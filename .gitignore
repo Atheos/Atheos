@@ -1,0 +1,11 @@
+*~
+*\#
+*.swp
+config.php
+data/
+workspace/
+.project
+.buildpath
+.settings/
+.svn/
+i/
