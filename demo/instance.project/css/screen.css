@@ -1,0 +1,176 @@
+/* RESET */
+
+    html, body, div, span, applet, object, iframe,
+    h1, h2, h3, h4, h5, h6, p, blockquote, pre,
+    abbr, acronym, address, big, cite, code,
+    del, dfn, em, img, ins, kbd, q, s, samp,
+    small, strike, strong, sub, sup, tt, var,
+    b, u, i, center,
+    dl, dt, dd, ol, ul, li,
+    fieldset, form, label, legend,
+    table, caption, tbody, tfoot, thead, tr, th, td,
+    article, aside, canvas, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section, summary,
+    time, mark, audio, video{margin:0;padding:0;border:0;outline:0;font-size:100%;font:inherit;vertical-align:baseline;}
+    a{margin:0;padding:0;font-size:100%;vertical-align:baseline;background:transparent;}
+    article, aside, details, figcaption, figure,
+    footer, header, hgroup, menu, nav, section{display:block;}
+    body{line-height:1;}
+    ol, ul{list-style:none;}
+    blockquote, q{quotes:none;}
+    blockquote:before, blockquote:after,
+    q:before, q:after{content:'';content:none;}
+    ins{text-decoration:none;}
+    del{text-decoration:line-through;}
+    table{border-collapse:collapse;border-spacing:0;}
+    
+    * { -webkit-box-sizing: border-box; -moz-box-sizing: border-box; box-sizing: border-box; }
+
+/* DOCUMENT */
+
+    html { width: 100%; height: 100%; overflow: scroll; font: normal 15px Helvetica, Arial, serif; color: #6d6d6d; background: #e7e7e7; }
+    body { max-width: 800px; margin: 20px auto; padding: 20px; height: 100%; line-height: 175%; text-shadow: 0 1px 0 rgba(255, 255, 255, 0.8); }
+
+/* GLOBALS */
+
+    h1,h2,h3,h4 { font-weight: bold; margin: 25px 0; }
+    
+    h1 { font-size: 3.2em; }
+    h2 { font-size: 2.2em; }
+    h3 { font-size: 2em; }
+    h4 { font-size: 1.5em; }
+
+    a,a:link,a:visited { 
+        display: inline;
+        cursor: pointer;
+        text-decoration: none;
+        color: #333;
+    }
+    a:hover,a:active { text-decoration: underline; }
+    
+    .hide { display: none; }
+    .clear { clear: both; }
+    .right { float: right; }
+    .left { float: left; }
+    
+    hr { border: 0; height: 1px; margin: 35px 0;
+        background-image: -webkit-linear-gradient(left, rgba(120,120,120,0), rgba(200,200,200,0.75), rgba(120,120,120,0)); 
+        background-image:    -moz-linear-gradient(left, rgba(120,120,120,0), rgba(200,200,200,0.75), rgba(120,120,120,0)); 
+        background-image:     -ms-linear-gradient(left, rgba(120,120,120,0), rgba(200,200,200,0.75), rgba(120,120,120,0)); 
+        background-image:      -o-linear-gradient(left, rgba(120,120,120,0), rgba(200,200,200,0.75), rgba(120,120,120,0));    
+    }
+    
+    /* clearing floats normal browsers */
+    .clear-all:after {
+        content: "";
+        display: block;
+        height: 0;
+        clear: both;
+        visibility: hidden;
+     }
+        
+     /* clearing floats IE6 */
+     * html .clear-all { height: 1px; }
+        
+     /* clearing floats IE7 */
+     *:first-child+html .clear-all { min-height: 1px; }
+
+    
+/* FORM ELEMENTS */
+    
+    label { display: block; margin: 10px 0 10px 0; font-size: 1.2em; font-weight: bold; }        
+    
+    input, select, textarea {
+        display: block;
+        width: 100%;
+        margin: 5px 0 15px 0;
+        padding: 8px 10px;
+        color: #333;
+        font-size: 1.2em;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.25, rgb(250,250,250)), color-stop(0.75, rgb(255,255,255)));
+        background-image: -moz-linear-gradient(center bottom, rgb(250,250,250) 25%, rgb(255,255,255) 75%);
+        border: 1px solid #ccc;
+        border-radius: 4px;
+    }
+    
+    textarea { font-family: Arial, Helvetica, sans-serif; min-height: 150px; }
+    
+    input:focus, select:focus, textarea:focus{
+        border: 1px solid #999; outline: none;
+    }
+    
+    /* Buttons */
+    
+    button { 
+        display: inline-block;      
+        width: auto;
+        margin: 5px 15px 15px 0;
+        padding: 9px 25px 7px 25px;
+        cursor: pointer;
+        color: #6d6d6d;
+        font-weight: bold;
+        font-size: 16px;
+        background-image: -webkit-gradient(linear, left bottom, left top, color-stop(0.25, rgb(224,224,224)), color-stop(0.75, rgb(240,240,240)));
+        background-image: -moz-linear-gradient(center bottom, rgb(224,224,224) 25%, rgb(240,240,240) 75%);
+        border: 1px solid #ccc;
+        border-radius: 5px;
+    }
+    
+    .btn-left { 
+        margin-right: 0;
+        border-radius: 5px 0 0 5px;
+    }
+    
+    .btn-mid {
+        margin-left: -4px; /* Inline-block fix */
+        margin-right: 0;
+        border-radius: 0;
+        border-left: 1px solid transparent;
+    }
+    
+    .btn-right {
+        margin-left: -4px; /* Inline-block fix */
+        margin-right: 0;
+        border-radius: 0 5px 5px 0;
+        border-left: 1px solid transparent;
+    }
+    
+    button:hover, button:hover{
+        color: #333;
+        border: 1px solid #999;
+        box-shadow: 1px 1px 1px 0 rgba(100, 100, 100, .3);
+    }
+    
+    ::-webkit-input-placeholder {color: #b0b0b0; }
+    :-moz-placeholder { color: #b0b0b0; }
+    .placeholder { color: #b0b0b0; }
+    
+/* PRE/CODE */
+
+    pre {
+        margin: 20px 0;
+        padding: 15px;
+        border: 1px solid #ccc;
+        font-family: 'monospace', sans-serif;
+        box-shadow: inset 0 0 10px 0 rgba(0, 0, 0, .1);
+        border-radius: 5px;
+    }
+    
+/* TABLES */
+
+    .datatable { border-collapse: separate; width: 100%; margin: 15px 0; border-spacing: 0; box-shadow: 0 5px 8px 0 rgba(0, 0, 0, .1); }
+    .datatable th, .datatable td { padding: 8px 10px 6px 10px; border: 1px solid #ccc; background: #fafafa;  }
+    .datatable th { text-align: left; font-weight: bold;
+        background-image: -webkit-gradient(linear,left bottom, left top, color-stop(0.25, rgb(224,224,224)), color-stop(0.75, rgb(240,240,240)));
+        background-image: -moz-linear-gradient(center bottom, rgb(224,224,224) 25%, rgb(240,240,240) 75%);
+    }   
+    .datatable .empty-set td { text-align: center; font-style: italic; color: #999; padding: 25px 0; }  
+    .datatable td.icon { line-height: 100%; font-size: 30px; text-align: center; font-family: 'Icon'; padding-top: 0; padding-bottom: 0; }
+    .datatable td.icon a { line-height: 100%; padding: 0; }
+    .datatable td.icon a:hover { color: #333; }  
+    .datatable tr:first-child th:first-child { border-top-left-radius:8px; }   
+    .datatable tr:first-child th:last-child { border-top-right-radius:8px; }
+
+/* CONTENT */
+
+    

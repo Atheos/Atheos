@@ -1,0 +1,3 @@
+RemoveHandler .php .phtml .php3 .php4 .php5 .cgi
+php_flag engine off
+Options -Execcgi -MultiViews
