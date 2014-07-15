@@ -11,10 +11,10 @@
 //////////////////////////////////////////////////////////////////
 
 // PATH TO CODIAD
-define("BASE_PATH", "/var/www/git/CodiadDemo");
+define("BASE_PATH", "/path/to/codiad");
 
 // BASE URL TO CODIAD (without trailing slash)
-define("BASE_URL", "nas/git/CodiadDemo");
+define("BASE_URL", "domain.tld");
 
 // THEME : default, modern or clear (look at /themes)
 define("THEME", "default");
@@ -26,8 +26,10 @@ define("WHITEPATHS", BASE_PATH . ",/home");
 $cookie_lifetime = "0";
 
 // TIMEZONE
-date_default_timezone_set("Europe/London");
+date_default_timezone_set("America/Chicago");
 
+// External Authentification
+//define("AUTH_PATH", "/path/to/customauth.php");
 
 //////////////////////////////////////////////////////////////////
 // ** DO NOT EDIT CONFIG BELOW **
