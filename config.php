@@ -2,46 +2,53 @@
 
 /*
 *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-*  as-is and without warranty under the MIT License. See 
+*  as-is and without warranty under the MIT License. See
 *  [root]/license.txt for more. This information must remain intact.
 */
 
 //////////////////////////////////////////////////////////////////
-// PATH
+// CONFIG
 //////////////////////////////////////////////////////////////////
 
-$rel = "/ide";
-define("BASE_PATH",$_SERVER["DOCUMENT_ROOT"] . $rel);
-define("COMPONENTS",BASE_PATH . "/components");
-define("THEMES",BASE_PATH . "/themes");
-define("DATA",BASE_PATH . "/data");
-define("WORKSPACE",BASE_PATH . "/workspace");
-define("WSURL",$_SERVER["HTTP_HOST"] . $rel . "/workspace");
+// PATH TO CODIAD
+define("BASE_PATH", "/var/www/git/CodiadDemo");
 
-//////////////////////////////////////////////////////////////////
-// THEME
-//////////////////////////////////////////////////////////////////
+// BASE URL TO CODIAD (without trailing slash)
+define("BASE_URL", "nas/git/CodiadDemo");
 
-define("THEME", "Codiad-Theme-Modern");
+// THEME : default, modern or clear (look at /themes)
+define("THEME", "default");
 
-//////////////////////////////////////////////////////////////////
 // ABSOLUTE PATH
-//////////////////////////////////////////////////////////////////
+define("WHITEPATHS", BASE_PATH . ",/home");
 
-define("WHITEPATHS", $_SERVER["DOCUMENT_ROOT"]);
-
-//////////////////////////////////////////////////////////////////
-// SESSIONS
-//////////////////////////////////////////////////////////////////
-
+// SESSIONS (e.g. 7200)
 $cookie_lifetime = "0";
 
-define("AUTH_PATH", "data/ntlm.class.php");
-
-//////////////////////////////////////////////////////////////////
 // TIMEZONE
+date_default_timezone_set("Europe/London");
+
+
+//////////////////////////////////////////////////////////////////
+// ** DO NOT EDIT CONFIG BELOW **
 //////////////////////////////////////////////////////////////////
 
-date_default_timezone_set("Europe/Amsterdam");
+// PATHS
+define("COMPONENTS", BASE_PATH . "/components");
+define("PLUGINS", BASE_PATH . "/plugins");
+define("THEMES", BASE_PATH . "/themes");
+define("DATA", BASE_PATH . "/data");
+define("WORKSPACE", BASE_PATH . "/workspace");
+
+// URLS
+define("WSURL", BASE_URL . "/workspace");
+
+// Marketplace
+//define("MARKETURL", "http://market.codiad.com/json");
+
+// Update Check
+//define("UPDATEURL", "http://update.codiad.com/?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}");
+//define("ARCHIVEURL", "https://github.com/Codiad/Codiad/archive/master.zip");
+//define("COMMITURL", "https://api.github.com/repos/Codiad/Codiad/commits");
 
 ?>
