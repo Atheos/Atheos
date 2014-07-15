@@ -36,5 +36,4 @@ cp $CORE/demo/instance.htaccess $SANDBOX/$RAND/workspace/.htaccess
 
 cp -r $CORE/demo/instance.project $SANDBOX/$RAND/workspace/demo
 cp -r $CORE/data $SANDBOX/$RAND/data
-rm -rf $SANDBOX/$RAND/data/collaborative
 echo $RAND
