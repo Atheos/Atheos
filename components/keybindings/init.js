@@ -17,8 +17,10 @@
             .keydown(function(e) {
             if (!args) args = [];
             if (e.keyCode == key && (e.ctrlKey || e.metaKey)) {
-                callback.apply(this, args);
-                return false;
+                if (!(e.ctrlKey && e.altKey)) {
+                    callback.apply(this, args);
+                    return false;
+                }
             }
         });
     };

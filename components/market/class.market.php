@@ -32,19 +32,15 @@ class Market extends Common {
 
     public function __construct(){
         // initial setup
-        if(!file_exists(DATA.'/plugins.php')) {
-          saveJSON('plugins.php', array(''));
-        }
-        if(!file_exists(DATA.'/themes.php')) {
-          saveJSON('themes.php', array(''));
-        }
         if(!file_exists(DATA.'/cache')) {
           mkdir(DATA.'/cache');
         }
+        
         // get existing data
-        $this->local['plugins'] = getJSON('plugins.php');
-        $this->local['themes'] = getJSON('themes.php');
+        $this->local['plugins'] = Common::readDirectory(PLUGINS);
+        $this->local['themes'] = Common::readDirectory(THEMES);
         $this->url = Common::getConstant('MARKETURL', $this->url);
+                
         // load market from server
         if(!file_exists(DATA.'/cache/market.current')) {
           $optout = "";
@@ -72,30 +68,9 @@ class Market extends Common {
         // get current and last market cache to establish array
         $this->old = json_decode(file_get_contents(DATA.'/cache/market.last'),true);
         $this->remote = json_decode(file_get_contents(DATA.'/cache/market.current'),true);
+        // check old cache for new ones
+        $this->tmp = array();
         foreach($this->remote as $key=>$data) {
-          if(substr($data['url'],-4) == '.git') {
-              $data['url'] = substr($data['url'],0,-4);
-          }
-          // check if folder exists for that extension
-          if(file_exists(BASE_PATH.'/'.$data['type'].substr($data['url'],strrpos($data['url'],'/')))) {
-              $data['folder'] = substr($data['url'],strrpos($data['url'],'/')+1);
-          } else {
-            if(file_exists(BASE_PATH.'/'.$data['type'].substr($data['url'],strrpos($data['url'],'/')).'-master')) {
-                $data['folder'] = substr($data['url'],strrpos($data['url'],'/')+1).'-master';
-            }
-          }
-          
-          // extension exists locally, so load its metadata
-          if(isset($data['folder'])) {
-              $local = json_decode(file_get_contents(BASE_PATH.'/'.$data['type'].'/'.$data['folder'].'/'.rtrim($data['type'],'s').'.json'),true);
-              $remote = json_decode(file_get_contents(str_replace('github.com','raw.github.com',$data['url']).'/master/'.rtrim($data['type'],'s').'.json'),true);
-              $data['version'] = $local[0]['version'];
-              if($remote[0]['version'] != $local[0]['version']) {
-                $data['update'] = $remote[0]['version'];
-              }
-          }
-
-          // check old cache for new ones
           $found = false;
           foreach($this->old as $key=>$old) {
             if($old['name'] == $data['name']) {
@@ -106,11 +81,23 @@ class Market extends Common {
           if(!$found && !isset($data['folder'])) {
             $data['new'] = '1';
           }
+          
+          // check if folder exists for that extension
+          if(substr($data['url'],-4) == '.git') {
+              $data['url'] = substr($data['url'],0,-4);
+          }
+          if(file_exists(BASE_PATH.'/'.$data['type'].substr($data['url'],strrpos($data['url'],'/'.rtrim($data['type'],'s').'.json')))) {
+              $data['folder'] = substr($data['url'],strrpos($data['url'],'/')+1);
+          } else {
+            if(file_exists(BASE_PATH.'/'.$data['type'].substr($data['url'],strrpos($data['url'],'/')).'-master/'.rtrim($data['type'],'s').'.json')) {
+                $data['folder'] = substr($data['url'],strrpos($data['url'],'/')+1).'-master';
+            }
+          }
              
           array_push($this->tmp, $data);
         }
         $this->remote = $this->tmp;
-        
+                
         // Scan plugins directory for missing plugins
         foreach (scandir(PLUGINS) as $fname){
                 if($fname == '.' || $fname == '..' ){
@@ -132,7 +119,10 @@ class Market extends Common {
                         $data[0]['type'] = 'plugins';
                         $data[0]['image'] = '';
                         $data[0]['count'] = -1;
-                        $data[0]['description'] = 'Manual Installation';
+                        $data[0]['remote'] = 0;
+                        if(!isset($data[0]['description'])) {
+                          $data[0]['description'] = 'Manual Installation';
+                        }
                         array_push($this->remote, $data[0]);
                     }
                 }
@@ -159,30 +149,36 @@ class Market extends Common {
                         $data[0]['type'] = 'themes';
                         $data[0]['image'] = '';
                         $data[0]['count'] = -1;
-                        $data[0]['description'] = 'Manual Installation';
+                        $data[0]['remote'] = 0;
+                        if(!isset($data[0]['description'])) {
+                          $data[0]['description'] = 'Manual Installation';
+                        }
                         array_push($this->remote, $data[0]);
                     }
                 }
          }
-    }
-
-    //////////////////////////////////////////////////////////////////
-    // Deactivate Plugin
-    //////////////////////////////////////////////////////////////////
-
-    public function Deactivate($type, $name){
-        saveJSON($type.'.php',array_diff($this->local[$type], array($name)));
-        echo formatJSEND("success",null);
-    }
-
-    //////////////////////////////////////////////////////////////////
-    // Activate Plugin
-    //////////////////////////////////////////////////////////////////
-
-    public function Activate($type, $name){
-        $this->local[$type][] = $name;
-        saveJSON($type.'.php',$this->local[$type]);
-        echo formatJSEND("success",null);
+         
+         // Check for updates
+         $this->tmp = array();
+         foreach($this->remote as $key=>$data) {      
+          if(substr($data['url'],-4) == '.git') {
+              $data['url'] = substr($data['url'],0,-4);
+          }    
+          // extension exists locally, so load its metadata
+          if(isset($data['folder'])) {
+              $local = json_decode(file_get_contents(BASE_PATH.'/'.$data['type'].'/'.$data['folder'].'/'.rtrim($data['type'],'s').'.json'),true);
+              $remote = json_decode(file_get_contents(str_replace('github.com','raw.github.com',$data['url']).'/master/'.rtrim($data['type'],'s').'.json'),true);
+              $data['version'] = $local[0]['version'];
+              if($remote[0]['version'] != $local[0]['version']) {
+                $data['update'] = $remote[0]['version'];
+              }
+              $data['remote'] = 0;
+          } else {
+            $data['remote'] = 1;
+          }             
+          array_push($this->tmp, $data);
+        }
+        $this->remote = $this->tmp;
     }
 
     //////////////////////////////////////////////////////////////////
@@ -225,7 +221,7 @@ class Market extends Common {
 
             unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
             // Response
-            $this->Activate($type, substr($repo, strrpos($repo, "/") + 1)."-master");
+            echo formatJSEND("success",null);
         } else {
             die(formatJSEND("error","Unable to download ".$repo));
         }
@@ -243,7 +239,7 @@ class Market extends Common {
         }
 
         rrmdir(BASE_PATH.'/'.$type.'/'.$name);
-        $this->Deactivate($type, $name);
+        echo formatJSEND("success",null);
     }
 
     //////////////////////////////////////////////////////////////////

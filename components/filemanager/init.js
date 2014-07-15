@@ -108,7 +108,8 @@
                     e.preventDefault();
                     _this.contextMenuShow(e, $(this)
                         .attr('data-path'), $(this)
-                        .attr('data-type'));
+                        .attr('data-type'), $(this)
+                        .html());
                     $(this)
                         .addClass('context-menu-active');
                 });
@@ -118,8 +119,7 @@
         // Context Menu
         //////////////////////////////////////////////////////////////////
 
-        contextMenuShow: function(e, path, type) {
-
+        contextMenuShow: function(e, path, type, name) {
             var _this = this;
 
             // Selective options
@@ -162,7 +162,8 @@
                 })
                 .fadeIn(200)
                 .attr('data-path', path)
-                .attr('data-type', type);
+                .attr('data-type', type)
+                .attr('data-name', name);
             // Show faded 'paste' if nothing in clipboard
             if (this.clipboard === '') {
                 $('#context-menu a[content="Paste"]')
@@ -176,6 +177,8 @@
                 .on('mouseover', function() {
                     _this.contextMenuHide();
                 });
+            /* Notify listeners. */
+            amplify.publish('context-menu.onShow', {e: e, path: path, type: type});
             // Hide on click
             $('#context-menu a')
                 .click(function() {
@@ -188,6 +191,8 @@
                 .fadeOut(200);
             $('#file-manager a')
                 .removeClass('context-menu-active');
+            /* Notify listeners. */
+            amplify.publish('context-menu.onHide');
         },
 
         //////////////////////////////////////////////////////////////////
@@ -255,7 +260,10 @@
         // Loop out all files and folders in directory path
         //////////////////////////////////////////////////////////////////
 
+        indexFiles: [],
+
         index: function(path, rescan) {
+            var _this = this;
             if (rescan === undefined) {
                 rescan = false;
             }
@@ -274,7 +282,10 @@
                     node.addClass('open');
                     var objectsResponse = codiad.jsend.parse(data);
                     if (objectsResponse != 'error') {
-                        files = objectsResponse.index;
+                        /* Notify listener */
+                        _this.indexFiles = objectsResponse.index;
+                        amplify.publish("filemanager.onIndex", {path: path, files: _this.indexFiles});
+                        var files = _this.indexFiles;
                         if (files.length > 0) {
                             var display = 'display:none;';
                             if (rescan) {
@@ -311,11 +322,11 @@
                         }
                     }
                     node.removeClass('loading');
-                    if (rescan && this.rescanChildren.length > this.rescanCounter) {
-                        this.rescan(this.rescanChildren[this.rescanCounter++]);
+                    if (rescan && _this.rescanChildren.length > _this.rescanCounter) {
+                        _this.rescan(_this.rescanChildren[_this.rescanCounter++]);
                     } else {
-                        this.rescanChildren = [];
-                        this.rescanCounter = 0;
+                        _this.rescanChildren = [];
+                        _this.rescanCounter = 0;
                     }
                 });
             }
@@ -479,6 +490,8 @@
                             codiad.modal.unload();
                             // Add new element to filemanager screen
                             codiad.filemanager.createObject(path, createPath, type);
+                            /* Notify listeners. */
+                            amplify.publish('filemanager.onCreate', {createPath: createPath, path: path, shortName: shortName, type: type});
                         }
                     });
                 });
@@ -540,6 +553,8 @@
                     if (pasteResponse != 'error') {
                         _this.createObject(path, path + '/' + shortName, type);
                         codiad.modal.unload();
+                        /* Notify listeners. */
+                        amplify.publish('filemanager.onPaste', {path: path, shortName: shortName, duplicate: duplicate});
                     }
                 });
         },
@@ -654,7 +669,9 @@
                     $('#modal-content form input[name="search_string"]').val(lastSearched.searchText);
                     $('#modal-content form input[name="search_file_type"]').val(lastSearched.fileExtension);
                     $('#modal-content form select[name="search_type"]').val(lastSearched.searchType);
-                    $('#filemanager-search-results').slideDown().html(lastSearched.searchResults);
+                    if(lastSearched.searchResults != '') {
+                      $('#filemanager-search-results').slideDown().html(lastSearched.searchResults);
+                    }
                 }
             });
             codiad.modal.hideOverlay();
@@ -680,8 +697,8 @@
                     search_file_type: searchFileType
                 }, function(data) {
                     searchResponse = codiad.jsend.parse(data);
+                    var results = '';
                     if (searchResponse != 'error') {
-                        var results = '';
                         $.each(searchResponse.index, function(key, val) {
                             // Cleanup file format
                             if(val['file'].substr(-1) == '/') {
@@ -694,11 +711,11 @@
                         $('#filemanager-search-results')
                             .slideDown()
                             .html(results);
-                        _this.saveSearchResults(searchString, searchType, fileExtensions, results);
                     } else {
                         $('#filemanager-search-results')
                             .slideUp();
                     }
+                    _this.saveSearchResults(searchString, searchType, fileExtensions, results);
                     $('#filemanager-search-processing')
                         .hide();
                 });
