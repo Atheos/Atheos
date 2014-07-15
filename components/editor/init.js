@@ -7,10 +7,10 @@
 (function(global, $) {
 
     // Classes from Ace
-    var VirtualRenderer = require('ace/virtual_renderer').VirtualRenderer;
-    var Editor = require('ace/editor').Editor;
-    var EditSession = require('ace/edit_session').EditSession;
-    var UndoManager = require("ace/undomanager").UndoManager;
+    var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
+    var Editor = ace.require('ace/editor').Editor;
+    var EditSession = ace.require('ace/edit_session').EditSession;
+    var UndoManager = ace.require("ace/undomanager").UndoManager;
 
     // Editor modes that have been loaded
     var editorModes = {};
@@ -27,32 +27,55 @@
     // modes available for selecting
     var availableTextModes = new Array(
         'abap',
+        'actionscript',
+        'ada',
+        'apache_conf',
+        'applescript',
         'asciidoc',
+        'assembly_x86',
+        'autohotkey',
+        'batchfile',
         'c9search',
         'c_cpp',
+        'cirru',
         'clojure',
+        'cobol',
         'coffee',
         'coldfusion',
         'csharp',
         'css',
         'curly',
+        'd',
         'dart',
         'diff',
         'django',
+        'dockerfile',
         'dot',
+        'ejs',
+        'erlang',
+        'forth',
         'ftl',
+        'gherkin',
+        'gitignore',
         'glsl',
         'golang',
         'groovy',
         'haml',
+        'handlebars',
+        'haskell',
         'haxe',
         'html',
+        'html_ruby',
+        'ini',
+        'jack',
         'jade',
         'java',
         'javascript',
         'json',
+        'jsoniq',
         'jsp',
         'jsx',
+        'julia',
         'latex',
         'less',
         'liquid',
@@ -63,27 +86,40 @@
         'lua',
         'luapage',
         'lucene',
+        'matlab',
         'makefile',
         'markdown',
+        'mel',
         'mushcode',
+        'mysql',
+        'nix',
         'objectivec',
         'ocaml',
         'pascal',
         'perl',
         'pgsql',
         'php',
+        'plain_text',
         'powershell',
+        'prolog',
+        'protobuf',
         'python',
         'r',
         'rdoc',
         'rhtml',
         'ruby',
+        'rust',
         'sass',
         'scad',
         'scala',
         'scheme',
         'scss',
         'sh',
+        'sjs',
+        'smarty',
+        'snippets',
+        'soy_template',
+        'space',
         'sql',
         'stylus',
         'svg',
@@ -91,11 +127,14 @@
         'tex',
         'text',
         'textile',
-        'tmsnippet',
         'toml',
         'typescript',
+        'twig',
+        'vala',
         'vbscript',
         'velocity',
+        'verilog',
+        'vhdl',
         'xml',
         'xquery',
         'yaml'
@@ -479,8 +518,8 @@
             i.setHighlightActiveLine(this.settings.highlightLine);
             i.setDisplayIndentGuides(this.settings.indentGuides);
             i.getSession().setUseWrapMode(this.settings.wrapMode);
-            this.setTabSize(this.settings.tabSize);
-            this.setSoftTabs(this.settings.softTabs);
+            this.setTabSize(this.settings.tabSize, i);
+            this.setSoftTabs(this.settings.softTabs, i);
 
             this.changeListener(i);
             this.cursorTracking(i);
@@ -826,12 +865,12 @@
 
                     // Mark the mode as loaded
                     editorModes[m] = true;
-                    var EditorMode = require('ace/mode/' + m).Mode;
+                    var EditorMode = ace.require('ace/mode/' + m).Mode;
                     i.getSession().setMode(new EditorMode());
                 }, true);
             } else {
 
-                var EditorMode = require('ace/mode/' + m).Mode;
+                var EditorMode = ace.require('ace/mode/' + m).Mode;
                 i.getSession().setMode(new EditorMode());
 
             }

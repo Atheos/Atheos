@@ -46,6 +46,8 @@
                     $('#lock-right-sidebar')
                         .removeClass('icon-lock')
                         .addClass('icon-switch');
+                    //Push cursor position rightwards
+                    $('#cursor-position').css("right", "30px");
 
                 } else {
 
@@ -53,6 +55,8 @@
                     $('#lock-right-sidebar')
                         .removeClass('icon-switch')
                         .addClass('icon-lock');
+                    //Push cursor position leftwards
+                    $('#cursor-position').css("right", "220px");
 
                 }
             });
@@ -124,9 +128,10 @@
                             .width(),
                             sbarWidthL = $("#sb-left")
                             .width();
+                        $('#editor-region').css('margin-right','0px');    
                         $('#editor-region')
                             .animate({
-                                'margin-right': sbarWidthR+'px'
+                                'margin-right': sbarWidthR-10+'px'
                             }, 300, 'easeOutQuart', function(){
                                 _this.isRightSidebarOpen = true;
                                 codiad.active.updateTabDropdownVisibility();
@@ -159,9 +164,10 @@
                         if (!codiad.sidebars.leftLock) {
                             sbarWidthL = 10;
                         }
+                        $('#editor-region').css('margin-right','0px');  
                         $('#editor-region')
                             .animate({
-                                'margin-right': sbarWidthR+'px'
+                                'margin-right': sbarWidthR-10+'px'
                             }, 300, 'easeOutQuart', function(){
                                 _this.isRightSidebarOpen = true;
                                 codiad.active.updateTabDropdownVisibility();
@@ -196,7 +202,7 @@
                             }
                             $('#editor-region')
                                 .animate({
-                                    'margin-right': '10px'
+                                    'margin-right': '0px'
                                 }, 300, 'easeOutQuart', function(){
                                     _this.isRightSidebarOpen = false;
                                     codiad.active.updateTabDropdownVisibility();
