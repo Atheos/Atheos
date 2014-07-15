@@ -6,9 +6,9 @@
 
 (function(global, $) {
 
-    var EditSession = require('ace/edit_session')
+    var EditSession = ace.require('ace/edit_session')
         .EditSession;
-    var UndoManager = require('ace/undomanager')
+    var UndoManager = ace.require('ace/undomanager')
         .UndoManager;
 
     var codiad = global.codiad;
@@ -382,10 +382,12 @@
             
             if(path != this.getPath()) {
                 codiad.editor.setSession(this.sessions[path]);
-                this.check(path);
                 this.history.push(path);
                 $.get(this.controller, {'action':'focused', 'path':path});
             }
+            
+            /* Check for users registered on the file. */
+            this.check(path);
 
             /* Notify listeners. */
             amplify.publish('active.onFocus', path);
@@ -640,7 +642,7 @@
                     .text(newPath.substring(1));
                 this.sessions[newPath] = this.sessions[oldPath];
                 this.sessions[newPath].path = newPath;
-                this.sessions[oldPath] = undefined;
+                delete this.sessions[oldPath];
             };
             if (this.sessions[oldPath]) {
                 // A file was renamed
