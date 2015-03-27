@@ -105,7 +105,7 @@
                         if(checkAccess()){
                             if($_SESSION['project'] == $data['path']){
                             ?>
-                            <td width="70"><a onclick="codiad.message.error('Active Project Cannot Be Removed');" class="icon-block bigger-icon"></a></td>
+                            <td width="70"><a onclick="codiad.message.error(i18n('Active Project Cannot Be Removed'));" class="icon-block bigger-icon"></a></td>
                             <?php
                             }else{
                             ?>
@@ -138,13 +138,9 @@
             <form>
             <label><?php i18n("Project Name"); ?></label>
             <input name="project_name" autofocus="autofocus" autocomplete="off">
-            <?php if (strtoupper(substr(PHP_OS, 0, 3)) !== 'WIN') { ?>
             <label><?php i18n("Folder Name or Absolute Path"); ?></label>
             <input name="project_path" autofocus="off" autocomplete="off">
-            <?php } else { ?>
-            <input type="hidden" name="project_path">
-            <?php }  ?>
-            
+                        
             <!-- Clone From GitHub -->
             <div style="width: 500px;">
             <table class="hide" id="git-clone">
@@ -201,7 +197,7 @@
             <form>
             <input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
             <label><?php i18n("Confirm Project Deletion"); ?></label>
-            <pre><?php i18n("Name:"); ?> <?php echo($_GET['name']); ?>, Path: <?php echo($_GET['path']); ?></pre>
+            <pre><?php i18n("Name:"); ?> <?php echo($_GET['name']); ?>, <?php i18n("Path:") ?> <?php echo($_GET['path']); ?></pre>
             <table>
             <tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
             <tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>

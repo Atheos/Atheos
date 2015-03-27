@@ -157,6 +157,9 @@ class Update {
                 $data[0]['version'] = trim(file_get_contents(BASE_PATH."/.git/".trim(str_replace('ref: ', '', $tmp))));
             }
             $data[0]['name'] = "";
+            if(file_exists(DATA ."/version.php")) {
+              $data[0]['optout'] = "true";
+            }
         } else {
             $data = getJSON('version.php');
         }
@@ -172,7 +175,7 @@ class Update {
         $remoteurl = str_replace("{OS}", PHP_OS, $remoteurl);
         $remoteurl = str_replace("{PHP}", phpversion(), $remoteurl);
         $remoteurl = str_replace("{VER}", $localversion, $remoteurl);
-        $remoteurl = str_replace("{WEB}", $_SERVER['SERVER_SOFTWARE'], $remoteurl);
+        $remoteurl = str_replace("{WEB}", urlencode($_SERVER['SERVER_SOFTWARE']), $remoteurl);
         $remoteurl = str_replace("{ACT}", $action, $remoteurl);
         
         return json_decode(file_get_contents($remoteurl),true);
