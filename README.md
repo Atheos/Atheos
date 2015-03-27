@@ -7,7 +7,7 @@
 (Please use your webserver user for the chown command, example is for Apache2's user www-data)
 
 ```
-git pull https://github.com/Codiad/CodiadDemo.git
+git clone https://github.com/Codiad/CodiadDemo.git
 chown www-data:www-data -R *
 chmod 744 demo/createinstance.sh
 ```
