@@ -69,7 +69,7 @@
         "title": "Settings",
         "admin": false,
         "icon": "icon-doc-text",
-        "onclick": "codiad.modal.load(400, 'components/editor/dialog.php?action=settings');codiad.modal.hideOverlay();"
+        "onclick": "codiad.settings.show();"
     },
     {
         "title": "Password",
@@ -82,6 +82,12 @@
         "admin": false,
         "icon": null,
         "onclick": null
+    },
+    {
+        "title": "Help",
+        "admin": false,
+        "icon": "icon-help",
+        "onclick": "window.open('https://github.com/Codiad/Codiad/wiki');"
     },
     {
         "title": "Logout",

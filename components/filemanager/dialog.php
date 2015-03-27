@@ -67,7 +67,7 @@ switch($_GET['action']){
     case 'preview':
     ?>
     <label><?php i18n("Inline Preview"); ?></label>
-    <div><br><br><img src="<?php echo($_GET['path']); ?>"><br><br></div>
+    <div><br><br><img src="<?php echo(str_replace(BASE_PATH . "/", "", WORKSPACE) . "/" . $_GET['path']); ?>"><br><br></div>
     <button class="btn-right" onclick="codiad.modal.unload();return false;"><?php i18n("Close"); ?></button>
     <?php
     break;
@@ -113,11 +113,9 @@ switch($_GET['action']){
             </td>
         </tr>
         <tr>
-            <td width="65%">
+            <td colspan="3">
                <label><?php i18n("File Type:"); ?></label>
-               <input type="text" name="search_file_type" placeholder="space seperated file types eg: js c php">
-            </td>
-            <td>
+               <input type="text" name="search_file_type" placeholder="<?php i18n("space seperated file types eg: js c php"); ?>">
             </td>
         </tr>
     </table>

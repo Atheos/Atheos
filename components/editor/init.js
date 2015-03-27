@@ -373,6 +373,9 @@
             indentGuides: true,
             wrapMode: false,
             softTabs: false,
+            persistentModal: true,
+            rightSidebarTrigger: false,
+            fileManagerTrigger: false,
             tabSize: 4
         },
    
@@ -417,14 +420,14 @@
 
             var _this = this;
 
-            $.each(['theme', 'fontSize', "tabSize"], function(idx, key) {
+            $.each(['theme', 'fontSize', 'tabSize'], function(idx, key) {
                 var localValue = localStorage.getItem('codiad.editor.' + key);
                 if (localValue !== null) {
                     _this.settings[key] = localValue;
                 }
             });
 
-            $.each(['printMargin', 'highlightLine', 'indentGuides', 'wrapMode', 'rightSidebarTrigger', 'fileManagerTrigger', "softTabs"],
+            $.each(['printMargin', 'highlightLine', 'indentGuides', 'wrapMode', 'rightSidebarTrigger', 'fileManagerTrigger', 'softTabs', 'persistentModal'],
                    function(idx, key) {
                        var localValue =
                            localStorage.getItem('codiad.editor.' + key);
@@ -433,6 +436,30 @@
                        }
                        _this.settings[key] = (localValue == 'true');
                    });
+        },
+
+        /////////////////////////////////////////////////////////////////
+        //
+        // Apply configuration settings
+        //
+        // Parameters:
+        //   i - {Editor}
+        //
+        /////////////////////////////////////////////////////////////////
+
+        applySettings: function(i) {
+            // Check user-specified settings
+            this.getSettings();
+
+            // Apply the current configuration settings:
+            i.setTheme('ace/theme/' + this.settings.theme);
+            i.setFontSize(this.settings.fontSize);
+            i.setShowPrintMargin(this.settings.printMargin);
+            i.setHighlightActiveLine(this.settings.highlightLine);
+            i.setDisplayIndentGuides(this.settings.indentGuides);
+            i.getSession().setUseWrapMode(this.settings.wrapMode);
+            this.setTabSize(this.settings.tabSize, i);
+            this.setSoftTabs(this.settings.softTabs, i);
         },
 
         //////////////////////////////////////////////////////////////////
@@ -507,19 +534,6 @@
 
             i.el = el;
             this.setSession(session, i);
-
-            // Check user-specified settings
-            this.getSettings();
-
-            // Apply the current configuration settings:
-            i.setTheme('ace/theme/' + this.settings.theme);
-            i.setFontSize(this.settings.fontSize);
-            i.setShowPrintMargin(this.settings.printMargin);
-            i.setHighlightActiveLine(this.settings.highlightLine);
-            i.setDisplayIndentGuides(this.settings.indentGuides);
-            i.getSession().setUseWrapMode(this.settings.wrapMode);
-            this.setTabSize(this.settings.tabSize, i);
-            this.setSoftTabs(this.settings.softTabs, i);
 
             this.changeListener(i);
             this.cursorTracking(i);
@@ -787,6 +801,8 @@
                     i.setSession(proxySession);
                 }
             }
+            this.applySettings(i);
+            
             this.setActive(i);
         },
 
@@ -1061,6 +1077,22 @@
             }
             // LocalStorage
             localStorage.setItem('codiad.editor.wrapMode', w);
+        },
+        
+        //////////////////////////////////////////////////////////////////
+        //
+        // Set last position of modal to be saved
+        //
+        // Parameters:
+        //   t - {Boolean} (false for Automatic Position, true for Last Position)
+        //   i - {Editor}  (If omitted, Defaults to all editors)
+        //
+        //////////////////////////////////////////////////////////////////
+
+        setPersistentModal: function(t, i) {
+            this.settings.persistentModal = t;
+            // LocalStorage
+            localStorage.setItem('codiad.editor.persistentModal', t);
         },
 
         //////////////////////////////////////////////////////////////////

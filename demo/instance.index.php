@@ -75,8 +75,13 @@ if(isset($_SESSION['theme'])) {
 <body>
     <script>
     var i18n = (function(lang) {
-        return function(word) {
-            return (word in lang) ? lang[word] : word;
+        return function(word,args) {
+            var x;
+            var returnw = (word in lang) ? lang[word] : word;
+            for(x in args){
+                returnw=returnw.replace("%{"+x+"}%",args[x]);   
+            }
+            return returnw;
         }
     })(<?php echo json_encode($lang); ?>)
     </script>
@@ -176,6 +181,10 @@ if(isset($_SESSION['theme'])) {
 
         <div id="sb-left" class="sidebar">
             <div id="sb-left-title">
+                <a id="lock-left-sidebar" class="icon-lock icon"></a>
+                <?php if (!common::isWINOS()) { ?>
+                <a id="finder-quick" class="icon icon-archive"></a>
+                <a id="tree-search" class="icon-search icon"></a>
                 <h2 id="finder-label"> <?php i18n("Explore"); ?> </h2>
                 <div id="finder-wrapper">
                    <a id="finder-options" class="icon icon-cog"></a>
@@ -189,9 +198,7 @@ if(isset($_SESSION['theme'])) {
                       <li><a data-action="search"><?php i18n("Search File Contents"); ?></a></li>
                    </ul>
                 </div>
-                <a id="lock-left-sidebar" class="icon-lock icon"></a>
-                <a id="finder-quick" class="icon icon-archive"></a>
-                <a id="tree-search" class="icon-search icon"></a>
+                <?php } ?>
             </div>
 
             <div class="sb-left-content">
@@ -247,6 +254,7 @@ if(isset($_SESSION['theme'])) {
                         <h2><?php i18n("Projects"); ?></h2>
                         <a id="projects-collapse" class="icon-down-dir icon" alt="<?php i18n("Collapse"); ?>"></a>
                         <?php if(checkAccess()) { ?>
+                        <a id="projects-manage" class="icon-archive icon"></a>
                         <a id="projects-create" class="icon-plus icon" alt="<?php i18n("Create Project"); ?>"></a>
                         <?php } ?>
                     </div>
@@ -269,7 +277,7 @@ if(isset($_SESSION['theme'])) {
                     <a id="tab-dropdown-button" class="icon-down-open"></a>
                 </div>
                 <div id="tab-close">
-                    <a id="tab-close-button" class="icon-cancel-circled"></a>
+                    <a id="tab-close-button" class="icon-cancel-circled" title="<?php i18n("Close All") ?>"></a>
                 </div>
                 <ul id="dropdown-list-active-files"></ul>
                 <div class="bar"></div>

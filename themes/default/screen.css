@@ -92,13 +92,17 @@ a:hover,a:active {;
 /* ICONS */
 
 [class^="icon-"], [class*=" icon-"] {
-  font-family: entypo;
-  font-style: normal;
-  font-size: 75%;
-  display: inline-block;
-  margin-right: 8px;
-  text-align: center;
-  vertical-align: top;
+    font-family: entypo;
+    font-style: normal;
+    font-size: 75%;
+    display: inline-block;
+    margin-right: 8px;
+    text-align: center;
+    vertical-align: top;
+}
+
+.sb-right-content [class^="icon-"], .sb-right-content [class*=" icon-"] {
+    width: 16px;
 }
 
 /* Useful size modifiers for icons. */
@@ -153,6 +157,7 @@ input, textarea, select, button {
     border-bottom: 2px solid #595959;
     color: #fff;
     border-radius: 2px;
+    line-height: normal;
 }
 
 select option { background: #242424; }
@@ -741,7 +746,7 @@ table [class^="icon-"], [class*=" icon-"] {
 
 #modal {
     display: none;
-    position: fixed;
+    position: absolute;
     top: 15%;
     left: 50%;
     max-height: 70vh;
