@@ -2,16 +2,9 @@
 *\#
 *.swp
 workspace/
-plugins/*
-!plugins/README.md
-!plugins/Codiad-ColorPicker-master/*
-!plugins/Codiad-DiffViewer-master/*
 i/*
 !i/index.php
 !i/README.md
-themes/*
-!themes/default/
-!themes/README.md
 .project
 .buildpath
 .settings/
