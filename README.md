@@ -25,7 +25,8 @@ Atheos is Codiad to its core, however Atheos will be updated to use all the late
 04. Modify everything to meet best practices, SEO and accessabilty standards.
     - Make everything pretty, new icons, cleaner design, better ingredients
 
-## Planned goals/features
+| ## | Planned goals & features                                  |
+|----|-----------------------------------------------------------|
 | 01 | Closing tabs sometimes has issues, only way is to refresh |
 | 02 | Marketplace gets mad if something is missing              |
 | 03 | Settings sometimes don't stick and have to be reset       |
