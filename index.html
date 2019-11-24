@@ -1,116 +1,117 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset='utf-8'>
-    <meta http-equiv="X-UA-Compatible" content="chrome=1">
-    <meta name="description" content="Atheos is an open source, web-based, cloud IDE and code editor with minimal footprint and requirements">
-    <link href='https://fonts.googleapis.com/css?family=Chivo:900' rel='stylesheet' type='text/css'/>
-    <link rel="stylesheet" type="text/css" href="stylesheets/stylesheet.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/pygment_trac.css" media="screen" />
-    <link rel="stylesheet" type="text/css" href="stylesheets/print.css" media="print" />
-    <link rel="shortcut icon" href="favicon.ico" type="image/x-icon" />
 
-    <title>Atheos Web Based IDE by Liam Siira</title>
-  </head>
+<head>
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="description" content="Atheos is an open source, web-based, cloud IDE and code editor with minimal footprint and requirements, built on top of Codiad by Fluidbyte">
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="author" content="Liam Siira, Liam@Siira.us">
 
-  <body>
-    <div id="banner_shadow"></div>
-  
-    <div id="container">
-      <div class="inner">
+	<link rel="stylesheet" type="text/css" href="scss/style.css" media="screen" />
 
-        <header>
-          <a id="logo" href=""><img src="logo.png"></a>
-          <h1>Atheos<span class="version">v.1.0</span></h1>
-          <h2>Web Based, Cloud IDE</h2>
-        </header>
+	<link rel="shortcut icon" href="favicon.ico" type="image/ico" />
 
-        <section id="downloads" class="clearfix">
-          <a href="https://github.com/HLSiira/Atheos/releases" id="download-zip" class="button"><span>Download</span></a>
-          <!--<a href="http://demo.Atheos.com" target="_blank" id="open-demo" class="button" onClick="_gaq.push(['_trackEvent', 'Demo', 'Demo', 'Load Demo']);"><span>Live Demo</span></a>-->
-          <!--<a href="http://market.Atheos.com" id="plugins" class="button" onClick="_gaq.push(['_trackEvent', 'Market', 'Market', 'Goto Market']);"><span>Plugins</span></a>-->
-          <a href="https://github.com/HLSiira/Atheos" id="view-on-github" class="button"><span>GitHub</span></a>
-        </section>
+	<title>Atheos IDE</title>
+</head>
 
-        <hr>
+<body>
 
-        <section id="main_content">
-          <h1>Atheos Web IDE</h1>
+	<a href="" id="demo_drop-in">
+		<!--<span>Click Banner to Try a Live Demo</span>-->
+	</a>
+	<main>
 
-<p>Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte</p>
+		<header>
+			<a id="logo" href=""><img src="images/logo.png"></a>
+			<h1>Atheos<small id="version_tag">v.1.0</small></h1>
+			<h2>Web Based, Cloud IDE</h2>
+		</header>
 
-<p>Keep up to date with the latest changes and news on <strong>Github</strong></p>
+		<section id="downloads" class="clearfix">
+			<a href="https://github.com/HLSiira/Atheos/releases" id="download-zip" class="button"><span>Download</span></a>
+			<!--<a href="http://demo.Atheos.com" id="open-demo" class="button" target="_blank"><span>Live Demo</span></a>-->
+			<!--<a href="http://market.Atheos.com" id="plugins" class="button"><span>Plugins</span></a>-->
+			<a href="https://github.com/HLSiira/Atheos" id="view-on-github" class="button"><span>GitHub</span></a>
+		</section>
 
-<h2>Features</h2>
+		<section id="main_content">
+			<h3>Atheos Web IDE</h3>
 
-<p>Atheos was built with simplicity in mind, allowing for fast, interactive development without the massive overhead of some of the larger desktop editors. That being said even users of IDE's 
-    such as Eclipse, NetBeans and Aptana are finding Atheos's simplicity to be a huge benefit. While simplicity was key, we didn't skimp on features and have a team of dedicated developer actively adding more. 
-</p>
+			<p>Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte</p>
 
-<ul class="features_left">
-    <li>Support for 40+ languages</li>
-    <li>Plugin Library</li>
-    <li>Error checking &amp; notifications</li>
-    <li>Mutliple user support</li>
-    <li>Editor screen splitting</li>
-    <li>LocalStorage redundancy</li>
-    <li>Advanced searching tools</li>
-    <li>Smart auto-complete</li>
-</ul>
+			<p>Keep up to date with the latest changes and news on <strong><a href="https://github.com/HLSiira/Atheos">Github</a></strong></p>
 
-<ul class="features_right">
-    <li>Real-Time Collaborative editing</li>
-    <li>Over 20 Syntax color themes</li>
-    <li>Completely Open-Source</li>
-    <li>Easily customized source</li>
-    <li>Runs on your own server</li>
-    <li>Quick-Download backups</li>
-    <li>Maximum editor screen space</li>
-    <li>i18n Language Support</li>
-</ul>
+			<h3>Features</h3>
 
-<div style="clear:both;"></div>
+			<p>Atheos was built with simplicity in mind, allowing for fast, interactive development without the massive overhead of some of the larger desktop editors. That being said even users of IDE's
+				such as Eclipse, NetBeans and Aptana are finding Atheos's simplicity to be a huge benefit. While simplicity was key, we didn't skimp on features and have a team of dedicated developer actively adding more.
+			</p>
 
-<br>
+			<ul class="features_left">
+				<li>Support for 40+ languages</li>
+				<li>Plugin Library</li>
+				<li>Error checking &amp; notifications</li>
+				<li>Mutliple user support</li>
+				<li>Editor screen splitting</li>
+				<li>LocalStorage redundancy</li>
+				<li>Advanced searching tools</li>
+				<li>Smart auto-complete</li>
+			</ul>
 
-<p>...and with a team of passionate collaborators the list keeps growing.</p>
+			<ul class="features_right">
+				<li>Real-Time Collaborative editing</li>
+				<li>Over 20 Syntax color themes</li>
+				<li>Completely Open-Source</li>
+				<li>Easily customized source</li>
+				<li>Runs on your own server</li>
+				<li>Quick-Download backups</li>
+				<li>Maximum editor screen space</li>
+				<li>i18n Language Support</li>
+			</ul>
 
-<h2>Interface</h2>
+			<div style="clear:both;"></div>
 
-<p>Atheos consists of three panels; a left panel which houses the file manager and active files, center panel which is where editors reside, and a right panel which contains system and other controls. The right &amp; left side panels collapse providing maximum real-estate to the editor.</p>
+			<br>
 
-<img src="atheos.png" alt="Atheos Screenshot">
+			<p>...and with a team of passionate collaborators the list keeps growing.</p>
 
-<h2>Requirements</h2>
+			<h3>Interface</h3>
 
-<p>Atheos requires a minimal server installation with Apache2, PHP 5+ and basic r/w access to several directories. There is no database requirement</p>
+			<p>Atheos consists of three panels; a left panel which houses the file manager and active files, center panel which is where editors reside, and a right panel which contains system and other controls. The right &amp; left side panels collapse providing maximum real-estate to the editor.</p>
 
-<p>The application will work in modern browsers including Chrome, Firefox, and IE9+, though it is developed in Chrome</p>
+			<img src="images/atheos.png" alt="Atheos Screenshot">
 
-<h2>Getting Started</h2>
+			<h3>Requirements</h3>
 
-<p>Installation of Atheos requires uploading the files and making several directories and a config file writeable. There is no database and no other server components are required. PHP 5.3 or above is recommended, however, the system will work with any version of PHP over v.5.</p>
+			<p>Atheos requires a minimal server installation with Apache2, PHP 5+ and basic r/w access to several directories. There is no database requirement</p>
 
-<p>For more information please <strong><a href="https://github.com/HLSiira/Atheos/wiki/Installation">read the installation instructions</a></strong> on the Wiki.</p>
+			<p>The application will work in modern browsers including Chrome, Firefox, and IE9+, though it is developed in Chrome</p>
 
-<br>
+			<h3>Getting Started</h3>
 
-<h2>Support the Atheos Project</h2>
+			<p>Installation of Atheos requires uploading the files and making several directories and a config file writeable. There is no database and no other server components are required. PHP 5.3 or above is recommended, however, the system will work with any version of PHP over v.5.</p>
 
-<!--<p>A <i>LOT</i> of time and energy has been put into the system, and there are a lot of new features in the works. If you -->
-<!--like the system and would like to say thanks, here&apos;s your chance!</p>-->
+			<p>For more information please <strong><a href="https://github.com/HLSiira/Atheos/wiki/Installation">read the installation instructions</a></strong> on the Wiki.</p>
+
+			<br>
+
+			<!--<h3>Support the Atheos Project</h3>-->
+
+			<!--<p>A <i>LOT</i> of time and energy has been put into the system, and there are a lot of new features in the works. If you -->
+			<!--like the system and would like to say thanks, here&apos;s your chance!</p>-->
 
 
-        </section>
+		</section>
 
-        <footer>
-          Atheos is maintained by <a href="https://github.com/HLSiira">Liam Siira</a><br>
-        </footer>
+		<footer>
+			Atheos is maintained by <a href="https://github.com/HLSiira">Liam Siira</a><br>
+		</footer>
 
-        <script src="javascripts/jquery.js"></script>
-        <script src="javascripts/main.js"></script>
+		<script src="js/main.js"></script>
 
-      </div>
-    </div>
-  </body>
+
+	</main>
+</body>
+
 </html>
