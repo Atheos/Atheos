@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" ?>
-<project name="Codiad" basedir="." default="phpcs">
+<project name="Atheos" basedir="." default="phpcs">
 
 	<fileset id="components" dir="./components">
 		<include name="**/*.php" />
