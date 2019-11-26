@@ -2,7 +2,7 @@
 
 (function(global) {
 
-	var codiad = global.codiad,
+	var core = global.codiad,
 	amplify = global.amplify,
 	bioflux = global.bioflux,
 	events = global.events;
@@ -18,7 +18,7 @@
 	//												- Liam Siira
 	//////////////////////////////////////////////////////////////////////
 
-	codiad.message = {
+	core.toast = {
 
 		icons: {
 			'error': 'exclamation-circle',
@@ -38,7 +38,7 @@
 
 		init: function(options) {
 			if (options) {
-				this.settings = codiad.helpers.extend(this.settings, options);
+				this.settings = core.helpers.extend(this.settings, options);
 			}
 		},
 
@@ -68,14 +68,14 @@
 			wrapper.appendChild(close);
 			
 			close.addEventListener('click', function() {
-				codiad.message.hide(wrapper);
+				core.message.hide(wrapper);
 			});
 
 			return wrapper;
 		},
 
 		showToast: function(options) {
-			options = codiad.helpers.extend(this.settings, options);
+			options = core.helpers.extend(this.settings, options);
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
@@ -88,7 +88,7 @@
 
 				if (!options.sticky) {
 					setTimeout(function() {
-						codiad.message.hide(wrapper);
+						core.message.hide(wrapper);
 					}, options.stayTime);
 				}
 			}, 10);
@@ -130,5 +130,7 @@
 			});
 		}
 	};
+	
+	core.message = core.toast;
 
 })(this);
