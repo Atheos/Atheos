@@ -1,10 +1,10 @@
 {
-  "name": "codiad/codiad",
+  "name": "hlsiira/atheos",
   "type": "application",
   "keywords": ["ide","development","environment","editor"],
-  "homepage": "http://www.codiad.com",
+  "homepage": "http://www.atheos.io",
   "license": "MIT",
-  "description": "Codiad is a web-based IDE framework with a small footprint and minimal requirements. The system is still early in development, and while it has been proven extremely stable please be sure have a backup system if you use it in any production work.",
+  "description": "Atheos is an updated and currently maintained fork of Codiad, a web-based IDE framework with a small footprint and minimal requirements. The system is still early in development, and while it has been proven extremely stable please be sure have a backup system if you use it in any production work.",
   "authors": [
     {
       "name": "Kent Safranski @fluidbyte",
@@ -34,6 +34,10 @@
     },
     {
       "name": "@holblin"
+    },
+    {
+      "name": "Liam Siira",
+      "email": "lliam@siira.us"
     }
   ],
   "minimum-stability": "dev",

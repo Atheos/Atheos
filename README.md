@@ -2,9 +2,7 @@
 
 ![Screenshot: Atheos](/docs/atheos.png?raw=true "Atheos")
 
-Atheos is an updated and currently maintained fork of Codiad.
-
-Codiad is a web-based IDE framework with a small footprint and minimal requirements. 
+Atheos is an updated and currently maintained fork of Codiad, a web-based IDE framework with a small footprint and minimal requirements. 
 
 Codiad was built with simplicity in mind, allowing for fast, interactive development without the massive overhead of some of the larger desktop editors. That being said even users of IDE's such as Eclipse, NetBeans and Aptana are finding Codiad's simplicity to be a huge benefit. While simplicity was key, we didn't skimp on features and have a team of dedicated developer actively adding more.
 
