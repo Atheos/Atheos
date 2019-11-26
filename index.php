@@ -35,14 +35,14 @@ if (isset($_SESSION['theme'])) {
     echo('<link rel="stylesheet" href="themes/' . $theme . '/main.css">');
     
     // Link favicons
-    echo('<link rel="apple-touch-icon" sizes="180x180" href="themes/' . $theme . '/favicons/apple-touch-icon.png">');
-    echo('<link rel="icon" type="image/png" sizes="32x32" href="themes/' . $theme . '/favicons/favicon-32x32.png">');
-    echo('<link rel="icon" type="image/png" sizes="16x16" href="themes/' . $theme . '/favicons/favicon-16x16.png">');
-    echo('<link rel="manifest" href="themes/' . $theme . '/favicons/site.webmanifest">');
-    echo('<link rel="mask-icon" href="themes/' . $theme . '/favicons/safari-pinned-tab.svg" color="#000713">');
-    echo('<link rel="shortcut icon" href="themes/' . $theme . '/favicons/favicon.ico">');
+    echo('<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">');
+    echo('<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">');
+    echo('<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">');
+    echo('<link rel="manifest" href="favicons/site.webmanifest">');
+    echo('<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#000713">');
+    echo('<link rel="shortcut icon" href="favicons/favicon.ico">');
     echo('<meta name="msapplication-TileColor" content="#2b5797">');
-    echo('<meta name="msapplication-config" content="themes/' . $theme . '/favicons/browserconfig.xml">');
+    echo('<meta name="msapplication-config" content="favicons/browserconfig.xml">');
     echo('<meta name="theme-color" content="#ffffff">');    
 
     // Load Plugin CSS Files
@@ -97,7 +97,7 @@ if (isset($_SESSION['theme'])) {
     <script src="js/system.js"></script>
     
     <script src="js/helpers.js"></script>
-    <script src="js/sidebars.new.js"></script>
+    <script src="js/sidebars.js"></script>
     <script src="js/modal.js"></script>
     <script src="js/toast.js"></script>
     <script src="js/jsend.js"></script>

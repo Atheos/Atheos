@@ -924,16 +924,16 @@
              * to handle all the offsets, so afterwards we add a fixed offset
              * just t be sure. */
             var lsbarWidth = $(".sidebar-handle").width();
-            if (codiad.sidebars.isLeftSidebarOpen) {
+            if (codiad.sidebars.settings.isLeftSidebarOpen) {
                 lsbarWidth = $("#sb-left").width();
             }
 
             var rsbarWidth = $(".sidebar-handle").width();
-            if (codiad.sidebars.isRightSidebarOpen) {
+            if (codiad.sidebars.settings.isRightSidebarOpen) {
                 rsbarWidth = $("#sb-right").width();
             }
 
-            var tabListWidth = $("#tab-list-active-files").width();
+            // var tabListWidth = $("#tab-list-active-files").width();
             var dropdownWidth = $('#tab-dropdown').width();
             var closeWidth = $('#tab-close').width();
             var room = window.innerWidth - lsbarWidth - rsbarWidth - dropdownWidth - closeWidth - width - 30;
