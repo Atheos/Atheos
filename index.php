@@ -127,7 +127,7 @@ if (isset($_SESSION['theme'])) {
                 <label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
                 <input type="text" name="username" autofocus="autofocus" autocomplete="off">
 
-                <label><span class="icon-lock login-icon"></span> <?php i18n("Password"); ?></label>
+                <label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
                 <input type="password" name="password">
                 <!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
@@ -189,7 +189,7 @@ if (isset($_SESSION['theme'])) {
 
         <div id="sb-left" class="sidebar">
             <div id="sb-left-title">
-                <a id="lock-left-sidebar" class="icon-lock icon"></a>
+                <a id="lock-left-sidebar" class="icon-lock-close icon"></a>
                 <?php if (!common::isWINOS()) { ?>
                 <a id="finder-quick" class="icon icon-archive"></a>
                 <a id="tree-search" class="icon-search icon"></a>
@@ -335,7 +335,7 @@ if (isset($_SESSION['theme'])) {
 
             <div class="sidebar-handle"><span><a class="icon-menu"></a></span></div>
             <div id="sb-right-title">
-                <span id="lock-right-sidebar" class="icon-lock icon"></span>
+                <span id="lock-right-sidebar" class="icon-lock-close icon"></span>
             </div>
 
             <div class="sb-right-content">
