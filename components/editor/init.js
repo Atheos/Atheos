@@ -395,7 +395,6 @@
 			wrapMode: false,
 			softTabs: false,
 			persistentModal: true,
-			rightSidebarTrigger: false,
 			fileManagerTrigger: false,
 			tabSize: 4
 		},
@@ -448,7 +447,7 @@
 				}
 			});
 
-			$.each(['printMargin', 'highlightLine', 'indentGuides', 'wrapMode', 'rightSidebarTrigger', 'fileManagerTrigger', 'softTabs', 'persistentModal'],
+			$.each(['printMargin', 'highlightLine', 'indentGuides', 'wrapMode', 'fileManagerTrigger', 'softTabs', 'persistentModal'],
 				function(idx, key) {
 					var localValue =
 						localStorage.getItem('codiad.editor.' + key);
@@ -1150,7 +1149,22 @@
 			// LocalStorage
 			localStorage.setItem('codiad.editor.persistentModal', t);
 		},
+		
+		//////////////////////////////////////////////////////////////////
+		//
+		// Set trigger for opening the left sidebar
+		//
+		// Parameters:
+		//   t - {Boolean} (false for Hover, true for Click)
+		//   i - {Editor}  (If omitted, Defaults to all editors)
+		//
+		//////////////////////////////////////////////////////////////////
 
+		setLeftSidebarTrigger: function(t, i) {
+			codiad.sidebars.settings.leftSidebarTrigger = t;
+			// LocalStorage
+			localStorage.setItem('codiad.sidebars.leftSidebarTrigger', t);
+		},
 		//////////////////////////////////////////////////////////////////
 		//
 		// Set trigger for opening the right sidebar
@@ -1162,9 +1176,9 @@
 		//////////////////////////////////////////////////////////////////
 
 		setRightSidebarTrigger: function(t, i) {
-			this.settings.rightSidebarTrigger = t;
+			codiad.sidebars.settings.rightSidebarTrigger = t;
 			// LocalStorage
-			localStorage.setItem('codiad.editor.rightSidebarTrigger', t);
+			localStorage.setItem('codiad.sidebars.rightSidebarTrigger', t);
 		},
 
 		//////////////////////////////////////////////////////////////////
