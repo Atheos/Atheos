@@ -1,3 +1,6 @@
+$sidebar-handle-width: 15px;
+
+
 .sb-right-content [class^="icon-"],
 .sb-right-content [class*=" icon-"] {
 	width: 16px;
@@ -14,7 +17,7 @@
 	-webkit-user-select: none;
 	user-select: none;
 	background: #1a1a1a;
-	transition: right,left $animation-duration ease-in-out;
+	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
 }
 
 .sidebar#sb-left {
@@ -41,12 +44,12 @@
 
 .sidebar#sb-right {
 	width: 200px;
-	right: -190px;
+	right: -185px;
 	z-index: 99999;
 }
 
 .sidebar-handle {
-	width: 12px;
+	width: $sidebar-handle-width;
 	height: 100%;
 	z-index: 99999;
 	margin: 0;
@@ -59,7 +62,7 @@
 .sidebar-handle span {
 	display: block;
 	position: absolute;
-	width: 10px;
+	width: 14px;
 	top: 50%;
 	text-align: center;
 	letter-spacing: -1px;
@@ -73,7 +76,13 @@
 	cursor: col-resize;
 }
 
-#sb-right .sidebar-handle span {
+#sb-right .sidebar-handle span {}
+
+#sb-right .sidebar-handle span a {}
+
+#sb-right .sidebar-handle span a:hover {}
+
+.unlocked .sidebar-handle span {
 	width: 18px;
 	height: 30px;
 	margin-left: -18px;
@@ -84,15 +93,16 @@
 	// border-left: 2px solid #707070;
 	// color: #c2c2c2;
 	color: $icon-color;
-}
 
-#sb-right .sidebar-handle span a {
-	font-size: 22px;
-	padding-top: 5px;
-}
+	a {
+		font-size: 22px;
+		padding-top: 5px;
 
-#sb-right .sidebar-handle span a:hover {
-	background-color: transparent;
+		&:hover {
+			background-color: transparent;
+
+		}
+	}
 }
 
 .sb-left-content {
@@ -106,11 +116,11 @@
 
 .sb-left-projects {
 	position: absolute;
-	height: 276px;
+	height: 280px;
 	bottom: 0;
 	left: 0;
-	right: 10px;
-	display: none;
+	right: $sidebar-handle-width;
+	// display: none;
 }
 
 /*#lock-left-sidebar {
@@ -146,7 +156,7 @@
 	position: absolute;
 	z-index: 9998;
 	top: 0;
-	left: 12px;
+	left: $sidebar-handle-width;
 	right: 0;
 	height: 33px;
 	background-color: #303030;
@@ -174,12 +184,23 @@
 	float: left;
 }
 
+// .sb-right-content {
+// 	width: 185px;
+// 	float: left;
+// 	height: 100%;
+// 	padding: 40px 15px 15px;
+// 	overflow: auto;
+// }
+
 .sb-right-content {
-	width: 185px;
-	float: left;
-	height: 100%;
-	padding: 40px 15px 15px;
-	overflow: auto;
+	position: absolute;
+	min-width: 185px;
+	width: 100%;
+	top: 33px;
+	left: $sidebar-handle-width;
+	// bottom: 276px;
+	height: calc(100% - 33px);
+	margin-top: 5px;
 }
 
 .sb-right-category {
@@ -188,9 +209,11 @@
 	// color:#7F7F7F;
 	color: $accent-color;
 	padding-bottom: 5px;
+	margin-left: 5px;
 }
 
 #sb-right a {
+	margin-left: 5px;
 	display: block;
 	min-width: 100%;
 	cursor: pointer;
