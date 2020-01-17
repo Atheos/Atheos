@@ -837,8 +837,8 @@
             var menu = $('#dropdown-list-active-files');
             
             menu.css({
-                top: $("#editor-top-bar").height() + 'px',
-                right: '20px',
+                top: $("#editor-top-bar").height() + 1 + 'px',
+                right: '22px',
                 width: '200px'
             });
             
