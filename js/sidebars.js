@@ -1,5 +1,13 @@
 'use strict';
 
+var log = function(m, t) {
+	if (t) {
+		console.trace(m);
+	} else {
+		console.log(m);
+	}
+};
+
 (function(global, $) {
 
 	var core = global.codiad,
@@ -26,18 +34,28 @@
 	// understandable at a glance and this code will probably change a lot
 	// as I hit the grove of it sooooooo
 	//
+	// Future to-do: The right sidebar had a larger icon for it's handle due
+	// the default "hover" while the left is generally locked open. I changed
+	// them to match and plan on changing them to change based on whether the
+	// sidebar is locked or not.
+	//
+	// Currently only the right sidebar can be set to click-trigger while the
+	// left is default to hover-hover trigger if unlocked.
+	//
 	// Sidebar module currently called from:
-	//	Modal.js
+	//	Components/Active/init.js
+	//	System.js: During initialization, check if left sidebar is locked.
 	//												- Liam Siira
 	//////////////////////////////////////////////////////////////////////		
 
 	core.sidebars = {
 		settings: {
-			leftLock: true,
-			rightLock: false,
-			modalLock: false,
+			leftLockedVisible: true,
+			rightLockedVisible: false,
 			isLeftSidebarOpen: true,
-			isRightSidebarOpen: false
+			isRightSidebarOpen: false,
+			leftSidebarTrigger: false,
+			rightSidebarTrigger: false
 		},
 		IDs: {
 			sbarLeft: '#sb-left',
@@ -48,25 +66,36 @@
 
 		init: function() {
 			amplify.subscribe('settings.loaded', function(settings) {
-				var sbWidth = localStorage.getItem('codiad.sidebars.sb-left-width'),
+				var sbLeftWidth = localStorage.getItem('codiad.sidebars.sb-left-width'),
+					sbRightWidth = localStorage.getItem('codiad.sidebars.sb-left-width'),
 					SBs = core.sidebars;
 
-				if (sbWidth !== null) {
+				core.sidebars.leftSidebarTrigger = localStorage.getItem('codiad.sidebars.leftSidebarTrigger');
+				core.sidebars.rightSidebarTrigger = localStorage.getItem('codiad.sidebars.rightSidebarTrigger');
+
+				if (sbLeftWidth !== null) {
 					// This somehow runs before the OBJ is fully created and so the IDs aren't available yet
 					// Either delay this with a setTimeout, or figure out a better plan
-					bioflux.queryO(SBs.IDs.sbarLeft).style.width = sbWidth;
+					bioflux.queryO(SBs.IDs.sbarLeft).style.width = sbLeftWidth;
+					core.helpers.trigger(window, 'resize');
+					core.helpers.trigger('#editor-region', 'h-resize-init');
+				}
+				if (sbRightWidth !== null) {
+					// This somehow runs before the OBJ is fully created and so the IDs aren't available yet
+					// Either delay this with a setTimeout, or figure out a better plan
+					bioflux.queryO(SBs.IDs.sbarLeft).style.width = sbRightWidth;
 					core.helpers.trigger(window, 'resize');
 					core.helpers.trigger('#editor-region', 'h-resize-init');
 				}
 
 				if (localStorage.getItem('codiad.sidebars.lock-left-sidebar') === "false") {
 					core.helpers.trigger(SBs.IDs.sbarLockLeft, 'click');
-					SBs.closeLeftSidebar();
+					SBs.closeSidebar('left');
 				}
 
 				if (localStorage.getItem('codiad.sidebars.lock-right-sidebar') === "true") {
 					core.helpers.trigger(SBs.IDs.sbarLockRight, 'click');
-					SBs.openRightSidebar();
+					SBs.openSidebar('right');
 				}
 			});
 
@@ -76,20 +105,36 @@
 
 			events.on('click', this.IDs.sbarLockLeft, function(e) {
 				var icon = e.target || e.srcElement;
-				if (core.sidebars.settings.leftLock) {
-					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
+				var sbarLeft = bioflux.queryO('#sb-left');
+				if (core.sidebars.settings.leftLockedVisible) {
+					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
+					// bioflux.replaceClass(sbarLeft, 'locked', 'unlocked');
 				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
+					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
+					// bioflux.replaceClass(sbarLeft, 'unlocked', 'locked');
 				}
-				core.sidebars.settings.leftLock = !(core.sidebars.settings.leftLock);
-				localStorage.setItem('codiad.sidebars.lock-left-sidebar', core.sidebars.settings.leftLock);
+				core.sidebars.settings.leftLockedVisible = !(core.sidebars.settings.leftLockedVisible);
+				localStorage.setItem('codiad.sidebars.lock-left-sidebar', core.sidebars.settings.leftLockedVisible);
 			});
 
 			events.on('mousedown', this.IDs.sbarLeft + ' .sidebar-handle', function(e) {
-				core.sidebars.drag(bioflux.queryO(core.sidebars.IDs.sbarLeft));
+				core.sidebars.drag(bioflux.queryO(core.sidebars.IDs.sbarLeft), 'left');
 			});
 
-			hoverintent(bioflux.queryO(this.IDs.sbarLeft), this.openLeftSidebar, this.closeLeftSidebar);
+			events.on('click', this.IDs.sbarLeft + ' .sidebar-handle', function() {
+				if (core.sidebars.settings.leftSidebarTrigger) { // if trigger set to Click
+					core.sidebars.openSidebar('left');
+				}
+			});
+
+			hoverintent(bioflux.queryO(this.IDs.sbarLeft), function() {
+				if (!core.sidebars.settings.leftSidebarTrigger) { // if trigger set to Hover
+					core.sidebars.openSidebar('left');
+				}
+			}, function() {
+				core.sidebars.closeSidebar('left');
+			});
+
 
 			//////////////////////////////////////////////////////////////////////	
 			// Right Sidebar Initialization
@@ -97,210 +142,111 @@
 
 			events.on('click', this.IDs.sbarLockRight, function(e) {
 				var icon = e.target || e.srcElement;
-				if (core.sidebars.settings.rightLock) {
-					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
+				if (core.sidebars.settings.rightLockedVisible) {
+					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
 				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
+					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
 				}
-				core.sidebars.settings.rightLock = !(core.sidebars.settings.rightLock);
-				localStorage.setItem('codiad.sidebars.lock-right-sidebar', core.sidebars.settings.rightLock);
+				core.sidebars.settings.rightLockedVisible = !(core.sidebars.settings.rightLockedVisible);
+				localStorage.setItem('codiad.sidebars.lock-right-sidebar', core.sidebars.settings.rightLockedVisible);
+			});
+
+			events.on('mousedown', this.IDs.sbarRight + ' .sidebar-handle', function(e) {
+				core.sidebars.drag(bioflux.queryO(core.sidebars.IDs.sbarRight), 'right');
 			});
 
 			events.on('click', this.IDs.sbarRight + ' .sidebar-handle', function() {
-				if (core.editor.settings.rightSidebarTrigger) { // if trigger set to Click
-					core.sidebars.openRightSidebar();
+				if (core.sidebars.settings.rightSidebarTrigger) { // if trigger set to Click
+					core.sidebars.openSidebar('right');
 				}
 			});
 
 			hoverintent(bioflux.queryO(this.IDs.sbarRight), function() {
-				if (!core.editor.settings.rightSidebarTrigger) { // if trigger set to Hover
-					core.sidebars.openRightSidebar();
+				if (!core.sidebars.settings.rightSidebarTrigger) { // if trigger set to Hover
+					core.sidebars.openSidebar('right');
 				}
 			}, function() {
-				setTimeout(function() {
-					if (!core.sidebars.settings.rightLock) {
-						core.sidebars.closeRightSidebar();
-					}
-				}, 500);
+				core.sidebars.closeSidebar('right');
 			});
 		},
-		closeLeftSidebar: function() {
-			var _this = this;
-			var sbarWidthL = $("#sb-left")
-				.width(),
-				sbarWidthR = $("#sb-right")
-				.width();
-			if (!core.sidebars.settings.rightLock) {
-				sbarWidthR = 10;
+
+		openSidebar: function(side) {
+			side = side || 'left';
+			var sidebars = core.sidebars,
+				sidebar = bioflux.queryO(side === "left" ? sidebars.IDs.sbarLeft : sidebars.IDs.sbarRight),
+				sidebarWidth = sidebar.clientWidth;
+
+			if (sidebar.data && sidebar.data.timeoutClose) {
+				clearTimeout(sidebar.data.timeoutClose);
 			}
-			$('#sb-left')
-				.data("timeout_r", setTimeout($.proxy(function() {
-					if (!core.sidebars.settings.leftLock && !core.sidebars.settings.modalLock) { // Check locks
-						$('#sb-left').css('left', (-sbarWidthL + 10) + 'px');
-						$('#editor-region').css('margin-left', '10px');
-						setTimeout(function() {
-							_this.isLeftSidebarOpen = false;
-							$('#sb-left').trigger('h-resize-init');
-							core.active.updateTabDropdownVisibility();
-						}, 500);
-					} else {
-						if ($("#sb-left .sidebar-handle").position().left <= 0) {
-							$("#sb-left").width(10);
-							$("#sb-left")
-								.animate({
-									'left': "0px"
-								}, 300, 'easeOutQuart');
-							$("#sb-left .sidebar-handle").css("left", 0);
-							$('#editor-region')
-								.animate({
-									'margin-left': '10px'
-								}, 300, 'easeOutQuart', function() {
-									_this.isLeftSidebarOpen = false;
-									$(this).trigger('h-resize-init');
-									core.active.updateTabDropdownVisibility();
-								});
-						}
-					}
-				}, this), 500));
+			sidebar.style[side] = '0px';
 
-		},
+			// bioflux.queryO('#editor-region').style['margin-' + side] = sidebarWidth - 10 + 'px';
+			bioflux.queryO('#editor-region').style['margin-' + side] = sidebarWidth - ((side === 'left') ? 0 : 0) + 'px';
 
-		closeLeftSidebarNew: function() {
-			var sidebars = core.sidebars;
-
-			var sbarLeft = bioflux.queryO(sidebars.IDs.sbarLeft),
-				sbarRight = bioflux.queryO(sidebars.IDs.sbarRight),
-				sbarWidthL = sbarLeft.clientWidth,
-				sbarWidthR = sbarRight.clientWidth;
-
-			if (!sidebars.settings.rightLock) {
-				sbarWidthR = 10;
-			}
 			setTimeout(function() {
-				if (!sidebars.settings.leftLock && !sidebars.settings.modalLock) {
-					sbarLeft.style.left = (-sbarWidthL + 10) + 'px';
-					bioflux.queryO('#editor-region').style.marginLeft = '10px';
-					setTimeout(function() {
-						sidebars.settings.isLeftSidebarOpen = false;
-
-						core.helpers.trigger('#sb-left', 'h-resize-init');
-
-						core.active.updateTabDropdownVisibility();
-					}, 300);
+				if (side === 'left') {
+					sidebars.settings.isLeftSidebarOpen = true;
 				} else {
-					var sbLeftHandle = bioflux.queryO(sidebars.IDs.sbarLeft + ' .sidebar-handle');
-					if (sbLeftHandle && sbLeftHandle.offsetLeft <= 0) {
-						sbarLeft.style.width = '10px';
-						sbarLeft.style.left = '0px';
-					}
-					$("#sb-left .sidebar-handle").css("left", 0);
-					$('#editor-region')
-						.animate({
-							'margin-left': '10px'
-						}, 300, 'easeOutQuart', function() {
-							sidebars.settings.isLeftSidebarOpen = false;
-							$(this).trigger('h-resize-init');
-							core.active.updateTabDropdownVisibility();
-						});
+					sidebars.settings.isRightSidebarOpen = true;
 
 				}
-			}, 500);
-
-		},
-		openLeftSidebar: function() {
-			var _this = core.sidebars;
-			var timeout_r = $('#sb-left')
-				.data("timeout_r");
-			if (timeout_r) {
-				clearTimeout(timeout_r);
+				core.helpers.trigger('#sb-' + side, 'h-resize-init');
+				core.active.updateTabDropdownVisibility();
+			}, 300);
+			if (side === 'right') {
+				bioflux.queryO('#tab-close').style.marginRight = (sidebarWidth - 10) + 'px';
+				bioflux.queryO('#tab-dropdown').style.marginRight = (sidebarWidth - 10) + 'px';
 			}
-			var sbarWidthL = $("#sb-left")
-				.width(),
-				sbarWidthR = $("#sb-right")
-				.width();
-			if (!core.sidebars.settings.rightLock) {
-				sbarWidthR = 10;
-			}
-			$('#editor-region')
-				.animate({
-					'margin-left': sbarWidthL + 'px'
-				}, 300, 'easeOutQuart', function() {
-					_this.settings.isLeftSidebarOpen = true;
-					$('#sb-left').trigger('h-resize-init');
-					core.active.updateTabDropdownVisibility();
-				});
-			$('#sb-left')
-				.animate({
-					'left': '0px'
-				}, 300, 'easeOutQuart');
 		},
 
-		closeRightSidebar: function() {
-			var _this = this;
-			var sbarWidthR = $("#sb-right").width();
-			$('#sb-right')
-				.animate({
-					'right': '-' + (sbarWidthR - 10) + 'px'
-				}, 300, 'easeOutQuart');
-			var sbarWidthL = $("#sb-left")
-				.width(),
-				sbarWidthR = $("#sb-right")
-				.width();
-			if (!core.sidebars.settings.leftLock) {
-				sbarWidthL = 10;
-			}
-			$('#editor-region')
-				.animate({
-					'margin-right': '0px'
-				}, 300, 'easeOutQuart', function() {
-					_this.settings.isRightSidebarOpen = false;
+		closeSidebar: function(side) {
+			side = side || 'left';
+
+			var sidebars = core.sidebars,
+				sidebar = bioflux.queryO(side === "left" ? sidebars.IDs.sbarLeft : sidebars.IDs.sbarRight),
+				sidebarWidth = sidebar.clientWidth,
+				sidebarHandleWidth = sidebar.querySelector('.sidebar-handle').clientWidth;
+
+			// If the sidebar isn't locked & the modal isn't open, minimize the sidebar.
+			if (!sidebars.settings[side + 'LockedVisible']) { // Check locks
+				if (side === 'left') {
+					sidebar.style.left = (-sidebarWidth + sidebarHandleWidth) + 'px';
+				} else {
+					sidebar.style.right = -(sidebarWidth - sidebarHandleWidth) + 'px';
+				}
+				bioflux.queryO('#editor-region').style['margin-' + side] = (side === 'left') ? '15px' : '15px';
+
+				setTimeout(function() {
+					if (side === 'left') {
+						sidebars.settings.isLeftSidebarOpen = false;
+					} else {
+						sidebars.settings.isRightSidebarOpen = false;
+					}
+					core.helpers.trigger('#sb-' + side, 'h-resize-init');
 					core.active.updateTabDropdownVisibility();
-				});
-			$('#tab-close')
-				.animate({
-					'margin-right': 0 + 'px'
-				}, 300, 'easeOutQuart');
-			$('#tab-dropdown')
-				.animate({
-					'margin-right': 0 + 'px'
-				}, 300, 'easeOutQuart');
-		},
-		openRightSidebar: function() {
-			var _this = this;
-			var timeout_r = $('#sb-right')
-				.data("timeout_r");
-			if (timeout_r) {
-				clearTimeout(timeout_r);
+				}, 300);
+				if (side === 'right') {
+					bioflux.queryO('#tab-close').style.marginRight = '0px';
+					bioflux.queryO('#tab-dropdown').style.marginRight = '0px';
+				}
+			} else {
+				// Looking through older commits, this else function runs to ensure
+				// that the sidebar doesn't get completely off screen and no longer
+				// clickable, but I'm not sure it's really necessary. I'm keeping it
+				// since it really doesn't have any negative impact for now.
+				//		- Liam Siira
+
+				// var sbLeftHandle = bioflux.queryO(sidebars.IDs.sbarLeft + ' .sidebar-handle');
+				// if (sbLeftHandle && sbLeftHandle.offsetLeft <= 0) {
+				// 	sidebar.style.left = '0px';
+				// }
 			}
-			var sbarWidthR = $("#sb-right")
-				.width(),
-				sbarWidthL = $("#sb-left")
-				.width();
-			if (!core.sidebars.settings.leftLock) {
-				sbarWidthL = 10;
-			}
-			$('#editor-region').css('margin-right', '0px');
-			$('#editor-region')
-				.animate({
-					'margin-right': sbarWidthR - 10 + 'px'
-				}, 300, 'easeOutQuart', function() {
-					_this.settings.isRightSidebarOpen = true;
-					core.active.updateTabDropdownVisibility();
-				});
-			$('#tab-close')
-				.animate({
-					'margin-right': (sbarWidthR - 10) + 'px'
-				}, 300, 'easeOutQuart');
-			$('#tab-dropdown')
-				.animate({
-					'margin-right': (sbarWidthR - 10) + 'px'
-				}, 300, 'easeOutQuart');
-			$('#sb-right')
-				.animate({
-					'right': '0px'
-				}, 300, 'easeOutQuart');
+
+
 		},
-		drag: function(sidebar) {
+
+		drag: function(sidebar, side) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
 			var rect = sidebar.getBoundingClientRect(),
@@ -309,7 +255,16 @@
 
 			function move_element(event) {
 				if (sidebar !== null) {
-					sidebar.style.width = (modal_x + event.clientX + 10) + 'px';
+					if (side === 'left') {
+						sidebar.style.width = (modal_x + event.clientX + 10) + 'px';
+					} else {
+						sidebar.style.width = (window.innerWidth - event.clientX + 10) + 'px';
+					}
+					bioflux.queryO('#editor-region').style['margin-' + side] = sidebar.style.width;
+					if (side === 'right') {
+						bioflux.queryO('#tab-close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+						bioflux.queryO('#tab-dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+					}
 				}
 			}
 
@@ -321,6 +276,7 @@
 				// $('editor-region').trigger('h-resize-init');
 
 				localStorage.setItem('codiad.sidebars.sb-left-width', bioflux.queryO('#sb-left').style.width);
+				localStorage.setItem('codiad.sidebars.sb-right-width', bioflux.queryO('#sb-right').style.width);
 
 				document.removeEventListener('mousemove', move_element, false);
 				document.removeEventListener('mouseup', remove_listeners, false);
