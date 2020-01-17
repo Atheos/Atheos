@@ -40,9 +40,14 @@
 	font-size: 20px;
 	margin: 2px;
 	padding: 0;
-	cursor: move;
+	cursor: grab;
 	color: #999;
+
+	&.active {
+		cursor: grabbing;
+	}
 }
+
 
 #modal_wrapper .icon-cancel {
 	float: right;
