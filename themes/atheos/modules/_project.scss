@@ -14,16 +14,15 @@ $tab-color: #3E50B4;
 }
 
 .project-list-title {
-    position: absolute;
-    z-index: 9998;
-    top: 0;
-    left: 0;
-    right: 0px;
+    // position: absolute;
+    // z-index: 9998;
+    // top: 0;
+    // left: 0;
+    // right: 0px;
     height: 35px;
     background-color: #303030;
     // box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;
-    box-shadow: $box-shadow;
-    border-top: 2px solid #141414;
+    // box-shadow: $box-shadow;
     overflow:hidden;
 }
 
@@ -31,7 +30,7 @@ $tab-color: #3E50B4;
     float: left;
     font-size: 15px;
     font-weight: 500;
-    color: #666;
+    color: #ffffff;
     display: block;
     margin: 10px;    
 }
@@ -39,7 +38,7 @@ $tab-color: #3E50B4;
 .project-list-title .icon {
     display: block;
     font-size: 15px;
-    color: #666;
+    color: #ffffff;
     z-index: 99999;
     cursor: pointer;
     margin: 5px;
@@ -62,7 +61,7 @@ $tab-color: #3E50B4;
     width:100%;
     overflow: auto;
     position: absolute;
-    padding: 15px;
+    padding: 5px;
 }
 
 .sb-projects-content li:hover {
@@ -73,7 +72,6 @@ $tab-color: #3E50B4;
 .sb-projects-content ul {
     height:100%;
     display:block;
-    padding-top:35px;
 }
 
 .sb-projects-content ul li {
@@ -84,6 +82,7 @@ $tab-color: #3E50B4;
 }
 
 .sb-projects-content ul li .icon {
+	color: $accent-color;
     font-size: 12px;
 }
 

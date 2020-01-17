@@ -71,7 +71,7 @@
 
             var marginL, reduction;
             if ($("#sb-left")
-                .css('left') !== 0 && !codiad.sidebars.leftLock) {
+                .css('left') !== 0 && !codiad.sidebars.settings.leftLockedVisible) {
                 marginL = handleWidth;
                 reduction = 2 * handleWidth;
             } else {
@@ -88,7 +88,7 @@
             $('#root-editor-wrapper')
                 .css({
                 'height': ($('body')
-                    .outerHeight() - 60) + 'px' // TODO Adjust '75' in function of the final tabs height.
+                    .outerHeight() - 57) + 'px' // TODO Adjust '75' in function of the final tabs height.
             });
 
             // Run resize command to fix render issues
