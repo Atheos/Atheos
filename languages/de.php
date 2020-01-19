@@ -90,6 +90,9 @@ $lang = array(
    "Copied to Clipboard"                                 => "In die Zwischenablage kopiert",
    "Nothing in Your Clipboard"                           => "Die Zwischenablage ist leer.",
    "Cannot Paste Directory Into Itself"                  => "Kann das Verzeichnis nicht in sich selber verschieben",
-   "File could not be saved"                             => "Datei konnte nicht gespeichert werden"
+   "File could not be saved"                             => "Datei konnte nicht gespeichert werden",
+   "Your Version"                                        => "Deine Version",
+   "Latest Version"                                      => "Neueste Version",
+   "Note: Your installation is a nightly build. Codiad might be unstable." => "Hinweis: Ihre Installation ist ein Nightly Build. Atheos könnte instabil sein."
 );
 ?>
