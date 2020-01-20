@@ -45,7 +45,7 @@
 			overlay_id: 'modal_overlay',
 			wrapper_id: 'modal_wrapper',
 			content_id: 'modal_content',
-		},		
+		},
 
 		init: function() {
 			console.log('Modal Initialized');
@@ -89,16 +89,15 @@
 		},
 
 		load: function(width, url, data) {
-			if (data) {
-				console.log(data);
-			}
 			data = data || {};
 
 			var wrapper = bioflux.queryO('#modal_wrapper') || this.createModal(),
 				content = wrapper.querySelector('#modal_content');
 			wrapper.style.top = '15%';
-			wrapper.style.left = 'calc(50% - ' + (width / 2) + 'px)';
-			wrapper.style.minWidth = width ? width + 'px' : '400px';
+			
+			// resize - Kurim
+			wrapper.style.left = width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)';
+			wrapper.style.minWidth = width ? (width + 300) + 'px' : '400px';
 
 			content.innerHTML = '<div id="modal_loading"></div>';
 
