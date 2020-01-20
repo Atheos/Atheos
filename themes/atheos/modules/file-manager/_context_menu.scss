@@ -1,0 +1,43 @@
+/* CONTEXT MENU */
+
+#context-menu {
+	display: none;
+	top: 0;
+	left: 0;
+	position: fixed;
+	width: 140px;
+	padding: 0;
+	background: #333;
+	z-index: 9999999;
+	background-clip: content-box;
+	border: 3px solid rgba(255, 255, 255, 0.5);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);
+	border-radius: 3px;
+	overflow-y: auto;
+}
+
+#context-menu a {
+	display: block;
+	padding: 5px 5px 7px 5px;
+	margin: 0;
+}
+
+#context-menu .icon {
+	padding-right: 5px;
+}
+
+#context-menu a:hover {
+	background-color: #4a4a4a;
+}
+
+#context-menu hr {
+	height: 0;
+	border: none;
+	border-top: 1px solid #292929;
+	margin: 5px;
+}
+
+.disabled {
+	color: #999;
+	font-style: italic;
+}
