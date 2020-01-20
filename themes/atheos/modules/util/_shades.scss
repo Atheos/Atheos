@@ -1,0 +1,29 @@
+/*============================================================================*
+	PALETTE	
+	From https://clrs.cc/
+	Based on File-Icons
+/*============================================================================*/
+
+$grey:    #666666;
+
+$base00: #121212; //# ----
+$base01: #404040; //# ---
+$base04: #8C8C8C; //# +
+$base07: #F2F2F2; //# ++++
+
+
+// Grey
+$medium-grey: $grey;
+$light-grey: lighten($grey, $adjust-tone);
+$dark-grey:   darken($grey, $adjust-tone);
+
+
+
+/*============================================================================*
+	CSS CLASSES
+/*============================================================================*/
+
+
+.light-grey:before    { color: $light-grey; }
+.medium-grey:before   { color: $medium-grey; }
+.dark-grey:before     { @include brighten-grey-if-needed($dark-grey, 15%); }
