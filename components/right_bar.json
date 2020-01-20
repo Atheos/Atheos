@@ -104,7 +104,7 @@
     "title": "Help",
     "admin": false,
     "icon": "icon-help",
-    "onclick": "window.open('https://github.com/HLSiira/Axiom/wiki');"
+    "onclick": "window.open('https://github.com/HLSiira/Atheos/wiki');"
   },
   {
     "title": "Logout",

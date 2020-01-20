@@ -107,10 +107,10 @@ var log = function(m, t) {
 				var icon = e.target || e.srcElement;
 				var sbarLeft = bioflux.queryO('#sb-left');
 				if (core.sidebars.settings.leftLockedVisible) {
-					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
+					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
 					// bioflux.replaceClass(sbarLeft, 'locked', 'unlocked');
 				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
+					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
 					// bioflux.replaceClass(sbarLeft, 'unlocked', 'locked');
 				}
 				core.sidebars.settings.leftLockedVisible = !(core.sidebars.settings.leftLockedVisible);
@@ -143,9 +143,9 @@ var log = function(m, t) {
 			events.on('click', this.IDs.sbarLockRight, function(e) {
 				var icon = e.target || e.srcElement;
 				if (core.sidebars.settings.rightLockedVisible) {
-					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
+					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
 				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
+					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
 				}
 				core.sidebars.settings.rightLockedVisible = !(core.sidebars.settings.rightLockedVisible);
 				localStorage.setItem('codiad.sidebars.lock-right-sidebar', core.sidebars.settings.rightLockedVisible);
