@@ -35,14 +35,24 @@
 						if (_this.basename(item.name) == '.git') {
 							console.log(item);
 							console.log(_this.dirname(item.name));
-							$('[data-path="' + item.path + '"]').addClass('repo');
+							console.log(_this.dirname('.git'));
+							console.log(_this.dirname('atheos/.git'));
+							console.log(_this.dirname(item.path));
+							// console.log(_this.dirname(item.name));
+
+							$('[data-path="' + _this.dirname(item.path) + '"]').addClass('repo');
+							$('.directory[data-path="' + _this.dirname(item.name) + '"]').addClass('repo');
 						} else if (item.type == 'directory') {
-							//Deeper inspect
-							// $.getJSON(_this.path + 'controller.php?action=checkRepo&path=' + item.name, function(result) {
-							// 	if (result.status) {
-							// 		$('.directory[data-path="' + item.name + '"]').addClass('repo');
-							// 	}
-							// });
+							// Deeper inspect
+							$.getJSON(_this.path + 'controller.php?action=checkRepo&path=' + item.path, function(result) {
+								if (result.status) {
+									// $('.directory[data-path="' + item.name + '"]').addClass('repo');
+									log(item.name + " | " + item.path);
+									log(result);
+									$('[data-path="' + item.path + '"]').addClass('repo');
+
+								}
+							});
 						}
 					});
 
