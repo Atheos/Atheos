@@ -8,7 +8,7 @@ var log = function(m, t) {
 	}
 };
 
-(function(global) {
+(function(global, $) {
 
 	var core = global.codiad,
 		amplify = global.amplify,
@@ -42,9 +42,6 @@ var log = function(m, t) {
 	// Currently only the right sidebar can be set to click-trigger while the
 	// left is default to hover-hover trigger if unlocked.
 	//
-	// Right sidebar hides cursor position element when locked, needs to be
-	// moved like it did in the OG code.
-	//
 	// Sidebar module currently called from:
 	//	Components/Active/init.js
 	//	System.js: During initialization, check if left sidebar is locked.
@@ -70,7 +67,7 @@ var log = function(m, t) {
 		init: function() {
 			amplify.subscribe('settings.loaded', function(settings) {
 				var sbLeftWidth = localStorage.getItem('codiad.sidebars.sb-left-width'),
-					sbRightWidth = localStorage.getItem('codiad.sidebars.sb-right-width'),
+					sbRightWidth = localStorage.getItem('codiad.sidebars.sb-left-width'),
 					SBs = core.sidebars;
 
 				core.sidebars.leftSidebarTrigger = localStorage.getItem('codiad.sidebars.leftSidebarTrigger');
@@ -86,7 +83,7 @@ var log = function(m, t) {
 				if (sbRightWidth !== null) {
 					// This somehow runs before the OBJ is fully created and so the IDs aren't available yet
 					// Either delay this with a setTimeout, or figure out a better plan
-					bioflux.queryO(SBs.IDs.sbarRight).style.width = sbRightWidth;
+					bioflux.queryO(SBs.IDs.sbarLeft).style.width = sbRightWidth;
 					core.helpers.trigger(window, 'resize');
 					core.helpers.trigger('#editor-region', 'h-resize-init');
 				}
@@ -110,10 +107,10 @@ var log = function(m, t) {
 				var icon = e.target || e.srcElement;
 				var sbarLeft = bioflux.queryO('#sb-left');
 				if (core.sidebars.settings.leftLockedVisible) {
-					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
+					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
 					// bioflux.replaceClass(sbarLeft, 'locked', 'unlocked');
 				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
+					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
 					// bioflux.replaceClass(sbarLeft, 'unlocked', 'locked');
 				}
 				core.sidebars.settings.leftLockedVisible = !(core.sidebars.settings.leftLockedVisible);
@@ -145,20 +142,10 @@ var log = function(m, t) {
 
 			events.on('click', this.IDs.sbarLockRight, function(e) {
 				var icon = e.target || e.srcElement;
-				var rSidebarWidth = bioflux.queryO('#sb-right').style.width.split('p')[0];
 				if (core.sidebars.settings.rightLockedVisible) {
-<<<<<<< HEAD
 					bioflux.replaceClass(icon, 'icon-lock-close', 'icon-lock-open');
-					bioflux.queryO('#cursor-position').style.right = 10 + rSidebarWidth + 'px';
 				} else {
 					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock-close');
-					// bioflux.queryO('#cursor-position').style.right = "220px";
-					bioflux.queryO('#cursor-position').style.right = 10 + rSidebarWidth + 'px';
-=======
-					bioflux.replaceClass(icon, 'icon-lock', 'icon-lock-open');
-				} else {
-					bioflux.replaceClass(icon, 'icon-lock-open', 'icon-lock');
->>>>>>> 187b6b23fcbfb46067b023d70dd581b179177c82
 				}
 				core.sidebars.settings.rightLockedVisible = !(core.sidebars.settings.rightLockedVisible);
 				localStorage.setItem('codiad.sidebars.lock-right-sidebar', core.sidebars.settings.rightLockedVisible);
@@ -285,6 +272,8 @@ var log = function(m, t) {
 			function remove_listeners() {
 				core.helpers.trigger(window, 'resize');
 				core.helpers.trigger('#editor-region', 'h-resize-init');
+				// $(window).resize();
+				// $('editor-region').trigger('h-resize-init');
 
 				localStorage.setItem('codiad.sidebars.sb-left-width', bioflux.queryO('#sb-left').style.width);
 				localStorage.setItem('codiad.sidebars.sb-right-width', bioflux.queryO('#sb-right').style.width);
@@ -299,4 +288,4 @@ var log = function(m, t) {
 		}
 	};
 
-})(this);
+})(this, jQuery);
