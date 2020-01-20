@@ -89,9 +89,6 @@
 		},
 
 		load: function(width, url, data) {
-			if (data) {
-				console.log(data);
-			}
 			data = data || {};
 
 			var wrapper = bioflux.queryO('#modal_wrapper') || this.createModal(),

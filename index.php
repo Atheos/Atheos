@@ -29,6 +29,10 @@ if (isset($_SESSION['theme'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
 	<link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
+	<link rel="stylesheet" href="fonts/ubuntu-webfont/all.css">
+	<link rel="stylesheet" href="fonts/file-icons/all.css">
+	<script src="fonts/file-icons/main.js"></script>
+	
 
 	<?php
 	// Load System CSS Files
