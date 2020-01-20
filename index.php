@@ -193,7 +193,7 @@ if (isset($_SESSION['theme'])) {
 
 			<div id="sb-left" class="sidebar">
 				<div id="sb-left-title">
-					<a id="lock-left-sidebar" class="icon icon-lock-close"></a>
+					<a id="lock-left-sidebar" class="icon icon-lock"></a>
 					<?php if (!common::isWINOS()) {
 						?>
 						<a id="finder-quick" class="icon icon-archive"></a>
