@@ -29,10 +29,10 @@ class Update
 
     public function __construct()
     {
-        ini_set("user_agent", "Codiad");
-        $this->remote = "http://update.codiad.com/?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}";
-        $this->commits = "https://api.github.com/repos/Codiad/Codiad/commits";
-        $this->archive = "https://github.com/Codiad/Codiad/archive/master.zip";
+        ini_set("user_agent", "Atheos");
+        $this->remote = "https://update.kurim.de/?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}";
+        $this->commits = "https://api.github.com/repos/HLSiira/Atheos/commits";
+        $this->archive = "https://github.com/HLSiira/Atheos/archive/master.zip";
     }
 
     //////////////////////////////////////////////////////////////////
