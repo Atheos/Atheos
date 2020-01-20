@@ -45,7 +45,7 @@
 			overlay_id: 'modal_overlay',
 			wrapper_id: 'modal_wrapper',
 			content_id: 'modal_content',
-		},		
+		},
 
 		init: function() {
 			console.log('Modal Initialized');
@@ -94,6 +94,7 @@
 			var wrapper = bioflux.queryO('#modal_wrapper') || this.createModal(),
 				content = wrapper.querySelector('#modal_content');
 			wrapper.style.top = '15%';
+			
 			// resize - Kurim
 			wrapper.style.left = width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)';
 			wrapper.style.minWidth = width ? (width + 300) + 'px' : '400px';
