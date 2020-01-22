@@ -333,9 +333,9 @@
 								if (file.type == 'directory' && file.size > 0) {
 									nodeClass = 'fa fa-plus';
 								}
-								
+
 								// appendage += '<li><span class="' + nodeClass + '"></span><a class="' + file.class + '" data-type="' + file.type + '" data-path="' + file.path + '">' + file.name + '</a></li>';
-								
+
 								appendage += `<li>
 											<a data-type="${file.type}" data-path="${file.path}">
 											<i class="expand ${nodeClass}"></i>
@@ -655,16 +655,15 @@
 						if (renameResponse != 'error') {
 							codiad.message.success(type.charAt(0)
 								.toUpperCase() + type.slice(1) + ' Renamed');
-							var node = $('#file-manager a[data-path="' + path + '"]');
+							var node = $('#file-manager a[data-path="' + path + '"]'),
+							icon = node.find('i:nth-child(2)'),
+							span = node.find('span');
 							// Change pathing and name for node
-							node.attr('data-path', newPath)
-								.html(newName);
+							node.attr('data-path', newPath);
+							span.html(newName);
 							if (type == 'file') { // Change icons for file
-								curExtClass = 'ext-' + _this.getExtension(path);
-								newExtClass = 'ext-' + _this.getExtension(newPath);
-								$('#file-manager a[data-path="' + newPath + '"]')
-									.removeClass(curExtClass)
-									.addClass(newExtClass);
+								icon.removeClass();
+								icon.addClass(FileIcons.getClassWithColor(newName));
 							} else { // Change pathing on any sub-files/directories
 								_this.repathSubs(path, newPath);
 							}
@@ -672,6 +671,7 @@
 							codiad.active.rename(path, newPath);
 							codiad.modal.unload();
 						}
+
 					});
 				});
 		},
