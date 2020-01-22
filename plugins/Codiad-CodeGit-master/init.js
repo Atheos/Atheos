@@ -86,7 +86,6 @@
 					var file = path;
 					while (path != root) {
 						path = _this.dirname(path);
-						console.log(file + '|' + path);
 						if ($('[data-path="' + path + '"]').hasClass('repo')) {
 							$('#context-menu').append('<hr class="file-only code_git">');
 							$('#context-menu').append('<a class="file-only code_git" onclick="codiad.CodeGit.contextMenuDiff($(\'#context-menu\').attr(\'data-path\'), \'' + path + '\');"><span class="icon-flow-branch"></span>Git Diff</a>');
