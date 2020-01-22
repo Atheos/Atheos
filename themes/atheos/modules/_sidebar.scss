@@ -56,7 +56,7 @@ $sidebar-handle-width: 15px;
 	padding: 0;
 	background: #474747;
 	/*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);*/
-	cursor: 'ne-resize';
+	cursor: col-resize;
 }
 
 .sidebar-handle span {
@@ -73,7 +73,6 @@ $sidebar-handle-width: 15px;
 #sb-left .sidebar-handle {
 	position: absolute;
 	right: 0;
-	cursor: col-resize;
 }
 
 #sb-right .sidebar-handle span {}
@@ -110,8 +109,8 @@ $sidebar-handle-width: 15px;
 	top: 33px;
 	left: 0;
 	right: 10px;
-	// bottom: 276px;
-	height: calc(100% - 33px);
+	bottom: 280px;
+	// height: calc(100% - 33px);
 }
 
 .sb-left-projects {
