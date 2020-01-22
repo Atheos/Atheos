@@ -6,3 +6,13 @@
   font-weight: normal;
   font-style : normal;
 }
+
+@font-face {
+    font-family: 'Ubuntu-Lig';
+    src: url('UbuntuMono-Lig.woff2') format('woff2'),
+        url('UbuntuMono-Lig.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+
