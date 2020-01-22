@@ -1,9 +1,24 @@
 <div class="git_network_area">
-    <label>Network view</label>
+	<label>Status: <span class="git_area_path"></span></label>
+	<header>
+		<button onclick="codiad.CodeGit.showDialog('overview', codiad.CodeGit.location); return false;">Overview</button>
+		<button onclick="codiad.CodeGit.showCommitDialog(); return false;">Commit</button>
+		<!--<button onclick="codiad.CodeGit.showDialog('branches', codiad.CodeGit.location); return false;">Branches</button>-->
+		<button onclick="codiad.CodeGit.showDialog('remote', codiad.CodeGit.location); return false;">Remotes</button>
+		<button onclick="codiad.CodeGit.showDialog('log', codiad.CodeGit.location); return false;">Log</button>
+		<button onclick="codiad.CodeGit.showDialog('push', codiad.CodeGit.location); return false;">Pull/Push</button>
+		<button onclick="codiad.CodeGit.network(codiad.CodeGit.location); return false;">Network</button>
+		<div id="git_branch">
+			<span>Branch: </span><select id="git_branches"></select>
+		</div>		
+	</header>
     <div class="content" id="git_network">
-        
+		codiad.CodeGit.status();
+		$('.git_area_path').text(codiad.CodeGit.location);    
+        codiad.CodeGit.getBranches();
+        function renameBranch() {
+            codiad.CodeGit.name = $('#git_branches').val();
+            codiad.CodeGit.showDialog('renameBranch', codiad.CodeGit.location);
+        }
     </div>
-    <footer>
-        <button onclick="codiad.CodeGit.showDialog('overview', codiad.CodeGit.location); return false;">Close</button>
-    </footer>
 </div>

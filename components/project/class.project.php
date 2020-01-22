@@ -1,39 +1,54 @@
 <?php
 
 /*
-*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-*  as-is and without warranty under the MIT License. See
-*  [root]/license.txt for more. This information must remain intact.
-*/
+ *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+ *  as-is and without warranty under the MIT License. See
+ *  [root]/license.txt for more. This information must remain intact.
+ */
+ 
+ 
+ 	//////////////////////////////////////////////////////////////////////
+	// Project Class
+	//////////////////////////////////////////////////////////////////////
+	// Notes: 
+	// I saw that there was an open issue on Codiad for this file being a 
+	// backdoor. https://github.com/Codiad/Codiad/issues/1115
+	//
+	// I looked into it and I can see where windows is coming from on
+	// marking them as malicious but I'm simply not seeing that it
+	// actually is malicious, but I am not a cyber security expert.
+	//
+	//												- Liam Siira
+	//////////////////////////////////////////////////////////////////////
 
 require_once('../../common.php');
 
 class Project extends Common
 {
-
+    
     //////////////////////////////////////////////////////////////////
     // PROPERTIES
     //////////////////////////////////////////////////////////////////
-
-    public $name         = '';
-    public $path         = '';
-    public $gitrepo      = false;
-    public $gitbranch    = '';
-    public $projects     = '';
-    public $no_return    = false;
-    public $assigned     = false;
+    
+    public $name = '';
+    public $path = '';
+    public $gitrepo = false;
+    public $gitbranch = '';
+    public $projects = '';
+    public $no_return = false;
+    public $assigned = false;
     public $command_exec = '';
-
+    
     //////////////////////////////////////////////////////////////////
     // METHODS
     //////////////////////////////////////////////////////////////////
-
+    
     // -----------------------------||----------------------------- //
-
+    
     //////////////////////////////////////////////////////////////////
     // Construct
     //////////////////////////////////////////////////////////////////
-
+    
     public function __construct()
     {
         $this->projects = getJSON('projects.php');
@@ -45,10 +60,10 @@ class Project extends Common
     //////////////////////////////////////////////////////////////////
     // Get First (Default, none selected)
     //////////////////////////////////////////////////////////////////
-
+    
     public function GetFirst()
     {
-
+        
         $projects_assigned = false;
         if ($this->assigned) {
             foreach ($this->projects as $project => $data) {
@@ -64,51 +79,57 @@ class Project extends Common
         }
         // Set Sessions
         $_SESSION['project'] = $this->path;
-
+        
         if (!$this->no_return) {
-            echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+            echo formatJSEND("success", array(
+                "name" => $this->name,
+                "path" => $this->path
+            ));
         }
     }
-
+    
     //////////////////////////////////////////////////////////////////
     // Get Name From Path
     //////////////////////////////////////////////////////////////////
-
+    
     public function GetName()
     {
         foreach ($this->projects as $project => $data) {
-            if ($data['path']==$this->path) {
+            if ($data['path'] == $this->path) {
                 $this->name = $data['name'];
             }
         }
         return $this->name;
     }
-
+    
     //////////////////////////////////////////////////////////////////
     // Open Project
     //////////////////////////////////////////////////////////////////
-
+    
     public function Open()
     {
         $pass = false;
         foreach ($this->projects as $project => $data) {
-            if ($data['path']==$this->path) {
-                $pass = true;
-                $this->name = $data['name'];
+            if ($data['path'] == $this->path) {
+                $pass                = true;
+                $this->name          = $data['name'];
                 $_SESSION['project'] = $data['path'];
             }
         }
         if ($pass) {
-            echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+            echo formatJSEND("success", array(
+                "name" => $this->name,
+                "path" => $this->path
+            ));
         } else {
             echo formatJSEND("error", "Error Opening Project");
         }
     }
-
+    
     //////////////////////////////////////////////////////////////////
     // Create
     //////////////////////////////////////////////////////////////////
-
+    
     public function Create()
     {
         if ($this->name != '' && $this->path != '') {
@@ -131,11 +152,11 @@ class Project extends Common
                                 }
                             }
                             if (!$allowed) {
-                                die(formatJSEND("error", "Absolute Path Only Allowed for ".WHITEPATHS));
+                                die(formatJSEND("error", "Absolute Path Only Allowed for " . WHITEPATHS));
                             }
                         }
                         if (!file_exists($this->path)) {
-                            if (!mkdir($this->path.'/', 0755, true)) {
+                            if (!mkdir($this->path . '/', 0755, true)) {
                                 die(formatJSEND("error", "Unable to create Absolute Path"));
                             }
                         } else {
@@ -144,7 +165,10 @@ class Project extends Common
                             }
                         }
                     }
-                    $this->projects[] = array("name"=>$this->name,"path"=>$this->path);
+                    $this->projects[] = array(
+                        "name" => $this->name,
+                        "path" => $this->path
+                    );
                     saveJSON('projects.php', $this->projects);
                     
                     // Pull from Git Repo?
@@ -158,7 +182,10 @@ class Project extends Common
                         $this->ExecuteCMD();
                     }
                     
-                    echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+                    echo formatJSEND("success", array(
+                        "name" => $this->name,
+                        "path" => $this->path
+                    ));
                 } else {
                     echo formatJSEND("error", "A Project With the Same Name or Path Exists");
                 }
@@ -166,49 +193,72 @@ class Project extends Common
                 echo formatJSEND("error", "Project Name/Folder not allowed");
             }
         } else {
-             echo formatJSEND("error", "Project Name/Folder is empty");
+            echo formatJSEND("error", "Project Name/Folder is empty");
         }
     }
     
     //////////////////////////////////////////////////////////////////
     // Sanitize GitBranch
     //////////////////////////////////////////////////////////////////
-
+    
     public function SanitizeGitBranch()
     {
-        $sanitized = str_replace(array("..",chr(40), chr(177),"~","^",":","?","*","[","@{","\\"), array(""), $this->gitbranch);
+        $sanitized = str_replace(array(
+            "..",
+            chr(40),
+            chr(177),
+            "~",
+            "^",
+            ":",
+            "?",
+            "*",
+            "[",
+            "@{",
+            "\\"
+        ), array(
+            ""
+        ), $this->gitbranch);
         return $sanitized;
     }
     
     //////////////////////////////////////////////////////////////////
     // Rename
     //////////////////////////////////////////////////////////////////
-
+    
     public function Rename()
     {
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
-            if ($data['path']!=$this->path) {
-                $revised_array[] = array("name"=>$data['name'],"path"=>$data['path']);
+            if ($data['path'] != $this->path) {
+                $revised_array[] = array(
+                    "name" => $data['name'],
+                    "path" => $data['path']
+                );
             }
         }
-        $revised_array[] = $this->projects[] = array("name"=>$_GET['project_name'],"path"=>$this->path);
+        $revised_array[] = $this->projects[] = array(
+            "name" => $_GET['project_name'],
+            "path" => $this->path
+        );
         // Save array back to JSON
         saveJSON('projects.php', $revised_array);
         // Response
         echo formatJSEND("success", null);
     }
-
+    
     //////////////////////////////////////////////////////////////////
     // Delete Project
     //////////////////////////////////////////////////////////////////
-
+    
     public function Delete()
     {
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
-            if ($data['path']!=$this->path) {
-                $revised_array[] = array("name"=>$data['name'],"path"=>$data['path']);
+            if ($data['path'] != $this->path) {
+                $revised_array[] = array(
+                    "name" => $data['name'],
+                    "path" => $data['path']
+                );
             }
         }
         // Save array back to JSON
@@ -216,27 +266,27 @@ class Project extends Common
         // Response
         echo formatJSEND("success", null);
     }
-
-
+    
+    
     //////////////////////////////////////////////////////////////////
     // Check Duplicate
     //////////////////////////////////////////////////////////////////
-
+    
     public function CheckDuplicate()
     {
         $pass = true;
         foreach ($this->projects as $project => $data) {
-            if ($data['name']==$this->name || $data['path']==$this->path) {
+            if ($data['name'] == $this->name || $data['path'] == $this->path) {
                 $pass = false;
             }
         }
         return $pass;
     }
-
+    
     //////////////////////////////////////////////////////////////////
     // Sanitize Path
     //////////////////////////////////////////////////////////////////
-
+    
     public function SanitizePath()
     {
         $sanitized = str_replace(" ", "_", $this->path);
@@ -249,15 +299,15 @@ class Project extends Common
     
     public function cleanPath()
     {
-
+        
         // prevent Poison Null Byte injections
         $path = str_replace(chr(0), '', $this->path);
-
+        
         // prevent go out of the workspace
         while (strpos($path, '../') !== false) {
             $path = str_replace('../', '', $path);
         }
-
+        
         return $path;
     }
     
