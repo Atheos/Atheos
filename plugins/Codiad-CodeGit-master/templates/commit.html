@@ -1,14 +1,31 @@
 <div class="git_commit_area">
+	<label>Status: <span class="git_area_path"></span></label>
+	<header>
+		<button onclick="codiad.CodeGit.showDialog('overview', codiad.CodeGit.location); return false;">Overview</button>
+		<button onclick="codiad.CodeGit.showCommitDialog(); return false;">Commit</button>
+		<!--<button onclick="codiad.CodeGit.showDialog('branches', codiad.CodeGit.location); return false;">Branches</button>-->
+		<button onclick="codiad.CodeGit.showDialog('remote', codiad.CodeGit.location); return false;">Remotes</button>
+		<button onclick="codiad.CodeGit.showDialog('log', codiad.CodeGit.location); return false;">Log</button>
+		<button onclick="codiad.CodeGit.showDialog('push', codiad.CodeGit.location); return false;">Pull/Push</button>
+		<button onclick="codiad.CodeGit.network(codiad.CodeGit.location); return false;">Network</button>
+		<div id="git_branch">
+			<span>Branch: </span><select id="git_branches"></select>
+		</div>
+	</header>
 	<div class="content">
-		<label>Commit</label>
-		<ul class="git_diff"></ul>
 		<input type="text" id="commit_msg" placeholder="Enter commit message here...">
+		<button onclick="codiad.CodeGit.commit(codiad.CodeGit.location, $('#commit_msg').val()); return false;">Commit</button>
+		<ul class="git_diff"></ul>
 	</div>
 	<footer>
 		<button onclick="codiad.CodeGit.commit(codiad.CodeGit.location, $('#commit_msg').val()); return false;">Commit</button>
-		<button onclick="codiad.CodeGit.showDialog('overview', codiad.CodeGit.location); return false;">Close</button>
+		<button onclick="codiad.CodeGit.status(); return false;">Reload</button>
 	</footer>
 	<script>
+		// codiad.CodeGit.status();
+		$('.git_area_path').text(codiad.CodeGit.location);
+		codiad.CodeGit.getBranches();
+
 		if (codiad.CodeGit.files.length === 0) {
 			codiad.message.error("Nothing to commit!");
 			codiad.CodeGit.showDialog('overview', codiad.CodeGit.location);

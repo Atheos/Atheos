@@ -33,15 +33,14 @@
 				setTimeout(function() {
 					$.each(obj.files, function(i, item) {
 						if (_this.basename(item.name) == '.git') {
-							console.log(item);
-							console.log(_this.dirname(item.name));
-							$('[data-path="' + item.path + '"]').addClass('repo');
-						} else if (item.type == 'directory') {
-							//Deeper inspect
-							// $.getJSON(_this.path + 'controller.php?action=checkRepo&path=' + item.name, function(result) {
-							// 	if (result.status) {
-							// 		$('.directory[data-path="' + item.name + '"]').addClass('repo');
-							// 	}
+							$('[data-path="' + _this.dirname(item.path) + '"]').addClass('repo');
+						// } else if (item.type == 'directory') {
+							// Deeper inspect
+							// $.getJSON(_this.path + 'controller.php?action=checkRepo&path=' + item.path, function(result) {
+								// if (result.status) {
+									// $('[data-path="' + item.path + '"]').addClass('repo');
+
+								// }
 							// });
 						}
 					});
@@ -87,7 +86,6 @@
 					var file = path;
 					while (path != root) {
 						path = _this.dirname(path);
-						console.log(file + '|' + path);
 						if ($('[data-path="' + path + '"]').hasClass('repo')) {
 							$('#context-menu').append('<hr class="file-only code_git">');
 							$('#context-menu').append('<a class="file-only code_git" onclick="codiad.CodeGit.contextMenuDiff($(\'#context-menu\').attr(\'data-path\'), \'' + path + '\');"><span class="icon-flow-branch"></span>Git Diff</a>');
@@ -254,6 +252,7 @@
 							file = $('.git_area .git_list .file[data-line="' + line + '"]').text();
 							files.push(file);
 						});
+						console.log(files);
 						_this.files = files;
 						_this.showDialog('commit', _this.location);
 					}
@@ -1123,7 +1122,7 @@
 
 		addLine: function(status, name) {
 			var line = this.line;
-			var element = '<tr><td><input type="checkbox" data-line="' + line + '"></td><td class="' + status.toLowerCase() + '">' + status + '</td><td data-line="' + line + '" class="file">' + name + '</td><td><button class="git_button git_diff" data-line="' + line + '">Diff</button><button class="git_button git_undo" data-line="' + line + '">Undo changes</button></td></tr>';
+			var element = '<tr><td><input type="checkbox" data-line="' + line + '"></td><td class="' + status.toLowerCase() + '">' + status + '</td><td data-line="' + line + '" class="file">' + name + '</td><td><button class="git_button git_diff" data-line="' + line + '">Diff</button><button class="git_button git_undo" data-line="' + line + '">Undo</button></td></tr>';
 			$('.git_list tbody').append(element);
 			this.line++;
 		},
@@ -1167,7 +1166,7 @@
 
 		addStatusIcon: function() {
 			if ($("span#git-repo-status-icon").length < 1) {
-				$('#file-manager #project-root').before('<span id="git-repo-status-icon" class="hidden uncommit"></span>');
+				// $('#file-manager #project-root').before('<span id="git-repo-status-icon" class="hidden uncommit"></span>');
 			}
 		},
 
