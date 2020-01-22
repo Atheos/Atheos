@@ -5,72 +5,19 @@
  * This information must remain intact.
  */
 
-/* Global */
-/*h1,*/
-/*h2,*/
-/*h3,*/
-/*h4,*/
-/*h5,*/
-/*h6 {*/
-/*	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);*/
-/*}*/
-
-/*h1>span,*/
-/*h2>span,*/
-/*h3>span,*/
-/*h4>span,*/
-/*h5>span,*/
-/*h6>span {*/
-/*	font-size: 13px;*/
-/*}*/
-
-/*h1 {*/
-/*	font-size: 20px;*/
-/*}*/
-
-/*h2 {*/
-/*	font-size: 16px;*/
-/*}*/
-
-/*h3 {*/
-/*	font-size: 15px;*/
-/*}*/
-
-/* Git status */
-/*.git_area table th,*/
-/*.git_area table td {*/
-	/*padding: 0;*/
-	/*font-weight: 100;*/
-/*}*/
+/* Fix for the file manager bottom most file being hidden underneath the project list. */
+#file-manager {
+	height: calc(100% - 22px);
+}
 
 .git_area header input {
 	display: inline;
 }
 
-/*.git_area #check_all {*/
-/*	margin-left: 5px;*/
-/*}*/
-
 .git_area>div {
 	max-height: 45vh;
 	overflow-y: scroll;
 }
-
-/*.git_list td {*/
-/*	padding-left: 5px;*/
-/*}*/
-
-/*.git_area .col_1 {*/
-/*	width: 30px;*/
-/*}*/
-
-/*.git_area .col_2 {*/
-/*	width: 70px;*/
-/*}*/
-
-/*.git_area .col_3 {*/
-/*	width: 400px;*/
-/*}*/
 
 th.col_4 {
 	text-align: center;
@@ -80,13 +27,6 @@ th.col_4 {
 	margin: auto;
 }
 
-/*.git_button {*/
-/*	border-radius: 3px;*/
-/*	font-size: 12px;*/
-/*	line-height: 1em;*/
-/*	padding: 5px;*/
-/*	margin: 2px 0;*/
-/*}*/
 
 .git_area .right {
 	position: relative;
