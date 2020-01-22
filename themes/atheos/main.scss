@@ -1,19 +1,14 @@
-/* SCSS VARIABLES */
-$box-shadow: none;
-$border-radius: 0;
-$icon-color: #ffffff;
-$tab-color: #3E50B4;
-$accent-color: #3E50B4;
-$font-size: 14px;
-$font-size-lg: 16px;
-
-$animation-duration: 0.2s;
 /* SCSS IMPORT FILES */
-@import "modules/reset";
+@import "modules/util/reset";
+@import "modules/util/mixins", "modules/util/colours", "modules/util/shades", "modules/util/variables";
+@import "modules/util/animations";
 @import "modules/toast", "modules/modal";
-@import "modules/active", "modules/autocomplete", "modules/editor";
-@import "modules/fileext_textmode", "modules/filemanager", "modules/extensions", "modules/fonts", "modules/market";
-@import "modules/project", "modules/settings", "modules/active-tabs", "modules/user", "modules/sidebar";
+@import "modules/active", "modules/autocomplete";
+@import "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
+@import "modules/fileext_textmode", "modules/extensions", "modules/fonts", "modules/market";
+@import "modules/file-manager/file-manager", "modules/file-manager/context_menu", "modules/file-manager/search";
+
+@import "modules/project", "modules/settings", "modules/user", "modules/sidebar";
 
 /* WEBKIT SCROLLBARS */
 ::-webkit-scrollbar {
