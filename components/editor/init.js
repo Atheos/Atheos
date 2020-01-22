@@ -386,7 +386,7 @@
 
 		// Settings for Editor instances
 		settings: {
-			theme: 'twilight',
+			theme: 'atheos',
 			fontSize: '13px',
 			printMargin: false,
 			printMarginColumn: 80,
@@ -482,6 +482,9 @@
 
 			// Apply the current configuration settings:
 			i.setTheme('ace/theme/' + this.settings.theme);
+			i.setOptions({
+				fontFamily: "Ubuntu-Lig",
+			});
 			i.setFontSize(this.settings.fontSize);
 			i.setPrintMarginColumn(this.settings.printMarginColumn);
 			i.setShowPrintMargin(this.settings.printMargin);
@@ -1149,7 +1152,7 @@
 			// LocalStorage
 			localStorage.setItem('codiad.editor.persistentModal', t);
 		},
-		
+
 		//////////////////////////////////////////////////////////////////
 		//
 		// Set trigger for opening the left sidebar
