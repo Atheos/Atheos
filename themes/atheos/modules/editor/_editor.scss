@@ -1,0 +1,67 @@
+#editor-region {
+    width: auto;
+    // padding-right:10px;
+    height: 100%;
+    margin-right: 15px;
+    margin-left: 10px;
+    transition: margin $animation-duration ease-in-out;
+}
+.editor {
+    width: 100%;
+    height: 100%;
+    color: $font-color-main;
+}
+.ace_editor {
+    position: absolute !important;
+}
+.ace_content {
+    padding: 0;
+    margin: 0;
+}
+.ace_gutter-layer {
+    padding: 0;
+    background: url(images/default/gutter-bg.jpg);
+    color: $font-color-secondary;
+}
+.ace_error {
+    background-position: 3px 0 !important;
+}
+
+editor-region {
+  margin-left: 300px;
+  position   : relative;
+}
+
+#root-editor-wrapper {
+  /* Adjust this size depending on the final editor-top-bar height. */
+  top     : 34px;
+  position: relative;
+}
+
+.editor-wrapper {
+  position: absolute;
+}
+
+.editor-wrapper-horizontal > .editor {
+  top: 0;
+}
+
+.editor-wrapper-horizontal > .editor-wrapper {
+  top: 0;
+}
+
+.editor-wrapper-vertical > .editor {
+  left: 0;
+}
+
+.editor-wrapper-vertical > .editor-wrapper {
+  left: 0;
+}
+
+.editor {
+  position: absolute;
+  top     : 0;
+  left    : 0;
+  right   : 0;
+  bottom  : 0;
+}
