@@ -217,6 +217,8 @@ input[type="checkbox"] {
 button {
 	display: inline-block;
 	width: auto;
+	margin: 3px;
+	margin-left: 0;
 	min-width: 80px;
 	// margin: 10px 0 5px 0;
 	padding: 6px 15px 5px;
@@ -230,6 +232,10 @@ button {
 	// border: 1px solid #7d7d7d;
 	border: none;
 	border-bottom: 2px solid #7d7d7d;
+}
+
+button + button {
+	margin-left: auto;
 }
 
 button:hover {
