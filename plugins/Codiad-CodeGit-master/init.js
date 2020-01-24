@@ -12,6 +12,30 @@
 		path = scripts[scripts.length - 1].src.split('?')[0],
 		curpath = path.split('/').slice(0, -1).join('/') + '/';
 
+	//////////////////////////////////////////////////////////////////////
+	// CodeGit
+	//////////////////////////////////////////////////////////////////////
+	// Notes: 
+	// I recall there being a security concern issue on teh github issues page
+	// for this plugin as well as a call to action to utilize a different
+	// backend. I'd like to ensure this plugin is reaching its full potential
+	// but there is a huge and still growing ToDo list. 
+	//
+	// What this means is that I'm going to remove some features that I don't 
+	// see as entirely useful / are overly complex, and instead try to focus
+	// on simplifying this plugin as much as possible and as performant as 
+	// possible.
+	//
+	// One thing I noticed is that I don't think many of the templates are
+	// needed, and the GitPlugin can be made to mostly operate from the
+	// overview, and the entire plugin might be able to be made on a state
+	// based system, currently it doesn't store anything it needs until it
+	// needs to and then it scrambles to do get teh infomation.
+	//
+	//												- Liam Siira
+	//////////////////////////////////////////////////////////////////////
+
+
 	$(function() {
 		codiad.CodeGit.init();
 	});
@@ -252,7 +276,6 @@
 							file = $('.git_area .git_list .file[data-line="' + line + '"]').text();
 							files.push(file);
 						});
-						console.log(files);
 						_this.files = files;
 						_this.showDialog('commit', _this.location);
 					}
@@ -317,8 +340,10 @@
 		},
 
 		diff: function(path, repo) {
+			if (!path || !repo) return;
 			var _this = this;
 			repo = this.getPath(repo);
+			console.log(path + '|' + repo);
 			$.getJSON(this.path + 'controller.php?action=diff&repo=' + repo + '&path=' + path, function(result) {
 				if (result.status != 'success') {
 					codiad.message[result.status](result.message);
@@ -1189,6 +1214,7 @@
 		},
 
 		suppressCommitDiff: function() {
+			// What the fuck?
 			return false || localStorage.getItem('codiad.plugin.codegit.suppressCommitDiff') == "true";
 		}
 	};
