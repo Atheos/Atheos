@@ -30,6 +30,7 @@ if (isset($_SESSION['theme'])) {
 	<title>Atheos IDE</title>
 	<link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
 	<link rel="stylesheet" href="fonts/ubuntu-webfont/all.css">
+	<!--<link rel="stylesheet" href="fonts/jetbrains-mono/stylesheet.css">-->
 	<link rel="stylesheet" href="fonts/file-icons/all.css">
 	<script src="fonts/file-icons/main.js"></script>
 	
