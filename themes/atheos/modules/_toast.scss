@@ -1,5 +1,6 @@
 #toast-container {
-    width: 280px;
+    min-width: 280px;
+    max-width: 480px;
     z-index: 99999;
     position: absolute;
 }
