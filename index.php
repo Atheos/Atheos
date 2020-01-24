@@ -126,8 +126,8 @@ if (isset($_SESSION['theme'])) {
 			require_once('components/install/view.php');
 		} else {
 			// Login form ?>
-
-			<form id="login" method="post" style="position: fixed; width: 350px; top: 30%; left: 50%; margin-left: -175px; padding: 35px;">
+			<div style="position: absolute;height: 384px;width: 786px;top: 5%;left: 50%;margin-left: -375px;padding: 35px;background-image: url(favicons/login.png);">
+			<form id="login" method="post" style="width: 384px;margin-left: -192px;margin-top: 140px;left: 50%;padding: 35px;top: 50%;position: absolute;">
 
 				<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
 				<input type="text" name="username" autofocus="autofocus" autocomplete="off">
@@ -179,7 +179,7 @@ if (isset($_SESSION['theme'])) {
 				<a class="show-language-selector"><?php i18n("More"); ?></a>
 
 			</form>
-
+			</div>
 			<script src="components/user/init.js"></script>
 			<?php
 		}
