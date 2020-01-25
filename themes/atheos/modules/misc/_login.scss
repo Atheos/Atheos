@@ -1,0 +1,9 @@
+#login {
+	width: 384px;
+	left: calc(50% - ( 384px / 2));
+	padding: 35px;
+	z-index: 1;
+	top: 35%;
+	position: absolute;
+	background-color: $base00;
+}
