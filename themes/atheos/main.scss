@@ -7,7 +7,9 @@
 @import "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/fileext_textmode", "modules/extensions", "modules/fonts", "modules/market";
 @import "modules/file-manager/file-manager", "modules/file-manager/context_menu", "modules/file-manager/search";
-
+@import "modules/misc/title", "modules/misc/logo", "modules/misc/login", "modules/misc/hex-overlay";
+@import "modules/input/checkbox";
+@import "modules/misc/tables";
 @import "modules/project", "modules/settings", "modules/user", "modules/sidebar";
 
 /* WEBKIT SCROLLBARS */
@@ -274,29 +276,6 @@ pre {
 	overflow: auto;
 }
 
-/* TABLES */
-table {
-	width: 100%;
-	border-collapse: collapse;
-}
-
-table td,
-table th {
-	padding: 3px 10px 5px;
-	border: 1px solid #454445;
-}
-
-table th {
-	text-align: left;
-	font-weight: bold;
-	background: #3b3b3b;
-	padding-top: 8px;
-}
-
-table [class^="icon-"],
-[class*=" icon-"] {
-	display: block;
-}
 
 /* INSTALLER */
 #installer {
