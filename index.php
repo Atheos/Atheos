@@ -40,15 +40,17 @@ if (isset($_SESSION['theme'])) {
 	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.css">');
 
 	// Link favicons
-	echo('<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">');
-	echo('<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">');
-	echo('<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">');
-	echo('<link rel="manifest" href="favicons/site.webmanifest">');
-	echo('<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#000713">');
-	echo('<link rel="shortcut icon" href="favicons/favicon.ico">');
-	echo('<meta name="msapplication-TileColor" content="#2b5797">');
-	echo('<meta name="msapplication-config" content="favicons/browserconfig.xml">');
-	echo('<meta name="theme-color" content="#ffffff">');
+	echo('
+	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
+	<link rel="manifest" href="/favicons/site.webmanifest">
+	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="/favicons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#ffffff">
+	<meta name="msapplication-config" content="/favicons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+	');
 
 	// Load Plugin CSS Files
 	foreach ($plugins as $plugin) {
@@ -102,12 +104,12 @@ if (isset($_SESSION['theme'])) {
 	<script src="js/system.js"></script>
 
 	<script src="js/helpers.js"></script>
+	<script src="js/hex.js"></script>
 	<script src="js/sidebars.js"></script>
 	<script src="js/modal.js"></script>
 	<script src="js/toast.js"></script>
 	<script src="js/jsend.js"></script>
 	<script src="js/instance.js?v=<?php echo time(); ?>"></script>
-	<div id="message"></div>
 	<?php
 
 	//////////////////////////////////////////////////////////////////
@@ -126,8 +128,12 @@ if (isset($_SESSION['theme'])) {
 			require_once('components/install/view.php');
 		} else {
 			// Login form ?>
-			<div style="position: absolute;height: 384px;width: 786px;top: 5%;left: 50%;margin-left: -375px;padding: 35px;background-image: url(favicons/login.png);">
-			<form id="login" method="post" style="width: 384px;margin-left: -192px;margin-top: 140px;left: 50%;padding: 35px;top: 50%;position: absolute;">
+			<div id="logo"></div>
+			<div id="title">
+				<h1 class="linear-wipe">Atheos</h1>
+				<span>IDE</span>
+				</div>
+			<form id="login" method="post">
 
 				<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
 				<input type="text" name="username" autofocus="autofocus" autocomplete="off">
@@ -445,6 +451,7 @@ if (isset($_SESSION['theme'])) {
 }
 
 ?>
+	<div id="message"></div>
 
 </body>
 </html>
