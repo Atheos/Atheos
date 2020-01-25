@@ -58,13 +58,13 @@
 					$.each(obj.files, function(i, item) {
 						if (_this.basename(item.name) == '.git') {
 							$('[data-path="' + _this.dirname(item.path) + '"]').addClass('repo');
-						// } else if (item.type == 'directory') {
+							// } else if (item.type == 'directory') {
 							// Deeper inspect
 							// $.getJSON(_this.path + 'controller.php?action=checkRepo&path=' + item.path, function(result) {
-								// if (result.status) {
-									// $('[data-path="' + item.path + '"]').addClass('repo');
+							// if (result.status) {
+							// $('[data-path="' + item.path + '"]').addClass('repo');
 
-								// }
+							// }
 							// });
 						}
 					});
@@ -343,7 +343,7 @@
 			if (!path || !repo) return;
 			var _this = this;
 			repo = this.getPath(repo);
-			console.log(path + '|' + repo);
+
 			$.getJSON(this.path + 'controller.php?action=diff&repo=' + repo + '&path=' + path, function(result) {
 				if (result.status != 'success') {
 					codiad.message[result.status](result.message);
@@ -1147,7 +1147,17 @@
 
 		addLine: function(status, name) {
 			var line = this.line;
-			var element = '<tr><td><input type="checkbox" data-line="' + line + '"></td><td class="' + status.toLowerCase() + '">' + status + '</td><td data-line="' + line + '" class="file">' + name + '</td><td><button class="git_button git_diff" data-line="' + line + '">Diff</button><button class="git_button git_undo" data-line="' + line + '">Undo</button></td></tr>';
+			var element = `<tr>
+							<td>
+							<input type="checkbox" class="large" data-line="${line}">
+							</td>
+							<td class="' + status.toLowerCase() + '">${status}</td>
+							<td data-line="${line}" class="file">${name}</td>
+							<td>
+							<button class="git_button git_diff" data-line="${line}">Diff</button>
+							<button class="git_button git_undo" data-line="${line}">Undo</button>
+							</td>
+							</tr>`;
 			$('.git_list tbody').append(element);
 			this.line++;
 		},
