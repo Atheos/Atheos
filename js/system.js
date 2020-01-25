@@ -5,6 +5,7 @@
  */
 
 (function(global, $){
+	
 
     var codiad = global.codiad = {};
 
@@ -65,6 +66,9 @@
         
         // Messages
         codiad.message.init();
+        
+        //HexOverlay
+        codiad.hexoverlay.init();
 
         $(window)
             .on('load resize', function() {
