@@ -96,7 +96,7 @@
             var _this = this;
             codiad.modal.load(800, 'components/settings/dialog.php?action=settings');
             codiad.modal.hideOverlay();
-            codiad.modal.load_process.done(function(){
+            codiad.modal.load_process.then(function(){
                 if (typeof(data_file) == 'string') {
                     codiad.settings._showTab(data_file);
                 } else {
