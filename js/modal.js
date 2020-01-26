@@ -1,4 +1,4 @@
-(function(global, $) {
+(function(global, $, P) {
 
 	var core = global.codiad,
 		amplify = global.amplify,
@@ -186,4 +186,4 @@
 		}
 	};
 
-})(this, jQuery);
+})(this, jQuery, P);
