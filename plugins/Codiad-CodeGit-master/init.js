@@ -277,6 +277,7 @@
 							files.push(file);
 						});
 						_this.files = files;
+						console.log(files);
 						_this.showDialog('commit', _this.location);
 					}
 				} else {
