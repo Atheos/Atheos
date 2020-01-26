@@ -1,6 +1,7 @@
 *~
 *\#
 *.swp
+.ignore
 config.php
 data/*
 !data/.htaccess
