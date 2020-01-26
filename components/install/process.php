@@ -152,7 +152,7 @@ define("BASE_PATH", "' . $path . '");
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
 // THEME : default, modern or clear (look at /themes)
-define("THEME", "default");
+define("THEME", "atheos");
 
 // ABSOLUTE PATH
 define("WHITEPATHS", BASE_PATH . ",/home");
