@@ -1,13 +1,5 @@
 'use strict';
 
-var log = function(m, t) {
-	if (t) {
-		console.trace(m);
-	} else {
-		console.log(m);
-	}
-};
-
 (function(global, $) {
 
 	var core = global.codiad,
@@ -47,6 +39,7 @@ var log = function(m, t) {
 	//	System.js: During initialization, check if left sidebar is locked.
 	//												- Liam Siira
 	//////////////////////////////////////////////////////////////////////		
+
 
 	core.sidebars = {
 		settings: {
@@ -181,7 +174,6 @@ var log = function(m, t) {
 			}
 			sidebar.style[side] = '0px';
 
-			// bioflux.queryO('#editor-region').style['margin-' + side] = sidebarWidth - 10 + 'px';
 			bioflux.queryO('#editor-region').style['margin-' + side] = sidebarWidth - ((side === 'left') ? 0 : 0) + 'px';
 
 			setTimeout(function() {
@@ -268,12 +260,9 @@ var log = function(m, t) {
 				}
 			}
 
-			// Destroy the object when we are done
 			function remove_listeners() {
 				core.helpers.trigger(window, 'resize');
 				core.helpers.trigger('#editor-region', 'h-resize-init');
-				// $(window).resize();
-				// $('editor-region').trigger('h-resize-init');
 
 				localStorage.setItem('codiad.sidebars.sb-left-width', bioflux.queryO('#sb-left').style.width);
 				localStorage.setItem('codiad.sidebars.sb-right-width', bioflux.queryO('#sb-right').style.width);
@@ -282,7 +271,6 @@ var log = function(m, t) {
 				document.removeEventListener('mouseup', remove_listeners, false);
 			}
 
-			// document.onmousemove = _move_elem;
 			document.addEventListener('mousemove', move_element, false);
 			document.addEventListener('mouseup', remove_listeners, false);
 		}

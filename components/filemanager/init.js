@@ -34,7 +34,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Listen for dbclick events on nodes
+		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////
 
 		nodeListener: function() {
@@ -42,25 +42,6 @@
 
 			$('#file-manager').on('selectstart', false);
 
-			// $('#file-manager .expand')
-			// 	.live('click', function() { // Open or Expand
-			// 		if ($(this).parent().attr('data-type') == 'directory') {
-			// 			_this.index($(this).parent("a")
-			// 				.attr('data-path'));
-			// 		} else {
-			// 			_this.openFile($(this).parent("a")
-			// 				.attr('data-path'));
-			// 		}
-			// 		if (!$(this).hasClass('none')) {
-			// 			if ($(this).hasClass('fa-plus')) {
-			// 				$(this).removeClass('fa-plus');
-			// 				$(this).addClass('fa-minus');
-			// 			} else {
-			// 				$(this).removeClass('fa-minus');
-			// 				$(this).addClass('fa-plus');
-			// 			}
-			// 		}
-			// 	});
 			$('#file-manager a')
 				.live('dblclick', function() { // Open or Expand
 					if (codiad.editor.settings.fileManagerTrigger) {
@@ -637,8 +618,7 @@
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
-					var newName = $('#modal_content form input[name="object_name"]')
-						.val();
+					var newName = $('#modal_content form input[name="object_name"]').val();
 					// Build new path
 					var arr = path.split('/');
 					var temp = new Array();
@@ -653,8 +633,7 @@
 					}, function(data) {
 						var renameResponse = codiad.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.message.success(type.charAt(0)
-								.toUpperCase() + type.slice(1) + ' Renamed');
+							codiad.message.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
 							var node = $('#file-manager a[data-path="' + path + '"]'),
 							icon = node.find('i:nth-child(2)'),
 							span = node.find('span');
@@ -733,7 +712,7 @@
 				action: 'search',
 				path: path
 			});
-			codiad.modal.load_process.done(function() {
+			codiad.modal.load_process.then(function() {
 				var lastSearched = JSON.parse(localStorage.getItem("lastSearched"));
 				if (lastSearched) {
 					$('#modal_content form input[name="search_string"]').val(lastSearched.searchText);
