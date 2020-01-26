@@ -27,7 +27,6 @@
 		codiad.CodeGit.getBranches();
 
 		if (codiad.CodeGit.files.length === 0) {
-			console.trace(codiad.CodeGit.files);
 			codiad.message.error("Nothing to commit!");
 			codiad.CodeGit.showDialog('overview', codiad.CodeGit.location);
 		} else {
