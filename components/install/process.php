@@ -152,7 +152,7 @@ define("BASE_PATH", "' . $path . '");
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
 // THEME : default, modern or clear (look at /themes)
-define("THEME", "default");
+define("THEME", "atheos");
 
 // ABSOLUTE PATH
 define("WHITEPATHS", BASE_PATH . ",/home");
@@ -181,12 +181,12 @@ define("WORKSPACE", BASE_PATH . "/workspace");
 define("WSURL", BASE_URL . "/workspace");
 
 // Marketplace
-//define("MARKETURL", "http://market.codiad.com/json");
+//define("MARKETURL", "https://atheos.io/market/json");
 
 // Update Check
-//define("UPDATEURL", "http://update.codiad.com/?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}");
-//define("ARCHIVEURL", "https://github.com/Codiad/Codiad/archive/master.zip");
-//define("COMMITURL", "https://api.github.com/repos/Codiad/Codiad/commits");
+//define("UPDATEURL", "http://https://atheos.io/update?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}");
+//define("ARCHIVEURL", "https://github.com/HLSiira/Atheos/archive/master.zip");
+//define("COMMITURL", "https://api.github.com/repos/HLSiira/Atheos/commits");
 ';
 
     saveFile($config, $config_data);
