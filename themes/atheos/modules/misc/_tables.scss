@@ -1,0 +1,24 @@
+/* TABLES */
+table {
+	width: 100%;
+	border-collapse: collapse;
+}
+
+table td,
+table th {
+	vertical-align: middle;
+	padding: 3px 10px 5px;
+	border: 1px solid #454445;
+}
+
+table th {
+	text-align: left;
+	font-weight: bold;
+	background: #3b3b3b;
+	padding-top: 8px;
+}
+
+table [class^="icon-"],
+[class*=" icon-"] {
+	display: block;
+}

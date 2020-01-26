@@ -1,0 +1,64 @@
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="243 243 165 185" width="680" height="765">
+  <defs>
+    <path d="M325 425l-80-45v-90l80-45 80 45v90l-80 45z" id="a"/>
+    <path d="M245 290l80 45v-90l-80 45z" id="b"/>
+    <path d="M325 335l80-45v90l-80 45v-90z" id="c"/>
+    <path d="M405 290l-80 45v-90l80 45z" id="d"/>
+    <path d="M245 290l80 45-80 45v-90z" id="e"/>
+    <path d="M325 425v-90l-80 45 80 45z" id="f"/>
+    <clipPath id="h">
+      <use xlink:href="#b"/>
+    </clipPath>
+    <clipPath id="i">
+      <use xlink:href="#c"/>
+    </clipPath>
+    <clipPath id="j">
+      <use xlink:href="#d"/>
+    </clipPath>
+    <clipPath id="k">
+      <use xlink:href="#e"/>
+    </clipPath>
+    <clipPath id="l">
+      <use xlink:href="#f"/>
+    </clipPath>
+    <mask id="g" x="241" y="241" width="168" height="188" maskUnits="userSpaceOnUse">
+      <path fill="#fff" d="M241 241h168v188H241z"/>
+      <use xlink:href="#a"/>
+    </mask>
+  </defs>
+  <use xlink:href="#a" fill="#111"/>
+  <g mask="url(#g)">
+    <use xlink:href="#a" fill-opacity="0" stroke="#111" stroke-width="4"/>
+  </g>
+  <use xlink:href="#b" fill="#39cccc"/>
+  <use xlink:href="#b" fill-opacity="0" stroke="#111" stroke-width=".5"/>
+  <g clip-path="url(#h)">
+    <use xlink:href="#b" fill-opacity="0" stroke="#111" stroke-width="4"/>
+  </g>
+  <use xlink:href="#c" fill="#001f3f"/>
+  <use xlink:href="#c" fill-opacity="0" stroke="#111" stroke-width=".5"/>
+  <g clip-path="url(#i)">
+    <use xlink:href="#c" fill-opacity="0" stroke="#111" stroke-width="4"/>
+  </g>
+  <g>
+    <use xlink:href="#d" fill="#0074d9"/>
+    <use xlink:href="#d" fill-opacity="0" stroke="#111" stroke-width=".5"/>
+    <g clip-path="url(#j)">
+      <use xlink:href="#d" fill-opacity="0" stroke="#111" stroke-width="4"/>
+    </g>
+  </g>
+  <g>
+    <use xlink:href="#e" fill="#0074d9"/>
+    <use xlink:href="#e" fill-opacity="0" stroke="#111" stroke-width=".5"/>
+    <g clip-path="url(#k)">
+      <use xlink:href="#e" fill-opacity="0" stroke="#111" stroke-width="4"/>
+    </g>
+  </g>
+  <g>
+    <use xlink:href="#f" fill="#7fdbff"/>
+    <use xlink:href="#f" fill-opacity="0" stroke="#111" stroke-width=".5"/>
+    <g clip-path="url(#l)">
+      <use xlink:href="#f" fill-opacity="0" stroke="#111" stroke-width="4"/>
+    </g>
+  </g>
+</svg>
