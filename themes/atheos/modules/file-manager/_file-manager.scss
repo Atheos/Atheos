@@ -28,11 +28,12 @@
 #file-manager {
 	a {
 		display: inline-block;
-		position: relative;
+		// position: relative;
 		min-width: 100%;
 		cursor: pointer;
 		padding: 2px 5px;
 		padding-left: 0px;
+		z-index: 80;
 
 		&:hover,
 		&.context-menu-active {
@@ -50,21 +51,24 @@
 		display: inline-block;
 		height: 18px;
 		width: 18px;
-		vertical-align: text-bottom;
-		
+		text-align: center;
+		// vertical-align: text-bottom;
+
 		&:before {
-			text-align:center;
+			text-align: center;
+			line-height: 18px;
 		}
 
 		&.expand:not(.none) {
-			position: absolute;
-			left: -20px;
+			// position: absolute;
+			// left: -20px;
+			margin-left: -22px;
 			height: auto;
 			width: auto;
 			// top: 0px;
 			// padding: 5px 0px 5px 2px;
 		}
-		
+
 		&.none {
 			display: none;
 		}
