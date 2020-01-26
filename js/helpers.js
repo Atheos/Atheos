@@ -1,5 +1,13 @@
 'use strict';
 
+var log = function(m, t) {
+	if (t) {
+		console.trace(m);
+	} else {
+		console.log(m);
+	}
+};
+
 (function(global) {
 
 	var codiad = global.codiad;
