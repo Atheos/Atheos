@@ -16,7 +16,7 @@ class Market extends Common
     //////////////////////////////////////////////////////////////////
 
     public $local       = array();
-    public $url         = 'http://market.codiad.com/json';
+    public $url         = 'https://atheos.io/market/json';
     public $remote      = null;
     public $tmp         = array();
     public $old         = null;
