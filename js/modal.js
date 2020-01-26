@@ -85,34 +85,31 @@
 			document.body.appendChild(wrapper);
 
 			document.body.appendChild(overlay);
-			return wrapper;
+			return P(wrapper);
 		},
 
 		load: function(width, url, data) {
 			data = data || {};
-
-			var wrapper = bioflux.queryO('#modal_wrapper') || this.createModal(),
-				content = wrapper.querySelector('#modal_content');
-			wrapper.style.top = '15%';
 			
+			var wrapper = P('#modal_wrapper') || this.createModal(),
+				content = P('#modal_content').sel;
+			wrapper.style.top = '15%';
+
 			// resize - Kurim
 			wrapper.style.left = width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)';
 			wrapper.style.minWidth = width ? (width + 300) + 'px' : '400px';
 
 			content.innerHTML = '<div id="modal_loading"></div>';
 
-			this.load_process = $.get(url, data, function(data) {
-				$(content).html(data);
-				// content.innerHTML = data;
-				// var script = content.getElementsByTagName('script');
-				// if (script) {
-				// 	console.log(script);
-				// 	console.log('Script Evaled');
-				// 	eval(script.innerText);
-				// }
-				// Fix for Firefox autofocus goofiness
-				var input = wrapper.querySelector('input[autofocus="autofocus"]');
-				if (input) input.focus();
+			this.load_process = ajax({
+				url: url,
+				data: data,
+				success: function(data) {
+					$(content).html(data);
+					// Fix for Firefox autofocus goofiness
+					var input = wrapper.find('input[autofocus="autofocus"]');
+					if (input) input.focus();
+				}
 			});
 
 			amplify.publish('modal.onLoad', {
@@ -120,25 +117,20 @@
 			});
 
 			wrapper.style.display = 'block';
-			bioflux.queryO('#modal_overlay').style.display = 'block';
-
-			// setTimeout(function() {
-			// 	wrapper.classList.add('modal-active');
-			// 	document.querySelector("#modal_overlay").classList.add('modal-active');
-			// }, 10);
+			P('#modal_overlay').style.display = 'block';
 
 			core.modal.settings.isModalVisible = true;
 		},
 
 		hideOverlay: function() {
-			bioflux.queryO("#modal_overlay").style.display = 'none';
+			P('#modal_overlay').style.display = 'none';
 		},
 		hide: function() {
-			var wrapper = bioflux.queryO('#modal_wrapper'),
-				overlay = bioflux.queryO('#modal_overlay');
+			var wrapper = P('#modal_wrapper'),
+				content = P('#modal_content');
 
-			wrapper.classList.remove('modal-active');
-			overlay.classList.remove('modal-active');
+			wrapper.removeClass('modal-active');
+			overlay.removeClass('modal-active');
 
 			wrapper.addEventListener("transitionend", function() {
 				wrapper.remove();
@@ -157,9 +149,9 @@
 				animationPerformed: false
 			});
 
-			bioflux.queryO('#modal_overlay').style.display = '';
-			bioflux.queryO('#modal_wrapper').style.display = '';
-			bioflux.queryO('#modal_content').innerHtml = '';
+			P('#modal_overlay').style.display = '';
+			P('#modal_wrapper').style.display = '';
+			P('#modal_content').empty();
 
 			core.editor.focus();
 			core.modal.settings.isModalVisible = false;
