@@ -1,0 +1,37 @@
+ul li {
+	list-style: disc inside;
+	padding-left: 20px;
+}
+
+ol li {
+	list-style: decimal inside;
+	padding-left: 3px;
+}
+
+dl dt {
+	color: #303030;
+}
+
+
+
+ul,
+ol,
+dl {
+	margin-bottom: 20px;
+}
+
+
+
+.features_left {
+	width: 45%;
+	display: inline-block;
+	float: left;
+	margin: 0 10% 0 0;
+}
+
+.features_right {
+	width: 45%;
+	display: inline-block;
+	float: left;
+	margin: 0;
+}

@@ -1,0 +1,54 @@
+code,
+pre {
+	font-family: Monaco, "Bitstream Vera Sans Mono", "Lucida Console", Terminal;
+	color: #222;
+	margin-bottom: 30px;
+	font-size: 14px;
+}
+
+code {
+	background-color: #f2f2f2;
+	border: solid 1px #ddd;
+	padding: 0 3px;
+}
+
+pre {
+	padding: 20px;
+	background: #303030;
+	color: #f2f2f2;
+	text-shadow: none;
+	overflow: auto;
+}
+
+pre code {
+	color: #f2f2f2;
+	background-color: #303030;
+	border: none;
+	padding: 0;
+}
+
+
+.video-container {
+	position: relative;
+	padding-bottom: 56.25%;
+	padding-top: 30px;
+	height: 0;
+	overflow: hidden;
+}
+
+.video-container iframe,
+.video-container object,
+.video-container embed {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+}
+
+
+form {
+	background: #f2f2f2;
+	padding: 20px;
+
+}

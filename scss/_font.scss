@@ -1,10 +1,21 @@
 @font-face {
+	font-family: 'CFA';
+	src: url('/fonts/CFA/custom-font-awesome.eot?75429923');
+	src: url('/fonts/CFA/custom-font-awesome.eot?75429923#iefix') format('embedded-opentype'),
+		url('/fonts/CFA/custom-font-awesome.woff?75429923') format('woff'),
+		url('/fonts/CFA/custom-font-awesome.ttf?75429923') format('truetype'),
+		url('/fonts/CFA/custom-font-awesome.svg?75429923#custom-font-awesome') format('svg');
+	font-weight: normal;
+	font-style: normal;
+}
+
+@font-face {
 	font-family: 'Ubuntu';
-	src: url('../fonts/ubuntu-webfont.eot');
-	src: url('../fonts/ubuntu-webfont.eot?#iefix') format('embedded-opentype'),
-		url('../fonts/ubuntu-webfont.woff') format('woff'),
-		url('../fonts/ubuntu-webfont.ttf') format('truetype'),
-		url('../fonts/ubuntu-webfont.svg#ubunturegular') format('svg');
+	src: url('/fonts/UW/ubuntu-webfont.eot');
+	src: url('/fonts/UW/ubuntu-webfont.eot?#iefix') format('embedded-opentype'),
+		url('/fonts/UW/ubuntu-webfont.woff') format('woff'),
+		url('/fonts/UW/ubuntu-webfont.ttf') format('truetype'),
+		url('/fonts/UW/ubuntu-webfont.svg#ubunturegular') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -52,15 +63,45 @@ small {
 p {
 	font-weight: 300;
 	margin-bottom: 10px;
+
+	a {
+		font-weight: normal;
+	}
 }
 
 a {
+	color: #34437a;
+	font-weight: bold;
+	cursor: pointer;
 	text-decoration: none;
+
+	&.button {
+		color: #404040;
+		padding: 12px 8px;
+		font-size: 14px;
+		line-height: 24px;
+		float: left;
+		width: 140px;
+		margin-right: 15px;
+		text-align: center;
+		background-color: #fdfdfd;
+	}
+
+	&:hover {
+		color: #34437a;
+	}
 }
 
-p a {
-	font-weight: 400;
+em {
+	font-size: 12px;
+	color: #666;
+	font-style: italic;
 }
+
+strong {
+	font-weight: bold;
+}
+
 
 blockquote {
 	font-size: 1.6em;
