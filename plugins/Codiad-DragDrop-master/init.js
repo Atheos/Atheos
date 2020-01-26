@@ -13,6 +13,17 @@
         curpath = path.split('/').slice(0, -1).join('/')+'/',
         instance = null;
 
+	//////////////////////////////////////////////////////////////////////
+	// DragDrop
+	//////////////////////////////////////////////////////////////////////
+	// Notes: 
+	// There is something that is adding Overflow:hidden to every list on the
+	// file manager, which is why items seemingling can't be pulled out of their
+	// own directories. No idea what it could be.
+	//
+	//												- Liam Siira
+	//////////////////////////////////////////////////////////////////////
+
     $(function() {
         codiad.Drag.init();
     });
@@ -30,23 +41,24 @@
 				//Drag
 				$('#file-manager a:not(#project-root)').draggable({
 					opacity: 0.85,
-					revert: true,
+					// revert: true,
 					start: _this.start,
 					stop: _this.stop,
-					zIndex: 100
+					zIndex: 100,
 				});
 				//Drop
-				$('.directory').droppable({
-					accept  : "#file-manager a:not(#project-root)",
+				$('a[data-type="directory"], a[data-type="root"]').droppable({
+					accept  : "#file-manager a",
 					drop    : _this.drop,
 					over    : _this.over,
 					out     : _this.out
 				});
 			};
+
 			amplify.subscribe('filemanager.onIndex', function(obj){
 				setTimeout(fn, 250);
 				setTimeout(function(){
-					//Reopen closed files
+					// Reopen closed files
 					$.each(instance.files, function(i, item){
 						codiad.filemanager.openFile(item, false);
 					});
@@ -62,17 +74,18 @@
 			amplify.subscribe('filemanager.onUpload', function(obj){
 				setTimeout(fn, 250);
 			});
+
 			//File drop
 			var apply = function() {
 			    $('#file-manager').append(_this.template);
                 $('#drag_append').droppable({
-                    accept  : "#file-manager a.file",
+                    accept  : '#file-manager a[data-type="file"]',
                     drop    : _this.appendDrop,
                     over    : _this.over,
                     out     : _this.out
                 });
                 $('#drag_insert').droppable({
-                    accept  : "#file-manager a.file",
+                    accept  : '#file-manager a[data-type="file"]',
                     drop    : _this.insertDrop,
                     over    : _this.over,
                     out     : _this.out
@@ -205,11 +218,8 @@
         //
         //////////////////////////////////////////////////////////
         isDir: function(element) {
-			if ($(element).hasClass('directory')) {
-				return true;
-			} else {
-				return false;
-			}
+        	log(element);
+        	return ($(element).data('type') === 'directory' || $(element).data('type') === 'root');
         },
         
         //////////////////////////////////////////////////////////
