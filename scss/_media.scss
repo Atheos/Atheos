@@ -9,24 +9,45 @@
 
 /* All Mobile Sizes (devices and browser) */
 @media only screen and (max-width: 767px) {
+
 	header {
 		padding-top: 10px;
 		padding-bottom: 10px;
+		text-align: center;
 	}
 
-	#downloads {
-		margin-bottom: 25px;
+	#logo {
+		float: none;
+
+		img {
+			margin: 0 auto;
+		}
 	}
 
 	#download-zip,
 	#download-tar-gz {
-		display: none;
+		display: none !important;
 	}
 
-	.inner {
-		width: 94%;
-		margin: 0 auto;
+	#downloads {
+		margin-bottom: 25px;
+		text-align: center;
+
+		a.button {
+			display: inline-block;
+			float: none;
+		}
 	}
+
+	.features_left,
+	.features_right {
+		width: auto;
+		display: block;
+		float: none;
+
+	}
+
+
 }
 
 /* Mobile Landscape Size to Tablet Portrait (devices and browsers) */

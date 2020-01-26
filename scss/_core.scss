@@ -16,9 +16,6 @@ header {
 	padding: 25px 0;
 }
 
-
-
-
 main {
 	max-width: 800px;
 	padding: 10px;
@@ -34,7 +31,6 @@ section {
 a.button {
 	color: #404040;
 	padding: 12px 8px;
-	display: block;
 	font-size: 14px;
 	line-height: 24px;
 	float: left;
@@ -148,7 +144,7 @@ dl dt {
 }
 
 footer {
-	padding: 20px 0;
+	padding: 0 0 20px 0;
 	font-size: 13px;
 	color: #aaa;
 }
