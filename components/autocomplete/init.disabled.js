@@ -33,7 +33,7 @@
         standardGoLineDownExec: null,
 
         standardGoLineUpExec: null,
-
+        
         _suggestionCache: null,
 
         standardGoToRightExec: null,
@@ -44,15 +44,15 @@
 
         init: function () {
             var _this = this;
-
+            
             this.$onDocumentChange = this.onDocumentChange.bind(this);
             this.$selectNextSuggestion = this.selectNextSuggestion.bind(this);
             this.$selectPreviousSuggestion = this.selectPreviousSuggestion.bind(this);
             this.$complete = this.complete.bind(this);
             this.$hide = this.hide.bind(this);
-
+            
             /* Catch click on suggestion */
-            $('#autocomplete li').on('click', function () {
+            $('#autocomplete li').live('click', function () {
                 $('#autocomplete li.active-suggestion').removeClass('active-suggestion');
                 $(this).addClass('active-suggestion');
                 _this.complete();
@@ -160,6 +160,7 @@
 
             this.addKeyboardCommands();
         },
+
 
         hide: function () {
             this.isVisible = false;
@@ -360,13 +361,13 @@
         /* Get suggestions of completion for the current position in the
          * document. */
         getSuggestions: function (position) {
-
+            
             /* If suggestions are cached,
              * return them directely */
             if (this._suggestionCache) {
                 return this._suggestionCache;
             }
-
+            
             var doc = this._getDocument();
 
             /* FIXME For now, make suggestions on the whole file content except
@@ -422,10 +423,10 @@
 
             /* Fill the cache */
             this._suggestionCache = suggestionsAndDistance;
-
+            
             return suggestionsAndDistance;
         },
-
+        
         /* Clear the suggestion cache */
         clearSuggestionCache: function () {
             this._suggestionCache = null;
@@ -460,7 +461,7 @@
                     }
                 }
             }
-
+            
             /* Now for each suggestion we have its matching score and its
              * distance to the word under the cursor. So compute its final
              * score as a combination of both. */
@@ -481,7 +482,7 @@
                     suggestions.push(suggestion);
                 }
             }
-
+            
             suggestions.sort(function (firstSuggestion, secondSuggestion) {
                 return suggestionsAndFinalScore[secondSuggestion] - suggestionsAndFinalScore[firstSuggestion];
             });
@@ -627,7 +628,7 @@
         },
 
         /* Some unit tests. */
-        //i don't need to translate this... this is just for testing things...
+        //i don't need to translate this... this is just for testing things... 
         _testSimpleMatchScorer: function () {
             var prefix = 'myprefix';
             var suggestion = 'myprefixisshort';
