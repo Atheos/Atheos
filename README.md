@@ -1,5 +1,7 @@
 # Atheos Web IDE, updated from [Codiad](http://codiad.com/)
 
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/32872c26cdfc41ce95e8b53ddbd0e724)](https://app.codacy.com/manual/HLSiira/Atheos?utm_source=github.com&utm_medium=referral&utm_content=HLSiira/Atheos&utm_campaign=Badge_Grade_Dashboard)
+
 ![Screenshot: Atheos](/docs/atheos.png?raw=true "Atheos")
 
 Atheos is an updated and currently maintained fork of Codiad, a web-based IDE framework with a small footprint and minimal requirements. 
