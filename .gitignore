@@ -10,7 +10,6 @@ workspace/*
 !workspace/README.md
 plugins/*
 !plugins/README.md
-plugins.planned
 !themes/*
 !themes/codiad/
 !themes/atheos/
@@ -21,3 +20,4 @@ plugins.planned
 .svn/
 vendor/
 composer.lock
+wip.*
