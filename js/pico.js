@@ -78,7 +78,7 @@ const func = (() => {
 			on:				function(t, fn) { sel.addEventListener(t, fn);		return this; },
 			off:			function(t, fn) { sel.removeEventListener(t, fn);	return this; },
 			css:			function(s) { sel.style.cssText += s;				return this; },
-			html:			function(h) { seli.innerHTML = h;					return this; },
+			html:			function(h) { sel.innerHTML = h;					return this; },
 			text:			function(t) { sel.innerText = t;					return this; },
 			addClass:		function(t) { sel.classList.add(t);					return this; },
 			toggleClass:	function(t) { sel.classList.toggle(t);				return this; },
@@ -100,7 +100,8 @@ const func = (() => {
 			insertFirst:	insertToAdjacent('afterbegin'),
 			insertLast:		insertToAdjacent('beforeend'),
 			
-			find:			findChild,
+			// find:			findChild,
+			find:			function(s) {										return sel.querySelector(s); },
 
 			prepend:		insertAdjacent('afterbegin'),
 			append:			insertAdjacent('beforeend'),
