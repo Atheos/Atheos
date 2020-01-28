@@ -68,6 +68,7 @@ if (isset($_SESSION['theme'])) {
 	?>
 
 
+
 </head>
 
 <body>
@@ -426,6 +427,8 @@ if (isset($_SESSION['theme'])) {
 
 <!-- ACE -->
 <script src="components/editor/ace-editor/ace.js"></script>
+<script src="components/editor/ace-editor/ext-language_tools.js"></script>
+
 
 <!-- COMPONENTS -->
 <?php
