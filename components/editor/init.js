@@ -484,7 +484,11 @@
 			i.setTheme('ace/theme/' + this.settings.theme);
 			i.setOptions({
 				fontFamily: "Ubuntu-Lig",
+				enableBasicAutocompletion: true,
+				enableSnippets: true,
+				enableLiveAutocompletion: false
 			});
+
 			i.setFontSize(this.settings.fontSize);
 			i.setPrintMarginColumn(this.settings.printMarginColumn);
 			i.setShowPrintMargin(this.settings.printMargin);

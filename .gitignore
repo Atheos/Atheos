@@ -20,3 +20,4 @@ plugins/*
 .svn/
 vendor/
 composer.lock
+wip.*
