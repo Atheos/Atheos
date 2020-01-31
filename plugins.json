@@ -1,292 +1,434 @@
-[ { "author" : "daeks",
-    "name" : "PullTester",
-    "description" : "Util to view and pull requests from Codiad core",
-    "image": "https://raw.github.com/daeks-archive/Codiad-PullTester/master/screen.png",
-    "category" : "Development",
-    "url" : "https://github.com/daeks-archive/Codiad-PullTester"
-  },
-  { "author" : "Fluidbyte",
-    "name" : "ColorPicker",
-    "description" : "Simple HEX and RGB color utility",
-    "url" : "https://github.com/Fluidbyte/Codiad-ColorPicker"
-  },
-  { "author" : "neissa",
-    "name" : "HtmlEntities",
-    "description" : "Simple transformation of special char to their html code",
-    "url" : "https://github.com/neissa/Codiad-HtmlEntities"
-  },
-  { "author" : "Fluidbyte",
-    "name" : "Terminal",
-    "description" : "Allows execution of terminal command through Codiad",
-    "url" : "https://github.com/Fluidbyte/Codiad-Terminal"
-  },
-  { "author" : "daeks",
-    "name" : "DiffViewer",
-    "description" : "Allows user to compare 2 files and to see all changes made in it",
-    "image": "https://raw.github.com/daeks-archive/Codiad-DiffViewer/master/screen.png",
-    "url" : "https://github.com/daeks-archive/Codiad-DiffViewer"
-  },
-  { "author" : "daeks",
-    "name" : "AutoUpdate",
-    "description" : "Hooks into the Codiad updater to allow for automatic update",
-    "image": "https://raw.github.com/daeks-archive/Codiad-AutoUpdate/master/screen.png",
-    "url" : "https://github.com/daeks-archive/Codiad-AutoUpdate"
-  },
-  { "author" : "Andr3as",
-    "name" : "Compress",
-    "description" : "Compress CSS and JS Files",
-    "image": "https://raw.github.com/Andr3as/Codiad-Compress/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Compress"
-  },
-  { "author" : "Andr3as",
-    "name" : "Permissions",
-    "description" : "Allows to change file permissions",
-    "image": "https://raw.github.com/Andr3as/Codiad-Permissions/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Permissions"
-  },
-  { "author" : "Andr3as",
-    "name" : "SurroundWith",
-    "description" : "Adds Surround (Eclipse) ability to add/wrap common functions",
-    "image": "https://raw.github.com/Andr3as/Codiad-SurroundWith/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-SurroundWith"
-  },
-  { "author" : "Andr3as",
-    "name" : "AutoAlign",
-    "description" : "Adds better formatting through variable alignment and spacing",
-    "image": "https://raw.github.com/Andr3as/Codiad-AutoAlignment/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-AutoAlignment"
-  },
-  { "author" : "Andr3as",
-    "name" : "Emmet",
-    "description" : "Add Emmet support to Codiad",
-    "image": "https://raw.github.com/Andr3as/Codiad-Emmet/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Emmet"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodeDate",
-    "description" : "Allows to insert the current date or time",
-    "image": "https://raw.github.com/Andr3as/Codiad-CodeDate/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-CodeDate"
-  },
-  { "author" : "Andr3as",
-    "name" : "CompletePlus",
-    "description" : "Alternative autocomplete; Expandable by plugins",
-    "url" : "https://github.com/Andr3as/Codiad-CompletePlus"
-  },
-  { "author" : "Andr3as",
-    "name" : "Include",
-    "description" : "Sets file links through autocomplete",
-    "image": "https://raw.github.com/Andr3as/Codiad-Include/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Include"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodePrint",
-    "description" : "Allows to print files",
-    "image": "https://raw.github.com/Andr3as/Codiad-CodePrint/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-CodePrint"
-  },
-  { "author" : "Andr3as",
-    "name" : "MarkdownPreview",
-    "description" : "Displays a preview of markdown files",
-    "image": "https://raw.github.com/Andr3as/Codiad-MarkdownPreview/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-MarkdownPreview"
-  },
-  { "author" : "tholum",
-    "name" : "SVN",
-    "description" : "Allows SVN connection to remote repositories",
-    "image": "https://raw.github.com/tholum/Codiad-SVN/master/screen.png",
-    "url" : "https://github.com/tholum/Codiad-SVN"
-  },
-  { "author" : "Fluidbyte",
-    "name" : "DocHub",
-    "description" : "Access DocHub resources directly from within Codiad",
-    "url" : "https://github.com/Fluidbyte/Codiad-DocHub"
-  },
-  { "author" : "daeks",
-    "name" : "GitAdmin",
-    "description" : "Allows for pulling repos into your current project",
-    "image": "https://raw.github.com/daeks-archive/Codiad-GitAdmin/master/screen.png",
-    "url" : "https://github.com/daeks-archive/Codiad-GitAdmin"
-  },
-  { "author" : "Codiad",
-    "name" : "PluginTemplate",
-    "description" : "Boilerplate for developing Codiad Plugins",
-    "category" : "Development",
-    "url" : "https://github.com/Codiad/Codiad-Plugin-Template"
-  },
-  { "author" : "daeks",
-    "name" : "Macro",
-    "description" : "Allows custom predefined shell commands",
-    "image": "https://raw.github.com/daeks-archive/Codiad-Macro/master/screen.png",
-    "url" : "https://github.com/daeks-archive/Codiad-Macro"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodeTransfer",
-    "description" : "Allows FTP/SCP connection to remote servers",
-    "image": "https://raw.github.com/Andr3as/Codiad-CodeTransfer/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-CodeTransfer"
-  },
-  { "author" : "Andr3as",
-    "name" : "Beautify",
-    "description" : "Beautify js, json, html or css files",
-    "url" : "https://github.com/Andr3as/Codiad-Beautify"
-  },
-  { "author" : "Andr3as",
-    "name" : "Bookmarks",
-    "description" : "Set bookmarks and jump between them",
-    "url" : "https://github.com/Andr3as/Codiad-Bookmarks"
-  },
-  { "author" : "Andr3as",
-    "name" : "Duplicate",
-    "description" : "Duplicate files directly through the filemanager",
-    "url" : "https://github.com/Andr3as/Codiad-Duplicate"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodeDocs",
-    "description" : "Create your jsdoc documentation directly through the filemanager",
-    "url" : "https://github.com/Andr3as/Codiad-CodeDocs"
-  },
-  { "author" : "Andr3as",
-    "name" : "Ignore",
-    "description" : "Hide/Ignore files and directories in the filemanager",
-    "url" : "https://github.com/Andr3as/Codiad-Ignore"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodeSettings",
-    "description" : "Create your own keybindings",
-    "url" : "https://github.com/Andr3as/Codiad-CodeSettings"
-  },
-  { "author" : "Andr3as",
-    "name" : "HTMLPreview",
-    "description" : "Open html file as preview during editing a css file",
-    "url" : "https://github.com/Andr3as/Codiad-HTMLPreview"
-  },
-  { "author" : "Codiad",
-    "name" : "Collaborative",
-    "description" : "Ajax based Collaborative Plugin for Codiad. Requires version 2.x or newer",
-    "category" : "Collaboration",
-    "url" : "https://github.com/Codiad/Codiad-Collaborative"
-  },
-  {"author" : "daeks",
-    "name" : "Together",
-    "description" : "Audio and Chat Support for Codiad. Not compatible with IE.",
-    "category" : "Collaboration",
-    "image": "https://raw.githubusercontent.com/daeks-archive/Codiad-Together/master/screen.png",
-    "url" : "https://github.com/daeks-archive/Codiad-Together"
-  },
-  { "author" : "LRancez",
-    "name" : "DeepLinking",
-    "description" : "Provides direct access linking for Codiad",
-    "url" : "https://github.com/LRancez/Codiad-Deep-Linking"
-  },
-  { "author" : "Andr3as",
-    "name" : "DragDrop",
-    "description" : "Drag and Drop within the filemanager",
-    "url" : "https://github.com/Andr3as/Codiad-DragDrop"
-  },
-  { "author" : "JSXRED",
-    "name" : "Query-Designer",
-    "description" : "This plugin allow designing database queries through Codiad user interface",
-    "url" : "https://github.com/JSXRED/Codiad-Query-Designer"
-  },
-  { "author" : "Andr3as",
-    "name" : "Favorites",
-    "description" : "Set folders as favorites for quick access",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-Favorites/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Favorites"
-  },
-  { "author" : "Andr3as",
-    "name" : "CodeGit",
-    "description" : "Git integration for Codiad",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-CodeGit/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-CodeGit"
-  },
-  { "author" : "RustyGumbo",
-    "name" : "FileUse",
-    "description" : "Displays other users viewing the file",
-    "url" : "https://github.com/RustyGumbo/Codiad-FileUse"
-  },
-  { "author" : "RustyGumbo",
-    "name" : "Messaging",
-    "description" : "Allows to send other users notification messages",
-    "url" : "https://github.com/RustyGumbo/Codiad-Messaging"
-  },
-  { "author" : "dev-rke",
-    "name" : "LessCompiler",
-    "description" : "Less Compiler for Codiad",
-    "url" : "https://github.com/dev-rke/Codiad-LessCompiler"
-  },
-  { "author" : "dev-rke",
-    "name" : "CoffeeScriptCompiler",
-    "description" : "CoffeeScript Compiler for Codiad",
-    "url" : "https://github.com/dev-rke/Codiad-CoffeeScriptCompiler"
-  },
-  { "author" : "dev-rke",
-    "name" : "ToDo",
-    "description" : "ToDo Parser for Codiad",
-    "url" : "https://github.com/dev-rke/Codiad-ToDo"
-  },
-  { "author" : "ViniciusGerevini",
-    "name" : "Compass",
-    "description" : "Compass integration plugin for Codiad IDE",
-    "image" : "https://raw.githubusercontent.com/ViniciusGerevini/Codiad-Compass/master/screen.png",
-    "url" : "https://github.com/ViniciusGerevini/Codiad-Compass"
-  },
-  { "author" : "glitchassassin",
-    "name" : "Active-Markdown-Links",
-    "description" : "Makes links in Markdown files active to be opened directly",
-    "url" : "https://github.com/glitchassassin/Codiad-Active-Markdown-Links"
-  },
-  { "author" : "Andr3as",
-    "name" : "JSHint",
-    "description" : "Lint your javascript code with JSHint",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-JSHint/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-JSHint"
-  },
-  { "author" : "Andr3as",
-    "name" : "AutoPrefixer",
-    "description" : "Parse CSS and add vendor prefixes to rules",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-AutoPrefixer/master/screen.jpg",
-    "url" : "https://github.com/Andr3as/Codiad-AutoPrefixer"
-  },
-  { "author" : "Andr3as",
-    "name" : "Iconbar",
-    "description" : "Reach some commands directly from the rightbar",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-Iconbar/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Iconbar"
-  },
-  { "author" : "Andr3as",
-    "name" : "Minimap",
-    "description" : "Small minimap to get an overview",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-Minimap/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-Minimap"
-  },
-  { "author" : "Andr3as",
-    "name" : "CSSLint",
-    "description" : "Lint your css code with CSSLint",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-CSSLint/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-CSSLint"
-  },
-  { "author" : "SmartBlug",
-    "name" : "Outline",
-    "description" : "Parses function and class tags to be displayed in editor",
-    "url" : "https://github.com/SmartBlug/Codiad-Outline"
-  },
-  { "author" : "rafasashi",
-    "name" : "Archives",
-    "description" : "Extracts archives to given folder",
-    "url" : "https://github.com/rafasashi/Codiad-Archives"
-  },
-  { "author" : "Andr3as",
-    "name" : "SassCompiler",
-    "description" : "Sass/Scss Compiler for Codiad",
-    "image": "https://raw.githubusercontent.com/Andr3as/Codiad-SassCompiler/master/screen.png",
-    "url" : "https://github.com/Andr3as/Codiad-SassCompiler"
-  },
-  { "author" : "olivierauverlot",
-    "name" : "ChromeToolkit",
-    "description" : "ChromeToolkit for Codiad",
-    "image": "https://raw.githubusercontent.com/olivierauverlot/Codiad-ChromeToolkit/master/screen.png",
-    "url" : "https://github.com/olivierauverlot/Codiad-ChromeToolkit"
-  }
+[{
+		"author": "glitchassassin",
+		"name": "Active-Markdown-Links",
+		"description": "Makes links in Markdown files active to be opened directly",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/glitchassassin/Codiad-Active-Markdown-Links"
+	},
+	{
+		"author": "rafasashi",
+		"name": "Archives",
+		"description": "Extracts archives to given folder",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/rafasashi/Codiad-Archives"
+	},
+	{
+		"author": "daeks",
+		"name": "Codiad-Auth-NTLM",
+		"description": "NTLM authentication for Codiad",
+		"category": "Admin",
+		"status": "disabled",
+		"url": "https://github.com/daeks-archive/Codiad-Auth-NTLM"
+	},
+	{
+		"author": "Andr3as",
+		"name": "AutoAlign",
+		"description": "Adds better formatting through variable alignment and spacing",
+		"category": "Beautification",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-AutoAlignment"
+	},
+	{
+		"author": "Andr3as",
+		"name": "AutoPrefixer",
+		"description": "Parse CSS and add vendor prefixes to rules",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-AutoPrefixer"
+	},
+	{
+		"author": "daeks",
+		"name": "AutoUpdate",
+		"description": "Hooks into the Codiad updater to allow for automatic update",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-AutoUpdate"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Beautify",
+		"description": "Beautify js, json, html or css files",
+		"category": "Beautify",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-Beautify"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Bookmarks",
+		"description": "Set bookmarks and jump between them",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Bookmarks"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CSSLint",
+		"description": "Lint your css code with CSSLint",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CSSLint"
+	},
+	{
+		"author": "olivierauverlot",
+		"name": "ChromeToolkit",
+		"description": "ChromeToolkit for Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/olivierauverlot/Codiad-ChromeToolkit"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeDate",
+		"description": "Allows to insert the current date or time",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CodeDate"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeDocs",
+		"description": "Create your jsdoc documentation directly through the filemanager",
+		"category": "Documentation",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CodeDocs"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeGit",
+		"description": "Git integration for Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-CodeGit"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodePrint",
+		"description": "Allows to print files",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CodePrint"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeSettings",
+		"description": "Create your own keybindings",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CodeSettings"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeSpell",
+		"description": "Check your comments or markdown and text files for typos",
+		"category": "Admin",
+		"status": "disabled",
+		"url": "https://github.com/Andr3as/Codiad-CodeSpell"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CodeTransfer",
+		"description": "Allows FTP/SCP connection to remote servers",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CodeTransfer"
+	},
+	{
+		"author": "dev-rke",
+		"name": "CoffeeScriptCompiler",
+		"description": "CoffeeScript Compiler for Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/dev-rke/Codiad-CoffeeScriptCompiler"
+	},
+	{
+		"author": "Codiad",
+		"name": "Collaborative",
+		"description": "Ajax based Collaborative Plugin for Codiad. Requires version 2.x or newer",
+		"category": "Collaboration",
+		"status": "active",
+		"url": "https://github.com/Codiad/Codiad-Collaborative"
+	},
+	{
+		"author": "Fluidbyte",
+		"name": "ColorPicker",
+		"description": "Simple HEX and RGB color utility",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Fluidbyte/Codiad-ColorPicker"
+	},
+	{
+		"author": "ViniciusGerevini",
+		"name": "Compass",
+		"description": "Compass integration plugin for Codiad IDE",
+		"image": "https://raw.githubusercontent.com/ViniciusGerevini/Codiad-Compass/master/screen.png",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/ViniciusGerevini/Codiad-Compass"
+	},
+	{
+		"author": "Andr3as",
+		"name": "CompletePlus",
+		"description": "Alternative autocomplete; Expandable by plugins",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-CompletePlus"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Compress",
+		"description": "Compress CSS and JS Files",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-Compress"
+	},
+	{
+		"author": "LRancez",
+		"name": "DeepLinking",
+		"description": "Provides direct access linking for Codiad",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/LRancez/Codiad-Deep-Linking"
+	},
+	{
+		"author": "daeks",
+		"name": "DiffViewer",
+		"description": "Allows user to compare 2 files and to see all changes made in it",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-DiffViewer"
+	},
+	{
+		"author": "Fluidbyte",
+		"name": "DocHub",
+		"description": "Access DocHub resources directly from within Codiad",
+		"category": "Documentation",
+		"status": "active",
+		"url": "https://github.com/Fluidbyte/Codiad-DocHub"
+	},
+	{
+		"author": "Andr3as",
+		"name": "DragDrop",
+		"description": "Drag and Drop within the filemanager",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-DragDrop"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Duplicate",
+		"description": "Duplicate files directly through the filemanager",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-Duplicate"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Emmet",
+		"description": "Add Emmet support to Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Emmet"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Favorites",
+		"description": "Set folders as favorites for quick access",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Favorites"
+	},
+	{
+		"author": "RustyGumbo",
+		"name": "FileUse",
+		"description": "Displays other users viewing the file",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/RustyGumbo/Codiad-FileUse"
+	},
+	{
+		"author": "daeks",
+		"name": "GitAdmin",
+		"description": "Allows for pulling repos into your current project",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-GitAdmin"
+	},
+	{
+		"author": "Andr3as",
+		"name": "HTMLPreview",
+		"description": "Open html file as preview during editing a css file",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-HTMLPreview"
+	},
+	{
+		"author": "neissa",
+		"name": "HtmlEntities",
+		"description": "Simple transformation of special char to their html code",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/neissa/Codiad-HtmlEntities"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Iconbar",
+		"description": "Reach some commands directly from the rightbar",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Iconbar"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Ignore",
+		"description": "Hide/Ignore files and directories in the filemanager",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-Ignore"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Include",
+		"description": "Sets file links through autocomplete",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Include"
+	},
+	{
+		"author": "Andr3as",
+		"name": "JSHint",
+		"description": "Lint your javascript code with JSHint",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-JSHint"
+	},
+	{
+		"author": "dev-rke",
+		"name": "LessCompiler",
+		"description": "Less Compiler for Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/dev-rke/Codiad-LessCompiler"
+	},
+	{
+		"author": "daeks",
+		"name": "Macro",
+		"description": "Allows custom predefined shell commands",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-Macro"
+	},
+	{
+		"author": "Andr3as",
+		"name": "MarkdownPreview",
+		"description": "Displays a preview of markdown files",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-MarkdownPreview"
+	},
+	{
+		"author": "RustyGumbo",
+		"name": "Messaging",
+		"description": "Allows to send other users notification messages",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/RustyGumbo/Codiad-Messaging"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Minimap",
+		"description": "Small minimap to get an overview",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Minimap"
+	},
+	{
+		"author": "SmartBlug",
+		"name": "Outline",
+		"description": "Parses function and class tags to be displayed in editor",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/SmartBlug/Codiad-Outline"
+	},
+	{
+		"author": "Andr3as",
+		"name": "Permissions",
+		"description": "Allows to change file permissions",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-Permissions"
+	},
+	{
+		"author": "Codiad",
+		"name": "PluginTemplate",
+		"description": "Boilerplate for developing Codiad Plugins",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Codiad/Codiad-Plugin-Template"
+	},
+	{
+		"author": "daeks",
+		"name": "PullTester",
+		"description": "Util to view and pull requests from Codiad core",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-PullTester"
+	},
+	{
+		"author": "JSXRED",
+		"name": "Query-Designer",
+		"description": "This plugin allow designing database queries through Codiad user interface",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/JSXRED/Codiad-Query-Designer"
+	},
+	{
+		"author": "tholum",
+		"name": "SVN",
+		"description": "Allows SVN connection to remote repositories",
+		"category": "Utility",
+		"status": "active",
+		"url": "https://github.com/tholum/Codiad-SVN"
+	},
+	{
+		"author": "Andr3as",
+		"name": "SassCompiler",
+		"description": "Sass/Scss Compiler for Codiad",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/HLSiira/Atheos-SassCompiler"
+	},
+	{
+		"author": "Andr3as",
+		"name": "SurroundWith",
+		"description": "Adds Surround (Eclipse) ability to add/wrap common functions",
+		"category": "Development",
+		"status": "active",
+		"url": "https://github.com/Andr3as/Codiad-SurroundWith"
+	},
+	{
+		"author": "Fluidbyte",
+		"name": "Terminal",
+		"description": "Allows execution of terminal command through Codiad",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/Fluidbyte/Codiad-Terminal"
+	},
+	{
+		"author": "dev-rke",
+		"name": "ToDo",
+		"description": "ToDo Parser for Codiad",
+		"category": "Admin",
+		"status": "active",
+		"url": "https://github.com/dev-rke/Codiad-ToDo"
+	},
+	{
+		"author": "daeks",
+		"name": "Together",
+		"description": "Audio and Chat Support for Codiad. Not compatible with IE.",
+		"category": "Collaboration",
+		"status": "active",
+		"url": "https://github.com/daeks-archive/Codiad-Together"
+	}
 ]

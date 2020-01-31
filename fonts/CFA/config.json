@@ -1,5 +1,5 @@
 {
-  "name": "custom-font-awesome",
+  "name": "cfa",
   "css_prefix_text": "icon-",
   "css_use_suffix": false,
   "hinting": true,
@@ -52,6 +52,54 @@
       "uid": "d7271d490b71df4311e32cdacae8b331",
       "css": "home",
       "code": 59394,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "3a26448b711645ba1abfc86c1a6e2f30",
+      "css": "coffee",
+      "code": 61684,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "98687378abd1faf8f6af97c254eb6cd6",
+      "css": "cogs",
+      "code": 59395,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "f8aa663c489bcbd6e68ec8147dca841e",
+      "css": "dir",
+      "code": 59397,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "c95735c17a10af81448c7fed98a04546",
+      "css": "dir-open",
+      "code": 59400,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "56da5324fc5a04f131ab65668c36b931",
+      "css": "manual",
+      "code": 59401,
+      "src": "typicons"
+    },
+    {
+      "uid": "1d7c1d30ad49a988556273a238097c2a",
+      "css": "file",
+      "code": 59402,
+      "src": "entypo"
+    },
+    {
+      "uid": "559647a6f430b3aeadbecd67194451dd",
+      "css": "menu",
+      "code": 61641,
+      "src": "fontawesome"
+    },
+    {
+      "uid": "9dd9e835aebe1060ba7190ad2b2ed951",
+      "css": "toc",
+      "code": 59403,
       "src": "fontawesome"
     }
   ]

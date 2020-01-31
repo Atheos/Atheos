@@ -1,6 +1,14 @@
+$sidebar-width: 300px;
+$desktop-width: 959px;
+
 @import 'reset', 'colors';
 @import 'font', 'core', 'custom';
-@import 'media';
+@import 'content';
+@import 'header';
 @import 'icons';
 @import 'list';
+@import 'navbar';
+@import 'sidebar';
 @import 'table';
+@import 'toc';
+// @import 'media';

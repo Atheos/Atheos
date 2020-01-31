@@ -1,10 +1,10 @@
 @font-face {
 	font-family: 'CFA';
-	src: url('/fonts/CFA/custom-font-awesome.eot?75429923');
-	src: url('/fonts/CFA/custom-font-awesome.eot?75429923#iefix') format('embedded-opentype'),
-		url('/fonts/CFA/custom-font-awesome.woff?75429923') format('woff'),
-		url('/fonts/CFA/custom-font-awesome.ttf?75429923') format('truetype'),
-		url('/fonts/CFA/custom-font-awesome.svg?75429923#custom-font-awesome') format('svg');
+	src: url('/fonts/CFA/cfa.eot?75429923');
+	src: url('/fonts/CFA/cfa.eot?75429923#iefix') format('embedded-opentype'),
+		url('/fonts/CFA/cfa.woff?75429923') format('woff'),
+		url('/fonts/CFA/cfa.ttf?75429923') format('truetype'),
+		url('/fonts/CFA/cfa.svg?75429923#cfa') format('svg');
 	font-weight: normal;
 	font-style: normal;
 }
@@ -48,8 +48,9 @@ h2 {
 h3 {
 	font-size: 22px;
 	font-weight: bold;
-	margin-bottom: 8px;
+	margin: 16px 0 8px 0;
 	color: #fff;
+	border-bottom: 1px solid #fff;
 }
 
 small {
@@ -92,6 +93,13 @@ a {
 	}
 }
 
+
+.right {
+	text-align: right;
+}
+.center {
+	text-align: center;
+}
 em {
 	font-size: 12px;
 	color: #666;

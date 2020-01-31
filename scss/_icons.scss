@@ -46,6 +46,14 @@
 	content: '\e802';
 }
 
+.icon-cogs:before {
+	content: '\e803';
+}
+
+.icon-dir:before {
+	content: '\e805';
+}
+
 .icon-download:before {
 	content: '\e804';
 }
@@ -58,8 +66,32 @@
 	content: '\e807';
 }
 
+.icon-dir-open:before {
+	content: '\e808';
+}
+
+.icon-manual:before {
+	content: '\e809';
+}
+
+.icon-file:before {
+	content: '\e80a';
+}
+
+.icon-toc:before {
+	content: '\e80b';
+}
+
 .icon-github:before {
 	content: '\f09b';
+}
+
+.icon-menu:before {
+	content: '\f0c9';
+}
+
+.icon-coffee:before {
+	content: '\f0f4';
 }
 
 .icon-code:before {

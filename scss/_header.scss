@@ -1,0 +1,22 @@
+header {
+	padding: 20px;
+	// display: none;
+	margin-top: 4em;
+
+	h1,
+	h2 {
+		display: none;
+	}
+}
+
+/* Desktop View */
+@media (min-width: $desktop-width) {
+	header {
+		display: block;
+
+		h1,
+		h2 {
+			display: block;
+		}
+	}
+}

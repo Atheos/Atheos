@@ -1,0 +1,48 @@
+nav {
+	position: relative;
+
+}
+
+nav ul {
+	position: absolute;
+	border-top: 1px solid #fff;
+	// top: 4em;
+	left: 0;
+	margin: 0;
+	padding: 0;
+	width: $sidebar-width;
+}
+
+nav ul li {
+	list-style: none;
+	padding: 0;
+
+	a {
+		width: 100%;
+		padding: 10px 15px;
+		border-bottom: 1px solid #fff;
+		position: relative;
+		display: inline-block;
+		font-size: 18px;
+		font-weight: bold;
+		color: #fff;
+		vertical-align: middle;
+
+
+		i {
+			display: inline-block;
+			pointer-events: none;
+
+			// font-size: 18px;
+		}
+
+		span {
+			pointer-events: none;
+		}
+
+		&:hover {
+			background-color: #111;
+		}
+
+	}
+}
