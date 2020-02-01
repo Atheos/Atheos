@@ -1,24 +1,14 @@
 <?php
 
 /*
- *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
- *  as-is and without warranty under the MIT License. See
- *  [root]/license.txt for more. This information must remain intact.
- */
+* 	Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+* 	as-is and without warranty under the MIT License. See
+* 	[root]/license.txt for more. This information must remain intact.
+*/
  
  
  	//////////////////////////////////////////////////////////////////////
 	// Project Class
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// I saw that there was an open issue on Codiad for this file being a 
-	// backdoor. https://github.com/Codiad/Codiad/issues/1115
-	//
-	// I looked into it and I can see where windows is coming from on
-	// marking them as malicious but I'm simply not seeing that it
-	// actually is malicious, but I am not a cyber security expert.
-	//
-	//												- Liam Siira
 	//////////////////////////////////////////////////////////////////////
 
 require_once('../../common.php');
@@ -320,10 +310,6 @@ class Project extends Common
         if (function_exists('system')) {
             ob_start();
             system($this->command_exec);
-            ob_end_clean();
-        } elseif (function_exists('passthru')) {
-            ob_start();
-            passthru($this->command_exec);
             ob_end_clean();
         } elseif (function_exists('exec')) {
             exec($this->command_exec, $this->output);
