@@ -1,12 +1,12 @@
 <?php
 
-
 /*
- *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
- *  as-is and without warranty under the MIT License. See
- *  [root]/license.txt for more. This information must remain intact.
- */
-	
+* 	Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+* 	as-is and without warranty under the MIT License. See
+* 	[root]/license.txt for more. This information must remain intact.
+*/
+ 
+ 
  	//////////////////////////////////////////////////////////////////////
 	// Project Class
 	//////////////////////////////////////////////////////////////////////
@@ -20,13 +20,13 @@ class Project extends Common
     // PROPERTIES
     //////////////////////////////////////////////////////////////////
     
-    public $name         = '';
-    public $path         = '';
-    public $gitrepo      = false;
-    public $gitbranch    = '';
-    public $projects     = '';
-    public $no_return    = false;
-    public $assigned     = false;
+    public $name = '';
+    public $path = '';
+    public $gitrepo = false;
+    public $gitbranch = '';
+    public $projects = '';
+    public $no_return = false;
+    public $assigned = false;
     public $command_exec = '';
     
     //////////////////////////////////////////////////////////////////
@@ -71,7 +71,10 @@ class Project extends Common
         $_SESSION['project'] = $this->path;
         
         if (!$this->no_return) {
-            echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+            echo formatJSEND("success", array(
+                "name" => $this->name,
+                "path" => $this->path
+            ));
         }
     }
     
@@ -104,7 +107,10 @@ class Project extends Common
             }
         }
         if ($pass) {
-            echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+            echo formatJSEND("success", array(
+                "name" => $this->name,
+                "path" => $this->path
+            ));
         } else {
             echo formatJSEND("error", "Error Opening Project");
         }
@@ -149,7 +155,10 @@ class Project extends Common
                             }
                         }
                     }
-                    $this->projects[] = array("name"=>$this->name,"path"=>$this->path);
+                    $this->projects[] = array(
+                        "name" => $this->name,
+                        "path" => $this->path
+                    );
                     saveJSON('projects.php', $this->projects);
                     
                     // Pull from Git Repo?
@@ -163,7 +172,10 @@ class Project extends Common
                         $this->ExecuteCMD();
                     }
                     
-                    echo formatJSEND("success", array("name"=>$this->name,"path"=>$this->path));
+                    echo formatJSEND("success", array(
+                        "name" => $this->name,
+                        "path" => $this->path
+                    ));
                 } else {
                     echo formatJSEND("error", "A Project With the Same Name or Path Exists");
                 }
@@ -181,7 +193,21 @@ class Project extends Common
     
     public function SanitizeGitBranch()
     {
-        $sanitized = str_replace(array("..",chr(40), chr(177),"~","^",":","?","*","[","@{","\\"), array(""), $this->gitbranch);
+        $sanitized = str_replace(array(
+            "..",
+            chr(40),
+            chr(177),
+            "~",
+            "^",
+            ":",
+            "?",
+            "*",
+            "[",
+            "@{",
+            "\\"
+        ), array(
+            ""
+        ), $this->gitbranch);
         return $sanitized;
     }
     
@@ -194,10 +220,16 @@ class Project extends Common
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
             if ($data['path'] != $this->path) {
-                $revised_array[] = array("name"=>$data['name'],"path"=>$data['path']);
+                $revised_array[] = array(
+                    "name" => $data['name'],
+                    "path" => $data['path']
+                );
             }
         }
-        $revised_array[] = $this->projects[] = array("name"=>$_GET['project_name'],"path"=>$this->path);
+        $revised_array[] = $this->projects[] = array(
+            "name" => $_GET['project_name'],
+            "path" => $this->path
+        );
         // Save array back to JSON
         saveJSON('projects.php', $revised_array);
         // Response
@@ -213,7 +245,10 @@ class Project extends Common
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
             if ($data['path'] != $this->path) {
-                $revised_array[] = array("name"=>$data['name'],"path"=>$data['path']);
+                $revised_array[] = array(
+                    "name" => $data['name'],
+                    "path" => $data['path']
+                );
             }
         }
         // Save array back to JSON
