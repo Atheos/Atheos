@@ -1,0 +1,12 @@
+#logo {
+	position: absolute;
+	height: 460px;
+	width: 786px;
+	z-index: 1;
+	top: 5%;
+	left: calc(50% - ( 786px / 2));
+	background-image: url(/favicons/logo.png);
+	background-repeat: no-repeat;
+	background-position: center;
+	background-size: contain;
+}
