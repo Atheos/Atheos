@@ -62,7 +62,7 @@
             }
 
             if(!defined('THEME')){
-                define("THEME", "modern");
+                define("THEME", "atheos");
             }
             
             if(!defined('LANGUAGE')){
