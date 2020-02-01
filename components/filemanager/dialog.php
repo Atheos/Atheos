@@ -15,7 +15,7 @@ require_once('class.filemanager.php');
 checkSession();
 
 ?>
-<form>
+<form onsubmit="return;">
 <?php
 
 switch($_GET['action']){

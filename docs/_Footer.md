@@ -1,0 +1,1 @@
+[Codiad Website](http://codiad.com) | [Plugins](http://market.codiad.com) | [Documentation](https://github.com/Codiad/Codiad/wiki) | [Support](https://github.com/Codiad/Codiad/issues) | [Twitter](https://twitter.com/codiadide) | [Facebook](https://www.facebook.com/Codiad)

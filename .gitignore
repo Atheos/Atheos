@@ -1,13 +1,14 @@
 *~
 *\#
 *.swp
+.ignore
 config.php
 data/*
 !data/.htaccess
 !data/README.md
 workspace/*
 !workspace/README.md
-!plugins/*
+plugins/*
 !plugins/README.md
 !themes/*
 !themes/codiad/
@@ -19,3 +20,4 @@ workspace/*
 .svn/
 vendor/
 composer.lock
+wip.*

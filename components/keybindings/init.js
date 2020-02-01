@@ -4,6 +4,7 @@
  *  [root]/license.txt for more. This information must remain intact.
  */
 
+
 (function(global, $){
 
     var codiad = global.codiad;
@@ -76,9 +77,9 @@
             });
 
             // Autocomplete [CTRL+SPACE] /////////////////////////////////
-            $.ctrl('32', function() {
-                codiad.autocomplete.suggest();
-            });
+            // $.ctrl('32', function() {
+            //     codiad.autocomplete.suggest();
+            // });
 
             $.ctrl('71', function(){
                 if (codiad.finder) {
