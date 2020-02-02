@@ -15,18 +15,18 @@ For more information on the project please check out the **[check out the Wiki](
 ## ~~Un~~ Maintained Status
 
 Atheos is Codiad to its core, however Atheos will be updated to use all the latest versions of libraries used if possible. Where not possible, newer libraries will replace older libraries. The UI has been given a new flat look, Font Awesome Icons in place of EnTypo, and the SVGs used in the file manager have been replaced with a smaller web font. Both the Front and Back ends are slowly being rebuilt with more performant, and smaller functions.
-
-## RoadMap
-01. Update all dependendencies:
-	- Ace Editor has been updated, but it needs optimization / cleaning.
-	- jQuery is actually so out of date thait's easier to remove it completely in favor of a smaller library.
   
-02. Standardize all modules/components:
-	- As Codiad grew, new features and standards were added but not back dated to older established functions.
+## RoadMap
+1. Update all dependendencies:
+   - Ace Editor has been updated, but it needs optimization / cleaning.
+   - jQuery is actually so out of date thait's easier to remove it completely in favor of a smaller library.
 
-03. Modify everything to meet best practices, SEO and accessabilty standards.
-	- Make everything pretty, new icons, cleaner design, better ingredients.
-	- Accessability is going to be a hard one to tackle and might be a long term goal unless an expert drops in.
+2. Standardize all modules/components:
+   - As Codiad grew, new features and standards were added but not back dated to older established functions.
+
+3. Modify everything to meet best practices, SEO and accessabilty standards.
+   - Make everything pretty, new icons, cleaner design, better ingredients.
+   - Accessability is going to be a hard one to tackle and might be a long term goal unless an expert drops in.
 
 | ## | Planned goals & features (No order)                       |
 |----|-----------------------------------------------------------|
