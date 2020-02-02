@@ -20,8 +20,10 @@ Atheos is Codiad to its core, however Atheos will be updated to use all the late
 01. Update all dependendencies
     - Ace Editor has been updated, but it needs optimization / cleaning.
     - jQuery is actually so out of date thait's easier to remove it completely in favor of a smaller library.
+
 02. Standardize all modules/components
     - As Codiad grew, new features and standards were added but not back dated to older established functions.
+
 03. Modify everything to meet best practices, SEO and accessabilty standards
     - Make everything pretty, new icons, cleaner design, better ingredients.
     - Accessability is going to be a hard one to tackle and might be a long term goal unless an expert drops in.
