@@ -10,9 +10,7 @@ The element IDs aren't easily changable, css files have them littered throughout
 
 CSS in JS everywhere.... A lot of the moving, transitions, hide and show are inside jquery functions instead of CSS classes and objects and I don't approve. It makes the JS very complex as well as locking transition animations inside many JS files instead of in the themes. Cosmetics should be controllable by the theme chosen by the user.
 
-
 Backend:
  * In components/update/class.update.php @ line 32/33, there is a reference to the update server pointing towards Kurim's server. Eventually I'll need to set up a backend for it.
  * I've created the backend and updated all references to it. I think I should find a better palce to host the JSON files as I don't want people pinging my server that often.
  * Seems promising: https://jsonbin.io/pricing
-
