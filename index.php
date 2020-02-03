@@ -135,10 +135,10 @@ if (isset($_SESSION['theme'])) {
 			<form id="login" method="post">
 
 				<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
-				<input type="text" name="username" autofocus="autofocus" autocomplete="off">
+				<input type="text" name="username" autofocus="autofocus" autocomplete="username">
 
 				<label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
-				<input type="password" name="password">
+				<input type="password" name="password" autocomplete="current-password">
 				<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
 				<div class="language-selector">

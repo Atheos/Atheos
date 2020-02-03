@@ -7,13 +7,14 @@
 (function(global, $) {
 
 
-	var codiad = global.codiad = {};
+	var core = global.codiad = {};
 
 	//////////////////////////////////////////////////////////////////////
 	// loadScript instead of getScript (checks and balances and shit...)
 	//////////////////////////////////////////////////////////////////////
 
 	$.loadScript = function(url, arg1, arg2) {
+		// console.trace('Custom LoadScripts');
 		var cache = true,
 			callback = null;
 		//arg1 and arg2 can be interchangable
@@ -53,58 +54,26 @@
 	// Init
 	//////////////////////////////////////////////////////////////////////
 	document.addEventListener("DOMContentLoaded", function() {
-		// $(function() {
-		// $(document).ready(function () {
 		// Console fix for IE
 		if (typeof(console) === 'undefined') {
 			console = {};
 			console.log = console.error = console.info = console.debug = console.warn = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = function() {};
 		}
 		// Sliding sidebars
-		codiad.sidebars.init();
-		var handleWidth = 10;
+		core.sidebars.init();
 
 		// Messages
-		codiad.message.init();
+		core.message.init();
 
 		//HexOverlay
-		codiad.hexoverlay.init();
+		core.hexoverlay.init();
 
-		$(window)
-			.on('load resize', function() {
-
-				var marginL, reduction;
-				if ($("#sb-left")
-					.css('left') !== 0 && !codiad.sidebars.settings.leftLockedVisible) {
-					marginL = handleWidth;
-					reduction = 2 * handleWidth;
-				} else {
-					marginL = $("#sb-left")
-						.width();
-					reduction = marginL + handleWidth;
-				}
-				$('#editor-region')
-					.css({
-						'margin-left': marginL + 'px',
-						'height': ($('body')
-							.outerHeight()) + 'px'
-					});
-				$('#root-editor-wrapper')
-					.css({
-						'height': ($('body')
-							.outerHeight() - 57) + 'px' // TODO Adjust '75' in function of the final tabs height.
-					});
-
-				// Run resize command to fix render issues
-				if (codiad.editor) {
-					codiad.editor.resize();
-					codiad.active.updateTabDropdownVisibility();
-				}
-			});
-
-		$('#settings').click(function() {
-			codiad.settings.show();
+		events.on('click', '#settings', function() {
+			core.settings.show();
 		});
+		// $('#settings').click(function() {
+		// 	core.settings.show();
+		// });
 	});
 
 })(this, jQuery);

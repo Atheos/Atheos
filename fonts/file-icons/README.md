@@ -38,13 +38,11 @@ Consult the package stylesheets to see what classes are used:
 * **Colours:** [`styles/colours.less`](./styles/colours.less)
 * **Fonts:**   [`styles/fonts.less`](./styles/fonts.less)
 
-
 #### Icon reference
 * [**File-Icons**](https://github.com/file-icons/source/blob/master/charmap.md) 
 * [**FontAwesome 4.7.0**](https://fontawesome.com/v4.7.0/cheatsheet/)
 * [**Mfizz**](https://github.com/file-icons/MFixx/blob/master/charmap.md)
 * [**Devicons**](https://github.com/file-icons/DevOpicons/blob/master/charmap.md)
-
 
 ### Examples ####################################################################
 
@@ -61,14 +59,12 @@ Consult the package stylesheets to see what classes are used:
 }
 ~~~
 
-
 #### Choose your own shades of orange
 ~~~css
 .dark-orange   { color: #6a1e05; }
 .medium-orange { color: #b8743d; }
 .light-orange  { color: #cf9b67; }
 ~~~
-
 
 #### Bring back PHP's blue-shield icon
 ~~~css
@@ -77,7 +73,6 @@ Consult the package stylesheets to see what classes are used:
 	content: "\f147";
 }
 ~~~
-
 
 #### Assign icons by file extension
 The following examples use [attribute selectors][12] to target specific pathnames:
@@ -89,7 +84,6 @@ The following examples use [attribute selectors][12] to target specific pathname
 }
 ~~~
 
-
 #### Assign icons to directories
 ~~~less
 .directory > .header > .icon{
@@ -99,8 +93,6 @@ The following examples use [attribute selectors][12] to target specific pathname
 	}
 }
 ~~~
-
-
 
 Troubleshooting
 ---------------
@@ -112,8 +104,6 @@ Troubleshooting
 A restart is needed to complete installation. Reload the window, or restart Atom.
 
 If this doesn't help, [please file an issue][7].
-
-
 
 <a name="npm-error-when-installing"></a>
 #### Installation halts with an `npm` error:
@@ -127,8 +117,6 @@ rm -rf ~/.atom/.apm
 apm install --production file-icons
 ~~~
 
-
-
 <a name="an-icon-has-stopped-updating"></a>
 #### An icon has stopped updating:
 It's probably a caching issue. Do the following:
@@ -136,8 +124,6 @@ It's probably a caching issue. Do the following:
 1. Open the command palette: <kbd>Cmd/Ctrl</kbd> + <kbd>Shift</kbd> + <kbd>P</kbd>
 2. Run `file-icons:clear-cache`
 3. Reload the window, or restart Atom
-
-
 
 <a name="ruby-files-look-weird"></a>
 #### Ruby files are showing the [wrong font][14]:
@@ -147,15 +133,11 @@ For Solidity support, use [`linter-solidity`][17] or [`language-solidity`][18] i
 
 If `language-ethereum` *isn't* installed, please [follow these steps][19] and file an issue.
 
-
-
 <a name="the-tree-views-files-are-borked"></a>
 #### The tree-view's files are borked and [look like this][6]:
 If you haven't restarted Atom since upgrading to [File-Icons v2][v2.0], do so now.
 
 If restarting doesn't help, your stylesheet probably needs updating. See below.
-
-
 
 <a name="my-stylesheet-has-errors-since-updating"></a>
 #### My stylesheet has errors since updating:
@@ -174,7 +156,6 @@ As of [v2.0][], classes are used for displaying icons instead of mixins. Delete 
 }
 ~~~
 
-
 Instead of `@pane-tab…` variables, use `.tab > .icon[data-path]`:
 
 ~~~diff
@@ -188,7 +169,6 @@ Instead of `@pane-tab…` variables, use `.tab > .icon[data-path]`:
 }
 ~~~
 
-
 These CSS classes are no longer used, so delete them:
 
 ~~~diff
@@ -197,10 +177,8 @@ These CSS classes are no longer used, so delete them:
 -.file-icons-on-changes
 ~~~
 
-
 #### It's something else.
 Please [file an issue][7]. Include screenshots if necessary.
-
 
 
 Integration with other packages
@@ -249,7 +227,6 @@ fileIcon.onDestroy(() => disposable.dispose());
 +fileIcon.classList.remove("icon-file-text");
  const disposable = addIconToElement(fileIcon, "/path/to/file.txt");
 ```
-
 
 Backers
 ------------------------------------------------------------------------------------------
