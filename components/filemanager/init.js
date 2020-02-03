@@ -13,6 +13,17 @@
 			codiad.filemanager.init();
 		});
 
+	//////////////////////////////////////////////////////////////////////
+	// FileManager
+	//////////////////////////////////////////////////////////////////////
+	// Notes: 
+	// Goodness this file is very complex; it's going to take a very long time
+	// to really get a grasp of what's going on in this file and how to 
+	// refactor it.
+	//
+	//												- Liam Siira
+	//////////////////////////////////////////////////////////////////////
+
 	codiad.filemanager = {
 
 		clipboard: '',
@@ -225,24 +236,28 @@
 		//////////////////////////////////////////////////////////////////
 		// Create node in file tree
 		// This function doesn't seem to be called ever. - Liam Siira
+		// This function is used during the new file creation. Probably can be
+		// used elsewhere, like the intiation.
 		//////////////////////////////////////////////////////////////////
 
 		createObject: function(parent, path, type) {
-			console.trace();
 			// NODE FORMAT: <li><a class="{type} {ext-file_extension}" data-type="{type}" data-path="{path}">{short_name}</a></li>
 			var parentNode = $('#file-manager a[data-path="' + parent + '"]');
-			if (!$('#file-manager a[data-path="' + path + '"]')
-				.length) { // Doesn't already exist
-				if (parentNode.hasClass('open') && parentNode.hasClass('directory')) { // Only append node if parent is open (and a directory)
+			if (!$('#file-manager a[data-path="' + path + '"]').length) { // Doesn't already exist
+				if (parentNode.hasClass('open') && parentNode.data('type') === 'directory') { // Only append node if parent is open (and a directory)
 					var shortName = this.getShortName(path);
-					if (type == 'directory') {
-						var appendage = '<li><span class="none"></span><a class="fa fa-folder" data-type="directory" data-path="' + path + '">' + shortName + '</a></li>';
-					} else {
-						var appendage = '<li><span class="none"></span><a class="file ext-' +
-							this.getExtension(shortName) +
-							'" data-type="file" data-path="' +
-							path + '">' + shortName + '</a></li>';
-					}
+					var nodeClass = 'none';
+					var fileClass = type == "directory" ? "fa fa-folder medium-blue" : FileIcons.getClassWithColor(shortName);
+					fileClass = fileClass || 'fa fa-file medium-green';
+
+					var appendage = `<li>
+										<a data-type="${type}" data-path="${path}">
+											<i class="expand ${nodeClass}"></i>
+											<i class="${fileClass}"></i>
+											<span>${shortName}</span>
+										</a>
+									</li>`;
+
 					if (parentNode.siblings('ul')
 						.length) { // UL exists, other children to play with
 						parentNode.siblings('ul')
@@ -306,7 +321,7 @@
 								file.name = file.name.replace(path, '').split('/').join('');
 
 								file.class = file.type == "directory" ? "fa fa-folder medium-blue" : FileIcons.getClassWithColor(file.name);
-								file.class = file.class || 'fa fa-file medium-green'
+								file.class = file.class || 'fa fa-file medium-green';
 								var nodeClass = 'none';
 								if (file.type == 'file') {
 									file.ext = ' ext-' + name.split('.').pop();
@@ -635,8 +650,8 @@
 						if (renameResponse != 'error') {
 							codiad.message.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
 							var node = $('#file-manager a[data-path="' + path + '"]'),
-							icon = node.find('i:nth-child(2)'),
-							span = node.find('span');
+								icon = node.find('i:nth-child(2)'),
+								span = node.find('span');
 							// Change pathing and name for node
 							node.attr('data-path', newPath);
 							span.html(newName);
@@ -712,7 +727,7 @@
 				action: 'search',
 				path: path
 			});
-			codiad.modal.load_process.then(function() {
+			codiad.modal.loadProcess.then(function() {
 				var lastSearched = JSON.parse(localStorage.getItem("lastSearched"));
 				if (lastSearched) {
 					$('#modal_content form input[name="search_string"]').val(lastSearched.searchText);

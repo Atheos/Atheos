@@ -1,16 +1,29 @@
-	//////////////////////////////////////////////////////////////////////
-	// PicoJS
-	//////////////////////////////////////////////////////////////////////
-	// Notes:
-	// Built from FemtoJS: https://github.com/vladocar/femtoJS
-	// Buiflux wasn't quite meeting my needs and I wanted something a little
-	// more thoughout, but still close enough to vanillaJS that it won't cause
-	// too many issues. PicoJS will work just like Fempto did, but only on
-	// single elements.
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////		
+//////////////////////////////////////////////////////////////////////
+// PicoJS
+//////////////////////////////////////////////////////////////////////
+// Notes:
+// Built from FemtoJS: https://github.com/vladocar/femtoJS
+// Buiflux wasn't quite meeting my needs and I wanted something a little
+// more thoughout, but still close enough to vanillaJS that it won't cause
+// too many issues. PicoJS will work just like Fempto did, but only on
+// single elements.
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////		
 
-const func = (() => {
+(function (root, factory) {
+	if ( typeof define === 'function' && define.amd ) {
+		define([], function () {
+			return factory(root);
+		});
+	} else if ( typeof exports === 'object' ) {
+		module.exports = factory(root);
+	} else {
+		root.pico = factory(root);
+	}
+})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function (window) {
+
+	'use strict';
+
 	let argToElements = function(src) {
 		if (typeof src === 'string') {
 			const tagName = /^<(\w+)>$/.exec(src);
@@ -26,7 +39,7 @@ const func = (() => {
 			return src;
 		}
 		
-		throw TypeError('Expected string | HTMLElement | Array | femtoJS,' +
+		throw TypeError('Expected string | HTMLElement | Array | picoJS,' +
 		                ' got ' + typeof src);
 	};
 
@@ -78,11 +91,12 @@ const func = (() => {
 			on:				function(t, fn) { sel.addEventListener(t, fn);		return this; },
 			off:			function(t, fn) { sel.removeEventListener(t, fn);	return this; },
 			css:			function(s) { sel.style.cssText += s;				return this; },
-			html:			function(h) { sel.innerHTML = h;					return this; },
-			text:			function(t) { sel.innerText = t;					return this; },
+			html:			function(h) { if(h) {sel.innerHTML = h;	}			return sel.innerHTML; },
+			text:			function(t) { if(t) {sel.innerText = t; }			return sel.innerText; },
 			addClass:		function(t) { sel.classList.add(t);					return this; },
-			toggleClass:	function(t) { sel.classList.toggle(t);				return this; },
 			removeClass:	function(t) { sel.classList.remove(t);				return this; },
+			replaceClass:	function(c, n) { sel.classList.remove(c); sel.classList.add(n);	return this; },
+			toggleClass:	function(t) { sel.classList.toggle(t);				return this; },
 			empty:			function() { sel.innerHTML = '';					return this; },
 			attr:			function(k, v) { sel.setAttribute(k, v);            return this; },
 			removeAttr:		function(k) { sel.removeAttribute(k);				return this; },
@@ -118,14 +132,5 @@ const func = (() => {
 	pico.fragment = () => pico(document.createDocumentFragment());
 
 	return pico;
+
 });
-
-if (typeof module === 'object' && module.exports) {
-	module.exports = func();
-} else if (typeof define === 'function' && define.amd) {
-	const singleton = func();
-
-	define('picoJS', [], () => singleton);
-} else {
-	window.P = func();
-}
