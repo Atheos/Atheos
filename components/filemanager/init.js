@@ -24,6 +24,22 @@
 	//												- Liam Siira
 	//////////////////////////////////////////////////////////////////////
 
+
+	//////////////////////////////////////////////////////////////////////
+	// FileManager
+	//////////////////////////////////////////////////////////////////////
+	// FileManager: 
+	//		Clipboard: Whatdo?
+	//		noOpen: Unopenable filetypes
+	//		noBrowser: Whatdo?
+	//		controller: Identifies backend controller destination
+	//		dialog: Identifies backend dialog destination
+	//
+	//		init: Initializes file manager
+	//
+	//												- Ayla Siira
+	//////////////////////////////////////////////////////////////////////
+
 	codiad.filemanager = {
 
 		clipboard: '',
@@ -516,7 +532,9 @@
 				path: path
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
+					console.log('Submit');
 					e.preventDefault();
 					var shortName = $('#modal_content form input[name="object_name"]')
 						.val();
@@ -526,6 +544,7 @@
 						.val();
 					var createPath = path + '/' + shortName;
 					$.get(codiad.filemanager.controller + '?action=create&path=' + encodeURIComponent(createPath) + '&type=' + type, function(data) {
+						console.log(data);
 						var createResponse = codiad.jsend.parse(data);
 						if (createResponse != 'error') {
 							codiad.message.success(type.charAt(0)
@@ -576,6 +595,7 @@
 						path: path + '/' + shortName
 					});
 					$('#modal_content form')
+						.die('submit')
 						.live('submit', function(e) {
 							e.preventDefault();
 							var duplicate = false;
@@ -631,6 +651,7 @@
 				type: type
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var newName = $('#modal_content form input[name="object_name"]').val();
@@ -695,6 +716,7 @@
 				path: path
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					$.get(_this.controller + '?action=delete&path=' + encodeURIComponent(path), function(data) {
@@ -741,6 +763,7 @@
 			codiad.modal.hideOverlay();
 			var _this = this;
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					$('#filemanager-search-processing')
 						.show();
