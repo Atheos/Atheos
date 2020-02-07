@@ -35,14 +35,14 @@ if (isset($_SESSION['theme'])) {
 	<script src="fonts/file-icons/main.js"></script>
 
 	<!--Link favicons-->
-	<link rel="apple-touch-icon" sizes="180x180" href="/favicons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="/favicons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="/favicons/favicon-16x16.png">
-	<link rel="manifest" href="/favicons/site.webmanifest">
-	<link rel="mask-icon" href="/favicons/safari-pinned-tab.svg" color="#5bbad5">
-	<link rel="shortcut icon" href="/favicons/favicon.ico">
-	<meta name="msapplication-TileColor" content="#ffffff">
-	<meta name="msapplication-config" content="/favicons/browserconfig.xml">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+	<link rel="manifest" href="favicons/site.webmanifest">
+	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
+	<link rel="shortcut icon" href="favicons/favicon.ico">
+	<meta name="msapplication-TileColor" content="#111111">
+	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
 	<?php
@@ -89,10 +89,7 @@ if (isset($_SESSION['theme'])) {
 
 	<script src="js/jquery.css3.min.js"></script>
 
-	<script src="js/jquery.easing.js"></script>
-	<script src="js/jquery.hoverIntent.min.js"></script>
-
-	<script src="js/amplify.min.js"></script>
+	<script src="js/amplify.js"></script>
 	<script src="js/localstorage.js"></script>
 	<script src="js/events.js"></script>
 	<script src="js/hoverintent.min.js"></script>
@@ -103,11 +100,14 @@ if (isset($_SESSION['theme'])) {
 	<script src="js/system.js"></script>
 
 	<script src="js/helpers.js"></script>
-	<script src="js/hex.js"></script>
+	<script src="js/synthetic.js"></script>
 	<script src="js/sidebars.js"></script>
 	<script src="js/modal.js"></script>
 	<script src="js/toast.js"></script>
 	<script src="js/jsend.js"></script>
+
+	<!--<script src="js/main.min.php"></script>-->
+
 	<script src="js/instance.js?v=<?php echo time(); ?>"></script>
 	<?php
 
@@ -127,62 +127,71 @@ if (isset($_SESSION['theme'])) {
 			require_once('components/install/view.php');
 		} else {
 			// Login form ?>
-			<div id="logo"></div>
-			<div id="title">
-				<h1 class="linear-wipe">Atheos</h1>
-				<span>IDE</span>
+			<div id="logo">
+				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" width="320" height="400" version="1.1">
+					<path class="delay-0" style="fill:#111111" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
+					<path class="delay-1" style="fill:#0074d9" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
+					<path class="delay-2" style="fill:#0074d9" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
+					<path class="delay-3" style="fill:#0074d9" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
+					<path class="delay-3" style="fill:#0074d9" d="M960 980L520 740v80l440 240 440-220v-80z" />
+				</svg>
 			</div>
+			<!--<div id="title">-->
+			<!--	<h1 class="">Atheos</h1>-->
+			<!--	<span>IDE</span>-->
+			<!--</div>-->
 			<form id="login" method="post">
+				<fieldset>
+					<legend>Atheos <span>IDE</span></legend>
+					<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
+					<input type="text" name="username" autofocus="autofocus" autocomplete="username">
 
-				<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
-				<input type="text" name="username" autofocus="autofocus" autocomplete="username">
+					<label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
+					<input type="password" name="password" autocomplete="current-password">
+					<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
-				<label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
-				<input type="password" name="password" autocomplete="current-password">
-				<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
-
-				<div class="language-selector">
-					<label><span class="icon-picture login-icon"></span> <?php i18n("Theme"); ?></label>
-					<select name="theme" id="theme">
-						<option value="default"><?php i18n("Default"); ?></option>
-						<?php
-						include 'languages/code.php';
-						foreach ($themes as $theme):
-						if (file_exists(THEMES."/" . $theme . "/theme.json")) {
-							$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
-							$data = json_decode($data, true); ?>
-							<option value="<?php echo $theme; ?>" <?php if ($theme == THEME) {
-								echo "selected";
-							} ?>><?php if ($data[0]['name'] != '') {
-								echo $data[0]['name'];
-							} else {
-								echo $theme;
-							} ?></option>
+					<div class="language-selector">
+						<label><span class="icon-picture login-icon"></span> <?php i18n("Theme"); ?></label>
+						<select name="theme" id="theme">
+							<option value="default"><?php i18n("Default"); ?></option>
 							<?php
-						}
-						endforeach; ?>
-					</select>
-					<label><span class="icon-language login-icon"></span> <?php i18n("Language"); ?></label>
-					<select name="language" id="language">
-						<?php
-						include 'languages/code.php';
-						foreach (glob("languages/*.php") as $filename):
-						$lang_code = str_replace(array("languages/", ".php"), "", $filename);
-						if (!isset($languages[$lang_code])) {
-							continue;
-						}
-						$lang_disp = ucfirst(strtolower($languages[$lang_code])); ?>
-						<option value="<?php echo $lang_code; ?>" <?php if ($lang_code == "en") {
-							echo "selected";
-						} ?>><?php echo $lang_disp; ?></option>
-						<?php endforeach; ?>
-					</select>
-				</div>
+							include 'languages/code.php';
+							foreach ($themes as $theme):
+							if (file_exists(THEMES."/" . $theme . "/theme.json")) {
+								$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
+								$data = json_decode($data, true); ?>
+								<option value="<?php echo $theme; ?>" <?php if ($theme == THEME) {
+									echo "selected";
+								} ?>><?php if ($data[0]['name'] != '') {
+									echo $data[0]['name'];
+								} else {
+									echo $theme;
+								} ?></option>
+								<?php
+							}
+							endforeach; ?>
+						</select>
+						<label><span class="icon-language login-icon"></span> <?php i18n("Language"); ?></label>
+						<select name="language" id="language">
+							<?php
+							include 'languages/code.php';
+							foreach (glob("languages/*.php") as $filename):
+							$lang_code = str_replace(array("languages/", ".php"), "", $filename);
+							if (!isset($languages[$lang_code])) {
+								continue;
+							}
+							$lang_disp = ucfirst(strtolower($languages[$lang_code])); ?>
+							<option value="<?php echo $lang_code; ?>" <?php if ($lang_code == "en") {
+								echo "selected";
+							} ?>><?php echo $lang_disp; ?></option>
+							<?php endforeach; ?>
+						</select>
+					</div>
 
-				<button><?php i18n("Login"); ?></button>
+					<button><?php i18n("Login"); ?></button>
 
-				<a class="show-language-selector"><?php i18n("More"); ?></a>
-
+					<a class="show-language-selector"><?php i18n("More"); ?></a>
+				</fieldset>
 			</form>
 		</div>
 		<script src="components/user/init.js"></script>
@@ -453,6 +462,5 @@ foreach ($plugins as $plugin) {
 
 ?>
 <div id="message"></div>
-
 </body>
 </html>
