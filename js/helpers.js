@@ -76,15 +76,6 @@ var log = function(m, t) {
 					el.fireEvent('on' + e.eventType, e);
 				}
 			}
-
-			// if (selector.nodeType === Node.ELEMENT_NODE) {
-			// 	selector.dispatchEvent(new Event(event));
-			// } else if (typeof s === 'string') {
-			// 	var element = document.querySelector(selector);
-			// 	if (element) {
-			// 		element.dispatchEvent(new Event(event));
-			// 	}
-			// }
 		}
 	};
 
