@@ -66,7 +66,7 @@
 		core.message.init();
 
 		//HexOverlay
-		core.hexoverlay.init();
+		synthetic.init();
 
 		events.on('click', '#settings', function() {
 			core.settings.show();
