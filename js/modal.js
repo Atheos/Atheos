@@ -1,10 +1,12 @@
-'use strict';
+(function(global, $) {
 
-(function(global, $, p) {
+	'use strict';
+
 
 	var core = global.codiad,
+		ajax = global.ajax,
 		amplify = global.amplify,
-		events = global.events;
+		p = global.pico;
 
 	//////////////////////////////////////////////////////////////////////
 	// Modal
@@ -51,67 +53,74 @@
 
 		createModal: function() {
 			var modal = core.modal;
-			var overlay = document.createElement('div'),
-				wrapper = document.createElement('div'),
-				content = document.createElement('div'),
-				drag = document.createElement('i'),
-				close = document.createElement('i');
+			var overlay = p('<div>'),
+				wrapper = p('<div>'),
+				content = p('<div>'),
+				drag = p('<i>'),
+				close = p('<i>');
 
-			overlay.id = 'modal_overlay';
-			overlay.addEventListener('click', function(event) {
+			overlay.attr('id', 'modal_overlay');
+			overlay.on('click', function(event) {
 				if (event.target.id !== 'modal_overlay') {
 					return;
 				}
 				modal.unload();
 			}, false);
 
-			wrapper.id = 'modal_wrapper';
-			content.id = 'modal_content';
+			wrapper.attr('id', 'modal_wrapper');
+			content.attr('id', 'modal_content');
 
-			close.classList.add('icon-cancel');
-			close.addEventListener('click', modal.unload, false);
+			close.addClass('icon-cancel');
+			close.on('click', modal.unload);
 
-			drag.classList.add('icon-arrows');
-			drag.addEventListener('mousedown', function() {
-				drag.classList.add('active');
+			drag.addClass('icon-arrows');
+			drag.on('mousedown', function() {
+				drag.addClass('active');
 				modal.drag(wrapper);
 			}, false);
 
-			wrapper.appendChild(close);
-			wrapper.appendChild(drag);
-			wrapper.appendChild(content);
+			wrapper.append(close);
+			wrapper.append(drag);
+			wrapper.append(content);
 
 			// overlay.appendChild(wrapper);
-			document.body.appendChild(wrapper);
+			document.body.appendChild(wrapper.el);
 
-			document.body.appendChild(overlay);
-			return p(wrapper);
+			document.body.appendChild(overlay.el);
+			return wrapper;
 		},
 
 		load: function(width, url, data) {
 			data = data || {};
 
 			var wrapper = p('#modal_wrapper') || this.createModal(),
-				content = p('#modal_content').sel;
-			wrapper.style.top = '15%';
+				content = p('#modal_content');
 
-			wrapper.style.left = width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)';
-			wrapper.style.minWidth = width ? (width + 300) + 'px' : '400px';
+			wrapper.css({
+				'top': '15%'
+			});
+			wrapper.css({
+				'left': (width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)')
+			});
 
-			content.innerHTML = '<div id="modal_loading"></div>';
+			wrapper.css({
+				'min-width': (width ? (width + 300) + 'px' : '400px')
+			});
+
+			content.html('<div id="modal_loading"></div>');
 
 			this.loadProcess = ajax({
 				url: url,
 				data: data,
 				success: function(data) {
-					$(content).html(data);
-					
+					$('#modal_content').html(data);
+
 					// p(content).html(data);
 					// var script = p(p(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
 					// }
-					
+
 					// Fix for Firefox autofocus goofiness
 					var input = wrapper.find('input[autofocus="autofocus"]');
 					if (input) {
@@ -124,8 +133,12 @@
 				animationPerformed: false
 			});
 
-			wrapper.style.display = 'block';
-			p('#modal_overlay').style.display = 'block';
+			wrapper.css({
+				'display': 'block'
+			});
+			p('#modal_overlay').css({
+				'display': 'block'
+			});
 
 			core.modal.settings.isModalVisible = true;
 		},
@@ -140,7 +153,7 @@
 			wrapper.removeClass('modal-active');
 			overlay.removeClass('modal-active');
 
-			wrapper.addEventListener('transitionend', function() {
+			wrapper.on('transitionend', function() {
 				wrapper.remove();
 				overlay.remove();
 			});
@@ -155,8 +168,12 @@
 				animationPerformed: false
 			});
 
-			p('#modal_overlay').style.display = '';
-			p('#modal_wrapper').style.display = '';
+			p('#modal_overlay').css({
+				'display': ''
+			});
+			p('#modal_wrapper').css({
+				'display': ''
+			});
 			p('#modal_content').empty();
 
 			core.editor.focus();
@@ -166,7 +183,7 @@
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
-			var rect = wrapper.getBoundingClientRect(),
+			var rect = wrapper.offset(),
 				mouseX = window.event.clientX,
 				mouseY = window.event.clientY, // Stores x & y coordinates of the mouse pointer
 				modalX = rect.left,
@@ -192,4 +209,4 @@
 		}
 	};
 
-})(this, jQuery, pico);
+})(this, jQuery);

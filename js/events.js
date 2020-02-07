@@ -1,14 +1,14 @@
-(function (root, factory) {
-	if ( typeof define === 'function' && define.amd ) {
-		define([], function () {
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define([], function() {
 			return factory(root);
 		});
-	} else if ( typeof exports === 'object' ) {
+	} else if (typeof exports === 'object') {
 		module.exports = factory(root);
 	} else {
 		root.events = factory(root);
 	}
-})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function (window) {
+})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
 	'use strict';
 
@@ -25,12 +25,12 @@
 	//
 
 	/**
-	 * Get the index for the listener
-	 * @param  {Array}   arr      The listeners for an event
-	 * @param  {Array}   listener The listener details
-	 * @return {Integer}          The index of the listener
-	 */
-	var getIndex = function (arr, selector, callback) {
+		* Get the index for the listener
+		* @param  {Array}   arr      The listeners for an event
+		* @param  {Array}   listener The listener details
+		* @return {Integer}          The index of the listener
+		*/
+	var getIndex = function(arr, selector, callback) {
 		for (var i = 0; i < arr.length; i++) {
 			if (
 				arr[i].selector === selector &&
@@ -41,21 +41,21 @@
 	};
 
 	/**
-	 * Check if the listener callback should run or not
-	 * @param  {Node}         target   The event.target
-	 * @param  {String|Node}  selector The selector to check the target against
-	 * @return {Boolean}               If true, run listener
-	 */
-	var doRun = function (target, selector) {
+		* Check if the listener callback should run or not
+		* @param  {Node}         target   The event.target
+		* @param  {String|Node}  selector The selector to check the target against
+		* @return {Boolean}               If true, run listener
+		*/
+	var doRun = function(target, selector) {
 		if ([
-			'*',
-			'window',
-			'document',
-			'document.documentElement',
-			window,
-			document,
-			document.documentElement
-		].indexOf(selector) > -1) return true;
+				'*',
+				'window',
+				'document',
+				'document.documentElement',
+				window,
+				document,
+				document.documentElement
+			].indexOf(selector) > -1) return true;
 		if (typeof selector !== 'string' && selector.contains) {
 			return selector === target || selector.contains(target);
 		}
@@ -63,30 +63,30 @@
 	};
 
 	/**
-	 * Handle listeners after event fires
-	 * @param {Event} event The event
-	 */
-	var eventHandler = function (event) {
+		* Handle listeners after event fires
+		* @param {Event} event The event
+		*/
+	var eventHandler = function(event) {
 		if (!activeEvents[event.type]) return;
-		activeEvents[event.type].forEach(function (listener) {
+		activeEvents[event.type].forEach(function(listener) {
 			if (!doRun(event.target, listener.selector)) return;
 			listener.callback(event);
 		});
 	};
 
 	/**
-	 * Add an event
-	 * @param  {String}   types    The event type or types (comma separated)
-	 * @param  {String}   selector The selector to run the event on
-	 * @param  {Function} callback The function to run when the event fires
-	 */
-	publicAPIs.on = function (types, selector, callback) {
+		* Add an event
+		* @param  {String}   types    The event type or types (comma separated)
+		* @param  {String}   selector The selector to run the event on
+		* @param  {Function} callback The function to run when the event fires
+		*/
+	publicAPIs.on = function(types, selector, callback) {
 
 		// Make sure there's a selector and callback
 		if (!selector || !callback) return;
 
 		// Loop through each event type
-		types.split(',').forEach(function (type) {
+		types.split(',').forEach(function(type) {
 
 			// Remove whitespace
 			type = type.trim();
@@ -108,15 +108,15 @@
 	};
 
 	/**
-	 * Remove an event
-	 * @param  {String}   types    The event type or types (comma separated)
-	 * @param  {String}   selector The selector to remove the event from
-	 * @param  {Function} callback The function to remove
-	 */
-	publicAPIs.off = function (types, selector, callback) {
+		* Remove an event
+		* @param  {String}   types    The event type or types (comma separated)
+		* @param  {String}   selector The selector to remove the event from
+		* @param  {Function} callback The function to remove
+		*/
+	publicAPIs.off = function(types, selector, callback) {
 
 		// Loop through each event type
-		types.split(',').forEach(function (type) {
+		types.split(',').forEach(function(type) {
 
 			// Remove whitespace
 			type = type.trim();
@@ -141,23 +141,23 @@
 	};
 
 	/**
-	 * Add an event, and automatically remove it after it's first run
-	 * @param  {String}   types    The event type or types (comma separated)
-	 * @param  {String}   selector The selector to run the event on
-	 * @param  {Function} callback The function to run when the event fires
-	 */
-	publicAPIs.once = function (types, selector, callback) {
-		publicAPIs.on(types, selector, function temp (event) {
+		* Add an event, and automatically remove it after it's first run
+		* @param  {String}   types    The event type or types (comma separated)
+		* @param  {String}   selector The selector to run the event on
+		* @param  {Function} callback The function to run when the event fires
+		*/
+	publicAPIs.once = function(types, selector, callback) {
+		publicAPIs.on(types, selector, function temp(event) {
 			callback(event);
 			publicAPIs.off(types, selector, temp);
 		});
 	};
 
 	/**
-	 * Get an immutable copy of all active event listeners
-	 * @return {Object} Active event listeners
-	 */
-	publicAPIs.get = function () {
+		* Get an immutable copy of all active event listeners
+		* @return {Object} Active event listeners
+		*/
+	publicAPIs.get = function() {
 		var obj = {};
 		for (var type in activeEvents) {
 			if (activeEvents.hasOwnProperty(type)) {
