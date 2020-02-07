@@ -1,12 +1,12 @@
-#hex_overlay {
-	left: -20px;
-	// opacity: .15;
-	position: fixed;
-	top: -20px;
-	z-index: -1;
-	pointer-events: none;
-	height: 120vh;
-	width: 120vw;
+#synthetic {
+    left: -20px;
+    position: fixed;
+    top: -20px;
+    z-index: 0;
+    pointer-events: none;
+    height: 120vh;
+    width: 120vw;
+    background-color: #000;
 	background: linear-gradient(-45deg, #000 40%, #0074D7 50%, #000 60%);
 	background-size: 600% 600%;
 	animation: gradient 10s linear infinite;
