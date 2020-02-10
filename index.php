@@ -29,8 +29,8 @@ if (isset($_SESSION['theme'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
 	<link rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
-	<!--<link rel="stylesheet" href="fonts/ubuntu-webfont/all.css">-->
-	<link rel="stylesheet" href="fonts/victor-mono/webfont.css">
+	<link rel="stylesheet" href="fonts/ubuntu-webfont/webfont.css">
+	<!--<link rel="stylesheet" href="fonts/victor-mono/webfont.css">-->
 	<link rel="stylesheet" href="fonts/file-icons/webfont.css">
 	<script src="fonts/file-icons/main.js"></script>
 
@@ -87,14 +87,14 @@ if (isset($_SESSION['theme'])) {
 	<script src="js/jquery-1.7.2.min.js"></script>
 	<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
 
-	<script src="js/jquery.css3.min.js"></script>
+	<!--<script src="js/jquery.css3.min.js"></script>-->
 
 	<script src="js/amplify.js"></script>
 	<script src="js/localstorage.js"></script>
 	<!--<script src="js/events.js"></script>-->
 	<script src="js/hoverintent.min.js"></script>
 	<script src="js/miniAjax.js"></script>
-	<script src="js/bioflux.js"></script>
+	<!--<script src="js/bioflux.js"></script>-->
 
 	<script src="js/onyx.js"></script>
 
@@ -210,7 +210,7 @@ if (isset($_SESSION['theme'])) {
 
 		<div id="sb-left" class="sidebar">
 			<div id="sb-left-title">
-				<a id="lock-left-sidebar" class="icon icon-lock-close"></a>
+				<a id="sb-left-lock" class="icon icon-lock-close"></a>
 				<?php if (!common::isWINOS()) {
 					?>
 					<a id="finder-quick" class="icon icon-archive"></a>
@@ -293,16 +293,11 @@ if (isset($_SESSION['theme'])) {
 			</div>
 		</div>
 
-		<div class="sidebar-handle">
+		<div id="sb-left-handle">
 			<span>|||</span>
 		</div>
 
 	</div>
-
-	<div id="cursor-position">
-		<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
-	</div>
-
 	<div id="editor-region">
 		<div id="editor-top-bar">
 			<ul id="tab-list-active-files">
@@ -351,6 +346,9 @@ if (isset($_SESSION['theme'])) {
 			<a id="current-mode"><span class="icon-layout"></span></a>
 			<div class="divider"></div>
 			<div id="current-file"></div>
+			<div id="cursor-position">
+				<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
+			</div>
 		</div>
 		<div id="changemode-menu" class="options-menu">
 		</div>
@@ -363,15 +361,12 @@ if (isset($_SESSION['theme'])) {
 
 	<div id="sb-right" class="sidebar">
 
-		<div class="sidebar-handle">
-			<!--<span>-->
-			<!--	<a class="icon icon-menu"></a>-->
-			<!--</span>-->
+		<div id="sb-right-handle">
 			<span>|||</span>
 
 		</div>
 		<div id="sb-right-title">
-			<span id="lock-right-sidebar" class="icon icon-lock-open"></span>
+			<span id="sb-right-lock" class="icon icon-lock-open"></span>
 		</div>
 
 		<div class="sb-right-content">

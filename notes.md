@@ -11,7 +11,6 @@ FrontEnd:
  * Amplify could be used to replace any promise requests used in Modal.js
 
 Backend:
- * In components/update/class.update.php @ line 32/33, there is a reference to the update server pointing towards Kurim's server. Eventually I'll need to set up a backend for it.
  * I've created the backend and updated all references to it. I think I should find a better palce to host the JSON files as I don't want people pinging my server that often.
  * Seems promising: https://jsonbin.io/pricing
  * 
@@ -21,6 +20,15 @@ Using the minifier library, I plan on having all plugin screen.css files combine
 
 I'd like to create an assets folder that contains the PHP script as a router to request files from the server to ensure that they are minified before being sent as assets; even combined if possible.
 
-https://www.freecodecamp.org/news/how-to-write-a-jquery-like-library-in-71-lines-of-code-learn-about-the-dom-e9fb99dbc8d2/
-https://codepen.io/ImagineProgramming/post/checksum-algorithms-in-javascript-checksum-js-engine
-https://addyosmani.com/resources/essentialjsdesignpatterns/book/#observerpatternjavascript
+
+
+
+CheckList:
+* Change Atheos on login screen to blue font color perharps?
+* Change name of PicoJS to something cool, optimize it as well. Iter function is from original fempto.
+* Finish Atheos Documentation website.
+* JSHint on: Amplify, Events, Ajax.
+* Remove all references to Bioflux, and remove it.
+* Package all JS files in PHP script.
+* Check on AutoComplete functions
+* Release an official distribution.
