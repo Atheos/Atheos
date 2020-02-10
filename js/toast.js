@@ -1,22 +1,23 @@
-'use strict';
+////////////////////////////////////////////////////////////////////////////////
+// User Alerts / Messages
+////////////////////////////////////////////////////////////////////////////////
+// Notes: 
+// Currently the icons are hard coded: Close/Types. They'll need to be
+// migrated to css classes modifiable by the themes for consistancy.
+//
+// codiad.message needs to be changed to codiad.toast in the future
+//
+//												- Liam Siira
+////////////////////////////////////////////////////////////////////////////////
+
 
 (function(global) {
 
-	var core = global.codiad,
-	amplify = global.amplify,
-	bioflux = global.bioflux,
-	events = global.events;
+	'use strict';
 
-	//////////////////////////////////////////////////////////////////////
-	// User Alerts / Messages
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// Currently the icons are hard coded: Close/Types. They'll need to be
-	// migrated to css classes modifiable by the themes for consistancy.
-	//
-	// codiad.message needs to be changed to codiad.toast in the future
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
+
+	var core = global.codiad,
+		amplify = global.amplify;
 
 	core.toast = {
 
@@ -66,7 +67,7 @@
 			wrapper.appendChild(icon);
 			wrapper.appendChild(message);
 			wrapper.appendChild(close);
-			
+
 			close.addEventListener('click', function() {
 				core.message.hide(wrapper);
 			});
@@ -130,7 +131,7 @@
 			});
 		}
 	};
-	
+
 	core.message = core.toast;
 
 })(this);
