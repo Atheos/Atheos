@@ -7,7 +7,8 @@
 (function(global, $) {
 
 
-	var core = global.codiad = {};
+	var core = global.codiad = {},
+		o = global.onyx;
 
 	//////////////////////////////////////////////////////////////////////
 	// loadScript instead of getScript (checks and balances and shit...)
@@ -54,26 +55,50 @@
 	// Init
 	//////////////////////////////////////////////////////////////////////
 	document.addEventListener("DOMContentLoaded", function() {
-		// Console fix for IE
-		if (typeof(console) === 'undefined') {
-			console = {};
-			console.log = console.error = console.info = console.debug = console.warn = console.trace = console.dir = console.dirxml = console.group = console.groupEnd = console.time = console.timeEnd = console.assert = console.profile = function() {};
+
+		//Synthetic Login Overlay
+		if (document.querySelector('#login')) {
+			synthetic.init();
+		} else {
+			core.modal.init();
+			core.sidebars.init();
+			core.toast.init();
+
+			window.addEventListener('resize', function() {
+				var handleWidth = 10;
+
+				var marginL, reduction;
+				if ($("#sb-left").css('left') !== 0 && !core.sidebars.settings.leftLockedVisible) {
+					marginL = handleWidth;
+					reduction = 2 * handleWidth;
+				} else {
+					marginL = $("#sb-left").width();
+					reduction = marginL + handleWidth;
+				}
+
+				o('#editor-region').css({
+					'margin-left': marginL + 'px'
+				});
+
+				// $('#editor-region')
+				// 	.css({
+				// 		'margin-left': marginL + 'px',
+				// 		'height': ($('body')
+				// 			.outerHeight()) + 'px'
+				// 	});
+
+				o('#root-editor-wrapper').css({
+					'height': (o('body').clientHeight() - 57) + 'px'
+				});
+
+				// Run resize command to fix render issues
+				if (core.editor) {
+					core.editor.resize();
+					core.active.updateTabDropdownVisibility();
+				}
+			});
+
 		}
-		// Sliding sidebars
-		core.sidebars.init();
-
-		// Messages
-		core.message.init();
-
-		//HexOverlay
-		synthetic.init();
-
-		events.on('click', '#settings', function() {
-			core.settings.show();
-		});
-		// $('#settings').click(function() {
-		// 	core.settings.show();
-		// });
 	});
 
 })(this, jQuery);
