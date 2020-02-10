@@ -58,7 +58,7 @@
 								</li></ul>`);
 					codiad.filemanager.index(projectInfo.path);
 					codiad.user.project(projectInfo.path);
-					codiad.message.success(i18n('Project %{projectName}% Loaded', {
+					codiad.toast.success(i18n('Project %{projectName}% Loaded', {
 						projectName: projectInfo.name
 					}));
 				}
@@ -184,7 +184,7 @@
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
 						renameResponse = codiad.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.message.success(i18n('Project renamed'));
+							codiad.toast.success(i18n('Project renamed'));
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							codiad.modal.unload();
@@ -224,7 +224,7 @@
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
 							deleteResponse = codiad.jsend.parse(data);
 							if (deleteResponse != 'error') {
-								codiad.message.success(i18n('Project Deleted'));
+								codiad.toast.success(i18n('Project Deleted'));
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open

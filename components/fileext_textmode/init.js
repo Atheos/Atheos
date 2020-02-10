@@ -121,13 +121,13 @@
 			if(resp.status != undefined && resp.status != '' && resp.msg != undefined && resp.message != ''){
 				switch (resp.status) {
 				case 'success':
-					codiad.message.success(resp.msg);
+					codiad.toast.success(resp.msg);
 					break;
 				case 'error':
-					codiad.message.error(resp.msg);
+					codiad.toast.error(resp.msg);
 					break;
 				case 'notice':
-					codiad.message.notice(resp.msg);
+					codiad.toast.notice(resp.msg);
 					break;
 				};	
 			}
