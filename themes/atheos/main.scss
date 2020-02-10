@@ -3,8 +3,8 @@
 @import "modules/util/mixins", "modules/util/colours", "modules/util/shades", "modules/util/variables";
 @import "modules/util/animations";
 @import "modules/toast", "modules/modal";
-@import "modules/active", "modules/autocomplete";
-@import "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
+@import "modules/autocomplete";
+@import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/fileext_textmode", "modules/fonts", "modules/market";
 @import "modules/file-manager/file-manager", "modules/file-manager/context_menu", "modules/file-manager/search";
 @import "modules/misc/title", "modules/misc/logo", "modules/misc/login", "modules/misc/synthetic";
@@ -54,7 +54,8 @@ html {
 	height: 100%;
 	background-color: #1a1a1a;
 	color: #fff;
-	font: normal $font-size 'VictorMono', sans-serif;
+	font: normal $font-size 'Ubuntu', sans-serif;
+	// font: normal $font-size 'VictorMono', sans-serif;
 	overflow: hidden;
 }
 
@@ -236,7 +237,7 @@ button {
 	border-bottom: 2px solid #7d7d7d;
 }
 
-button + button {
+button+button {
 	margin-left: auto;
 }
 
