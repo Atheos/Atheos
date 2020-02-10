@@ -10,17 +10,17 @@
 
 @font-face {
 	font-family: 'VictorMono';
-	src: url('VictorMono-SemiBold.woff2') format('woff2'),
-		url("VictorMono-SemiBold.woff") format("woff");
+	src: url('VictorMono-Regular.woff2') format('woff2'),
+		url("VictorMono-Regular.woff") format("woff");
 	font-weight: 500;
 	font-style: normal;
 }
 
 @font-face {
 	font-family: 'VictorMono-Bold';
-	src: url('VictorMono-Bold.woff2') format('woff2'),
-		url("VictorMono-Bold.woff") format("woff");
-	font-weight: 700;
+	src: url('VictorMono-SemiBold.woff2') format('woff2'),
+		url('VictorMono-SemiBold.woff') format("woff");
+	font-weight: 500;
 	font-style: normal;
 }
 

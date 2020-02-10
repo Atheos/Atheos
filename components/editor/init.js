@@ -483,7 +483,8 @@
 			// Apply the current configuration settings:
 			i.setTheme('ace/theme/' + this.settings.theme);
 			i.setOptions({
-				fontFamily: "VictorMono-Bold",
+				// fontFamily: "VictorMono-Bold",
+				fontFamily: "Ubuntu-Fira",
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
 				enableLiveAutocompletion: false
