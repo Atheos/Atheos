@@ -18,6 +18,7 @@ $sidebar-handle-width: 15px;
 	user-select: none;
 	background: #1a1a1a;
 	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
+	letter-spacing: -0.4px;
 }
 
 .sidebar#sb-left {

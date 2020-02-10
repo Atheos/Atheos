@@ -483,7 +483,7 @@
 			// Apply the current configuration settings:
 			i.setTheme('ace/theme/' + this.settings.theme);
 			i.setOptions({
-				fontFamily: "Ubuntu-Lig",
+				fontFamily: "VictorMono-Bold",
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
 				enableLiveAutocompletion: false
