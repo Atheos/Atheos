@@ -1,14 +1,15 @@
-//////////////////////////////////////////////////////////////////////
-// PicoJS
-//////////////////////////////////////////////////////////////////////
+////////////////////////////////////////////////////////////////////////////////
+// OnyxJS
+////////////////////////////////////////////////////////////////////////////////
 // Notes:
 // Built from FemtoJS: https://github.com/vladocar/femtoJS
 // Bioflux wasn't quite meeting my needs and I wanted something a little
 // more thoughout, but still close enough to vanillaJS that it won't cause
-// too many issues. PicoJS will work just like Fempto did, but only on
+// too many issues. Onyx has similar functions to FemtoJS, but only on
 // single elements.
+//
 //												- Liam Siira
-//////////////////////////////////////////////////////////////////////		
+////////////////////////////////////////////////////////////////////////////////
 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -18,11 +19,112 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(root);
 	} else {
-		root.pico = factory(root);
+		root.onyx = factory(root);
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
 	'use strict';
+
+	var activeEvents = {};
+
+	var getIndex = function(arr, selector, callback) {
+		for (var i = 0; i < arr.length; i++) {
+			if (
+				arr[i].selector === selector &&
+				arr[i].callback.toString() === callback.toString()
+			) return i;
+		}
+		return -1;
+	};
+
+	var doRun = function(target, selector) {
+		if ([
+				'*',
+				'window',
+				'document',
+				'document.documentElement',
+				window,
+				document,
+				document.documentElement
+			].indexOf(selector) > -1) return true;
+		if (typeof selector !== 'string' && selector.contains) {
+			return selector === target || selector.contains(target);
+		}
+		return target.closest(selector);
+	};
+
+	var eventHandler = function(event) {
+		if (!activeEvents[event.type]) return;
+		activeEvents[event.type].forEach(function(listener) {
+			if (!doRun(event.target, listener.selector)) return;
+			listener.callback(event);
+		});
+	};
+
+	var events = {
+		on: function(types, selector, callback) {
+
+			if (!selector || !callback) return;
+
+			types.split(',').forEach(function(type) {
+
+				type = type.trim();
+
+				if (!activeEvents[type]) {
+					activeEvents[type] = [];
+					window.addEventListener(type, eventHandler, true);
+				}
+
+				activeEvents[type].push({
+					selector: selector,
+					callback: callback
+				});
+
+			});
+
+		},
+
+		off: function(types, selector, callback) {
+
+			types.split(',').forEach(function(type) {
+
+				type = type.trim();
+
+				if (!activeEvents[type]) return;
+
+				if (activeEvents[type].length < 2 || !selector) {
+					delete activeEvents[type];
+					window.removeEventListener(type, eventHandler, true);
+					return;
+				}
+
+				var index = getIndex(activeEvents[type], selector, callback);
+				if (index < 0) return;
+				activeEvents[type].splice(index, 1);
+
+			});
+		},
+
+		once: function(types, selector, callback) {
+			events.on(types, selector, function temp(event) {
+				callback(event);
+				events.off(types, selector, temp);
+			});
+		},
+
+		get: function() {
+			var obj = {};
+			for (var type in activeEvents) {
+				if (activeEvents.hasOwnProperty(type)) {
+					obj[type] = activeEvents[type];
+				}
+			}
+			return obj;
+		}
+	};
+
+	// return events;
+
 
 	let argToElement = function(selector) {
 		if (selector) {
@@ -36,15 +138,15 @@
 				}
 			} else if (selector instanceof HTMLElement) {
 				return selector;
-			} else if (selector.isPicoJS) {
+			} else if (selector.isOnyx) {
 				console.trace();
 				return selector.el;
 			}
-			throw new TypeError('Expected string | HTMLElement | picoJS; got ' + typeof selector);
+			throw new TypeError('Expected string | HTMLElement | OnyxJS; got ' + typeof selector);
 		}
 	};
 
-	const pico = function(selector) {
+	const onyx = function(selector) {
 		let element = argToElement(selector);
 		if (!element) return;
 
@@ -62,7 +164,7 @@
 			if (typeof sOrE !== 'string') {
 				if (sOrE instanceof HTMLElement) {
 					element.insertAdjacentElement(s, sOrE);
-				} else if ('isPicoJS' in sOrE) {
+				} else if ('isOnyx' in sOrE) {
 					const osel = sOrE.el;
 
 					element.insertAdjacentElement(s, osel);
@@ -127,6 +229,12 @@
 				// element.style.cssText += s;
 				return this;
 			},
+			data: function(d) {
+				if (d) {
+					element.data = d;
+				}
+				return element.data;
+			},
 			html: function(h) {
 				if (h) {
 					element.innerHTML = h;
@@ -175,13 +283,12 @@
 				return element.childNodes;
 			},
 			find: function(s) {
-				return pico(element.querySelector(s));
+				return onyx(element.querySelector(s));
 			},
 			remove: function() {
 				element.remove();
 				return this;
 			},
-
 
 			before: insertAdjacent('beforebegin'),
 			after: insertAdjacent('afterend'),
@@ -197,15 +304,20 @@
 
 			getAttr: v => element.getAttribute(v),
 			offset: () => element.getBoundingClientRect(),
+			outerHeight: element.outerHeight,
+			outerWidth: element.outerWidth,
+			clientHeight: function() {
+				return element.clientHeight;
+			},
+			clientWidth: function() {
+				return element.clientWidth;
+			},
 			style: element.style,
 			el: element,
 
-			isPicoJS: true
+			isOnyx: true
 		};
 	};
-
-	pico.fragment = () => pico(document.createDocumentFragment());
-
-	return pico;
+	return onyx;
 
 });
