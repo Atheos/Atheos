@@ -14,3 +14,11 @@
 	font-weight: normal;
 	font-style: normal;
 }
+
+@font-face {
+	font-family: 'Ubuntu-Fira';
+	src: url('FiraCodeUbuntuMono-Regular.woff2') format('woff2'),
+		url('FiraCodeUbuntuMono-Regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+}
