@@ -1,23 +1,22 @@
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // User Alerts / Messages
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// Currently the icons are hard coded: Close/Types. They'll need to be
-// migrated to css classes modifiable by the themes for consistancy.
+// Currently the icons are hard coded: Close/Types. They'll need to be migrated
+// to css classes modifiable by the themes for consistancy.
 //
-// codiad.message needs to be changed to codiad.toast in the future
-//
+// Currently, the langauge translations are done on each call to the Toast
+// message, even though I think it would make more sense for Toast to handle
+// the translation. For Future consideration.
 //												- Liam Siira
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 
 
 (function(global) {
 
 	'use strict';
 
-
-	var core = global.codiad,
-		amplify = global.amplify;
+	var core = global.codiad;
 
 	core.toast = {
 
@@ -89,7 +88,7 @@
 
 				if (!options.sticky) {
 					setTimeout(function() {
-						core.message.hide(wrapper);
+						core.toast.hide(wrapper);
 					}, options.stayTime);
 				}
 			}, 10);
@@ -131,7 +130,4 @@
 			});
 		}
 	};
-
-	core.message = core.toast;
-
 })(this);

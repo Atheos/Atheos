@@ -54,7 +54,7 @@
                 <?php
                     if($_SESSION['user'] == $data['username']){
                     ?>
-                    <td width="75"><a onclick="codiad.message.error('You Cannot Delete Your Own Account');" class="icon-block bigger-icon"></a></td>
+                    <td width="75"><a onclick="codiad.toast.error('You Cannot Delete Your Own Account');" class="icon-block bigger-icon"></a></td>
                     <?php
                     }else{
                     ?>
