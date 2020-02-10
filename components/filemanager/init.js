@@ -428,7 +428,7 @@
 						this.openInModal(path);
 					}
 				} else {
-					codiad.message.error(i18n('Unable to open file in Browser'));
+					codiad.toast.error(i18n('Unable to open file in Browser'));
 				}
 			}
 		},
@@ -460,7 +460,7 @@
 			var _this = this,
 				action, data;
 			var notifySaveErr = function() {
-				codiad.message.error(i18n('File could not be saved'));
+				codiad.toast.error(i18n('File could not be saved'));
 				if (typeof callbacks.error === 'function') {
 					var context = callbacks.context || _this;
 					callbacks.error.apply(context, [data]);
@@ -469,13 +469,13 @@
 			$.post(this.controller + '?action=modify&path=' + encodeURIComponent(path), data, function(resp) {
 				resp = $.parseJSON(resp);
 				if (resp.status == 'success') {
-					codiad.message.success(i18n('File saved'));
+					codiad.toast.success(i18n('File saved'));
 					if (typeof callbacks.success === 'function') {
 						var context = callbacks.context || _this;
 						callbacks.success.call(context, resp.data.mtime);
 					}
 				} else {
-					if (resp.message == 'Client is out of sync') {
+					if (resp.toast == 'Client is out of sync') {
 						var reload = confirm(
 							"Server has a more updated copy of the file. Would " +
 							"you like to refresh the contents ? Pressing no will " +
@@ -491,7 +491,7 @@
 							session.serverMTime = null;
 							session.untainted = null;
 						}
-					} else codiad.message.error(i18n('File could not be saved'));
+					} else codiad.toast.error(i18n('File could not be saved'));
 					if (typeof callbacks.error === 'function') {
 						var context = callbacks.context || _this;
 						callbacks.error.apply(context, [resp.data]);
@@ -547,7 +547,7 @@
 						console.log(data);
 						var createResponse = codiad.jsend.parse(data);
 						if (createResponse != 'error') {
-							codiad.message.success(type.charAt(0)
+							codiad.toast.success(type.charAt(0)
 								.toUpperCase() + type.slice(1) + ' Created');
 							codiad.modal.unload();
 							// Add new element to filemanager screen
@@ -573,7 +573,7 @@
 
 		copyNode: function(path) {
 			this.clipboard = path;
-			codiad.message.success(i18n('Copied to Clipboard'));
+			codiad.toast.success(i18n('Copied to Clipboard'));
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -583,9 +583,9 @@
 		pasteNode: function(path) {
 			var _this = this;
 			if (this.clipboard == '') {
-				codiad.message.error(i18n('Nothing in Your Clipboard'));
+				codiad.toast.error(i18n('Nothing in Your Clipboard'));
 			} else if (path == this.clipboard) {
-				codiad.message.error(i18n('Cannot Paste Directory Into Itself'));
+				codiad.toast.error(i18n('Cannot Paste Directory Into Itself'));
 			} else {
 				var shortName = _this.getShortName(_this.clipboard);
 				if ($('#file-manager a[data-path="' + path + '/' + shortName + '"]')
@@ -669,7 +669,7 @@
 					}, function(data) {
 						var renameResponse = codiad.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.message.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
+							codiad.toast.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
 							var node = $('#file-manager a[data-path="' + path + '"]'),
 								icon = node.find('i:nth-child(2)'),
 								span = node.find('span');
