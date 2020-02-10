@@ -18,7 +18,7 @@ $sidebar-handle-width: 15px;
 	user-select: none;
 	background: #1a1a1a;
 	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
-	letter-spacing: -0.4px;
+	// letter-spacing: -0.4px;
 }
 
 .sidebar#sb-left {
@@ -49,7 +49,8 @@ $sidebar-handle-width: 15px;
 	z-index: 99999;
 }
 
-.sidebar-handle {
+#sb-right-handle,
+#sb-left-handle {
 	width: $sidebar-handle-width;
 	height: 100%;
 	z-index: 99999;
@@ -60,7 +61,8 @@ $sidebar-handle-width: 15px;
 	cursor: col-resize;
 }
 
-.sidebar-handle span {
+#sb-right-handle span,
+#sb-left-handle span {
 	display: block;
 	position: absolute;
 	width: 14px;
@@ -71,16 +73,10 @@ $sidebar-handle-width: 15px;
 }
 
 /* Left Sidebar */
-#sb-left .sidebar-handle {
+#sb-left-handle {
 	position: absolute;
 	right: 0;
 }
-
-#sb-right .sidebar-handle span {}
-
-#sb-right .sidebar-handle span a {}
-
-#sb-right .sidebar-handle span a:hover {}
 
 .unlocked .sidebar-handle span {
 	width: 18px;
@@ -180,7 +176,7 @@ $sidebar-handle-width: 15px;
 }
 
 /* Right Sidebar */
-#sb-right .sidebar-handle {
+#sb-right-handle {
 	float: left;
 }
 
@@ -227,10 +223,6 @@ $sidebar-handle-width: 15px;
 
 #sb-right a:hover {
 	background-color: #333;
-}
-
-#lock-right-sidebar:hover {
-	color: #fff;
 }
 
 #sb-right hr {
