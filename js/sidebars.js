@@ -1,29 +1,33 @@
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // Sidebar
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // Notes:
-// The opening and closing functions for each sidebar originally had
-// some sort of jquery proxy function, a timeout, and a data method
-// for storing reference to that timeout. Removing them seems to have
-// had no ill effects. My guess is that it was an original attempt at
-// the hoverIntent plugin, but who knows. Keeping this in mind in case
-// I ever have to come back to it. http://jsfiddle.net/npXQx/
+// The opening and closing functions for each sidebar originally had some sort 
+// of jquery proxy function, a timeout, and a data method for storing reference
+// to that timeout. Removing them seems to have had no ill effects. My guess is
+// that it was an original attempt at the hoverIntent plugin, but who knows.
+// Keeping this in mind in case I ever have to come back to it. 
+// JSFiddle Link: http://jsfiddle.net/npXQx/
 //
-// Honestly, there is a lot going on inside each of these functions in
-// this file and I don't like it. It's easy to get lost here, and 
-// readability is next to performance and security in my mind. I know
-// comments are important and required but good clean code should be
-// understandable at a glance and this code will probably change a lot
-// as I hit the grove of it sooooooo
+// Honestly, there is a lot going on inside each of these functions in this file
+// and I don't like it. It's easy to get lost here, and readability is next to
+// performance and security in my mind. I know comments are important and
+// required but good clean code should be understandable at a glance and this
+// code will probably change a lot as I hit the grove of it.
 //
-// Currently only the right sidebar can be set to click-trigger while the
-// left is default to hover-hover trigger if unlocked.
+// Currently, I'm not overly happy with the layout, but it is a lot easier to 
+// maintain I think. The left/right sidebars are seperate objects with their own
+// functions. I wish I knew more about passing scopes as I think it would really
+// cut down on the clutter in this file.
+//
+// Currently only the right sidebar can be set to click-trigger while the left is
+// default to hover-hover trigger if unlocked.
 //
 // Sidebar module currently called from:
 //	Components/Active/init.js
 //	System.js: During initialization, check if left sidebar is locked.
 //												- Liam Siira
-////////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 	'use strict';
@@ -66,12 +70,12 @@
 				core.sidebars.leftSidebarTrigger = localStorage.getItem('codiad.sidebars.leftSidebarTrigger');
 				core.sidebars.rightSidebarTrigger = localStorage.getItem('codiad.sidebars.rightSidebarTrigger');
 
-				if (localStorage.getItem('codiad.sidebars.lock-left-sidebar') === "false") {
+				if (localStorage.getItem('codiad.sidebars.lock-left-sidebar') === 'false') {
 					core.helpers.trigger('#lock-left-sidebar', 'click');
 					core.sidebars.left.close();
 				}
 
-				if (localStorage.getItem('codiad.sidebars.lock-right-sidebar') === "true") {
+				if (localStorage.getItem('codiad.sidebars.lock-right-sidebar') === 'true') {
 					core.helpers.trigger('#lock-right-sidebar', 'click');
 					core.sidebars.right.open();
 				}

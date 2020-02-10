@@ -58,12 +58,12 @@
               $.get(_this.controller + '?action=install&type=' + type + '&name=' + name + '&repo=' + repo, function(data) {
                   var response = codiad.jsend.parse(data);
                   if (response == 'error') {
-                      codiad.message.error(response.message);
+                      codiad.toast.error(response.message);
                   }
                   _this.list(page, true);
               });
             } else {
-               codiad.message.error('No Repository URL');
+               codiad.toast.error('No Repository URL');
             }
         },
         
@@ -77,7 +77,7 @@
             $.get(_this.controller + '?action=remove&type=' + type + '&name=' + name, function(data) {
                 var response = codiad.jsend.parse(data);
                 if (response == 'error') {
-                    codiad.message.error(response.message);
+                    codiad.toast.error(response.message);
                 }
                 _this.list(page, true);
             });
@@ -93,7 +93,7 @@
             $.get(_this.controller + '?action=update&type=' + type + '&name=' + name, function(data) {
                 var response = codiad.jsend.parse(data);
                 if (response == 'error') {
-                    codiad.message.error(response.message);
+                    codiad.toast.error(response.message);
                 }
                 _this.list(page, false);
             });
