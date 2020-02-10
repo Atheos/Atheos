@@ -28,19 +28,19 @@ if (isset($_SESSION['theme'])) {
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
-	<link rel="stylesheet" href="fonts/fontawesome/css/all.min.css">
-	<link rel="stylesheet" href="fonts/ubuntu-webfont/all.css">
-	<!--<link rel="stylesheet" href="fonts/jetbrains-mono/stylesheet.css">-->
-	<link rel="stylesheet" href="fonts/file-icons/all.css">
+	<link rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
+	<!--<link rel="stylesheet" href="fonts/ubuntu-webfont/all.css">-->
+	<link rel="stylesheet" href="fonts/victor-mono/webfont.css">
+	<link rel="stylesheet" href="fonts/file-icons/webfont.css">
 	<script src="fonts/file-icons/main.js"></script>
 
 	<!--Link favicons-->
-	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
-	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png">
-	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png">
+	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png?v=2">
+	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png?v=2">
+	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png?v=2">
 	<link rel="manifest" href="favicons/site.webmanifest">
-	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg" color="#5bbad5">
-	<link rel="shortcut icon" href="favicons/favicon.ico">
+	<link rel="mask-icon" href="favicons/safari-pinned-tab.svg?v=2" color="#5bbad5">
+	<link rel="shortcut icon" href="favicons/favicon.ico?v=2">
 	<meta name="msapplication-TileColor" content="#111111">
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
@@ -91,11 +91,13 @@ if (isset($_SESSION['theme'])) {
 
 	<script src="js/amplify.js"></script>
 	<script src="js/localstorage.js"></script>
-	<script src="js/events.js"></script>
+	<!--<script src="js/events.js"></script>-->
 	<script src="js/hoverintent.min.js"></script>
-	<script src="js/pico.js"></script>
 	<script src="js/miniAjax.js"></script>
 	<script src="js/bioflux.js"></script>
+
+	<script src="js/onyx.js"></script>
+
 
 	<script src="js/system.js"></script>
 
