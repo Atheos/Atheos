@@ -70,7 +70,7 @@
                 var draft = _this.checkDraft(path);
                 if (draft) {
                     content = draft;
-                    codiad.message.success(i18n('Recovered unsaved content for: ') + path);
+                    codiad.toast.success(i18n('Recovered unsaved content for: ') + path);
                 }
 
                 //var session = new EditSession(content, new Mode());
@@ -445,7 +445,7 @@
 
             var _this = this;
             if ((path && !this.isOpen(path)) || (!path && !codiad.editor.getActive())) {
-                codiad.message.error(i18n('No Open Files to save'));
+                codiad.toast.error(i18n('No Open Files to save'));
                 return;
             }
             var session;
@@ -692,7 +692,7 @@
             if (path) {
                 codiad.filemanager.openInBrowser(path);
             } else {
-                codiad.message.error('No Open Files');
+                codiad.toast.error('No Open Files');
             }
         },
 
@@ -709,7 +709,7 @@
                 codiad.editor.getActive()
                     .getSelectionRange());
             } else {
-                codiad.message.error(i18n('No Open Files or Selected Text'));
+                codiad.toast.error(i18n('No Open Files or Selected Text'));
             }
         },
 
