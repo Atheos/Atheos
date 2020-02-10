@@ -1,3 +1,37 @@
+////////////////////////////////////////////////////////////////////////////////
+// Modal
+////////////////////////////////////////////////////////////////////////////////
+// Notes: 
+// In an effort of removing jquery and saving myself time, I removed persistant
+// modal functions, modal will always load center screen; I can re-add them
+// later if I decide that it was important.
+//
+// Event propagation from the overlay and the interactions within
+// the modal seem to be a bit twisted up. Once I sort out all the
+// plugins & components into a cohesive system, I'll need to clean
+// this mess up.
+//
+// It looks like the modal loader handles event management & even
+// loading the content for each modal, while I know a lot of the 
+// plugins seem to as well, this will have to be optimized.
+//
+// *Sigh* The jquery HTML function for loading the content also
+// executes the script tags contained within, which is a nightmare in
+// my opinion. I think the idea was to containerize each component &
+// only call it when it's loaded. The two options I can think of are
+// create my own version of that function, or load all javascript from
+// the start.
+//
+// Modal module currently called from:
+//	Sidebars.js: Keep leftsidebar open if modal is open
+//	Settings/init.js: Check for AJAX return promise
+//	FileManager/init.js: Check for AJAX return promise
+//
+//												- Liam Siira
+////////////////////////////////////////////////////////////////////////////////
+
+
+
 (function(global, $) {
 
 	'use strict';
@@ -6,40 +40,7 @@
 	var core = global.codiad,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		p = global.pico;
-
-	//////////////////////////////////////////////////////////////////////
-	// Modal
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// In an effort of removing jquery and saving myself time, I removed
-	// persistant modal functions, modal will always load center screen.
-	//
-	// I will re-add them later when I need them
-	// Event propagation from the overlay and the interactions within
-	// the modal seem to be a bit twisted up. Once I sort out all the
-	// plugins & components into a cohesive system, I'll need to clean
-	// this mess up.
-	//
-	// It looks like the modal loader handles event management & even
-	// loading the content for each modal, while I know a lot of the 
-	// plugins seem to as well, this will have to be optimized.
-	//
-	// *Sigh* The jquery HTML function for loading the content also
-	// executes the script tags contained within, which is a nightmare in
-	// my opinion. I think the idea was to containerize each component &
-	// only call it when it's loaded. The two options I can think of are
-	// create my own version of that function, or load all javascript from
-	// the start.
-	//
-	// Modal module currently called from:
-	//	Sidebars.js: Keep leftsidebar open if modal is open
-	//	Settings/init.js: Check for AJAX return promise
-	//	FileManager/init.js: Check for AJAX return promise
-	//
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
-
+		o = global.onyx;
 
 	core.modal = {
 
@@ -53,11 +54,11 @@
 
 		createModal: function() {
 			var modal = core.modal;
-			var overlay = p('<div>'),
-				wrapper = p('<div>'),
-				content = p('<div>'),
-				drag = p('<i>'),
-				close = p('<i>');
+			var overlay = o('<div>'),
+				wrapper = o('<div>'),
+				content = o('<div>'),
+				drag = o('<i>'),
+				close = o('<i>');
 
 			overlay.attr('id', 'modal_overlay');
 			overlay.on('click', function(event) {
@@ -92,19 +93,15 @@
 
 		load: function(width, url, data) {
 			data = data || {};
+			width = width || 400;
 
-			var wrapper = p('#modal_wrapper') || this.createModal(),
-				content = p('#modal_content');
-
-			wrapper.css({
-				'top': '15%'
-			});
-			wrapper.css({
-				'left': (width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)')
-			});
+			var wrapper = o('#modal_wrapper') || this.createModal(),
+				content = o('#modal_content');
 
 			wrapper.css({
-				'min-width': (width ? (width + 300) + 'px' : '400px')
+				'top': '15%',
+				'left': 'calc(50% - ' + (width / 2) + 'px)',
+				'min-width': width + 'px'
 			});
 
 			content.html('<div id="modal_loading"></div>');
@@ -115,8 +112,8 @@
 				success: function(data) {
 					$('#modal_content').html(data);
 
-					// p(content).html(data);
-					// var script = p(p(content).find('script'));
+					// o(content).html(data);
+					// var script = o(o(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
 					// }
@@ -136,7 +133,7 @@
 			wrapper.css({
 				'display': 'block'
 			});
-			p('#modal_overlay').css({
+			o('#modal_overlay').css({
 				'display': 'block'
 			});
 
@@ -144,11 +141,11 @@
 		},
 
 		hideOverlay: function() {
-			p('#modal_overlay').style.display = 'none';
+			o('#modal_overlay').style.display = 'none';
 		},
 		hide: function() {
-			var wrapper = p('#modal_wrapper'),
-				overlay = p('#modal_overlay');
+			var wrapper = o('#modal_wrapper'),
+				overlay = o('#modal_overlay');
 
 			wrapper.removeClass('modal-active');
 			overlay.removeClass('modal-active');
@@ -168,13 +165,13 @@
 				animationPerformed: false
 			});
 
-			p('#modal_overlay').css({
+			o('#modal_overlay').css({
 				'display': ''
 			});
-			p('#modal_wrapper').css({
+			o('#modal_wrapper').css({
 				'display': ''
 			});
-			p('#modal_content').empty();
+			o('#modal_content').empty();
 
 			core.editor.focus();
 			core.modal.settings.isModalVisible = false;
@@ -200,7 +197,7 @@
 			function removeListeners() {
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
-				p('.icon-arrows.active').removeClass('active');
+				o('.icon-arrows.active').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;
