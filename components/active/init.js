@@ -59,7 +59,7 @@
                 if(focus) this.focus(path);
                 return;
             }
-            var ext = codiad.filemanager.getExtension(path);
+            var ext = core.helpers.file.getExtension(path);
             var mode = codiad.editor.selectMode(ext);
             var fn = function() {
                 //var Mode = require('ace/mode/' + mode)
