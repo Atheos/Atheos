@@ -1,21 +1,31 @@
-/*
-	* author: WeideMo
-	* email: 412511016@qq.com
-	* source: https://github.com/WeideMo/miniAjax
-	* alt: https://github.com/maxrpeterson/ajax/blob/master/ajax.js
-	**/
-!(function(ob) {
+(function(root, factory) {
+	if (typeof define === 'function' && define.amd) {
+		define([], function() {
+			return factory(root);
+		});
+	} else if (typeof exports === 'object') {
+		module.exports = factory(root);
+	} else {
+		root.ajax = factory(root);
+	}
+})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
+
+	'use strict';
+
 	function formatParams(data, random) {
 		var arr = [];
-		for (var name in data) {
-			arr.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+		if (data && typeof data === 'object') {
+			for (var name in data) {
+				arr.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+			}
 		}
 		if (random) {
 			arr.push(('v=' + Math.random()).replace('.', ''));
 		}
 		return arr.join('&');
 	}
-	ob.ajax = function(options) {
+
+	const ajax = function(options) {
 		options = options || {};
 		options.type = (options.type || 'GET').toUpperCase();
 		options.dataType = options.dataType || 'json';
@@ -33,10 +43,14 @@
 				if (xhr.readyState === 4) {
 					var status = xhr.status;
 					if (status >= 200 && status < 300) {
-						options.success && options.success(xhr.responseText, xhr.responseXML);
+						if (options.success) {
+							options.success(xhr.responseText, xhr.responseXML);
+						}
 						resolve();
 					} else {
-						options.fail && options.fail(status);
+						if (options.fail) {
+							options.fail(status);
+						}
 						reject({
 							status: xhr.status,
 							statusText: xhr.statusText
@@ -56,4 +70,16 @@
 		});
 		// return xhr;
 	};
-})(window || this);
+	
+	return ajax;
+
+});
+
+
+
+/*
+	* author: WeideMo
+	* email: 412511016@qq.com
+	* source: https://github.com/WeideMo/miniAjax
+	* alt: https://github.com/maxrpeterson/ajax/blob/master/ajax.js
+	**/

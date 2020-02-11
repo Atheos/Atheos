@@ -1,6 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Sidebar
 //////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
 // Notes:
 // The opening and closing functions for each sidebar originally had some sort 
 // of jquery proxy function, a timeout, and a data method for storing reference
@@ -44,8 +48,8 @@
 			rightLockedVisible: false,
 			isLeftSidebarOpen: true,
 			isRightSidebarOpen: false,
-			leftSidebarTrigger: false,
-			rightSidebarTrigger: false
+			leftSidebarClickOpen: false,
+			rightSidebarClickOpen: false
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Initialization
@@ -67,8 +71,8 @@
 					core.helpers.trigger('#editor-region', 'h-resize-init');
 				}
 
-				core.sidebars.leftSidebarTrigger = localStorage.getItem('codiad.sidebars.leftSidebarTrigger');
-				core.sidebars.rightSidebarTrigger = localStorage.getItem('codiad.sidebars.rightSidebarTrigger');
+				core.sidebars.leftSidebarClickOpen = localStorage.getItem('codiad.sidebars.leftSidebarClickOpen');
+				core.sidebars.rightSidebarClickOpen = localStorage.getItem('codiad.sidebars.rightSidebarClickOpen');
 
 				if (localStorage.getItem('codiad.sidebars.lock-left-sidebar') === 'false') {
 					core.helpers.trigger('#lock-left-sidebar', 'click');
@@ -109,13 +113,13 @@
 				});
 
 				this.handle.on('click', function() {
-					if (core.sidebars.settings.leftSidebarTrigger) { // if trigger set to Hover
+					if (core.sidebars.settings.leftSidebarClickOpen) { // if trigger set to Hover
 						core.sidebars.left.open();
 					}
 				});
 
 				hoverintent(this.sidebar.el, function() {
-					if (!core.sidebars.settings.leftSidebarTrigger) { // if trigger set to Hover
+					if (!core.sidebars.settings.leftSidebarClickOpen) { // if trigger set to Hover
 						core.sidebars.left.open();
 					}
 				}, function() {
@@ -195,13 +199,13 @@
 				});
 
 				this.handle.on('click', function() {
-					if (core.sidebars.settings.rightSidebarTrigger) { // if trigger set to Hover
+					if (core.sidebars.settings.rightSidebarClickOpen) { // if trigger set to Hover
 						core.sidebars.right.open();
 					}
 				});
 
 				hoverintent(this.sidebar.el, function() {
-					if (!core.sidebars.settings.rightSidebarTrigger) { // if trigger set to Hover
+					if (!core.sidebars.settings.rightSidebarClickOpen) { // if trigger set to Hover
 						core.sidebars.right.open();
 					}
 				}, function() {
