@@ -6,7 +6,10 @@
 
 (function(global, $) {
 
-	var codiad = global.codiad;
+	var codiad = global.codiad,
+		i18n = global.i18n,
+		amplify = global.amplify;
+
 
 	$(function() {
 		codiad.user.init();
@@ -64,7 +67,7 @@
 
 		authenticate: function() {
 			$.post(this.controller + '?action=authenticate', this.loginForm.serialize(), function(data) {
-				parsed = codiad.jsend.parse(data);
+				var parsed = codiad.jsend.parse(data);
 				if (parsed != 'error') {
 					// Session set, reload
 					window.location.reload();
@@ -83,7 +86,7 @@
 			}
 			if (forcelogout) {
 				$('#list-active-files li.changed').each(function() {
-					$(this).removeClass('changed')
+					$(this).removeClass('changed');
 				});
 				amplify.publish('user.logout', {});
 				codiad.settings.save();
@@ -140,7 +143,7 @@
 						}, function(data) {
 							var createResponse = codiad.jsend.parse(data);
 							if (createResponse != 'error') {
-								codiad.toast.success(i18n('User Account Created'))
+								codiad.toast.success(i18n('User Account Created'));
 								_this.list();
 							}
 						});
@@ -163,7 +166,7 @@
 					$.get(_this.controller + '?action=delete&username=' + username, function(data) {
 						var deleteResponse = codiad.jsend.parse(data);
 						if (deleteResponse != 'error') {
-							codiad.toast.success(i18n('Account Deleted'))
+							codiad.toast.success(i18n('Account Deleted'));
 							_this.list();
 						}
 					});
@@ -184,7 +187,7 @@
 						.val();
 					var accessLevel = $('#modal_content form select[name="access_level"]')
 						.val();
-					var projects = new Array();
+					var projects = [];
 					$('input:checkbox[name="project"]:checked').each(function() {
 						projects.push($(this).val());
 					});
