@@ -63,24 +63,24 @@
 				if (sbLeftWidth !== null) {
 					o('#sb-left').style.width = sbLeftWidth;
 					core.helpers.trigger(window, 'resize');
-					core.helpers.trigger('#editor-region', 'h-resize-init');
+					o('#editor-region').trigger('h-resize-init');
 				}
 				if (sbRightWidth !== null) {
 					o('#sb-left').style.width = sbRightWidth;
 					core.helpers.trigger(window, 'resize');
-					core.helpers.trigger('#editor-region', 'h-resize-init');
+					o('#editor-region').trigger('h-resize-init');
 				}
 
 				core.sidebars.leftSidebarClickOpen = localStorage.getItem('codiad.sidebars.leftSidebarClickOpen');
 				core.sidebars.rightSidebarClickOpen = localStorage.getItem('codiad.sidebars.rightSidebarClickOpen');
 
 				if (localStorage.getItem('codiad.sidebars.lock-left-sidebar') === 'false') {
-					core.helpers.trigger('#lock-left-sidebar', 'click');
+					o('#sb-left-lock').trigger('click');
 					core.sidebars.left.close();
 				}
 
 				if (localStorage.getItem('codiad.sidebars.lock-right-sidebar') === 'true') {
-					core.helpers.trigger('#lock-right-sidebar', 'click');
+					o('#sb-right-lock').trigger('click');
 					core.sidebars.right.open();
 				}
 			});

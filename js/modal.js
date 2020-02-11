@@ -141,7 +141,7 @@
 				'display': 'block'
 			});
 
-			core.modal.settings.isModalVisible = true;
+			this.settings.isModalVisible = true;
 		},
 
 		hideOverlay: function() {
@@ -161,10 +161,9 @@
 
 
 			core.editor.focus();
-			core.modal.settings.isModalVisible = false;
+			this.settings.isModalVisible = false;
 		},
 		unload: function() {
-
 			amplify.publish('modal.onUnload', {
 				animationPerformed: false
 			});
@@ -176,9 +175,9 @@
 				'display': ''
 			});
 			o('#modal_content').empty();
-
+			
+			this.settings.isModalVisible = false;
 			core.editor.focus();
-			core.modal.settings.isModalVisible = false;
 
 		},
 		drag: function(wrapper) {
