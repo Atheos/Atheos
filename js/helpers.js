@@ -1,3 +1,23 @@
+//////////////////////////////////////////////////////////////////////////////80
+// Atheos Specific Helper functions
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Notes: 
+// This helper module is potentially temporary, but will be used to
+// help identify and reduce code repition across the application.
+// Think of it like a temporary garbage dump of all functions that
+// don't fit within the actual module I found them in.
+//
+// If any of these become long term solutions, more research will need
+// to take place on each function to ensure it does what it says. Most
+// of these were just pulled from a google search and kept if they 
+// seemed to work.
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
+
 'use strict';
 
 var log = function(m, t) {
@@ -12,21 +32,7 @@ var log = function(m, t) {
 
 	var codiad = global.codiad;
 
-	//////////////////////////////////////////////////////////////////////
-	// Codiad Specific Helper functions
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// This helper module is potentially temporary, but will be used to
-	// help identify and reduce code repition across the application.
-	// Think of it like a temporary garbage dump of all functions that
-	// don't fit within the actual module I found them in.
-	//
-	// If any of these become long term solutions, more research will need
-	// to take place on each function to ensure it does what it says. Most
-	// of these were just pulled from a google search and kept if they 
-	// seemed to work.
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
+
 
 	codiad.helpers = {
 
