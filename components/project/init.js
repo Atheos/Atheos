@@ -144,7 +144,7 @@
 						.val(),
 						gitBranch = $('#modal_content form input[name="git_branch"]')
 						.val();
-					if (projectPath.indexOf('/') == 0) {
+					if (projectPath.indexOf('/') === 0) {
 						create = confirm('Do you really want to create project with absolute path "' + projectPath + '"?');
 					}
 					if (create) {
@@ -232,7 +232,7 @@
 									.each(function() {
 										var curPath = $(this)
 											.attr('data-path');
-										if (curPath.indexOf(projectPath) == 0) {
+										if (curPath.indexOf(projectPath) === 0) {
 											codiad.active.remove(curPath);
 										}
 									});
