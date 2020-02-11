@@ -90,7 +90,7 @@
             };
 
             // Assuming the mode file has no dependencies
-            $.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
+            codiad.helpers.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
             fn);
         },
 
