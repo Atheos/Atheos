@@ -45,6 +45,24 @@ var log = function(m, t) {
 			}
 		},
 
+		file: {
+			//////////////////////////////////////////////////////////////////
+			// Return the node name (sans path)
+			//////////////////////////////////////////////////////////////////
+
+			getShortName: function(path) {
+				return path.split('/').pop();
+			},
+
+			//////////////////////////////////////////////////////////////////
+			// Return extension
+			//////////////////////////////////////////////////////////////////
+
+			getExtension: function(path) {
+				return path.split('.').pop();
+			},
+		},
+
 		//////////////////////////////////////////////////////////////////////
 		// Extend used in:
 		//   Toast.js
@@ -80,6 +98,42 @@ var log = function(m, t) {
 					var e = document.createEventObject();
 					e.eventType = event;
 					el.fireEvent('on' + e.eventType, e);
+				}
+			}
+		},
+		loadScript: function(url, arg1, arg2) {
+			// console.trace('Custom LoadScripts');
+			var cache = true,
+				callback = null;
+			//arg1 and arg2 can be interchangable
+			if (typeof arg1 === 'function') {
+				callback = arg1;
+				cache = arg2 || cache;
+			} else {
+				cache = arg1 || cache;
+				callback = arg2 || callback;
+			}
+
+			var load = true;
+			//check all existing script tags in the page for the url
+			jQuery('script[type="text/javascript"]')
+				.each(function() {
+					return load = (url != $(this)
+						.attr('src'));
+				});
+			if (load) {
+				//didn't find it in the page, so load it
+				jQuery.ajax({
+					type: 'GET',
+					url: url,
+					success: callback,
+					dataType: 'script',
+					cache: cache
+				});
+			} else {
+				//already loaded so just call the callback
+				if (jQuery.isFunction(callback)) {
+					callback.call(this);
 				}
 			}
 		}

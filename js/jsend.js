@@ -18,7 +18,7 @@
 	core.jsend = {
 
 		parse: function(data) {
-			console.log('JSend Parsed');
+			// console.trace('JSend Parsed');
 			var obj = JSON.parse(data);
 			if (obj.debug !== undefined && Array.isArray(obj.debug)) {
 				var debug = obj.debug.join('\nDEBUG: ');
