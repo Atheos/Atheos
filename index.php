@@ -91,10 +91,8 @@ if (isset($_SESSION['theme'])) {
 
 	<script src="js/amplify.js"></script>
 	<script src="js/localstorage.js"></script>
-	<!--<script src="js/events.js"></script>-->
 	<script src="js/hoverintent.min.js"></script>
 	<script src="js/miniAjax.js"></script>
-	<!--<script src="js/bioflux.js"></script>-->
 
 	<script src="js/onyx.js"></script>
 
