@@ -259,6 +259,9 @@
 				element.classList.remove(t);
 				return this;
 			},
+			hasClass: function(c) {
+				return element.classList.contains(c);
+			},
 			replaceClass: function(c, n) {
 				element.classList.remove(c);
 				element.classList.add(n);
@@ -273,8 +276,10 @@
 				return this;
 			},
 			attr: function(k, v) {
-				element.setAttribute(k, v);
-				return this;
+				if (v) {
+					element.setAttribute(k, v);
+				}
+				return element.getAttribute(k);
 			},
 			removeAttr: function(k) {
 				element.removeAttribute(k);
