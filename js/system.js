@@ -7,7 +7,7 @@
 (function(global, $) {
 
 
-	var core = global.codiad = {},
+	var core = global.core = global.codiad = {},
 		o = global.onyx;
 
 	//////////////////////////////////////////////////////////////////////
@@ -63,6 +63,7 @@
 			core.modal.init();
 			core.sidebars.init();
 			core.toast.init();
+			amplify.publish('core.loaded', {});
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
