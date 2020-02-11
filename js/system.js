@@ -68,7 +68,7 @@
 				var handleWidth = 10;
 
 				var marginL, reduction;
-				if ($("#sb-left").css('left') !== 0 && !core.sidebars.settings.leftLockedVisible) {
+				if (o("#sb-left").css('left') !== 0 && !core.sidebars.settings.leftLockedVisible) {
 					marginL = handleWidth;
 					reduction = 2 * handleWidth;
 				} else {
@@ -80,12 +80,10 @@
 					'margin-left': marginL + 'px'
 				});
 
-				// $('#editor-region')
-				// 	.css({
-				// 		'margin-left': marginL + 'px',
-				// 		'height': ($('body')
-				// 			.outerHeight()) + 'px'
-				// 	});
+				o('#editor-region').css({
+					'margin-left': marginL + 'px',
+					'height': (o('body').clientHeight()) + 'px'
+				});
 
 				o('#root-editor-wrapper').css({
 					'height': (o('body').clientHeight() - 57) + 'px'

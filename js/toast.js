@@ -1,6 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////80
 // User Alerts / Messages
 //////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
 // Notes: 
 // Currently the icons are hard coded: Close/Types. They'll need to be migrated
 // to css classes modifiable by the themes for consistancy.
