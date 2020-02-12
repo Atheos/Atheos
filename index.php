@@ -23,16 +23,15 @@ if (isset($_SESSION['theme'])) {
 
 ?>
 <!doctype html>
-
+<html lang="en">
 <head>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
-	<link rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
-	<link rel="stylesheet" href="fonts/ubuntu-webfont/webfont.css">
+	<link defer rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
+	<link defer rel="stylesheet" href="fonts/ubuntu-webfont/webfont.css">
 	<!--<link rel="stylesheet" href="fonts/victor-mono/webfont.css">-->
-	<link rel="stylesheet" href="fonts/file-icons/webfont.css">
-	<script src="fonts/file-icons/main.js"></script>
+	<link defer rel="stylesheet" href="fonts/file-icons/webfont.css">
 
 	<!--Link favicons-->
 	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png?v=2">
@@ -87,15 +86,14 @@ if (isset($_SESSION['theme'])) {
 	<!--<script src="js/jquery-1.7.2.min.js"></script>-->
 	<!--<script src="js/jquery-ui-1.8.23.custom.min.js"></script>-->
 
-	<!--<script src="js/jquery.css3.min.js"></script>-->
-
 	<!--<script src="js/amplify.js"></script>-->
 	<!--<script src="js/localstorage.js"></script>-->
 	<!--<script src="js/hoverintent.min.js"></script>-->
-	<!--<script src="js/miniAjax.js"></script>-->
+	<!--<script src="js/ajax.js"></script>-->
 
 	<!--<script src="js/onyx.js"></script>-->
 
+	<!--<script src="js/file-icons.js"></script>-->
 
 	<!--<script src="js/system.js"></script>-->
 
@@ -107,7 +105,7 @@ if (isset($_SESSION['theme'])) {
 	<!--<script src="js/toast.js"></script>-->
 	<!--<script src="js/jsend.js"></script>-->
 
-	<script src="js/main.min.php"></script>
+	<?php require_once('public/minify-core-js.php'); ?>
 
 	<!--<script src="js/instance.js?v=<?php echo time(); ?>"></script>-->
 	<?php
@@ -448,6 +446,8 @@ foreach ($components as $component) {
 	}
 }
 
+// require_once('plugins/minify-plugins-js.php');
+
 foreach ($plugins as $plugin) {
 	if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
 		echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
@@ -456,6 +456,5 @@ foreach ($plugins as $plugin) {
 }
 
 ?>
-<div id="message"></div>
 </body>
 </html>
