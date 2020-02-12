@@ -32,6 +32,11 @@
 //	FileManager/init.js: Check for AJAX return promise
 //
 //												- Liam Siira
+//
+// Readd the width calculator from older version which allow bigger modal
+// if needed this avoid broken project list
+//												- kurim
+//
 //////////////////////////////////////////////////////////////////////////////80
 
 
@@ -104,8 +109,8 @@
 
 			wrapper.css({
 				'top': '15%',
-				'left': 'calc(50% - ' + (width / 2) + 'px)',
-				'min-width': width + 'px'
+				'left': width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)',
+				'min-width': width ? (width + 300) + 'px' : '400px'
 			});
 
 			content.html('<div id="modal_loading"></div>');
