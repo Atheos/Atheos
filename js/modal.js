@@ -104,8 +104,7 @@
 
 			wrapper.css({
 				'top': '15%',
-				'left': 'calc(50% - ' + (width / 2) + 'px)',
-				'min-width': width + 'px'
+				'left': 'calc(50% - ' + (width / 2) + 'px)'
 			});
 
 			content.html('<div id="modal_loading"></div>');
@@ -175,8 +174,8 @@
 				'display': ''
 			});
 			o('#modal_content').empty();
-			
-			this.settings.isModalVisible = false;
+
+			core.modal.settings.isModalVisible = false;
 			core.editor.focus();
 
 		},
