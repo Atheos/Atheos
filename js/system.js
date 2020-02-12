@@ -6,7 +6,7 @@
 
 (function(global, $) {
 
-
+ 
 	var core = global.core = global.codiad = {},
 		amplify = global.amplify,
 		o = global.onyx;
