@@ -55,7 +55,7 @@ if (isset($_SESSION['theme'])) {
 		if (file_exists(THEMES . "/". $theme . "/" . $plugin . "/screen.css")) {
 			echo('<link rel="stylesheet" href="themes/'.$theme.'/'.$plugin.'/screen.css">');
 		} else {
-			if (file_exists("themes/default/" . $plugin . "/screen.css")) {
+			if (file_exists("themes/atheos/" . $plugin . "/screen.css")) {
 				echo('<link rel="stylesheet" href="themes/default/'.$plugin.'/screen.css">');
 			} else {
 				if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
@@ -154,7 +154,6 @@ if (isset($_SESSION['theme'])) {
 					<div class="language-selector">
 						<label><span class="icon-picture login-icon"></span> <?php i18n("Theme"); ?></label>
 						<select name="theme" id="theme">
-							<option value="default"><?php i18n("Default"); ?></option>
 							<?php
 							include 'languages/code.php';
 							foreach ($themes as $theme):
