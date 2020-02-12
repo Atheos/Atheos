@@ -150,7 +150,7 @@
 						codiad.confirm.showConfirm({
 							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
 							confirm: {
-								message: "Yes",
+								message: 'Yes',
 								fnc: function() {
 									$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
 										var createResponse = codiad.jsend.parse(data);
@@ -170,7 +170,7 @@
 								}
 							},
 							deny: {
-								message: "No",
+								message: 'No',
 								fnc: function() {}
 							}
 						});
