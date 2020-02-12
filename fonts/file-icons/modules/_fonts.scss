@@ -2,6 +2,8 @@
 	font-family: 'FontAwesome';
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
+
 	src: url('fonts/fontawesome.woff2');
 }
 
@@ -10,6 +12,8 @@
 	src: url('fonts/mfixx.woff2');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
+
 }
 
 @font-face {
@@ -17,6 +21,8 @@
 	src: url('fonts/octicons.woff');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
+
 }
 
 @font-face {
@@ -24,6 +30,8 @@
 	src: url('fonts/devopicons.woff2');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
+
 }
 
 @font-face {
@@ -31,4 +39,5 @@
 	src: url('fonts/file-icons.woff2');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }

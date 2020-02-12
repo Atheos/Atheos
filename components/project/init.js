@@ -133,40 +133,39 @@
 
 		create: function(close) {
 			var _this = this;
-			// create = true;
 			codiad.modal.load(500, this.dialog + '?action=create&close=' + close);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
-					var projectName = $('#modal_content form input[name="project_name"]')
-						.val(),
-						projectPath = $('#modal_content form input[name="project_path"]')
-						.val(),
-						gitRepo = $('#modal_content form input[name="git_repo"]')
-						.val(),
-						gitBranch = $('#modal_content form input[name="git_branch"]')
-						.val();
+					var projectName = $('#modal_content form input[name="project_name"]').val(),
+						projectPath = $('#modal_content form input[name="project_path"]').val(),
+						gitRepo = $('#modal_content form input[name="git_repo"]').val(),
+						gitBranch = $('#modal_content form input[name="git_branch"]').val();
+					var create = function() {
+						$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
+							var createResponse = codiad.jsend.parse(data);
+							if (createResponse !== 'error') {
+								_this.open(createResponse.path);
+								codiad.modal.unload();
+								_this.loadSide();
+								/* Notify listeners. */
+								amplify.publish('project.onCreate', {
+									"name": projectName,
+									"path": projectPath,
+									"git_repo": gitRepo,
+									"git_branch": gitBranch
+								});
+							}
+						});
+					};
 					if (projectPath.indexOf('/') === 0) {
 						codiad.confirm.showConfirm({
 							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
 							confirm: {
 								message: 'Yes',
 								fnc: function() {
-									$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
-										var createResponse = codiad.jsend.parse(data);
-										if (createResponse !== 'error') {
-											_this.open(createResponse.path);
-											codiad.modal.unload();
-											_this.loadSide();
-											/* Notify listeners. */
-											amplify.publish('project.onCreate', {
-												"name": projectName,
-												"path": projectPath,
-												"git_repo": gitRepo,
-												"git_branch": gitBranch
-											});
-										}
-									});
+									create();
+
 								}
 							},
 							deny: {
@@ -174,6 +173,8 @@
 								fnc: function() {}
 							}
 						});
+					} else {
+						create();
 					}
 				});
 		},
