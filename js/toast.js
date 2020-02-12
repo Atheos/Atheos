@@ -134,4 +134,5 @@
 			});
 		}
 	};
+	core.message = core.toast;
 })(this);
