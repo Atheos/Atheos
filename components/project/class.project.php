@@ -1,35 +1,25 @@
 <?php
 
 /*
- *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
- *  as-is and without warranty under the MIT License. See
- *  [root]/license.txt for more. This information must remain intact.
- */
- 
- 
- 	//////////////////////////////////////////////////////////////////////
-	// Project Class
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// I saw that there was an open issue on Codiad for this file being a 
-	// backdoor. https://github.com/Codiad/Codiad/issues/1115
-	//
-	// I looked into it and I can see where windows is coming from on
-	// marking them as malicious but I'm simply not seeing that it
-	// actually is malicious, but I am not a cyber security expert.
-	//
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
+* 	Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+* 	as-is and without warranty under the MIT License. See
+* 	[root]/license.txt for more. This information must remain intact.
+*/
+
+
+//////////////////////////////////////////////////////////////////////
+// Project Class
+//////////////////////////////////////////////////////////////////////
 
 require_once('../../common.php');
 
 class Project extends Common
 {
-    
+
     //////////////////////////////////////////////////////////////////
     // PROPERTIES
     //////////////////////////////////////////////////////////////////
-    
+
     public $name = '';
     public $path = '';
     public $gitrepo = false;
@@ -38,32 +28,30 @@ class Project extends Common
     public $no_return = false;
     public $assigned = false;
     public $command_exec = '';
-    
+
     //////////////////////////////////////////////////////////////////
     // METHODS
     //////////////////////////////////////////////////////////////////
-    
+
     // -----------------------------||----------------------------- //
-    
+
     //////////////////////////////////////////////////////////////////
     // Construct
     //////////////////////////////////////////////////////////////////
-    
-    public function __construct()
-    {
+
+    public function __construct() {
         $this->projects = getJSON('projects.php');
         if (file_exists(BASE_PATH . "/data/" . $_SESSION['user'] . '_acl.php')) {
             $this->assigned = getJSON($_SESSION['user'] . '_acl.php');
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Get First (Default, none selected)
     //////////////////////////////////////////////////////////////////
-    
-    public function GetFirst()
-    {
-        
+
+    public function GetFirst() {
+
         $projects_assigned = false;
         if ($this->assigned) {
             foreach ($this->projects as $project => $data) {
@@ -79,7 +67,7 @@ class Project extends Common
         }
         // Set Sessions
         $_SESSION['project'] = $this->path;
-        
+
         if (!$this->no_return) {
             echo formatJSEND("success", array(
                 "name" => $this->name,
@@ -87,13 +75,12 @@ class Project extends Common
             ));
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Get Name From Path
     //////////////////////////////////////////////////////////////////
-    
-    public function GetName()
-    {
+
+    public function GetName() {
         foreach ($this->projects as $project => $data) {
             if ($data['path'] == $this->path) {
                 $this->name = $data['name'];
@@ -101,18 +88,17 @@ class Project extends Common
         }
         return $this->name;
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Open Project
     //////////////////////////////////////////////////////////////////
-    
-    public function Open()
-    {
+
+    public function Open() {
         $pass = false;
         foreach ($this->projects as $project => $data) {
             if ($data['path'] == $this->path) {
-                $pass                = true;
-                $this->name          = $data['name'];
+                $pass = true;
+                $this->name = $data['name'];
                 $_SESSION['project'] = $data['path'];
             }
         }
@@ -125,13 +111,12 @@ class Project extends Common
             echo formatJSEND("error", "Error Opening Project");
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Create
     //////////////////////////////////////////////////////////////////
-    
-    public function Create()
-    {
+
+    public function Create() {
         if ($this->name != '' && $this->path != '') {
             $this->path = $this->cleanPath();
             $this->name = htmlspecialchars($this->name);
@@ -170,7 +155,7 @@ class Project extends Common
                         "path" => $this->path
                     );
                     saveJSON('projects.php', $this->projects);
-                    
+
                     // Pull from Git Repo?
                     if ($this->gitrepo && filter_var($this->gitrepo, FILTER_VALIDATE_URL) !== false) {
                         $this->gitbranch = $this->SanitizeGitBranch();
@@ -181,7 +166,7 @@ class Project extends Common
                         }
                         $this->ExecuteCMD();
                     }
-                    
+
                     echo formatJSEND("success", array(
                         "name" => $this->name,
                         "path" => $this->path
@@ -196,13 +181,12 @@ class Project extends Common
             echo formatJSEND("error", "Project Name/Folder is empty");
         }
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Sanitize GitBranch
     //////////////////////////////////////////////////////////////////
-    
-    public function SanitizeGitBranch()
-    {
+
+    public function SanitizeGitBranch() {
         $sanitized = str_replace(array(
             "..",
             chr(40),
@@ -220,13 +204,12 @@ class Project extends Common
         ), $this->gitbranch);
         return $sanitized;
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Rename
     //////////////////////////////////////////////////////////////////
-    
-    public function Rename()
-    {
+
+    public function Rename() {
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
             if ($data['path'] != $this->path) {
@@ -245,13 +228,12 @@ class Project extends Common
         // Response
         echo formatJSEND("success", null);
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Delete Project
     //////////////////////////////////////////////////////////////////
-    
-    public function Delete()
-    {
+
+    public function Delete() {
         $revised_array = array();
         foreach ($this->projects as $project => $data) {
             if ($data['path'] != $this->path) {
@@ -266,14 +248,13 @@ class Project extends Common
         // Response
         echo formatJSEND("success", null);
     }
-    
-    
+
+
     //////////////////////////////////////////////////////////////////
     // Check Duplicate
     //////////////////////////////////////////////////////////////////
-    
-    public function CheckDuplicate()
-    {
+
+    public function CheckDuplicate() {
         $pass = true;
         foreach ($this->projects as $project => $data) {
             if ($data['name'] == $this->name || $data['path'] == $this->path) {
@@ -282,48 +263,41 @@ class Project extends Common
         }
         return $pass;
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Sanitize Path
     //////////////////////////////////////////////////////////////////
-    
-    public function SanitizePath()
-    {
+
+    public function SanitizePath() {
         $sanitized = str_replace(" ", "_", $this->path);
         return preg_replace('/[^\w-]/', '', $sanitized);
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Clean Path
     //////////////////////////////////////////////////////////////////
-    
-    public function cleanPath()
-    {
-        
+
+    public function cleanPath() {
+
         // prevent Poison Null Byte injections
         $path = str_replace(chr(0), '', $this->path);
-        
+
         // prevent go out of the workspace
         while (strpos($path, '../') !== false) {
             $path = str_replace('../', '', $path);
         }
-        
+
         return $path;
     }
-    
+
     //////////////////////////////////////////////////////////////////
     // Execute Command
     //////////////////////////////////////////////////////////////////
-    
-    public function ExecuteCMD()
-    {
+
+    public function ExecuteCMD() {
         if (function_exists('system')) {
             ob_start();
             system($this->command_exec);
-            ob_end_clean();
-        } elseif (function_exists('passthru')) {
-            ob_start();
-            passthru($this->command_exec);
             ob_end_clean();
         } elseif (function_exists('exec')) {
             exec($this->command_exec, $this->output);

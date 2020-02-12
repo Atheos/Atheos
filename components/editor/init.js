@@ -10,7 +10,7 @@
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
 	var Editor = ace.require('ace/editor').Editor;
 	var EditSession = ace.require('ace/edit_session').EditSession;
-	var UndoManager = ace.require("ace/undomanager").UndoManager;
+	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
 	// Editor modes that have been loaded
 	var editorModes = {};
@@ -483,7 +483,8 @@
 			// Apply the current configuration settings:
 			i.setTheme('ace/theme/' + this.settings.theme);
 			i.setOptions({
-				fontFamily: "Ubuntu-Lig",
+				// fontFamily: 'VictorMono-Bold',
+				fontFamily: 'Ubuntu-Fira',
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
 				enableLiveAutocompletion: false
@@ -653,7 +654,7 @@
 
 			$('#changemode-menu a').click(function(e) {
 				e.stopPropagation();
-				var newMode = "ace/mode/" + $(e.currentTarget).text();
+				var newMode = 'ace/mode/' + $(e.currentTarget).text();
 				var actSession = _this.activeInstance.getSession();
 
 				// handle async mode change
@@ -661,7 +662,7 @@
 					_this.setModeDisplay(actSession);
 					actSession.removeListener('changeMode', fn);
 				};
-				actSession.on("changeMode", fn);
+				actSession.on('changeMode', fn);
 
 				actSession.setMode(newMode);
 				_thisMenu.hide();
@@ -702,7 +703,7 @@
 		},
 
 		closeMenus: function(exclude) {
-			var menuId = exclude.attr("id");
+			var menuId = exclude.attr('id');
 			if (menuId != 'split-options-menu') $('#split-options-menu').hide();
 			if (menuId != 'changemode-menu') $('#changemode-menu').hide();
 		},
@@ -1347,7 +1348,7 @@
 
 		promptLine: function() {
 			if (codiad.editor.getActive() !== null) {
-				var line = parseInt(prompt("Enter line number:"), 10);
+				var line = parseInt(prompt('Enter line number:'), 10);
 				if (!isNaN(line)) {
 					codiad.editor.gotoLine(line);
 					codiad.editor.focus();
@@ -1479,7 +1480,7 @@
 					type);
 				codiad.modal.hideOverlay();
 			} else {
-				codiad.message.error('No Open Files');
+				codiad.toast.error('No Open Files');
 			}
 		},
 
