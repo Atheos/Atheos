@@ -1,7 +1,7 @@
 <?php
 require_once('../../common.php');
 ?>
-<label><span class="icon-home big-icon"></span><?php i18n("Editor Settings"); ?></label>
+<label class="header"><i class="icon-home"></i><?php i18n("Editor Settings"); ?></label>
 <hr>
 <table class="settings">
 
