@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////80
-// OnyxJS
+// OnyxJS 
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Liam Siira (Siira.us), distributed as-is and without warranty
 // under the modified MIT License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -11,7 +11,7 @@
 // more thoughout, but still close enough to vanillaJS that it won't cause
 // too many issues. Onyx has similar functions to FemtoJS, but only on
 // single elements.
-//
+// 
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 

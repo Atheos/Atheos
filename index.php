@@ -84,32 +84,32 @@ if (isset($_SESSION['theme'])) {
 			}
 		})(<?php echo json_encode($lang); ?>)
 	</script>
-	<script src="js/jquery-1.7.2.min.js"></script>
-	<script src="js/jquery-ui-1.8.23.custom.min.js"></script>
+	<!--<script src="js/jquery-1.7.2.min.js"></script>-->
+	<!--<script src="js/jquery-ui-1.8.23.custom.min.js"></script>-->
 
 	<!--<script src="js/jquery.css3.min.js"></script>-->
 
-	<script src="js/amplify.js"></script>
-	<script src="js/localstorage.js"></script>
-	<script src="js/hoverintent.min.js"></script>
-	<script src="js/miniAjax.js"></script>
+	<!--<script src="js/amplify.js"></script>-->
+	<!--<script src="js/localstorage.js"></script>-->
+	<!--<script src="js/hoverintent.min.js"></script>-->
+	<!--<script src="js/miniAjax.js"></script>-->
 
-	<script src="js/onyx.js"></script>
+	<!--<script src="js/onyx.js"></script>-->
 
 
-	<script src="js/system.js"></script>
+	<!--<script src="js/system.js"></script>-->
 
-	<script src="js/helpers.js"></script>
-	<script src="js/synthetic.js"></script>
-	<script src="js/sidebars.js"></script>
-	<script src="js/confirm.js"></script>
-	<script src="js/modal.js"></script>
-	<script src="js/toast.js"></script>
-	<script src="js/jsend.js"></script>
+	<!--<script src="js/helpers.js"></script>-->
+	<!--<script src="js/synthetic.js"></script>-->
+	<!--<script src="js/sidebars.js"></script>-->
+	<!--<script src="js/confirm.js"></script>-->
+	<!--<script src="js/modal.js"></script>-->
+	<!--<script src="js/toast.js"></script>-->
+	<!--<script src="js/jsend.js"></script>-->
 
-	<!--<script src="js/main.min.php"></script>-->
+	<script src="js/main.min.php"></script>
 
-	<script src="js/instance.js?v=<?php echo time(); ?>"></script>
+	<!--<script src="js/instance.js?v=<?php echo time(); ?>"></script>-->
 	<?php
 
 	//////////////////////////////////////////////////////////////////
