@@ -117,7 +117,7 @@
                                   $right = 160;
                                 } 
                                 if(isset($addon['new'])) {
-                                    echo '<div style="position:absolute;top:0px;left:0px;z-index:10000;"><img src="./themes/default/images/new.png" width="35" height="35"></div>';
+                                    echo '<div style="position:absolute;top:0px;left:0px;z-index:10000;"><img src="./themes/atheos/images/default/new.png" width="35" height="35"></div>';
                                     $left = $left + 30;
                                 }
                                 echo '<div style="position:absolute;top:2px;left:'.($left+10).'px;"><a style="font-weight:bold;font-size:14px" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');return false;">'.$addon['name'].'</a></div>';
