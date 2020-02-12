@@ -116,11 +116,10 @@ var log = function(m, t) {
 
 			var load = true;
 			//check all existing script tags in the page for the url
-			jQuery('script[type="text/javascript"]')
-				.each(function() {
-					return load = (url != $(this)
-						.attr('src'));
-				});
+			jQuery('script[type="text/javascript"]').each(function() {
+				load = (url !== $(this).attr('src'));
+				return load;
+			});
 			if (load) {
 				//didn't find it in the page, so load it
 				jQuery.ajax({
