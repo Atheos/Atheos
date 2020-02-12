@@ -52,6 +52,8 @@
 		height: 18px;
 		width: 18px;
 		text-align: center;
+		pointer-events: none;
+
 		// vertical-align: text-bottom;
 
 		&:before {
@@ -85,6 +87,7 @@
 	span {
 		color: white;
 		vertical-align: text-top;
+		pointer-events: none;
 	}
 }
 
