@@ -399,25 +399,25 @@
 					}
 				},
 				async: false
-			});
+			}); 
 		},
 		openInModal: function(path) {
 			core.modal.load(250, this.dialog, {
 				action: 'preview',
 				path: path
-			});
+			}); 
 		},
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
 			var _this = this,
 				action, data;
 			var notifySaveErr = function() {
-				core.toast.error(i18n('File could not be saved'));
+				core.toast.error(i18n('File could not be saved')); 
 				if (typeof callbacks.error === 'function') {
 					var context = callbacks.context || _this;
 					callbacks.error.apply(context, [data]);
 				}
-			}
+			} 
 			$.post(this.controller + '?action=modify&path=' + encodeURIComponent(path), data, function(resp) {
 				resp = $.parseJSON(resp);
 				if (resp.status == 'success') {
@@ -428,21 +428,43 @@
 					}
 				} else {
 					if (resp.message == 'Client is out of sync') {
-						var reload = confirm(
-							"Server has a more updated copy of the file. Would " +
-							"you like to refresh the contents ? Pressing no will " +
-							"cause your changes to override the server's copy upon " +
-							"next save."
-						);
-						if (reload) {
-							core.active.close(path);
-							core.active.removeDraft(path);
-							_this.openFile(path);
-						} else {
-							var session = core.editor.getActive().getSession();
-							session.serverMTime = null;
-							session.untainted = null;
-						}
+						core.confirm.showConfirm({
+							message: 'The server has a more updated copy of the file.\n' +
+								'Would you like to retreieve an updated copy of the file?\n' +
+								'Pressing no will cause your changes to override the\n' +
+								'server\'s copy upon next save.',
+							confirm: {
+								message: "Yes",
+								fnc: function() {
+									core.active.close(path);
+									core.active.removeDraft(path);
+									_this.openFile(path); 
+								} 
+							},
+							deny: {
+								message: "No",
+								fnc: function() {
+									var session = core.editor.getActive().getSession();
+									session.serverMTime = null;
+									session.untainted = null;
+								}
+							}
+						});
+						// var reload = confirm(
+						// 	"Server has a more updated copy of the file. Would " +
+						// 	"you like to refresh the contents ? Pressing no will " +
+						// 	"cause your changes to override the server's copy upon " +
+						// 	"next save."
+						// );
+						// if (reload) {
+						// 	core.active.close(path);
+						// 	core.active.removeDraft(path);
+						// 	_this.openFile(path);
+						// } else {
+						// 	var session = core.editor.getActive().getSession();
+						// 	session.serverMTime = null;
+						// 	session.untainted = null;
+						// }
 					} else core.toast.error(i18n('File could not be saved'));
 					if (typeof callbacks.error === 'function') {
 						var context = callbacks.context || _this;
