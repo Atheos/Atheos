@@ -47,12 +47,24 @@
 			//Prevent text selection in fie-manager
 			// $('#file-manager').on('selectstart', false);
 
+			// this.createContextMenu();
+
 			// Initialize node listener
 			this.nodeListener();
 			// Load uploader
 			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
 			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
 			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
+		},
+
+		createContextMenu: function() {
+			ajax({
+				url: 'components/filemanager/context_menu.json',
+				success: function(data) {
+					core.filemanager.contextMenu = core.jsend.parse(data);
+					console.log(core.filemanager.contextMenu);
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -532,7 +544,6 @@
 				path: path
 			});
 			$('#modal_content form')
-				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var shortName = $('#modal_content form input[name="object_name"]')
@@ -593,7 +604,6 @@
 						path: path + '/' + shortName
 					});
 					$('#modal_content form')
-						.die('submit')
 						.live('submit', function(e) {
 							e.preventDefault();
 							var duplicate = false;
@@ -649,7 +659,6 @@
 				type: type
 			});
 			$('#modal_content form')
-				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var newName = $('#modal_content form input[name="object_name"]').val();
@@ -714,7 +723,6 @@
 				path: path
 			});
 			$('#modal_content form')
-				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					$.get(_this.controller + '?action=delete&path=' + encodeURIComponent(path), function(data) {
@@ -761,7 +769,6 @@
 			core.modal.hideOverlay();
 			var _this = this;
 			$('#modal_content form')
-				.die('submit')
 				.live('submit', function(e) {
 					$('#filemanager-search-processing')
 						.show();
