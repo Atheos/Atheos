@@ -154,7 +154,7 @@
 								fnc: function() {
 									$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
 										var createResponse = codiad.jsend.parse(data);
-										if (createResponse != 'error') {
+										if (createResponse !== 'error') {
 											_this.open(createResponse.path);
 											codiad.modal.unload();
 											_this.loadSide();

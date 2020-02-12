@@ -61,7 +61,7 @@
 
 			var nodeFunctions = (function(node) {
 				node = o(node);
-				if (node.attr('data-type') == 'directory' || node.attr('data-type') == 'root') {
+				if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
 					this.index(node.attr('data-path'));
 				} else {
 					this.openFile(node.attr('data-path'));
