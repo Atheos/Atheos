@@ -391,7 +391,7 @@ class Filemanager extends Common
             $this->status = "success";
         } else {
             $this->status = "error";
-            $this->message = "Path Does Not Exist ";
+            $this->message = "Delete: Path Does Not Exist ";
         }
 
         $this->respond();
