@@ -10,7 +10,7 @@ Codiad was built with simplicity in mind, allowing for fast, interactive develop
 
 Atheos is expanding on that mentality as much as possible, trying to minimizing it's footprint even further while maximizing functionality and performance. The major goal of Atheos will be a complete rewrite of every line of code, from the bottom to the top, including plugins.
 
-For more information on the project please check out the **[check out the Wiki](https://github.com/Atheos/Atheos/wiki)** or **[the Atheos Website](http://www.atheos.io)**
+For more information on the project please check out the **[check out the docs](https://www.atheos.io/docs)** or **[the Atheos Website](http://www.atheos.io)**
 
 ## ~~Un~~ Maintained Status
 
