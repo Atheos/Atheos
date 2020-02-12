@@ -82,7 +82,8 @@
 	padding-left: 0;
 }
 
-.fa-u>li 	position: relative;
+.fa-u>li {
+	position: relative;
 }
 
 .fa-li {
@@ -134,7 +135,8 @@
 }
 
 @-webkit-keyframes fa-spin {
-	0% {				-webkit-transform: rotate(0deg);
+	0% {
+		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 
@@ -145,7 +147,8 @@
 }
 
 @keyframes fa-spin {
-	0% {				-webkit-transform: rotate(0deg);
+	0% {
+		-webkit-transform: rotate(0deg);
 		transform: rotate(0deg);
 	}
 
@@ -5833,4 +5836,5 @@ readers do not read off random characters that represent icons */
 .fa,
 .fas {
 	font-family: 'Font Awesome 5 Free';
-	font-weight: 900;
+	font-weight: 900;
+	

@@ -8,6 +8,7 @@
 
 
 	var core = global.core = global.codiad = {},
+		amplify = global.amplify,
 		o = global.onyx;
 
 	//////////////////////////////////////////////////////////////////////
@@ -16,7 +17,7 @@
 
 	$.loadScript = function(url, arg1, arg2) {
 		console.trace('Custom LoadScript');
-		core.helpers.loadScript(url,arg1,arg2);
+		core.helpers.loadScript(url, arg1, arg2);
 	};
 
 	//////////////////////////////////////////////////////////////////////
@@ -41,7 +42,7 @@
 					marginL = handleWidth;
 					reduction = 2 * handleWidth;
 				} else {
-					marginL = $("#sb-left").width();
+					marginL = $('#sb-left').width();
 					reduction = marginL + handleWidth;
 				}
 
