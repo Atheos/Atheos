@@ -20,6 +20,7 @@
 	// 'use strict';
 	var core = global.codiad,
 		amplify = global.amplify,
+		ajax = global.ajax,
 		o = global.onyx;
 
 	amplify.subscribe('core.loaded', function(settings) {
@@ -40,6 +41,8 @@
 		dialog: 'components/filemanager/dialog.php',
 		dialogUpload: 'components/filemanager/dialog_upload.php',
 
+		contextMenu: {},
+
 		init: function() {
 			//Prevent text selection in fie-manager
 			// $('#file-manager').on('selectstart', false);
@@ -57,41 +60,63 @@
 		//////////////////////////////////////////////////////////////////
 
 		nodeListener: function() {
-			var _this = this;
+
+			var checkAnchor = function(node) {
+				node = o(node);
+				//////////////////////////////////////////////////////////////////
+				// This tagname business is due to the logical but annoying way
+				// event delegation is handled. I keep trying to avoid organizing
+				// the css in a better way for the file manager, and this is the
+				// result.
+				//////////////////////////////////////////////////////////////////
+				var tagName = node.el.tagName;
+				if (tagName === 'UL') {
+					return false;
+				} else if (tagName !== 'A') {
+					if (tagName === 'LI') {
+						node = node.find('a');
+					} else {
+						node = o(node.parent());
+					}
+				}
+				return node;
+			};
 
 			var nodeFunctions = (function(node) {
-				node = o(node);
-				if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-					this.index(node.attr('data-path'));
-				} else {
-					this.openFile(node.attr('data-path'));
-				}
-				let icon = node.find('.expand');
-				if (icon && icon.hasClass('none')) {
-					if (icon.hasClass('fa-plus')) {
-						icon.removeClass('fa-plus');
-						icon.addClass('fa-minus');
+				if (node) {
+					node = o(node);
+					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
+						this.index(node.attr('data-path'));
 					} else {
-						icon.removeClass('fa-minus');
-						icon.addClass('fa-plus');
+						this.openFile(node.attr('data-path'));
+					}
+					let icon = node.find('.expand');
+					if (icon && icon.hasClass('none')) {
+						if (icon.hasClass('fa-plus')) {
+							icon.removeClass('fa-plus');
+							icon.addClass('fa-minus');
+						} else {
+							icon.removeClass('fa-minus');
+							icon.addClass('fa-plus');
+						}
 					}
 				}
 			}).bind(this);
 
 			o('#file-manager').on('click', function(e) {
 				if (!core.editor.settings.fileManagerTrigger) {
-					nodeFunctions(e.target);
+					nodeFunctions(checkAnchor(e.target));
 				}
 			});
 			o('#file-manager').on('dblclick', function(e) {
 				if (core.editor.settings.fileManagerTrigger) {
-					nodeFunctions(e.target);
+					nodeFunctions(checkAnchor(e.target));
 				}
 			});
 
 			o('#file-manager').on("contextmenu", function(e) { // Context Menu
 				e.preventDefault();
-				core.filemanager.contextMenuShow(e);
+				core.filemanager.contextMenuShow(e, checkAnchor(e.target));
 			});
 		},
 
@@ -99,91 +124,92 @@
 		// Context Menu
 		//////////////////////////////////////////////////////////////////
 
-		contextMenuShow: function(e) {
-			var node = o(e.target),
-				path = node.attr('data-path'),
-				type = node.attr('data-type'),
-				name = node.html();
+		contextMenuShow: function(e, node) {
+			if (node) {
+				var path = node.attr('data-path'),
+					type = node.attr('data-type'),
+					name = node.html();
 
-			node.addClass('context-menu-active');
+				node.addClass('context-menu-active');
 
 
-			// Selective options
-			switch (type) {
-				case 'directory':
-					$('#context-menu .directory-only, #context-menu .non-root').show();
-					$('#context-menu .file-only, #context-menu .root-only').hide();
-					break;
-				case 'file':
-					$('#context-menu .directory-only, #context-menu .root-only').hide();
-					$('#context-menu .file-only,#context-menu .non-root').show();
-					break;
-				case 'root':
-					$('#context-menu .directory-only, #context-menu .root-only').show();
-					$('#context-menu .non-root, #context-menu .file-only').hide();
-					break;
-			}
-			if (core.project.isAbsPath(o('#file-manager a[data-type="root"]').attr('data-path'))) {
-				$('#context-menu .no-external').hide();
-			} else {
-				$('#context-menu .no-external').show();
-			}
-			// Show menu
-			var top = e.pageY;
-			if (top > $(window).height() - $('#context-menu').height()) {
-				top -= $('#context-menu').height();
-			}
-			if (top < 10) {
-				top = 10;
-			}
-			var max = $(window).height() - top - 10;
+				// Selective options
+				switch (type) {
+					case 'directory':
+						$('#context-menu .directory-only, #context-menu .non-root').show();
+						$('#context-menu .file-only, #context-menu .root-only').hide();
+						break;
+					case 'file':
+						$('#context-menu .directory-only, #context-menu .root-only').hide();
+						$('#context-menu .file-only,#context-menu .non-root').show();
+						break;
+					case 'root':
+						$('#context-menu .directory-only, #context-menu .root-only').show();
+						$('#context-menu .non-root, #context-menu .file-only').hide();
+						break;
+				}
+				if (core.project.isAbsPath(o('#file-manager a[data-type="root"]').attr('data-path'))) {
+					$('#context-menu .no-external').hide();
+				} else {
+					$('#context-menu .no-external').show();
+				}
+				// Show menu
+				var top = e.pageY;
+				if (top > $(window).height() - $('#context-menu').height()) {
+					top -= $('#context-menu').height();
+				}
+				if (top < 10) {
+					top = 10;
+				}
+				var max = $(window).height() - top - 10;
 
-			var menu = o('#context-menu');
+				var menu = o('#context-menu');
 
-			menu.css({
-				'top': top + 'px',
-				'left': e.pageX + 'px',
-				'max-height': max + 'px',
-				'display': 'block'
-			});
-			menu.attr('data-path', path);
-			menu.attr('data-type', type);
-			menu.attr('data-name', name);
-			// Show faded 'paste' if nothing in clipboard
-			if (this.clipboard === '') {
-				$('#context-menu a[content="Paste"]').addClass('disabled');
-			} else {
-				$('#context-menu a[data-action="paste"]').removeClass('disabled');
-			}
-			// Hide menu
-			// $('#file-manager, #editor-region')
-			//     .on('mouseover', function() {
-			//         _this.contextMenuHide();
-			//     });
-			var _this = this;
+				menu.css({
+					'top': top + 'px',
+					'left': e.pageX + 'px',
+					'max-height': max + 'px',
+					'display': 'block'
+				});
+				menu.attr('data-path', path);
+				menu.attr('data-type', type);
+				menu.attr('data-name', name);
+				// Show faded 'paste' if nothing in clipboard
+				if (this.clipboard === '') {
+					$('#context-menu a[content="Paste"]').addClass('disabled');
+				} else {
+					$('#context-menu a[data-action="paste"]').removeClass('disabled');
+				}
+				// Hide menu
+				// $('#file-manager, #editor-region')
+				//     .on('mouseover', function() {
+				//         _this.contextMenuHide();
+				//     });
+				var _this = this;
 
-			var hideContextMenu;
-			$('#context-menu')
-				.on('mouseleave', function() {
-					hideContextMenu = setTimeout(function() {
+				var hideContextMenu;
+				$('#context-menu')
+					.on('mouseleave', function() {
+						hideContextMenu = setTimeout(function() {
+							_this.contextMenuHide();
+						}, 500);
+					});
+				$('#context-menu')
+					.on('mouseover', function() {
+						if (hideContextMenu) clearTimeout(hideContextMenu);
+					});
+				/* Notify listeners. */
+				amplify.publish('context-menu.onShow', {
+					e: e,
+					path: path,
+					type: type
+				});
+				// Hide on click
+				$('#context-menu a')
+					.click(function() {
 						_this.contextMenuHide();
-					}, 500);
-				});
-			$('#context-menu')
-				.on('mouseover', function() {
-					if (hideContextMenu) clearTimeout(hideContextMenu);
-				});
-			/* Notify listeners. */
-			amplify.publish('context-menu.onShow', {
-				e: e,
-				path: path,
-				type: type
-			});
-			// Hide on click
-			$('#context-menu a')
-				.click(function() {
-					_this.contextMenuHide();
-				});
+					});
+			}
 		},
 
 		contextMenuHide: function() {
@@ -399,25 +425,25 @@
 					}
 				},
 				async: false
-			}); 
+			});
 		},
 		openInModal: function(path) {
 			core.modal.load(250, this.dialog, {
 				action: 'preview',
 				path: path
-			}); 
+			});
 		},
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
 			var _this = this,
 				action, data;
 			var notifySaveErr = function() {
-				core.toast.error(i18n('File could not be saved')); 
+				core.toast.error(i18n('File could not be saved'));
 				if (typeof callbacks.error === 'function') {
 					var context = callbacks.context || _this;
 					callbacks.error.apply(context, [data]);
 				}
-			} 
+			}
 			$.post(this.controller + '?action=modify&path=' + encodeURIComponent(path), data, function(resp) {
 				resp = $.parseJSON(resp);
 				if (resp.status == 'success') {
@@ -438,8 +464,8 @@
 								fnc: function() {
 									core.active.close(path);
 									core.active.removeDraft(path);
-									_this.openFile(path); 
-								} 
+									_this.openFile(path);
+								}
 							},
 							deny: {
 								message: "No",
@@ -506,6 +532,7 @@
 				path: path
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var shortName = $('#modal_content form input[name="object_name"]')
@@ -566,6 +593,7 @@
 						path: path + '/' + shortName
 					});
 					$('#modal_content form')
+						.die('submit')
 						.live('submit', function(e) {
 							e.preventDefault();
 							var duplicate = false;
@@ -621,6 +649,7 @@
 				type: type
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var newName = $('#modal_content form input[name="object_name"]').val();
@@ -685,6 +714,7 @@
 				path: path
 			});
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					e.preventDefault();
 					$.get(_this.controller + '?action=delete&path=' + encodeURIComponent(path), function(data) {
@@ -731,6 +761,7 @@
 			core.modal.hideOverlay();
 			var _this = this;
 			$('#modal_content form')
+				.die('submit')
 				.live('submit', function(e) {
 					$('#filemanager-search-processing')
 						.show();
