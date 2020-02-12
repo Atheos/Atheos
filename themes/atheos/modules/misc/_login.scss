@@ -1,9 +1,29 @@
 #login {
-	width: 384px;
-	left: calc(50% - ( 384px / 2));
-	padding: 35px;
+	left: calc(50% - (384px / 2));
+	// padding: 35px;
 	z-index: 1;
 	top: 35%;
 	position: absolute;
-	background-color: $base00;
+	// background: rgba($base00, 0.8);
+
+	fieldset {
+		width: 384px;
+
+		border: 1px solid #0074D9;
+		background-color: #111111;
+		margin: auto;
+		// margin-top: 15px;
+		// width: 310px;
+		padding: 15px 35px 25px 35px;
+	}
+
+	legend {
+		font-size: 3rem;
+		font-weight: 700;
+		text-align: center;
+
+		span {
+			font-size: 1rem;
+		}
+	}
 }
