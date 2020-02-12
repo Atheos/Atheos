@@ -66,8 +66,8 @@
 				} else {
 					this.openFile(node.attr('data-path'));
 				}
-				if (!node.find('.expand').hasClass('none')) {
-					let icon = node.find('.expand');
+				let icon = node.find('.expand');
+				if (icon && icon.hasClass('none')) {
 					if (icon.hasClass('fa-plus')) {
 						icon.removeClass('fa-plus');
 						icon.addClass('fa-minus');
