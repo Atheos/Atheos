@@ -656,7 +656,7 @@
                 var newSession = this.sessions[newPath];
 
                 // Change Editor Mode
-                var ext = codiad.filemanager.getExtension(newPath);
+                var ext = codiad.helpers.file.getExtension(newPath);
                 var mode = codiad.editor.selectMode(ext);
 
                 // handle async mode change
