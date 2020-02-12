@@ -97,14 +97,15 @@
 
 		load: function(width, url, data) {
 			data = data || {};
-			width = width || 400;
+			width = width > 400 ? width : 400;
 
 			var wrapper = o('#modal_wrapper') || this.createModal(),
 				content = o('#modal_content');
 
 			wrapper.css({
 				'top': '15%',
-				'left': 'calc(50% - ' + (width / 2) + 'px)'
+				'left': 'calc(50% - ' + (width / 2) + 'px)',
+				'min-width': width + 'px'
 			});
 
 			content.html('<div id="modal_loading"></div>');
