@@ -36,7 +36,9 @@
 			if (
 				arr[i].selector === selector &&
 				arr[i].callback.toString() === callback.toString()
-			) return i;
+			) {
+				return i;
+			}
 		}
 		return -1;
 	};
@@ -68,7 +70,9 @@
 	var events = {
 		on: function(types, selector, callback) {
 
-			if (!selector || !callback) return;
+			if (!selector || !callback) {
+				return;
+			}
 
 			types.split(',').forEach(function(type) {
 

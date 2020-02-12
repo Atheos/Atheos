@@ -5,6 +5,9 @@
 	*/
 
 (function(global, $) {
+	var codiad = global.codiad,
+		amplify = global.amplify;
+
 
 	$(function() {
 		codiad.settings.init();
@@ -15,8 +18,6 @@
 		controller: 'components/settings/controller.php',
 
 		init: function() {
-			var _this = this;
-
 			/*
 				*  Storage Event:
 				*  Note: Event fires only if change was made in different window and not in this one
@@ -44,23 +45,23 @@
 			/* Notify listeners */
 			amplify.publish('settings.save', {});
 
-			var sync_system = (localStorage.getItem('codiad.settings.system.sync') == "true");
-			var sync_plugin = (localStorage.getItem('codiad.settings.plugin.sync') == "true");
+			var syncSystem = (localStorage.getItem('codiad.settings.system.sync') === "true");
+			var syncPlugin = (localStorage.getItem('codiad.settings.plugin.sync') === "true");
 
-			if (sync_system || sync_plugin) {
+			if (syncSystem || syncPlugin) {
 				for (var i = 0; i < localStorage.length; i++) {
 					key = localStorage.key(i);
-					if (systemRegex.test(key) && !pluginRegex.test(key) && sync_system) {
+					if (systemRegex.test(key) && !pluginRegex.test(key) && syncSystem) {
 						settings[key] = localStorage.getItem(key);
 					}
-					if (pluginRegex.test(key) && sync_plugin) {
+					if (pluginRegex.test(key) && syncPlugin) {
 						settings[key] = localStorage.getItem(key);
 					}
 				}
 			}
 
-			settings['codiad.settings.system.sync'] = sync_system;
-			settings['codiad.settings.plugin.sync'] = sync_plugin;
+			settings['codiad.settings.system.sync'] = syncSystem;
+			settings['codiad.settings.plugin.sync'] = syncPlugin;
 
 			$.post(this.controller + '?action=save', {
 				settings: JSON.stringify(settings)
@@ -75,8 +76,8 @@
 
 		load: function() {
 			$.get(this.controller + '?action=load', function(data) {
-				parsed = codiad.jsend.parse(data);
-				if (parsed != 'error') {
+				var parsed = codiad.jsend.parse(data);
+				if (parsed !== 'error') {
 					$.each(parsed, function(i, item) {
 						localStorage.setItem(i, item);
 					});
@@ -91,17 +92,17 @@
 		//
 		//  Parameter
 		//
-		//  data_file - {String} - Location of settings file based on BASE_URL
+		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
 
-		show: function(data_file) {
+		show: function(dataFile) {
 			var _this = this;
 			codiad.modal.load(800, 'components/settings/dialog.php?action=settings');
 			codiad.modal.hideOverlay();
 			codiad.modal.loadProcess.then(function() {
-				if (typeof(data_file) == 'string') {
-					codiad.settings._showTab(data_file);
+				if (typeof(dataFile) == 'string') {
+					codiad.settings._showTab(dataFile);
 				} else {
 					_this._loadTabValues('components/settings/settings.editor.php');
 				}
@@ -116,30 +117,30 @@
 		//
 		//  Parameter
 		//
-		//  data_file - {String} - Location of settings file based on BASE_URL
+		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
 
-		_showTab: function(data_file) {
+		_showTab: function(dataFile) {
 			var _this = this;
-			if (typeof(data_file) != 'string') {
+			if (typeof(dataFile) != 'string') {
 				return false;
 			}
 			$('.settings-view .config-menu .active').removeClass('active');
-			$('.settings-view .config-menu li[data-file="' + data_file + '"]').addClass('active');
+			$('.settings-view .config-menu li[data-file="' + dataFile + '"]').addClass('active');
 			$('.settings-view .panels .active').hide().removeClass('active');
 			//Load panel
-			if ($('.settings-view .panel[data-file="' + data_file + '"]').length === 0) {
-				$('.settings-view .panels').append('<div class="panel active" data-file="' + data_file + '"></div>');
-				$('.settings-view .panel[data-file="' + data_file + '"]').load(data_file, function() {
+			if ($('.settings-view .panel[data-file="' + dataFile + '"]').length === 0) {
+				$('.settings-view .panels').append('<div class="panel active" data-file="' + dataFile + '"></div>');
+				$('.settings-view .panel[data-file="' + dataFile + '"]').load(dataFile, function() {
 					//TODO Show and hide loading information
 					/* Notify listeners */
-					var name = $('.settings-view .config-menu li[data-file="' + data_file + '"]').attr('data-name');
+					var name = $('.settings-view .config-menu li[data-file="' + dataFile + '"]').attr('data-name');
 					amplify.publish('settings.dialog.tab_loaded', name);
-					_this._loadTabValues(data_file);
+					_this._loadTabValues(dataFile);
 				});
 			} else {
-				$('.settings-view .panel[data-file="' + data_file + '"]').show().addClass('active');
+				$('.settings-view .panel[data-file="' + dataFile + '"]').show().addClass('active');
 			}
 		},
 
@@ -149,13 +150,13 @@
 		//
 		//  Parameter
 		//
-		//  data_file - {String} - Location of settings file based on BASE_URL
+		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
-		_loadTabValues: function(data_file) {
+		_loadTabValues: function(dataFile) {
 			//Load settings
 			var key, value;
-			$('.settings-view .panel[data-file="' + data_file + '"] .setting').each(function(i, item) {
+			$('.settings-view .panel[data-file="' + dataFile + '"] .setting').each(function(i, item) {
 				key = $(item).attr('data-setting');
 				value = localStorage.getItem(key);
 				if (value !== null) {

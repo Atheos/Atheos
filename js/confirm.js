@@ -38,8 +38,8 @@
 				dialog = document.createElement('div'),
 				actions = document.createElement('div');
 
-			overlay.id = "confirm-overlay";
-			dialog.id = "confirm-dialog";
+			overlay.id = 'confirm-overlay';
+			dialog.id = 'confirm-dialog';
 
 			actions.classList.add('actions');
 
@@ -53,23 +53,23 @@
 		},
 
 		showConfirm: function(options) {
-			if (!options) {
-				options = {
-					message: "Are you sure you want to do this?",
-					confirm: {
-						message: "Yes",
-						fnc: function() {
-							console.log('Success');
-						}
-					},
-					deny: {
-						message: "No",
-						fnc: function() {
-							console.log('Fail');
-						}
-					}
-				};
-			}
+			// if (!options) {
+			// 	options = {
+			// 		message: "Are you sure you want to do this?",
+			// 		confirm: {
+			// 			message: "Yes",
+			// 			fnc: function() {
+			// 				console.log('Success');
+			// 			}
+			// 		},
+			// 		deny: {
+			// 			message: "No",
+			// 			fnc: function() {
+			// 				console.log('Fail');
+			// 			}
+			// 		}
+			// 	};
+			// }
 
 			if (options && typeof options === 'object') {
 				// declare variables
