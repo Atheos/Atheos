@@ -102,6 +102,7 @@ if (isset($_SESSION['theme'])) {
 	<script src="js/helpers.js"></script>
 	<script src="js/synthetic.js"></script>
 	<script src="js/sidebars.js"></script>
+	<script src="js/confirm.js"></script>
 	<script src="js/modal.js"></script>
 	<script src="js/toast.js"></script>
 	<script src="js/jsend.js"></script>
