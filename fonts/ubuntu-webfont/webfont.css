@@ -5,6 +5,7 @@
 	src: url('ubuntu-webfont.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -13,6 +14,7 @@
 		url('UbuntuMono-Lig.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }
 
 @font-face {
@@ -21,4 +23,5 @@
 		url('FiraCodeUbuntuMono-Regular.woff') format('woff');
 	font-weight: normal;
 	font-style: normal;
+	font-display: swap;
 }
