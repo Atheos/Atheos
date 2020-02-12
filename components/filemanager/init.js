@@ -1,30 +1,35 @@
-/*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// FileManager
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Notes: 
+// Goodness this file is very complex; it's going to take a very long time
+// to really get a grasp of what's going on in this file and how to 
+// refactor it.
+// The context menu should become an object stored within the filemanager, and
+// constructed based on the fules specified therein. The OBJ is created, and then
+// added to by each plugin based on it's requirements. The OBJ could even be 
+// cached.
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(global, $) {
+	// 'use strict';
+	var core = global.codiad,
+		amplify = global.amplify,
+		o = global.onyx;
 
-	var codiad = global.codiad;
+	amplify.subscribe('core.loaded', function(settings) {
+		core.filemanager.init();
+	});
 
-	$(window)
-		.load(function() {
-			codiad.filemanager.init();
-		});
 
-	//////////////////////////////////////////////////////////////////////
-	// FileManager
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// Goodness this file is very complex; it's going to take a very long time
-	// to really get a grasp of what's going on in this file and how to 
-	// refactor it.
-	//
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
 
-	codiad.filemanager = {
+
+	core.filemanager = {
 
 		clipboard: '',
 
@@ -36,12 +41,15 @@
 		dialogUpload: 'components/filemanager/dialog_upload.php',
 
 		init: function() {
+			//Prevent text selection in fie-manager
+			// $('#file-manager').on('selectstart', false);
+
 			// Initialize node listener
 			this.nodeListener();
 			// Load uploader
-			$.loadScript("components/filemanager/upload_scripts/jquery.ui.widget.js", true);
-			$.loadScript("components/filemanager/upload_scripts/jquery.iframe-transport.js", true);
-			$.loadScript("components/filemanager/upload_scripts/jquery.fileupload.js", true);
+			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
+			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
+			core.helpers.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -51,91 +59,71 @@
 		nodeListener: function() {
 			var _this = this;
 
-			$('#file-manager').on('selectstart', false);
+			var nodeFunctions = (function(node) {
+				node = o(node);
+				if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
+					this.index(node.attr('data-path'));
+				} else {
+					this.openFile(node.attr('data-path'));
+				}
+				if (!node.find('.expand').hasClass('none')) {
+					let icon = node.find('.expand');
+					if (icon.hasClass('fa-plus')) {
+						icon.removeClass('fa-plus');
+						icon.addClass('fa-minus');
+					} else {
+						icon.removeClass('fa-minus');
+						icon.addClass('fa-plus');
+					}
+				}
+			}).bind(this);
 
-			$('#file-manager a')
-				.live('dblclick', function() { // Open or Expand
-					if (codiad.editor.settings.fileManagerTrigger) {
-						if ($(this)
-							.data('type') == 'directory') {
-							_this.index($(this)
-								.attr('data-path'));
-						} else {
-							_this.openFile($(this)
-								.attr('data-path'));
-						}
-						if (!$(this).children(".expand").hasClass('none')) {
-							if ($(this).children(".expand").hasClass('fa-plus')) {
-								$(this).children(".expand").removeClass('fa-plus');
-								$(this).children(".expand").addClass('fa-minus');
-							} else {
-								$(this).children(".expand").removeClass('fa-minus');
-								$(this).children(".expand").addClass('fa-plus');
-							}
-						}
-					}
-				})
-				.live('click', function() { // Open or Expand
-					if (!codiad.editor.settings.fileManagerTrigger) {
-						if ($(this).data('type') == 'directory' || $(this).data('type') == 'root') {
-							// .hasClass('directory')) {
-							_this.index($(this)
-								.attr('data-path'));
-						} else {
-							_this.openFile($(this)
-								.attr('data-path'));
-						}
-						if (!$(this).children(".expand").hasClass('none')) {
-							if ($(this).children(".expand").hasClass('fa-plus')) {
-								$(this).children(".expand").removeClass('fa-plus');
-								$(this).children(".expand").addClass('fa-minus');
-							} else {
-								$(this).children(".expand").removeClass('fa-minus');
-								$(this).children(".expand").addClass('fa-plus');
-							}
-						}
-					}
-				})
-				.live("contextmenu", function(e) { // Context Menu
-					e.preventDefault();
-					_this.contextMenuShow(e, $(this)
-						.attr('data-path'), $(this)
-						.attr('data-type'), $(this)
-						.html());
-					$(this)
-						.addClass('context-menu-active');
-				});
+			o('#file-manager').on('click', function(e) {
+				if (!core.editor.settings.fileManagerTrigger) {
+					nodeFunctions(e.target);
+				}
+			});
+			o('#file-manager').on('dblclick', function(e) {
+				if (core.editor.settings.fileManagerTrigger) {
+					nodeFunctions(e.target);
+				}
+			});
+
+			o('#file-manager').on("contextmenu", function(e) { // Context Menu
+				e.preventDefault();
+				core.filemanager.contextMenuShow(e);
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Context Menu
 		//////////////////////////////////////////////////////////////////
 
-		contextMenuShow: function(e, path, type, name) {
-			var _this = this;
+		contextMenuShow: function(e) {
+			var node = o(e.target),
+				path = node.attr('data-path'),
+				type = node.attr('data-type'),
+				name = node.html();
+
+			node.addClass('context-menu-active');
+
 
 			// Selective options
 			switch (type) {
 				case 'directory':
-					$('#context-menu .directory-only, #context-menu .non-root')
-						.show();
-					$('#context-menu .file-only, #context-menu .root-only')
-						.hide();
+					$('#context-menu .directory-only, #context-menu .non-root').show();
+					$('#context-menu .file-only, #context-menu .root-only').hide();
 					break;
 				case 'file':
-					$('#context-menu .directory-only, #context-menu .root-only')
-						.hide();
-					$('#context-menu .file-only,#context-menu .non-root')
-						.show();
+					$('#context-menu .directory-only, #context-menu .root-only').hide();
+					$('#context-menu .file-only,#context-menu .non-root').show();
 					break;
 				case 'root':
-					$('#context-menu .directory-only, #context-menu .root-only')
-						.show();
-					$('#context-menu .non-root, #context-menu .file-only')
-						.hide();
+					$('#context-menu .directory-only, #context-menu .root-only').show();
+					$('#context-menu .non-root, #context-menu .file-only').hide();
 					break;
 			}
-			if (codiad.project.isAbsPath($('#file-manager a[data-type="root"]').attr('data-path'))) {
+			if (core.project.isAbsPath(o('#file-manager a[data-type="root"]').attr('data-path'))) {
 				$('#context-menu .no-external').hide();
 			} else {
 				$('#context-menu .no-external').show();
@@ -150,29 +138,30 @@
 			}
 			var max = $(window).height() - top - 10;
 
-			$('#context-menu')
-				.css({
-					'top': top + 'px',
-					'left': e.pageX + 'px',
-					'max-height': max + 'px'
-				})
-				.fadeIn(200)
-				.attr('data-path', path)
-				.attr('data-type', type)
-				.attr('data-name', name);
+			var menu = o('#context-menu');
+
+			menu.css({
+				'top': top + 'px',
+				'left': e.pageX + 'px',
+				'max-height': max + 'px',
+				'display': 'block'
+			});
+			menu.attr('data-path', path);
+			menu.attr('data-type', type);
+			menu.attr('data-name', name);
 			// Show faded 'paste' if nothing in clipboard
 			if (this.clipboard === '') {
-				$('#context-menu a[content="Paste"]')
-					.addClass('disabled');
+				$('#context-menu a[content="Paste"]').addClass('disabled');
 			} else {
-				$('#context-menu a[data-action="paste"]')
-					.removeClass('disabled');
+				$('#context-menu a[data-action="paste"]').removeClass('disabled');
 			}
 			// Hide menu
 			// $('#file-manager, #editor-region')
 			//     .on('mouseover', function() {
 			//         _this.contextMenuHide();
 			//     });
+			var _this = this;
+
 			var hideContextMenu;
 			$('#context-menu')
 				.on('mouseleave', function() {
@@ -206,23 +195,6 @@
 			amplify.publish('context-menu.onHide');
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Return the node name (sans path)
-		//////////////////////////////////////////////////////////////////
-
-		getShortName: function(path) {
-			return path.split('/')
-				.pop();
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Return extension
-		//////////////////////////////////////////////////////////////////
-
-		getExtension: function(path) {
-			return path.split('.')
-				.pop();
-		},
 
 		//////////////////////////////////////////////////////////////////
 		// Return type
@@ -241,11 +213,10 @@
 		//////////////////////////////////////////////////////////////////
 
 		createObject: function(parent, path, type) {
-			// NODE FORMAT: <li><a class="{type} {ext-file_extension}" data-type="{type}" data-path="{path}">{short_name}</a></li>
 			var parentNode = $('#file-manager a[data-path="' + parent + '"]');
 			if (!$('#file-manager a[data-path="' + path + '"]').length) { // Doesn't already exist
 				if (parentNode.hasClass('open') && parentNode.data('type') === 'directory') { // Only append node if parent is open (and a directory)
-					var shortName = this.getShortName(path);
+					var shortName = core.helpers.file.getShortName(path);
 					var nodeClass = 'none';
 					var fileClass = type == "directory" ? "fa fa-folder medium-blue" : FileIcons.getClassWithColor(shortName);
 					fileClass = fileClass || 'fa fa-file medium-green';
@@ -258,13 +229,10 @@
 										</a>
 									</li>`;
 
-					if (parentNode.siblings('ul')
-						.length) { // UL exists, other children to play with
-						parentNode.siblings('ul')
-							.append(appendage);
+					if (parentNode.siblings('ul').length) { // UL exists, other children to play with
+						parentNode.siblings('ul').append(appendage);
 					} else {
-						$('<ul>' + appendage + '</ul>')
-							.insertAfter(parentNode);
+						$('<ul>' + appendage + '</ul>').insertAfter(parentNode);
 					}
 				} else {
 					parentNode.parent().children('span').removeClass('none');
@@ -297,7 +265,7 @@
 				node.children('.expand').addClass('loading');
 				$.get(this.controller + '?action=index&path=' + encodeURIComponent(path), function(data) {
 					node.addClass('open');
-					var objectsResponse = codiad.jsend.parse(data);
+					var objectsResponse = core.jsend.parse(data);
 					if (objectsResponse != 'error') {
 						/* Notify listener */
 						_this.indexFiles = objectsResponse.index;
@@ -394,25 +362,25 @@
 				focus = true;
 			}
 			var node = $('#file-manager a[data-path="' + path + '"]');
-			var ext = this.getExtension(path);
+			var ext = core.helpers.file.getExtension(path);
 			if ($.inArray(ext.toLowerCase(), this.noOpen) < 0) {
 				node.children('.expand').addClass('loading');
 				$.get(this.controller + '?action=open&path=' + encodeURIComponent(path), function(data) {
-					var openResponse = codiad.jsend.parse(data);
+					var openResponse = core.jsend.parse(data);
 					if (openResponse != 'error') {
 						node.children('.expand').removeClass('loading');
-						codiad.active.open(path, openResponse.content, openResponse.mtime, false, focus);
+						core.active.open(path, openResponse.content, openResponse.mtime, false, focus);
 					}
 				});
 			} else {
-				if (!codiad.project.isAbsPath(path)) {
+				if (!core.project.isAbsPath(path)) {
 					if ($.inArray(ext.toLowerCase(), this.noBrowser) < 0) {
 						this.download(path);
 					} else {
 						this.openInModal(path);
 					}
 				} else {
-					codiad.message.error(i18n('Unable to open file in Browser'));
+					core.toast.error(i18n('Unable to open file in Browser'));
 				}
 			}
 		},
@@ -425,57 +393,79 @@
 			$.ajax({
 				url: this.controller + '?action=open_in_browser&path=' + encodeURIComponent(path),
 				success: function(data) {
-					var openIBResponse = codiad.jsend.parse(data);
+					var openIBResponse = core.jsend.parse(data);
 					if (openIBResponse != 'error') {
 						window.open(openIBResponse.url, '_newtab');
 					}
 				},
 				async: false
-			});
+			}); 
 		},
 		openInModal: function(path) {
-			codiad.modal.load(250, this.dialog, {
+			core.modal.load(250, this.dialog, {
 				action: 'preview',
 				path: path
-			});
+			}); 
 		},
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
 			var _this = this,
 				action, data;
 			var notifySaveErr = function() {
-				codiad.message.error(i18n('File could not be saved'));
+				core.toast.error(i18n('File could not be saved')); 
 				if (typeof callbacks.error === 'function') {
 					var context = callbacks.context || _this;
 					callbacks.error.apply(context, [data]);
 				}
-			}
+			} 
 			$.post(this.controller + '?action=modify&path=' + encodeURIComponent(path), data, function(resp) {
 				resp = $.parseJSON(resp);
 				if (resp.status == 'success') {
-					codiad.message.success(i18n('File saved'));
+					core.toast.success(i18n('File saved'));
 					if (typeof callbacks.success === 'function') {
 						var context = callbacks.context || _this;
 						callbacks.success.call(context, resp.data.mtime);
 					}
 				} else {
 					if (resp.message == 'Client is out of sync') {
-						var reload = confirm(
-							"Server has a more updated copy of the file. Would " +
-							"you like to refresh the contents ? Pressing no will " +
-							"cause your changes to override the server's copy upon " +
-							"next save."
-						);
-						if (reload) {
-							codiad.active.close(path);
-							codiad.active.removeDraft(path);
-							_this.openFile(path);
-						} else {
-							var session = codiad.editor.getActive().getSession();
-							session.serverMTime = null;
-							session.untainted = null;
-						}
-					} else codiad.message.error(i18n('File could not be saved'));
+						core.confirm.showConfirm({
+							message: 'The server has a more updated copy of the file.\n' +
+								'Would you like to retreieve an updated copy of the file?\n' +
+								'Pressing no will cause your changes to override the\n' +
+								'server\'s copy upon next save.',
+							confirm: {
+								message: "Yes",
+								fnc: function() {
+									core.active.close(path);
+									core.active.removeDraft(path);
+									_this.openFile(path); 
+								} 
+							},
+							deny: {
+								message: "No",
+								fnc: function() {
+									var session = core.editor.getActive().getSession();
+									session.serverMTime = null;
+									session.untainted = null;
+								}
+							}
+						});
+						// var reload = confirm(
+						// 	"Server has a more updated copy of the file. Would " +
+						// 	"you like to refresh the contents ? Pressing no will " +
+						// 	"cause your changes to override the server's copy upon " +
+						// 	"next save."
+						// );
+						// if (reload) {
+						// 	core.active.close(path);
+						// 	core.active.removeDraft(path);
+						// 	_this.openFile(path);
+						// } else {
+						// 	var session = core.editor.getActive().getSession();
+						// 	session.serverMTime = null;
+						// 	session.untainted = null;
+						// }
+					} else core.toast.error(i18n('File could not be saved'));
 					if (typeof callbacks.error === 'function') {
 						var context = callbacks.context || _this;
 						callbacks.error.apply(context, [resp.data]);
@@ -510,7 +500,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		createNode: function(path, type) {
-			codiad.modal.load(250, this.dialog, {
+			core.modal.load(250, this.dialog, {
 				action: 'create',
 				type: type,
 				path: path
@@ -525,16 +515,16 @@
 					var type = $('#modal_content form input[name="type"]')
 						.val();
 					var createPath = path + '/' + shortName;
-					$.get(codiad.filemanager.controller + '?action=create&path=' + encodeURIComponent(createPath) + '&type=' + type, function(data) {
-						var createResponse = codiad.jsend.parse(data);
+					$.get(core.filemanager.controller + '?action=create&path=' + encodeURIComponent(createPath) + '&type=' + type, function(data) {
+						var createResponse = core.jsend.parse(data);
 						if (createResponse != 'error') {
-							codiad.message.success(type.charAt(0)
+							core.toast.success(type.charAt(0)
 								.toUpperCase() + type.slice(1) + ' Created');
-							codiad.modal.unload();
+							core.modal.unload();
 							// Add new element to filemanager screen
-							codiad.filemanager.createObject(path, createPath, type);
+							core.filemanager.createObject(path, createPath, type);
 							if (type == 'file') {
-								codiad.filemanager.openFile(createPath, true);
+								core.filemanager.openFile(createPath, true);
 							}
 							/* Notify listeners. */
 							amplify.publish('filemanager.onCreate', {
@@ -554,7 +544,7 @@
 
 		copyNode: function(path) {
 			this.clipboard = path;
-			codiad.message.success(i18n('Copied to Clipboard'));
+			core.toast.success(i18n('Copied to Clipboard'));
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -564,14 +554,14 @@
 		pasteNode: function(path) {
 			var _this = this;
 			if (this.clipboard == '') {
-				codiad.message.error(i18n('Nothing in Your Clipboard'));
+				core.toast.error(i18n('Nothing in Your Clipboard'));
 			} else if (path == this.clipboard) {
-				codiad.message.error(i18n('Cannot Paste Directory Into Itself'));
+				core.toast.error(i18n('Cannot Paste Directory Into Itself'));
 			} else {
-				var shortName = _this.getShortName(_this.clipboard);
+				var shortName = core.helpers.file.getShortName(_this.clipboard);
 				if ($('#file-manager a[data-path="' + path + '/' + shortName + '"]')
 					.length) { // Confirm overwrite?
-					codiad.modal.load(400, this.dialog, {
+					core.modal.load(400, this.dialog, {
 						action: 'overwrite',
 						path: path + '/' + shortName
 					});
@@ -593,7 +583,7 @@
 
 		processPasteNode: function(path, duplicate) {
 			var _this = this;
-			var shortName = this.getShortName(this.clipboard);
+			var shortName = core.helpers.file.getShortName(this.clipboard);
 			var type = this.getType(this.clipboard);
 			if (duplicate) {
 				shortName = "copy_of_" + shortName;
@@ -602,10 +592,10 @@
 				encodeURIComponent(this.clipboard) + '&destination=' +
 				encodeURIComponent(path + '/' + shortName),
 				function(data) {
-					var pasteResponse = codiad.jsend.parse(data);
+					var pasteResponse = core.jsend.parse(data);
 					if (pasteResponse != 'error') {
 						_this.createObject(path, path + '/' + shortName, type);
-						codiad.modal.unload();
+						core.modal.unload();
 						/* Notify listeners. */
 						amplify.publish('filemanager.onPaste', {
 							path: path,
@@ -621,10 +611,10 @@
 		//////////////////////////////////////////////////////////////////
 
 		renameNode: function(path) {
-			var shortName = this.getShortName(path);
+			var shortName = core.helpers.file.getShortName(path);
 			var type = this.getType(path);
 			var _this = this;
-			codiad.modal.load(250, this.dialog, {
+			core.modal.load(250, this.dialog, {
 				action: 'rename',
 				path: path,
 				short_name: shortName,
@@ -646,9 +636,9 @@
 						path: path,
 						new_name: newName
 					}, function(data) {
-						var renameResponse = codiad.jsend.parse(data);
+						var renameResponse = core.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.message.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
+							core.toast.success(type.charAt(0).toUpperCase() + type.slice(1) + ' Renamed');
 							var node = $('#file-manager a[data-path="' + path + '"]'),
 								icon = node.find('i:nth-child(2)'),
 								span = node.find('span');
@@ -662,8 +652,8 @@
 								_this.repathSubs(path, newPath);
 							}
 							// Change any active files
-							codiad.active.rename(path, newPath);
-							codiad.modal.unload();
+							core.active.rename(path, newPath);
+							core.modal.unload();
 						}
 
 					});
@@ -690,7 +680,7 @@
 
 		deleteNode: function(path) {
 			var _this = this;
-			codiad.modal.load(400, this.dialog, {
+			core.modal.load(400, this.dialog, {
 				action: 'delete',
 				path: path
 			});
@@ -698,7 +688,7 @@
 				.live('submit', function(e) {
 					e.preventDefault();
 					$.get(_this.controller + '?action=delete&path=' + encodeURIComponent(path), function(data) {
-						var deleteResponse = codiad.jsend.parse(data);
+						var deleteResponse = core.jsend.parse(data);
 						if (deleteResponse != 'error') {
 							var node = $('#file-manager a[data-path="' + path + '"]');
 							node.parent('li')
@@ -709,11 +699,11 @@
 									var curPath = $(this)
 										.attr('data-path');
 									if (curPath.indexOf(path) == 0) {
-										codiad.active.remove(curPath);
+										core.active.remove(curPath);
 									}
 								});
 						}
-						codiad.modal.unload();
+						core.modal.unload();
 					});
 				});
 		},
@@ -723,11 +713,11 @@
 		//////////////////////////////////////////////////////////////////
 
 		search: function(path) {
-			codiad.modal.load(500, this.dialog, {
+			core.modal.load(500, this.dialog, {
 				action: 'search',
 				path: path
 			});
-			codiad.modal.loadProcess.then(function() {
+			core.modal.loadProcess.then(function() {
 				var lastSearched = JSON.parse(localStorage.getItem("lastSearched"));
 				if (lastSearched) {
 					$('#modal_content form input[name="search_string"]').val(lastSearched.searchText);
@@ -738,7 +728,7 @@
 					}
 				}
 			});
-			codiad.modal.hideOverlay();
+			core.modal.hideOverlay();
 			var _this = this;
 			$('#modal_content form')
 				.live('submit', function(e) {
@@ -760,7 +750,7 @@
 						search_string: searchString,
 						search_file_type: searchFileType
 					}, function(data) {
-						searchResponse = codiad.jsend.parse(data);
+						searchResponse = core.jsend.parse(data);
 						var results = '';
 						if (searchResponse != 'error') {
 							$.each(searchResponse.index, function(key, val) {
@@ -803,7 +793,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		uploadToNode: function(path) {
-			codiad.modal.load(500, this.dialogUpload, {
+			core.modal.load(500, this.dialogUpload, {
 				path: path
 			});
 		},
