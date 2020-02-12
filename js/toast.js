@@ -1,22 +1,26 @@
-'use strict';
+//////////////////////////////////////////////////////////////////////////////80
+// User Alerts / Messages
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Notes: 
+// Currently the icons are hard coded: Close/Types. They'll need to be migrated
+// to css classes modifiable by the themes for consistancy.
+//
+// Currently, the langauge translations are done on each call to the Toast
+// message, even though I think it would make more sense for Toast to handle
+// the translation. For Future consideration.
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
+
 
 (function(global) {
 
-	var core = global.codiad,
-	amplify = global.amplify,
-	bioflux = global.bioflux,
-	events = global.events;
+	'use strict';
 
-	//////////////////////////////////////////////////////////////////////
-	// User Alerts / Messages
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// Currently the icons are hard coded: Close/Types. They'll need to be
-	// migrated to css classes modifiable by the themes for consistancy.
-	//
-	// codiad.message needs to be changed to codiad.toast in the future
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
+	var core = global.codiad;
 
 	core.toast = {
 
@@ -66,7 +70,7 @@
 			wrapper.appendChild(icon);
 			wrapper.appendChild(message);
 			wrapper.appendChild(close);
-			
+
 			close.addEventListener('click', function() {
 				core.message.hide(wrapper);
 			});
@@ -88,7 +92,7 @@
 
 				if (!options.sticky) {
 					setTimeout(function() {
-						core.message.hide(wrapper);
+						core.toast.hide(wrapper);
 					}, options.stayTime);
 				}
 			}, 10);
@@ -130,7 +134,5 @@
 			});
 		}
 	};
-	
 	core.message = core.toast;
-
 })(this);

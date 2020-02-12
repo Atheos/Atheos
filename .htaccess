@@ -2,3 +2,5 @@ Options -Indexes
 <Files ~ "^.*\.(txt|yml|md|xml|json)">
   Require all denied
 </Files>
+
+RedirectMatch 403 ^/workspace/?$

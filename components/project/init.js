@@ -6,7 +6,9 @@
 
 (function(global, $) {
 
-	var codiad = global.codiad;
+	var codiad = global.codiad,
+		amplify = global.amplify,
+		i18n = global.i18n;
 
 	$(function() {
 		codiad.project.init();
@@ -58,7 +60,7 @@
 								</li></ul>`);
 					codiad.filemanager.index(projectInfo.path);
 					codiad.user.project(projectInfo.path);
-					codiad.message.success(i18n('Project %{projectName}% Loaded', {
+					codiad.toast.success(i18n('Project %{projectName}% Loaded', {
 						projectName: projectInfo.name
 					}));
 				}
@@ -131,7 +133,7 @@
 
 		create: function(close) {
 			var _this = this;
-			create = true;
+			// create = true;
 			codiad.modal.load(500, this.dialog + '?action=create&close=' + close);
 			$('#modal_content form')
 				.live('submit', function(e) {
@@ -144,23 +146,32 @@
 						.val(),
 						gitBranch = $('#modal_content form input[name="git_branch"]')
 						.val();
-					if (projectPath.indexOf('/') == 0) {
-						create = confirm('Do you really want to create project with absolute path "' + projectPath + '"?');
-					}
-					if (create) {
-						$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
-							createResponse = codiad.jsend.parse(data);
-							if (createResponse != 'error') {
-								_this.open(createResponse.path);
-								codiad.modal.unload();
-								_this.loadSide();
-								/* Notify listeners. */
-								amplify.publish('project.onCreate', {
-									"name": projectName,
-									"path": projectPath,
-									"git_repo": gitRepo,
-									"git_branch": gitBranch
-								});
+					if (projectPath.indexOf('/') === 0) {
+						codiad.confirm.showConfirm({
+							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
+							confirm: {
+								message: 'Yes',
+								fnc: function() {
+									$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
+										var createResponse = codiad.jsend.parse(data);
+										if (createResponse !== 'error') {
+											_this.open(createResponse.path);
+											codiad.modal.unload();
+											_this.loadSide();
+											/* Notify listeners. */
+											amplify.publish('project.onCreate', {
+												"name": projectName,
+												"path": projectPath,
+												"git_repo": gitRepo,
+												"git_branch": gitBranch
+											});
+										}
+									});
+								}
+							},
+							deny: {
+								message: 'No',
+								fnc: function() {}
 							}
 						});
 					}
@@ -182,9 +193,9 @@
 					var projectName = $('#modal_content form input[name="project_name"]')
 						.val();
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
-						renameResponse = codiad.jsend.parse(data);
+						var renameResponse = codiad.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.message.success(i18n('Project renamed'));
+							codiad.toast.success(i18n('Project renamed'));
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							codiad.modal.unload();
@@ -222,9 +233,9 @@
 					}
 					$.get(codiad.filemanager.controller + action, function(d) {
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
-							deleteResponse = codiad.jsend.parse(data);
+							var deleteResponse = codiad.jsend.parse(data);
 							if (deleteResponse != 'error') {
-								codiad.message.success(i18n('Project Deleted'));
+								codiad.toast.success(i18n('Project Deleted'));
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open
@@ -232,7 +243,7 @@
 									.each(function() {
 										var curPath = $(this)
 											.attr('data-path');
-										if (curPath.indexOf(projectPath) == 0) {
+										if (curPath.indexOf(projectPath) === 0) {
 											codiad.active.remove(curPath);
 										}
 									});
