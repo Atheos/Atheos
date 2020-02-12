@@ -83,8 +83,8 @@
 				if (options.message) {
 					message.innerText = options.message;
 				}
-				let confirm = document.createElement('button');
-				let deny = document.createElement('button');
+				var confirm = document.createElement('button');
+				var deny = document.createElement('button');
 
 				confirm.innerText = options.confirm.message;
 				deny.innerText = options.deny.message;
@@ -99,7 +99,7 @@
 					overlay.style.display = 'none';
 
 				});
-				actions.innerHtml = '';
+				actions.innerHTML = '';
 				actions.appendChild(confirm);
 				actions.appendChild(deny);
 
