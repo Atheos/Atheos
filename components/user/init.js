@@ -30,25 +30,25 @@
 			this.loginForm.on('submit', function(e) {
 				e.preventDefault();
 				// Save Language
-				localStorage.setItem('codiad.language', $("#language").val());
+				localStorage.setItem('codiad.language', $('#language').val());
 				// Save Theme
-				localStorage.setItem('codiad.theme', $("#theme").val());
+				localStorage.setItem('codiad.theme', $('#theme').val());
 				_this.authenticate();
 			});
 
 			// Get Theme
 			var theme = localStorage.getItem('codiad.theme');
-			$("#theme option").each(function() {
+			$('#theme option').each(function() {
 				if ($(this).val() == theme) {
-					$(this).attr("selected", "selected");
+					$(this).attr('selected', 'selected');
 				}
 			});
 
 			// Get Language
 			var language = localStorage.getItem('codiad.language');
-			$("#language option").each(function() {
-				if ($(this).val() == language) {
-					$(this).attr("selected", "selected");
+			$('#language option').each(function() {
+				if ($(this).val() === language) {
+					$(this).attr('selected', 'selected');
 				}
 			});
 
@@ -57,7 +57,7 @@
 				$(this).hide();
 				$('.language-selector').animate({
 					height: 'toggle'
-				}, "fast");
+				}, 'fast');
 			});
 		},
 
@@ -68,7 +68,7 @@
 		authenticate: function() {
 			$.post(this.controller + '?action=authenticate', this.loginForm.serialize(), function(data) {
 				var parsed = codiad.jsend.parse(data);
-				if (parsed != 'error') {
+				if (parsed !== 'error') {
 					// Session set, reload
 					window.location.reload();
 				}
@@ -142,7 +142,7 @@
 							'password': password1
 						}, function(data) {
 							var createResponse = codiad.jsend.parse(data);
-							if (createResponse != 'error') {
+							if (createResponse !== 'error') {
 								codiad.toast.success(i18n('User Account Created'));
 								_this.list();
 							}
@@ -191,18 +191,18 @@
 					$('input:checkbox[name="project"]:checked').each(function() {
 						projects.push($(this).val());
 					});
-					if (accessLevel == 0) {
+					if (accessLevel === 0) {
 						projects = 0;
 					}
 					// Check and make sure if access level not full that at least on project is selected
-					if (accessLevel == 1 && !projects) {
+					if (accessLevel === 1 && !projects) {
 						codiad.toast.error(i18n('At Least One Project Must Be Selected'));
 					} else {
 						$.post(_this.controller + '?action=project_access&username=' + username, {
 							projects: projects
 						}, function(data) {
 							var projectsResponse = codiad.jsend.parse(data);
-							if (projectsResponse != 'error') {
+							if (projectsResponse !== 'error') {
 								codiad.toast.success(i18n('Account Modified'));
 							}
 						});
@@ -226,7 +226,7 @@
 						.val();
 					var password2 = $('#modal_content form input[name="password2"]')
 						.val();
-					if (password1 != password2) {
+					if (password1 !== password2) {
 						codiad.toast.error(i18n('Passwords Do Not Match'));
 					} else {
 						$.post(_this.controller + '?action=password', {
@@ -234,7 +234,7 @@
 							'password': password1
 						}, function(data) {
 							var passwordResponse = codiad.jsend.parse(data);
-							if (passwordResponse != 'error') {
+							if (passwordResponse !== 'error') {
 								codiad.toast.success(i18n('Password Changed'));
 								codiad.modal.unload();
 							}
