@@ -1,50 +1,55 @@
-(function(global, $, P) {
+//////////////////////////////////////////////////////////////////////////////80
+// Modal
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Notes: 
+// In an effort of removing jquery and saving myself time, I removed persistant
+// modal functions, modal will always load center screen; I can re-add them
+// later if I decide that it was important.
+//
+// Event propagation from the overlay and the interactions within
+// the modal seem to be a bit twisted up. Once I sort out all the
+// plugins & components into a cohesive system, I'll need to clean
+// this mess up.
+//
+// It looks like the modal loader handles event management & even
+// loading the content for each modal, while I know a lot of the 
+// plugins seem to as well, this will have to be optimized.
+//
+// *Sigh* The jquery HTML function for loading the content also
+// executes the script tags contained within, which is a nightmare in
+// my opinion. I think the idea was to containerize each component &
+// only call it when it's loaded. The two options I can think of are
+// create my own version of that function, or load all javascript from
+// the start.
+//
+// Modal module currently called from:
+//	Sidebars.js: Keep leftsidebar open if modal is open
+//	Settings/init.js: Check for AJAX return promise
+//	FileManager/init.js: Check for AJAX return promise
+//
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
+
+
+
+(function(global, $) {
+
+	'use strict';
+
 
 	var core = global.codiad,
+		ajax = global.ajax,
 		amplify = global.amplify,
-		bioflux = global.bioflux,
-		events = global.events;
-
-	//////////////////////////////////////////////////////////////////////
-	// Modal
-	//////////////////////////////////////////////////////////////////////
-	// Notes: 
-	// In an effort of removing jquery and saving myself time, I removed
-	// persistant modal functions, modal will always load center screen.
-	//
-	// I will re-add them later when need them
-	// Event propagation from the overlay and the interactions within
-	// the modal seem to be a bit twisted up. Once I sort out all the
-	// plugins & components into a cohesive system, I'll need to clean
-	// this mess up.
-	//
-	// It looks like the modal loader handles event management & even
-	// loading the content for each modal, while I know a lot of the 
-	// plugins seem to as well, this will have to be optimized.
-	//
-	// *Sigh* The jquery HTML function for loading the content also
-	// executes the script tags contained within, which is a nightmare in
-	// my opinion. I think the idea was to containerize each component &
-	// only call it when it's loaded. The two options I can think of are
-	// create my own version of that function, or load all javascript from
-	// the start.
-	//
-	// Modal module currently called from:
-	//	Sidebars.js: Keep leftsidebar open if modal is open
-	//
-	//												- Liam Siira
-	//////////////////////////////////////////////////////////////////////
-
+		o = global.onyx;
 
 	core.modal = {
 
 		settings: {
 			isModalVisible: false
-		},
-		IDs: {
-			overlay_id: 'modal_overlay',
-			wrapper_id: 'modal_wrapper',
-			content_id: 'modal_content',
 		},
 
 		init: function() {
@@ -53,62 +58,75 @@
 
 		createModal: function() {
 			var modal = core.modal;
-			var overlay = document.createElement('div'),
-				wrapper = document.createElement('div'),
-				content = document.createElement('div'),
-				drag = document.createElement('i'),
-				close = document.createElement('i');
+			var overlay = o('<div>'),
+				wrapper = o('<div>'),
+				content = o('<div>'),
+				drag = o('<i>'),
+				close = o('<i>');
 
-			overlay.id = "modal_overlay";
-			overlay.addEventListener('click', function(event) {
-				if (event.target.id !== 'modal_overlay') return;
+			overlay.attr('id', 'modal_overlay');
+			overlay.on('click', function(event) {
+				if (event.target.id !== 'modal_overlay') {
+					return;
+				}
 				modal.unload();
 			}, false);
 
-			wrapper.id = 'modal_wrapper';
-			content.id = 'modal_content';
+			wrapper.attr('id', 'modal_wrapper');
+			content.attr('id', 'modal_content');
 
-			close.classList.add('icon-cancel');
-			close.addEventListener('click', modal.unload, false);
+			close.addClass('icon-cancel');
+			close.on('click', modal.unload);
 
-			drag.classList.add('icon-arrows');
-			drag.addEventListener('mousedown', function() {
-				drag.classList.add('active');
+			drag.addClass('icon-arrows');
+			drag.on('mousedown', function() {
+				drag.addClass('active');
 				modal.drag(wrapper);
 			}, false);
 
-			wrapper.appendChild(close);
-			wrapper.appendChild(drag);
-			wrapper.appendChild(content);
+			wrapper.append(close);
+			wrapper.append(drag);
+			wrapper.append(content);
 
 			// overlay.appendChild(wrapper);
-			document.body.appendChild(wrapper);
+			document.body.appendChild(wrapper.el);
 
-			document.body.appendChild(overlay);
-			return P(wrapper);
+			document.body.appendChild(overlay.el);
+			return wrapper;
 		},
 
 		load: function(width, url, data) {
 			data = data || {};
-			
-			var wrapper = P('#modal_wrapper') || this.createModal(),
-				content = P('#modal_content').sel;
-			wrapper.style.top = '15%';
+			width = width > 400 ? width : 400;
 
-			// resize - Kurim
-			wrapper.style.left = width ? 'calc(50% - ' + ((width + 300) / 2) + 'px)' : 'calc(50% - ' + (width / 2) + 'px)';
-			wrapper.style.minWidth = width ? (width + 300) + 'px' : '400px';
+			var wrapper = o('#modal_wrapper') || this.createModal(),
+				content = o('#modal_content');
 
-			content.innerHTML = '<div id="modal_loading"></div>';
+			wrapper.css({
+				'top': '15%',
+				'left': 'calc(50% - ' + (width / 2) + 'px)',
+				'min-width': width + 'px'
+			});
 
-			this.load_process = ajax({
+			content.html('<div id="modal_loading"></div>');
+
+			this.loadProcess = ajax({
 				url: url,
 				data: data,
 				success: function(data) {
-					$(content).html(data);
+					$('#modal_content').html(data);
+
+					// o(content).html(data);
+					// var script = o(o(content).find('script'));
+					// if (script) {
+					// 	eval(script.text());
+					// }
+
 					// Fix for Firefox autofocus goofiness
 					var input = wrapper.find('input[autofocus="autofocus"]');
-					if (input) input.focus();
+					if (input) {
+						input.focus();
+					}
 				}
 			});
 
@@ -116,74 +134,79 @@
 				animationPerformed: false
 			});
 
-			wrapper.style.display = 'block';
-			P('#modal_overlay').style.display = 'block';
+			wrapper.css({
+				'display': 'block'
+			});
+			o('#modal_overlay').css({
+				'display': 'block'
+			});
 
-			core.modal.settings.isModalVisible = true;
+			this.settings.isModalVisible = true;
 		},
 
 		hideOverlay: function() {
-			P('#modal_overlay').style.display = 'none';
+			o('#modal_overlay').style.display = 'none';
 		},
 		hide: function() {
-			var wrapper = P('#modal_wrapper'),
-				content = P('#modal_content');
+			var wrapper = o('#modal_wrapper'),
+				overlay = o('#modal_overlay');
 
 			wrapper.removeClass('modal-active');
 			overlay.removeClass('modal-active');
 
-			wrapper.addEventListener("transitionend", function() {
+			wrapper.on('transitionend', function() {
 				wrapper.remove();
 				overlay.remove();
 			});
 
 
 			core.editor.focus();
-			core.modal.settings.isModalVisible = false;
+			this.settings.isModalVisible = false;
 		},
 		unload: function() {
-
-			$('#modal_content form').die('submit'); // Prevent form bubbling
-
 			amplify.publish('modal.onUnload', {
 				animationPerformed: false
 			});
 
-			P('#modal_overlay').style.display = '';
-			P('#modal_wrapper').style.display = '';
-			P('#modal_content').empty();
+			o('#modal_overlay').css({
+				'display': ''
+			});
+			o('#modal_wrapper').css({
+				'display': ''
+			});
+			o('#modal_content').empty();
 
-			core.editor.focus();
 			core.modal.settings.isModalVisible = false;
+			core.editor.focus();
 
 		},
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
-			var rect = wrapper.getBoundingClientRect(),
-				mouse_x = window.event.clientX,
-				mouse_y = window.event.clientY, // Stores x & y coordinates of the mouse pointer
-				modal_x = rect.left,
-				modal_y = rect.top; // Stores top, left values (edge) of the element
+			var rect = wrapper.offset(),
+				mouseX = window.event.clientX,
+				mouseY = window.event.clientY, // Stores x & y coordinates of the mouse pointer
+				modalX = rect.left,
+				modalY = rect.top; // Stores top, left values (edge) of the element
 
-			function move_element(event) {
+			function moveElement(event) {
 				if (wrapper !== null) {
-					wrapper.style.left = modal_x + event.clientX - mouse_x + 'px';
-					wrapper.style.top = modal_y + event.clientY - mouse_y + 'px';
+					wrapper.style.left = modalX + event.clientX - mouseX + 'px';
+					wrapper.style.top = modalY + event.clientY - mouseY + 'px';
 				}
 			}
 
 			// Destroy the object when we are done
-			function remove_listeners() {
-				document.removeEventListener('mousemove', move_element, false);
-				document.removeEventListener('mouseup', remove_listeners, false);
-				bioflux.queryO('.icon-arrows.active').classList.remove('active');
+			function removeListeners() {
+				document.removeEventListener('mousemove', moveElement, false);
+				document.removeEventListener('mouseup', removeListeners, false);
+				o('.icon-arrows.active').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;
-			document.addEventListener('mousemove', move_element, false);
-			document.addEventListener('mouseup', remove_listeners, false);
+			document.addEventListener('mousemove', moveElement, false);
+			document.addEventListener('mouseup', removeListeners, false);
 		}
 	};
 
-})(this, jQuery, P);
+})(this, jQuery);
