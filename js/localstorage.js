@@ -1,18 +1,9 @@
 /*
-*
-* localStorage.setItem( key , value );
-* localStorage.getItem( key );
-* localStorage.length;
-* localStorage.removeItem( key );
-* localStorage.clear(); (Removes all)
-*
-*
-*
 Copyright (c) 2011 Wojo Design
 Dual licensed under the MIT or GPL licenses.
 */
 (function(){
-    var window = this;
+	var window = this;
 	// check to see if we have localStorage or not
 	if( !window.localStorage ){		
 
