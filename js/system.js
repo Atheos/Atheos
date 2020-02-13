@@ -6,7 +6,7 @@
 
 (function(global, $) {
 
- 
+
 	var core = global.core = global.codiad = {},
 		amplify = global.amplify,
 		o = global.onyx;
@@ -16,8 +16,13 @@
 	//////////////////////////////////////////////////////////////////////
 
 	$.loadScript = function(url, arg1, arg2) {
-		console.trace('Custom LoadScript');
+		console.trace('$.loadScript is depreciated, please use "core.helpers.loadScript"');
 		core.helpers.loadScript(url, arg1, arg2);
+	};
+
+	$.ctrl = function(key, callback, args) {
+		console.trace('$.ctrl is depreciated, please use "core.keybind.bind"');
+		core.keybind.bind(key, callback, args);
 	};
 
 	//////////////////////////////////////////////////////////////////////

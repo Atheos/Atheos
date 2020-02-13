@@ -147,7 +147,6 @@
 			} else if (selector instanceof HTMLElement) {
 				return selector;
 			} else if (selector.isOnyx) {
-				console.trace();
 				return selector.el;
 			}
 			throw new TypeError('Expected string | HTMLElement | OnyxJS; got ' + typeof selector);
