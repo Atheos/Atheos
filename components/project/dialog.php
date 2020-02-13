@@ -85,7 +85,7 @@ switch ($_GET['action']) {
 				<tr>
 					<th width="70"><?php i18n("Open"); ?></th>
 					<th width="150"><?php i18n("Project Name"); ?></th>
-					<th width="250"><?php i18n("Path"); ?></th>
+					<th width="450"><?php i18n("Path"); ?></th>
 					<?php if (checkAccess()) {
 						?><th width="70"><?php i18n("Delete"); ?></th><?php
 					} ?>
@@ -108,7 +108,7 @@ switch ($_GET['action']) {
 							<tr>
 								<td width="70"><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="icon-folder bigger-icon"></a></td>
 								<td width="150"><?php echo($data['name']); ?></td>
-								<td width="250"><?php echo($data['path']); ?></td>
+								<td width="450"><?php echo($data['path']); ?></td>
 								<?php
 								if (checkAccess()) {
 									if ($_SESSION['project'] == $data['path']) {

@@ -96,6 +96,7 @@
             if (isset($_SESSION['lang'])) {
                 include BASE_PATH."/languages/{$_SESSION['lang']}.php";
             } else {
+            	$lang = LANGUAGE;
                 include BASE_PATH."/languages/".LANGUAGE.".php";
             }
         }
