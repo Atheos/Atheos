@@ -16,7 +16,6 @@
 	var editorModes = {};
 
 	var codiad = global.codiad;
-	codiad._cursorPoll = null;
 
 	var separatorWidth = 3;
 
@@ -406,6 +405,7 @@
 		init: function() {
 			this.createSplitMenu();
 			this.createModeMenu();
+			this.cursorTracking();
 
 			var er = $('#editor-region');
 
@@ -576,7 +576,7 @@
 			this.setSession(session, i);
 
 			this.changeListener(i);
-			this.cursorTracking(i);
+			// this.cursorTracking(i);
 			this.bindKeys(i);
 
 			this.instances.push(i);
@@ -1377,7 +1377,7 @@
 			if (!i) return;
 			i.focus();
 			codiad.active.focus(i.getSession().path);
-			this.cursorTracking(i);
+			// this.cursorTracking(i);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1390,17 +1390,13 @@
 		//////////////////////////////////////////////////////////////////
 
 		cursorTracking: function(i) {
-			i = i || this.getActive();
-			if (!i) return;
-			clearInterval(codiad._cursorPoll);
-			codiad._cursorPoll = setInterval(function() {
-				$('#cursor-position')
-					.html(i18n('Ln') + ': ' +
-						(i.getCursorPosition().row + 1) +
-						' &middot; ' + i18n('Col') + ': ' +
-						i.getCursorPosition().column
-					);
-			}, 100);
+			amplify.subscribe('chrono.kilo', function() {
+				var i = codiad.editor.getActive();
+				if (i) {
+					var pos = i.getCursorPosition();
+					$('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
