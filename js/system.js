@@ -1,29 +1,28 @@
-/*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// System
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Description: 
+// The System Module initializes the core Atheos object and puts the engine in
+// motion, calling the initilization of other modules, and publishing the
+// Amplify 'atheos.loaded' event.
+//
+// Notes:
+// This file also houses the wrapper functions for older APIs to get to newer
+// newer systems, while pushing warnings about said depreciation.
+//
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
 
 
-	var core = global.core = global.codiad = {},
+	var atheos = global.core = global.atheos = global.codiad = {},
 		amplify = global.amplify,
 		o = global.onyx;
-
-	//////////////////////////////////////////////////////////////////////
-	// loadScript instead of getScript (checks and balances and shit...)
-	//////////////////////////////////////////////////////////////////////
-
-	$.loadScript = function(url, arg1, arg2) {
-		console.trace('$.loadScript is depreciated, please use "core.helpers.loadScript"');
-		core.helpers.loadScript(url, arg1, arg2);
-	};
-
-	$.ctrl = function(key, callback, args) {
-		console.trace('$.ctrl is depreciated, please use "core.keybind.bind"');
-		core.keybind.bind(key, callback, args);
-	};
 
 	//////////////////////////////////////////////////////////////////////
 	// Init
@@ -32,22 +31,27 @@
 
 		//Synthetic Login Overlay
 		if (document.querySelector('#login')) {
-			synthetic.init();
+			global.synthetic.init();
 		} else {
-			core.modal.init();
-			core.sidebars.init();
-			core.toast.init();
-			amplify.publish('core.loaded', {});
+			atheos.confirm.init();
+			atheos.helpers.init();
+			atheos.modal.init();
+			atheos.sidebars.init();
+			atheos.storage.init();
+			atheos.toast.init();
+
+			amplify.publish('atheos.loaded', {});
+
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
 
 				var marginL, reduction;
-				if (o("#sb-left").css('left') !== 0 && !core.sidebars.settings.leftLockedVisible) {
+				if (o("#sb-left").css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
 					marginL = handleWidth;
 					reduction = 2 * handleWidth;
 				} else {
-					marginL = $('#sb-left').width();
+					marginL = o('#sb-left').clientWidth();
 					reduction = marginL + handleWidth;
 				}
 
@@ -65,13 +69,35 @@
 				});
 
 				// Run resize command to fix render issues
-				if (core.editor) {
-					core.editor.resize();
-					core.active.updateTabDropdownVisibility();
+				if (atheos.editor) {
+					atheos.editor.resize();
+					atheos.active.updateTabDropdownVisibility();
 				}
 			});
 
 		}
 	});
 
-})(this, jQuery);
+})(this);
+
+
+
+(function(global) {
+	//////////////////////////////////////////////////////////////////////
+	// Collection of wrapper functions for depreciated calls.
+	//////////////////////////////////////////////////////////////////////
+
+	var atheos = global.atheos,
+		$ = global.jQuery;
+
+	$.loadScript = function(url, arg1, arg2) {
+		console.warn('$.loadScript is depreciated, please use "atheos.helpers.loadScript"');
+		atheos.helpers.loadScript(url, arg1, arg2);
+	};
+
+	$.ctrl = function(key, callback, args) {
+		console.warn('$.ctrl is depreciated, please use "atheos.keybind.bind"');
+		atheos.keybind.bind(key, callback, args);
+	};
+
+})(this);
