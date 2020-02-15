@@ -41,12 +41,12 @@
 	'use strict';
 
 
-	var core = global.codiad,
+	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
 		o = global.onyx;
-
-	core.modal = {
+		
+	atheos.modal = {
 
 		settings: {
 			isModalVisible: false
@@ -57,7 +57,7 @@
 		},
 
 		createModal: function() {
-			var modal = core.modal;
+			var modal = atheos.modal;
 			var overlay = o('<div>'),
 				wrapper = o('<div>'),
 				content = o('<div>'),
@@ -102,6 +102,8 @@
 			var wrapper = o('#modal_wrapper') || this.createModal(),
 				content = o('#modal_content');
 
+			$('#modal_content form').die('submit'); // Prevent form bubbling
+
 			wrapper.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
@@ -109,6 +111,7 @@
 			});
 
 			content.html('<div id="modal_loading"></div>');
+
 
 			this.loadProcess = ajax({
 				url: url,
@@ -160,7 +163,7 @@
 			});
 
 
-			core.editor.focus();
+			atheos.editor.focus();
 			this.settings.isModalVisible = false;
 		},
 		unload: function() {
@@ -176,8 +179,8 @@
 			});
 			o('#modal_content').empty();
 
-			core.modal.settings.isModalVisible = false;
-			core.editor.focus();
+			atheos.modal.settings.isModalVisible = false;
+			atheos.editor.focus();
 
 		},
 		drag: function(wrapper) {
