@@ -1,5 +1,5 @@
 /*
- *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+ *  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
  *  as-is and without warranty under the MIT License. See
  *  [root]/license.txt for more. This information must remain intact.
  */
@@ -10,21 +10,22 @@
     var Range = ace.require('ace/range').Range;
 
 
-    var codiad = global.codiad;
+	var atheos = global.atheos,
+		amplify = global.amplify;
 
-    $(function () {
-        codiad.autocomplete.init();
-    });
+	amplify.subscribe('atheos.loaded', function() {
+		atheos.autocomplete.init();
+	});
 
     //////////////////////////////////////////////////////////////////
     //
-    // Autocomplete Component for Codiad
+    // Autocomplete Component for Atheos
     // ---------------------------------
     // Show a popup with word completion suggestions.
     //
     //////////////////////////////////////////////////////////////////
 
-    codiad.autocomplete = {
+    atheos.autocomplete = {
 
         wordRegex: /[^a-zA-Z_0-9\$]+/,
 
@@ -492,7 +493,7 @@
 
         /* Return the number of consecutive letters starting from the first
          * letter in suggestion that match prefix. For instance,
-         * this.computeSimpleMatchScore(cod, codiad) will return 3. If
+         * this.computeSimpleMatchScore(cod, atheos) will return 3. If
          * suggestion is shorter than prefix, return a score of zero. The score
          * is computed using a Vim-like smartcase behavior. */
         computeSimpleMatchScore: function (prefix, suggestion) {
@@ -595,7 +596,7 @@
              * offset using the position of the last created cursor. */
             var cursor = $('.ace_cursor');
             if (cursor.length > 0) {
-                var fontSize = codiad.editor.getActive().container.style.fontSize.replace('px', '');
+                var fontSize = atheos.editor.getActive().container.style.fontSize.replace('px', '');
                 var interLine = 1.7;
                 cursor = $(cursor[0]);
                 var top = cursor.offset().top + fontSize * interLine;
@@ -616,15 +617,15 @@
 
         /* Set of helper methods to manipulate the editor. */
         _getEditor: function () {
-            return codiad.editor.getActive();
+            return atheos.editor.getActive();
         },
 
         _getEditSession: function () {
-            return codiad.editor.getActive().getSession();
+            return atheos.editor.getActive().getSession();
         },
 
         _getDocument: function () {
-            return codiad.editor.getActive().getSession().getDocument();
+            return atheos.editor.getActive().getSession().getDocument();
         },
 
         /* Some unit tests. */
