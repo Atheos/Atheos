@@ -1,0 +1,12 @@
+#Options -Indexes
+
+DirectorySlash Off
+
+RewriteEngine On
+RewriteBase /
+#RewriteCond %{REQUEST_URI} !^/index.html$
+#RewriteCond %{REQUEST_FILENAME} !-f
+#RewriteCond %{REQUEST_FILENAME} !-d
+RewriteCond %{REQUEST_URI} !\.(json|css|gif|ico|jpg|js|png|swf|txt|svg|woff|ttf|eot|webmanifest)$
+RewriteCond %{REQUEST_URI} !/index.php$
+RewriteRule .* /index.php [L]

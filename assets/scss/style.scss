@@ -1,0 +1,53 @@
+$sidebar-width: 300px;
+$desktop-width: 959px;
+
+@import 'reset', 'colors', 'shades';
+@import 'font', 'core', 'custom';
+@import 'breadcrumbs';
+@import 'content';
+@import 'footer';
+@import 'header';
+@import 'icons';
+@import 'list';
+@import 'markdown';
+@import 'navbar';
+@import 'sidebar';
+@import 'table';
+@import 'toc';
+@import 'visualization';
+// @import 'media';
+
+/* WEBKIT SCROLLBARS */
+::-webkit-scrollbar {
+	width: 10px;
+	height: 10px;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: $ebony;
+	// -webkit-border-radius: $border-radius;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	height: 5px;
+	background-color: $onyx;
+	// -webkit-border-radius: $border-radius;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+	background-color: $grey;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	width: 5px;
+	background-color: $onyx;
+	// -webkit-border-radius: $border-radius;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background-color: $grey;
+}
+
+::-webkit-scrollbar-corner {
+	background-color: $ebony;
+}

@@ -1,0 +1,30 @@
+#visualization {
+	overflow: auto;
+
+	circle.node {
+		cursor: pointer;
+		stroke: #111;
+		stroke-width: 1px;
+	}
+
+	circle.node.directory {
+		stroke: #001f3f;
+		stroke-width: 2px;
+	}
+
+	circle.node.collapsed {
+		stroke: #555;
+	}
+
+	.nodetext {
+		fill: #252929;
+		font-weight: bold;
+		text-shadow: 0 0 0.2em white;
+	}
+
+	line.link {
+		fill: none;
+		stroke: #DDDDDD;
+		stroke-width: 1px;
+	}
+}

@@ -1,0 +1,9 @@
+24.214.190.133,US,7.2,WIN64,{VER},"Apache/2.2.3 (CentOS)","check"
+192.155.95.27,US,7.0.33-0 deb9u6,Linux,94d859f2e5470f9d1e10ac55f06c9e3af48ebc8d,Apache/2.4.25 (Debian),check
+192.155.95.27,US,7.0.33-0 deb9u6,Linux,94d859f2e5470f9d1e10ac55f06c9e3af48ebc8d,Apache/2.4.25 (Debian),check
+24.214.190.133,US,7.2,WIN64,{VER},"Apache/2.2.3 (CentOS)","check"
+24.214.190.133,US,7.2,WIN64,{VER},"Apache/2.2.3 (CentOS)","check"
+24.214.190.133,US,7.2,WIN64,{VER},"Apache/2.2.3 (CentOS)","check"
+138.201.226.84,DE,7.4.2,Linux,,Apache,update_man
+192.155.95.27,US,7.0.33-0 deb9u6,Linux,94d859f2e5470f9d1e10ac55f06c9e3af48ebc8d,Apache/2.4.25 (Debian),update_git
+192.155.95.27,US,plugin,https:,

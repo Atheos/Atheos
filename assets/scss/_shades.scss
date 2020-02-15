@@ -1,0 +1,28 @@
+/*============================================================================*
+	PALETTE	
+	From https://clrs.cc/
+	Based on File-Icons
+/*============================================================================*/
+
+
+$black:  #111111;
+$ebony:  #222222;
+$onyx:   #555555;
+$flat:   #787878;
+$grey:   #AAAAAA;
+$silver: #DDDDDD;
+$white:  #EEEEEE;
+
+
+/*============================================================================*
+	CSS CLASSES
+/*============================================================================*/
+
+.black:before  { color: $black; }
+.ebony:before  { color: $ebony; }
+.onyx:before   { color: $onyx; }
+.flat:before   { color: $flat; }
+.grey:before   { color: $grey; }
+.silver:before { color: $silver; }
+.white:before  { color: $white; }
+
