@@ -23,7 +23,7 @@
 		ajax = global.ajax,
 		o = global.onyx;
 
-	amplify.subscribe('core.loaded', function(settings) {
+	amplify.subscribe('atheos.loaded', function(settings) {
 		core.filemanager.init();
 	});
 
