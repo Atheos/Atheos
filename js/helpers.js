@@ -18,7 +18,6 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-'use strict';
 
 var log = function(m, t) {
 	if (t) {
@@ -29,20 +28,20 @@ var log = function(m, t) {
 };
 
 (function(global) {
+	'use strict';
 
-	var codiad = global.codiad;
+	var atheos = global.atheos,
+		ajax = global.ajax;
 
 
 
-	codiad.helpers = {
+	atheos.helpers = {
 
 		icons: {},
 		settings: {},
 
 		init: function(options) {
-			if (options) {
-				this.setings = this.extend(this.settings, options);
-			}
+			console.log('Helpers Initialized');
 		},
 
 		file: {
@@ -80,6 +79,7 @@ var log = function(m, t) {
 		//   Sidebars.js
 		//////////////////////////////////////////////////////////////////////
 		trigger: function(selector, event) {
+			console.warn('Trigger Helper will be depreciated on next release');
 			if (!event || !selector) return;
 			var element;
 			if (selector.self == window) {
@@ -88,24 +88,28 @@ var log = function(m, t) {
 				element = selector.nodeType === Node.ELEMENT_NODE ? selector : document.querySelector(selector);
 			}
 			if (element) {
+				var e;
 				if ('createEvent' in document) {
 					// modern browsers, IE9+
-					var e = document.createEvent('HTMLEvents');
+					e = document.createEvent('HTMLEvents');
 					e.initEvent(event, false, true);
 					element.dispatchEvent(e);
 				} else {
 					// IE 8
-					var e = document.createEventObject();
+					e = document.createEventObject();
 					e.eventType = event;
 					el.fireEvent('on' + e.eventType, e);
 				}
 			}
 		},
+		//////////////////////////////////////////////////////////////////////
+		// Load Script: Used to add new JS to the page.
+		//  Notes: could probably be optimized to cache the scripts nodeArray
+		//////////////////////////////////////////////////////////////////////
 		loadScript: function(url, arg1, arg2) {
-			// console.trace('Custom LoadScripts');
 			var cache = true,
 				callback = null;
-			//arg1 and arg2 can be interchangable
+
 			if (typeof arg1 === 'function') {
 				callback = arg1;
 				cache = arg2 || cache;
@@ -116,22 +120,45 @@ var log = function(m, t) {
 
 			var load = true;
 			//check all existing script tags in the page for the url
-			jQuery('script[type="text/javascript"]').each(function() {
-				load = (url !== $(this).attr('src'));
-				return load;
-			});
+			var scripts = document.getElementsByTagName('script');
+			for (var i = 0; i < scripts.length; i++) {
+				load = (url !== scripts[i].src);
+			}
+
 			if (load) {
+				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
+				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
+				
 				//didn't find it in the page, so load it
-				jQuery.ajax({
-					type: 'GET',
-					url: url,
-					success: callback,
-					dataType: 'script',
-					cache: cache
-				});
+				// jQuery.ajax({
+				// 	type: 'GET',
+				// 	url: url,
+				// 	success: callback,
+				// 	dataType: 'script',
+				// 	cache: cache
+				// });
+
+				// ajax({
+				// 	url: url,
+				// 	success: function(data) {
+				// 		eval(data);
+				// 		if (typeof callback === 'function') {
+				// 			callback.call(this);
+				// 		}
+				// 	},
+				// });
+
+				var script = document.createElement('script');
+				script.type = 'text/javascript';
+				script.src = url;
+				document.getElementsByTagName('head')[0].appendChild(script);
+				if (typeof callback === 'function') {
+					callback.call(this);
+				}
+
 			} else {
 				//already loaded so just call the callback
-				if (jQuery.isFunction(callback)) {
+				if (typeof callback === 'function') {
 					callback.call(this);
 				}
 			}
