@@ -278,6 +278,23 @@
 					return errMsg;
 				}
 			};
+
+			amplify.subscribe('chrono.mega', function() {
+				$('#active-files a.changed')
+					.each(function() {
+
+						// Get changed content and path
+						var path = $(this)
+							.attr('data-path');
+						var content = codiad.active.sessions[path].getValue();
+
+						// TODO: Add some visual indication about draft getting saved.
+
+						// Set localstorage
+						localStorage.setItem(path, content);
+
+					});
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
