@@ -198,8 +198,11 @@
                 $path = preg_replace('#/+#','/',$path);
                 if(!is_dir($path)) mkdir($path);
             }
-
-            $data = "<?php\r\n/*|" . json_encode($data) . "|*/\r\n?>";
+            if(pathinfo($file, PATHINFO_EXTENSION) == 'php') {
+            	$data = "<?php\r\n/*|" . json_encode($data) . "|*/\r\n?>";
+            } else {
+            	$data = json_encode($data);
+            }
             $write = fopen($path . $file, 'w') or die("can't open file ".$path.$file);
             fwrite($write, $data);
             fclose($write);
