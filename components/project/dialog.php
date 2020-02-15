@@ -83,16 +83,13 @@ switch ($_GET['action']) {
 		<div id="project-list">
 			<table width="100%">
 				<tr>
-					<th width="70"><?php i18n("Open"); ?></th>
-					<th width="150"><?php i18n("Project Name"); ?></th>
+					<th width="70" style="padding-left: 5px;text-align: center;padding-right: 5px;"><?php i18n("Open"); ?></th>
+					<th width="170"><?php i18n("Project Name"); ?></th>
 					<th width="450"><?php i18n("Path"); ?></th>
 					<?php if (checkAccess()) {
-						?><th width="70"><?php i18n("Delete"); ?></th><?php
+						?><th width="60"><?php i18n("Delete"); ?></th><?php
 					} ?>
 				</tr>
-			</table>
-			<div class="project-wrapper">
-				<table width="100%" style="word-wrap: break-word;word-break: break-all;">
 					<?php
 
 					// Get projects JSON data
@@ -106,18 +103,18 @@ switch ($_GET['action']) {
 						if ($show) {
 							?>
 							<tr>
-								<td width="70"><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="icon-folder bigger-icon"></a></td>
-								<td width="150"><?php echo($data['name']); ?></td>
-								<td width="450"><?php echo($data['path']); ?></td>
+								<td><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="icon-folder bigger-icon"></a></td>
+								<td><?php echo($data['name']); ?></td>
+								<td><?php echo($data['path']); ?></td>
 								<?php
 								if (checkAccess()) {
 									if ($_SESSION['project'] == $data['path']) {
 										?>
-										<td width="70"><a onclick="codiad.toast.error(i18n('Active Project Cannot Be Removed'));" class="icon-block bigger-icon"></a></td>
+										<td><a onclick="codiad.toast.error(i18n('Active Project Cannot Be Removed'));" class="icon-block bigger-icon"></a></td>
 										<?php
 									} else {
 										?>
-										<td width="70"><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="icon-cancel-circled bigger-icon"></a></td>
+										<td><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="icon-cancel-circled bigger-icon"></a></td>
 										<?php
 									}
 								}
