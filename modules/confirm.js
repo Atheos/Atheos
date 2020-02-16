@@ -21,9 +21,9 @@
 
 	'use strict';
 
-	var core = global.codiad;
+	var atheos = global.atheos;
 
-	core.confirm = {
+	atheos.confirm = {
 
 		icons: {
 			'error': 'exclamation-circle',
@@ -31,7 +31,9 @@
 			'success': 'check-circle',
 			'warning': 'exclamation-triangle'
 		},
-		init: function() {}, 
+		init: function() {
+			console.log('Confirmation Initialized');
+		}, 
 
 		createConfirm: function(text, type) {
 			var overlay = document.createElement('div'),
@@ -54,21 +56,21 @@
 
 		showConfirm: function(options) {
 			// if (!options) {
-			// 	options = {
-			// 		message: "Are you sure you want to do this?",
-			// 		confirm: {
-			// 			message: "Yes",
-			// 			fnc: function() {
-			// 				console.log('Success');
-			// 			}
-			// 		},
-			// 		deny: {
-			// 			message: "No",
-			// 			fnc: function() {
-			// 				console.log('Fail');
-			// 			}
-			// 		}
-			// 	};
+				// options = {
+				// 	message: "Are you sure you want to do this?",
+				// 	confirm: {
+				// 		message: "Yes",
+				// 		fnc: function() {
+				// 			console.log('Success');
+				// 		}
+				// 	},
+				// 	deny: {
+				// 		message: "No",
+				// 		fnc: function() {
+				// 			console.log('Fail');
+				// 		}
+				// 	}
+				// };
 			// }
 
 			if (options && typeof options === 'object') {

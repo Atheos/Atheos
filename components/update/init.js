@@ -1,58 +1,78 @@
-/*
- *  Copyright (c) Codiad & daeks (codiad.com), distributed
- *  as-is and without warranty under the MIT License. See
- *  [root]/license.txt for more. This information must remain intact.
- */ 
- 
- (function (global, $) {
+//////////////////////////////////////////////////////////////////////////////80
+// Update Init
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Description: 
+// The Update component is used to check for Atheos updates, pinging the home
+// server, as well as handling all client tracking/statistics.
+//
+//
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
 
-    var codiad = global.codiad;
+(function(global) {
 
-    $(window)
-        .load(function() {
-            codiad.update.init();
-        });
+	var atheos = global.atheos,
+		amplify = global.amplify,
+		ajax = global.ajax,
+		o = global.onyx;
 
-    codiad.update = {
+	amplify.subscribe('atheos.loaded', function(settings) {
+		atheos.update.init();
+	});
 
-        controller: 'components/update/controller.php',
-        dialog: 'components/update/dialog.php',
+	atheos.update = {
 
-        //////////////////////////////////////////////////////////////////
-        // Initilization
-        //////////////////////////////////////////////////////////////////
+		controller: 'components/update/controller.php',
+		dialog: 'components/update/dialog.php',
+		home: 'https://www.atheos.io/update',
+		repo: 'https://api.github.com/repos/Atheos/Atheos/releases/latest',
+		local: '',
 
-        init: function () {
-            var _this = this;
-            $.get(_this.controller + '?action=init');
-        },
+		//////////////////////////////////////////////////////////////////
+		// Initilization
+		//////////////////////////////////////////////////////////////////
 
-        //////////////////////////////////////////////////////////////////
-        // Update Check
-        //////////////////////////////////////////////////////////////////
+		init: function() {
+			var update = this;
+			ajax({
+				url: update.controller + '?action=init',
+				success: function(data) {
+					update.local = JSON.parse(data);
+				}
+			});
+			ajax({
+				url: update.repo,
+				success: function(data) {
+					update.remote = JSON.parse(data);
+				}
+			});
+		},
 
-        check: function () {
-            var _this = this;
-            $('#modal_content form')
-                .die('submit'); // Prevent form bubbling
-                codiad.modal.load(500, this.dialog + '?action=check');
-                $('#modal-content').html('<div id="modal-loading"></div><div align="center">' + i18n("Contacting GitHub...") + '</div><br>');
-        }, 
-        
-        //////////////////////////////////////////////////////////////////
-        // Download Archive
-        //////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		// Update Check
+		//////////////////////////////////////////////////////////////////
 
-        download: function () {
-            var _this = this;
-            var archive = $('#modal_content form input[name="archive"]')
-                        .val();
-            $('#download')
-                .attr('src', archive);            
-            $.get(_this.controller + '?action=clear');             
-            codiad.modal.unload();    
-        }
+		check: function() {
+			atheos.modal.load(500, this.dialog + '?action=check');
+		},
 
-    };
+		//////////////////////////////////////////////////////////////////
+		// Download Archive
+		//////////////////////////////////////////////////////////////////
 
-})(this, jQuery);
+		download: function() {
+			var archive = $('#modal_content form input[name="archive"]').val();
+			o('#download').attr('src', archive);
+			ajax({
+				url: this.controller + '?action=clear',
+			});
+			atheos.modal.unload();
+		}
+
+	};
+
+})(this);

@@ -20,9 +20,9 @@
 
 	'use strict';
 
-	var core = global.codiad;
+	var atheos = global.atheos;
 
-	core.toast = {
+	atheos.toast = {
 
 		icons: {
 			'error': 'exclamation-circle',
@@ -42,7 +42,7 @@
 
 		init: function(options) {
 			if (options) {
-				this.settings = core.helpers.extend(this.settings, options);
+				this.settings = atheos.helpers.extend(this.settings, options);
 			}
 		},
 
@@ -72,14 +72,14 @@
 			wrapper.appendChild(close);
 
 			close.addEventListener('click', function() {
-				core.message.hide(wrapper);
+				atheos.toast.hide(wrapper);
 			});
 
 			return wrapper;
 		},
 
 		showToast: function(options) {
-			options = core.helpers.extend(this.settings, options);
+			options = atheos.helpers.extend(this.settings, options);
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
@@ -92,7 +92,7 @@
 
 				if (!options.sticky) {
 					setTimeout(function() {
-						core.toast.hide(wrapper);
+						atheos.toast.hide(wrapper);
 					}, options.stayTime);
 				}
 			}, 10);
@@ -134,5 +134,5 @@
 			});
 		}
 	};
-	core.message = core.toast;
+	atheos.message = atheos.toast;
 })(this);
