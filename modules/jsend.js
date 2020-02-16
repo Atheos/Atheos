@@ -13,9 +13,9 @@
 (function(global) {
 	'use strict';
 
-	var core = global.codiad;
+	var atheos = global.atheos;
 
-	core.jsend = {
+	atheos.jsend = {
 
 		parse: function(data) {
 			// console.trace('JSend Parsed');
@@ -28,7 +28,7 @@
 				console.log(debug);
 			}
 			if (obj.status == 'error') {
-				core.toast.error(obj.message);
+				atheos.toast.error(obj.message);
 				return 'error';
 			} else {
 				return obj.data;
