@@ -83,7 +83,7 @@
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
-				wrapper = this.createToast(options.text, options.type);
+				wrapper = this.createToast(i18n(options.text), options.type);
 
 			container.appendChild(wrapper);
 

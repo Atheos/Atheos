@@ -100,4 +100,7 @@
 		atheos.keybind.bind(key, callback, args);
 	};
 
+	amplify.subscribe('context-menu.onShow', function() {
+		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextMenu');
+	});
 })(this);

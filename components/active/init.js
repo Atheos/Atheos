@@ -11,9 +11,7 @@
 	var UndoManager = ace.require('ace/undomanager')
 		.UndoManager;
 
-	var codiad = global.codiad,
-		i18n = global.i18n;
-
+	var codiad = global.codiad;
 
 	$(function() {
 		codiad.active.init();
@@ -72,7 +70,7 @@
 				var draft = _this.checkDraft(path);
 				if (draft) {
 					content = draft;
-					codiad.toast.success(i18n('Recovered unsaved content for: ') + path);
+					codiad.toast.success('Recovered unsaved content for: ' + path);
 				}
 
 				//var session = new EditSession(content, new Mode());
@@ -266,8 +264,8 @@
 			window.onbeforeunload = function(e) {
 				if ($('#list-active-files li.changed')
 					.length > 0) {
-					var e = e || window.event;
-					var errMsg = i18n('You have unsaved files.');
+					e = e || window.event;
+					var errMsg = 'You have unsaved files.';
 
 					// For IE and Firefox prior to version 4
 					if (e) {
@@ -466,7 +464,7 @@
 
 			var _this = this;
 			if ((path && !this.isOpen(path)) || (!path && !codiad.editor.getActive())) {
-				codiad.toast.error(i18n('No Open Files to save'));
+				codiad.toast.error('No Open Files to save');
 				return;
 			}
 			var session;
@@ -735,7 +733,7 @@
 					codiad.editor.getActive()
 					.getSelectionRange());
 			} else {
-				codiad.toast.error(i18n('No Open Files or Selected Text'));
+				codiad.toast.error('No Open Files or Selected Text');
 			}
 		},
 
