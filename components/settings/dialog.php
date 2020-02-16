@@ -97,7 +97,7 @@ switch ($_GET['action']) {
 					var setting = $(this).data('setting');
 					var val = $(this).val();
 					if (val === null) {
-						codiad.toast.alert(i18n("You Must Choose A Value"));
+						codiad.toast.alert("You Must Choose A Value");
 						return;
 					} else {
 						switch (setting) {
