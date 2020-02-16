@@ -27,7 +27,7 @@
 	//////////////////////////////////////////////////////////////////////
 	// Init
 	//////////////////////////////////////////////////////////////////////
-	document.addEventListener("DOMContentLoaded", function() {
+	document.addEventListener('DOMContentLoaded', function() {
 
 		//Synthetic Login Overlay
 		if (document.querySelector('#login')) {
@@ -47,7 +47,7 @@
 				var handleWidth = 10;
 
 				var marginL, reduction;
-				if (o("#sb-left").css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
+				if (o('#sb-left').css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
 					marginL = handleWidth;
 					reduction = 2 * handleWidth;
 				} else {
