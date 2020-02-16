@@ -28,7 +28,7 @@ $files = [
 	"modules/confirm.js",
 	"modules/helpers.js",
 	"modules/jsend.js",
-	"modules/keybinding.js",
+	"modules/keybind.js",
 	"modules/modal.js",
 	"modules/sidebars.js",
 	"modules/storage.js",
