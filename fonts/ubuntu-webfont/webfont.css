@@ -9,6 +9,13 @@
 }
 
 @font-face {
+    font-family: "Ubuntu";
+    src: url('ubuntu-webfont-bold.woff') format('woff');
+    font-weight: 700;
+    font-style: normal;
+}
+
+@font-face {
 	font-family: 'Ubuntu-Lig';
 	src: url('UbuntuMono-Lig.woff2') format('woff2'),
 		url('UbuntuMono-Lig.woff') format('woff');
