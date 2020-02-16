@@ -1,47 +1,60 @@
 <?php
 
-    /*
+/*
     *  Copyright (c) Codiad & daeks (codiad.com), distributed
     *  as-is and without warranty under the MIT License. See
     *  [root]/license.txt for more. This information must remain intact.
     */
-    
 
-    require_once('../../common.php');
-    require_once('class.update.php');
 
-    //////////////////////////////////////////////////////////////////
-    // Verify Session or Key
-    //////////////////////////////////////////////////////////////////
+require_once('../../common.php');
+require_once('class.update.php');
 
-    checkSession();
+//////////////////////////////////////////////////////////////////
+// Get Action
+//////////////////////////////////////////////////////////////////
 
-    $update = new Update();
-    
-    //////////////////////////////////////////////////////////////////
-    // Set Initial Version
-    //////////////////////////////////////////////////////////////////
-
-if ($_GET['action']=='init') {
-    $update->Init();
+if (!empty($_GET['action'])) {
+	$action = $_GET['action'];
+} else {
+	exit('{"status":"error","data":{"error":"No Action Specified"}}');
 }
-    
-    //////////////////////////////////////////////////////////////////
-    // Clear Version
-    //////////////////////////////////////////////////////////////////
 
-if ($_GET['action']=='clear') {
-    if (checkAccess()) {
-        $update->Clear();
-    }
-}
-    
-    //////////////////////////////////////////////////////////////////
-    // OptOut
-    //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Verify Session or Key
+//////////////////////////////////////////////////////////////////
 
-if ($_GET['action']=='optout') {
-    if (checkAccess()) {
-        $update->OptOut();
-    }
-}
+checkSession();
+
+$update = new Update();
+
+//////////////////////////////////////////////////////////////////
+// Handle Action
+//////////////////////////////////////////////////////////////////
+
+switch ($action) {
+	case 'init':
+		$update->init();
+		break;
+	case 'check':
+		$update->check();
+		break;			
+	case 'get':
+		$update->getLocalData();
+		break;				
+	case 'set':
+		$update->setLocalData();
+		break;		
+	case 'optout':
+		if (checkAccess()) {
+			$update->optOut();
+		}
+		break;
+	case 'optin':
+		if (checkAccess()) {
+			$update->optIn();
+		}
+		break;		
+	default:
+		exit('{"status":"fail","data":{"error":"Unknown Action"}}');
+	}

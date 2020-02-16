@@ -59,6 +59,18 @@
 					height: 'toggle'
 				}, 'fast');
 			});
+
+			amplify.subscribe('chrono.mega', function() {
+				// Run controller to check session (also acts as keep-alive) & Check user
+				ajax({
+					url: codiad.user.controller + '?action=verify',
+					success: function(data) {
+						if (data == 'false') {
+							codiad.user.logout();
+						}
+					}
+				});
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
