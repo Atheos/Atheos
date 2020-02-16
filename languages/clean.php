@@ -163,6 +163,7 @@ $lang = array(
 	"Nothing in Your Clipboard"								=> "",
 	"Folder Name Or Absolute Path"							=> "",
 	"You can not check for updates"							=> "",
+	"Project %{projectName}% Loaded"						=> "",
 	"Enter Github Repository Url..."						=> "",
 	"You can not edit the user list"						=> "",
 	"Recovered unsaved content for:"						=> "",
@@ -184,6 +185,6 @@ $lang = array(
 	"Please make sure these environmental variables are set:"																		=> "",
 	"Note: Your installation is a nightly build. Codiad might be unstable."															=> "",
 	"Connection to the market place can not be made. Please check your internet connection."										=> "",
-	"Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."		=> "Hinweis: Dies funktioniert nur, wenn Ihr Git-Repo NICHT eine interaktive Authentifizierung erfordert und Ihr Server Git installiert hat."
+	"Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."		=> ""
 );
 ?>
