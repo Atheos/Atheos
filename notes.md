@@ -32,3 +32,15 @@ CheckList:
 * Package all JS files in PHP script.
 * Check on AutoComplete functions
 * Release an official distribution.
+* 
+
+
+
+Order of operations of Atheos:
+ # Installation:
+	# Establish reqs
+	# Get Admin User Info
+	# Create Version.json from config.php
+ # Login:
+	# Look at session data passed to establish default values, such as language and other things
+	# Define global variables

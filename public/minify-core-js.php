@@ -1,55 +1,73 @@
 <?php
 
-require 'lib/Minifier.php';
+// require 'lib/Minifier.php';
+
+require_once 'lib/minify/src/Minify.php';
+require_once 'lib/minify/src/CSS.php';
+require_once 'lib/minify/src/JS.php';
+require_once 'lib/minify/src/Exception.php';
+require_once 'lib/minify/src/Exceptions/BasicException.php';
+require_once 'lib/minify/src/Exceptions/FileImportException.php';
+require_once 'lib/minify/src/Exceptions/IOException.php';
+require_once 'lib/path-converter/src/ConverterInterface.php';
+require_once 'lib/path-converter/src/Converter.php';
+
+use MatthiasMullie\Minify;
 
 $files = [
-	"js/jquery-1.7.2.min.js",
-	"js/jquery-ui-1.8.23.custom.min.js",
-	"js/amplify.js",
-	"js/localstorage.js",
-	"js/hoverintent.min.js",
-	"js/ajax.js",
-	"js/file-icons.js",
-	"js/onyx.js",
-	"js/system.js",
-	"js/helpers.js",
-	"js/synthetic.js",
-	"js/sidebars.js",
-	"js/confirm.js",
-	"js/modal.js",
-	"js/toast.js",
-	"js/jsend.js",
-	"js/instance.js"
+	"modules/jquery-1.7.2.min.js",
+	"modules/jquery-ui-1.8.23.custom.min.js",
+	"modules/amplify.js",
+	"modules/hoverintent.min.js",
+	"modules/ajax.js",
+	"modules/file-icons.js",
+	"modules/onyx.js",
+	"modules/synthetic.js",
+	"modules/system.js",
+	"modules/chronometer.js",
+	"modules/confirm.js",
+	"modules/helpers.js",
+	"modules/jsend.js",
+	"modules/keybinding.js",
+	"modules/modal.js",
+	"modules/sidebars.js",
+	"modules/storage.js",
+	"modules/toast.js"
 ];
-
-$minified = 'public/core.min.js';
-
-if (file_exists($minified)) {
-	$mostRecent = filemtime($minified);
+// This is a conditional that helps during developement of Atheos.
+if (false) {
 	foreach ($files as $file) {
-		if (filemtime($file) > $mostRecent) {
-			$mostRecent = filemtime($file);
-			break;
-		}
-	}
-	if (filemtime($minified) < $mostRecent) {
-		$javascript = '';
-		foreach ($files as $file) {
-			$javascript .= file_get_contents($file) . ';' . PHP_EOL;
-		}
-		$minified_javascript = "// Creation Time: " . time() . PHP_EOL;
-		$minified_javascript .= \JShrink\Minifier::minify($javascript);
-		file_put_contents($minified, $minified_javascript);
+		echo("<script type=\"text/javascript\" src=\"$file\"></script>");
 	}
 } else {
+	$minified = 'public/core.min.js';
+	function minifyJS($minified, $files) {
 		$javascript = '';
-	foreach ($files as $file) {
-		$javascript .= file_get_contents($file) . ';' . PHP_EOL;
+		$minified_javascript = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
+		foreach ($files as $file) {
+			$javascript = file_get_contents($file);
+			$minified_javascript .= "// $file" . PHP_EOL;
+			$minifier = new Minify\JS($javascript);
+			$minified_javascript .= $minifier->minify() . ';' . PHP_EOL;
+		}
+		file_put_contents($minified, $minified_javascript);
+	};
+
+	if (file_exists($minified)) {
+		$mostRecent = filemtime($minified);
+		foreach ($files as $file) {
+			if (filemtime($file) > $mostRecent) {
+				$mostRecent = filemtime($file);
+				break;
+			}
+		}
+		if (filemtime($minified) < $mostRecent) {
+			minifyJS($minified, $files);
+		}
+	} else {
+		minifyJS($minified, $files);
 	}
-		$minified_javascript = "// Creation Time: " . time() . PHP_EOL;
-		$minified_javascript .= \JShrink\Minifier::minify($javascript);
 
-	file_put_contents($minified, $minified_javascript);
+	echo("<script src=\"$minified\"></script>");
+
 }
-
-echo("<script src=\"$minified\"></script>");
