@@ -81,13 +81,13 @@ switch ($_GET['action']) {
 		?>
 		<label><?php i18n("Project List"); ?></label>
 		<div id="project-list">
-			<table width="100%">
+			<table>
 				<tr>
-					<th width="70" style="padding-left: 5px;text-align: center;padding-right: 5px;"><?php i18n("Open"); ?></th>
-					<th width="170"><?php i18n("Project Name"); ?></th>
-					<th width="450"><?php i18n("Path"); ?></th>
+					<th id="project-list-open"><?php i18n("Open"); ?></th>
+					<th><?php i18n("Project Name"); ?></th>
+					<th><?php i18n("Path"); ?></th>
 					<?php if (checkAccess()) {
-						?><th width="60"><?php i18n("Delete"); ?></th><?php
+						?><th><?php i18n("Delete"); ?></th><?php
 					} ?>
 				</tr>
 					<?php
