@@ -31,13 +31,13 @@
 		init: function() {
 			console.log('Chronometer Initialized');
 			var chrono = this;
-			kilo = setInterval(function() {
+			chrono.kilo = setInterval(function() {
 				amplify.publish('chrono.kilo');
 			}, 1000);
-			mega = setInterval(function() {
+			chrono.mega = setInterval(function() {
 				amplify.publish('chrono.mega');
 			}, 10000);
-			giga = setInterval(function() {
+			chrono.giga = setInterval(function() {
 				amplify.publish('chrono.giga');
 			}, 100000);
 
