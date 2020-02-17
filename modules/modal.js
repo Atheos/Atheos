@@ -45,7 +45,7 @@
 		ajax = global.ajax,
 		amplify = global.amplify,
 		o = global.onyx;
-		
+
 	atheos.modal = {
 
 		settings: {
@@ -113,7 +113,7 @@
 			content.html('<div id="modal_loading"></div>');
 
 
-			this.loadProcess = ajax({
+			this.ready = ajax({
 				url: url,
 				data: data,
 				success: function(data) {
@@ -130,12 +130,10 @@
 					if (input) {
 						input.focus();
 					}
+					amplify.publish('modal.loaded');
 				}
 			});
 
-			amplify.publish('modal.onLoad', {
-				animationPerformed: false
-			});
 
 			wrapper.css({
 				'display': 'block'
@@ -167,9 +165,7 @@
 			this.settings.isModalVisible = false;
 		},
 		unload: function() {
-			amplify.publish('modal.onUnload', {
-				animationPerformed: false
-			});
+			amplify.publish('modal.unload');
 
 			o('#modal_overlay').css({
 				'display': ''
@@ -177,7 +173,9 @@
 			o('#modal_wrapper').css({
 				'display': ''
 			});
+			o('#modal_content form').off('submit');
 			o('#modal_content').empty();
+
 
 			atheos.modal.settings.isModalVisible = false;
 			atheos.editor.focus();
