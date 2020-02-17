@@ -20,7 +20,9 @@
 
 	'use strict';
 
-	var atheos = global.atheos;
+	var atheos = global.atheos,
+		i18n = global.i18n;
+
 
 	atheos.toast = {
 
