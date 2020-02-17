@@ -20,7 +20,8 @@
 
 	'use strict';
 
-	var atheos = global.atheos;
+	var atheos = global.atheos,
+		i18n = global.i18n;
 
 	atheos.confirm = {
 
@@ -32,7 +33,7 @@
 		},
 		init: function() {
 			console.log('Confirmation Initialized');
-		}, 
+		},
 
 		createConfirm: function(text, type) {
 			var overlay = document.createElement('div'),
@@ -55,21 +56,21 @@
 
 		showConfirm: function(options) {
 			// if (!options) {
-				// options = {
-				// 	message: "Are you sure you want to do this?",
-				// 	confirm: {
-				// 		message: "Yes",
-				// 		fnc: function() {
-				// 			console.log('Success');
-				// 		}
-				// 	},
-				// 	deny: {
-				// 		message: "No",
-				// 		fnc: function() {
-				// 			console.log('Fail');
-				// 		}
-				// 	}
-				// };
+			// options = {
+			// 	message: "Are you sure you want to do this?",
+			// 	confirm: {
+			// 		message: "Yes",
+			// 		fnc: function() {
+			// 			console.log('Success');
+			// 		}
+			// 	},
+			// 	deny: {
+			// 		message: "No",
+			// 		fnc: function() {
+			// 			console.log('Fail');
+			// 		}
+			// 	}
+			// };
 			// }
 
 			if (options && typeof options === 'object') {
@@ -82,7 +83,7 @@
 				overlay.style.display = 'block';
 
 				if (options.message) {
-					message.innerText = options.message;
+					message.innerText = i18n(options.message);
 				}
 				var confirm = document.createElement('button');
 				var deny = document.createElement('button');
