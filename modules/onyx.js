@@ -214,13 +214,15 @@
 			trigger: function(e) {
 				triggerEvent(e);
 			},
+			once: function(t, fn) {
+				events.once(t, element, fn);
+				return this;
+			},			
 			on: function(t, fn) {
-				// element.addEventListener(t, fn);
 				events.on(t, element, fn);
 				return this;
 			},
 			off: function(t, fn) {
-				// element.removeEventListener(t, fn);
 				events.off(t, element, fn);
 				return this;
 			},
