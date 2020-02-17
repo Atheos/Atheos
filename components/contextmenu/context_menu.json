@@ -32,7 +32,7 @@
 		"title": "Upload Files",
 		"icon": "icon-upload",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.uploadToNode($('#context-menu').attr('data-path'));"
+		"onclick": "codiad.filemanager.upload($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Preview",
@@ -56,13 +56,13 @@
 		"title": "Copy",
 		"icon": "icon-copy",
 		"applies-to": "both",
-		"onclick": "codiad.filemanager.copyNode($('#context-menu').attr('data-path'));"
+		"onclick": "codiad.filemanager.copy($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Paste",
 		"icon": "icon-paste",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.pasteNode($('#context-menu').attr('data-path'));"
+		"onclick": "codiad.filemanager.paste($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
@@ -74,7 +74,7 @@
 		"title": "Rename",
 		"icon": "icon-pencil",
 		"applies-to": "non-root",
-		"onclick": "codiad.filemanager.renameNode($('#context-menu').attr('data-path'));"
+		"onclick": "codiad.filemanager.rename($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Rename Project",
@@ -92,7 +92,7 @@
 		"title": "Delete",
 		"icon": "icon-cancel-circled",
 		"applies-to": "non-root",
-		"onclick": "codiad.filemanager.deleteNode($('#context-menu').attr('data-path'));"
+		"onclick": "codiad.filemanager.delete($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
