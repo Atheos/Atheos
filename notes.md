@@ -11,7 +11,7 @@ FrontEnd:
  * Amplify could be used to replace any promise requests used in Modal.js
 
 Backend:
- * I've created the backend and updated all references to it. I think I should find a better palce to host the JSON files as I don't want people pinging my server that often.
+ * I've created the backend and updated all references to it. I think I should find a better place to host the JSON files as I don't want people pinging my server that often.
  * Seems promising: https://jsonbin.io/pricing
  * 
  
@@ -44,3 +44,14 @@ Order of operations of Atheos:
  # Login:
 	# Look at session data passed to establish default values, such as language and other things
 	# Define global variables
+	
+Modal & Alert need to have transition animations applied, and across the Alert, Toast, and Modal, the code should follow very very similar standards. Right now, they all follow very similar logic in 3 different ways.
+The github repo needs some template made for community things
+Ajax is under utilized, and lost of things get sent to the server via encoding in the URL.
+JSON Web Tokens should probably be used at some point within the server.
+
+Honestly I'm starting to see how the backend works and it scares me.
+
+https://plainjs.com/
+https://medium.com/javascript-scene/master-the-javascript-interview-what-is-a-promise-27fc71e77261
+https://www.sitepoint.com/overview-javascript-promises/
