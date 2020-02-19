@@ -153,15 +153,11 @@
 				});
 
 				/* Notify listeners. */
-				amplify.publish('contextMenu.onShow', {
+				amplify.publish('contextmenu.onShow', {
 					path: path,
 					type: type
 				});
-				amplify.publish('context-menu.onShow', {
-					e: e,
-					path: path,
-					type: type
-				});
+
 				// Hide on click
 				o('#context-menu').on('click', function() {
 					contextMenu.hide();
