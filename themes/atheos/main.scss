@@ -3,7 +3,7 @@
 @import "modules/util/mixins", "modules/util/colours", "modules/util/shades", "modules/util/variables";
 @import "modules/util/animations";
 @import "modules/misc/todo";
-@import "modules/feedback/confirm", "modules/feedback/modal", "modules/feedback/toast";
+@import "modules/feedback/alert", "modules/feedback/modal", "modules/feedback/toast";
 @import "modules/autocomplete";
 @import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/fileext_textmode", "modules/fonts", "modules/market";
