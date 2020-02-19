@@ -72,6 +72,7 @@ if (isset($_SESSION['theme'])) {
 
 <body>
 	<script>
+		Error.stackTraceLimit = undefined //unlimited stack trace
 		var i18n = (function(lang) {
 			return function(word, args) {
 				var x;
