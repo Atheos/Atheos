@@ -15,17 +15,18 @@
 
 	var atheos = global.atheos,
 		amplify = global.amplify;
-		
-	amplify.subscribe('atheos.loaded', function() {
-		atheos.keybind.init();
-	});
+
+
 	//////////////////////////////////////////////////////////////////////
 	// Bindings
 	//////////////////////////////////////////////////////////////////////
-	
+
 	atheos.keybind = {
 
-		init: function() {
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Keybind Initialized');
+			}
 
 			// Close Modals //////////////////////////////////////////////
 			document.addEventListener('keyup', function(e) {
@@ -45,7 +46,7 @@
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////
-			this.bind(70, function() { 
+			this.bind(70, function() {
 				atheos.editor.openSearch('find');
 			});
 
