@@ -20,14 +20,12 @@
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
-	amplify.subscribe('atheos.loaded', function() {
-		atheos.storage.init();
-	});
-
 	atheos.storage = {
 
-		init: function() {
-			console.log('Storage Initialized');
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Storage Initialized');
+			}
 		},
 
 		set: function(key, value) {
