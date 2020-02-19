@@ -52,11 +52,13 @@
 			isModalVisible: false
 		},
 
-		init: function() {
-			console.log('Modal Initialized');
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Modal Initialized');
+			}
 		},
 
-		createModal: function() {
+		create: function() {
 			var modal = atheos.modal;
 			var overlay = o('<div>'),
 				wrapper = o('<div>'),
@@ -99,7 +101,7 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var wrapper = o('#modal_wrapper') || this.createModal(),
+			var wrapper = o('#modal_wrapper') || this.create(),
 				content = o('#modal_content');
 
 			$('#modal_content form').die('submit'); // Prevent form bubbling
