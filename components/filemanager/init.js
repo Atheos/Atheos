@@ -121,59 +121,78 @@
 		indexFiles: [],
 
 		openDir: function(path, rescan) {
-			var fileManager = this;
+			var fileManager = this,
+				slideDuration = 200;
 			rescan = rescan || false;
 
-			var node = $('#file-manager a[data-path="' + path + '"]');
+			var node = o('#file-manager a[data-path="' + path + '"]');
+
 			if (node.hasClass('open') && !rescan) {
-				node.parent('li').children('ul').slideUp(300, function() {
-					$(this).remove();
-					node.removeClass('open');
-				});
+				node.removeClass('open');
+
+				var list = node.siblings('ul');
+				if (list) {
+					fileManager.slideToggle(list.el, slideDuration);
+					setTimeout(function() {
+						list.remove();
+					}, slideDuration);
+				}
+
 			} else {
-				node.children('.expand').addClass('loading');
-				$.get(this.controller + '?action=index&path=' + encodeURIComponent(path), function(response) {
-					node.addClass('open');
-					response = JSON.parse(response);
-					if (response.status != 'error') {
-						/* Notify listener */
-						fileManager.indexFiles = response.data.index;
+				if (node.find('.expand')) {
+					node.find('.expand').addClass('loading');
+				}
+				ajax({
+					url: this.controller + '?action=index&path=' + encodeURIComponent(path),
+					success: function(response) {
 
-						var files = fileManager.indexFiles;
-						if (files.length > 0) {
-							if (node.parent().children('i').hasClass('fa-plus')) {
-								node.parent().children('i').removeClass('fa-plus').addClass('fa-minus');
-							}
-							var display = 'display:none;';
-							if (rescan) {
-								display = '';
-							}
-							var appendage = '<ul style="' + display + '">';
+						response = JSON.parse(response);
+						if (response.status != 'error') {
+							/* Notify listener */
+							fileManager.indexFiles = response.data.index;
 
-							files.forEach(function(file) {
-								appendage += fileManager.createDirectoryItem(file.path, file.type, file.size);
+							var files = fileManager.indexFiles;
+							if (files.length > 0) {
+								if (node.find('.fa-plus')) {
+									node.find('.fa-plus').replaceClass('fa-plus', 'fa-minus');
+								}
+								var display = ' style="display:none;"';
+								if (rescan) {
+									display = '';
+								}
+								var appendage = '<ul' + display + '">';
+
+								files.forEach(function(file) {
+									appendage += fileManager.createDirectoryItem(file.path, file.type, file.size);
+								});
+
+								appendage += '</ul>';
+								if (rescan) {
+									node.parent('li').children('ul').remove();
+								}
+
+								node.after(appendage);
+								var list = node.siblings('ul');
+								if (!rescan && list) {
+									fileManager.slideToggle(list.el, slideDuration);
+								}
+							}
+							amplify.publish("filemanager.onIndex", {
+								path: path,
+								files: fileManager.indexFiles
 							});
-
-							appendage += '</ul>';
-							if (rescan) {
-								node.parent('li').children('ul').remove();
-							}
-							$(appendage).insertAfter(node);
-							if (!rescan) {
-								node.siblings('ul').slideDown(300);
-							}
 						}
-						amplify.publish("filemanager.onIndex", {
-							path: path,
-							files: fileManager.indexFiles
-						});
-					}
-					node.children('.expand').removeClass('loading');
-					if (rescan && fileManager.rescanChildren.length > fileManager.rescanCounter) {
-						fileManager.rescan(fileManager.rescanChildren[fileManager.rescanCounter++]);
-					} else {
-						fileManager.rescanChildren = [];
-						fileManager.rescanCounter = 0;
+						node.addClass('open');
+						if (node.find('.expand')) {
+							node.find('.expand').removeClass('loading');
+						}
+						if (rescan && fileManager.rescanChildren.length > fileManager.rescanCounter) {
+							fileManager.rescan(fileManager.rescanChildren[fileManager.rescanCounter++]);
+						} else {
+							fileManager.rescanChildren = [];
+							fileManager.rescanCounter = 0;
+						}
+
 					}
 				});
 			}
@@ -505,7 +524,6 @@
 					} else {
 						var list = o('<ul>').append(node);
 						parentNode.append(list);
-						// $('<ul>' + node + '</ul>').insertAfter(parentNode);
 					}
 				} else {
 					parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
@@ -520,7 +538,7 @@
 
 		rename: function(path) {
 			var nodeName = atheos.helpers.getNodeName(path);
-			var type = this.getNodeType(path);
+			var type = atheos.helpers.getNodeType(path);
 			var fileManager = this;
 
 			atheos.modal.load(250, this.dialog, {
@@ -643,17 +661,58 @@
 
 		download: function(path) {
 			var type = this.getType(path);
-			$('#download')
-				.attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
+			o('#download').attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Return type
-		//////////////////////////////////////////////////////////////////
+		slideToggle: function(target, duration = 500) {
+			//Source: https://w3bits.com/javascript-slidetoggle/
+			target.style.overflow = 'hidden';
+			target.style.transitionProperty = 'height, margin, padding';
+			target.style.transitionDuration = duration + 'ms';
 
-		getNodeType: function(path) {
-			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
+			var zeroStyles = function() {
+				target.style.height = 0;
+				target.style.paddingTop = 0;
+				target.style.paddingBottom = 0;
+				target.style.marginTop = 0;
+				target.style.marginBottom = 0;
+			};
+
+			if (window.getComputedStyle(target).display === 'none') {
+				//SlideDown (Open)
+				target.style.removeProperty('display');
+
+				var display = window.getComputedStyle(target).display;
+				display = display === 'none' ? 'block' : display;
+
+				target.style.display = display;
+				var height = target.offsetHeight;
+
+				zeroStyles();
+				target.offsetHeight;
+				target.style.boxSizing = 'border-box';
+				target.style.height = height + 'px';
+				target.style.removeProperty('padding-top');
+				target.style.removeProperty('padding-bottom');
+				target.style.removeProperty('margin-top');
+				target.style.removeProperty('margin-bottom');
+				window.setTimeout(() => {
+					target.setAttribute('style', '');
+				}, duration);
+			} else {
+				// SlideUp (Close)
+				target.style.boxSizing = 'border-box';
+				target.style.height = target.offsetHeight + 'px';
+				target.offsetHeight;
+				zeroStyles();
+				window.setTimeout(() => {
+					target.setAttribute('style', '');
+					target.style.display = 'none';
+				}, duration);
+			}
 		}
+
+
 	};
 
 })(this, jQuery);
