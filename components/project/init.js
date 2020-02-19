@@ -58,7 +58,7 @@
 									<span>${projectInfo.name}</span>
 									</a>
 								</li></ul>`);
-					codiad.filemanager.index(projectInfo.path);
+					codiad.filemanager.openDir(projectInfo.path);
 					codiad.user.project(projectInfo.path);
 					codiad.toast.success('Project Loaded');
 				}
@@ -157,16 +157,16 @@
 						});
 					};
 					if (projectPath.indexOf('/') === 0) {
-						codiad.confirm.showConfirm({
+						codiad.alert.show({
 							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
-							confirm: {
+							positive: {
 								message: 'Yes',
 								fnc: function() {
 									create();
 
 								}
 							},
-							deny: {
+							negative: {
 								message: 'No',
 								fnc: function() {}
 							}
@@ -275,15 +275,20 @@
 
 		getCurrent: function() {
 			var _this = this;
-			var currentResponse = null;
-			$.ajax({
-				url: _this.controller + '?action=current',
-				async: false,
-				success: function(data) {
-					currentResponse = codiad.jsend.parse(data);
-				}
+			// var currentResponse = null;
+			// $.ajax({
+			// 	url: _this.controller + '?action=current',
+			// 	// async: false,
+			// 	success: function(data) {
+			// 		console.log(data);
+			// 		currentResponse = codiad.jsend.parse(data);
+			// 	}
+			// });
+			// return currentResponse;
+
+			return ajax({
+				url: this.controller + '?action=current'
 			});
-			return currentResponse;
 		}
 	};
 })(this, jQuery);
