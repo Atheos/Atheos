@@ -59,7 +59,7 @@
 				if (focus) this.focus(path);
 				return;
 			}
-			var ext = codiad.helpers.file.getExtension(path);
+			var ext = codiad.helpers.getNodeExtension(path);
 			var mode = codiad.editor.selectMode(ext);
 			var fn = function() {
 				//var Mode = require('ace/mode/' + mode)
@@ -456,6 +456,8 @@
 
 		//////////////////////////////////////////////////////////////////
 		// Save active editor
+		// I'm pretty sure the save methods on this are magic and should
+		// be worshipped.
 		//////////////////////////////////////////////////////////////////
 
 		save: function(path) {
@@ -468,14 +470,17 @@
 				return;
 			}
 			var session;
-			if (path) session = this.sessions[path];
-			else session = codiad.editor.getActive()
-				.getSession();
+			if (path) {
+				session = this.sessions[path];
+			}
+			else {
+				session = codiad.editor.getActive().getSession();
+			}
 			var content = session.getValue();
 			var path = session.path;
 			var handleSuccess = function(mtime) {
 				var session = codiad.active.sessions[path];
-				if (typeof session != 'undefined') {
+				if (typeof session !== 'undefined') {
 					session.untainted = newContent;
 					session.serverMTime = mtime;
 					if (session.listThumb) session.listThumb.removeClass('changed');
@@ -518,8 +523,8 @@
 
 		saveAll: function() {
 			var _this = this;
-			for (var session in _this.sessions) {
-				if (_this.sessions[session].listThumb.hasClass('changed')) {
+			for (var session in this.sessions) {
+				if (this.sessions[session].listThumb.hasClass('changed')) {
 					codiad.active.save(session);
 				}
 			}
@@ -677,7 +682,7 @@
 				var newSession = this.sessions[newPath];
 
 				// Change Editor Mode
-				var ext = codiad.helpers.file.getExtension(newPath);
+				var ext = codiad.helpers.getNodeExtension(newPath);
 				var mode = codiad.editor.selectMode(ext);
 
 				// handle async mode change
