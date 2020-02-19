@@ -256,8 +256,14 @@
 				}
 				return element.innerText;
 			},
+			value: function(v) {
+				if (v) {
+					element.value = v;
+				}
+				return element.value;				
+			},
 			addClass: function(t) {
-				element.classList.add(t);
+				element.classList.add(...t.split(' '));
 				return this;
 			},
 			removeClass: function(t) {
@@ -268,8 +274,8 @@
 				return element.classList.contains(c);
 			},
 			replaceClass: function(c, n) {
-				element.classList.remove(c);
-				element.classList.add(n);
+				this.removeClass(c);
+				this.addClass(n);
 				return this;
 			},
 			toggleClass: function(t) {
@@ -279,6 +285,9 @@
 			empty: function() {
 				element.innerHTML = '';
 				return this;
+			},
+			exists: function() {
+				return (element && element.nodeType);
 			},
 			attr: function(k, v) {
 				if (v) {
