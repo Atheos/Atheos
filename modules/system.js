@@ -33,15 +33,19 @@
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
 		} else {
-			atheos.confirm.init();
-			atheos.helpers.init();
-			atheos.modal.init();
-			atheos.sidebars.init();
-			atheos.storage.init();
-			atheos.toast.init();
+			var verbose = false;
 
-			amplify.publish('atheos.loaded', {});
+			atheos.alert.init(verbose);
+			atheos.chrono.init(verbose);
+			atheos.helpers.init(verbose);
+			atheos.keybind.init(verbose);
+			atheos.modal.init(verbose);
+			atheos.sidebars.init(verbose);
+			atheos.storage.init(verbose);
+			atheos.toast.init(verbose);
 
+			amplify.publish('atheos.loaded');
+			amplify.publish('atheos.plugins');
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
@@ -100,7 +104,10 @@
 		atheos.keybind.bind(key, callback, args);
 	};
 
-	amplify.subscribe('context-menu.onShow', function() {
+
+
+	amplify.subscribe('contextmenu.onShow', function(obj) {
 		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextMenu');
+		amplify.publish('context-menu.onShow', obj);
 	});
 })(this);
