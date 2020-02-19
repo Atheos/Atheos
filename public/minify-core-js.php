@@ -24,8 +24,8 @@ $files = [
 	"modules/onyx.js",
 	"modules/synthetic.js",
 	"modules/system.js",
+	"modules/alert.js",
 	"modules/chronometer.js",
-	"modules/confirm.js",
 	"modules/helpers.js",
 	"modules/jsend.js",
 	"modules/keybind.js",
@@ -35,7 +35,7 @@ $files = [
 	"modules/toast.js"
 ];
 // This is a conditional that helps during developement of Atheos.
-if (false) {
+if (true) {
 	foreach ($files as $file) {
 		echo("<script type=\"text/javascript\" src=\"$file\"></script>");
 	}
