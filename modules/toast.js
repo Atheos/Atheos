@@ -42,9 +42,9 @@
 			close: null
 		},
 
-		init: function(options) {
-			if (options) {
-				this.settings = atheos.helpers.extend(this.settings, options);
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Toast Initialized');
 			}
 		},
 
