@@ -132,7 +132,7 @@
 
 				var list = node.siblings('ul');
 				if (list) {
-					fileManager.slideToggle(list.el, slideDuration);
+					fileManager.slideToggle(list.el, 'close', slideDuration);
 					setTimeout(function() {
 						list.remove();
 					}, slideDuration);
@@ -167,14 +167,15 @@
 								});
 
 								appendage += '</ul>';
-								if (rescan) {
-									node.parent('li').children('ul').remove();
+
+								if (rescan && node.siblings('ul')) {
+									node.siblings('ul').remove();
 								}
 
 								node.after(appendage);
 								var list = node.siblings('ul');
 								if (!rescan && list) {
-									fileManager.slideToggle(list.el, slideDuration);
+									fileManager.slideToggle(list.el, 'open', slideDuration);
 								}
 							}
 							amplify.publish("filemanager.onIndex", {
@@ -246,7 +247,7 @@
 		// Open File
 		//////////////////////////////////////////////////////////////////
 
-		openFile: function(path, focus) {
+		openFile: function(path, focus, line) {
 			focus = focus || true;
 
 			// var node = o('#file-manager a[data-path="' + path + '"]');
@@ -259,6 +260,9 @@
 						response = JSON.parse(response);
 						if (response.status !== 'error') {
 							atheos.active.open(path, response.data.content, response.data.mtime, false, focus);
+							if (line) {
+								codiad.active.gotoLine(line);
+							}
 						}
 					}
 				});
@@ -469,11 +473,13 @@
 
 		create: function(path, type) {
 			var fileManager = this;
+			console.trace();
 
 			atheos.modal.load(250, this.dialog, {
 				action: 'create',
 				type: type
 			});
+
 			atheos.modal.ready.then(function() {
 				o('#modal_content form').once('submit', function(e) {
 					e.preventDefault();
@@ -513,22 +519,50 @@
 
 		addToFileManager: function(path, type, parent) {
 			var parentNode = o('#file-manager a[data-path="' + parent + '"]');
-
 			if (!o('#file-manager a[data-path="' + path + '"]')) { // Doesn't already exist
-				if (parentNode.hasClass('open') && parentNode.data('type') === 'directory') { // Only append node if parent is open (and a directory)
+				if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(directory|root)$/)) { // Only append node if parent is open (and a directory)
 
 					var node = this.createDirectoryItem(path, type, 0);
 
-					if (parentNode.siblings('ul').length) { // UL exists, other children to play with
-						parentNode.siblings('ul').append(node);
+					var list = parentNode.siblings('ul');
+					if (list) { // UL exists, other children to play with
+						list.append(node);
+						this.sortPath(list.el);
 					} else {
-						var list = o('<ul>').append(node);
-						parentNode.append(list);
+						list = o('<ul>');
+						list.append(node);
+						parentNode.append(list.el);
 					}
 				} else {
-					parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
+					if (parentNode.find('.expand')) {
+						parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
+					}
 				}
 			}
+		},
+
+		sortPath: function(list) {
+			var nodesToSort = list.children;
+
+			nodesToSort = Array.prototype.map.call(nodesToSort, function(node) {
+				return {
+					node: node,
+					span: node.querySelector('span').textContent,
+					type: node.querySelector('a').getAttribute('data-type')
+				};
+			});
+
+			nodesToSort.sort(function(a, b) {
+				return a.span.localeCompare(b.span);
+			});
+
+			nodesToSort.sort(function(a, b) {
+				return a.type.localeCompare(b.type);
+			});
+
+			nodesToSort.forEach(function(item) {
+				list.appendChild(item.node);
+			});
 		},
 
 
@@ -629,14 +663,13 @@
 								var node = o('#file-manager a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files
-								$('#active-files a')
-									.each(function() {
-										var curPath = $(this)
-											.attr('data-path');
-										if (curPath.indexOf(path) === 0) {
-											atheos.active.remove(curPath);
-										}
-									});
+								var active = document.querySelectorAll('#active-files a');
+								for (var i = 0; i < active.length; i++) {
+									var curPath = o(active[i]).attr('data-path');
+									if (curPath.indexOf(path) === 0) {
+										atheos.active.remove(curPath);
+									}
+								}
 							}
 							atheos.modal.unload();
 						}
@@ -664,7 +697,7 @@
 			o('#download').attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
 		},
 
-		slideToggle: function(target, duration = 500) {
+		slideToggle: function(target, direction, duration = 500) {
 			//Source: https://w3bits.com/javascript-slidetoggle/
 			target.style.overflow = 'hidden';
 			target.style.transitionProperty = 'height, margin, padding';
@@ -678,7 +711,7 @@
 				target.style.marginBottom = 0;
 			};
 
-			if (window.getComputedStyle(target).display === 'none') {
+			if (window.getComputedStyle(target).display === 'none' || direction === 'open') {
 				//SlideDown (Open)
 				target.style.removeProperty('display');
 
@@ -715,7 +748,7 @@
 
 	};
 
-})(this, jQuery);
+})(this);
 
 
 
@@ -736,66 +769,123 @@
 	// Search
 	//////////////////////////////////////////////////////////////////
 	atheos.filemanager.search = function(path) {
+		var filemanager = this;
 		atheos.modal.load(500, this.dialog, {
 			action: 'search',
 			path: path
 		});
 		atheos.modal.ready.then(function() {
+			atheos.modal.hideOverlay();
+			var table = o('#filemanager-search-results');
+
+
 			var lastSearched = JSON.parse(localStorage.getItem("lastSearched"));
 			if (lastSearched) {
-				$('#modal_content form input[name="search_string"]').val(lastSearched.searchText);
-				$('#modal_content form input[name="search_file_type"]').val(lastSearched.fileExtension);
-				$('#modal_content form select[name="search_type"]').val(lastSearched.searchType);
+				o('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
+				o('#modal_content form input[name="search_file_type"]').value(lastSearched.fileExtension);
+				o('#modal_content form select[name="search_type"]').value(lastSearched.searchType);
 				if (lastSearched.searchResults !== '') {
-					$('#filemanager-search-results').slideDown().html(lastSearched.searchResults);
+					table.html(lastSearched.searchResults);
+					filemanager.slideToggle(table.el, 'open');
+					atheos.modal.resize();
 				}
 			}
-		});
-		atheos.modal.hideOverlay();
-		var _this = this;
-		$('#modal_content form')
-			.die('submit')
-			.live('submit', function(e) {
-				$('#filemanager-search-processing')
-					.show();
+
+			o('#modal_content form').once('submit', function(e) {
+				o('#filemanager-search-processing').show();
+
 				e.preventDefault();
-				var searchString = $('#modal_content form input[name="search_string"]').val();
-				var fileExtensions = $('#modal_content form input[name="search_file_type"]').val();
-				var searchFileType = $.trim(fileExtensions);
+				var searchString = o('#modal_content form input[name="search_string"]').value();
+				var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
+				var searchFileType = fileExtensions.trim();
 				if (searchFileType !== '') {
 					//season the string to use in find command
 					searchFileType = "\\(" + searchFileType.replace(/\s+/g, "\\|") + "\\)";
 				}
-				var searchType = $('#modal_content form select[name="search_type"]').val();
-				$.post(_this.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType, {
-					search_string: searchString,
-					search_file_type: searchFileType
-				}, function(data) {
-					var searchResponse = atheos.jsend.parse(data);
-					var results = '';
-					if (searchResponse != 'error') {
-						$.each(searchResponse.index, function(key, val) {
-							// Cleanup file format
-							if (val.file.substr(-1) == '/') {
-								val.file = val.file.substr(0, val.file.substr.length - 1);
+
+				var searchType = o('#modal_content form select[name="search_type"]').value();
+
+				ajax({
+					type: 'post',
+					url: filemanager.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
+					data: {
+						search_string: searchString,
+						search_file_type: searchFileType
+					},
+					success: function(response) {
+						response = JSON.parse(response);
+						table.empty();
+						var results = '';
+						if (response.status != 'error') {
+							var index = response.data;
+
+							for (var key in index) {
+								if (!index.hasOwnProperty(key)) continue;
+
+								var file = index[key];
+								
+								if (key.substr(-1) == '/') {
+									key = key.substr(0, key.substr.length - 1);
+								}
+								
+								var node = o('<div>'),
+									content = '<span><strong>File: </strong>' + key + '</span>';
+
+								
+								
+								node.addClass('file');
+
+								file.forEach(function(result) {
+									result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+									content += `<a class="result" onclick="codiad.filemanager.openFile('${result.path}',true,${result.line});codiad.modal.unload();"><span>Line ${result.line}: </span>${result.string}
+												</a>`;
+								});
+
+								node.html(content);
+								table.append(node);
+
 							}
-							val.file = val.file.replace('//', '/');
-							// Add result
-							results += '<div><a onclick="codiad.filemanager.openFile(\'' + val.result + '\');setTimeout( function() { codiad.active.gotoLine(' + val.line + '); }, 500);codiad.modal.unload();">Line ' + val.line + ': ';
-							val.file += '</a></div>';
-						});
-						$('#filemanager-search-results')
-							.slideDown()
-							.html(results);
-					} else {
-						$('#filemanager-search-results')
-							.slideUp();
+							
+							results = table.html();
+
+							/*response.data.forEach(function(result) {
+
+								if (result.file.substr(-1) == '/') {
+									result.file = result.file.substr(0, result.file.substr.length - 1);
+								}
+
+								var searchPos = result.string.indexOf(searchString) - 20;
+								searchPos = searchPos > 0 ? searchPos : 0;
+								result.string = result.string.substr(searchPos, 240);
+								result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+
+
+								result.file = result.file.replace('//', '/');
+								results += `<div class="result">
+												<a onclick="codiad.filemanager.openFile('${result.result}',true,${result.line});codiad.modal.unload();"><span>File: ${result.file}</span><span>Line ${result.line}: </span>${result.string}
+												</a>
+											</div>`;
+
+
+							});*/
+							// table.html(results);
+							filemanager.slideToggle(table.el, 'open');
+						} else {
+							filemanager.slideToggle(table.el);
+						}
+						filemanager.saveSearchResults(searchString, searchType, fileExtensions, results);
+						o('#filemanager-search-processing').hide();
+						atheos.modal.resize();
+
 					}
-					_this.saveSearchResults(searchString, searchType, fileExtensions, results);
-					$('#filemanager-search-processing')
-						.hide();
 				});
+
 			});
+
+
+		});
+
+
 	};
 
 	/////////////////////////////////////////////////////////////////
@@ -810,4 +900,4 @@
 		};
 		localStorage.setItem("lastSearched", JSON.stringify(lastSearched));
 	};
-})(this, jQuery);
+})(this);
