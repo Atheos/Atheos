@@ -147,6 +147,22 @@
 			this.settings.isModalVisible = true;
 		},
 
+		resize: function() {
+
+			var wrapper = o('#modal_wrapper'),
+				content = o('#modal_content');
+				
+
+			if (wrapper && content) {
+				var width = wrapper.clientWidth();
+				wrapper.css({
+					'top': '15%',
+					'left': 'calc(50% - ' + (width / 2) + 'px)',
+					'min-width': width + 'px'
+				});
+			}
+		},
+
 		hideOverlay: function() {
 			o('#modal_overlay').style.display = 'none';
 		},
