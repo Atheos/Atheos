@@ -71,6 +71,10 @@
 					'display': 'block'
 				});
 
+				dialog.css({
+					'display': 'block'
+				});
+
 				if (options.banner) {
 					dialog.append(document.createElement('h1'));
 					dialog.find('h1').text(i18n(options.banner));
@@ -125,6 +129,7 @@
 			var dialog = o('#alert-dialog');
 			if (overlay && overlay) {
 				dialog.innerHTML = '';
+				dialog.style.display = 'none';
 				overlay.style.display = 'none';
 			}
 		}
