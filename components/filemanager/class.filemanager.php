@@ -248,11 +248,14 @@ class Filemanager extends Common
 				$data = explode(":", $line);
 				$da = array();
 				if (count($data) > 2) {
+					$file = str_replace($this->path, '', $data[0]);
+
 					$da['line'] = $data[1];
-					$da['file'] = str_replace($this->path, '', $data[0]);
-					$da['result'] = str_replace($this->root, '', $data[0]);
+					$da['name'] = str_replace($this->path, '', $data[0]);
+					$da['path'] = str_replace($this->root, '', $data[0]);
 					$da['string'] = str_replace($data[0] . ":" . $data[1] . ':', '', $line);
-					$return[] = $da;
+					// $return[$file]['line'] = $data[1];
+					$return[$file][] = $da;
 				}
 			}
 			if (count($return) == 0) {
@@ -260,10 +263,10 @@ class Filemanager extends Common
 				$this->message = "No Results Returned";
 			} else {
 				$this->status = "success";
-				$this->data = '"index":' . json_encode($return);
+				$this->data = json_encode($return);
 			}
 		}
-		$this->respond();
+		$this->respond(true);
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -566,12 +569,17 @@ class Filemanager extends Common
 	// RESPOND (Outputs data in JSON [JSEND] format)
 	//////////////////////////////////////////////////////////////////
 
-	public function respond() {
+	public function respond($adjusted) {
 
 		// Success ///////////////////////////////////////////////
 		if ($this->status == "success") {
 			if ($this->data) {
-				$json = '{"status":"success","data":{'.$this->data.'}}';
+				if ($adjusted) {
+					$json = '{"status":"success","data":'.$this->data.'}';
+				} else {
+					$json = '{"status":"success","data":{'.$this->data.'}}';
+
+				}
 			} else {
 				$json = '{"status":"success","data":null}';
 			}
