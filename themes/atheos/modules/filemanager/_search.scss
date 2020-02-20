@@ -1,27 +1,38 @@
-
-
 /* SEARCH */
 
 #filemanager-search-results {
-	display: none;
+	// display: none;
 	height: 250px;
 	overflow: scroll !important;
 	border: 1px solid #262626;
-}
+	padding: 0;
 
-#filemanager-search-results div {
-	padding: 4px 6px 3px 6px;
-	border-radius: 3px;
-	white-space: nowrap;
-}
+	div {
+		padding: 4px 6px;
+		overflow: hidden;
 
-#filemanager-search-results div:hover {
-	background-image: linear-gradient(left, rgb(26, 26, 26) 1%, rgba(26, 26, 26, 0.0) 100%);
-	background-image: -o-linear-gradient(left, rgb(26, 26, 26) 1%, rgba(26, 26, 26, 0.0) 100%);
-	background-image: -moz-linear-gradient(left, rgb(26, 26, 26) 1%, rgba(26, 26, 26, 0.0) 100%);
-	background-image: -webkit-linear-gradient(left, rgb(26, 26, 26) 1%, rgba(26, 26, 26, 0.0) 100%);
-	background-image: -ms-linear-gradient(left, rgb(26, 26, 26) 1%, rgba(26, 26, 26, 0.0) 100%);
-	background-image: -webkit-gradient(linear, left top, right top, color-stop(0.01, rgb(26, 26, 26)), color-stop(1.00, rgba(26, 26, 26, 0.0)));
+		strong {
+			font-weight: 700;
+				color: $blue;
+		}
+
+		a {
+			display: block;
+			white-space: nowrap;
+
+
+			span:nth-child(1) {
+				padding: 4px 6px 3px 6px;
+				color: $teal;
+				width: 10%;
+				display: inline-block;
+			}
+
+			&:hover {
+				background-color: rgb(26, 26, 26);
+			}
+		}
+	}
 }
 
 #filemanager-search-processing {
