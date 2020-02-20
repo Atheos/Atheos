@@ -31,7 +31,8 @@ var log = function(m, t) {
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax;
+		ajax = global.ajax,
+		o = global.onyx;
 
 
 
@@ -60,6 +61,10 @@ var log = function(m, t) {
 
 		getNodeExtension: function(path) {
 			return path.split('.').pop();
+		},
+		
+		getNodeType: function(path) {
+			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
 		},
 
 		//////////////////////////////////////////////////////////////////////
