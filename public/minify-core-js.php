@@ -26,6 +26,7 @@ $files = [
 	"modules/system.js",
 	"modules/alert.js",
 	"modules/chronometer.js",
+	"modules/codiad.js",
 	"modules/helpers.js",
 	"modules/jsend.js",
 	"modules/keybind.js",
@@ -37,7 +38,7 @@ $files = [
 // This is a conditional that helps during developement of Atheos.
 if (true) {
 	foreach ($files as $file) {
-		echo("<script type=\"text/javascript\" src=\"$file\"></script>");
+		echo("<script type=\"text/javascript\" src=\"$file\"></script>" . PHP_EOL);
 	}
 } else {
 	$minified = 'public/core.min.js';

@@ -10,17 +10,13 @@
 // motion, calling the initilization of other modules, and publishing the
 // Amplify 'atheos.loaded' event.
 //
-// Notes:
-// This file also houses the wrapper functions for older APIs to get to newer
-// newer systems, while pushing warnings about said depreciation.
-//
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 
 
-	var atheos = global.core = global.atheos = global.codiad = {},
+	var atheos = global.atheos = {},
 		amplify = global.amplify,
 		o = global.onyx;
 
@@ -46,6 +42,8 @@
 
 			amplify.publish('atheos.loaded');
 			amplify.publish('atheos.plugins');
+			
+			atheos.codiad.init();
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
@@ -82,32 +80,4 @@
 		}
 	});
 
-})(this);
-
-
-
-(function(global) {
-	//////////////////////////////////////////////////////////////////////
-	// Collection of wrapper functions for depreciated calls.
-	//////////////////////////////////////////////////////////////////////
-
-	var atheos = global.atheos,
-		$ = global.jQuery;
-
-	$.loadScript = function(url, arg1, arg2) {
-		console.warn('$.loadScript is depreciated, please use "atheos.helpers.loadScript"');
-		atheos.helpers.loadScript(url, arg1, arg2);
-	};
-
-	$.ctrl = function(key, callback, args) {
-		console.warn('$.ctrl is depreciated, please use "atheos.keybind.bind"');
-		atheos.keybind.bind(key, callback, args);
-	};
-
-
-
-	amplify.subscribe('contextmenu.onShow', function(obj) {
-		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextMenu');
-		amplify.publish('context-menu.onShow', obj);
-	});
 })(this);
