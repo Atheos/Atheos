@@ -158,13 +158,18 @@
 		if (!element) return;
 
 		let insertToAdjacent = (s) => function(e) {
-			iter((j, i) => i === 0 ?
-				e instanceof HTMLElement ?
-				e.insertAdjacentElement(s, j) :
-				e.element.insertAdjacentElement(s, j) :
-				element.insertAdjacentElement('afterend', j));
+			console.log(e);
+			if (e instanceof HTMLElement) {
+				e.insertAdjacentElement(s, element);
+			} else {
+				e.element.insertAdjacentElement(s, element);
 
-			return this;
+			}
+			// e instanceof HTMLElement ?
+			// 	e.insertAdjacentElement(s, j) :
+			// 	e.element.insertAdjacentElement(s, j):
+			// 	element.insertAdjacentElement('afterend', j);
+
 		};
 
 		let insertAdjacent = (s) => function(sOrE) {
@@ -211,13 +216,19 @@
 				element.focus();
 				return this;
 			},
+			show: function() {
+				element.style.display = 'block';
+			},
+			hide: function() {
+				element.style.display = 'none';
+			},
 			trigger: function(e) {
 				triggerEvent(e);
 			},
 			once: function(t, fn) {
 				events.once(t, element, fn);
 				return this;
-			},			
+			},
 			on: function(t, fn) {
 				events.on(t, element, fn);
 				return this;
@@ -260,7 +271,7 @@
 				if (v) {
 					element.value = v;
 				}
-				return element.value;				
+				return element.value;
 			},
 			addClass: function(t) {
 				element.classList.add(...t.split(' '));
@@ -302,7 +313,20 @@
 			parent: function() {
 				return element.parentNode;
 			},
-			children: function() {
+			siblings: function(s) {
+				var siblings = [];
+
+				var sibling = element.parentNode.firstElementChild;
+
+				do {
+					if (!s || sibling.matches(s)) {
+						siblings.push(onyx(sibling));
+					}
+				} while (sibling = sibling.nextElementSibling);
+
+				return (siblings.length > 0) ? siblings[0] : '';
+			},
+			children: function(s) {
 				return element.childNodes;
 			},
 			find: function(s) {
