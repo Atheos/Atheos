@@ -1,3 +1,5 @@
+$input-background: #222;
+
 /* GLOBALS */
 a,
 a:link,
@@ -106,7 +108,7 @@ textarea {
 	width: 100%;
 	padding: 7px 10px;
 	margin: 5px 0;
-	background: #242424;
+	background: $input-background;
 	border: none;
 	border-bottom: 2px solid #595959;
 	color: #fff;
@@ -123,7 +125,7 @@ textarea {
 }
 
 select option {
-	background: #242424;
+	background: $input-background;
 }
 
 textarea {
@@ -134,7 +136,7 @@ input:focus,
 select:focus,
 textarea:focus {
 	outline: none;
-	background: #242424;
+	background: $input-background;
 	border-bottom: 2px solid #ccc;
 }
 
@@ -146,7 +148,7 @@ input[type="checkbox"] {
 }
 
 pre {
-	background: #404040;
+	background: $input-background;
 	padding: 10px;
 	margin: 10px 0 5px;
 	border-radius: $border-radius;
@@ -180,7 +182,7 @@ pre {
 }
 
 .install_issues {
-	background: #404040;
+	background: $input-background;
 	padding: 10px;
 	margin: 10px 0 5px;
 	border-radius: $border-radius;
