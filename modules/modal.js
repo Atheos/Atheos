@@ -147,7 +147,7 @@
 
 			var wrapper = o('#modal_wrapper'),
 				content = o('#modal_content');
-				
+
 
 			if (wrapper && content) {
 				var width = wrapper.clientWidth();
@@ -170,6 +170,7 @@
 			overlay.removeClass('modal-active');
 
 			wrapper.on('transitionend', function() {
+				Settings
 				wrapper.remove();
 				overlay.remove();
 			});
@@ -193,6 +194,8 @@
 		},
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
+			
+			var element = wrapper.el;
 
 			var rect = wrapper.offset(),
 				mouseX = window.event.clientX,
@@ -201,22 +204,34 @@
 				modalY = rect.top; // Stores top, left values (edge) of the element
 
 			function moveElement(event) {
-				if (wrapper !== null) {
-					wrapper.style.left = modalX + event.clientX - mouseX + 'px';
-					wrapper.style.top = modalY + event.clientY - mouseY + 'px';
+				if (element) {
+					// console.log(wrapper);
+					// wrapper.css({
+					// 	'top': modalY + event.clientY - mouseY + 'px',
+					// 	'left': modalX + event.clientX - mouseX + 'px'
+					// });
+					element.style.left = modalX + event.clientX - mouseX + 'px';
+					element.style.top = modalY + event.clientY - mouseY + 'px';
 				}
+			}
+
+			function disableSelect(e) {
+				e.preventDefault();
 			}
 
 			// Destroy the object when we are done
 			function removeListeners() {
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
-				o('.icon-arrows.active').removeClass('active');
+				window.removeEventListener('selectstart', disableSelect);
+				o('.icon-arrows').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;
 			document.addEventListener('mousemove', moveElement, false);
 			document.addEventListener('mouseup', removeListeners, false);
+			window.addEventListener('selectstart', disableSelect);
+
 		}
 	};
 
