@@ -20,7 +20,9 @@
 
 	'use strict';
 
-	var atheos = global.atheos;
+	var atheos = global.atheos,
+		i18n = global.i18n;
+
 
 	atheos.toast = {
 
@@ -40,9 +42,9 @@
 			close: null
 		},
 
-		init: function(options) {
-			if (options) {
-				this.settings = atheos.helpers.extend(this.settings, options);
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Toast Initialized');
 			}
 		},
 
@@ -83,7 +85,7 @@
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
-				wrapper = this.createToast(options.text, options.type);
+				wrapper = this.createToast(i18n(options.text), options.type);
 
 			container.appendChild(wrapper);
 

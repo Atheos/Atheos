@@ -10,17 +10,13 @@
 // motion, calling the initilization of other modules, and publishing the
 // Amplify 'atheos.loaded' event.
 //
-// Notes:
-// This file also houses the wrapper functions for older APIs to get to newer
-// newer systems, while pushing warnings about said depreciation.
-//
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 
 
-	var atheos = global.core = global.atheos = global.codiad = {},
+	var atheos = global.atheos = {},
 		amplify = global.amplify,
 		o = global.onyx;
 
@@ -33,15 +29,21 @@
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
 		} else {
-			atheos.confirm.init();
-			atheos.helpers.init();
-			atheos.modal.init();
-			atheos.sidebars.init();
-			atheos.storage.init();
-			atheos.toast.init();
+			var verbose = false;
 
-			amplify.publish('atheos.loaded', {});
+			atheos.alert.init(verbose);
+			atheos.chrono.init(verbose);
+			atheos.helpers.init(verbose);
+			atheos.keybind.init(verbose);
+			atheos.modal.init(verbose);
+			atheos.sidebars.init(verbose);
+			atheos.storage.init(verbose);
+			atheos.toast.init(verbose);
 
+			amplify.publish('atheos.loaded');
+			amplify.publish('atheos.plugins');
+			
+			atheos.codiad.init();
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
@@ -77,27 +79,5 @@
 
 		}
 	});
-
-})(this);
-
-
-
-(function(global) {
-	//////////////////////////////////////////////////////////////////////
-	// Collection of wrapper functions for depreciated calls.
-	//////////////////////////////////////////////////////////////////////
-
-	var atheos = global.atheos,
-		$ = global.jQuery;
-
-	$.loadScript = function(url, arg1, arg2) {
-		console.warn('$.loadScript is depreciated, please use "atheos.helpers.loadScript"');
-		atheos.helpers.loadScript(url, arg1, arg2);
-	};
-
-	$.ctrl = function(key, callback, args) {
-		console.warn('$.ctrl is depreciated, please use "atheos.keybind.bind"');
-		atheos.keybind.bind(key, callback, args);
-	};
 
 })(this);

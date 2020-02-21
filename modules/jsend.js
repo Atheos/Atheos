@@ -8,6 +8,9 @@
 // Notes: 
 // I'm not exactly sure what jSend is but it looks like a standard of
 // JSON communication, needs more research.
+// This module can be removed. It parses the JSON reponse, looks for debug data,
+// then returns the OBJ, or it strips the error info and send back 'error'. All
+// of this logic should be handled in the request ajax.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 (function(global) {

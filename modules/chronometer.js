@@ -11,25 +11,23 @@
 // Intervals running while providing plugins the ability to use timed events.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
+
 
 (function(global) {
 
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
-	amplify.subscribe('atheos.loaded', function() {
-		atheos.chrono.init();
-	});
-	
 	atheos.chrono = {
 
 		kilo: '',
 		mega: '',
 		giga: '',
 
-		init: function() {
-			console.log('Chronometer Initialized');
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Chronometer Initialized');
+			}
 			var chrono = this;
 			chrono.kilo = setInterval(function() {
 				amplify.publish('chrono.kilo');

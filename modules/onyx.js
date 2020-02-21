@@ -15,6 +15,9 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
+// https://github.com/finom/balalaika/blob/master/balalaika.umd.js
+// https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
+
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -131,6 +134,13 @@
 		}
 	};
 
+
+	window.events = {
+		list: function() {
+			return events.get();
+		}
+	};
+
 	// return events;
 
 
@@ -144,6 +154,18 @@
 				} else {
 					return document.querySelector(selector);
 				}
+
+				// var element = document.querySelector(selector);
+				// if (element) {
+				// 	return element;
+				// } else {
+				// 	element = document.createElement(selector);
+				// 	if(element.toString() !== '[object HTMLUnknownElement') {
+				// 		return element;
+				// 	} else {
+				// 		throw new TypeError('Invalid String for Element Construction; got ' + selector);
+				// 	}
+				// }
 			} else if (selector instanceof HTMLElement) {
 				return selector;
 			} else if (selector.isOnyx) {
@@ -158,13 +180,18 @@
 		if (!element) return;
 
 		let insertToAdjacent = (s) => function(e) {
-			iter((j, i) => i === 0 ?
-				e instanceof HTMLElement ?
-				e.insertAdjacentElement(s, j) :
-				e.element.insertAdjacentElement(s, j) :
-				element.insertAdjacentElement('afterend', j));
+			console.log(e);
+			if (e instanceof HTMLElement) {
+				e.insertAdjacentElement(s, element);
+			} else {
+				e.element.insertAdjacentElement(s, element);
 
-			return this;
+			}
+			// e instanceof HTMLElement ?
+			// 	e.insertAdjacentElement(s, j) :
+			// 	e.element.insertAdjacentElement(s, j):
+			// 	element.insertAdjacentElement('afterend', j);
+
 		};
 
 		let insertAdjacent = (s) => function(sOrE) {
@@ -209,20 +236,24 @@
 		return {
 			focus: function() {
 				element.focus();
-				return this;
+			},
+			show: function() {
+				element.style.display = 'block';
+			},
+			hide: function() {
+				element.style.display = 'none';
 			},
 			trigger: function(e) {
 				triggerEvent(e);
 			},
+			once: function(t, fn) {
+				events.once(t, element, fn);
+			},
 			on: function(t, fn) {
-				// element.addEventListener(t, fn);
 				events.on(t, element, fn);
-				return this;
 			},
 			off: function(t, fn) {
-				// element.removeEventListener(t, fn);
 				events.off(t, element, fn);
-				return this;
 			},
 			css: function(s) {
 				if (typeof s === 'string') {
@@ -234,7 +265,6 @@
 					}
 				}
 				// element.style.cssText += s;
-				return this;
 			},
 			data: function(d) {
 				if (d) {
@@ -254,29 +284,33 @@
 				}
 				return element.innerText;
 			},
+			value: function(v) {
+				if (v) {
+					element.value = v;
+				}
+				return element.value;
+			},
 			addClass: function(t) {
-				element.classList.add(t);
-				return this;
+				element.classList.add(...t.split(' '));
 			},
 			removeClass: function(t) {
 				element.classList.remove(t);
-				return this;
 			},
 			hasClass: function(c) {
 				return element.classList.contains(c);
 			},
 			replaceClass: function(c, n) {
-				element.classList.remove(c);
-				element.classList.add(n);
-				return this;
+				this.removeClass(c);
+				this.addClass(n);
 			},
 			toggleClass: function(t) {
 				element.classList.toggle(t);
-				return this;
 			},
 			empty: function() {
 				element.innerHTML = '';
-				return this;
+			},
+			exists: function() {
+				return (element && element.nodeType);
 			},
 			attr: function(k, v) {
 				if (v) {
@@ -289,17 +323,43 @@
 				return this;
 			},
 			parent: function() {
-				return element.parentNode;
+				return onyx(element.parentNode);
 			},
-			children: function() {
-				return element.childNodes;
+			siblings: function(s) {
+				var siblings = [];
+				var sibling = element.parentNode.firstElementChild;
+
+				do {
+					if (!s || sibling.matches(s)) {
+						siblings.push(onyx(sibling));
+					}
+					sibling = sibling.nextElementSibling;
+				} while (sibling);
+
+				return siblings;
+			},
+			children: function(s) {
+				var children = [];
+				var child = element.firstElementChild;
+				do {
+					if (!s || child.matches(s)) {
+						children.push(onyx(child));
+					}
+					child = child.nextElementSibling;
+				} while (child);
+
+				return children;
 			},
 			find: function(s) {
-				return onyx(element.querySelector(s));
+				var nodes = element.querySelectorAll(s),
+					results = [];
+				for (var i = 0; i < nodes.length; i++) {
+					results.push(onyx(nodes[i]));
+				}
+				return results;
 			},
 			remove: function() {
 				element.remove();
-				return this;
 			},
 
 			before: insertAdjacent('beforebegin'),
@@ -314,17 +374,18 @@
 			prepend: insertAdjacent('afterbegin'),
 			append: insertAdjacent('beforeend'),
 
-			getAttr: v => element.getAttribute(v),
 			offset: () => element.getBoundingClientRect(),
-			outerHeight: element.outerHeight,
-			outerWidth: element.outerWidth,
+			// outerHeight: element.outerHeight,
+			// outerWidth: element.outerWidth,
 			clientHeight: function() {
 				return element.clientHeight;
 			},
 			clientWidth: function() {
 				return element.clientWidth;
 			},
-			style: element.style,
+			style: function() {
+				return element.style;
+			},
 			el: element,
 
 			isOnyx: true
