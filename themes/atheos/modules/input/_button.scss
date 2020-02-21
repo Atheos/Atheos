@@ -1,7 +1,7 @@
 button {
 	display: inline-block;
 	width: auto;
-	margin: 3px 6px 3px 0;
+	margin: 3px 0;
 	min-width: 80px;
 	padding: 6px 15px 5px;
 	color: #242424;
@@ -17,7 +17,7 @@ button {
 }
 
 button+button {
-	// margin-left: auto;
+	margin-left: 6px;
 }
 
 button:hover {
