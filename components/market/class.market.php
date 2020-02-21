@@ -122,7 +122,7 @@ class Market extends Common
                 if (!$found && file_exists(PLUGINS . "/" . $fname . "/plugin.json")) {
                     $data = file_get_contents(PLUGINS . "/" . $fname . "/plugin.json");
                     $data = json_decode($data, true);
-                    $data[0]['name'] = $fname;
+                    // $data[0]['name'] = $fname;
                     $data[0]['folder'] = $fname;
                     $data[0]['type'] = 'plugins';
                     $data[0]['image'] = '';
@@ -152,7 +152,7 @@ class Market extends Common
                 if (!$found && file_exists(THEMES . "/" . $fname . "/theme.json")) {
                     $data = file_get_contents(THEMES . "/" . $fname . "/theme.json");
                     $data = json_decode($data, true);
-                    $data[0]['name'] = $fname;
+                    // $data[0]['name'] = $fname;
                     $data[0]['folder'] = $fname;
                     $data[0]['type'] = 'themes';
                     $data[0]['image'] = '';
