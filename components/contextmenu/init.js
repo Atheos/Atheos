@@ -55,7 +55,7 @@
 					return false;
 				} else if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						node = node.find('a');
+						node = node.find('a')[0];
 					} else {
 						node = o(node.parent());
 					}
