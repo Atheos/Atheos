@@ -28,6 +28,7 @@
 		//Synthetic Login Overlay
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
+			amplify.publish('atheos.loaded');
 		} else {
 			var verbose = false;
 
