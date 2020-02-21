@@ -33,9 +33,9 @@ CheckList:
 * Check on AutoComplete functions
 * Release an official distribution.
 * 
+ 
 
-
-
+v
 Order of operations of Atheos:
  # Installation:
 	# Establish reqs
