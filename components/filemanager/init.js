@@ -15,7 +15,7 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
+ 
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
@@ -408,18 +408,18 @@
 			var fileManager = this;
 
 			var processPaste = function(path, duplicate) {
-				var nodeName = atheos.helpers.getNodeName(this.clipboard);
-				var type = this.getType(this.clipboard);
+				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
+				var type = atheos.helpers.getNodeType(fileManager.clipboard);
 
 				if (duplicate) {
 					nodeName = 'copy_of_' + nodeName;
 				}
 				ajax({
-					url: `${this.controller}?action=duplicate&path=${encodeURIComponent(this.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
+					url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
 					success: function(response) {
 						response = JSON.parse(response);
 						if (response.status !== 'error') {
-							fileManager.createObject(path, path + '/' + nodeName, type);
+							fileManager.addToFileManager(path, path + '/' + nodeName, type);
 							atheos.modal.unload();
 							/* Notify listeners. */
 							amplify.publish('filemanager.onPaste', {
@@ -452,20 +452,20 @@
 								message: 'Overwrite',
 								fnc: function() {
 									console.log('Overwrite');
-									fileManager.processPaste(path, false);
+									processPaste(path, false);
 								}
 							},
 							{
 								message: 'Duplicate',
 								fnc: function() {
 									console.log('Duplicate');
-									fileManager.processPaste(path, true);
+									processPaste(path, true);
 								}
 							}
 						]
 					});
 				} else {
-					fileManager.processPaste(path, false);
+					processPaste(path, false);
 				}
 			}
 		},
