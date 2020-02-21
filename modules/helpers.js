@@ -31,7 +31,8 @@ var log = function(m, t) {
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax;
+		ajax = global.ajax,
+		o = global.onyx;
 
 
 
@@ -40,31 +41,34 @@ var log = function(m, t) {
 		icons: {},
 		settings: {},
 
-		init: function(options) {
-			console.log('Helpers Initialized');
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Helpers Initialized');
+			}
 		},
 
-		file: {
-			//////////////////////////////////////////////////////////////////
-			// Return the node name (sans path)
-			//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		// Return the node name (sans path)
+		//////////////////////////////////////////////////////////////////
 
-			getShortName: function(path) {
-				return path.split('/').pop();
-			},
+		getNodeName: function(path) {
+			return path.split('/').pop();
+		},
 
-			//////////////////////////////////////////////////////////////////
-			// Return extension
-			//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		// Return extension from path
+		//////////////////////////////////////////////////////////////////
 
-			getExtension: function(path) {
-				return path.split('.').pop();
-			},
+		getNodeExtension: function(path) {
+			return path.split('.').pop();
+		},
+		
+		getNodeType: function(path) {
+			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
 		},
 
 		//////////////////////////////////////////////////////////////////////
-		// Extend used in:
-		//   Toast.js
+		// Extend
 		//////////////////////////////////////////////////////////////////////
 
 		extend: function(obj, src) {
@@ -73,10 +77,41 @@ var log = function(m, t) {
 			}
 			return obj;
 		},
-
 		//////////////////////////////////////////////////////////////////////
-		// Trigger used in:
-		//   Sidebars.js
+		// SerializeForm
+		//////////////////////////////////////////////////////////////////////
+		serializeForm: function(form) {
+			var field, l, s = [];
+			var o = {};
+			if (typeof form === 'object' && form.nodeName === "FORM") {
+
+				var len = form.elements.length;
+
+				for (var i = 0; i < len; i++) {
+
+					field = form.elements[i];
+					if (!field.name && field.disabled && field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button') {
+						continue;
+					}
+
+					if (field.type == 'select-multiple') {
+						l = form.elements[i].options.length;
+						for (j = 0; j < l; j++) {
+							if (field.options[j].selected) {
+								o[field.name] = field.options[j].value;
+							}
+						}
+					} else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+						o[field.name] = field.value;
+					}
+
+				}
+
+			}
+			return o;
+		},
+		//////////////////////////////////////////////////////////////////////
+		// Trigger
 		//////////////////////////////////////////////////////////////////////
 		trigger: function(selector, event) {
 			console.warn('Trigger Helper will be depreciated on next release');
@@ -128,7 +163,7 @@ var log = function(m, t) {
 			if (load) {
 				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
 				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
-				
+
 				//didn't find it in the page, so load it
 				// jQuery.ajax({
 				// 	type: 'GET',

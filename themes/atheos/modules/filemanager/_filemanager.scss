@@ -7,9 +7,10 @@
 	overflow: auto;
 
 	ul {
-		display: block;
 		margin: 0;
 		padding: 0;
+		transition: height 500ms ease-in;
+		overflow: hidden;
 	}
 
 	li {

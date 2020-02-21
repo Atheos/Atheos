@@ -54,7 +54,10 @@
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
-		init: function() {
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Sidebars Intialized');
+			}
 			amplify.subscribe('settings.loaded', function(settings) {
 				var sidebars = atheos.sidebars,
 					sbLeftWidth = atheos.storage.get('sidebars.sb-left-width'),

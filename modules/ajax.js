@@ -46,15 +46,12 @@
 						if (options.success) {
 							options.success(xhr.responseText, xhr.responseXML);
 						}
-						resolve();
+						resolve(xhr.responseText);
 					} else {
 						if (options.fail) {
 							options.fail(status);
 						}
-						reject({
-							status: xhr.status,
-							statusText: xhr.statusText
-						});
+						reject(xhr.responseText);
 					}
 				}
 			};

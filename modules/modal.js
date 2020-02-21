@@ -45,18 +45,20 @@
 		ajax = global.ajax,
 		amplify = global.amplify,
 		o = global.onyx;
-		
+
 	atheos.modal = {
 
 		settings: {
 			isModalVisible: false
 		},
 
-		init: function() {
-			console.log('Modal Initialized');
+		init: function(verbose) {
+			if (verbose) {
+				console.log('Modal Initialized');
+			}
 		},
 
-		createModal: function() {
+		create: function() {
 			var modal = atheos.modal;
 			var overlay = o('<div>'),
 				wrapper = o('<div>'),
@@ -99,7 +101,7 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var wrapper = o('#modal_wrapper') || this.createModal(),
+			var wrapper = o('#modal_wrapper') || this.create(),
 				content = o('#modal_content');
 
 			$('#modal_content form').die('submit'); // Prevent form bubbling
@@ -113,7 +115,7 @@
 			content.html('<div id="modal_loading"></div>');
 
 
-			this.loadProcess = ajax({
+			this.ready = ajax({
 				url: url,
 				data: data,
 				success: function(data) {
@@ -126,29 +128,39 @@
 					// }
 
 					// Fix for Firefox autofocus goofiness
-					var input = wrapper.find('input[autofocus="autofocus"]');
+					var input = wrapper.find('input[autofocus="autofocus"]')[0];
 					if (input) {
 						input.focus();
 					}
+					amplify.publish('modal.loaded');
 				}
 			});
 
-			amplify.publish('modal.onLoad', {
-				animationPerformed: false
-			});
 
-			wrapper.css({
-				'display': 'block'
-			});
-			o('#modal_overlay').css({
-				'display': 'block'
-			});
+			wrapper.show();
+			o('#modal_overlay').show();
 
 			this.settings.isModalVisible = true;
 		},
 
+		resize: function() {
+
+			var wrapper = o('#modal_wrapper'),
+				content = o('#modal_content');
+				
+
+			if (wrapper && content) {
+				var width = wrapper.clientWidth();
+				wrapper.css({
+					'top': '15%',
+					'left': 'calc(50% - ' + (width / 2) + 'px)',
+					'min-width': width + 'px'
+				});
+			}
+		},
+
 		hideOverlay: function() {
-			o('#modal_overlay').style.display = 'none';
+			o('#modal_overlay').hide();
 		},
 		hide: function() {
 			var wrapper = o('#modal_wrapper'),
@@ -167,17 +179,13 @@
 			this.settings.isModalVisible = false;
 		},
 		unload: function() {
-			amplify.publish('modal.onUnload', {
-				animationPerformed: false
-			});
+			amplify.publish('modal.unload');
 
-			o('#modal_overlay').css({
-				'display': ''
-			});
-			o('#modal_wrapper').css({
-				'display': ''
-			});
+			o('#modal_overlay').hide();
+			o('#modal_wrapper').hide();
+			// o('#modal_content form').off('submit');
 			o('#modal_content').empty();
+
 
 			atheos.modal.settings.isModalVisible = false;
 			atheos.editor.focus();

@@ -1,44 +1,55 @@
 /*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
 	*  as-is and without warranty under the MIT License. See
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
 
 (function(global, $) {
 
-	var codiad = global.codiad,
+	var atheos = global.atheos,
 		amplify = global.amplify,
-		i18n = global.i18n;
+		i18n = global.i18n,
+		o = global.onyx;
 
-	$(function() {
-		codiad.project.init();
+	amplify.subscribe('atheos.loaded', function(settings) {
+		atheos.project.init();
 	});
 
-	codiad.project = {
+	atheos.project = {
 
 		controller: 'components/project/controller.php',
 		dialog: 'components/project/dialog.php',
+
+		//projectmanager
+		sideExpanded: true,
+		current: {
+			name: '',
+			path: ''
+		},
 
 		init: function() {
 			this.loadCurrent();
 			this.loadSide();
 
-			var _this = this;
+			var project = this;
 
-			$('#projects-create').click(function() {
-				codiad.project.create('true');
+			o('#projects-create').on('click', function() {
+				atheos.project.create('true');
 			});
 
-			$('#projects-manage').click(function() {
-				codiad.project.list();
+			o('#projects-manage').on('click', function() {
+				atheos.project.list();
 			});
 
-			$('#projects-collapse').click(function() {
-				if (!_this._sideExpanded) {
-					_this.projectsExpand();
+			o('#projects-collapse').on('click', function() {
+				if (!project.sideExpanded) {
+					project.expand();
 				} else {
-					_this.projectsCollapse();
+					project.collapse();
 				}
+			});
+			amplify.subscribe('chrono.mega', function() {
+				project.getCurrent();
 			});
 		},
 
@@ -47,22 +58,32 @@
 		//////////////////////////////////////////////////////////////////
 
 		loadCurrent: function() {
-			$.get(this.controller + '?action=get_current', function(data) {
-				var projectInfo = codiad.jsend.parse(data);
-				if (projectInfo != 'error') {
-					$('#file-manager')
-						.html('')
-						.append(`<ul><li>
-									<a id="project-root" data-type="root" data-path="${projectInfo.path}">
+			var project = this;
+			ajax({
+				url: this.controller,
+				type: 'post',
+				data: {
+					'action': 'load'
+				},
+				success: function(response) {
+					response = JSON.parse(response);
+
+					if (response.status != 'error') {
+						project.current = {
+							name: response.name,
+							path: response.path
+						};
+						o('#file-manager').empty();
+						o('#file-manager').html(`<ul><li>
+									<a id="project-root" data-type="root" data-path="${response.path}">
 									<i class="root fa fa-folder medium-blue"></i>
-									<span>${projectInfo.name}</span>
+									<span>${response.name}</span>
 									</a>
 								</li></ul>`);
-					codiad.filemanager.index(projectInfo.path);
-					codiad.user.project(projectInfo.path);
-					codiad.toast.success(i18n('Project %{projectName}% Loaded', {
-						projectName: projectInfo.name
-					}));
+						atheos.filemanager.openDir(response.path);
+						atheos.user.project(response.path);
+						atheos.toast.success('Project Loaded');
+					}
 				}
 			});
 		},
@@ -72,19 +93,23 @@
 		//////////////////////////////////////////////////////////////////
 
 		open: function(path) {
-			var _this = this;
-			codiad.finder.contractFinder();
-			$.get(this.controller + '?action=open&path=' + encodeURIComponent(path), function(data) {
-				var projectInfo = codiad.jsend.parse(data);
-				if (projectInfo != 'error') {
-					_this.loadCurrent();
-					if (codiad.modal.settings.isModalVisible) {
-						codiad.modal.unload();
+			var project = this;
+			atheos.finder.contractFinder();
+			ajax({
+				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
+				success: function(response) {
+
+					response = JSON.parse(response);
+					if (response.status != 'error') {
+						project.loadCurrent();
+						if (atheos.modal.settings.isModalVisible) {
+							atheos.modal.unload();
+						}
+						atheos.user.project(path);
+						localStorage.removeItem("lastSearched");
+						/* Notify listeners. */
+						amplify.publish('project.onOpen', path);
 					}
-					codiad.user.project(path);
-					localStorage.removeItem("lastSearched");
-					/* Notify listeners. */
-					amplify.publish('project.onOpen', path);
 				}
 			});
 		},
@@ -96,19 +121,19 @@
 		list: function() {
 			$('#modal_content form')
 				.die('submit'); // Prevent form bubbling
-			codiad.modal.load(500, this.dialog + '?action=list');
+			atheos.modal.load(500, this.dialog + '?action=list');
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
 		loadSide: function() {
-			$('.sb-projects-content').load(this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('codiad.editor.fileManagerTrigger'));
-			this._sideExpanded = true;
+			$('.sb-projects-content').load(this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'));
+			this.sideExpanded = true;
 		},
 
-		projectsExpand: function() {
-			this._sideExpanded = true;
+		expand: function() {
+			this.sideExpanded = true;
 			$('#side-projects').css('height', 276 + 'px');
 			$('.project-list-title').css('right', 0);
 			$('.sb-left-content').css('bottom', 276 + 'px');
@@ -117,8 +142,8 @@
 				.addClass('icon-down-dir');
 		},
 
-		projectsCollapse: function() {
-			this._sideExpanded = false;
+		collapse: function() {
+			this.sideExpanded = false;
 			$('#side-projects').css('height', 33 + 'px');
 			$('.project-list-title').css('right', 0);
 			$('.sb-left-content').css('bottom', 33 + 'px');
@@ -133,7 +158,7 @@
 
 		create: function(close) {
 			var _this = this;
-			codiad.modal.load(500, this.dialog + '?action=create&close=' + close);
+			atheos.modal.load(500, this.dialog + '?action=create&close=' + close);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -143,10 +168,10 @@
 						gitBranch = $('#modal_content form input[name="git_branch"]').val();
 					var create = function() {
 						$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
-							var createResponse = codiad.jsend.parse(data);
+							var createResponse = atheos.jsend.parse(data);
 							if (createResponse !== 'error') {
 								_this.open(createResponse.path);
-								codiad.modal.unload();
+								atheos.modal.unload();
 								_this.loadSide();
 								/* Notify listeners. */
 								amplify.publish('project.onCreate', {
@@ -159,16 +184,16 @@
 						});
 					};
 					if (projectPath.indexOf('/') === 0) {
-						codiad.confirm.showConfirm({
+						atheos.alert.show({
 							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
-							confirm: {
+							positive: {
 								message: 'Yes',
 								fnc: function() {
 									create();
 
 								}
 							},
-							deny: {
+							negative: {
 								message: 'No',
 								fnc: function() {}
 							}
@@ -185,7 +210,7 @@
 
 		rename: function(path, name) {
 			var _this = this;
-			codiad.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
+			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -194,12 +219,12 @@
 					var projectName = $('#modal_content form input[name="project_name"]')
 						.val();
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
-						var renameResponse = codiad.jsend.parse(data);
+						var renameResponse = atheos.jsend.parse(data);
 						if (renameResponse != 'error') {
-							codiad.toast.success(i18n('Project renamed'));
+							atheos.toast.success('Project renamed');
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
-							codiad.modal.unload();
+							atheos.modal.unload();
 							/* Notify listeners. */
 							amplify.publish('project.onRename', {
 								"path": projectPath,
@@ -216,7 +241,7 @@
 
 		delete: function(name, path) {
 			var _this = this;
-			codiad.modal.load(500, this.dialog + '?action=delete&name=' + encodeURIComponent(name) + '&path=' + encodeURIComponent(path));
+			atheos.modal.load(500, this.dialog + '?action=delete&name=' + encodeURIComponent(name) + '&path=' + encodeURIComponent(path));
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -232,11 +257,11 @@
 							action += '&path=' + encodeURIComponent(projectPath);
 						}
 					}
-					$.get(codiad.filemanager.controller + action, function(d) {
+					$.get(atheos.filemanager.controller + action, function(d) {
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
-							var deleteResponse = codiad.jsend.parse(data);
+							var deleteResponse = atheos.jsend.parse(data);
 							if (deleteResponse != 'error') {
-								codiad.toast.success(i18n('Project Deleted'));
+								atheos.toast.success('Project Deleted');
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open
@@ -245,7 +270,7 @@
 										var curPath = $(this)
 											.attr('data-path');
 										if (curPath.indexOf(projectPath) === 0) {
-											codiad.active.remove(curPath);
+											atheos.active.remove(curPath);
 										}
 									});
 								/* Notify listeners. */
@@ -264,11 +289,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		isAbsPath: function(path) {
-			if (path.indexOf("/") == 0) {
-				return true;
-			} else {
-				return false;
-			}
+			return (path.indexOf("/") == 0) ? true : false;
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -276,16 +297,21 @@
 		//////////////////////////////////////////////////////////////////
 
 		getCurrent: function() {
-			var _this = this;
-			var currentResponse = null;
-			$.ajax({
-				url: _this.controller + '?action=current',
-				async: false,
-				success: function(data) {
-					currentResponse = codiad.jsend.parse(data);
+			var project = this;
+			ajax({
+				url: this.controller,
+				type: 'post',
+				data: {
+					action: "current"
+				},
+				success: function(response) {
+					response = JSON.parse(response);
+					if (response.status === 'success') {
+						project.current.path = response.path;
+					}
 				}
 			});
-			return currentResponse;
+			return project.current.path;
 		}
 	};
 })(this, jQuery);

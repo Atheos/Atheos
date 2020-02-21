@@ -3,7 +3,7 @@
 require_once('common.php');
 
 // Context Menu
-$context_menu = file_get_contents(COMPONENTS . "/filemanager/context_menu.json");
+$context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
 $context_menu = json_decode($context_menu, true);
 
 // Right Bar
@@ -72,6 +72,7 @@ if (isset($_SESSION['theme'])) {
 
 <body>
 	<script>
+		Error.stackTraceLimit = undefined //unlimited stack trace
 		var i18n = (function(lang) {
 			return function(word, args) {
 				var x;
