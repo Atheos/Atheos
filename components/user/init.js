@@ -1,23 +1,25 @@
 /*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
 	*  as-is and without warranty under the MIT License. See
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
 
 (function(global, $) {
 
-	var codiad = global.codiad,
+	var atheos = global.atheos,
+		ajax = global.ajax,
+		amplify = global.amplify,
 		i18n = global.i18n,
-		amplify = global.amplify;
+		o = global.onyx;
 
 
-	$(function() {
-		codiad.user.init();
+	amplify.subscribe('atheos.loaded', function(settings) {
+		atheos.user.init();
 	});
 
-	codiad.user = {
+	atheos.user = {
 
-		loginForm: $('#login'),
+		loginForm: o('#login'),
 		controller: 'components/user/controller.php',
 		dialog: 'components/user/dialog.php',
 
@@ -26,26 +28,27 @@
 		//////////////////////////////////////////////////////////////////
 
 		init: function() {
-			var _this = this;
-			this.loginForm.on('submit', function(e) {
-				e.preventDefault();
-				// Save Language
-				localStorage.setItem('codiad.language', $('#language').val());
-				// Save Theme
-				localStorage.setItem('codiad.theme', $('#theme').val());
-				_this.authenticate();
-			});
-
+			var user = this;
+			if (user.loginForm) {
+				user.loginForm.on('submit', function(e) {
+					e.preventDefault();
+					// Save Language
+					atheos.storage.set('language', o('#language').value());
+					// Save Theme
+					atheos.storage.set('theme', o('#theme').value());
+					user.authenticate();
+				});
+			}
 			// Get Theme
-			var theme = localStorage.getItem('codiad.theme');
+			var theme = atheos.storage.get('theme');
 			$('#theme option').each(function() {
-				if ($(this).val() == theme) {
+				if ($(this).val() === theme) {
 					$(this).attr('selected', 'selected');
 				}
 			});
 
 			// Get Language
-			var language = localStorage.getItem('codiad.language');
+			var language = atheos.storage.get('language');
 			$('#language option').each(function() {
 				if ($(this).val() === language) {
 					$(this).attr('selected', 'selected');
@@ -63,10 +66,10 @@
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				ajax({
-					url: codiad.user.controller + '?action=verify',
+					url: atheos.user.controller + '?action=verify',
 					success: function(data) {
-						if (data == 'false') {
-							codiad.user.logout();
+						if (data === 'false') {
+							atheos.user.logout();
 						}
 					}
 				});
@@ -78,11 +81,16 @@
 		//////////////////////////////////////////////////////////////////
 
 		authenticate: function() {
-			$.post(this.controller + '?action=authenticate', this.loginForm.serialize(), function(data) {
-				var parsed = codiad.jsend.parse(data);
-				if (parsed !== 'error') {
-					// Session set, reload
-					window.location.reload();
+			ajax({
+				url: this.controller + '?action=authenticate',
+				type: 'post',
+				data: atheos.helpers.serializeForm(this.loginForm.el),
+				success: function(response) {
+					console.log(response);
+					response = JSON.parse(response);
+					if (response.status !== 'error') {
+						window.location.reload();
+					}
 				}
 			});
 		},
@@ -101,7 +109,7 @@
 					$(this).removeClass('changed');
 				});
 				amplify.publish('user.logout', {});
-				codiad.settings.save();
+				atheos.settings.save();
 				$.get(this.controller + '?action=logout', function() {
 					window.location.reload();
 				});
@@ -115,7 +123,7 @@
 		list: function() {
 			$('#modal_content form')
 				.die('submit'); // Prevent form bubbling
-			codiad.modal.load(400, this.dialog + '?action=list');
+			atheos.modal.load(400, this.dialog + '?action=list');
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -124,7 +132,7 @@
 
 		createNew: function() {
 			var _this = this;
-			codiad.modal.load(400, this.dialog + '?action=create');
+			atheos.modal.load(400, this.dialog + '?action=create');
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -137,14 +145,14 @@
 						.val();
 
 					// Check matching passwords
-					if (password1 != password2) {
-						codiad.toast.error(i18n('Passwords Do Not Match'));
+					if (password1 !== password2) {
+						atheos.toast.error(i18n('Passwords Do Not Match'));
 						pass = false;
 					}
 
 					// Check no spaces in username
 					if (!/^[a-z0-9]+$/i.test(username) || username.length === 0) {
-						codiad.toast.error(i18n('Username Must Be Alphanumeric String'));
+						atheos.toast.error(i18n('Username Must Be Alphanumeric String'));
 						pass = false;
 					}
 
@@ -153,9 +161,9 @@
 							'username': username,
 							'password': password1
 						}, function(data) {
-							var createResponse = codiad.jsend.parse(data);
+							var createResponse = atheos.jsend.parse(data);
 							if (createResponse !== 'error') {
-								codiad.toast.success(i18n('User Account Created'));
+								atheos.toast.success(i18n('User Account Created'));
 								_this.list();
 							}
 						});
@@ -169,16 +177,16 @@
 
 		delete: function(username) {
 			var _this = this;
-			codiad.modal.load(400, this.dialog + '?action=delete&username=' + username);
+			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var username = $('#modal-content form input[name="username"]')
 						.val();
 					$.get(_this.controller + '?action=delete&username=' + username, function(data) {
-						var deleteResponse = codiad.jsend.parse(data);
-						if (deleteResponse != 'error') {
-							codiad.toast.success(i18n('Account Deleted'));
+						var deleteResponse = atheos.jsend.parse(data);
+						if (deleteResponse !== 'error') {
+							atheos.toast.success(i18n('Account Deleted'));
 							_this.list();
 						}
 					});
@@ -190,7 +198,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		projects: function(username) {
-			codiad.modal.load(400, this.dialog + '?action=projects&username=' + username);
+			atheos.modal.load(400, this.dialog + '?action=projects&username=' + username);
 			var _this = this;
 			$('#modal_content form')
 				.live('submit', function(e) {
@@ -208,14 +216,14 @@
 					}
 					// Check and make sure if access level not full that at least on project is selected
 					if (accessLevel === 1 && !projects) {
-						codiad.toast.error(i18n('At Least One Project Must Be Selected'));
+						atheos.toast.error(i18n('At Least One Project Must Be Selected'));
 					} else {
 						$.post(_this.controller + '?action=project_access&username=' + username, {
 							projects: projects
 						}, function(data) {
-							var projectsResponse = codiad.jsend.parse(data);
+							var projectsResponse = atheos.jsend.parse(data);
 							if (projectsResponse !== 'error') {
-								codiad.toast.success(i18n('Account Modified'));
+								atheos.toast.success(i18n('Account Modified'));
 							}
 						});
 					}
@@ -228,7 +236,7 @@
 
 		password: function(username) {
 			var _this = this;
-			codiad.modal.load(400, this.dialog + '?action=password&username=' + username);
+			atheos.modal.load(400, this.dialog + '?action=password&username=' + username);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -239,16 +247,16 @@
 					var password2 = $('#modal_content form input[name="password2"]')
 						.val();
 					if (password1 !== password2) {
-						codiad.toast.error(i18n('Passwords Do Not Match'));
+						atheos.toast.error(i18n('Passwords Do Not Match'));
 					} else {
 						$.post(_this.controller + '?action=password', {
 							'username': username,
 							'password': password1
 						}, function(data) {
-							var passwordResponse = codiad.jsend.parse(data);
+							var passwordResponse = atheos.jsend.parse(data);
 							if (passwordResponse !== 'error') {
-								codiad.toast.success(i18n('Password Changed'));
-								codiad.modal.unload();
+								atheos.toast.success(i18n('Password Changed'));
+								atheos.modal.unload();
 							}
 						});
 					}
