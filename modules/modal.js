@@ -128,7 +128,7 @@
 					// }
 
 					// Fix for Firefox autofocus goofiness
-					var input = wrapper.find('input[autofocus="autofocus"]');
+					var input = wrapper.find('input[autofocus="autofocus"]')[0];
 					if (input) {
 						input.focus();
 					}
@@ -137,12 +137,8 @@
 			});
 
 
-			wrapper.css({
-				'display': 'block'
-			});
-			o('#modal_overlay').css({
-				'display': 'block'
-			});
+			wrapper.show();
+			o('#modal_overlay').show();
 
 			this.settings.isModalVisible = true;
 		},
@@ -164,7 +160,7 @@
 		},
 
 		hideOverlay: function() {
-			o('#modal_overlay').style.display = 'none';
+			o('#modal_overlay').hide();
 		},
 		hide: function() {
 			var wrapper = o('#modal_wrapper'),
@@ -185,13 +181,9 @@
 		unload: function() {
 			amplify.publish('modal.unload');
 
-			o('#modal_overlay').css({
-				'display': ''
-			});
-			o('#modal_wrapper').css({
-				'display': ''
-			});
-			o('#modal_content form').off('submit');
+			o('#modal_overlay').hide();
+			o('#modal_wrapper').hide();
+			// o('#modal_content form').off('submit');
 			o('#modal_content').empty();
 
 
