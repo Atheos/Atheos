@@ -1,5 +1,5 @@
-#confirm-overlay {
-	display: block;
+#alert-overlay {
+	display: none;
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -10,29 +10,69 @@
 	transition: opacity ease-in-out 300ms;
 }
 
-#confirm-dialog {
+#alert-dialog {
+	display: none;
 	min-height: 150px;
-	width: 600px;
+	width: 400px;
 	position: absolute;
 	top: 10%;
 	left: calc(50% - 200px);
 	background-color: #333;
 	border: 3px solid rgba(255, 255, 255, 0.5);
+	padding: 5px 15px;
+		z-index: 9999999;
 
-	padding: 15px;
+	h1 {
+		font-size: 18px;
+		font-weight: bold;
+		text-align: center;
+		margin-bottom: 5px;
+	}
 
 	h2 {
 		text-align: left;
-		font-size: 18px;
+		font-size: 14px;
 	}
+
 	.actions {
-		display: flex;
 		width: 100%;
 		margin-top: 5px;
+		text-align: right;
+
+		button {
+			min-width: 90px;
+		}
+	}
+
+	.drag,
+	.close {
+		position: absolute;
+		font-size: $font-size-icon-medium;
+		padding: 0;
+		color: $font-color-subtle;
+		top: 5px;
+
+	}
+
+	.drag {
+		right: 28px;
+		cursor: grab;
+
+		&.active {
+			cursor: grabbing;
+		}
+	}
+
+	.close {
+		right: 5px;
+		padding: 0;
+		cursor: pointer;
 	}
 }
 
-.dialog-box {
+
+// This isn't used at all but I'm keeping it for when I start really going through the CSS and want inspiration
+/*.dialog-box {
 	background: #f8f8f8;
 	color: #39342d;
 	box-shadow: inset 0 1px 0 #fff, 0 1px 3px rgba(0, 0, 0, .3);
@@ -63,4 +103,4 @@
 	height: 100%;
 	width: 100%;
 	z-index: 1;
-}
+}*/

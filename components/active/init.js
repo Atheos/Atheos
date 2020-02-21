@@ -11,9 +11,7 @@
 	var UndoManager = ace.require('ace/undomanager')
 		.UndoManager;
 
-	var codiad = global.codiad,
-		i18n = global.i18n;
-
+	var codiad = global.codiad;
 
 	$(function() {
 		codiad.active.init();
@@ -61,7 +59,7 @@
 				if (focus) this.focus(path);
 				return;
 			}
-			var ext = codiad.helpers.file.getExtension(path);
+			var ext = codiad.helpers.getNodeExtension(path);
 			var mode = codiad.editor.selectMode(ext);
 			var fn = function() {
 				//var Mode = require('ace/mode/' + mode)
@@ -72,7 +70,7 @@
 				var draft = _this.checkDraft(path);
 				if (draft) {
 					content = draft;
-					codiad.toast.success(i18n('Recovered unsaved content for: ') + path);
+					codiad.toast.success('Recovered unsaved content for: ' + path);
 				}
 
 				//var session = new EditSession(content, new Mode());
@@ -266,8 +264,8 @@
 			window.onbeforeunload = function(e) {
 				if ($('#list-active-files li.changed')
 					.length > 0) {
-					var e = e || window.event;
-					var errMsg = i18n('You have unsaved files.');
+					e = e || window.event;
+					var errMsg = 'You have unsaved files.';
 
 					// For IE and Firefox prior to version 4
 					if (e) {
@@ -458,6 +456,8 @@
 
 		//////////////////////////////////////////////////////////////////
 		// Save active editor
+		// I'm pretty sure the save methods on this are magic and should
+		// be worshipped.
 		//////////////////////////////////////////////////////////////////
 
 		save: function(path) {
@@ -466,18 +466,21 @@
 
 			var _this = this;
 			if ((path && !this.isOpen(path)) || (!path && !codiad.editor.getActive())) {
-				codiad.toast.error(i18n('No Open Files to save'));
+				codiad.toast.error('No Open Files to save');
 				return;
 			}
 			var session;
-			if (path) session = this.sessions[path];
-			else session = codiad.editor.getActive()
-				.getSession();
+			if (path) {
+				session = this.sessions[path];
+			}
+			else {
+				session = codiad.editor.getActive().getSession();
+			}
 			var content = session.getValue();
 			var path = session.path;
 			var handleSuccess = function(mtime) {
 				var session = codiad.active.sessions[path];
-				if (typeof session != 'undefined') {
+				if (typeof session !== 'undefined') {
 					session.untainted = newContent;
 					session.serverMTime = mtime;
 					if (session.listThumb) session.listThumb.removeClass('changed');
@@ -520,8 +523,8 @@
 
 		saveAll: function() {
 			var _this = this;
-			for (var session in _this.sessions) {
-				if (_this.sessions[session].listThumb.hasClass('changed')) {
+			for (var session in this.sessions) {
+				if (this.sessions[session].listThumb.hasClass('changed')) {
 					codiad.active.save(session);
 				}
 			}
@@ -679,7 +682,7 @@
 				var newSession = this.sessions[newPath];
 
 				// Change Editor Mode
-				var ext = codiad.helpers.file.getExtension(newPath);
+				var ext = codiad.helpers.getNodeExtension(newPath);
 				var mode = codiad.editor.selectMode(ext);
 
 				// handle async mode change
@@ -735,7 +738,7 @@
 					codiad.editor.getActive()
 					.getSelectionRange());
 			} else {
-				codiad.toast.error(i18n('No Open Files or Selected Text'));
+				codiad.toast.error('No Open Files or Selected Text');
 			}
 		},
 
