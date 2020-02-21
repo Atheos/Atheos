@@ -67,25 +67,20 @@
 				var overlay = o('#alert-overlay') || this.create(),
 					dialog = o('#alert-dialog');
 
-				overlay.css({
-					'display': 'block'
-				});
-
-				dialog.css({
-					'display': 'block'
-				});
+				overlay.show();
+				dialog.show();
 
 				if (options.banner) {
 					dialog.append(document.createElement('h1'));
-					dialog.find('h1').text(i18n(options.banner));
+					dialog.find('h1')[0].text(i18n(options.banner));
 				}
 				if (options.message) {
 					dialog.append(document.createElement('h2'));
-					dialog.find('h2').text(i18n(options.message));
+					dialog.find('h2')[0].text(i18n(options.message));
 				}
 				if (options.data) {
 					dialog.append(document.createElement('pre'));
-					dialog.find('pre').text(i18n(options.data));
+					dialog.find('pre')[0].text(i18n(options.data));
 				}
 				if (options.actions || (options.positive && options.negative)) {
 					var actions = o('<div>');
@@ -128,9 +123,9 @@
 			var overlay = o('#alert-overlay');
 			var dialog = o('#alert-dialog');
 			if (overlay && overlay) {
-				dialog.innerHTML = '';
-				dialog.style.display = 'none';
-				overlay.style.display = 'none';
+				dialog.empty();
+				dialog.hide();
+				overlay.hide();
 			}
 		}
 	};
