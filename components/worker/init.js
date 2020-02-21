@@ -10,9 +10,11 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
+	
+	var atheos = global.atheos;
 
-	codiad.workerManager = {
+	atheos.workerManager = {
 		taskQueue: [],
 		addTask: function(taskConfig, callback, context) {
 			var _this = this;
@@ -36,7 +38,7 @@
 					}, false);
 				}
 
-				if (this.taskQueue.length == 1) {
+				if (this.taskQueue.length === 1) {
 					this.scheduleNext();
 				}
 			} else {
@@ -48,14 +50,14 @@
 		},
 		initiateWorker: function() {
 			if (typeof Worker !== 'undefined' && Worker !== null) {
-				this.worker = new Worker('components/worker_manager/worker.js');
+				this.worker = new Worker('components/worker/worker.js');
 				return !!this.worker;
 			}
 		},
 		clearSubsidableTasks: function(id) {
 			var i = this.taskQueue.length - 2;
 			while (i > 0) {
-				if (this.taskQueue[i].id == id) {
+				if (this.taskQueue[i].id === id) {
 					this.taskQueue.splice(i, 1);
 				}
 				i--;
@@ -68,7 +70,7 @@
 		concludeTask: function(msg) {
 			if (this.taskQueue.length > 0) {
 				var tq = this.taskQueue[0];
-				callback = tq.callback;
+				var callback = tq.callback;
 				context = tq.context;
 				this.taskQueue.splice(0, 1);
 				if (this.taskQueue.length > 0) {
@@ -77,6 +79,6 @@
 				tq.callback.apply(context, [msg.success, msg.result]);
 			}
 		}
-	}
+	};
 
-})(this, jQuery);
+})(this);
