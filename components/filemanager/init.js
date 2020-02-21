@@ -212,7 +212,7 @@
 			var name = atheos.helpers.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
-			var fileClass = type == 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
+			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
@@ -264,7 +264,7 @@
 						if (response.status !== 'error') {
 							atheos.active.open(path, response.data.content, response.data.mtime, false, focus);
 							if (line) {
-								codiad.active.gotoLine(line);
+								atheos.active.gotoLine(line);
 							}
 						}
 					}
@@ -412,7 +412,7 @@
 				var type = this.getType(this.clipboard);
 
 				if (duplicate) {
-					nodeName = "copy_of_" + nodeName;
+					nodeName = 'copy_of_' + nodeName;
 				}
 				ajax({
 					url: `${this.controller}?action=duplicate&path=${encodeURIComponent(this.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
@@ -436,7 +436,7 @@
 			if (this.clipboard === '') {
 				atheos.toast.error('Nothing in Your Clipboard');
 
-			} else if (path == this.clipboard) {
+			} else if (path === this.clipboard) {
 				atheos.toast.error('Cannot Paste Directory Into Itself');
 
 			} else {
@@ -445,18 +445,18 @@
 				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]').exists()) {
 
 					atheos.alert.show({
-						banner: "Path already exists!",
+						banner: 'Path already exists!',
 						message: 'Would you like to overwrite or duplicate the file?',
 						data: `/${path}/${nodeName}`,
 						actions: [{
-								message: "Overwrite",
+								message: 'Overwrite',
 								fnc: function() {
 									console.log('Overwrite');
 									fileManager.processPaste(path, false);
 								}
 							},
 							{
-								message: "Duplicate",
+								message: 'Duplicate',
 								fnc: function() {
 									console.log('Duplicate');
 									fileManager.processPaste(path, true);
@@ -780,7 +780,7 @@
 			var table = o('#filemanager-search-results');
 
 
-			var lastSearched = JSON.parse(localStorage.getItem("lastSearched"));
+			var lastSearched = JSON.parse(localStorage.getItem('lastSearched'));
 			if (lastSearched) {
 				o('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
 				o('#modal_content form input[name="search_file_type"]').value(lastSearched.fileExtension);
@@ -823,15 +823,17 @@
 						response = JSON.parse(response);
 						table.empty();
 						var results = '';
-						if (response.status != 'error') {
+						if (response.status !== 'error') {
 							var index = response.data;
 
 							for (var key in index) {
-								if (!index.hasOwnProperty(key)) continue;
+								if (!index.hasOwnProperty(key)) {
+									continue;
+								}
 
 								var file = index[key];
 
-								if (key.substr(-1) == '/') {
+								if (key.substr(-1) === '/') {
 									key = key.substr(0, key.substr.length - 1);
 								}
 
@@ -844,7 +846,7 @@
 
 								file.forEach(function(result) {
 									result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-									content += `<a class="result" onclick="codiad.filemanager.openFile('${result.path}',true,${result.line});codiad.modal.unload();"><span>Line ${result.line}: </span>${result.string}
+									content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}
 												</a>`;
 								});
 
@@ -885,6 +887,6 @@
 			fileExtension: fileExtensions,
 			searchResults: searchResults
 		};
-		localStorage.setItem("lastSearched", JSON.stringify(lastSearched));
+		localStorage.setItem('lastSearched', JSON.stringify(lastSearched));
 	};
 })(this);
