@@ -22,15 +22,15 @@ class Filemanager extends Common
 	public $path = "";
 	public $patch = "";
 	public $type = "";
-	public $new_name = "";
+	public $newName = "";
 	public $content = "";
 	public $destination = "";
 	public $upload = "";
 	public $controller = "";
 	public $upload_json = "";
-	public $search_string = "";
+	public $searchString = "";
 
-	public $search_file_type = "";
+	public $searchFileType = "";
 	public $query = "";
 	public $foptions = "";
 
@@ -69,19 +69,19 @@ class Filemanager extends Common
 			$this->path = $this->root . Filemanager::cleanPath($get['path']);
 		}
 		// Search
-		if (!empty($post['search_string'])) {
-			$this->search_string = ($post['search_string']);
+		if (!empty($post['searchString'])) {
+			$this->searchString = ($post['searchString']);
 		}
-		if (!empty($post['search_file_type'])) {
-			$this->search_file_type = ($post['search_file_type']);
+		if (!empty($post['searchFileType'])) {
+			$this->searchFileType = ($post['searchFileType']);
 		}
 		// Create
 		if (!empty($get['type'])) {
 			$this->type = $get['type'];
 		}
 		// Modify\Create
-		if (!empty($get['new_name'])) {
-			$this->new_name = $get['new_name'];
+		if (!empty($get['newName'])) {
+			$this->newName = $get['newName'];
 		}
 
 		foreach (array('content', 'mtime', 'patch') as $key) {
@@ -240,8 +240,8 @@ class Filemanager extends Common
 			}
 			$return = array();
 
-			$input = str_replace('"', '', $this->search_string);
-			$cmd = 'find -L ' . escapeshellarg($this->path) . ' -iregex  '.escapeshellarg('.*' . $this->search_file_type).' -type f | xargs grep -i -I -n -R -H ' . escapeshellarg($input) . '';
+			$input = str_replace('"', '', $this->searchString);
+			$cmd = 'find -L ' . escapeshellarg($this->path) . ' -iregex  '.escapeshellarg('.*' . $this->searchFileType).' -type f | xargs grep -i -I -n -R -H ' . escapeshellarg($input) . '';
 			$output = shell_exec($cmd);
 			$output_arr = explode("\n", $output);
 			foreach ($output_arr as $line) {
@@ -402,10 +402,10 @@ class Filemanager extends Common
 	public function modify() {
 
 		// Change name
-		if ($this->new_name) {
+		if ($this->newName) {
 			$explode = explode('/', $this->path);
 			array_pop($explode);
-			$new_path = implode("/", $explode) . "/" . $this->new_name;
+			$new_path = implode("/", $explode) . "/" . $this->newName;
 			if (!file_exists($new_path)) {
 				if (rename($this->path, $new_path)) {
 					//unlink($this->path);

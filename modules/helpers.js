@@ -62,7 +62,7 @@ var log = function(m, t) {
 		getNodeExtension: function(path) {
 			return path.split('.').pop();
 		},
-		
+
 		getNodeType: function(path) {
 			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
 		},
@@ -73,7 +73,9 @@ var log = function(m, t) {
 
 		extend: function(obj, src) {
 			for (var key in src) {
-				if (src.hasOwnProperty(key)) obj[key] = src[key];
+				if (src.hasOwnProperty(key)) {
+					obj[key] = src[key];
+				}
 			}
 			return obj;
 		},
@@ -83,7 +85,7 @@ var log = function(m, t) {
 		serializeForm: function(form) {
 			var field, l, s = [];
 			var o = {};
-			if (typeof form === 'object' && form.nodeName === "FORM") {
+			if (typeof form === 'object' && form.nodeName === 'FORM') {
 
 				var len = form.elements.length;
 
@@ -94,14 +96,14 @@ var log = function(m, t) {
 						continue;
 					}
 
-					if (field.type == 'select-multiple') {
+					if (field.type === 'select-multiple') {
 						l = form.elements[i].options.length;
-						for (j = 0; j < l; j++) {
+						for (var j = 0; j < l; j++) {
 							if (field.options[j].selected) {
 								o[field.name] = field.options[j].value;
 							}
 						}
-					} else if ((field.type != 'checkbox' && field.type != 'radio') || field.checked) {
+					} else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
 						o[field.name] = field.value;
 					}
 
@@ -115,25 +117,26 @@ var log = function(m, t) {
 		//////////////////////////////////////////////////////////////////////
 		trigger: function(selector, event) {
 			console.warn('Trigger Helper will be depreciated on next release');
-			if (!event || !selector) return;
-			var element;
-			if (selector.self == window) {
-				element = selector;
-			} else {
-				element = selector.nodeType === Node.ELEMENT_NODE ? selector : document.querySelector(selector);
-			}
-			if (element) {
-				var e;
-				if ('createEvent' in document) {
-					// modern browsers, IE9+
-					e = document.createEvent('HTMLEvents');
-					e.initEvent(event, false, true);
-					element.dispatchEvent(e);
+			if (event && selector) {
+				var element;
+				if (selector.self === window) {
+					element = selector;
 				} else {
-					// IE 8
-					e = document.createEventObject();
-					e.eventType = event;
-					el.fireEvent('on' + e.eventType, e);
+					element = selector.nodeType === Node.ELEMENT_NODE ? selector : document.querySelector(selector);
+				}
+				if (element) {
+					var e;
+					if ('createEvent' in document) {
+						// modern browsers, IE9+
+						e = document.createEvent('HTMLEvents');
+						e.initEvent(event, false, true);
+						element.dispatchEvent(e);
+					} else {
+						// IE 8
+						e = document.createEventObject();
+						e.eventType = event;
+						element.fireEvent('on' + e.eventType, e);
+					}
 				}
 			}
 		},
