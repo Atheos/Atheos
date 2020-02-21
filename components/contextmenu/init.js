@@ -64,7 +64,7 @@
 			};
 
 			// Initialize node listener
-			o('#file-manager').on("contextmenu", function(e) { // Context Menu
+			o('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 				atheos.contextmenu.show(e, checkAnchor(e.target));
 			});
@@ -149,7 +149,9 @@
 					}, 500);
 				});
 				$('#context-menu').on('mouseover', function() {
-					if (hideContextMenu) clearTimeout(hideContextMenu);
+					if (hideContextMenu) {
+						clearTimeout(hideContextMenu);
+					}
 				});
 
 				/* Notify listeners. */
