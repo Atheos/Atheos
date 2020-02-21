@@ -100,7 +100,7 @@
 			var _this = this;
 			codiad.modal.load(800, 'components/settings/dialog.php?action=settings');
 			codiad.modal.hideOverlay();
-			codiad.modal.loadProcess.then(function() {
+			codiad.modal.ready.then(function() {
 				if (typeof(dataFile) == 'string') {
 					codiad.settings._showTab(dataFile);
 				} else {

@@ -15,8 +15,8 @@
 
 	global.codiad.fileext_textmode = {
 
-		dialog: 'components/fileext_textmode/dialog.php',
-		controller: 'components/fileext_textmode/controller.php',
+		dialog: 'components/textmode/dialog.php',
+		controller: 'components/textmode/controller.php',
 
 		//////////////////////////////////////////////////////////////////
 		//do a post request for the first associations of fileextensions and textmodes
