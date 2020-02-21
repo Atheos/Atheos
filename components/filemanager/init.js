@@ -150,7 +150,7 @@
 					success: function(response) {
 
 						response = JSON.parse(response);
-						if (response.status != 'error') {
+						if (response.status !== 'error') {
 							/* Notify listener */
 							fileManager.indexFiles = response.data.index;
 
@@ -181,7 +181,7 @@
 									fileManager.slide('open', list.el, slideDuration);
 								}
 							}
-							amplify.publish("filemanager.onIndex", {
+							amplify.publish('filemanager.onIndex', {
 								path: path,
 								files: fileManager.indexFiles
 							});
@@ -345,7 +345,7 @@
 									'Pressing no will cause your changes to override the\n' +
 									'server\'s copy upon next save.',
 								positive: {
-									message: "Yes",
+									message: 'Yes',
 									fnc: function() {
 										atheos.active.close(path);
 										atheos.active.removeDraft(path);
@@ -353,7 +353,7 @@
 									}
 								},
 								negative: {
-									message: "No",
+									message: 'No',
 									fnc: function() {
 										var session = atheos.editor.getActive().getSession();
 										session.serverMTime = null;
@@ -380,12 +380,12 @@
 		},
 
 		savePatch: function(path, patch, mtime, callbacks) {
-			if (patch.length > 0)
+			if (patch.length > 0) {
 				this.saveModifications(path, {
 					patch: patch,
 					mtime: mtime
 				}, callbacks);
-			else if (typeof callbacks.success === 'function') {
+			} else if (typeof callbacks.success === 'function') {
 				var context = callbacks.context || this;
 				callbacks.success.call(context, mtime);
 			}
@@ -600,7 +600,7 @@
 						data: {
 							action: 'modify',
 							path: path,
-							new_name: newName
+							newName: newName
 						},
 						success: function(response) {
 							response = JSON.parse(response);
@@ -661,7 +661,7 @@
 						url: filemanager.controller + '?action=delete&path=' + encodeURIComponent(path),
 						success: function(response) {
 							response = JSON.parse(response);
-							if (response != 'error') {
+							if (response !== 'error') {
 								var node = o('#file-manager a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files
@@ -807,7 +807,7 @@
 				var searchFileType = fileExtensions.trim();
 				if (searchFileType !== '') {
 					//season the string to use in find command
-					searchFileType = "\\(" + searchFileType.replace(/\s+/g, "\\|") + "\\)";
+					searchFileType = '\\(' + searchFileType.replace(/\s+/g, '\\|') + '\\)';
 				}
 
 				var searchType = o('#modal_content form select[name="search_type"]').value();
@@ -817,7 +817,9 @@
 					url: filemanager.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
 					data: {
 						search_string: searchString,
-						search_file_type: searchFileType
+						search_file_type: searchFileType,
+						searchString: searchString,
+						searchFileType: searchFileType
 					},
 					success: function(response) {
 						response = JSON.parse(response);

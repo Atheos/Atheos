@@ -25,7 +25,9 @@
 	//////////////////////////////////////////////////////////////////////
 
 	var atheos = global.atheos,
+		amplify = global.amplify,
 		$ = global.jQuery;
+		
 	global.codiad = global.atheos;
 
 	atheos.codiad = {

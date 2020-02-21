@@ -30,7 +30,7 @@
 				}
 				console.log(debug);
 			}
-			if (obj.status == 'error') {
+			if (obj.status === 'error') {
 				atheos.toast.error(obj.message);
 				return 'error';
 			} else {

@@ -55,7 +55,9 @@
 				window,
 				document,
 				document.documentElement
-			].indexOf(selector) > -1) return true;
+			].indexOf(selector) > -1) {
+			return true;
+		}
 		if (typeof selector !== 'string' && selector.contains) {
 			return selector === target || selector.contains(target);
 		}
@@ -63,9 +65,13 @@
 	};
 
 	var eventHandler = function(event) {
-		if (!activeEvents[event.type]) return;
+		if (!activeEvents[event.type]) {
+			return;
+		}
 		activeEvents[event.type].forEach(function(listener) {
-			if (!doRun(event.target, listener.selector)) return;
+			if (!doRun(event.target, listener.selector)) {
+				return;
+			}
 			listener.callback(event);
 		});
 	};
@@ -101,7 +107,7 @@
 
 				type = type.trim();
 
-				if (!activeEvents[type]) return;
+				if (!activeEvents[type]){ return;}
 
 				if (activeEvents[type].length < 2 || !selector) {
 					delete activeEvents[type];
@@ -110,7 +116,7 @@
 				}
 
 				var index = getIndex(activeEvents[type], selector, callback);
-				if (index < 0) return;
+				if (index < 0){ return;}
 				activeEvents[type].splice(index, 1);
 
 			});
@@ -177,7 +183,7 @@
 
 	const onyx = function(selector) {
 		let element = argToElement(selector);
-		if (!element) return;
+		if (!element) {return;}
 
 		let insertToAdjacent = (s) => function(e) {
 			console.log(e);
@@ -215,8 +221,7 @@
 		};
 
 		let triggerEvent = function(event) {
-			if (!event) return;
-			if (element) {
+			if (element && event) {
 				var e;
 				if ('createEvent' in document) {
 					// modern browsers, IE9+
