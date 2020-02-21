@@ -16,7 +16,7 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
 	'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
@@ -72,7 +72,7 @@
 					return false;
 				} else if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						node = node.find('a');
+						node = node.find('a')[0];
 					} else {
 						node = o(node.parent());
 					}
@@ -87,16 +87,6 @@
 						this.openDir(node.attr('data-path'));
 					} else {
 						this.openFile(node.attr('data-path'));
-					}
-					let icon = node.find('.expand');
-					if (icon && !icon.hasClass('none')) {
-						if (icon.hasClass('fa-plus')) {
-							icon.removeClass('fa-plus');
-							icon.addClass('fa-minus');
-						} else {
-							icon.removeClass('fa-minus');
-							icon.addClass('fa-plus');
-						}
 					}
 				}
 			}).bind(this);
@@ -126,21 +116,34 @@
 			rescan = rescan || false;
 
 			var node = o('#file-manager a[data-path="' + path + '"]');
+			let icon = node.find('.expand')[0];
+			// if (icon && !icon.hasClass('none')) {
+			// 	if (icon.hasClass('fa-plus')) {
+			// 		icon.removeClass('fa-plus');
+			// 		icon.addClass('fa-minus');
+			// 	} else {
+			// 		icon.removeClass('fa-minus');
+			// 		icon.addClass('fa-plus');
+			// 	}
+			// }
 
 			if (node.hasClass('open') && !rescan) {
 				node.removeClass('open');
 
-				var list = node.siblings('ul');
+				var list = node.siblings('ul')[0];
 				if (list) {
-					fileManager.slideToggle(list.el, 'close', slideDuration);
+					fileManager.slide('close', list.el, slideDuration);
+					if (icon) {
+						icon.replaceClass('fa-minus', 'fa-plus');
+					}
 					setTimeout(function() {
 						list.remove();
 					}, slideDuration);
 				}
 
 			} else {
-				if (node.find('.expand')) {
-					node.find('.expand').addClass('loading');
+				if (icon) {
+					icon.addClass('loading');
 				}
 				ajax({
 					url: this.controller + '?action=index&path=' + encodeURIComponent(path),
@@ -153,14 +156,14 @@
 
 							var files = fileManager.indexFiles;
 							if (files.length > 0) {
-								if (node.find('.fa-plus')) {
-									node.find('.fa-plus').replaceClass('fa-plus', 'fa-minus');
+								if (icon) {
+									icon.replaceClass('fa-plus', 'fa-minus');
 								}
 								var display = ' style="display:none;"';
 								if (rescan) {
 									display = '';
 								}
-								var appendage = '<ul' + display + '">';
+								var appendage = '<ul' + display + '>';
 
 								files.forEach(function(file) {
 									appendage += fileManager.createDirectoryItem(file.path, file.type, file.size);
@@ -168,14 +171,14 @@
 
 								appendage += '</ul>';
 
-								if (rescan && node.siblings('ul')) {
-									node.siblings('ul').remove();
+								if (rescan && node.siblings('ul')[0]) {
+									node.siblings('ul')[0].remove();
 								}
 
 								node.after(appendage);
-								var list = node.siblings('ul');
+								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
-									fileManager.slideToggle(list.el, 'open', slideDuration);
+									fileManager.slide('open', list.el, slideDuration);
 								}
 							}
 							amplify.publish("filemanager.onIndex", {
@@ -184,8 +187,10 @@
 							});
 						}
 						node.addClass('open');
-						if (node.find('.expand')) {
-							node.find('.expand').removeClass('loading');
+
+						if (icon) {
+							icon.removeClass('loading');
+							icon.replaceClass('fa-plus', 'fa-minus');
 						}
 						if (rescan && fileManager.rescanChildren.length > fileManager.rescanCounter) {
 							fileManager.rescan(fileManager.rescanChildren[fileManager.rescanCounter++]);
@@ -232,14 +237,13 @@
 
 		rescan: function(path) {
 			if (this.rescanCounter === 0) {
-				var node = o('#file-manager a[data-path="' + path + '"]').el;
-				var children = node.querySelectorAll('a.open');
+				var list = o('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
+				var openNodes = list.find('a.open');
 
-				for (var i = 0; i < children.length; i++) {
-					this.rescanChildren.push(children[i].getAttribute('data-path'));
+				for (var i = 0; i < openNodes.length; i++) {
+					this.rescanChildren.push(openNodes[i].attr('data-path'));
 				}
 			}
-
 			this.openDir(path, true);
 		},
 
@@ -250,7 +254,6 @@
 		openFile: function(path, focus, line) {
 			focus = focus || true;
 
-			// var node = o('#file-manager a[data-path="' + path + '"]');
 			var ext = atheos.helpers.getNodeExtension(path).toLowerCase();
 
 			if (this.noOpen.indexOf(ext) < 0) {
@@ -473,7 +476,6 @@
 
 		create: function(path, type) {
 			var fileManager = this;
-			console.trace();
 
 			atheos.modal.load(250, this.dialog, {
 				action: 'create',
@@ -524,7 +526,7 @@
 
 					var node = this.createDirectoryItem(path, type, 0);
 
-					var list = parentNode.siblings('ul');
+					var list = parentNode.siblings('ul')[0];
 					if (list) { // UL exists, other children to play with
 						list.append(node);
 						this.sortPath(list.el);
@@ -534,8 +536,8 @@
 						parentNode.append(list.el);
 					}
 				} else {
-					if (parentNode.find('.expand')) {
-						parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
+					if (parentNode.find('.expand')[0]) {
+						parentNode.find('.expand')[0].replaceClass('none', 'fa fa-plus');
 					}
 				}
 			}
@@ -605,8 +607,8 @@
 							if (response.status !== 'error') {
 								atheos.toast.success('File Renamed');
 								var node = o('#file-manager a[data-path="' + path + '"]'),
-									icon = node.find('i:nth-child(2)'),
-									span = node.find('span');
+									icon = node.find('i:nth-child(2)')[0],
+									span = node.find('span')[0];
 								// Change pathing and name for node
 								node.attr('data-path', newPath);
 								span.text(newName);
@@ -697,7 +699,7 @@
 			o('#download').attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
 		},
 
-		slideToggle: function(target, direction, duration = 500) {
+		slide: function(direction, target, duration = 500) {
 			//Source: https://w3bits.com/javascript-slidetoggle/
 			target.style.overflow = 'hidden';
 			target.style.transitionProperty = 'height, margin, padding';
@@ -755,11 +757,10 @@
 
 
 //////////////////////////////////////////////////////////////////
-// These are the search functions that I personally have never used
-// but once accidently and need to fix and look into, but might end
-// up being within their own component.
+// This search module needs it's own component sooner than later
 //////////////////////////////////////////////////////////////////
-(function(global, $) {
+
+(function(global) {
 	// 'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
@@ -786,15 +787,21 @@
 				o('#modal_content form select[name="search_type"]').value(lastSearched.searchType);
 				if (lastSearched.searchResults !== '') {
 					table.html(lastSearched.searchResults);
-					filemanager.slideToggle(table.el, 'open');
+					filemanager.slide('open', table.el);
 					atheos.modal.resize();
 				}
 			}
 
-			o('#modal_content form').once('submit', function(e) {
-				o('#filemanager-search-processing').show();
 
+			var listener = function(e) {
 				e.preventDefault();
+
+				o('#filemanager-search-processing').show();
+				amplify.subscribe('modal.unload', function() {
+					console.log('test');
+					o('#modal_content form').off('submit', listener);
+				});
+
 				var searchString = o('#modal_content form input[name="search_string"]').value();
 				var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
 				var searchFileType = fileExtensions.trim();
@@ -823,16 +830,16 @@
 								if (!index.hasOwnProperty(key)) continue;
 
 								var file = index[key];
-								
+
 								if (key.substr(-1) == '/') {
 									key = key.substr(0, key.substr.length - 1);
 								}
-								
+
 								var node = o('<div>'),
 									content = '<span><strong>File: </strong>' + key + '</span>';
 
-								
-								
+
+
 								node.addClass('file');
 
 								file.forEach(function(result) {
@@ -845,33 +852,12 @@
 								table.append(node);
 
 							}
-							
+
 							results = table.html();
+							filemanager.slide('open', table.el);
 
-							/*response.data.forEach(function(result) {
-
-								if (result.file.substr(-1) == '/') {
-									result.file = result.file.substr(0, result.file.substr.length - 1);
-								}
-
-								var searchPos = result.string.indexOf(searchString) - 20;
-								searchPos = searchPos > 0 ? searchPos : 0;
-								result.string = result.string.substr(searchPos, 240);
-								result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-
-
-								result.file = result.file.replace('//', '/');
-								results += `<div class="result">
-												<a onclick="codiad.filemanager.openFile('${result.result}',true,${result.line});codiad.modal.unload();"><span>File: ${result.file}</span><span>Line ${result.line}: </span>${result.string}
-												</a>
-											</div>`;
-
-
-							});*/
-							// table.html(results);
-							filemanager.slideToggle(table.el, 'open');
 						} else {
-							filemanager.slideToggle(table.el);
+							filemanager.slide('close', table.el);
 						}
 						filemanager.saveSearchResults(searchString, searchType, fileExtensions, results);
 						o('#filemanager-search-processing').hide();
@@ -880,8 +866,9 @@
 					}
 				});
 
-			});
+			};
 
+			o('#modal_content form').on('submit', listener);
 
 		});
 
