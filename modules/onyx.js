@@ -17,7 +17,7 @@
 
 // https://github.com/finom/balalaika/blob/master/balalaika.umd.js
 // https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
-
+ 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -36,11 +36,12 @@
 
 	var getIndex = function(arr, selector, callback) {
 		for (var i = 0; i < arr.length; i++) {
-			if (
-				arr[i].selector === selector &&
-				arr[i].callback.toString() === callback.toString()
-			) {
-				return i;
+			if (arr[i].selector === selector) {
+				if (!callback) {
+					return i;
+				} else if (arr[i].callback.toString() === callback.toString()) {
+					return i;
+				}
 			}
 		}
 		return -1;
@@ -107,7 +108,9 @@
 
 				type = type.trim();
 
-				if (!activeEvents[type]){ return;}
+				if (!activeEvents[type]) {
+					return;
+				}
 
 				if (activeEvents[type].length < 2 || !selector) {
 					delete activeEvents[type];
@@ -116,7 +119,9 @@
 				}
 
 				var index = getIndex(activeEvents[type], selector, callback);
-				if (index < 0){ return;}
+				if (index < 0) {
+					return;
+				}
 				activeEvents[type].splice(index, 1);
 
 			});
@@ -183,7 +188,9 @@
 
 	const onyx = function(selector) {
 		let element = argToElement(selector);
-		if (!element) {return;}
+		if (!element) {
+			return;
+		}
 
 		let insertToAdjacent = (s) => function(e) {
 			console.log(e);
