@@ -1,9 +1,13 @@
 (function(global, $) {
 
-	var codiad = global.codiad;
+	var atheos = global.atheos,
+		amplify = global.amplify,
+		ajax = global.ajax,
+		fileIcons = global.FileIcons,
+		o = global.onyx;
 
-	$(window).load(function() {
-		codiad.finder.init();
+	amplify.subscribe('atheos.loaded', function(settings) {
+		atheos.finder.init();
 	});
 
 	//////////////////////////////////////////////////////////////////
@@ -13,65 +17,159 @@
 	//
 	//////////////////////////////////////////////////////////////////
 
-	codiad.finder = {
+	atheos.finder = {
+
+		finderExpanded: false,
+		menu: '',
+		rootName: '',
+		rootPath: '',
+		htmlCache: '',
+		options: {},
+
+		// Setup finder
+		init: function() {
+			var finder = this;
+
+			o('#tree-search').on('click', function() {
+				if (!finder.finderExpanded) {
+					finder.expandFinder();
+				} else {
+					finder.contractFinder();
+				}
+			});
+
+			o('#finder-label').on('click', function() {
+				finder.expandFinder();
+			});
+
+			var menu = o('#finder-options-menu');
+			var $finderOptionsMenu = $('#finder-options-menu');
+			finder.menu = menu;
+
+
+			$('#finder-options').click(function() {
+				$finderOptionsMenu.toggle();
+			});
+
+			// Setup the menu for selection of finding strategy
+			$finderOptionsMenu.bind('click', 'a', function(e) {
+				var $target = $(e.target);
+				var strategy = $target.attr('data-option');
+				var action = $target.attr('data-action');
+				if (strategy) {
+					finder.options.strategy = strategy;
+					$finderOptionsMenu
+						.find('li.chosen')
+						.removeClass('chosen');
+					$target.parent('li').addClass('chosen');
+				} else if (action) {
+					atheos.filemanager[action](atheos.project.getCurrent());
+					finder.contractFinder();
+				}
+				$finderOptionsMenu.hide();
+			});
+
+			// Setup the menu for selection of finding strategy
+			o('#finder-quick').on('click', function(e) {
+				atheos.filemanager.search(atheos.project.getCurrent());
+				finder.contractFinder();
+			});
+
+			/*
+
+
+			  TODO: provide configuration option
+			  to automatically collapse finder
+			  --
+			  The code below does exactly that
+			  --
+
+			$('#sb-left').mouseleave(function(){
+			    finder.finderSustainFocus = false;
+			    if (! $('#finder').is(':focus')){
+			        finder.contractFinder();
+			    }
+			}).mouseenter(function(){
+			    finder.finderSustainFocus = true;
+			});
+			$('#finder').blur(function(){
+			    if (! finder.finderSustainFocus)
+			        finder.contractFinder();
+			});
+
+			*/
+		},
 
 		// Create DOM node for a particular tree element
-		_makeDomNode: function(name, obj) {
-			var str, path, ext, chStr;
-			str = "<li><span class=\"none\"></span><a";
+		createDirectoryItem: function(name, obj) {
+			console.log(name);
+			console.log(obj);
 
-			if (obj.type === 'directory') {
-				str += " class='directory open'";
-			} else {
-				var s = name.split('.');
-				str += " class='file";
-				if (s.length > 0)
-					str += " ext-" + s[s.length - 1];
-				str += "'";
-			}
-			str += " data-path='" + obj.path + "' data-type='" +
-				obj.type + "' >" + name + "</a>";
-			chStr = "";
-			for (var key in obj.children) {
-				chStr += this._makeDomNode(key, obj.children[key]);
-			}
-			if (chStr.length > 0) {
-				str += "<ul>" + chStr + "</ul>";
+			// var name = atheos.helpers.getNodeName(path);
+			// name = path.replace(path, '').split('/').join('');
+
+			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
+
+			var nodeClass = 'none';
+			if (obj.type === 'directory' && (obj.children)) {
+				nodeClass = 'fa fa-plus';
 			}
 
-			str += "</li>";
-			return str;
+			fileClass = fileClass || 'fa fa-file medium-green';
+
+			var node = '<li>';
+
+			node += `<a data-type="${obj.type}" data-path="${obj.path}">
+						<i class="expand ${nodeClass}"></i>
+						<i class="${fileClass}"></i>
+						<span>${name}</span>
+					</a>`;
+
+			if (obj.children) {
+				node += '<ul>';
+				for (var key in obj.children) {
+					node += this.createDirectoryItem(key, obj.children[key]);
+				}
+				node += '</ul>';
+
+			}
+
+
+			node += '</li>';
+
+			return node;
 		},
 
 		// Construct DOM tree from internal data-structure representing
 		// the filtered directory tree
-		_makeDomTree: function(tree) {
+		createDirectory: function(tree) {
 			var str = "<ul>";
 			for (var key in tree) {
-				str += this._makeDomNode(key, tree[key]);
+				str += this.createDirectoryItem(key, tree[key]);
 			}
 			str += "</ul>";
-			//console.debug("DOM tree :", str);
 			return str;
 		},
 
 		// Construct internal representation for filtered directory tree
 		// from array returned by server
-		_makeHierarchy: function(data) {
+		createHierarchy: function(data) {
 			data = data.index;
 			//console.log('data : ', data);
 			var tree = {},
 				fpathArr, i, j, fragment, curLevel, type;
 			for (i = 0; i < data.length; i++) {
 				curLevel = tree;
-				if (codiad.project.isAbsPath(data[i].path)) {
-					fpathArr = data[i].path.replace(this._rootPath, this._rootName).split('/');
+				if (atheos.project.isAbsPath(data[i].path)) {
+					fpathArr = data[i].path.replace(this.rootPath, this.rootName).split('/');
 				} else {
 					fpathArr = data[i].path.split('/');
 				}
 				for (j = 0; j < fpathArr.length; j++) {
 					fragment = fpathArr[j];
-					if (fragment === "") continue;
+					if (fragment === "") {
+						continue;
+					}
 					if (!curLevel[fragment]) {
 						type = j < fpathArr.length - 1 ? 'directory' : data[i].type;
 						curLevel[fragment] = {
@@ -81,8 +179,8 @@
 						if (type === 'file') {
 							curLevel[fragment].path = data[i].path;
 						} else {
-							if (codiad.project.isAbsPath(data[i].path)) {
-								curLevel[fragment].path = fpathArr.slice(0, j + 1).join('/').replace(this._rootName, this._rootPath);
+							if (atheos.project.isAbsPath(data[i].path)) {
+								curLevel[fragment].path = fpathArr.slice(0, j + 1).join('/').replace(this.rootName, this.rootPath);
 							} else {
 								curLevel[fragment].path = fpathArr.slice(0, j + 1).join('/');
 							}
@@ -97,23 +195,23 @@
 
 		// Use query response returned by server to filter the directory tree
 		_filterTree: function(data) {
-			var tree = this._makeHierarchy(data);
-			var domTree = this._makeDomTree(tree);
+			var tree = this.createHierarchy(data);
+			var domTree = this.createDirectory(tree);
 			$('#file-manager').html(domTree);
 			$('#file-manager>ul>li:first-child>span').remove();
 			$('#file-manager>ul>li:first-child>a').attr({
 				id: 'project-root',
 				'data-type': 'root',
-				'data-path': this._rootPath
+				'data-path': this.rootPath
 			});
 		},
 
 		// Clear all filters applied and restore the tree to its original state
 		_clearFilters: function() {
 			//console.info("Reloading initial tree state ");
-			if (this._htmlStash)
-				$('#file-manager').html(this._htmlStash);
-			this._htmlStash = null;
+			if (this.htmlCache)
+				$('#file-manager').html(this.htmlCache);
+			this.htmlCache = null;
 			$('#finder').attr('value', '');
 		},
 
@@ -123,7 +221,7 @@
 		},
 
 		// Check finder for changes in the user entered query
-		_checkFinder: function() {
+		checkFinder: function() {
 			var fentry = $('#finder').attr('value');
 			var _this = this;
 			fentry = fentry.replace(/^\s+|\s+$/g, '');
@@ -156,11 +254,11 @@
 					data: {
 						query: fentry,
 						action: 'find',
-						path: this._rootPath,
-						options: this._options
+						path: this.rootPath,
+						options: this.options
 					},
 					success: function(data) {
-						if (data.status == 'success') {
+						if (data.status === 'success') {
 							_this._filterTree(data.data);
 						} else {
 							_this._emptyTree();
@@ -178,18 +276,17 @@
 		//////////////////////////////////////////////////////////////////
 
 		expandFinder: function() {
-			this._isFinderExpanded = true;
+			this.finderExpanded = true;
 			//console.info("Saving tree state : ");
-			this._htmlStash = $('#file-manager').html();
-			this._rootPath = $('#project-root').attr('data-path');
-			this._rootName = $('#project-root').html();
+			this.htmlCache = $('#file-manager').html();
+			this.rootPath = $('#project-root').attr('data-path');
+			this.rootName = $('#project-root').html();
+
 			$("#finder-wrapper").show();
 			$("#sb-left-title h2").hide();
-			var _this = this;
+
 			this._lastEntry = null;
-			amplify.subscribe('chrono.kilo', function() {
-				_this._checkFinder();
-			});
+			amplify.subscribe('chrono.kilo', this.checkFinder);
 			$("#finder").focus();
 			$("#finder-quick").hide();
 			$("#sb-left-title").addClass('active');
@@ -200,95 +297,20 @@
 
 		// Contract the finder box
 		contractFinder: function() {
-			this._isFinderExpanded = false;
+			this.finderExpanded = false;
 			$("#finder-wrapper").hide('fast');
 			$("#sb-left-title h2").show('fast');
-			clearInterval(this._poller);
-			this.finderMenu.hide();
+			this.menu.hide();
 			this._clearFilters();
+			amplify.unsubscribe('chrono.kilo', this.checkFinder);
+
 			$("#finder-quick").show();
 			$("#sb-left-title").removeClass('active');
 			$("#tree-search")
 				.removeClass('icon-cancel-squared active')
 				.addClass('icon-search');
-		},
-
-		// Setup finder
-		init: function() {
-			var _this = this;
-			var isExpanded = false;
-			this._options = {};
-			$('#tree-search').click(function() {
-				if (!_this._isFinderExpanded) {
-					_this.expandFinder();
-				} else {
-					_this.contractFinder();
-				}
-			});
-
-			$('#finder-label').click(function() {
-				_this.expandFinder();
-			});
-
-			this.finderMenu = $('#finder-options-menu')
-				.appendTo($('#sb-left'))
-				.hide();
-
-			var finderMenu = this.finderMenu;
-
-			var $finderOptionsMenu = $('#finder-options-menu');
-
-			$('#finder-options').click(function() {
-				finderMenu.toggle();
-			});
-
-			// Setup the menu for selection of finding strategy
-			$finderOptionsMenu.bind('click', 'a', function(e) {
-				var $target = $(e.target);
-				var strategy = $target.attr('data-option');
-				var action = $target.attr('data-action');
-				if (strategy) {
-					_this._options.strategy = strategy;
-					$finderOptionsMenu
-						.find('li.chosen')
-						.removeClass('chosen');
-					$target.parent('li').addClass('chosen');
-				} else if (action) {
-					codiad.filemanager[action](codiad.project.getCurrent());
-					_this.contractFinder();
-				}
-				$finderOptionsMenu.hide();
-			});
-
-			// Setup the menu for selection of finding strategy
-			$('#finder-quick').click(function(e) {
-				codiad.filemanager.search(codiad.project.getCurrent());
-				_this.contractFinder();
-			});
-
-			/*
-
-
-			  TODO: provide configuration option
-			  to automatically collapse finder
-			  --
-			  The code below does exactly that
-			  --
-
-			$('#sb-left').mouseleave(function(){
-			    _this.finderSustainFocus = false;
-			    if (! $('#finder').is(':focus')){
-			        _this.contractFinder();
-			    }
-			}).mouseenter(function(){
-			    _this.finderSustainFocus = true;
-			});
-			$('#finder').blur(function(){
-			    if (! _this.finderSustainFocus)
-			        _this.contractFinder();
-			});
-
-			*/
 		}
+
+
 	};
 })(this, jQuery);
