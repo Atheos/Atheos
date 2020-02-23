@@ -55,11 +55,11 @@
 					}
 				}
 			};
-			if (options.type == 'GET') {
+			if (options.type === 'GET') {
 				params = params ? '?' + params : '';
 				xhr.open('GET', options.url + params, true);
 				xhr.send(null);
-			} else if (options.type == 'POST') {
+			} else if (options.type === 'POST') {
 				xhr.open('POST', options.url, true);
 				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 				xhr.send(params);

@@ -131,7 +131,7 @@
 		},
 		hide: function(wrapper) {
 			wrapper.classList.remove('toast-active');
-			wrapper.addEventListener("transitionend", function() {
+			wrapper.addEventListener('transitionend', function() {
 				wrapper.remove();
 			});
 		}

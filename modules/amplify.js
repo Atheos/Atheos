@@ -5,8 +5,8 @@
 
 	var amplify = global.amplify = {
 		publish: function(topic) {
-			if (typeof topic !== "string") {
-				throw new Error("You must provide a valid topic to publish.");
+			if (typeof topic !== 'string') {
+				throw new Error('You must provide a valid topic to publish.');
 			}
 
 			var args = slice.call(arguments, 1),
@@ -32,11 +32,11 @@
 		},
 
 		subscribe: function(topic, context, callback, priority) {
-			if (typeof topic !== "string") {
-				throw new Error("You must provide a valid topic to create a subscription.");
+			if (typeof topic !== 'string') {
+				throw new Error('You must provide a valid topic to create a subscription.');
 			}
 
-			if (arguments.length === 3 && typeof callback === "number") {
+			if (arguments.length === 3 && typeof callback === 'number') {
 				priority = callback;
 				callback = context;
 				context = null;
@@ -82,8 +82,8 @@
 		},
 
 		unsubscribe: function(topic, context, callback) {
-			if (typeof topic !== "string") {
-				throw new Error("You must provide a valid topic to remove a subscription.");
+			if (typeof topic !== 'string') {
+				throw new Error('You must provide a valid topic to remove a subscription.');
 			}
 
 			if (arguments.length === 2) {
