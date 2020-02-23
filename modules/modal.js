@@ -170,7 +170,6 @@
 			overlay.removeClass('modal-active');
 
 			wrapper.on('transitionend', function() {
-				Settings
 				wrapper.remove();
 				overlay.remove();
 			});
@@ -181,10 +180,10 @@
 		},
 		unload: function() {
 			amplify.publish('modal.unload');
-
+			
+			o('#modal_content form').off('submit');
 			o('#modal_overlay').hide();
 			o('#modal_wrapper').hide();
-			// o('#modal_content form').off('submit');
 			o('#modal_content').empty();
 
 
