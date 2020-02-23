@@ -569,12 +569,12 @@ class Filemanager extends Common
 	// RESPOND (Outputs data in JSON [JSEND] format)
 	//////////////////////////////////////////////////////////////////
 
-	public function respond($adjusted) {
+	public function respond($adjusted = false) {
 
 		// Success ///////////////////////////////////////////////
 		if ($this->status == "success") {
 			if ($this->data) {
-				if ($adjusted) {
+				if ($adjusted == true) {
 					$json = '{"status":"success","data":'.$this->data.'}';
 				} else {
 					$json = '{"status":"success","data":{'.$this->data.'}}';
