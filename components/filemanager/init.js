@@ -96,6 +96,7 @@
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
+			
 			o('#file-manager').on('dblclick', function(e) {
 				if (atheos.editor.settings.fileManagerTrigger) {
 					nodeFunctions(checkAnchor(e.target));
@@ -209,6 +210,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		createDirectoryItem: function(path, type, size) {
+
 			var name = atheos.helpers.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
@@ -797,10 +799,10 @@
 				e.preventDefault();
 
 				o('#filemanager-search-processing').show();
-				amplify.subscribe('modal.unload', function() {
-					console.log('test');
-					o('#modal_content form').off('submit', listener);
-				});
+				
+				// amplify.subscribe('modal.unload', function() {
+				// 	o('#modal_content form').off('submit', listener);
+				// });
 
 				var searchString = o('#modal_content form input[name="search_string"]').value();
 				var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
