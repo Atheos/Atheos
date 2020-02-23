@@ -50,7 +50,7 @@ switch ($action) {
 			$Project->Create();
 		}
 		break;
-		
+
 	//////////////////////////////////////////////////////////////////
 	// Return Current
 	//////////////////////////////////////////////////////////////////
@@ -77,7 +77,7 @@ switch ($action) {
 			$Project->Delete();
 		}
 		break;
-		
+
 	//////////////////////////////////////////////////////////////////
 	// Load Project
 	//////////////////////////////////////////////////////////////////
@@ -89,12 +89,11 @@ switch ($action) {
 			// Load current
 			$Project->path = $_SESSION['project'];
 			$project_name = $Project->GetName();
-			if (!$no_return) {
-				echo json_encode(array("status" => "success", "name" => $project_name, "path" => $_SESSION['project']));
-			}
+			echo json_encode(array("status" => "success", "name" => $project_name, "path" => $_SESSION['project']));
+
 		}
 		break;
-		
+
 	//////////////////////////////////////////////////////////////////
 	// Open Project
 	//////////////////////////////////////////////////////////////////
