@@ -29,6 +29,7 @@
 
 		init: function() {
 			var user = this;
+
 			if (user.loginForm) {
 				user.loginForm.on('submit', function(e) {
 					e.preventDefault();
@@ -90,6 +91,9 @@
 					response = JSON.parse(response);
 					if (response.status !== 'error') {
 						window.location.reload();
+					} else {
+						atheos.toast.error(response.message);
+
 					}
 				}
 			});
