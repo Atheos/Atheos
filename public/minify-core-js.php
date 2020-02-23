@@ -37,24 +37,29 @@ $files = [
 ];
 // This is a conditional that helps during developement of Atheos.
 if (true) {
+	$scripts = '';
 	foreach ($files as $file) {
-		echo("<script type=\"text/javascript\" src=\"$file\"></script>" . PHP_EOL);
+		$scripts .= ("<script type=\"text/javascript\" src=\"$file\"></script>" . PHP_EOL);
 	}
+	echo $scripts;
 } else {
 	$minified = 'public/core.min.js';
+	
 	function minifyJS($minified, $files) {
 		$javascript = '';
 		$minified_javascript = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
 		foreach ($files as $file) {
-			$javascript = file_get_contents($file);
-			$minified_javascript .= "// $file" . PHP_EOL;
-			$minifier = new Minify\JS($javascript);
-			$minified_javascript .= $minifier->minify() . ';' . PHP_EOL;
+			if (is_readable($file)) {
+				$javascript = file_get_contents($file);
+				$minified_javascript .= "// $file" . PHP_EOL;
+				$minifier = new Minify\JS($javascript);
+				$minified_javascript .= $minifier->minify() . ';' . PHP_EOL;
+			}
 		}
 		file_put_contents($minified, $minified_javascript);
 	};
 
-	if (file_exists($minified)) {
+	if (is_readable($minified)) {
 		$mostRecent = filemtime($minified);
 		foreach ($files as $file) {
 			if (filemtime($file) > $mostRecent) {
