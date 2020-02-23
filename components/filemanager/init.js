@@ -15,7 +15,7 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
+ 
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
@@ -96,6 +96,7 @@
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
+			
 			o('#file-manager').on('dblclick', function(e) {
 				if (atheos.editor.settings.fileManagerTrigger) {
 					nodeFunctions(checkAnchor(e.target));
@@ -150,7 +151,7 @@
 					success: function(response) {
 
 						response = JSON.parse(response);
-						if (response.status != 'error') {
+						if (response.status !== 'error') {
 							/* Notify listener */
 							fileManager.indexFiles = response.data.index;
 
@@ -181,7 +182,7 @@
 									fileManager.slide('open', list.el, slideDuration);
 								}
 							}
-							amplify.publish("filemanager.onIndex", {
+							amplify.publish('filemanager.onIndex', {
 								path: path,
 								files: fileManager.indexFiles
 							});
@@ -209,6 +210,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		createDirectoryItem: function(path, type, size) {
+
 			var name = atheos.helpers.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
@@ -345,7 +347,7 @@
 									'Pressing no will cause your changes to override the\n' +
 									'server\'s copy upon next save.',
 								positive: {
-									message: "Yes",
+									message: 'Yes',
 									fnc: function() {
 										atheos.active.close(path);
 										atheos.active.removeDraft(path);
@@ -353,7 +355,7 @@
 									}
 								},
 								negative: {
-									message: "No",
+									message: 'No',
 									fnc: function() {
 										var session = atheos.editor.getActive().getSession();
 										session.serverMTime = null;
@@ -380,12 +382,12 @@
 		},
 
 		savePatch: function(path, patch, mtime, callbacks) {
-			if (patch.length > 0)
+			if (patch.length > 0) {
 				this.saveModifications(path, {
 					patch: patch,
 					mtime: mtime
 				}, callbacks);
-			else if (typeof callbacks.success === 'function') {
+			} else if (typeof callbacks.success === 'function') {
 				var context = callbacks.context || this;
 				callbacks.success.call(context, mtime);
 			}
@@ -408,18 +410,18 @@
 			var fileManager = this;
 
 			var processPaste = function(path, duplicate) {
-				var nodeName = atheos.helpers.getNodeName(this.clipboard);
-				var type = this.getType(this.clipboard);
+				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
+				var type = atheos.helpers.getNodeType(fileManager.clipboard);
 
 				if (duplicate) {
 					nodeName = 'copy_of_' + nodeName;
 				}
 				ajax({
-					url: `${this.controller}?action=duplicate&path=${encodeURIComponent(this.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
+					url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
 					success: function(response) {
 						response = JSON.parse(response);
 						if (response.status !== 'error') {
-							fileManager.createObject(path, path + '/' + nodeName, type);
+							fileManager.addToFileManager(path, path + '/' + nodeName, type);
 							atheos.modal.unload();
 							/* Notify listeners. */
 							amplify.publish('filemanager.onPaste', {
@@ -452,20 +454,20 @@
 								message: 'Overwrite',
 								fnc: function() {
 									console.log('Overwrite');
-									fileManager.processPaste(path, false);
+									processPaste(path, false);
 								}
 							},
 							{
 								message: 'Duplicate',
 								fnc: function() {
 									console.log('Duplicate');
-									fileManager.processPaste(path, true);
+									processPaste(path, true);
 								}
 							}
 						]
 					});
 				} else {
-					fileManager.processPaste(path, false);
+					processPaste(path, false);
 				}
 			}
 		},
@@ -600,7 +602,7 @@
 						data: {
 							action: 'modify',
 							path: path,
-							new_name: newName
+							newName: newName
 						},
 						success: function(response) {
 							response = JSON.parse(response);
@@ -661,7 +663,7 @@
 						url: filemanager.controller + '?action=delete&path=' + encodeURIComponent(path),
 						success: function(response) {
 							response = JSON.parse(response);
-							if (response != 'error') {
+							if (response !== 'error') {
 								var node = o('#file-manager a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files
@@ -797,17 +799,17 @@
 				e.preventDefault();
 
 				o('#filemanager-search-processing').show();
-				amplify.subscribe('modal.unload', function() {
-					console.log('test');
-					o('#modal_content form').off('submit', listener);
-				});
+				
+				// amplify.subscribe('modal.unload', function() {
+				// 	o('#modal_content form').off('submit', listener);
+				// });
 
 				var searchString = o('#modal_content form input[name="search_string"]').value();
 				var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
 				var searchFileType = fileExtensions.trim();
 				if (searchFileType !== '') {
 					//season the string to use in find command
-					searchFileType = "\\(" + searchFileType.replace(/\s+/g, "\\|") + "\\)";
+					searchFileType = '\\(' + searchFileType.replace(/\s+/g, '\\|') + '\\)';
 				}
 
 				var searchType = o('#modal_content form select[name="search_type"]').value();
@@ -817,7 +819,9 @@
 					url: filemanager.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
 					data: {
 						search_string: searchString,
-						search_file_type: searchFileType
+						search_file_type: searchFileType,
+						searchString: searchString,
+						searchFileType: searchFileType
 					},
 					success: function(response) {
 						response = JSON.parse(response);
