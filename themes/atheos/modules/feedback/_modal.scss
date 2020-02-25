@@ -1,17 +1,3 @@
-/* Modal */
-#modal_overlay {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: rgba(0, 0, 0, 0.4);
-	z-index: 9999998;
-	transition: opacity ease-in-out 300ms;
-	opacity: 0.5;
-}
-
 #modal_wrapper {
 	display: none;
 	position: absolute;
@@ -19,40 +5,49 @@
 	left: 50%;
 	max-height: 70vh;
 	max-width: 90vw;
-	overflow: auto;
+	// overflow: auto;
+	// overflow-y:scroll;
 	background: #333;
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
-	padding: 0;
-	background-clip: content-box;
 	border: 3px solid rgba(255, 255, 255, 0.5);
-
-	.icon-arrows {
-		float: right;
-		font-size: 23px;
-		margin: 2px;
-		padding: 0;
-		cursor: grab;
-		color: #999;
-
-		&.active {
-			cursor: grabbing;
-		}
-	}
-
-	.icon-cancel {
-		float: right;
-		font-size: 20px;
-		margin: 2px;
-		padding: 0;
-		cursor: pointer;
-		color: #999;
-	}
 }
 
 #modal_content {
-	padding: 20px;
+	
+	form {
+		padding: 10px;
+	}
+
+	h1 {
+		font-size: 24px;
+		padding: 2px 8px;
+		font-weight: 700;
+		border-bottom: 3px solid #aaa;
+
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	h2 {
+		font-size: 20px;
+		padding: 0;
+
+		i {
+			margin-right: 5px;
+		}
+	}
+
+	h3 {
+		font-size: 18px;
+		padding: 1px;
+
+		i {
+			margin-right: 5px;
+		}
+	}
 }
 
 #modal_loading {

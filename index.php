@@ -46,7 +46,7 @@ if (isset($_SESSION['theme'])) {
 
 	<?php
 	// Load System CSS Files
-	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.css">');
+	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
 
 
 	// Load Plugin CSS Files
@@ -122,15 +122,15 @@ if (isset($_SESSION['theme'])) {
 			<form id="login" method="post">
 				<fieldset>
 					<legend>Atheos <span>IDE</span></legend>
-					<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
+					<label><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
 					<input type="text" name="username" autofocus="autofocus" autocomplete="username">
 
-					<label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
+					<label><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
 					<input type="password" name="password" autocomplete="current-password">
 					<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
 					<div class="language-selector">
-						<label><span class="icon-picture login-icon"></span> <?php i18n("Theme"); ?></label>
+						<label><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
 						<select name="theme" id="theme">
 							<?php
 							include 'languages/code.php';
@@ -149,7 +149,7 @@ if (isset($_SESSION['theme'])) {
 							}
 							endforeach; ?>
 						</select>
-						<label><span class="icon-language login-icon"></span> <?php i18n("Language"); ?></label>
+						<label><i class="fas fa-language"></i> <?php i18n("Language"); ?></label>
 						<select name="language" id="language">
 							<?php
 							include 'languages/code.php';
@@ -186,14 +186,14 @@ if (isset($_SESSION['theme'])) {
 
 		<div id="sb-left" class="sidebar">
 			<div id="sb-left-title">
-				<a id="sb-left-lock" class="icon icon-lock-close"></a>
+				<i id="sb-left-lock" class="fas fa-lock"></i>
 				<?php if (!common::isWINOS()) {
 					?>
-					<a id="finder-quick" class="icon icon-search"></a>
-					<a id="tree-search" class="icon-search icon"></a>
+					<i id="finder-quick" class="fas fa-search"></i>
+					<i id="tree-search" class="fas fa-search"></i>
 					<h2 id="finder-label"> <?php i18n("Explore"); ?> </h2>
 					<div id="finder-wrapper">
-						<a id="finder-options" class="icon icon-cog"></a>
+						<i id="finder-options" class="fas fa-cog"></i>
 						<div id="finder-inner-wrapper">
 							<input type="text" id="finder"></input>
 					</div>
@@ -221,7 +221,7 @@ if (isset($_SESSION['theme'])) {
 					if ($data['title'] == 'Break') {
 						echo('<hr class="'.$data['applies-to'].'">');
 					} else {
-						echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><span class="'.$data['icon'].'"></span>'.get_i18n($data['title']).'</a>');
+						echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.get_i18n($data['title']).'</a>');
 					}
 				}
 
@@ -234,7 +234,7 @@ if (isset($_SESSION['theme'])) {
 								if ((!isset($contextmenu['admin']) || ($contextmenu['admin']) && checkAccess()) || !$contextmenu['admin']) {
 									if (isset($contextmenu['applies-to']) && isset($contextmenu['action']) && isset($contextmenu['icon']) && isset($contextmenu['title'])) {
 										echo('<hr class="'.$contextmenu['applies-to'].'">');
-										echo('<a class="'.$contextmenu['applies-to'].'" onclick="'.$contextmenu['action'].'"><span class="'.$contextmenu['icon'].'"></span>'.$contextmenu['title'].'</a>');
+										echo('<a class="'.$contextmenu['applies-to'].'" onclick="'.$contextmenu['action'].'"><i class="'.$contextmenu['icon'].'"></i>'.$contextmenu['title'].'</a>');
 									}
 								}
 							}
@@ -255,11 +255,11 @@ if (isset($_SESSION['theme'])) {
 
 				<div class="project-list-title">
 					<h2><?php i18n("Projects"); ?></h2>
-					<a id="projects-collapse" class="icon-down-dir icon" alt="<?php i18n("Collapse"); ?>"></a>
+					<a id="projects-collapse" class="fas fa-chevron-circle-down" alt="<?php i18n("Collapse"); ?>"></a>
 					<?php if (checkAccess()) {
 						?>
-						<a id="projects-manage" class="icon-archive icon"></a>
-						<a id="projects-create" class="icon-plus icon" alt="<?php i18n("Create Project"); ?>"></a>
+						<a id="projects-manage" class="fas fa-archive"></a>
+						<a id="projects-create" class="fas fa-plus-circle" alt="<?php i18n("Create Project"); ?>"></a>
 						<?php
 					} ?>
 				</div>
@@ -279,10 +279,10 @@ if (isset($_SESSION['theme'])) {
 			<ul id="tab-list-active-files">
 			</ul>
 			<div id="tab-dropdown">
-				<a id="tab-dropdown-button" class="icon-down-open"></a>
+				<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
 			</div>
 			<div id="tab-close">
-				<a id="tab-close-button" class="icon-cancel-circled" title="<?php i18n("Close All") ?>"></a>
+				<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
 			</div>
 			<ul id="dropdown-list-active-files"></ul>
 			<div class="bar"></div>
@@ -291,7 +291,7 @@ if (isset($_SESSION['theme'])) {
 		<div id="root-editor-wrapper"></div>
 
 		<div id="editor-bottom-bar">
-			<a id="settings" class="ico-wrapper"><span class="icon-cog"></span><?php i18n("Settings"); ?></a>
+			<a id="settings" class="ico-wrapper"><i class="fas fa-cog"></i><?php i18n("Settings"); ?></a>
 
 			<?php
 
@@ -317,9 +317,9 @@ if (isset($_SESSION['theme'])) {
 			} ?>
 
 			<div class="divider"></div>
-			<a id="split" class="ico-wrapper"><span class="icon-layout"></span><?php i18n("Split"); ?></a>
+			<a id="split" class="ico-wrapper"><i class="fas fa-column"></i><?php i18n("Split"); ?></a>
 			<div class="divider"></div>
-			<a id="current-mode"><span class="icon-layout"></span></a>
+			<a id="current-mode"><i class="fas fa-column"></i></a>
 			<div class="divider"></div>
 			<div id="current-file"></div>
 			<div id="cursor-position">
@@ -342,7 +342,7 @@ if (isset($_SESSION['theme'])) {
 
 		</div>
 		<div id="sb-right-title">
-			<span id="sb-right-lock" class="icon icon-lock-open"></span>
+			<i id="sb-right-lock" class="fas fa-unlock"></i>
 		</div>
 
 		<div class="sb-right-content">

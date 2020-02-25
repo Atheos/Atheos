@@ -1,0 +1,40 @@
+#overlay {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 9999998;
+	transition: opacity ease-in-out 300ms;
+}
+
+#alert_dialog,
+#modal_wrapper {
+
+	.drag,
+	.close {
+		position: absolute;
+		font-size: $font-size-icon-medium;
+		padding: 0;
+		color: $font-color-subtle;
+		top: 5px;
+
+	}
+
+	.drag {
+		right: 28px;
+		cursor: grab;
+
+		&.active {
+			cursor: grabbing;
+		}
+	}
+
+	.close {
+		right: 5px;
+		padding: 0;
+		cursor: pointer;
+	}
+}

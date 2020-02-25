@@ -21,6 +21,10 @@ $sidebar-handle-width: 15px;
 	// letter-spacing: -0.4px;
 }
 
+#tree-search {
+	display: none;
+}
+
 .sidebar#sb-left {
 	width: 300px;
 	left: 0;
@@ -32,7 +36,7 @@ $sidebar-handle-width: 15px;
 	z-index: 9998;
 	top: 0;
 	left: 0;
-	right: 10px;
+	right: 15px;
 	height: 35px;
 	background-color: #303030;
 	/*box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;*/
@@ -105,7 +109,7 @@ $sidebar-handle-width: 15px;
 	position: absolute;
 	top: 33px;
 	left: 0;
-	right: 10px;
+	right: 15px;
 	bottom: 280px;
 	// height: calc(100% - 33px);
 }
@@ -116,6 +120,11 @@ $sidebar-handle-width: 15px;
 	bottom: 0;
 	left: 0;
 	right: $sidebar-handle-width;
+
+	i {
+		color: $blue;
+	}
+
 	// display: none;
 }
 
@@ -129,13 +138,12 @@ $sidebar-handle-width: 15px;
     right: 20px;
     top: 6px;
 }*/
-#sb-left-title .icon {
-	display: block;
-	font-size: 15px;
+#sb-left-title i {
+	font-size: 16px;
 	color: $icon-color;
-	z-index: 99999;
+	// z-index: 99999;
 	cursor: pointer;
-	margin: 10px;
+	margin: 10px 5px;
 	float: right;
 }
 
@@ -159,19 +167,19 @@ $sidebar-handle-width: 15px;
 	/*box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;*/
 }
 
-#sb-right-title .icon {
+#sb-right-title i {
 	display: block;
 	font-size: 15px;
 	color: $icon-color;
 	z-index: 99999;
 	cursor: pointer;
-	margin: 10px;
+	margin: 10px 5px;
 	float: left;
 }
 
 
-#sb-left-title .icon.active,
-#sb-left-title .icon:hover {
+#sb-left-title i.active,
+#sb-left-title i:hover {
 	color: $icon-color;
 }
 
