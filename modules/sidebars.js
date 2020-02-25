@@ -49,7 +49,8 @@
 			isLeftSidebarOpen: true,
 			isRightSidebarOpen: false,
 			leftSidebarClickOpen: false,
-			rightSidebarClickOpen: false
+			rightSidebarClickOpen: false,
+			hoverDuration: 300
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Initialization
@@ -58,35 +59,35 @@
 			if (verbose) {
 				console.log('Sidebars Intialized');
 			}
+			var sidebars = atheos.sidebars,
+				sbLeftWidth = atheos.storage.get('sidebars.sb-left-width'),
+				sbRightWidth = atheos.storage.get('sidebars.sb-right-width');
+
+			if (sbLeftWidth !== null) {
+				o('#sb-left').css({
+					'width': sbLeftWidth
+				});
+			}
+			if (sbRightWidth !== null) {
+				o('#sb-right').css({
+					'width': sbRightWidth
+				});
+			}
+
+			sidebars.leftSidebarClickOpen = atheos.storage.get('sidebars.leftSidebarClickOpen');
+			sidebars.rightSidebarClickOpen = atheos.storage.get('sidebars.rightSidebarClickOpen');
+
+			if (atheos.storage.get('sidebars.sb-left-lock') === 'false') {
+				o('#sb-left-lock').trigger('click');
+				sidebars.sbLeft.close();
+			}
+
+			if (atheos.storage.get('sidebars.sb-right-lock') === 'true') {
+				o('#sb-right-lock').trigger('click');
+				sidebars.sbRight.open();
+			}
+			
 			amplify.subscribe('settings.loaded', function(settings) {
-				var sidebars = atheos.sidebars,
-					sbLeftWidth = atheos.storage.get('sidebars.sb-left-width'),
-					sbRightWidth = atheos.storage.get('sidebars.sb-right-width');
-
-
-				if (sbLeftWidth !== null) {
-					o('#sb-left').css({
-						'width': sbLeftWidth
-					});
-				}
-				if (sbRightWidth !== null) {
-					o('#sb-right').css({
-						'width': sbRightWidth
-					});
-				}
-
-				sidebars.leftSidebarClickOpen = atheos.storage.get('sidebars.leftSidebarClickOpen');
-				sidebars.rightSidebarClickOpen = atheos.storage.get('sidebars.rightSidebarClickOpen');
-
-				if (atheos.storage.get('sidebars.sb-left-lock') === 'false') {
-					o('#sb-left-lock').trigger('click');
-					sidebars.sbLeft.close();
-				}
-
-				if (atheos.storage.get('sidebars.sb-right-lock') === 'true') {
-					o('#sb-right-lock').trigger('click');
-					sidebars.sbRight.open();
-				}
 				atheos.helpers.trigger(window, 'resize');
 				o('#editor-region').trigger('h-resize-init');
 			});
@@ -99,14 +100,19 @@
 		// Left Sidebar
 		//////////////////////////////////////////////////////////////////////	
 		sbLeft: {
-			sidebar: '',
-			handle: '',
-			icon: '',
+			sidebar: null,
+			handle: null,
+			icon: null,
+			timeoutOpen: null,
+			timeoutClose: null,
+			hoverDuration: 300,
 			init: function() {
 				var sidebars = atheos.sidebars;
 				this.sidebar = o('#sb-left');
 				this.handle = o('#sb-left-handle');
 				this.icon = o('#sb-left-lock');
+
+				this.hoverDuration = atheos.storage.get('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
 					sidebars.sbLeft.lock();
@@ -122,63 +128,70 @@
 					}
 				});
 
-				hoverintent(this.sidebar.el, function() {
-					if (!sidebars.settings.leftSidebarClickOpen) { // if trigger set to Hover
-						sidebars.sbLeft.open();
-					}
-				}, function() {
+				this.sidebar.on('mouseout', function() {
 					sidebars.sbLeft.close();
 				});
-
+				this.sidebar.on('mouseover', function() {
+					sidebars.sbLeft.open();
+				});
 			},
 			open: function() {
 				var sidebarWidth = this.sidebar.clientWidth();
 
-				if (this.sidebar.data && this.sidebar.data.timeoutClose) {
-					clearTimeout(this.sidebar.data.timeoutClose);
+				if (this.timeoutClose) {
+					clearTimeout(this.timeoutClose);
 				}
-				this.sidebar.css({
-					'left': '0px'
-				});
-				o('#editor-region').css({
-					'margin-left': sidebarWidth + 'px'
-				});
+				this.timeoutOpen = setTimeout((function() {
+					this.sidebar.css({
+						'left': '0px'
+					});
+					o('#editor-region').css({
+						'margin-left': sidebarWidth + 'px'
+					});
 
-				setTimeout(function() {
-					atheos.sidebars.settings.isLeftSidebarOpen = true;
-					atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
-					atheos.active.updateTabDropdownVisibility();
-				}, 300);
+					setTimeout(function() {
+						atheos.sidebars.settings.isLeftSidebarOpen = true;
+						atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
+						atheos.active.updateTabDropdownVisibility();
+					}, 300);
+				}).bind(this), this.hoverDuration);
 
 			},
 			close: function() {
 				var sidebarWidth = this.sidebar.clientWidth(),
 					sidebarHandleWidth = this.handle.clientWidth();
 
+				if (this.timeoutOpen) {
+					clearTimeout(this.timeoutOpen);
+				}
+
 				sidebarWidth = o('#sb-left').clientWidth();
 
-				if (!atheos.sidebars.settings.leftLockedVisible) {
-					this.sidebar.css({
-						'left': (-sidebarWidth + sidebarHandleWidth) + 'px'
-					});
+				this.timeoutClose = setTimeout((function() {
 
-					o('#editor-region').css({
-						'margin-left': '15px'
-					});
+					if (!atheos.sidebars.settings.leftLockedVisible) {
+						this.sidebar.css({
+							'left': (-sidebarWidth + sidebarHandleWidth) + 'px'
+						});
 
-					setTimeout(function() {
-						atheos.sidebars.settings.isLeftSidebarOpen = false;
-						atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
-						atheos.active.updateTabDropdownVisibility();
-					}, 300);
-				}
+						o('#editor-region').css({
+							'margin-left': '15px'
+						});
+
+						setTimeout(function() {
+							atheos.sidebars.settings.isLeftSidebarOpen = false;
+							atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
+							atheos.active.updateTabDropdownVisibility();
+						}, 300);
+					}
+				}).bind(this), this.hoverDuration);
 			},
 			lock: function() {
 				var settings = atheos.sidebars.settings;
 				if (settings.leftLockedVisible) {
-					this.icon.replaceClass('icon-lock-close', 'icon-lock-open');
+					this.icon.replaceClass('fas fa-lock', 'fas fa-unlock');
 				} else {
-					this.icon.replaceClass('icon-lock-open', 'icon-lock-close');
+					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
 				}
 				settings.leftLockedVisible = !(settings.leftLockedVisible);
 				atheos.storage.set('sidebars.sb-left-lock', settings.leftLockedVisible);
@@ -188,14 +201,20 @@
 		// Right Sidebar
 		//////////////////////////////////////////////////////////////////////	
 		sbRight: {
-			sidebar: '',
-			handle: '',
-			icon: '',
+			sidebar: null,
+			handle: null,
+			icon: null,
+			timeoutOpen: null,
+			timeoutClose: null,
+			hoverDuration: 300,
 			init: function() {
 				var sidebars = atheos.sidebars;
 				this.sidebar = o('#sb-right');
 				this.handle = o('#sb-right-handle');
 				this.icon = o('#sb-right-lock');
+
+				this.hoverDuration = atheos.storage.get('sidebars.hoverDuration') || 300;
+
 				this.icon.on('click', function(e) {
 					sidebars.sbRight.lock();
 				});
@@ -209,13 +228,11 @@
 						sidebars.sbRight.open();
 					}
 				});
-
-				hoverintent(this.sidebar.el, function() {
-					if (!sidebars.settings.rightSidebarClickOpen) { // if trigger set to Hover
-						sidebars.sbRight.open();
-					}
-				}, function() {
+				this.sidebar.on('mouseout', function() {
 					sidebars.sbRight.close();
+				});
+				this.sidebar.on('mouseover', function() {
+					sidebars.sbRight.open();
 				});
 			},
 			open: function() {
@@ -224,51 +241,63 @@
 				if (this.sidebar.data && this.sidebar.data.timeoutClose) {
 					clearTimeout(this.sidebar.data.timeoutClose);
 				}
-				this.sidebar.css({
-					'right': '0px'
-				});
-				o('#editor-region').css({
-					'margin-right': sidebarWidth + 'px'
-				});
 
-				setTimeout(function() {
-					atheos.sidebars.settings.isRightSidebarOpen = true;
-					atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
-					atheos.active.updateTabDropdownVisibility();
-				}, 300);
-				o('#tab-close').style.marginRight = (sidebarWidth - 10) + 'px';
-				o('#tab-dropdown').style.marginRight = (sidebarWidth - 10) + 'px';
+				if (this.timeoutClose) {
+					clearTimeout(this.timeoutClose);
+				}
+				this.timeoutOpen = setTimeout((function() {
+					this.sidebar.css({
+						'right': '0px'
+					});
+					o('#editor-region').css({
+						'margin-right': sidebarWidth + 'px'
+					});
 
+					setTimeout(function() {
+						atheos.sidebars.settings.isRightSidebarOpen = true;
+						atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
+						atheos.active.updateTabDropdownVisibility();
+					}, 300);
+					o('#tab-close').style.marginRight = (sidebarWidth - 10) + 'px';
+					o('#tab-dropdown').style.marginRight = (sidebarWidth - 10) + 'px';
+				}).bind(this), this.hoverDuration);
 			},
 			close: function() {
 				var sidebarWidth = this.sidebar.clientWidth(),
 					sidebarHandleWidth = this.handle.clientWidth();
 
-				if (!atheos.sidebars.settings.rightLockedVisible) {
-					this.sidebar.css({
-						'right': -(sidebarWidth - sidebarHandleWidth) + 'px'
-					});
-
-					o('#editor-region').css({
-						'margin-right': '15px'
-					});
-
-					setTimeout(function() {
-						atheos.sidebars.settings.isRightSidebarOpen = false;
-						atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
-						atheos.active.updateTabDropdownVisibility();
-						atheos.helpers.trigger(window, 'resize');
-					}, 300);
-					o('#tab-close').style.marginRight = '0px';
-					o('#tab-dropdown').style.marginRight = '0px';
+				if (this.timeoutOpen) {
+					clearTimeout(this.timeoutOpen);
 				}
+
+				this.timeoutClose = setTimeout((function() {
+					if (!atheos.sidebars.settings.rightLockedVisible) {
+						this.sidebar.css({
+							'right': -(sidebarWidth - sidebarHandleWidth) + 'px'
+						});
+
+						o('#editor-region').css({
+							'margin-right': '15px'
+						});
+
+						setTimeout(function() {
+							atheos.sidebars.settings.isRightSidebarOpen = false;
+							atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
+							atheos.active.updateTabDropdownVisibility();
+							atheos.helpers.trigger(window, 'resize');
+						}, 300);
+						o('#tab-close').style.marginRight = '0px';
+						o('#tab-dropdown').style.marginRight = '0px';
+					}
+				}).bind(this), this.hoverDuration);
+
 			},
 			lock: function() {
 				var settings = atheos.sidebars.settings;
 				if (settings.rightLockedVisible) {
-					this.icon.replaceClass('icon-lock-close', 'icon-lock-open');
+					this.icon.replaceClass('fas fa-lock', 'fas fa-unlock');
 				} else {
-					this.icon.replaceClass('icon-lock-open', 'icon-lock-close');
+					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
 				}
 				settings.rightLockedVisible = !(settings.rightLockedVisible);
 				atheos.storage.set('sidebars.sb-right-lock', settings.rightLockedVisible);
@@ -315,4 +344,4 @@
 		}
 	};
 
-})(this);
+})(this)
