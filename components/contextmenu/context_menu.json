@@ -1,14 +1,14 @@
 [{
 		"title": "New File",
-		"icon": "icon-plus-circled",
+		"icon": "fas fa-plus-circle",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.create($('#context-menu').attr('data-path'),'file');"
+		"onclick": "atheos.filemanager.create($('#context-menu').attr('data-path'),'file');"
 	},
 	{
 		"title": "New Folder",
-		"icon": "icon-folder",
+		"icon": "fas fa-folder",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.create($('#context-menu').attr('data-path'),'directory');"
+		"onclick": "atheos.filemanager.create($('#context-menu').attr('data-path'),'directory');"
 	},
 	{
 		"title": "Break",
@@ -18,9 +18,9 @@
 	},
 	{
 		"title": "Search",
-		"icon": "icon-search",
+		"icon": "fas fa-search",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.search($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.search($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
@@ -30,21 +30,15 @@
 	},
 	{
 		"title": "Upload Files",
-		"icon": "icon-upload",
+		"icon": "fas fa-upload",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.upload($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.upload($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Preview",
-		"icon": "icon-eye",
+		"icon": "fas fa-eye",
 		"applies-to": "both no-external",
-		"onclick": "codiad.filemanager.openInBrowser($('#context-menu').attr('data-path'));"
-	},
-	{
-		"title": "Break",
-		"icon": null,
-		"applies-to": "file-only no-external",
-		"onclick": null
+		"onclick": "atheos.filemanager.openInBrowser($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
@@ -54,16 +48,22 @@
 	},
 	{
 		"title": "Copy",
-		"icon": "icon-copy",
+		"icon": "fas fa-copy",
 		"applies-to": "both",
-		"onclick": "codiad.filemanager.copy($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.copy($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Paste",
-		"icon": "icon-paste",
+		"icon": "fas fa-paste",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.paste($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.paste($('#context-menu').attr('data-path'));"
 	},
+	{
+		"title": "Duplicate",
+		"icon": "fas fa-clone",
+		"applies-to": "both",
+		"onclick": "atheos.filemanager.duplicate($('#context-menu').attr('data-path'));"
+	},	
 	{
 		"title": "Break",
 		"icon": null,
@@ -72,15 +72,15 @@
 	},
 	{
 		"title": "Rename",
-		"icon": "icon-pencil",
+		"icon": "fas fa-pencil-alt",
 		"applies-to": "non-root",
-		"onclick": "codiad.filemanager.rename($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.rename($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Rename Project",
-		"icon": "icon-pencil",
+		"icon": "fas fa-pencil-alt",
 		"applies-to": "root-only",
-		"onclick": "codiad.project.rename($('#context-menu').attr('data-path'),$('#context-menu').attr('data-name'));"
+		"onclick": "atheos.project.rename($('#context-menu').attr('data-path'),$('#context-menu').attr('data-name'));"
 	},
 	{
 		"title": "Break",
@@ -90,9 +90,9 @@
 	},
 	{
 		"title": "Delete",
-		"icon": "icon-cancel-circled",
+		"icon": "fas fa-trash-alt",
 		"applies-to": "non-root",
-		"onclick": "codiad.filemanager.delete($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.delete($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
@@ -102,9 +102,9 @@
 	},
 	{
 		"title": "Download",
-		"icon": "icon-download",
+		"icon": "fas fa-download",
 		"applies-to": "both",
-		"onclick": "codiad.filemanager.download($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.download($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
@@ -114,8 +114,8 @@
 	},
 	{
 		"title": "Rescan",
-		"icon": "icon-sync",
+		"icon": "fas fa-sync-alt",
 		"applies-to": "directory-only",
-		"onclick": "codiad.filemanager.rescan($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.filemanager.rescan($('#context-menu').attr('data-path'));"
 	}
 ]
