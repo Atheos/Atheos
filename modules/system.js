@@ -67,9 +67,9 @@
 					'height': (o('body').clientHeight()) + 'px'
 				});
 
-				o('#root-editor-wrapper').css({
-					'height': (o('body').clientHeight() - 57) + 'px'
-				});
+				// o('#root-editor-wrapper').css({
+				// 	'height': (o('body').clientHeight() - 56) + 'px'
+				// });
 
 				// Run resize command to fix render issues
 				if (atheos.editor) {

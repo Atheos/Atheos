@@ -15,7 +15,7 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
+
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
@@ -96,7 +96,7 @@
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
-			
+
 			o('#file-manager').on('dblclick', function(e) {
 				if (atheos.editor.settings.fileManagerTrigger) {
 					nodeFunctions(checkAnchor(e.target));
@@ -444,7 +444,7 @@
 			} else {
 				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
 
-				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]').exists()) {
+				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]')) {
 
 					atheos.alert.show({
 						banner: 'Path already exists!',
@@ -473,9 +473,60 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
+		// Duplicate Object
+		//////////////////////////////////////////////////////////////////		
+		duplicate: function(path, name) {
+			var fileManager = this;
+			var nodeName = atheos.helpers.getNodeName(path);
+			var type = atheos.helpers.getNodeType(path);
+
+			atheos.modal.load(250, this.dialog, {
+				action: 'duplicate',
+				path: path,
+				nodeName: nodeName,
+				type: type
+			});
+
+			atheos.modal.ready.then(function() {
+				o('#modal_content form').once('submit', function(e) {
+					e.preventDefault();
+					var newName = o('#modal_content form input[name="object_name"]').value();
+
+					// Build new path
+					var arr = path.split('/');
+					var temp = [];
+					for (var i = 0; i < arr.length - 1; i++) {
+						temp.push(arr[i]);
+					}
+					var newPath = temp.join('/') + '/' + newName;
+
+					ajax({
+						url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
+						success: function(response) {
+							response = JSON.parse(response);
+							
+							atheos.toast[response.status](response.message);
+
+							if (response.status !== 'error') {
+								fileManager.addToFileManager(path, path + '/' + nodeName, type);
+								atheos.modal.unload();
+								/* Notify listeners. */
+								amplify.publish('filemanager.onPaste', {
+									path: path,
+									nodeName: nodeName,
+									duplicate: duplicate
+								});
+							}
+						}
+					});
+					atheos.modal.unload();
+				});
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////
 		// Create Object
 		//////////////////////////////////////////////////////////////////
-
 		create: function(path, type) {
 			var fileManager = this;
 
@@ -799,7 +850,7 @@
 				e.preventDefault();
 
 				o('#filemanager-search-processing').show();
-				
+
 				// amplify.subscribe('modal.unload', function() {
 				// 	o('#modal_content form').off('submit', listener);
 				// });
