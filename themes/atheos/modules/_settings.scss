@@ -1,66 +1,53 @@
-.settings-view {
+#settings {
 	display: -webkit-flex;
 	display: -webkit-box;
 	display: -ms-flexbox;
 	display: flex;
-}
 
-.settings-view .big-icon {
-	font-size: 100%;
-	margin-right: 12px;
-}
-
-.settings-view .header {
-	font-size: 20px;
-	padding: 0;
-
-	i {
+	.big-icon {
 		font-size: 100%;
-
 		margin-right: 12px;
 	}
-}
 
-.settings-view .config-menu {
-	max-height: 55vh;
-	overflow: auto;
-	width: 200px;
-}
+	#panel_menu {
+		max-height: 55vh;
+		overflow: auto;
+		// position: fixed;
+		width: 200px;
 
-.settings-view .config-menu li {
-	box-sizing: border-box;
-	display: block;
-	margin-left: 0;
-	margin-top: 2px;
-	position: relative;
-}
+		li a {
+			display: block;
+			padding: 10px;
+			font-size: 16px;
+			-webkit-user-select: none;
+			-moz-user-select: none;
+			-ms-user-select: none;
+			-o-user-select: none;
+			user-select: none;
 
-.settings-view .config-menu li a {
-	position: relative;
-	display: block;
-	padding: 10px 15px;
+			i {
+				margin-right: 5px;
+			}
+		}
 
-	/* User select */
-	-webkit-user-select: none;
-	/* Chrome all / Safari all */
-	-moz-user-select: none;
-	/* Firefox all */
-	-ms-user-select: none;
-	/* IE 10+ */
+		.active {
+			background-color: $blue;
+		}
+	}
 
-	/* No support for these yet, use at own risk */
-	-o-user-select: none;
-	user-select: none;
-}
+	#panel_view {
+		// padding: 5px 20px 20px;
+		padding: 5px 0 5px 5px;
+		// overflow: auto;
+		// overflow-y: scroll;
+		width: 100%;
+		// margin-left: 200px;
 
-.settings-view .config-menu .active {
-	background-color: rgb(60, 118, 221);
-}
-
-.settings-view .panels {
-	max-height: 58vh;
-	padding: 5px 20px 20px;
-	overflow: auto;
-	overflow-y: scroll;
-	width: 100%;
+		overflow: auto;
+		overflow-y: scroll;
+		height: calc(100% - 23px);
+		display: block;
+		min-height: 500px;
+		border-left: 3px solid #aaa;
+	}
 }
