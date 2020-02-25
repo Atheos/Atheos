@@ -38,9 +38,6 @@ var log = function(m, t) {
 
 	atheos.helpers = {
 
-		icons: {},
-		settings: {},
-
 		init: function(verbose) {
 			if (verbose) {
 				console.log('Helpers Initialized');
@@ -201,6 +198,37 @@ var log = function(m, t) {
 				}
 			}
 		}
+	};
+
+})(this);
+
+(function(global) {
+	'use strict';
+
+	var atheos = global.atheos,
+		ajax = global.ajax,
+		o = global.onyx;
+
+	atheos.common = {
+
+
+		createOverlay: function() {
+			var overlay = o('<div>');
+
+			overlay.attr('id', 'overlay');
+			overlay.on('click', atheos.alert.unload);
+			overlay.on('click', atheos.modal.unload);
+
+			// overlay.on('click', function(event) {
+			// 	if (event.target.id !== 'modal_overlay') {
+			// 		return;
+			// 	}
+			// 	modal.unload();
+			// }, false);
+
+			document.body.appendChild(overlay.el);
+			return overlay;
+		},
 	};
 
 })(this);
