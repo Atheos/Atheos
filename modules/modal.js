@@ -33,8 +33,8 @@
 //
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
-
+ 
+ 
 
 (function(global, $) {
 
@@ -60,27 +60,18 @@
 
 		create: function() {
 			var modal = atheos.modal;
-			var overlay = o('<div>'),
-				wrapper = o('<div>'),
+			var wrapper = o('<div>'),
 				content = o('<div>'),
 				drag = o('<i>'),
 				close = o('<i>');
 
-			overlay.attr('id', 'modal_overlay');
-			overlay.on('click', function(event) {
-				if (event.target.id !== 'modal_overlay') {
-					return;
-				}
-				modal.unload();
-			}, false);
-
 			wrapper.attr('id', 'modal_wrapper');
 			content.attr('id', 'modal_content');
 
-			close.addClass('icon-cancel');
-			close.on('click', modal.unload);
+			close.addClass('close fas fa-times-circle');
+			close.on('click', atheos.modal.unload);
 
-			drag.addClass('icon-arrows');
+			drag.addClass('drag fas fa-arrows-alt');
 			drag.on('mousedown', function() {
 				drag.addClass('active');
 				modal.drag(wrapper);
@@ -93,7 +84,6 @@
 			// overlay.appendChild(wrapper);
 			document.body.appendChild(wrapper.el);
 
-			document.body.appendChild(overlay.el);
 			return wrapper;
 		},
 
@@ -101,8 +91,11 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var wrapper = o('#modal_wrapper') || this.create(),
+			var overlay = o('#overlay') || atheos.common.createOverlay(),
+				wrapper = o('#modal_wrapper') || this.create(),
 				content = o('#modal_content');
+				
+
 
 			$('#modal_content form').die('submit'); // Prevent form bubbling
 
@@ -113,7 +106,6 @@
 			});
 
 			content.html('<div id="modal_loading"></div>');
-
 
 			this.ready = ajax({
 				url: url,
@@ -138,18 +130,15 @@
 
 
 			wrapper.show();
-			o('#modal_overlay').show();
+			o('#overlay').show();
 
 			this.settings.isModalVisible = true;
 		},
 
 		resize: function() {
+			var wrapper = o('#modal_wrapper');
 
-			var wrapper = o('#modal_wrapper'),
-				content = o('#modal_content');
-
-
-			if (wrapper && content) {
+			if (wrapper) {
 				var width = wrapper.clientWidth();
 				wrapper.css({
 					'top': '15%',
@@ -160,29 +149,14 @@
 		},
 
 		hideOverlay: function() {
-			o('#modal_overlay').hide();
+			o('#overlay').hide();
 		},
-		hide: function() {
-			var wrapper = o('#modal_wrapper'),
-				overlay = o('#modal_overlay');
 
-			wrapper.removeClass('modal-active');
-			overlay.removeClass('modal-active');
-
-			wrapper.on('transitionend', function() {
-				wrapper.remove();
-				overlay.remove();
-			});
-
-
-			atheos.editor.focus();
-			this.settings.isModalVisible = false;
-		},
 		unload: function() {
 			amplify.publish('modal.unload');
-			
-			o('#modal_content form').off('submit');
-			o('#modal_overlay').hide();
+
+			o('#modal_content').off('submit');
+			o('#overlay').hide();
 			o('#modal_wrapper').hide();
 			o('#modal_content').empty();
 
@@ -193,7 +167,7 @@
 		},
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-			
+
 			var element = wrapper.el;
 
 			var rect = wrapper.offset(),

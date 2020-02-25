@@ -22,7 +22,7 @@
 
 	var atheos = global.atheos,
 		i18n = global.i18n,
-		o = global.onyx;
+		oX = global.onyx;
 
 	atheos.alert = {
 
@@ -33,15 +33,11 @@
 		},
 
 		create: function(text, type) {
-			var overlay = o('<div>'),
-				dialog = o('<div>'),
-				// drag = o('<i>'),
-				close = o('<i>');
+			var element = oX('<div>'),
+				// drag = oX('<i>'),
+				close = oX('<i>');
 
-			overlay.attr('id', 'alert-overlay');
-			overlay.on('click', atheos.alert.unload);
-
-			dialog.attr('id', 'alert-dialog');
+			element.attr('id', 'alert');
 
 			close.addClass('close fas fa-times-circle');
 			close.on('click', atheos.alert.unload);
@@ -52,40 +48,37 @@
 			// 	modal.drag(wrapper);
 			// }, false);
 
-			dialog.append(close);
-			// dialog.append(drag);
-			// overlay.append(dialog);
+			element.append(close);
 
-			document.body.appendChild(overlay.el);
-			document.body.appendChild(dialog.el);
-			return overlay;
+			document.body.appendChild(element.el);
+			return element;
 		},
 
 		show: function(options) {
 			if (options && typeof options === 'object') {
 				var alert = this;
-				var overlay = o('#alert-overlay') || this.create(),
-					dialog = o('#alert-dialog');
+				var overlay = oX('#overlay') || atheos.common.createOverlay(),
+					element = oX('#alert') || this.create();
 
 				overlay.show();
-				dialog.show();
+				element.show();
 
 				if (options.banner) {
-					dialog.append(document.createElement('h1'));
-					dialog.find('h1')[0].text(i18n(options.banner));
+					element.append(document.createElement('h1'));
+					element.find('h1')[0].text(i18n(options.banner));
 				}
 				if (options.message) {
-					dialog.append(document.createElement('h2'));
-					dialog.find('h2')[0].text(i18n(options.message));
+					element.append(document.createElement('h2'));
+					element.find('h2')[0].text(i18n(options.message));
 				}
 				if (options.data) {
-					dialog.append(document.createElement('pre'));
-					dialog.find('pre')[0].text(i18n(options.data));
+					element.append(document.createElement('pre'));
+					element.find('pre')[0].text(i18n(options.data));
 				}
 				if (options.actions || (options.positive && options.negative)) {
-					var actions = o('<div>');
+					var actions = oX('<div>');
 					actions.addClass('actions');
-					dialog.append(actions);
+					element.append(actions);
 
 					if (options.actions) {
 						options.actions.forEach(function(action) {
@@ -93,7 +86,7 @@
 							button.innerText = i18n(action.message);
 							button.addEventListener('click', function() {
 								action.fnc();
-								alert.unload();
+								alert.hide();
 							});
 							actions.append(button);
 						});
@@ -106,12 +99,12 @@
 
 						positive.addEventListener('click', function() {
 							options.positive.fnc();
-							alert.unload();
+							alert.hide();
 
 						});
 						negative.addEventListener('click', function() {
 							options.negative.fnc();
-							alert.unload();
+							alert.hide();
 						});
 						actions.append(positive);
 						actions.append(negative);
@@ -119,13 +112,15 @@
 				}
 			}
 		},
-		unload: function() {
-			var overlay = o('#alert-overlay');
-			var dialog = o('#alert-dialog');
-			if (overlay && overlay) {
-				dialog.empty();
-				dialog.hide();
+		hide: function() {
+			var overlay = oX('#overlay');
+			var element = oX('#alert');
+			if (overlay) {
 				overlay.hide();
+			}
+			if (element) {
+				element.empty();
+				element.hide();
 			}
 		}
 	};

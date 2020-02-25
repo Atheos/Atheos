@@ -868,7 +868,7 @@
 			menu.css({
 				top: $("#editor-top-bar").height() + 1 + 'px',
 				right: '22px',
-				width: '200px'
+				width: '300px'
 			});
 
 			menu.slideToggle('fast');

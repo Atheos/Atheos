@@ -127,6 +127,7 @@
 				menu.attr('data-path', path);
 				menu.attr('data-type', type);
 				menu.attr('data-name', name);
+				
 				// Show faded 'paste' if nothing in clipboard
 				if (this.clipboard === '') {
 					$('#context-menu a[content="Paste"]').addClass('disabled');
@@ -134,21 +135,17 @@
 					$('#context-menu a[data-action="paste"]').removeClass('disabled');
 				}
 
-				// Hide menu
-				// $('#file-manager, #editor-region')
-				//     .on('mouseover', function() {
-				//         _this.contextMenuHide();
-				//     });
-
 				var contextMenu = this;
 
 				var hideContextMenu;
-				$('#context-menu').on('mouseleave', function() {
+				o('#context-menu').on('mouseout', function() {
 					hideContextMenu = setTimeout(function() {
 						contextMenu.hide();
+						console.log('test');
 					}, 500);
 				});
-				$('#context-menu').on('mouseover', function() {
+				
+				o('#context-menu').on('mouseover', function() {
 					if (hideContextMenu) {
 						clearTimeout(hideContextMenu);
 					}
@@ -168,8 +165,8 @@
 		},
 
 		hide: function() {
-			$('#context-menu').fadeOut(200);
-			$('#file-manager a').removeClass('context-menu-active');
+			o('#context-menu').hide();
+			o('#file-manager a.context-menu-active').removeClass('context-menu-active');
 			amplify.publish('contextMenu.onHide');
 			amplify.publish('context-menu.onHide');
 
