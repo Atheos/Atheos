@@ -302,11 +302,11 @@
 				}
 				return element.value;
 			},
-			addClass: function(t) {
-				element.classList.add(...t.split(' '));
+			addClass: function(c) {
+				element.classList.add(...c.split(' '));
 			},
-			removeClass: function(t) {
-				element.classList.remove(t);
+			removeClass: function(c) {
+				element.classList.remove(...c.split(' '));
 			},
 			hasClass: function(c) {
 				return element.classList.contains(c);
