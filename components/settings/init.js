@@ -27,7 +27,7 @@
 				*  Workaround for Storage-Event:
 				*/
 			$('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
-			$('#settings').on('click', function() {
+			$('#settings_open').on('click', function() {
 				atheos.settings.show();
 			});
 			this.load();
