@@ -267,16 +267,18 @@
 			off: function(t, fn) {
 				events.off(t, element, fn);
 			},
-			css: function(s) {
-				if (typeof s === 'string') {
-					return element.style[s] || null;
-				} else if (typeof s === 'object') {
-					const entries = Object.entries(s);
+			css: function(a, v) {
+				if (typeof a === 'string') {
+					if(v) {
+						element.style[a] = v;
+					}
+					return element.style[a] || null;
+				} else if (typeof a === 'object') {
+					const entries = Object.entries(a);
 					for (const [key, value] of entries) {
 						element.style[key] = value;
 					}
 				}
-				// element.style.cssText += s;
 			},
 			data: function(d) {
 				if (d) {
