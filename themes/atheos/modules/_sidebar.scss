@@ -19,6 +19,7 @@ $sidebar-handle-width: 15px;
 	background: #1a1a1a;
 	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
 	// letter-spacing: -0.4px;
+	white-space: nowrap;
 }
 
 #tree-search {
@@ -225,8 +226,8 @@ $sidebar-handle-width: 15px;
 	border-radius: $border-radius;
 }
 
-#sb-right a span {
-	padding-right: 8px;
+#sb-right a i {
+	margin-right: 5px;
 }
 
 #sb-right a:hover {

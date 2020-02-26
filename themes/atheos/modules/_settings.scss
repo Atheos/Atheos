@@ -12,7 +12,6 @@
 	#panel_menu {
 		max-height: 55vh;
 		overflow: auto;
-		// position: fixed;
 		width: 200px;
 
 		li a {
@@ -36,18 +35,11 @@
 	}
 
 	#panel_view {
-		// padding: 5px 20px 20px;
-		padding: 5px 0 5px 5px;
-		// overflow: auto;
-		// overflow-y: scroll;
+		padding: 5px;
 		width: 100%;
-		// margin-left: 200px;
-
 		overflow: auto;
 		overflow-y: scroll;
-		height: calc(100% - 23px);
-		display: block;
-		min-height: 500px;
+		height: 500px;
 		border-left: 3px solid #aaa;
 	}
 }

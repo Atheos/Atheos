@@ -7,7 +7,7 @@
 @import "modules/autocomplete";
 @import "modules/graphics/icons";
 @import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
-@import "modules/fileext_textmode", "modules/fonts", "modules/market";
+@import "modules/textmode", "modules/market";
 @import "modules/filemanager/filemanager", "modules/filemanager/context_menu", "modules/filemanager/search";
 @import "modules/misc/title", "modules/misc/logo", "modules/misc/login", "modules/misc/synthetic";
 @import "modules/input/checkbox", "modules/input/button";
@@ -57,7 +57,6 @@ html {
 	background-color: #1a1a1a;
 	color: #fff;
 	font: normal $font-size 'Ubuntu', sans-serif;
-	// font: normal $font-size 'VictorMono', sans-serif;
 	overflow: hidden;
 }
 
