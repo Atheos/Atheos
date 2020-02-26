@@ -291,7 +291,7 @@ if (isset($_SESSION['theme'])) {
 		<div id="root-editor-wrapper"></div>
 
 		<div id="editor-bottom-bar">
-			<a id="settings" class="ico-wrapper"><i class="fas fa-cog"></i><?php i18n("Settings"); ?></a>
+			<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
 
 			<?php
 
@@ -308,7 +308,7 @@ if (isset($_SESSION['theme'])) {
 							if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
 								if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
 									echo('<div class="divider"></div>');
-									echo('<a onclick="'.$bottommenu['action'].'"><span class="'.$bottommenu['icon'].'"></span>'.$bottommenu['title'].'</a>');
+									echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
 								}
 							}
 						}
@@ -375,7 +375,7 @@ if (isset($_SESSION['theme'])) {
 									foreach ($pdata[0]['rightbar'] as $rightbar) {
 										if ((!isset($rightbar['admin']) || ($rightbar['admin']) && checkAccess()) || !$rightbar['admin']) {
 											if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
-												echo('<a onclick="'.$rightbar['action'].'"><span class="'.$rightbar['icon'].'"></span>'.get_i18n($rightbar['title']).'</a>');
+												echo('<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.get_i18n($rightbar['title']).'</a>');
 											}
 										}
 									}
@@ -386,7 +386,7 @@ if (isset($_SESSION['theme'])) {
 					}
 				} else {
 					if (!$data['admin'] || $data['admin'] && checkAccess()) {
-						echo('<a onclick="'.$data['onclick'].'"><span class="'.$data['icon'].' bigger-icon"></span>'.get_i18n($data['title']).'</a>');
+						echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.get_i18n($data['title']).'</a>');
 					}
 				}
 			} ?>
