@@ -801,10 +801,14 @@
 		/////////////////////////////////////////////////////////////////
 
 		setActive: function(i) {
-			if (!i) return;
-			this.activeInstance = i;
-			$('#current-file').text(i.getSession().path);
-			this.setModeDisplay(i.getSession());
+			if (i) {
+				this.activeInstance = i;
+				var path = i.getSession().path;
+				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
+
+				$('#current-file').text(path);
+				this.setModeDisplay(i.getSession());
+			}
 		},
 
 		/////////////////////////////////////////////////////////////////
