@@ -25,14 +25,14 @@
   {
     "title": "Projects",
     "admin": true,
-    "icon": "icon-archive",
-    "onclick": "codiad.project.list();"
+    "icon": "fas fa-archive",
+    "onclick": "atheos.project.list();"
   },
   {
     "title": "Users",
     "admin": true,
-    "icon": "icon-users",
-    "onclick": "codiad.user.list();"
+    "icon": "fas fa-users",
+    "onclick": "atheos.user.list();"
   },
   {
     "title": "break",
@@ -49,14 +49,14 @@
   {
     "title": "Marketplace",
     "admin": true,
-    "icon": "icon-market",
-    "onclick": "codiad.market.list();"
+    "icon": "fas fa-store",
+    "onclick": "atheos.market.list();"
   },
   {
     "title": "Update Check",
     "admin": true,
-    "icon": "icon-sync",
-    "onclick": "codiad.update.check();"
+    "icon": "fas fa-sync-alt",
+    "onclick": "atheos.update.check();"
   },
   {
     "title": "break",
@@ -73,14 +73,14 @@
   {
     "title": "Settings",
     "admin": false,
-    "icon": "icon-cogs",
-    "onclick": "codiad.settings.show();"
+    "icon": "fas fa-cogs",
+    "onclick": "atheos.settings.show();"
   },
   {
     "title": "Password",
     "admin": false,
-    "icon": "icon-key",
-    "onclick": "codiad.user.password();"
+    "icon": "fas fa-key",
+    "onclick": "atheos.user.password();"
   },
   {
     "title": "break",
@@ -91,25 +91,25 @@
   {
     "title": "Goto Line",
     "admin": false,
-    "icon": "icon-gotoline",
-    "onclick": "codiad.editor.promptLine();"
+    "icon": "fas fa-external-link-alt",
+    "onclick": "atheos.editor.promptLine();"
   },  
   {
     "title": "Save All",
     "admin": false,
-    "icon": "icon-install",
-    "onclick": "codiad.active.saveAll();"
+    "icon": "fa fa-save",
+    "onclick": "atheos.active.saveAll();"
   },
   {
     "title": "Help",
     "admin": false,
-    "icon": "icon-help",
-    "onclick": "window.open('https://github.com/HLSiira/Atheos/wiki');"
+    "icon": "fas fa-question-circle",
+    "onclick": "window.open('https://www.atheos.io/');"
   },
   {
     "title": "Logout",
     "admin": false,
-    "icon": "icon-logout",
-    "onclick": "codiad.user.logout();"
+    "icon": "fas fa-sign-out-alt",
+    "onclick": "atheos.user.logout();"
   }
 ]
