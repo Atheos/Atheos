@@ -44,7 +44,7 @@
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		o = global.onyx;
+		oX = global.onyx;
 
 	atheos.modal = {
 
@@ -60,10 +60,10 @@
 
 		create: function() {
 			var modal = atheos.modal;
-			var wrapper = o('<div>'),
-				content = o('<div>'),
-				drag = o('<i>'),
-				close = o('<i>');
+			var wrapper = oX('<div>'),
+				content = oX('<div>'),
+				drag = oX('<i>'),
+				close = oX('<i>');
 
 			wrapper.attr('id', 'modal_wrapper');
 			content.attr('id', 'modal_content');
@@ -91,9 +91,9 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var overlay = o('#overlay') || atheos.common.createOverlay(),
-				wrapper = o('#modal_wrapper') || this.create(),
-				content = o('#modal_content');
+			var overlay = oX('#overlay') || atheos.common.createOverlay(),
+				wrapper = oX('#modal_wrapper') || this.create(),
+				content = oX('#modal_content');
 				
 
 
@@ -113,8 +113,8 @@
 				success: function(data) {
 					$('#modal_content').html(data);
 
-					// o(content).html(data);
-					// var script = o(o(content).find('script'));
+					// oX(content).html(data);
+					// var script = oX(oX(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
 					// }
@@ -130,13 +130,13 @@
 
 
 			wrapper.show();
-			o('#overlay').show();
+			oX('#overlay').show();
 
 			this.settings.isModalVisible = true;
 		},
 
 		resize: function() {
-			var wrapper = o('#modal_wrapper');
+			var wrapper = oX('#modal_wrapper');
 
 			if (wrapper) {
 				var width = wrapper.clientWidth();
@@ -149,16 +149,16 @@
 		},
 
 		hideOverlay: function() {
-			o('#overlay').hide();
+			oX('#overlay').hide();
 		},
 
 		unload: function() {
 			amplify.publish('modal.unload');
 
-			o('#modal_content').off('submit');
-			o('#overlay').hide();
-			o('#modal_wrapper').hide();
-			o('#modal_content').empty();
+			oX('#modal_content').off('submit');
+			oX('#overlay').hide();
+			oX('#modal_wrapper').hide();
+			oX('#modal_content').empty();
 
 
 			atheos.modal.settings.isModalVisible = false;
@@ -197,7 +197,7 @@
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
 				window.removeEventListener('selectstart', disableSelect);
-				o('.icon-arrows').removeClass('active');
+				oX('.icon-arrows').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;

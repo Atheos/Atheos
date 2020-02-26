@@ -74,6 +74,10 @@
 				});
 			}
 
+			this.sbLeft.init();
+			this.sbRight.init();
+
+
 			sidebars.leftSidebarClickOpen = atheos.storage.get('sidebars.leftSidebarClickOpen');
 			sidebars.rightSidebarClickOpen = atheos.storage.get('sidebars.rightSidebarClickOpen');
 
@@ -86,15 +90,11 @@
 				o('#sb-right-lock').trigger('click');
 				sidebars.sbRight.open();
 			}
-			
+
 			amplify.subscribe('settings.loaded', function(settings) {
 				atheos.helpers.trigger(window, 'resize');
 				o('#editor-region').trigger('h-resize-init');
 			});
-
-			this.sbLeft.init();
-			this.sbRight.init();
-
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Left Sidebar
@@ -249,6 +249,7 @@
 					this.sidebar.css({
 						'right': '0px'
 					});
+
 					o('#editor-region').css({
 						'margin-right': sidebarWidth + 'px'
 					});
@@ -321,7 +322,9 @@
 					} else {
 						sidebar.style.width = (window.innerWidth - event.clientX + 10) + 'px';
 					}
-					o('#editor-region').style['margin-' + side] = sidebar.clientWidth + 'px';
+
+					o('#editor-region').el.style['margin-' + side] = sidebar.clientWidth + 'px';
+
 					if (side === 'right') {
 						o('#tab-close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
 						o('#tab-dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
@@ -330,7 +333,6 @@
 			}
 
 			function removeListeners() {
-				atheos.helpers.trigger(window, 'resize');
 
 				atheos.storage.set('sidebars.sb-left-width', o('#sb-left').style.width);
 				atheos.storage.set('sidebars.sb-right-width', o('#sb-right').style.width);
@@ -344,4 +346,4 @@
 		}
 	};
 
-})(this)
+})(this);
