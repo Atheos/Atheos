@@ -20,7 +20,6 @@
 	// 'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		ajax = global.ajax,
 		o = global.onyx;
 
 	amplify.subscribe('atheos.loaded', function(settings) {
@@ -127,7 +126,7 @@
 				menu.attr('data-path', path);
 				menu.attr('data-type', type);
 				menu.attr('data-name', name);
-				
+
 				// Show faded 'paste' if nothing in clipboard
 				if (this.clipboard === '') {
 					$('#context-menu a[content="Paste"]').addClass('disabled');
@@ -141,10 +140,9 @@
 				o('#context-menu').on('mouseout', function() {
 					hideContextMenu = setTimeout(function() {
 						contextMenu.hide();
-						console.log('test');
 					}, 500);
 				});
-				
+
 				o('#context-menu').on('mouseover', function() {
 					if (hideContextMenu) {
 						clearTimeout(hideContextMenu);
@@ -165,8 +163,12 @@
 		},
 
 		hide: function() {
+			console.trace('test');
 			o('#context-menu').hide();
-			o('#file-manager a.context-menu-active').removeClass('context-menu-active');
+			var active = o('#file-manager a.context-menu-active');
+			if (active) {
+				active.removeClass('context-menu-active');
+			}
 			amplify.publish('contextMenu.onHide');
 			amplify.publish('context-menu.onHide');
 
