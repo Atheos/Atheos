@@ -16,7 +16,6 @@
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
-
 	//////////////////////////////////////////////////////////////////////
 	// Bindings
 	//////////////////////////////////////////////////////////////////////
@@ -28,11 +27,9 @@
 				console.log('Keybind Initialized');
 			}
 
-			// Close Modals //////////////////////////////////////////////
-			document.addEventListener('keyup', function(e) {
-				if (e.keyCode === 27) {
-					atheos.modal.unload();
-				}
+			// Close Modals [Esc] ////////////////////////////////////////
+			this.bind(27, function() {
+				atheos.modal.unload();
 			});
 
 			// Save [CTRL+S] /////////////////////////////////////////////
