@@ -38,10 +38,6 @@
 			chrono.giga = setInterval(function() {
 				amplify.publish('chrono.giga');
 			}, 100000);
-
 		},
-
-
 	};
-
 }(this));

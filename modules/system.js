@@ -18,7 +18,7 @@
 
 	var atheos = global.atheos = {},
 		amplify = global.amplify,
-		o = global.onyx;
+		oX = global.onyx;
 
 	//////////////////////////////////////////////////////////////////////
 	// Init
@@ -28,8 +28,8 @@
 		//Synthetic Login Overlay
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
-			amplify.publish('atheos.loaded');
 		} else {
+
 			var verbose = false;
 
 			atheos.alert.init(verbose);
@@ -41,34 +41,33 @@
 			atheos.storage.init(verbose);
 			atheos.toast.init(verbose);
 
-			amplify.publish('atheos.loaded');
 			amplify.publish('atheos.plugins');
-			
+
 			atheos.codiad.init();
 
 			window.addEventListener('resize', function() {
 				var handleWidth = 10;
 
 				var marginL, reduction;
-				if (o('#sb-left').css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
+				if (oX('#sb-left').css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
 					marginL = handleWidth;
 					reduction = 2 * handleWidth;
 				} else {
-					marginL = o('#sb-left').clientWidth();
+					marginL = oX('#sb-left').clientWidth();
 					reduction = marginL + handleWidth;
 				}
 
-				o('#editor-region').css({
+				oX('#editor-region').css({
 					'margin-left': marginL + 'px'
 				});
 
-				o('#editor-region').css({
+				oX('#editor-region').css({
 					'margin-left': marginL + 'px',
-					'height': (o('body').clientHeight()) + 'px'
+					'height': (oX('body').clientHeight()) + 'px'
 				});
 
-				// o('#root-editor-wrapper').css({
-				// 	'height': (o('body').clientHeight() - 56) + 'px'
+				// oX('#root-editor-wrapper').css({
+				// 	'height': (oX('body').clientHeight() - 56) + 'px'
 				// });
 
 				// Run resize command to fix render issues
@@ -79,6 +78,7 @@
 			});
 
 		}
+		amplify.publish('atheos.loaded');
 	});
 
 })(this);
