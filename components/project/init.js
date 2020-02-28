@@ -81,7 +81,7 @@
 									</a>
 								</li></ul>`);
 						atheos.filemanager.openDir(response.path);
-						atheos.user.project(response.path);
+						atheos.user.saveActiveProject(response.path);
 						atheos.toast.success('Project Loaded');
 					}
 				}
@@ -105,7 +105,7 @@
 						if (atheos.modal.settings.isModalVisible) {
 							atheos.modal.unload();
 						}
-						atheos.user.project(path);
+						atheos.user.saveActiveProject(path);
 						localStorage.removeItem("lastSearched");
 						/* Notify listeners. */
 						amplify.publish('project.onOpen', path);
