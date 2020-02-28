@@ -965,7 +965,7 @@
 			// var tabListWidth = $("#tab-list-active-files").width();
 			var dropdownWidth = $('#tab-dropdown').width();
 			var closeWidth = $('#tab-close').width();
-			var room = window.innerWidth - lsbarWidth - rsbarWidth - dropdownWidth - closeWidth - width - 30;
+			var room = window.innerWidth - lsbarWidth - rsbarWidth - dropdownWidth - closeWidth - width - 40;
 			return (room < 0);
 		},
 
