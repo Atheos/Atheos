@@ -32,7 +32,8 @@ $files = [
 	"modules/modal.js",
 	"modules/sidebars.js",
 	"modules/storage.js",
-	"modules/toast.js"
+	"modules/toast.js",
+	"modules/types.js"
 ];
 // This is a conditional that helps during developement of Atheos.
 if (true) {
