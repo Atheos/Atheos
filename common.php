@@ -247,7 +247,7 @@ class Common {
 	// Format JSEND Response
 	//////////////////////////////////////////////////////////////////
 
-	public static function replyJSON($status, $data = false) {
+	public static function sendJSON($status, $data = false) {
 
 		/// Debug /////////////////////////////////////////////////
 		$debug = "";
