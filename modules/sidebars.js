@@ -29,7 +29,6 @@
 //
 // Sidebar module currently called from:
 //	Components/Active/init.js
-//	System.js: During initialization, check if left sidebar is locked.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -38,9 +37,7 @@
 
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		o = global.onyx,
-		hoverintent = global.hoverintent;
-
+		oX = global.onyx;
 
 	atheos.sidebars = {
 		settings: {
@@ -60,17 +57,19 @@
 				console.log('Sidebars Intialized');
 			}
 			var sidebars = atheos.sidebars,
-				sbLeftWidth = atheos.storage.get('sidebars.sb-left-width'),
-				sbRightWidth = atheos.storage.get('sidebars.sb-right-width');
+				sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
+				sbRightWidth = atheos.storage('sidebars.sb-right-width');
 
 			if (sbLeftWidth !== null) {
-				o('#sb-left').css({
-					'width': sbLeftWidth
+				oX('#sb-left').css({
+					'width': sbLeftWidth + 'px',
+					// 'left': 0 - (sbLeftWidth - 15) + 'px'
 				});
 			}
 			if (sbRightWidth !== null) {
-				o('#sb-right').css({
-					'width': sbRightWidth
+				oX('#sb-right').css({
+					'width': sbRightWidth + 'px',
+					'right': -(sbRightWidth - 15) + 'px'
 				});
 			}
 
@@ -78,22 +77,37 @@
 			this.sbRight.init();
 
 
-			sidebars.leftSidebarClickOpen = atheos.storage.get('sidebars.leftSidebarClickOpen');
-			sidebars.rightSidebarClickOpen = atheos.storage.get('sidebars.rightSidebarClickOpen');
+			sidebars.leftSidebarClickOpen = atheos.storage('sidebars.leftSidebarClickOpen');
+			sidebars.rightSidebarClickOpen = atheos.storage('sidebars.rightSidebarClickOpen');
 
-			if (atheos.storage.get('sidebars.sb-left-lock') === 'false') {
-				o('#sb-left-lock').trigger('click');
+			if (atheos.storage('sidebars.leftLockedVisible') === false) {
+				oX('#sb-left-lock').trigger('click');
 				sidebars.sbLeft.close();
 			}
 
-			if (atheos.storage.get('sidebars.sb-right-lock') === 'true') {
-				o('#sb-right-lock').trigger('click');
+			if (atheos.storage('sidebars.rightLockedVisible')) {
+				oX('#sb-right-lock').trigger('click');
 				sidebars.sbRight.open();
 			}
 
 			amplify.subscribe('settings.loaded', function(settings) {
-				atheos.helpers.trigger(window, 'resize');
-				o('#editor-region').trigger('h-resize-init');
+				var handleWidth = oX('#sb-left-handle').clientWidth();
+
+				var marginL = handleWidth,
+					marginR = handleWidth;
+
+				if (atheos.sidebars.settings.leftLockedVisible) {
+					marginL = oX('#sb-left').clientWidth();
+				}
+
+				if (atheos.sidebars.settings.rightLockedVisible) {
+					marginR = oX('#sb-right').clientWidth();
+				}
+
+				oX('#editor-region').css({
+					'margin-left': marginL + 'px',
+					'margin-right': marginR + 'px',
+				});
 			});
 		},
 		//////////////////////////////////////////////////////////////////////	
@@ -108,18 +122,18 @@
 			hoverDuration: 300,
 			init: function() {
 				var sidebars = atheos.sidebars;
-				this.sidebar = o('#sb-left');
-				this.handle = o('#sb-left-handle');
-				this.icon = o('#sb-left-lock');
+				this.sidebar = oX('#sb-left');
+				this.handle = oX('#sb-left-handle');
+				this.icon = oX('#sb-left-lock');
 
-				this.hoverDuration = atheos.storage.get('sidebars.hoverDuration') || 300;
+				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
 					sidebars.sbLeft.lock();
 				});
 
 				this.handle.on('mousedown', function(e) {
-					sidebars.resize(o('#sb-left').el, 'left');
+					sidebars.resize(oX('#sb-left').el, 'left');
 				});
 
 				this.handle.on('click', function() {
@@ -142,12 +156,9 @@
 					clearTimeout(this.timeoutClose);
 				}
 				this.timeoutOpen = setTimeout((function() {
-					this.sidebar.css({
-						'left': '0px'
-					});
-					o('#editor-region').css({
-						'margin-left': sidebarWidth + 'px'
-					});
+
+					this.sidebar.css('left', '0px');
+					oX('#editor-region').css('margin-left', sidebarWidth + 'px');
 
 					setTimeout(function() {
 						atheos.sidebars.settings.isLeftSidebarOpen = true;
@@ -165,22 +176,17 @@
 					clearTimeout(this.timeoutOpen);
 				}
 
-				sidebarWidth = o('#sb-left').clientWidth();
+				sidebarWidth = oX('#sb-left').clientWidth();
 
 				this.timeoutClose = setTimeout((function() {
 
 					if (!atheos.sidebars.settings.leftLockedVisible) {
-						this.sidebar.css({
-							'left': (-sidebarWidth + sidebarHandleWidth) + 'px'
-						});
 
-						o('#editor-region').css({
-							'margin-left': '15px'
-						});
+						this.sidebar.css('left', (-sidebarWidth + sidebarHandleWidth) + 'px');
+						oX('#editor-region').css('margin-left', '15px');
 
 						setTimeout(function() {
 							atheos.sidebars.settings.isLeftSidebarOpen = false;
-							atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
 							atheos.active.updateTabDropdownVisibility();
 						}, 300);
 					}
@@ -194,7 +200,7 @@
 					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
 				}
 				settings.leftLockedVisible = !(settings.leftLockedVisible);
-				atheos.storage.set('sidebars.sb-left-lock', settings.leftLockedVisible);
+				atheos.storage('sidebars.leftLockedVisible', settings.leftLockedVisible);
 			}
 		},
 		//////////////////////////////////////////////////////////////////////	
@@ -209,18 +215,18 @@
 			hoverDuration: 300,
 			init: function() {
 				var sidebars = atheos.sidebars;
-				this.sidebar = o('#sb-right');
-				this.handle = o('#sb-right-handle');
-				this.icon = o('#sb-right-lock');
+				this.sidebar = oX('#sb-right');
+				this.handle = oX('#sb-right-handle');
+				this.icon = oX('#sb-right-lock');
 
-				this.hoverDuration = atheos.storage.get('sidebars.hoverDuration') || 300;
+				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
 					sidebars.sbRight.lock();
 				});
 
 				this.handle.on('mousedown', function(e) {
-					sidebars.resize(o('#sb-right').el, 'right');
+					sidebars.resize(oX('#sb-right').el, 'right');
 				});
 
 				this.handle.on('click', function() {
@@ -246,21 +252,18 @@
 					clearTimeout(this.timeoutClose);
 				}
 				this.timeoutOpen = setTimeout((function() {
-					this.sidebar.css({
-						'right': '0px'
-					});
 
-					o('#editor-region').css({
-						'margin-right': sidebarWidth + 'px'
-					});
+					this.sidebar.css('right', '0px');
+					oX('#editor-region').css('margin-right', sidebarWidth + 'px');
 
 					setTimeout(function() {
 						atheos.sidebars.settings.isRightSidebarOpen = true;
-						atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
 						atheos.active.updateTabDropdownVisibility();
 					}, 300);
-					o('#tab-close').style.marginRight = (sidebarWidth - 10) + 'px';
-					o('#tab-dropdown').style.marginRight = (sidebarWidth - 10) + 'px';
+
+					// oX('#tab-close').css('margin-right', (sidebarWidth - 10) + 'px');
+					// oX('#tab-dropdown').css('margin-right', (sidebarWidth - 10) + 'px');
+
 				}).bind(this), this.hoverDuration);
 			},
 			close: function() {
@@ -273,22 +276,17 @@
 
 				this.timeoutClose = setTimeout((function() {
 					if (!atheos.sidebars.settings.rightLockedVisible) {
-						this.sidebar.css({
-							'right': -(sidebarWidth - sidebarHandleWidth) + 'px'
-						});
+						this.sidebar.css('right', -(sidebarWidth - sidebarHandleWidth) + 'px');
 
-						o('#editor-region').css({
-							'margin-right': '15px'
-						});
+						oX('#editor-region').css('margin-right', '15px');
 
 						setTimeout(function() {
 							atheos.sidebars.settings.isRightSidebarOpen = false;
 							atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
 							atheos.active.updateTabDropdownVisibility();
-							atheos.helpers.trigger(window, 'resize');
 						}, 300);
-						o('#tab-close').style.marginRight = '0px';
-						o('#tab-dropdown').style.marginRight = '0px';
+						// oX('#tab-close').style.marginRight = '0px';
+						// oX('#tab-dropdown').style.marginRight = '0px';
 					}
 				}).bind(this), this.hoverDuration);
 
@@ -301,9 +299,7 @@
 					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
 				}
 				settings.rightLockedVisible = !(settings.rightLockedVisible);
-				atheos.storage.set('sidebars.sb-right-lock', settings.rightLockedVisible);
-				atheos.helpers.trigger(window, 'resize');
-				// atheos.helpers.trigger('#editor-region', 'h-resize-init');
+				atheos.storage('sidebars.rightLockedVisible', settings.rightLockedVisible);
 			}
 		},
 		//////////////////////////////////////////////////////////////////////	
@@ -313,29 +309,38 @@
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
 			var rect = sidebar.getBoundingClientRect(),
-				modalX = rect.left;
+				modalX = rect.left,
+				editor = oX('#editor-region');
 
 			function moveElement(event) {
 				if (sidebar !== null) {
+					var width;
 					if (side === 'left') {
-						sidebar.style.width = (modalX + event.clientX + 10) + 'px';
+						width = (modalX + event.clientX + 10);
 					} else {
-						sidebar.style.width = (window.innerWidth - event.clientX + 10) + 'px';
+						width = (window.innerWidth - event.clientX + 10);
 					}
 
-					o('#editor-region').el.style['margin-' + side] = sidebar.clientWidth + 'px';
+					sidebar.style.width = ((width > 14) ? width : 15) + 'px';
+
+					editor.css('margin-' + side, sidebar.clientWidth + 'px');
 
 					if (side === 'right') {
-						o('#tab-close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
-						o('#tab-dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+						oX('#tab-close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+						oX('#tab-dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
 					}
 				}
 			}
 
 			function removeListeners() {
+				setTimeout(function() {
+					editor.css('margin-' + side, sidebar.clientWidth + 'px');
+				}, 200);
 
-				atheos.storage.set('sidebars.sb-left-width', o('#sb-left').style.width);
-				atheos.storage.set('sidebars.sb-right-width', o('#sb-right').style.width);
+				var width = oX('#sb-' + side).clientWidth();
+				width = width > 14 ? width : 15;
+
+				atheos.storage.set('sidebars.sb-' + side + '-width', width);
 
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
