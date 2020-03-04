@@ -308,7 +308,11 @@
 				element.classList.add(...c.split(' '));
 			},
 			removeClass: function(c) {
+				if(c) {
 				element.classList.remove(...c.split(' '));
+				} else {
+					element.className = '';
+				}
 			},
 			hasClass: function(c) {
 				return element.classList.contains(c);
@@ -318,7 +322,7 @@
 				this.addClass(n);
 			},
 			toggleClass: function(t) {
-				element.classList.toggle(t);
+				return element.classList.toggle(t);
 			},
 			empty: function() {
 				element.innerHTML = '';

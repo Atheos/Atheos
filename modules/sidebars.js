@@ -52,10 +52,8 @@
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Sidebars Intialized');
-			}
+		init: function() {
+
 			var sidebars = atheos.sidebars,
 				sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
 				sbRightWidth = atheos.storage('sidebars.sb-right-width');
