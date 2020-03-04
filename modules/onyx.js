@@ -144,15 +144,15 @@
 			return obj;
 		}
 	};
-
-
+	
+	
+	
+	// Lazy method to list currently active listeners in events, useful for debugging.
 	window.events = {
 		list: function() {
 			return events.get();
 		}
 	};
-
-	// return events;
 
 
 	let argToElement = function(selector) {
