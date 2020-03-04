@@ -29,22 +29,15 @@
 			global.synthetic.init();
 		} else {
 
-			var verbose = false;
-
-			atheos.alert.init(verbose);
-			atheos.chrono.init(verbose);
-			// atheos.common.init(verbose);
-			atheos.keybind.init(verbose);
-			atheos.modal.init(verbose);
-			atheos.sidebars.init(verbose);
-			atheos.toast.init(verbose);
-
-			amplify.publish('atheos.plugins');
+			atheos.chrono.init();
+			atheos.keybind.init();
+			atheos.sidebars.init();
 
 			atheos.codiad.init();
 
 		}
 		amplify.publish('atheos.loaded');
+		amplify.publish('atheos.plugins');
 	});
 
 })(this);
