@@ -1,13 +1,13 @@
 #alert {
 	display: none;
 	min-height: 150px;
-	width: 400px;
+	width: 325px;
 	position: absolute;
 	top: 10%;
 	left: calc(50% - 200px);
 	background-color: #333;
 	border: 3px solid rgba(255, 255, 255, 0.5);
-	padding: 5px 15px;
+	padding: 10px;
 		z-index: 9999999;
 
 	h1 {
@@ -25,7 +25,7 @@
 	.actions {
 		width: 100%;
 		margin-top: 5px;
-		text-align: right;
+		text-align: center;
 
 		button {
 			min-width: 90px;
