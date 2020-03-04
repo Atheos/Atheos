@@ -23,16 +23,21 @@
 				*  Storage Event:
 				*  Note: Event fires only if change was made in different window and not in this one
 				*  Details: http://dev.w3.org/html5/webstorage/#dom-localstorage
+				*  Reason: If a user has multiple Atheos windows open, all using the same local storage,
+				*  	and makes settings changes, using an iFrame will allow Atheos to detect those
+				*		changes. I think. It doesn't exactly make sense honestly, but that's my only guess.
 				*  
 				*  Workaround for Storage-Event:
 				*/
 			$('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
-			$('#settings_open').on('click', function() {
+
+
+			o('#settings_open').on('click', function() {
 				atheos.settings.show();
 			});
 			this.load();
-
 		},
+
 
 		liveChange: function(target) {
 
@@ -41,8 +46,6 @@
 			var value = target.value();
 			var boolean = (value === 'true');
 			var int = (!isNaN(parseFloat(value)) && isFinite(value)) ? parseInt(value, 10) : 0;
-
-			console.log(setting);
 
 			if (value === null) {
 				atheos.toast.alert("You Must Choose A Value");
@@ -100,7 +103,7 @@
 
 			var syncSystem = (localStorage.getItem('atheos.settings.system.sync') === "true");
 			var syncPlugin = (localStorage.getItem('atheos.settings.plugin.sync') === "true");
-			
+
 			var panel = o('#settings #panel_view');
 
 			if (syncSystem || syncPlugin) {
@@ -130,15 +133,15 @@
 			}
 
 		},
-		
+
 		saveOld: function(notify) {
 			var key, settings = {};
 			var systemRegex = /^atheos/;
 			var pluginRegex = /^atheos.plugin/;
 
 
-			var syncSystem = (localStorage.getItem('atheos.settings.system.sync') === "true");
-			var syncPlugin = (localStorage.getItem('atheos.settings.plugin.sync') === "true");
+			var syncSystem = (storage.get('settings.system.sync') === "true");
+			var syncPlugin = (storage.get('settings.plugin.sync') === "true");
 
 			if (syncSystem || syncPlugin) {
 				for (var i = 0; i < localStorage.length; i++) {
@@ -206,7 +209,7 @@
 					var type = target.el.type;
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
 						settings.liveChange(target);
-						settings.save(false);
+						settings.save();
 					}
 				});
 
@@ -218,9 +221,7 @@
 					}
 				});
 
-
 				$('.settings-view .config-menu li').click(function() {});
-
 
 				if (typeof(dataFile) == 'string') {
 					settings.showTab(dataFile);
@@ -228,7 +229,7 @@
 					settings.loadTabValues('components/settings/settings.editor.php');
 				}
 				/* Notify listeners */
-				amplify.publish('settings.dialog.show', {});
+				amplify.publish('settings.dialog.show');
 			});
 		},
 
