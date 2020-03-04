@@ -21,6 +21,7 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
+		common = atheos.common,
 		fileIcons = global.FileIcons,
 		o = global.onyx;
 
@@ -48,9 +49,9 @@
 			// Initialize node listener
 			this.nodeListener();
 			// Load uploader
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -211,7 +212,7 @@
 
 		createDirectoryItem: function(path, type, size) {
 
-			var name = atheos.helpers.getNodeName(path);
+			var name = common.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
 			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
@@ -256,7 +257,7 @@
 		openFile: function(path, focus, line) {
 			focus = focus || true;
 
-			var ext = atheos.helpers.getNodeExtension(path).toLowerCase();
+			var ext = common.getNodeExtension(path).toLowerCase();
 
 			if (this.noOpen.indexOf(ext) < 0) {
 				ajax({
@@ -410,8 +411,8 @@
 			var fileManager = this;
 
 			var processPaste = function(path, duplicate) {
-				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
-				var type = atheos.helpers.getNodeType(fileManager.clipboard);
+				var nodeName = common.getNodeName(fileManager.clipboard);
+				var type = common.getNodeType(fileManager.clipboard);
 
 				if (duplicate) {
 					nodeName = 'copy_of_' + nodeName;
@@ -442,7 +443,7 @@
 				atheos.toast.error('Cannot Paste Directory Into Itself');
 
 			} else {
-				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
+				var nodeName = common.getNodeName(fileManager.clipboard);
 
 				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]')) {
 
@@ -477,8 +478,8 @@
 		//////////////////////////////////////////////////////////////////		
 		duplicate: function(path, name) {
 			var fileManager = this;
-			var nodeName = atheos.helpers.getNodeName(path);
-			var type = atheos.helpers.getNodeType(path);
+			var nodeName = common.getNodeName(path);
+			var type = common.getNodeType(path);
 
 			atheos.modal.load(250, this.dialog, {
 				action: 'duplicate',
@@ -626,8 +627,8 @@
 		//////////////////////////////////////////////////////////////////
 
 		rename: function(path) {
-			var nodeName = atheos.helpers.getNodeName(path);
-			var type = atheos.helpers.getNodeType(path);
+			var nodeName = common.getNodeName(path);
+			var type = common.getNodeType(path);
 			var fileManager = this;
 
 			atheos.modal.load(250, this.dialog, {
