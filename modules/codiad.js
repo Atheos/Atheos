@@ -41,15 +41,15 @@
 			//////////////////////////////////////////////////////////////////////
 
 			atheos.filemanager.getShortName = function(path) {
-				return atheos.helpers.getNodeName(path);
+				return atheos.common.getNodeName(path);
 			};
 
 			atheos.filemanager.getExtension = function(path) {
-				return atheos.helpers.getNodeExtension(path);
+				return atheos.common.getNodeExtension(path);
 			};
 
 			atheos.filemanager.getType = function(path) {
-				return atheos.helpers.getNodeType(path);
+				return atheos.common.getNodeType(path);
 			};
 		}
 
@@ -61,8 +61,8 @@
 
 
 	$.loadScript = function(url, arg1, arg2) {
-		console.warn('$.loadScript is depreciated, please use "atheos.helpers.loadScript"');
-		atheos.helpers.loadScript(url, arg1, arg2);
+		console.warn('$.loadScript is depreciated, please use "atheos.common.loadScript"');
+		atheos.common.loadScript(url, arg1, arg2);
 	};
 
 	$.ctrl = function(key, callback, args) {
