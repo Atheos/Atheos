@@ -17,8 +17,7 @@
 
 
 	var atheos = global.atheos = {},
-		amplify = global.amplify,
-		oX = global.onyx;
+		amplify = global.amplify;
 
 	//////////////////////////////////////////////////////////////////////
 	// Init
@@ -34,48 +33,15 @@
 
 			atheos.alert.init(verbose);
 			atheos.chrono.init(verbose);
-			atheos.helpers.init(verbose);
+			// atheos.common.init(verbose);
 			atheos.keybind.init(verbose);
 			atheos.modal.init(verbose);
 			atheos.sidebars.init(verbose);
-			atheos.storage.init(verbose);
 			atheos.toast.init(verbose);
 
 			amplify.publish('atheos.plugins');
 
 			atheos.codiad.init();
-
-			window.addEventListener('resize', function() {
-				var handleWidth = 10;
-
-				var marginL, reduction;
-				if (oX('#sb-left').css('left') !== 0 && !atheos.sidebars.settings.leftLockedVisible) {
-					marginL = handleWidth;
-					reduction = 2 * handleWidth;
-				} else {
-					marginL = oX('#sb-left').clientWidth();
-					reduction = marginL + handleWidth;
-				}
-
-				oX('#editor-region').css({
-					'margin-left': marginL + 'px'
-				});
-
-				oX('#editor-region').css({
-					'margin-left': marginL + 'px',
-					'height': (oX('body').clientHeight()) + 'px'
-				});
-
-				// oX('#root-editor-wrapper').css({
-				// 	'height': (oX('body').clientHeight() - 56) + 'px'
-				// });
-
-				// Run resize command to fix render issues
-				if (atheos.editor) {
-					atheos.editor.resize();
-					atheos.active.updateTabDropdownVisibility();
-				}
-			});
 
 		}
 		amplify.publish('atheos.loaded');
