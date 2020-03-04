@@ -7,7 +7,8 @@
 (function(global, $) {
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		o = global.onyx;
+		oX = global.onyx,
+		storage = atheos.storage;
 
 
 	amplify.subscribe('atheos.loaded', function(settings) {
@@ -32,18 +33,15 @@
 			$('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
 
 
-			o('#settings_open').on('click', function() {
+			oX('#settings_open').on('click', function() {
 				atheos.settings.show();
 			});
 			this.load();
 		},
 
 
-		liveChange: function(target) {
+		publish: function(setting, value) {
 
-			var setting = target.attr('data-setting');
-
-			var value = target.value();
 			var boolean = (value === 'true');
 			var int = (!isNaN(parseFloat(value)) && isFinite(value)) ? parseInt(value, 10) : 0;
 
@@ -52,40 +50,40 @@
 				return;
 			} else {
 				switch (setting) {
-					case 'atheos.editor.theme':
+					case 'editor.theme':
 						atheos.editor.setTheme(value);
 						break;
-					case 'atheos.editor.fontSize':
+					case 'editor.fontSize':
 						atheos.editor.setFontSize(value);
 						break;
-					case 'atheos.editor.highlightLine':
+					case 'editor.highlightLine':
 						atheos.editor.setHighlightLine(value);
 						break;
-					case 'atheos.editor.indentGuides':
+					case 'editor.indentGuides':
 						atheos.editor.setIndentGuides(boolean);
 						break;
-					case 'atheos.editor.printMargin':
+					case 'editor.printMargin':
 						atheos.editor.setPrintMargin(boolean);
 						break;
-					case 'atheos.editor.printMarginColumn':
+					case 'editor.printMarginColumn':
 						atheos.editor.setPrintMarginColumn(int);
 						break;
-					case 'atheos.editor.wrapMode':
+					case 'editor.wrapMode':
 						atheos.editor.setWrapMode(boolean);
 						break;
-					case 'atheos.editor.rightSidebarTrigger':
+					case 'editor.rightSidebarTrigger':
 						atheos.editor.setRightSidebarTrigger(boolean);
 						break;
-					case 'atheos.editor.fileManagerTrigger':
+					case 'editor.fileManagerTrigger':
 						atheos.editor.setFileManagerTrigger(boolean);
 						break;
-					case 'atheos.editor.persistentModal':
+					case 'editor.persistentModal':
 						atheos.editor.setPersistentModal(boolean);
 						break;
-					case "atheos.editor.softTabs":
+					case "editor.softTabs":
 						atheos.editor.setSoftTabs(boolean);
 						break;
-					case "atheos.editor.tabSize":
+					case "editor.tabSize":
 						atheos.editor.setTabSize(value);
 						break;
 				}
@@ -95,78 +93,49 @@
 		//////////////////////////////////////////////////////////////////
 		// Save Settings
 		//////////////////////////////////////////////////////////////////
-		save: function(notify) {
-			var key, settings = {};
-			var systemRegex = /^atheos/;
-			var pluginRegex = /^atheos.plugin/;
+		save: function(target) {
+			if (target) {
+				var setting = target.attr('data-setting');
+				var value = target.value();
+				this.publish(setting, value);
+			} else {
+				var settings = {};
+				var systemRegex = /^atheos/;
+				var pluginRegex = /^atheos.plugin/;
 
 
-			var syncSystem = (localStorage.getItem('atheos.settings.system.sync') === "true");
-			var syncPlugin = (localStorage.getItem('atheos.settings.plugin.sync') === "true");
+				var syncSystem = storage('syncSystem');
+				var syncPlugin = storage('syncPlugin');
 
-			var panel = o('#settings #panel_view');
+				var panel = oX('#settings #panel_view');
 
-			if (syncSystem || syncPlugin) {
-				for (var i = 0; i < localStorage.length; i++) {
-					key = localStorage.key(i);
-					if (systemRegex.test(key) && !pluginRegex.test(key) && syncSystem) {
-						settings[key] = localStorage.getItem(key);
-					}
-					if (pluginRegex.test(key) && syncPlugin) {
-						settings[key] = localStorage.getItem(key);
-					}
-				}
-			}
-
-			settings['atheos.settings.system.sync'] = syncSystem;
-			settings['atheos.settings.plugin.sync'] = syncPlugin;
-
-			$.post(this.controller + '?action=save', {
-				settings: JSON.stringify(settings)
-			}, function(data) {
-				parsed = atheos.jsend.parse(data);
-			});
-
-			/* Notify listeners */
-			if (notify) {
-				amplify.publish('settings.save');
-			}
-
-		},
-
-		saveOld: function(notify) {
-			var key, settings = {};
-			var systemRegex = /^atheos/;
-			var pluginRegex = /^atheos.plugin/;
-
-
-			var syncSystem = (storage.get('settings.system.sync') === "true");
-			var syncPlugin = (storage.get('settings.plugin.sync') === "true");
-
-			if (syncSystem || syncPlugin) {
-				for (var i = 0; i < localStorage.length; i++) {
-					key = localStorage.key(i);
-					if (systemRegex.test(key) && !pluginRegex.test(key) && syncSystem) {
-						settings[key] = localStorage.getItem(key);
-					}
-					if (pluginRegex.test(key) && syncPlugin) {
-						settings[key] = localStorage.getItem(key);
+				if (syncSystem || syncPlugin) {
+					for (var i = 0; i < localStorage.length; i++) {
+						var key = localStorage.key(i);
+						if (systemRegex.test(key) && !pluginRegex.test(key) && syncSystem) {
+							settings[key] = localStorage.getItem(key);
+						}
+						if (pluginRegex.test(key) && syncPlugin) {
+							settings[key] = localStorage.getItem(key);
+						}
 					}
 				}
-			}
 
-			settings['atheos.settings.system.sync'] = syncSystem;
-			settings['atheos.settings.plugin.sync'] = syncPlugin;
+				// atheos.common.serialize(panel);
 
-			$.post(this.controller + '?action=save', {
-				settings: JSON.stringify(settings)
-			}, function(data) {
-				parsed = atheos.jsend.parse(data);
-			});
+				settings.syncSystem = syncSystem;
+				settings.syncPlugin = syncPlugin;
 
-			/* Notify listeners */
-			if (notify) {
+				console.log(settings);
+
+				$.post(this.controller + '?action=save', {
+					settings: JSON.stringify(settings)
+				}, function(data) {
+					parsed = atheos.jsend.parse(data);
+				});
+
 				amplify.publish('settings.save');
+
 			}
 
 		},
@@ -203,18 +172,17 @@
 
 			atheos.modal.ready.then(function() {
 
-				o('#modal_wrapper').on('change', function(e) {
-					var target = o(e.target);
+				oX('#modal_wrapper').on('change', function(e) {
+					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					var type = target.el.type;
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
-						settings.liveChange(target);
-						settings.save();
+						settings.save(target);
 					}
 				});
 
-				o('#panel_menu').on('click', function(e) {
-					var target = o(e.target);
+				oX('#panel_menu').on('click', function(e) {
+					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					if (tagName === 'A') {
 						settings.showTab(target.attr('data-file'));
@@ -228,8 +196,6 @@
 				} else {
 					settings.loadTabValues('components/settings/settings.editor.php');
 				}
-				/* Notify listeners */
-				amplify.publish('settings.dialog.show');
 			});
 		},
 
@@ -249,18 +215,15 @@
 
 				settings.save(false);
 
-				o('#panel_menu .active').removeClass('active');
-				o('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
+				oX('#panel_menu .active').removeClass('active');
+				oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
 
-				o('#panel_view').empty();
+				oX('#panel_view').empty();
 
 				//Load panel
 				// $('#settings panel_view').append('<div class="panel active" data-file="' + dataFile + '"></div>');
 				$('#panel_view').load(dataFile, function() {
 					//TODO Show and hide loading information
-					/* Notify listeners */
-					var name = $('.settings-view .config-menu li[data-file="' + dataFile + '"]').attr('data-name');
-					amplify.publish('settings.dialog.tab_loaded', name);
 					settings.loadTabValues(dataFile);
 				});
 

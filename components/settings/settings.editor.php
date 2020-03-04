@@ -4,7 +4,7 @@
 	<tr>
 		<td width="50%"><?php i18n("Theme"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.theme">
+			<select class="setting" data-setting="editor.theme">
 				<?php
 				$files = glob(COMPONENTS . "/editor/ace-editor/theme-*.js");
 				foreach ($files as $file) {
@@ -26,7 +26,7 @@
 	<tr>
 		<td><?php i18n("Font Size"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.fontSize">
+			<select class="setting" data-setting="editor.fontSize">
 				<option value="10px">10px</option>
 				<option value="11px">11px</option>
 				<option value="12px">12px</option>
@@ -42,7 +42,7 @@
 	<tr>
 		<td><?php i18n("Highlight Active Line"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.highlightLine">
+			<select class="setting" data-setting="editor.highlightLine">
 				<option value="true" selected><?php i18n("Yes"); ?></option>
 				<option value="false"><?php i18n("No"); ?></option>
 			</select>
@@ -51,7 +51,7 @@
 	<tr>
 		<td><?php i18n("Indent Guides"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.indentGuides">
+			<select class="setting" data-setting="editor.indentGuides">
 				<option value="true" selected><?php i18n("On"); ?></option>
 				<option value="false"><?php i18n("Off"); ?></option>
 			</select>
@@ -60,7 +60,7 @@
 	<tr>
 		<td><?php i18n("Print Margin"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.printMargin">
+			<select class="setting" data-setting="editor.printMargin">
 				<option value="true"><?php i18n("Show"); ?></option>
 				<option value="false" selected><?php i18n("Hide"); ?></option>
 			</select>
@@ -69,7 +69,7 @@
 	<tr>
 		<td><?php i18n("Print Margin Column"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.printMarginColumn">
+			<select class="setting" data-setting="editor.printMarginColumn">
 				<option value="80" selected>80</option>
 				<option value="85">85</option>
 				<option value="90">90</option>
@@ -85,7 +85,7 @@
 	<tr>
 		<td><?php i18n("Wrap Lines"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.wrapMode">
+			<select class="setting" data-setting="editor.wrapMode">
 				<option value="false" selected><?php i18n("No wrap"); ?></option>
 				<option value="true"><?php i18n("Wrap Lines"); ?></option>
 			</select>
@@ -94,7 +94,7 @@
 	<tr>
 		<td><?php i18n("Tab Size"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.tabSize">
+			<select class="setting" data-setting="editor.tabSize">
 				<option value="2">2</option>
 				<option value="3">3</option>
 				<option value="4" selected>4</option>
@@ -108,7 +108,7 @@
 	<tr>
 		<td><?php i18n("Soft Tabs"); ?></td>
 		<td>
-			<select class="setting" data-setting="atheos.editor.softTabs">
+			<select class="setting" data-setting="editor.softTabs">
 				<option value="false" selected><?php i18n("No"); ?></option>
 				<option value="true"><?php i18n("Yes"); ?></option>
 			</select>
