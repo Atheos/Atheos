@@ -17,25 +17,24 @@
 
 (function(global) {
 
-	var atheos = global.atheos,
-		amplify = global.amplify;
+	var atheos = global.atheos;
 
-	atheos.storage = {
+	atheos.storage = function(key, newVal) {
+		var oldVal = localStorage.getItem('atheos.' + key);
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Storage Initialized');
-			}
-		},
-
-		set: function(key, value) {
-			localStorage.setItem('atheos.' + key, value);
-		},
-		get: function(key, value) {
-			return localStorage.getItem('atheos.' + key, value);
+		if (typeof newVal !== 'undefined') {
+			localStorage.setItem('atheos.' + key, newVal);
 		}
 
-
+		if (!oldVal) {
+			return oldVal;
+		} else if (oldVal === 'true' || oldVal === 'false') {
+			return (oldVal === 'true');
+		} else if (isNaN(oldVal) === false) {
+			return parseInt(oldVal);
+		} else {
+			return oldVal;
+		}
 	};
 
 }(this));
