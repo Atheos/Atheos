@@ -22,10 +22,7 @@
 
 	atheos.keybind = {
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Keybind Initialized');
-			}
+		init: function() {
 
 			// Close Modals [Esc] ////////////////////////////////////////
 			this.bind(27, function() {

@@ -42,12 +42,6 @@
 			close: null
 		},
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Toast Initialized');
-			}
-		},
-
 		createContainer: function() {
 			var container = document.createElement('div');
 			container.id = 'toast-container';

@@ -24,7 +24,7 @@ $files = [
 	"modules/synthetic.js",
 	"modules/system.js",
 	"modules/alert.js",
-	"modules/chronometer.js",
+	"modules/chrono.js",
 	"modules/codiad.js",
 	"modules/common.js",
 	"modules/jsend.js",
