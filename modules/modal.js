@@ -197,7 +197,7 @@
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
 				window.removeEventListener('selectstart', disableSelect);
-				oX('.icon-arrows').removeClass('active');
+				oX('#modal_wrapper .drag').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;
