@@ -36,7 +36,7 @@ var log = function(m, t) {
 
 
 
-	atheos.helpers = {
+	atheos.common = {
 
 		init: function(verbose) {
 			if (verbose) {
@@ -87,9 +87,9 @@ var log = function(m, t) {
 				var len = form.elements.length;
 
 				for (var i = 0; i < len; i++) {
-
 					field = form.elements[i];
-					if (!field.name && field.disabled && field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button') {
+					// field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button' &&
+					if (!field.name || field.disabled || field.nodeName === 'BUTTON' || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) {
 						continue;
 					}
 
@@ -100,12 +100,16 @@ var log = function(m, t) {
 								o[field.name] = field.options[j].value;
 							}
 						}
-					} else if ((field.type !== 'checkbox' && field.type !== 'radio') || field.checked) {
+					} else if (field.type !== 'checkbox' && field.type !== 'radio') {
 						o[field.name] = field.value;
+					} else if (field.checked) {
+						if (o[field.name]) {
+							o[field.name].push(field.value);
+						} else {
+							o[field.name] = [field.value];
+						}
 					}
-
 				}
-
 			}
 			return o;
 		},
@@ -136,6 +140,23 @@ var log = function(m, t) {
 					}
 				}
 			}
+		},
+		createOverlay: function() {
+			var overlay = o('<div>');
+
+			overlay.attr('id', 'overlay');
+			overlay.on('click', atheos.alert.unload);
+			overlay.on('click', atheos.modal.unload);
+
+			// overlay.on('click', function(event) {
+			// 	if (event.target.id !== 'modal_overlay') {
+			// 		return;
+			// 	}
+			// 	modal.unload();
+			// }, false);
+
+			document.body.appendChild(overlay.el);
+			return overlay;
 		},
 		//////////////////////////////////////////////////////////////////////
 		// Load Script: Used to add new JS to the page.
@@ -202,33 +223,17 @@ var log = function(m, t) {
 
 })(this);
 
-(function(global) {
-	'use strict';
+// (function(global) {
+// 	'use strict';
 
-	var atheos = global.atheos,
-		ajax = global.ajax,
-		o = global.onyx;
+// 	var atheos = global.atheos,
+// 		ajax = global.ajax,
+// 		o = global.onyx;
 
-	atheos.common = {
+// 	atheos.common = {
 
 
-		createOverlay: function() {
-			var overlay = o('<div>');
 
-			overlay.attr('id', 'overlay');
-			overlay.on('click', atheos.alert.unload);
-			overlay.on('click', atheos.modal.unload);
+// 	};
 
-			// overlay.on('click', function(event) {
-			// 	if (event.target.id !== 'modal_overlay') {
-			// 		return;
-			// 	}
-			// 	modal.unload();
-			// }, false);
-
-			document.body.appendChild(overlay.el);
-			return overlay;
-		},
-	};
-
-})(this);
+// })(this);
