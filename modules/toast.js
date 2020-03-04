@@ -81,7 +81,7 @@
 		},
 
 		showToast: function(options) {
-			options = atheos.helpers.extend(this.settings, options);
+			options = atheos.common.extend(this.settings, options);
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
