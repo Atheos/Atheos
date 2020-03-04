@@ -79,16 +79,20 @@ switch ($_GET['action']) {
 		}
 
 		?>
+		<h1><i class="fas fa-archive"></i><?php i18n("Project List"); ?></h1>
+
 		<form>
-			<label><?php i18n("Project List"); ?></label>
 			<div id="project-list">
 				<table>
 					<tr>
-						<th id="project-list-open"><?php i18n("Open"); ?></th>
+						<th class="action"><?php i18n("Open"); ?></th>
 						<th><?php i18n("Project Name"); ?></th>
 						<th><?php i18n("Path"); ?></th>
 						<?php if (checkAccess()) {
-							?><th><?php i18n("Delete"); ?></th><?php
+							?>
+							<th class="action"><?php i18n("Delete"); ?></th>
+							<th class="action"><?php i18n("Rename"); ?></th>
+							<?php
 						} ?>
 					</tr>
 					<?php
@@ -104,20 +108,23 @@ switch ($_GET['action']) {
 						if ($show) {
 							?>
 							<tr>
-								<td><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="fas fa-archive"></a></td>
+								<td class="action"><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="fas fa-archive"></a></td>
 								<td><?php echo($data['name']); ?></td>
 								<td><?php echo($data['path']); ?></td>
 								<?php
 								if (checkAccess()) {
 									if ($_SESSION['project'] == $data['path']) {
 										?>
-										<td><a onclick="codiad.toast.error('Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+										<td class="action"><a onclick="codiad.toast.error('Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
 										<?php
 									} else {
 										?>
-										<td><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-trash-alt"></a></td>
+										<td class="action"><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-trash-alt"></a></td>
 										<?php
 									}
+									?>
+									<td class="action"><a onclick="codiad.project.rename('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-pencil-alt"></a></td>
+									<?php
 								}
 								?>
 							</tr>

@@ -80,7 +80,7 @@
 		"title": "Rename Project",
 		"icon": "fas fa-pencil-alt",
 		"applies-to": "root-only",
-		"onclick": "atheos.project.rename($('#context-menu').attr('data-path'),$('#context-menu').attr('data-name'));"
+		"onclick": "atheos.project.rename($('#context-menu').attr('data-name'),$('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",

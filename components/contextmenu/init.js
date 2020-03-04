@@ -77,7 +77,7 @@
 			if (node) {
 				var path = node.attr('data-path'),
 					type = node.attr('data-type'),
-					name = node.html();
+					name = node.find('span')[0].html();
 
 				node.addClass('context-menu-active');
 

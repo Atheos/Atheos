@@ -7,16 +7,9 @@ $tab-color: #3E50B4;
 	// max-height: 50vh;
 	// overflow: auto;
 	// margin: 15px 0;
-}
-
-#project-list-open {
-	padding-left: 5px;
-	text-align: center;
-	padding-right: 5px;
-}
-
-.project-wrapper {
-	width: 100%;
+	.action {
+		text-align: center;
+	}
 }
 
 .project-list-title {
@@ -30,6 +23,15 @@ $tab-color: #3E50B4;
 	// box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;
 	// box-shadow: $box-shadow;
 	overflow: hidden;
+
+	h2 {
+		float: left;
+		font-size: 15px;
+		font-weight: 500;
+		color: #ffffff;
+		display: block;
+		margin: 10px;
+	}
 
 	a {
 		display: block;
@@ -45,15 +47,8 @@ $tab-color: #3E50B4;
 
 		}
 	}
-}
 
-.project-list-title h2 {
-	float: left;
-	font-size: 15px;
-	font-weight: 500;
-	color: #ffffff;
-	display: block;
-	margin: 10px;
+
 }
 
 .sb-project-list {
