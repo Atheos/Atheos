@@ -43,6 +43,8 @@
 		settings: {
 			leftLockedVisible: true,
 			rightLockedVisible: false,
+			leftOpenOnClick: false,
+			rightOpenOnClick: false,
 			isLeftSidebarOpen: true,
 			isRightSidebarOpen: false,
 			leftSidebarClickOpen: false,
@@ -75,8 +77,8 @@
 			this.sbRight.init();
 
 
-			sidebars.leftSidebarClickOpen = atheos.storage('sidebars.leftSidebarClickOpen');
-			sidebars.rightSidebarClickOpen = atheos.storage('sidebars.rightSidebarClickOpen');
+			sidebars.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
+			sidebars.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
 
 			if (atheos.storage('sidebars.leftLockedVisible') === false) {
 				oX('#sb-left-lock').trigger('click');
@@ -135,7 +137,7 @@
 				});
 
 				this.handle.on('click', function() {
-					if (sidebars.settings.leftSidebarClickOpen) { // if trigger set to Hover
+					if (sidebars.settings.leftOpenOnClick) { // if trigger set to Click
 						sidebars.sbLeft.open();
 					}
 				});
@@ -144,7 +146,9 @@
 					sidebars.sbLeft.close();
 				});
 				this.sidebar.on('mouseover', function() {
-					sidebars.sbLeft.open();
+					if (!sidebars.settings.leftOpenOnClick) { // if trigger set to Hover
+						sidebars.sbLeft.open();
+					}
 				});
 			},
 			open: function() {
@@ -228,7 +232,7 @@
 				});
 
 				this.handle.on('click', function() {
-					if (sidebars.settings.rightSidebarClickOpen) { // if trigger set to Hover
+					if (sidebars.settings.rightOpenOnClick) { // if trigger set to Click
 						sidebars.sbRight.open();
 					}
 				});
@@ -236,7 +240,9 @@
 					sidebars.sbRight.close();
 				});
 				this.sidebar.on('mouseover', function() {
-					sidebars.sbRight.open();
+					if (!sidebars.settings.rightOpenOnClick) { // if trigger set to Click
+						sidebars.sbRight.open();
+					}
 				});
 			},
 			open: function() {
@@ -338,7 +344,7 @@
 				var width = oX('#sb-' + side).clientWidth();
 				width = width > 14 ? width : 15;
 
-				atheos.storage.set('sidebars.sb-' + side + '-width', width);
+				atheos.storage('sidebars.sb-' + side + '-width', width);
 
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
