@@ -59,7 +59,7 @@
 				if (focus) this.focus(path);
 				return;
 			}
-			var ext = codiad.helpers.getNodeExtension(path);
+			var ext = codiad.common.getNodeExtension(path);
 			var mode = codiad.editor.selectMode(ext);
 			var fn = function() {
 				//var Mode = require('ace/mode/' + mode)
@@ -90,7 +90,7 @@
 			};
 
 			// Assuming the mode file has no dependencies
-			codiad.helpers.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
+			codiad.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
 				fn);
 		},
 
@@ -682,7 +682,7 @@
 				var newSession = this.sessions[newPath];
 
 				// Change Editor Mode
-				var ext = codiad.helpers.getNodeExtension(newPath);
+				var ext = codiad.common.getNodeExtension(newPath);
 				var mode = codiad.editor.selectMode(ext);
 
 				// handle async mode change
