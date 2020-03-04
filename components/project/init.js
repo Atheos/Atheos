@@ -185,7 +185,8 @@
 					};
 					if (projectPath.indexOf('/') === 0) {
 						atheos.alert.show({
-							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
+							banner: 'Do you really want to create a project with an absolute path?',
+							data: projectPath,
 							positive: {
 								message: 'Yes',
 								fnc: function() {
@@ -208,9 +209,10 @@
 		// Rename Project
 		//////////////////////////////////////////////////////////////////
 
-		rename: function(path, name) {
+		rename: function(name, path) {
 			var _this = this;
 			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
+			
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
