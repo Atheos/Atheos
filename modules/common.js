@@ -38,11 +38,6 @@ var log = function(m, t) {
 
 	atheos.common = {
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Helpers Initialized');
-			}
-		},
 
 		//////////////////////////////////////////////////////////////////
 		// Return the node name (sans path)
