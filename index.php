@@ -72,7 +72,6 @@ if (isset($_SESSION['theme'])) {
 
 <body>
 	<script>
-		Error.stackTraceLimit = undefined //unlimited stack trace
 		var i18n = (function(lang) {
 			return function(word, args) {
 				var x;
@@ -129,7 +128,7 @@ if (isset($_SESSION['theme'])) {
 					<input type="password" name="password" autocomplete="current-password">
 					<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
-					<div class="language-selector">
+					<div id="login_options">
 						<label><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
 						<select name="theme" id="theme">
 							<?php
@@ -168,7 +167,7 @@ if (isset($_SESSION['theme'])) {
 
 					<button><?php i18n("Login"); ?></button>
 
-					<a class="show-language-selector"><?php i18n("More"); ?></a>
+					<a id="show_login_options"><?php i18n("More"); ?></a>
 				</fieldset>
 			</form>
 		</div>
