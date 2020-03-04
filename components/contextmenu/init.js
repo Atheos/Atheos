@@ -150,7 +150,7 @@
 				});
 
 				/* Notify listeners. */
-				amplify.publish('contextmenu.onShow', {
+				amplify.publish('contextmenu.show', {
 					path: path,
 					type: type
 				});
@@ -163,15 +163,12 @@
 		},
 
 		hide: function() {
-			console.trace('test');
 			o('#context-menu').hide();
 			var active = o('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');
 			}
-			amplify.publish('contextMenu.onHide');
-			amplify.publish('context-menu.onHide');
-
+			amplify.publish('contextmenu.hide');
 		},
 
 

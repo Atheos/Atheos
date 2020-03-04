@@ -34,8 +34,6 @@
 		init: function() {
 			global.codiad.message = global.atheos.toast;
 
-
-
 			//////////////////////////////////////////////////////////////////////
 			// File-Manager
 			//////////////////////////////////////////////////////////////////////
@@ -52,13 +50,7 @@
 				return atheos.common.getNodeType(path);
 			};
 		}
-
-
 	};
-
-
-
-
 
 	$.loadScript = function(url, arg1, arg2) {
 		console.warn('$.loadScript is depreciated, please use "atheos.common.loadScript"');
@@ -70,9 +62,12 @@
 		atheos.keybind.bind(key, callback, args);
 	};
 
-
-	amplify.subscribe('contextmenu.onShow', function(obj) {
-		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextMenu');
+	amplify.subscribe('contextmenu.show', function(obj) {
+		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.show');
 		amplify.publish('context-menu.onShow', obj);
 	});
+	amplify.subscribe('contextmenu.hide', function(obj) {
+		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.hide');
+		amplify.publish('context-menu.onHide', obj);
+	});	
 })(this);
