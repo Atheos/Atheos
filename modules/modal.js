@@ -52,12 +52,6 @@
 			isModalVisible: false
 		},
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Modal Initialized');
-			}
-		},
-
 		create: function() {
 			var modal = atheos.modal;
 			var wrapper = oX('<div>'),

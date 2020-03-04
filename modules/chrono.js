@@ -24,10 +24,7 @@
 		mega: '',
 		giga: '',
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Chronometer Initialized');
-			}
+		init: function() {
 			var chrono = this;
 			chrono.kilo = setInterval(function() {
 				amplify.publish('chrono.kilo');

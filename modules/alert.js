@@ -26,12 +26,6 @@
 
 	atheos.alert = {
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Alert Initialized');
-			}
-		},
-
 		create: function(text, type) {
 			var element = oX('<div>'),
 				// drag = oX('<i>'),

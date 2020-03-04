@@ -639,7 +639,7 @@
 			});
 
 			atheos.modal.ready.then(function() {
-				o('#modal_content form').once('submit', function(e) {
+				o('#modal_content form').on('submit', function(e) {
 					e.preventDefault();
 					var newName = o('#modal_content form input[name="object_name"]').value();
 					// Build new path
