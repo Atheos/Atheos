@@ -94,7 +94,7 @@
 			ajax({
 				url: this.controller + '?action=authenticate',
 				type: 'post',
-				data: atheos.helpers.serializeForm(this.loginForm.el),
+				data: atheos.common.serializeForm(this.loginForm.el),
 				success: function(response) {
 					response = JSON.parse(response);
 					if (response.status !== 'error') {
@@ -220,7 +220,7 @@
 				oX('#modal_content').on('submit', function(e) {
 					e.preventDefault();
 
-					data = atheos.helpers.serializeForm(oX('#modal_content form').el);
+					data = atheos.common.serializeForm(oX('#modal_content form').el);
 					data.action = 'setUserACL';
 
 					if (data.access_level === 0) {
