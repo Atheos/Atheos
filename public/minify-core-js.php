@@ -26,7 +26,7 @@ $files = [
 	"modules/alert.js",
 	"modules/chronometer.js",
 	"modules/codiad.js",
-	"modules/helpers.js",
+	"modules/common.js",
 	"modules/jsend.js",
 	"modules/keybind.js",
 	"modules/modal.js",
