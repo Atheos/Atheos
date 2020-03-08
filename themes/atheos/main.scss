@@ -15,8 +15,6 @@
 @import "modules/input/checkbox", "modules/input/button";
 @import "modules/misc/tables";
 
-@import "modules/user/login";
-
 @import "modules/project", "modules/settings", "modules/user", "modules/sidebar";
  
 /* WEBKIT SCROLLBARS */
@@ -27,13 +25,14 @@
 
 ::-webkit-scrollbar-track-piece {
 	background-color: #333;
-	-webkit-border-radius: $border-radius;
+	@include border-radius;
+
 }
 
 ::-webkit-scrollbar-thumb:vertical {
 	height: 5px;
 	background-color: #666;
-	-webkit-border-radius: $border-radius;
+	@include border-radius;
 }
 
 ::-webkit-scrollbar-thumb:vertical:hover {
@@ -43,7 +42,7 @@
 ::-webkit-scrollbar-thumb:horizontal {
 	width: 5px;
 	background-color: #666;
-	-webkit-border-radius: $border-radius;
+	@include border-radius;
 }
 
 ::-webkit-scrollbar-thumb:horizontal:hover {

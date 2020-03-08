@@ -1,15 +1,10 @@
 /* SCSS VARIABLES */
-$box-shadow: none;
-$border-radius: 0;
 $tab-color: #3E50B4;
 
 #project-list {
 	// max-height: 50vh;
 	// overflow: auto;
 	// margin: 15px 0;
-	.action {
-		text-align: center;
-	}
 }
 
 .project-list-title {
@@ -20,9 +15,8 @@ $tab-color: #3E50B4;
 	// right: 0px;
 	height: 35px;
 	background-color: #303030;
-	// box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;
-	// box-shadow: $box-shadow;
 	overflow: hidden;
+	@include box-shadow;
 
 	h2 {
 		float: left;
@@ -78,8 +72,7 @@ $tab-color: #3E50B4;
 .sb-projects-content ul li {
 	padding: 5px;
 	white-space: nowrap;
-	// border-radius: 3px;
-	border-radius: $border-radius;
+	@include border-radius;
 }
 
 .sb-projects-content ul li .icon {

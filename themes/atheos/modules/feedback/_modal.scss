@@ -11,7 +11,8 @@
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
-	border: 3px solid rgba(255, 255, 255, 0.5);
+	border: $border-thick;
+	@include border-radius;
 }
 
 #modal_content {
@@ -24,10 +25,10 @@
 		font-size: 24px;
 		padding: 2px 8px;
 		font-weight: 700;
-		border-bottom: 3px solid #aaa;
 
 		i {
 			margin-right: 5px;
+			display:none;
 		}
 	}
 
