@@ -205,7 +205,7 @@ class Common {
 		if (pathinfo($file, PATHINFO_EXTENSION) == 'php') {
 			$data = "<?php\r\n/*|" . json_encode($data) . "|*/\r\n?>";
 		} else {
-			$data = json_encode($data);
+			$data = json_encode($data, JSON_PRETTY_PRINT);
 		}
 		$write = fopen($path . $file, 'w') or die("can't open file ".$path.$file);
 		fwrite($write, $data);
