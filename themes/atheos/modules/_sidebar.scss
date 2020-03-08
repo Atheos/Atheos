@@ -40,8 +40,8 @@ $sidebar-handle-width: 15px;
 	right: 15px;
 	height: 35px;
 	background-color: #303030;
-	/*box-shadow: 0 0 10px 0 rgba(0, 0, 0, 0.898) inset;*/
 	overflow: hidden;
+	@include box-shadow;
 }
 
 #sb-left-title.active {
@@ -189,14 +189,6 @@ $sidebar-handle-width: 15px;
 	float: left;
 }
 
-// .sb-right-content {
-// 	width: 185px;
-// 	float: left;
-// 	height: 100%;
-// 	padding: 40px 15px 15px;
-// 	overflow: auto;
-// }
-
 .sb-right-content {
 	position: absolute;
 	min-width: 185px;
@@ -223,7 +215,7 @@ $sidebar-handle-width: 15px;
 	min-width: 100%;
 	cursor: pointer;
 	padding: 5px;
-	border-radius: $border-radius;
+	@include border-radius;
 }
 
 #sb-right a i {
