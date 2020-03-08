@@ -21,7 +21,7 @@ if (!isset($_GET['action'])) {
 switch ($_GET['action']) {
 	case "settings":
 		?>
-		<h1><i class="fas fa-cog"></i>Settings</h1>
+		<h1><i class="fas fa-cog"></i><?php i18n("Settings"); ?></h1>
 
 		<div id="settings">
 			<!--<div class="panels-components">-->
