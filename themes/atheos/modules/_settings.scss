@@ -1,8 +1,6 @@
 #settings {
-	display: -webkit-flex;
-	display: -webkit-box;
-	display: -ms-flexbox;
 	display: flex;
+	border-top: $border-thin;
 
 	.big-icon {
 		font-size: 100%;
@@ -17,11 +15,6 @@
 		li a {
 			display: block;
 			padding: 10px;
-			font-size: 16px;
-			-webkit-user-select: none;
-			-moz-user-select: none;
-			-ms-user-select: none;
-			-o-user-select: none;
 			user-select: none;
 
 			i {
@@ -40,6 +33,6 @@
 		overflow: auto;
 		overflow-y: scroll;
 		height: 500px;
-		border-left: 3px solid #aaa;
+		border-left: $border-thin;
 	}
 }
