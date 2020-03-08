@@ -1,0 +1,37 @@
+/* INSTALLER */
+#installer {
+	position: absolute;
+	width: 450px;
+	top: 15%;
+	left: 50%;
+	margin-left: -175px;
+	padding: 35px;
+	overflow: auto;
+}
+
+#installer h1 {
+	font-size: 24px;
+	margin: 0 0 15px;
+}
+
+#installer hr {
+	height: 0;
+	border: none;
+	border-top: 1px solid #ccc;
+	margin: 20px 0;
+}
+
+.install_issues {
+	background: $input-background;
+	padding: 10px;
+	margin: 10px 0 5px;
+	@extend %border-radius;
+	font-family: monospace;
+	/*box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);*/
+	overflow: auto;
+}
+
+.install_issues p {
+	padding: 0;
+	margin: 0;
+}

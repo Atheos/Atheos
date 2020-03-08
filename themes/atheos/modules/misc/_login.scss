@@ -26,4 +26,20 @@
 			font-size: 1rem;
 		}
 	}
+
+	#login_options {
+		position: relative;
+		display: none;
+	}
+
+	#show_login_options {
+		display: block;
+		float: right;
+		color: #666;
+		margin: 10px 0 0;
+
+		&:hover {
+			color: #fff;
+		}
+	}
 }

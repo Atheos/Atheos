@@ -1,6 +1,7 @@
 /* SCSS VARIABLES */
-$box-shadow: none;
-$border-radius: 0;
+$border-thin: 1px solid $grey;
+$border-thick: 3px solid $grey;
+
 $icon-color: $base07;
 $accent-color: $blue;
 $tab-color:$accent-color;
@@ -24,3 +25,20 @@ $transition-duration: 0.2s;
 // #999 -> $font-color-subtle
 
 $font-size-icon-medium: 20px;
+
+
+@mixin box-shadow {
+	// box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);
+}
+
+@mixin border-radius {
+	// border-radius: 30px;
+}
+
+@mixin border($size: 1px, $direction: 0) {
+	@if $direction !=0 {
+		border-#{$direction}: $size solid $grey;
+	} @else {
+		border: $size solid $grey;
+	}
+}
