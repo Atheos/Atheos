@@ -178,17 +178,30 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 
 	public static function getJSON($file, $namespace = "") {
-		$path = DATA . "/";
-		if ($namespace != "") {
-			$path = $path . $namespace . "/";
-			$path = preg_replace('#/+#', '/', $path);
+		$json = false;
+
+		$path = DATA . "/" . $namespace . "/";
+		$path = preg_replace('#/+#', '/', $path);
+
+		$file = pathinfo($file, PATHINFO_FILENAME);
+
+		if (is_readable($path . $file . '.json')) {
+			$json = file_get_contents($path . $file . '.json');
+		} elseif (is_readable($path . $file . '.php')) {
+			$json = file_get_contents($path . $file . '.php');
+			$json = str_replace(["\n\r", "\r", "\n"], "", $json);
+			$json = str_replace("|*/?>", "", str_replace("<?php/*|", "", $json));
+			saveJSON($file . ".json", json_decode($json, true), $namespace);
 		}
 
-		$json = file_get_contents($path . $file);
-		$json = str_replace(["\n\r", "\r", "\n"], "", $json);
-		$json = str_replace("|*/?>", "", str_replace("<?php/*|", "", $json));
-		$json = json_decode($json, true);
-		return $json;
+		if (is_file($path . $file . ".json") && is_file($path . $file . ".php")) {
+			unlink($path . $file . ".php");
+		}
+
+		if ($json) {
+			$json = json_decode($json, true);
+			return $json;
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -196,18 +209,16 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 
 	public static function saveJSON($file, $data, $namespace = "") {
-		$path = DATA . "/";
-		if ($namespace != "") {
-			$path = $path . $namespace . "/";
-			$path = preg_replace('#/+#', '/', $path);
-			if (!is_dir($path)) mkdir($path);
-		}
-		if (pathinfo($file, PATHINFO_EXTENSION) == 'php') {
-			$data = "<?php\r\n/*|" . json_encode($data) . "|*/\r\n?>";
-		} else {
-			$data = json_encode($data, JSON_PRETTY_PRINT);
-		}
-		$write = fopen($path . $file, 'w') or die("can't open file ".$path.$file);
+		$path = DATA . "/" . $namespace . "/";
+		$path = preg_replace('#/+#', '/', $path);
+
+		if (!is_dir($path)) mkdir($path);
+
+		$file = pathinfo($file, PATHINFO_FILENAME) . ".json";
+
+		$data = json_encode($data, JSON_PRETTY_PRINT);
+
+		$write = fopen($path . $file, 'w') or die("can't open file: " . $path . $file);
 		fwrite($write, $data);
 		fclose($write);
 	}
