@@ -1,6 +1,6 @@
 <?php
 // Right Bar
-$right_bar = file_get_contents(COMPONENTS . "/right_bar.json");
+$right_bar = file_get_contents(COMPONENTS . "/sidebars/right_bar.json");
 $right_bar = json_decode($right_bar, true);
 ?>
 <div id="sb-right" class="sidebar">
