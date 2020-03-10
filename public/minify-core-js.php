@@ -30,7 +30,6 @@ $files = [
 	"modules/jsend.js",
 	"modules/keybind.js",
 	"modules/modal.js",
-	"modules/sidebars.js",
 	"modules/storage.js",
 	"modules/toast.js",
 	"modules/types.js"
