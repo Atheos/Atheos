@@ -39,6 +39,10 @@
 		amplify = global.amplify,
 		oX = global.onyx;
 
+	amplify.subscribe('atheos.loaded', function(settings) {
+		atheos.sidebars.init();
+	});
+
 	atheos.sidebars = {
 		settings: {
 			leftLockedVisible: true,
