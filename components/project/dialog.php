@@ -45,13 +45,13 @@ switch ($_GET['action']) {
 				if ($show) {
 					if ($_GET['trigger'] == 'true') {
 						?>
-						<li onclick="codiad.project.open('<?php echo($data['path']); ?>');"><div class="icon-archive icon"></div>
+						<li onclick="codiad.project.open('<?php echo($data['path']); ?>');"><i class="fas fa-archive"></i>
 							<?php echo($data['name']); ?></li>
 
 						<?php
 					} else {
 						?>
-						<li ondblclick="codiad.project.open('<?php echo($data['path']); ?>');"><div class="icon-archive icon"></div>
+						<li ondblclick="codiad.project.open('<?php echo($data['path']); ?>');"><i class="fas fa-archive"></i>
 							<?php echo($data['name']); ?></li>
 
 						<?php
@@ -79,17 +79,22 @@ switch ($_GET['action']) {
 		}
 
 		?>
-		<label><?php i18n("Project List"); ?></label>
-		<div id="project-list">
-			<table>
-				<tr>
-					<th id="project-list-open"><?php i18n("Open"); ?></th>
-					<th><?php i18n("Project Name"); ?></th>
-					<th><?php i18n("Path"); ?></th>
-					<?php if (checkAccess()) {
-						?><th><?php i18n("Delete"); ?></th><?php
-					} ?>
-				</tr>
+		<h1><i class="fas fa-archive"></i><?php i18n("Project List"); ?></h1>
+
+		<form>
+			<div id="project-list">
+				<table>
+					<tr>
+						<th class="action"><?php i18n("Open"); ?></th>
+						<th><?php i18n("Project Name"); ?></th>
+						<th><?php i18n("Path"); ?></th>
+						<?php if (checkAccess()) {
+							?>
+							<th class="action"><?php i18n("Delete"); ?></th>
+							<th class="action"><?php i18n("Rename"); ?></th>
+							<?php
+						} ?>
+					</tr>
 					<?php
 
 					// Get projects JSON data
@@ -103,20 +108,23 @@ switch ($_GET['action']) {
 						if ($show) {
 							?>
 							<tr>
-								<td><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="icon-folder bigger-icon"></a></td>
+								<td class="action"><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="fas fa-archive"></a></td>
 								<td><?php echo($data['name']); ?></td>
 								<td><?php echo($data['path']); ?></td>
 								<?php
 								if (checkAccess()) {
 									if ($_SESSION['project'] == $data['path']) {
 										?>
-										<td><a onclick="codiad.toast.error('Active Project Cannot Be Removed');" class="icon-block bigger-icon"></a></td>
+										<td class="action"><a onclick="codiad.toast.error('Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
 										<?php
 									} else {
 										?>
-										<td><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="icon-cancel-circled bigger-icon"></a></td>
+										<td class="action"><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-trash-alt"></a></td>
 										<?php
 									}
+									?>
+									<td class="action"><a onclick="codiad.project.rename('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-pencil-alt"></a></td>
+									<?php
 								}
 								?>
 							</tr>
@@ -126,11 +134,10 @@ switch ($_GET['action']) {
 					?>
 				</table>
 			</div>
-		</div>
-		<?php if (checkAccess()) {
-			?><button class="btn-left" onclick="codiad.project.create();"><?php i18n("New Project"); ?></button><?php
-		} ?>
-		<button class="<?php if (checkAccess()) { echo('btn-right'); } ?>" onclick="codiad.modal.unload();return false;"><?php i18n("Close"); ?></button>
+			<?php if (checkAccess()) {
+				?><button class="btn-left" onclick="codiad.project.create();"><?php i18n("New Project"); ?></button><?php
+			} ?>
+		</form>
 		<?php
 
 		break;
@@ -176,43 +183,45 @@ switch ($_GET['action']) {
 			<button class="btn-left"><?php i18n("Create Project"); ?></button>
 			<button onclick="$('#git-clone').slideDown(300); $(this).hide(); return false;" class="btn-mid"><?php i18n("...From Git Repo"); ?></button>
 			<button class="btn-right" onclick="<?php echo $action; ?>return false;"><?php i18n("Cancel"); ?></button>
-			<form>
-				<?php
-				break;
+		</form>
+		<?php
+		break;
 
-				//////////////////////////////////////////////////////////////////
-				// Rename
-				//////////////////////////////////////////////////////////////////
-				case 'rename':
-					?>
-					<form>
-						<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
-						<label><span class="icon-pencil"></span><?php i18n("Rename Project"); ?></label>
-						<input type="text" name="project_name" autofocus="autofocus" autocomplete="off" value="<?php echo($_GET['name']); ?>">
-						<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
-						<form>
-							<?php
-							break;
+	//////////////////////////////////////////////////////////////////
+	// Rename
+	//////////////////////////////////////////////////////////////////
+	case 'rename':
+		?>
+		<form>
+			<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
+			<label><i class="fas fa-pencil-alt"></i><?php i18n("Rename Project"); ?></label>
+			<input type="text" name="project_name" autofocus="autofocus" autocomplete="off" value="<?php echo($_GET['name']); ?>">
+			<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+		</form>
+		<?php
+		break;
 
-							//////////////////////////////////////////////////////////////////////
-							// Delete Project
-							//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////
+	// Delete Project
+	//////////////////////////////////////////////////////////////////////
 
-							case 'delete':
+	case 'delete':
 
-								?>
-								<form>
-									<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
-									<label><?php i18n("Confirm Project Deletion"); ?></label>
-									<pre><?php i18n("Name:"); ?> <?php echo($_GET['name']); ?>, <?php i18n("Path:") ?> <?php echo($_GET['path']); ?></pre>
-									<table>
-										<tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
-										<tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>
-									</table>
-									<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="codiad.project.list();return false;"><?php i18n("Cancel"); ?></button>
-									<?php
-									break;
+		?>
+		<form>
+			<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
+			<label><?php i18n("Confirm Project Deletion"); ?></label>
+			<pre><?php i18n("Name:"); ?> <?php echo($_GET['name']); ?>, <?php i18n("Path:") ?> <?php echo($_GET['path']); ?></pre>
+			<table>
+				<tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
+				<tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>
+			</table>
+			<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="codiad.project.list();return false;"><?php i18n("Cancel"); ?></button>
+		</form>
 
-								}
+		<?php
+		break;
 
-								?>
+}
+
+?>

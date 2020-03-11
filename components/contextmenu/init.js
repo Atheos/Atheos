@@ -20,7 +20,6 @@
 	// 'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		ajax = global.ajax,
 		o = global.onyx;
 
 	amplify.subscribe('atheos.loaded', function(settings) {
@@ -78,7 +77,7 @@
 			if (node) {
 				var path = node.attr('data-path'),
 					type = node.attr('data-type'),
-					name = node.html();
+					name = node.find('span')[0].html();
 
 				node.addClass('context-menu-active');
 
@@ -127,6 +126,7 @@
 				menu.attr('data-path', path);
 				menu.attr('data-type', type);
 				menu.attr('data-name', name);
+
 				// Show faded 'paste' if nothing in clipboard
 				if (this.clipboard === '') {
 					$('#context-menu a[content="Paste"]').addClass('disabled');
@@ -134,28 +134,23 @@
 					$('#context-menu a[data-action="paste"]').removeClass('disabled');
 				}
 
-				// Hide menu
-				// $('#file-manager, #editor-region')
-				//     .on('mouseover', function() {
-				//         _this.contextMenuHide();
-				//     });
-
 				var contextMenu = this;
 
 				var hideContextMenu;
-				$('#context-menu').on('mouseleave', function() {
+				o('#context-menu').on('mouseout', function() {
 					hideContextMenu = setTimeout(function() {
 						contextMenu.hide();
 					}, 500);
 				});
-				$('#context-menu').on('mouseover', function() {
+
+				o('#context-menu').on('mouseover', function() {
 					if (hideContextMenu) {
 						clearTimeout(hideContextMenu);
 					}
 				});
 
 				/* Notify listeners. */
-				amplify.publish('contextmenu.onShow', {
+				amplify.publish('contextmenu.show', {
 					path: path,
 					type: type
 				});
@@ -168,11 +163,12 @@
 		},
 
 		hide: function() {
-			$('#context-menu').fadeOut(200);
-			$('#file-manager a').removeClass('context-menu-active');
-			amplify.publish('contextMenu.onHide');
-			amplify.publish('context-menu.onHide');
-
+			o('#context-menu').hide();
+			var active = o('#file-manager a.context-menu-active');
+			if (active) {
+				active.removeClass('context-menu-active');
+			}
+			amplify.publish('contextmenu.hide');
 		},
 
 

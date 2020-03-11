@@ -42,12 +42,6 @@
 			close: null
 		},
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Toast Initialized');
-			}
-		},
-
 		createContainer: function() {
 			var container = document.createElement('div');
 			container.id = 'toast-container';
@@ -81,7 +75,7 @@
 		},
 
 		showToast: function(options) {
-			options = atheos.helpers.extend(this.settings, options);
+			options = atheos.common.extend(this.settings, options);
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
@@ -98,7 +92,6 @@
 					}, options.stayTime);
 				}
 			}, 10);
-
 
 			return wrapper;
 		},
