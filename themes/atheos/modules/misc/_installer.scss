@@ -7,25 +7,26 @@
 	margin-left: -175px;
 	padding: 35px;
 	overflow: auto;
-}
 
-#installer h1 {
-	font-size: 24px;
-	margin: 0 0 15px;
-}
 
-#installer hr {
-	height: 0;
-	border: none;
-	border-top: 1px solid #ccc;
-	margin: 20px 0;
+	h1 {
+		font-size: 24px;
+		margin: 0 0 15px;
+	}
+
+	hr {
+		height: 0;
+		border: none;
+		margin: 20px 0;
+		@include border(1px, top);
+	}
 }
 
 .install_issues {
 	background: $input-background;
 	padding: 10px;
 	margin: 10px 0 5px;
-	@extend %border-radius;
+	@include border-radius;
 	font-family: monospace;
 	/*box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);*/
 	overflow: auto;
