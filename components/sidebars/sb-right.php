@@ -7,8 +7,8 @@ $right_bar = json_decode($right_bar, true);
 
 	<div id="sb-right-handle">
 		<span>|||</span>
-
 	</div>
+
 	<div id="sb-right-title">
 		<i id="sb-right-lock" class="fas fa-unlock"></i>
 	</div>
@@ -31,7 +31,7 @@ $right_bar = json_decode($right_bar, true);
 				}
 			} elseif ($data['title'] != 'break' && $data['title'] != 'pluginbar' && $data['onclick'] == '') {
 				if (!$data['admin'] || $data['admin'] && checkAccess()) {
-					echo("<div class='sb-right-category'>".get_i18n($data['title'])."</div>");
+					echo("<div class=\"sb-right-category\">" . i18n($data["title"], "return") . "</div>");
 				}
 			} elseif ($data['title'] == 'pluginbar') {
 				if (!$data['admin'] || $data['admin'] && checkAccess()) {
@@ -43,7 +43,7 @@ $right_bar = json_decode($right_bar, true);
 								foreach ($pdata[0]['rightbar'] as $rightbar) {
 									if ((!isset($rightbar['admin']) || ($rightbar['admin']) && checkAccess()) || !$rightbar['admin']) {
 										if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
-											echo('<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.get_i18n($rightbar['title']).'</a>');
+											echo('<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.i18n($rightbar['title'], "return").'</a>');
 										}
 									}
 								}
@@ -54,7 +54,7 @@ $right_bar = json_decode($right_bar, true);
 				}
 			} else {
 				if (!$data['admin'] || $data['admin'] && checkAccess()) {
-					echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.get_i18n($data['title']).'</a>');
+					echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], "return").'</a>');
 				}
 			}
 		} ?>

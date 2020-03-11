@@ -61,7 +61,7 @@ switch ($_GET['action']) {
 				} ?>
 				<br><?php
 				if ($local['atheos_version'] != $remote['tag_name']) {
-					echo '<button class="btn-left" onclick="codiad.update.download();return false;">'.get_i18n("Download Atheos").'</button>&nbsp;';
+					echo '<button class="btn-left" onclick="codiad.update.download();return false;">'.i18n("Download Atheos").'</button>&nbsp;';
 				}
 				?><button class="btn-right" onclick="codiad.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
 				<form>
