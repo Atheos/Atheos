@@ -34,35 +34,27 @@
 		init: function() {
 			global.codiad.message = global.atheos.toast;
 
-
-
 			//////////////////////////////////////////////////////////////////////
 			// File-Manager
 			//////////////////////////////////////////////////////////////////////
 
 			atheos.filemanager.getShortName = function(path) {
-				return atheos.helpers.getNodeName(path);
+				return atheos.common.getNodeName(path);
 			};
 
 			atheos.filemanager.getExtension = function(path) {
-				return atheos.helpers.getNodeExtension(path);
+				return atheos.common.getNodeExtension(path);
 			};
 
 			atheos.filemanager.getType = function(path) {
-				return atheos.helpers.getNodeType(path);
+				return atheos.common.getNodeType(path);
 			};
 		}
-
-
 	};
 
-
-
-
-
 	$.loadScript = function(url, arg1, arg2) {
-		console.warn('$.loadScript is depreciated, please use "atheos.helpers.loadScript"');
-		atheos.helpers.loadScript(url, arg1, arg2);
+		console.warn('$.loadScript is depreciated, please use "atheos.common.loadScript"');
+		atheos.common.loadScript(url, arg1, arg2);
 	};
 
 	$.ctrl = function(key, callback, args) {
@@ -70,9 +62,12 @@
 		atheos.keybind.bind(key, callback, args);
 	};
 
-
-	amplify.subscribe('contextmenu.onShow', function(obj) {
-		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextMenu');
+	amplify.subscribe('contextmenu.show', function(obj) {
+		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.show');
 		amplify.publish('context-menu.onShow', obj);
 	});
+	amplify.subscribe('contextmenu.hide', function(obj) {
+		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.hide');
+		amplify.publish('context-menu.onHide', obj);
+	});	
 })(this);

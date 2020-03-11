@@ -81,7 +81,7 @@
 									</a>
 								</li></ul>`);
 						atheos.filemanager.openDir(response.path);
-						atheos.user.project(response.path);
+						atheos.user.saveActiveProject(response.path);
 						atheos.toast.success('Project Loaded');
 					}
 				}
@@ -105,7 +105,7 @@
 						if (atheos.modal.settings.isModalVisible) {
 							atheos.modal.unload();
 						}
-						atheos.user.project(path);
+						atheos.user.saveActiveProject(path);
 						localStorage.removeItem("lastSearched");
 						/* Notify listeners. */
 						amplify.publish('project.onOpen', path);
@@ -185,7 +185,8 @@
 					};
 					if (projectPath.indexOf('/') === 0) {
 						atheos.alert.show({
-							message: 'Do you really want to create project with absolute path "' + projectPath + '"?',
+							banner: 'Do you really want to create a project with an absolute path?',
+							data: projectPath,
 							positive: {
 								message: 'Yes',
 								fnc: function() {
@@ -208,9 +209,10 @@
 		// Rename Project
 		//////////////////////////////////////////////////////////////////
 
-		rename: function(path, name) {
+		rename: function(name, path) {
 			var _this = this;
 			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
+			
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
