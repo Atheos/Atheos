@@ -101,108 +101,108 @@ if (isset($_SESSION['theme'])) {
 		?>
 
 		<div id="workspace">
-		<?php require_once('components/sidebars/sb-left.php'); ?>
+			<?php require_once('components/sidebars/sb-left.php'); ?>
 
 
-		<div id="editor-region">
-			<div id="editor-top-bar">
-				<ul id="tab-list-active-files">
-				</ul>
-				<div id="tab-dropdown">
-					<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
+			<div id="editor-region">
+				<div id="editor-top-bar">
+					<ul id="tab-list-active-files">
+					</ul>
+					<div id="tab-dropdown">
+						<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
+					</div>
+					<div id="tab-close">
+						<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
+					</div>
+					<ul id="dropdown-list-active-files"></ul>
+					<div class="bar"></div>
 				</div>
-				<div id="tab-close">
-					<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
-				</div>
-				<ul id="dropdown-list-active-files"></ul>
-				<div class="bar"></div>
-			</div>
 
-			<div id="root-editor-wrapper"></div>
+				<div id="root-editor-wrapper"></div>
 
-			<div id="editor-bottom-bar">
-				<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
+				<div id="editor-bottom-bar">
+					<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
 
-				<?php
+					<?php
 
-				////////////////////////////////////////////////////////////
-				// Load Plugins
-				////////////////////////////////////////////////////////////
+					////////////////////////////////////////////////////////////
+					// Load Plugins
+					////////////////////////////////////////////////////////////
 
-				foreach ($plugins as $plugin) {
-					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-						$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-						$pdata = json_decode($pdata, true);
-						if (isset($pdata[0]['bottombar'])) {
-							foreach ($pdata[0]['bottombar'] as $bottommenu) {
-								if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
-									if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
-										echo('<div class="divider"></div>');
-										echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
+					foreach ($plugins as $plugin) {
+						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
+							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
+							$pdata = json_decode($pdata, true);
+							if (isset($pdata[0]['bottombar'])) {
+								foreach ($pdata[0]['bottombar'] as $bottommenu) {
+									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
+										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
+											echo('<div class="divider"></div>');
+											echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
+										}
 									}
 								}
 							}
 						}
-					}
-				} ?>
+					} ?>
 
-				<div class="divider"></div>
-				<a id="split" class="ico-wrapper"><i class="fas fa-column"></i><?php i18n("Split"); ?></a>
-				<div class="divider"></div>
-				<a id="current-mode"><i class="fas fa-column"></i></a>
-				<div class="divider"></div>
-				<div id="current-file"></div>
-				<div id="cursor-position">
-					<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
+					<div class="divider"></div>
+					<a id="split" class="ico-wrapper"><i class="fas fa-column"></i><?php i18n("Split"); ?></a>
+					<div class="divider"></div>
+					<a id="current-mode"><i class="fas fa-column"></i></a>
+					<div class="divider"></div>
+					<div id="current-file"></div>
+					<div id="cursor-position">
+						<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
+					</div>
 				</div>
+				<div id="changemode-menu" class="options-menu">
+				</div>
+				<ul id="split-options-menu" class="options-menu">
+					<li id="split-horizontally"><a> <?php i18n("Split Horizontally"); ?> </a></li>
+					<li id="split-vertically"><a> <?php i18n("Split Vertically"); ?> </a></li>
+					<li id="merge-all"><a> <?php i18n("Merge all"); ?> </a></li>
+				</ul>
 			</div>
-			<div id="changemode-menu" class="options-menu">
-			</div>
-			<ul id="split-options-menu" class="options-menu">
-				<li id="split-horizontally"><a> <?php i18n("Split Horizontally"); ?> </a></li>
-				<li id="split-vertically"><a> <?php i18n("Split Vertically"); ?> </a></li>
-				<li id="merge-all"><a> <?php i18n("Merge all"); ?> </a></li>
-			</ul>
+			<?php require_once('components/sidebars/sb-right.php'); ?>
+
 		</div>
-		<?php require_once('components/sidebars/sb-right.php'); ?>
-
-	</div>
 
 
-	<iframe id="download"></iframe>
+		<iframe id="download"></iframe>
 
-	<div id="autocomplete">
-		<ul id="suggestions"></ul>
-	</div>
+		<div id="autocomplete">
+			<ul id="suggestions"></ul>
+		</div>
 
-	<!-- ACE -->
-	<script src="components/editor/ace-editor/ace.js"></script>
-	<script src="components/editor/ace-editor/ext-language_tools.js"></script>
+		<!-- ACE -->
+		<script src="components/editor/ace-editor/ace.js"></script>
+		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
 
 
-	<!-- COMPONENTS -->
-	<?php
+		<!-- COMPONENTS -->
+		<?php
 
-	//////////////////////////////////////////////////////////////////
-	// LOAD COMPONENTS
-	//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		// LOAD COMPONENTS
+		//////////////////////////////////////////////////////////////////
 
-	// JS
-	foreach ($components as $component) {
-		if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
-			echo('<script src="components/'.$component.'/init.js"></script>"');
+		// JS
+		foreach ($components as $component) {
+			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
+				echo('<script src="components/'.$component.'/init.js"></script>"');
+			}
+		}
+
+		// require_once('plugins/minify-plugins-js.php');
+
+		foreach ($plugins as $plugin) {
+			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
+				echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
+			}
 		}
 	}
 
-	// require_once('plugins/minify-plugins-js.php');
-
-	foreach ($plugins as $plugin) {
-		if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
-			echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
-		}
-	}
-}
-
-?>
+	?>
 </body>
 </html>
