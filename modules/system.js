@@ -25,7 +25,7 @@
 	document.addEventListener('DOMContentLoaded', function() {
 
 		//Synthetic Login Overlay
-		if (document.querySelector('#login')) {
+		if (document.querySelector('#login') || document.querySelector('#installer')) {
 			global.synthetic.init();
 		} else {
 
