@@ -312,7 +312,7 @@
 				}
 				return element.getAttribute(k);
 			},
-			removeAttr: () => element.removeAttribute(k),
+			removeAttr: (k) => element.removeAttribute(k),
 			parent: () => onyx(element.parentNode),
 
 			siblings: function(s) {
