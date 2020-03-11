@@ -100,9 +100,9 @@ switch ($_GET['action']) {
 								ksort($markettype);
 								echo '<tr><th class="market-remote-title">';
 								if (!$remote) {
-									echo get_i18n("Installed");
+									echo i18n("Installed");
 								} else {
-									echo get_i18n("Available");
+									echo i18n("Available");
 								}
 								echo '</th></tr>';
 								foreach ($markettype as $type => $data) {
@@ -118,26 +118,26 @@ switch ($_GET['action']) {
 												$left = 0;
 												$right = 0;
 												echo '<div style="position:absolute;top:2px;left:'.($left+10).'px;"><a style="font-weight:bold;font-size:14px" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');return false;">'.$addon['name'].'</a></div>';
-												echo '<div style="position:absolute;top:15px;left:'.($left+10).'px;"><font style="font-size:10px">'.get_i18n(ucfirst(rtrim($type, 's'))).' - '.get_i18n(ucfirst($category)).' | <a style="font-weight:bold;text-decoration:underline;" onclick="codiad.market.openInBrowser(\'https://github.com/'.$addon['author'].'\');return false;">'.$addon['author'].'</a> | '.$addon['count'].' '.get_i18n("Users").'</font></div>';
+												echo '<div style="position:absolute;top:15px;left:'.($left+10).'px;"><font style="font-size:10px">'.i18n(ucfirst(rtrim($type, 's'))).' - '.i18n(ucfirst($category)).' | <a style="font-weight:bold;text-decoration:underline;" onclick="codiad.market.openInBrowser(\'https://github.com/'.$addon['author'].'\');return false;">'.$addon['author'].'</a> | '.$addon['count'].' '.i18n("Users").'</font></div>';
 												echo '<div style="position:absolute;top:25px;left:5px;"><pre style="height:60px;color:#a8a6a8;width:'.(550-$right).'px;white-space: pre-wrap;">'.$addon['description'].'</pre></div>';
 												if (!$addon['remote']) {
 													if (!isset($addon['update'])) {
-														echo '<div style="position:absolute;top:7px;left:570px;"><font style="color:green">'.get_i18n("Latest Version").' v'.$addon['version'].'</font></div>';
+														echo '<div style="position:absolute;top:7px;left:570px;"><font style="color:green">'.i18n("Latest Version").' v'.$addon['version'].'</font></div>';
 													} else {
 														if ($extLoaded && is_writable(BASE_PATH.'/'.$type.'/'.$addon['folder'])) {
-															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="color: blue; width:150px;white-space:nowrap;" onclick="codiad.market.update(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.get_i18n("Update ".ucfirst(rtrim($type, 's'))).'</button></div>';
+															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="color: blue; width:150px;white-space:nowrap;" onclick="codiad.market.update(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.i18n("Update ".ucfirst(rtrim($type, 's'))).'</button></div>';
 														} else {
-															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.get_i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
+															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
 														}
 													}
 													if (is_writable(BASE_PATH.'/'.$type.'/'.$addon['folder'])) {
-														echo '<div style="position:absolute;top:30px;left:570px;"><button style="color: red; width:150px;white-space:nowrap;" onclick="codiad.market.remove(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.get_i18n("Delete ".ucfirst(rtrim($type, 's'))).'</button><div>';
+														echo '<div style="position:absolute;top:30px;left:570px;"><button style="color: red; width:150px;white-space:nowrap;" onclick="codiad.market.remove(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.i18n("Delete ".ucfirst(rtrim($type, 's'))).'</button><div>';
 													}
 												} else {
 													if ($extLoaded && is_writable(BASE_PATH.'/'.$type)) {
-														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.install(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['name'].'\',\''.$addon['url'].'\');return false;">'.get_i18n("Install ".ucfirst(rtrim($type, 's'))).'</button><div>';
+														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.install(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['name'].'\',\''.$addon['url'].'\');return false;">'.i18n("Install ".ucfirst(rtrim($type, 's'))).'</button><div>';
 													} else {
-														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.get_i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
+														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
 													}
 												}
 												echo '</div></td></tr>';

@@ -98,7 +98,6 @@ class Common {
 		if (isset($_SESSION['lang'])) {
 			include BASE_PATH."/languages/{$_SESSION['lang']}.php";
 		} else {
-			$lang = LANGUAGE;
 			include BASE_PATH."/languages/".LANGUAGE.".php";
 		}
 	}
@@ -143,17 +142,21 @@ class Common {
 	// Localization
 	//////////////////////////////////////////////////////////////////
 
-	public static function i18n($key, $args = array()) {
-		echo Common::get_i18n($key, $args);
+	public static function i18n($key, $type = "echo") {
+		return Common::get_i18n($key, $type);
 	}
 
-	public static function get_i18n($key, $args = array()) {
+	public static function get_i18n($key, $type = "return") {
 		global $lang;
 		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
-		foreach ($args as $k => $v)
-		$return = str_replace("%{".$k."}%", $v, $return);
-		return $return;
+		// foreach ($args as $k => $v)
+		// $return = str_replace("%{".$k."}%", $v, $return);
+		if ($type == "echo") {
+			echo $return;
+		} else {
+			return $return;
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -356,11 +359,8 @@ class Common {
 function debug($message) {
 	Common::debug($message);
 }
-function i18n($key, $args = array()) {
-	echo Common::i18n($key, $args);
-}
-function get_i18n($key, $args = array()) {
-	return Common::get_i18n($key, $args);
+function i18n($key, $type = "echo") {
+	return Common::i18n($key, $type);
 }
 function checkSession() {
 	Common::checkSession();
