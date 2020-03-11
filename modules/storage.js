@@ -31,7 +31,7 @@
 		} else if (oldVal === 'true' || oldVal === 'false') {
 			return (oldVal === 'true');
 		} else if (isNaN(oldVal) === false) {
-			return parseInt(oldVal);
+			return parseInt(oldVal, 10);
 		} else {
 			return oldVal;
 		}

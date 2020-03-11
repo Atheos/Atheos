@@ -505,7 +505,7 @@
 						url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
 						success: function(response) {
 							response = JSON.parse(response);
-							
+
 							atheos.toast[response.status](response.message);
 
 							if (response.status !== 'error') {
@@ -514,8 +514,7 @@
 								/* Notify listeners. */
 								amplify.publish('filemanager.onPaste', {
 									path: path,
-									nodeName: nodeName,
-									duplicate: duplicate
+									nodeName: nodeName
 								});
 							}
 						}
