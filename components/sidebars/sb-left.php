@@ -35,7 +35,7 @@
 			if ($data['title'] == 'Break') {
 				echo('<hr class="'.$data['applies-to'].'">');
 			} else {
-				echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title']).'</a>');
+				echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'],'return').'</a>');
 			}
 		}
 
