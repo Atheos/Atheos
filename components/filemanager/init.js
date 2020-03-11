@@ -15,12 +15,13 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
+
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
+		common = atheos.common,
 		fileIcons = global.FileIcons,
 		o = global.onyx;
 
@@ -48,9 +49,9 @@
 			// Initialize node listener
 			this.nodeListener();
 			// Load uploader
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
-			atheos.helpers.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
+			common.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -96,7 +97,7 @@
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
-			
+
 			o('#file-manager').on('dblclick', function(e) {
 				if (atheos.editor.settings.fileManagerTrigger) {
 					nodeFunctions(checkAnchor(e.target));
@@ -211,7 +212,7 @@
 
 		createDirectoryItem: function(path, type, size) {
 
-			var name = atheos.helpers.getNodeName(path);
+			var name = common.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
 			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
@@ -256,7 +257,7 @@
 		openFile: function(path, focus, line) {
 			focus = focus || true;
 
-			var ext = atheos.helpers.getNodeExtension(path).toLowerCase();
+			var ext = common.getNodeExtension(path).toLowerCase();
 
 			if (this.noOpen.indexOf(ext) < 0) {
 				ajax({
@@ -410,8 +411,8 @@
 			var fileManager = this;
 
 			var processPaste = function(path, duplicate) {
-				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
-				var type = atheos.helpers.getNodeType(fileManager.clipboard);
+				var nodeName = common.getNodeName(fileManager.clipboard);
+				var type = common.getNodeType(fileManager.clipboard);
 
 				if (duplicate) {
 					nodeName = 'copy_of_' + nodeName;
@@ -442,9 +443,9 @@
 				atheos.toast.error('Cannot Paste Directory Into Itself');
 
 			} else {
-				var nodeName = atheos.helpers.getNodeName(fileManager.clipboard);
+				var nodeName = common.getNodeName(fileManager.clipboard);
 
-				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]').exists()) {
+				if (o('#file-manager a[data-path="' + path + '/' + nodeName + '"]')) {
 
 					atheos.alert.show({
 						banner: 'Path already exists!',
@@ -473,9 +474,59 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
+		// Duplicate Object
+		//////////////////////////////////////////////////////////////////		
+		duplicate: function(path, name) {
+			var fileManager = this;
+			var nodeName = common.getNodeName(path);
+			var type = common.getNodeType(path);
+
+			atheos.modal.load(250, this.dialog, {
+				action: 'duplicate',
+				path: path,
+				nodeName: nodeName,
+				type: type
+			});
+
+			atheos.modal.ready.then(function() {
+				o('#modal_content form').once('submit', function(e) {
+					e.preventDefault();
+					var newName = o('#modal_content form input[name="object_name"]').value();
+
+					// Build new path
+					var arr = path.split('/');
+					var temp = [];
+					for (var i = 0; i < arr.length - 1; i++) {
+						temp.push(arr[i]);
+					}
+					var newPath = temp.join('/') + '/' + newName;
+
+					ajax({
+						url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
+						success: function(response) {
+							response = JSON.parse(response);
+
+							atheos.toast[response.status](response.message);
+
+							if (response.status !== 'error') {
+								fileManager.addToFileManager(path, path + '/' + nodeName, type);
+								atheos.modal.unload();
+								/* Notify listeners. */
+								amplify.publish('filemanager.onPaste', {
+									path: path,
+									nodeName: nodeName
+								});
+							}
+						}
+					});
+					atheos.modal.unload();
+				});
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////
 		// Create Object
 		//////////////////////////////////////////////////////////////////
-
 		create: function(path, type) {
 			var fileManager = this;
 
@@ -575,8 +626,8 @@
 		//////////////////////////////////////////////////////////////////
 
 		rename: function(path) {
-			var nodeName = atheos.helpers.getNodeName(path);
-			var type = atheos.helpers.getNodeType(path);
+			var nodeName = common.getNodeName(path);
+			var type = common.getNodeType(path);
 			var fileManager = this;
 
 			atheos.modal.load(250, this.dialog, {
@@ -587,7 +638,7 @@
 			});
 
 			atheos.modal.ready.then(function() {
-				o('#modal_content form').once('submit', function(e) {
+				o('#modal_content form').on('submit', function(e) {
 					e.preventDefault();
 					var newName = o('#modal_content form input[name="object_name"]').value();
 					// Build new path
@@ -799,7 +850,7 @@
 				e.preventDefault();
 
 				o('#filemanager-search-processing').show();
-				
+
 				// amplify.subscribe('modal.unload', function() {
 				// 	o('#modal_content form').off('submit', listener);
 				// });

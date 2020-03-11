@@ -10,7 +10,7 @@
 		ajax = global.ajax,
 		amplify = global.amplify,
 		i18n = global.i18n,
-		o = global.onyx;
+		oX = global.onyx;
 
 
 	amplify.subscribe('atheos.loaded', function(settings) {
@@ -19,7 +19,7 @@
 
 	atheos.user = {
 
-		loginForm: o('#login'),
+		loginForm: oX('#login'),
 		controller: 'components/user/controller.php',
 		dialog: 'components/user/dialog.php',
 
@@ -34,35 +34,42 @@
 				user.loginForm.on('submit', function(e) {
 					e.preventDefault();
 					// Save Language
-					atheos.storage.set('language', o('#language').value());
+					atheos.storage('language', oX('#language').value());
 					// Save Theme
-					atheos.storage.set('theme', o('#theme').value());
+					atheos.storage('theme', oX('#theme').value());
 					user.authenticate();
 				});
+
+
+				// Get Theme
+				var theme = atheos.storage('theme');
+				var select = oX('#theme');
+				if (select && select.find('option') > 1) {
+					select.find('option').forEach(function(option) {
+						if (option.value() === theme) {
+							console.log('found');
+							option.attr('selected', 'selected');
+						}
+					});
+				}
+
+				// Get Language
+				var language = atheos.storage('language');
+				select = oX('#language');
+				if (select && select.find('option') > 1) {
+					select.find('option').forEach(function(option) {
+						if (option.value() === language) {
+							option.attr('selected', 'selected');
+						}
+					});
+				}
+
+				// More Selector
+				oX('#show_login_options').on('click', function(e) {
+					oX(e.target).hide();
+					oX('#login_options').show();
+				});
 			}
-			// Get Theme
-			var theme = atheos.storage.get('theme');
-			$('#theme option').each(function() {
-				if ($(this).val() === theme) {
-					$(this).attr('selected', 'selected');
-				}
-			});
-
-			// Get Language
-			var language = atheos.storage.get('language');
-			$('#language option').each(function() {
-				if ($(this).val() === language) {
-					$(this).attr('selected', 'selected');
-				}
-			});
-
-			// More Selector
-			$('.show-language-selector').click(function() {
-				$(this).hide();
-				$('.language-selector').animate({
-					height: 'toggle'
-				}, 'fast');
-			});
 
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
@@ -75,6 +82,7 @@
 					}
 				});
 			});
+
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -85,9 +93,8 @@
 			ajax({
 				url: this.controller + '?action=authenticate',
 				type: 'post',
-				data: atheos.helpers.serializeForm(this.loginForm.el),
+				data: atheos.common.serializeForm(this.loginForm.el),
 				success: function(response) {
-					console.log(response);
 					response = JSON.parse(response);
 					if (response.status !== 'error') {
 						window.location.reload();
@@ -105,17 +112,22 @@
 
 		logout: function() {
 			var forcelogout = true;
-			if ($('#list-active-files li.changed').length > 0) {
+			var unsaved = oX('#list-active-files').find('li.changed');
+			if (unsaved.length > 0) {
 				forcelogout = confirm(i18n('You have unsaved files.'));
 			}
 			if (forcelogout) {
-				$('#list-active-files li.changed').each(function() {
-					$(this).removeClass('changed');
+				unsaved.forEach(function(changed) {
+					changed.removeClass('changed');
 				});
-				amplify.publish('user.logout', {});
+
+				amplify.publish('user.logout');
 				atheos.settings.save();
-				$.get(this.controller + '?action=logout', function() {
-					window.location.reload();
+				ajax({
+					url: this.controller + '?action=logout',
+					success: function() {
+						window.location.reload();
+					}
 				});
 			}
 		},
@@ -125,8 +137,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function() {
-			$('#modal_content form')
-				.die('submit'); // Prevent form bubbling
 			atheos.modal.load(400, this.dialog + '?action=list');
 		},
 
@@ -135,7 +145,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		createNew: function() {
-			var _this = this;
+			var user = this;
 			atheos.modal.load(400, this.dialog + '?action=create');
 			$('#modal_content form')
 				.live('submit', function(e) {
@@ -161,14 +171,14 @@
 					}
 
 					if (pass) {
-						$.post(_this.controller + '?action=create', {
+						$.post(user.controller + '?action=create', {
 							'username': username,
 							'password': password1
 						}, function(data) {
 							var createResponse = atheos.jsend.parse(data);
 							if (createResponse !== 'error') {
 								atheos.toast.success(i18n('User Account Created'));
-								_this.list();
+								user.list();
 							}
 						});
 					}
@@ -180,18 +190,18 @@
 		//////////////////////////////////////////////////////////////////
 
 		delete: function(username) {
-			var _this = this;
+			var user = this;
 			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
 					var username = $('#modal-content form input[name="username"]')
 						.val();
-					$.get(_this.controller + '?action=delete&username=' + username, function(data) {
+					$.get(user.controller + '?action=delete&username=' + username, function(data) {
 						var deleteResponse = atheos.jsend.parse(data);
 						if (deleteResponse !== 'error') {
 							atheos.toast.success(i18n('Account Deleted'));
-							_this.list();
+							user.list();
 						}
 					});
 				});
@@ -201,37 +211,38 @@
 		// Set Project Access
 		//////////////////////////////////////////////////////////////////
 
-		projects: function(username) {
+		showUserACL: function(username) {
 			atheos.modal.load(400, this.dialog + '?action=projects&username=' + username);
-			var _this = this;
-			$('#modal_content form')
-				.live('submit', function(e) {
+			var user = this;
+
+			atheos.modal.ready.then(function() {
+				oX('#modal_content').on('submit', function(e) {
 					e.preventDefault();
-					var username = $('#modal_content form input[name="username"]')
-						.val();
-					var accessLevel = $('#modal_content form select[name="access_level"]')
-						.val();
-					var projects = [];
-					$('input:checkbox[name="project"]:checked').each(function() {
-						projects.push($(this).val());
-					});
-					if (accessLevel === 0) {
-						projects = 0;
+
+					var data = atheos.common.serializeForm(oX('#modal_content form').el);
+					data.action = 'setUserACL';
+
+					if (data.access_level === 0) {
+						data.projects = 0;
 					}
+
 					// Check and make sure if access level not full that at least on project is selected
-					if (accessLevel === 1 && !projects) {
+					if (data.access_level === 1 && !data.projects) {
 						atheos.toast.error(i18n('At Least One Project Must Be Selected'));
 					} else {
-						$.post(_this.controller + '?action=project_access&username=' + username, {
-							projects: projects
-						}, function(data) {
-							var projectsResponse = atheos.jsend.parse(data);
-							if (projectsResponse !== 'error') {
-								atheos.toast.success(i18n('Account Modified'));
+						ajax({
+							url: user.controller,
+							type: 'post',
+							data: data,
+							success: function(data) {
+								atheos.modal.unload();
 							}
 						});
 					}
+
 				});
+			});
+
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -271,10 +282,16 @@
 		// Change Current Project
 		//////////////////////////////////////////////////////////////////
 
-		project: function(project) {
-			$.get(this.controller + '?action=project&project=' + project);
+		saveActiveProject: function(project) {
+			ajax({
+				url: this.controller,
+				type: 'post',
+				data: {
+					action: 'saveActiveProject',
+					project: project
+				}
+			});
 		}
-
 	};
 
 })(this, jQuery);

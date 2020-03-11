@@ -33,8 +33,8 @@
 //
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
-
+ 
+ 
 
 (function(global, $) {
 
@@ -44,7 +44,7 @@
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		o = global.onyx;
+		oX = global.onyx;
 
 	atheos.modal = {
 
@@ -52,35 +52,20 @@
 			isModalVisible: false
 		},
 
-		init: function(verbose) {
-			if (verbose) {
-				console.log('Modal Initialized');
-			}
-		},
-
 		create: function() {
 			var modal = atheos.modal;
-			var overlay = o('<div>'),
-				wrapper = o('<div>'),
-				content = o('<div>'),
-				drag = o('<i>'),
-				close = o('<i>');
-
-			overlay.attr('id', 'modal_overlay');
-			overlay.on('click', function(event) {
-				if (event.target.id !== 'modal_overlay') {
-					return;
-				}
-				modal.unload();
-			}, false);
+			var wrapper = oX('<div>'),
+				content = oX('<div>'),
+				drag = oX('<i>'),
+				close = oX('<i>');
 
 			wrapper.attr('id', 'modal_wrapper');
 			content.attr('id', 'modal_content');
 
-			close.addClass('icon-cancel');
-			close.on('click', modal.unload);
+			close.addClass('close fas fa-times-circle');
+			close.on('click', atheos.modal.unload);
 
-			drag.addClass('icon-arrows');
+			drag.addClass('drag fas fa-arrows-alt');
 			drag.on('mousedown', function() {
 				drag.addClass('active');
 				modal.drag(wrapper);
@@ -93,7 +78,6 @@
 			// overlay.appendChild(wrapper);
 			document.body.appendChild(wrapper.el);
 
-			document.body.appendChild(overlay.el);
 			return wrapper;
 		},
 
@@ -101,8 +85,11 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var wrapper = o('#modal_wrapper') || this.create(),
-				content = o('#modal_content');
+			var overlay = oX('#overlay') || atheos.common.createOverlay(),
+				wrapper = oX('#modal_wrapper') || this.create(),
+				content = oX('#modal_content');
+				
+
 
 			$('#modal_content form').die('submit'); // Prevent form bubbling
 
@@ -114,15 +101,14 @@
 
 			content.html('<div id="modal_loading"></div>');
 
-
 			this.ready = ajax({
 				url: url,
 				data: data,
 				success: function(data) {
 					$('#modal_content').html(data);
 
-					// o(content).html(data);
-					// var script = o(o(content).find('script'));
+					// oX(content).html(data);
+					// var script = oX(oX(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
 					// }
@@ -138,18 +124,15 @@
 
 
 			wrapper.show();
-			o('#modal_overlay').show();
+			oX('#overlay').show();
 
 			this.settings.isModalVisible = true;
 		},
 
 		resize: function() {
+			var wrapper = oX('#modal_wrapper');
 
-			var wrapper = o('#modal_wrapper'),
-				content = o('#modal_content');
-
-
-			if (wrapper && content) {
+			if (wrapper) {
 				var width = wrapper.clientWidth();
 				wrapper.css({
 					'top': '15%',
@@ -160,31 +143,16 @@
 		},
 
 		hideOverlay: function() {
-			o('#modal_overlay').hide();
+			oX('#overlay').hide();
 		},
-		hide: function() {
-			var wrapper = o('#modal_wrapper'),
-				overlay = o('#modal_overlay');
 
-			wrapper.removeClass('modal-active');
-			overlay.removeClass('modal-active');
-
-			wrapper.on('transitionend', function() {
-				wrapper.remove();
-				overlay.remove();
-			});
-
-
-			atheos.editor.focus();
-			this.settings.isModalVisible = false;
-		},
 		unload: function() {
 			amplify.publish('modal.unload');
-			
-			o('#modal_content form').off('submit');
-			o('#modal_overlay').hide();
-			o('#modal_wrapper').hide();
-			o('#modal_content').empty();
+
+			oX('#modal_content').off('submit');
+			oX('#overlay').hide();
+			oX('#modal_wrapper').hide();
+			oX('#modal_content').empty();
 
 
 			atheos.modal.settings.isModalVisible = false;
@@ -193,7 +161,7 @@
 		},
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-			
+
 			var element = wrapper.el;
 
 			var rect = wrapper.offset(),
@@ -223,7 +191,7 @@
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
 				window.removeEventListener('selectstart', disableSelect);
-				o('.icon-arrows').removeClass('active');
+				oX('#modal_wrapper .drag').removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;

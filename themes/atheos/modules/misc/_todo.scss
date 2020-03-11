@@ -67,21 +67,6 @@ a:hover {}
 	padding-top: 3px;
 }
 
-.language-selector {
-	position: relative;
-	display: none;
-}
-
-.show-language-selector {
-	display: block;
-	float: right;
-	color: #666;
-	margin: 10px 0 0;
-}
-
-.show-language-selector:hover {
-	color: #fff;
-}
 
 /* FORMS */
 label {
@@ -112,8 +97,8 @@ textarea {
 	border: none;
 	border-bottom: 2px solid #595959;
 	color: #fff;
-	border-radius: $border-radius;
 	line-height: normal;
+	@include border-radius;
 }
 
 #dependencies .error {
@@ -150,82 +135,16 @@ input[type="checkbox"] {
 pre {
 	background: $input-background;
 	padding: 10px;
-	margin: 10px 0 5px;
-	border-radius: $border-radius;
+	margin: 5px 0;
 	font-family: monospace;
-	/*box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);*/
 	overflow: auto;
+	@include border-radius;
+	@include box-shadow;
+
 }
 
-
-/* INSTALLER */
-#installer {
-	position: absolute;
-	width: 450px;
-	top: 15%;
-	left: 50%;
-	margin-left: -175px;
-	padding: 35px;
-	overflow: auto;
-}
-
-#installer h1 {
-	font-size: 24px;
-	margin: 0 0 15px;
-}
-
-#installer hr {
-	height: 0;
-	border: none;
-	border-top: 1px solid #ccc;
-	margin: 20px 0;
-}
-
-.install_issues {
-	background: $input-background;
-	padding: 10px;
-	margin: 10px 0 5px;
-	border-radius: $border-radius;
-	font-family: monospace;
-	/*box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);*/
-	overflow: auto;
-}
-
-.install_issues p {
-	padding: 0;
+hr {
 	margin: 0;
-}
-
-/* MESSAGES */
-#message {
-	display: none;
-	position: fixed;
-	top: 0;
-	left: 50%;
-	width: 500px;
-	margin-left: -250px;
-	padding: 8px 10px;
-	text-align: center;
-	color: #fff;
-	font-weight: bold;
-	z-index: 99999999;
-	line-height: 150%;
-	// border-radius: 0px 0px 10px 10px;
-	border-radius: $border-radius;
-	text-shadow: 1px 1px 3px #000000;
-	/*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);*/
-}
-
-#message.error {
-	background-color: #a10b0b;
-	border: 2px solid #ff0000;
-	border-top: none;
-}
-
-#message.success {
-	background-color: #0f9c0f;
-	border: 2px solid #00ff00;
-	border-top: none;
 }
 
 /* MAIN */
@@ -245,7 +164,7 @@ pre {
 	background-color: #2E2E2E;
 	border: 3px solid #666666;
 	display: none;
-	border-radius: $border-radius;
+	@include border-radius;
 }
 
 .options-menu li {

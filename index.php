@@ -6,10 +6,6 @@ require_once('common.php');
 $context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
 $context_menu = json_decode($context_menu, true);
 
-// Right Bar
-$right_bar = file_get_contents(COMPONENTS . "/right_bar.json");
-$right_bar = json_decode($right_bar, true);
-
 // Read Components, Plugins, Themes
 $components = Common::readDirectory(COMPONENTS);
 $plugins = Common::readDirectory(PLUGINS);
@@ -44,35 +40,7 @@ if (isset($_SESSION['theme'])) {
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
-	<?php
-	// Load System CSS Files
-	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.css">');
-
-
-	// Load Plugin CSS Files
-	foreach ($plugins as $plugin) {
-		if (file_exists(THEMES . "/". $theme . "/" . $plugin . "/screen.css")) {
-			echo('<link rel="stylesheet" href="themes/'.$theme.'/'.$plugin.'/screen.css">');
-		} else {
-			if (file_exists("themes/atheos/" . $plugin . "/screen.css")) {
-				echo('<link rel="stylesheet" href="themes/default/'.$plugin.'/screen.css">');
-			} else {
-				if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
-					echo('<link rel="stylesheet" href="plugins/'.$plugin.'/screen.css">');
-				}
-			}
-		}
-	}
-
-	?>
-
-
-
-</head>
-
-<body>
 	<script>
-		Error.stackTraceLimit = undefined //unlimited stack trace
 		var i18n = (function(lang) {
 			return function(word, args) {
 				var x;
@@ -85,9 +53,26 @@ if (isset($_SESSION['theme'])) {
 		})(<?php echo json_encode($lang); ?>)
 	</script>
 
-	<?php require_once('public/minify-core-js.php'); ?>
+	<?php
+	// Load System CSS Files
+	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
 
-	<!--<script src="js/instance.js?v=<?php echo time(); ?>"></script>-->
+
+	require_once('public/minify-core-js.php');
+
+	// Load Plugin CSS Files
+	foreach ($plugins as $plugin) {
+		if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
+			echo('<link rel="stylesheet" href="plugins/'.$plugin.'/screen.css">');
+		}
+	}
+
+	?>
+
+</head>
+
+<body>
+
 	<?php
 
 	//////////////////////////////////////////////////////////////////
@@ -97,344 +82,127 @@ if (isset($_SESSION['theme'])) {
 	if (!isset($_SESSION['user'])) {
 		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
 
-		$users = file_exists($path . "/data/users.php");
-		$projects = file_exists($path . "/data/projects.php");
-		$active = file_exists($path . "/data/active.php");
+		$users = file_exists($path . "/data/users.php") || file_exists($path . "/data/users.json");
+		$projects = file_exists($path . "/data/projects.php") || file_exists($path . "/data/projects.json");
+		$active = file_exists($path . "/data/active.php") || file_exists($path . "/data/active.json");
 
 		if (!$users && !$projects && !$active) {
 			// Installer
 			require_once('components/install/view.php');
 		} else {
-			// Login form ?>
-			<div id="logo">
-				<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" width="320" height="400" version="1.1">
-					<path class="delay-0" style="fill:#111111" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
-					<path class="delay-1" style="fill:#0074d9" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
-					<path class="delay-2" style="fill:#0074d9" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
-					<path class="delay-3" style="fill:#0074d9" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
-					<path class="delay-3" style="fill:#0074d9" d="M960 980L520 740v80l440 240 440-220v-80z" />
-				</svg>
-			</div>
-			<!--<div id="title">-->
-			<!--	<h1 class="">Atheos</h1>-->
-			<!--	<span>IDE</span>-->
-			<!--</div>-->
-			<form id="login" method="post">
-				<fieldset>
-					<legend>Atheos <span>IDE</span></legend>
-					<label><span class="icon-user login-icon"></span> <?php i18n("Username"); ?></label>
-					<input type="text" name="username" autofocus="autofocus" autocomplete="username">
+			// Login form
+			require_once('components/user/login.php');
+		}
 
-					<label><span class="icon-key login-icon"></span> <?php i18n("Password"); ?></label>
-					<input type="password" name="password" autocomplete="current-password">
-					<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
+		//////////////////////////////////////////////////////////////////
+		// AUTHENTICATED
+		//////////////////////////////////////////////////////////////////
+	} else {
+		?>
 
-					<div class="language-selector">
-						<label><span class="icon-picture login-icon"></span> <?php i18n("Theme"); ?></label>
-						<select name="theme" id="theme">
-							<?php
-							include 'languages/code.php';
-							foreach ($themes as $theme):
-							if (file_exists(THEMES."/" . $theme . "/theme.json")) {
-								$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
-								$data = json_decode($data, true); ?>
-								<option value="<?php echo $theme; ?>" <?php if ($theme == THEME) {
-									echo "selected";
-								} ?>><?php if ($data[0]['name'] != '') {
-									echo $data[0]['name'];
-								} else {
-									echo $theme;
-								} ?></option>
-								<?php
-							}
-							endforeach; ?>
-						</select>
-						<label><span class="icon-language login-icon"></span> <?php i18n("Language"); ?></label>
-						<select name="language" id="language">
-							<?php
-							include 'languages/code.php';
-							foreach (glob("languages/*.php") as $filename):
-							$lang_code = str_replace(array("languages/", ".php"), "", $filename);
-							if (!isset($languages[$lang_code])) {
-								continue;
-							}
-							$lang_disp = ucfirst(strtolower($languages[$lang_code])); ?>
-							<option value="<?php echo $lang_code; ?>" <?php if ($lang_code == "en") {
-								echo "selected";
-							} ?>><?php echo $lang_disp; ?></option>
-							<?php endforeach; ?>
-						</select>
-					</div>
+		<div id="workspace">
+			<?php require_once('components/sidebars/sb-left.php'); ?>
 
-					<button><?php i18n("Login"); ?></button>
 
-					<a class="show-language-selector"><?php i18n("More"); ?></a>
-				</fieldset>
-			</form>
-		</div>
-		<script src="components/user/init.js"></script>
-		<?php
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// AUTHENTICATED
-	//////////////////////////////////////////////////////////////////
-} else {
-	?>
-
-	<div id="workspace">
-
-		<div id="sb-left" class="sidebar">
-			<div id="sb-left-title">
-				<a id="sb-left-lock" class="icon icon-lock-close"></a>
-				<?php if (!common::isWINOS()) {
-					?>
-					<a id="finder-quick" class="icon icon-search"></a>
-					<a id="tree-search" class="icon-search icon"></a>
-					<h2 id="finder-label"> <?php i18n("Explore"); ?> </h2>
-					<div id="finder-wrapper">
-						<a id="finder-options" class="icon icon-cog"></a>
-						<div id="finder-inner-wrapper">
-							<input type="text" id="finder"></input>
-					</div>
-					<ul id="finder-options-menu" class="options-menu">
-						<li class="chosen"><a data-option="left_prefix"><?php i18n("Prefix"); ?></a></li>
-						<li><a data-option="substring"><?php i18n("Substring"); ?></a></li>
-						<li><a data-option="regexp"><?php i18n("Regular expression"); ?></a></li>
-						<li><a data-action="search"><?php i18n("Search File Contents"); ?></a></li>
+			<div id="editor-region">
+				<div id="editor-top-bar">
+					<ul id="tab-list-active-files">
 					</ul>
-				</div>
-				<?php
-			} ?>
-		</div>
-
-		<div class="sb-left-content">
-			<div id="context-menu" data-path="" data-type="">
-
-				<?php
-
-				////////////////////////////////////////////////////////////
-				// Load Context Menu
-				////////////////////////////////////////////////////////////
-
-				foreach ($context_menu as $menu_item => $data) {
-					if ($data['title'] == 'Break') {
-						echo('<hr class="'.$data['applies-to'].'">');
-					} else {
-						echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><span class="'.$data['icon'].'"></span>'.get_i18n($data['title']).'</a>');
-					}
-				}
-
-				foreach ($plugins as $plugin) {
-					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-						$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-						$pdata = json_decode($pdata, true);
-						if (isset($pdata[0]['contextmenu'])) {
-							foreach ($pdata[0]['contextmenu'] as $contextmenu) {
-								if ((!isset($contextmenu['admin']) || ($contextmenu['admin']) && checkAccess()) || !$contextmenu['admin']) {
-									if (isset($contextmenu['applies-to']) && isset($contextmenu['action']) && isset($contextmenu['icon']) && isset($contextmenu['title'])) {
-										echo('<hr class="'.$contextmenu['applies-to'].'">');
-										echo('<a class="'.$contextmenu['applies-to'].'" onclick="'.$contextmenu['action'].'"><span class="'.$contextmenu['icon'].'"></span>'.$contextmenu['title'].'</a>');
-									}
-								}
-							}
-						}
-					}
-				} ?>
-
-			</div>
-
-			<div id="file-manager"></div>
-
-			<ul id="list-active-files"></ul>
-
-		</div>
-
-		<div id="side-projects" class="sb-left-projects">
-			<div id="project-list" class="sb-project-list">
-
-				<div class="project-list-title">
-					<h2><?php i18n("Projects"); ?></h2>
-					<a id="projects-collapse" class="icon-down-dir icon" alt="<?php i18n("Collapse"); ?>"></a>
-					<?php if (checkAccess()) {
-						?>
-						<a id="projects-manage" class="icon-archive icon"></a>
-						<a id="projects-create" class="icon-plus icon" alt="<?php i18n("Create Project"); ?>"></a>
-						<?php
-					} ?>
+					<div id="tab-dropdown">
+						<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
+					</div>
+					<div id="tab-close">
+						<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
+					</div>
+					<ul id="dropdown-list-active-files"></ul>
+					<div class="bar"></div>
 				</div>
 
-				<div class="sb-projects-content"></div>
+				<div id="root-editor-wrapper"></div>
 
-			</div>
-		</div>
+				<div id="editor-bottom-bar">
+					<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
 
-		<div id="sb-left-handle">
-			<span>|||</span>
-		</div>
+					<?php
 
-	</div>
-	<div id="editor-region">
-		<div id="editor-top-bar">
-			<ul id="tab-list-active-files">
-			</ul>
-			<div id="tab-dropdown">
-				<a id="tab-dropdown-button" class="icon-down-open"></a>
-			</div>
-			<div id="tab-close">
-				<a id="tab-close-button" class="icon-cancel-circled" title="<?php i18n("Close All") ?>"></a>
-			</div>
-			<ul id="dropdown-list-active-files"></ul>
-			<div class="bar"></div>
-		</div>
+					////////////////////////////////////////////////////////////
+					// Load Plugins
+					////////////////////////////////////////////////////////////
 
-		<div id="root-editor-wrapper"></div>
-
-		<div id="editor-bottom-bar">
-			<a id="settings" class="ico-wrapper"><span class="icon-cog"></span><?php i18n("Settings"); ?></a>
-
-			<?php
-
-			////////////////////////////////////////////////////////////
-			// Load Plugins
-			////////////////////////////////////////////////////////////
-
-			foreach ($plugins as $plugin) {
-				if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-					$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-					$pdata = json_decode($pdata, true);
-					if (isset($pdata[0]['bottombar'])) {
-						foreach ($pdata[0]['bottombar'] as $bottommenu) {
-							if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
-								if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
-									echo('<div class="divider"></div>');
-									echo('<a onclick="'.$bottommenu['action'].'"><span class="'.$bottommenu['icon'].'"></span>'.$bottommenu['title'].'</a>');
-								}
-							}
-						}
-					}
-				}
-			} ?>
-
-			<div class="divider"></div>
-			<a id="split" class="ico-wrapper"><span class="icon-layout"></span><?php i18n("Split"); ?></a>
-			<div class="divider"></div>
-			<a id="current-mode"><span class="icon-layout"></span></a>
-			<div class="divider"></div>
-			<div id="current-file"></div>
-			<div id="cursor-position">
-				<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
-			</div>
-		</div>
-		<div id="changemode-menu" class="options-menu">
-		</div>
-		<ul id="split-options-menu" class="options-menu">
-			<li id="split-horizontally"><a> <?php i18n("Split Horizontally"); ?> </a></li>
-			<li id="split-vertically"><a> <?php i18n("Split Vertically"); ?> </a></li>
-			<li id="merge-all"><a> <?php i18n("Merge all"); ?> </a></li>
-		</ul>
-	</div>
-
-	<div id="sb-right" class="sidebar">
-
-		<div id="sb-right-handle">
-			<span>|||</span>
-
-		</div>
-		<div id="sb-right-title">
-			<span id="sb-right-lock" class="icon icon-lock-open"></span>
-		</div>
-
-		<div class="sb-right-content">
-
-			<?php
-
-			////////////////////////////////////////////////////////////
-			// Load Right Bar
-			////////////////////////////////////////////////////////////
-
-			foreach ($right_bar as $item_rb => $data) {
-				if (!isset($data['admin'])) {
-					$data['admin'] = false;
-				}
-				if ($data['title'] == 'break') {
-					if (!$data['admin'] || $data['admin'] && checkAccess()) {
-						echo("<hr>");
-					}
-				} elseif ($data['title'] != 'break' && $data['title'] != 'pluginbar' && $data['onclick'] == '') {
-					if (!$data['admin'] || $data['admin'] && checkAccess()) {
-						echo("<div class='sb-right-category'>".get_i18n($data['title'])."</div>");
-					}
-				} elseif ($data['title'] == 'pluginbar') {
-					if (!$data['admin'] || $data['admin'] && checkAccess()) {
-						foreach ($plugins as $plugin) {
-							if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-								$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-								$pdata = json_decode($pdata, true);
-								if (isset($pdata[0]['rightbar'])) {
-									foreach ($pdata[0]['rightbar'] as $rightbar) {
-										if ((!isset($rightbar['admin']) || ($rightbar['admin']) && checkAccess()) || !$rightbar['admin']) {
-											if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
-												echo('<a onclick="'.$rightbar['action'].'"><span class="'.$rightbar['icon'].'"></span>'.get_i18n($rightbar['title']).'</a>');
-											}
+					foreach ($plugins as $plugin) {
+						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
+							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
+							$pdata = json_decode($pdata, true);
+							if (isset($pdata[0]['bottombar'])) {
+								foreach ($pdata[0]['bottombar'] as $bottommenu) {
+									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
+										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
+											echo('<div class="divider"></div>');
+											echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
 										}
 									}
-									//echo("<hr>");
 								}
 							}
 						}
-					}
-				} else {
-					if (!$data['admin'] || $data['admin'] && checkAccess()) {
-						echo('<a onclick="'.$data['onclick'].'"><span class="'.$data['icon'].' bigger-icon"></span>'.get_i18n($data['title']).'</a>');
-					}
-				}
-			} ?>
+					} ?>
+
+					<div class="divider"></div>
+					<a id="split" class="ico-wrapper"><i class="fas fa-column"></i><?php i18n("Split"); ?></a>
+					<div class="divider"></div>
+					<a id="current-mode"><i class="fas fa-column"></i></a>
+					<div class="divider"></div>
+					<div id="current-file"></div>
+					<div id="cursor-position">
+						<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
+					</div>
+				</div>
+				<div id="changemode-menu" class="options-menu">
+				</div>
+				<ul id="split-options-menu" class="options-menu">
+					<li id="split-horizontally"><a> <?php i18n("Split Horizontally"); ?> </a></li>
+					<li id="split-vertically"><a> <?php i18n("Split Vertically"); ?> </a></li>
+					<li id="merge-all"><a> <?php i18n("Merge all"); ?> </a></li>
+				</ul>
+			</div>
+			<?php require_once('components/sidebars/sb-right.php'); ?>
 
 		</div>
 
-		<!--<div class="sidebar-handle">-->
-		<!--	<span>|||</span>-->
-		<!--</div>-->
-	</div>
 
-</div>
+		<iframe id="download"></iframe>
 
+		<div id="autocomplete">
+			<ul id="suggestions"></ul>
+		</div>
 
-<iframe id="download"></iframe>
-
-<div id="autocomplete">
-	<ul id="suggestions"></ul>
-</div>
-
-<!-- ACE -->
-<script src="components/editor/ace-editor/ace.js"></script>
-<script src="components/editor/ace-editor/ext-language_tools.js"></script>
+		<!-- ACE -->
+		<script src="components/editor/ace-editor/ace.js"></script>
+		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
 
 
-<!-- COMPONENTS -->
-<?php
+		<!-- COMPONENTS -->
+		<?php
 
-//////////////////////////////////////////////////////////////////
-// LOAD COMPONENTS
-//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////
+		// LOAD COMPONENTS
+		//////////////////////////////////////////////////////////////////
 
-// JS
-foreach ($components as $component) {
-	if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
-		echo('<script src="components/'.$component.'/init.js"></script>"');
+		// JS
+		foreach ($components as $component) {
+			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
+				echo('<script src="components/'.$component.'/init.js"></script>"');
+			}
+		}
+
+		// require_once('plugins/minify-plugins-js.php');
+
+		foreach ($plugins as $plugin) {
+			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
+				echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
+			}
+		}
 	}
-}
 
-// require_once('plugins/minify-plugins-js.php');
-
-foreach ($plugins as $plugin) {
-	if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
-		echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
-	}
-}
-}
-
-?>
+	?>
 </body>
 </html>
