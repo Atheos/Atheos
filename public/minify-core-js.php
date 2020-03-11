@@ -18,22 +18,21 @@ $files = [
 	"modules/jquery-1.7.2.min.js",
 	"modules/jquery-ui-1.8.23.custom.min.js",
 	"modules/amplify.js",
-	"modules/hoverintent.min.js",
 	"modules/ajax.js",
 	"modules/file-icons.js",
 	"modules/onyx.js",
 	"modules/synthetic.js",
 	"modules/system.js",
 	"modules/alert.js",
-	"modules/chronometer.js",
+	"modules/chrono.js",
 	"modules/codiad.js",
-	"modules/helpers.js",
+	"modules/common.js",
 	"modules/jsend.js",
 	"modules/keybind.js",
 	"modules/modal.js",
-	"modules/sidebars.js",
 	"modules/storage.js",
-	"modules/toast.js"
+	"modules/toast.js",
+	"modules/types.js"
 ];
 // This is a conditional that helps during developement of Atheos.
 if (true) {

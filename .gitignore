@@ -4,6 +4,7 @@
 .ignore
 config.php
 data/*
+!data/version.json
 !data/.htaccess
 !data/README.md
 workspace/*

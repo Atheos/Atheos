@@ -1,3 +1,21 @@
+//////////////////////////////////////////////////////////////////////////////80
+// Ajax
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Notes:
+// The Ajax library is built specifically for Atheos, meaning that some of it's
+// features are geared towards use in Atheos and may not be suitable towards
+// other uses, but those features are easily modified. I suggest looking at
+// older versions of this file, or grabbing the original source that I used as
+// a starter if you're looking to use this elsewhere.
+//
+// Source: https://github.com/WeideMo/miniAjax
+//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
+
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -25,7 +43,7 @@
 		return arr.join('&');
 	}
 
-	const ajax = function(options) {
+	return function(options) {
 		options = options || {};
 		options.type = (options.type || 'GET').toUpperCase();
 		options.dataType = options.dataType || 'json';
@@ -68,15 +86,4 @@
 		// return xhr;
 	};
 	
-	return ajax;
-
 });
-
-
-
-/*
-	* author: WeideMo
-	* email: 412511016@qq.com
-	* source: https://github.com/WeideMo/miniAjax
-	* alt: https://github.com/maxrpeterson/ajax/blob/master/ajax.js
-	**/
