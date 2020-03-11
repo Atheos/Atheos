@@ -33,6 +33,7 @@
 		overflow: auto;
 		overflow-y: scroll;
 		height: 500px;
-		border-left: $border-thin;
+		// border-left: $border-thin;
+		@include border(1px, left);
 	}
 }
