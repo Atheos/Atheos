@@ -80,10 +80,10 @@
 					case 'editor.persistentModal':
 						atheos.editor.setPersistentModal(boolean);
 						break;
-					case "editor.softTabs":
+					case 'editor.softTabs':
 						atheos.editor.setSoftTabs(boolean);
 						break;
-					case "editor.tabSize":
+					case 'editor.tabSize':
 						atheos.editor.setTabSize(value);
 						break;
 				}
@@ -131,7 +131,7 @@
 				$.post(this.controller + '?action=save', {
 					settings: JSON.stringify(settings)
 				}, function(data) {
-					parsed = atheos.jsend.parse(data);
+					var parsed = atheos.jsend.parse(data);
 				});
 
 				amplify.publish('settings.save');

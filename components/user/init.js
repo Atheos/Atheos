@@ -59,7 +59,6 @@
 				if (select && select.find('option') > 1) {
 					select.find('option').forEach(function(option) {
 						if (option.value() === language) {
-							console.log('found');
 							option.attr('selected', 'selected');
 						}
 					});
@@ -220,7 +219,7 @@
 				oX('#modal_content').on('submit', function(e) {
 					e.preventDefault();
 
-					data = atheos.common.serializeForm(oX('#modal_content form').el);
+					var data = atheos.common.serializeForm(oX('#modal_content form').el);
 					data.action = 'setUserACL';
 
 					if (data.access_level === 0) {
@@ -228,7 +227,7 @@
 					}
 
 					// Check and make sure if access level not full that at least on project is selected
-					if (data.access_level === 1 && !projects) {
+					if (data.access_level === 1 && !data.projects) {
 						atheos.toast.error(i18n('At Least One Project Must Be Selected'));
 					} else {
 						ajax({
@@ -236,7 +235,6 @@
 							type: 'post',
 							data: data,
 							success: function(data) {
-								console.log(data);
 								atheos.modal.unload();
 							}
 						});
