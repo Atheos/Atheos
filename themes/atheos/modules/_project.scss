@@ -52,7 +52,7 @@ $tab-color: #3E50B4;
 }
 
 .sb-projects-content {
-	height: 100%;
+	height: calc(100% - 35px);
 	width: 100%;
 	overflow: auto;
 	position: absolute;
