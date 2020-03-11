@@ -1,17 +1,21 @@
-#project-selector { max-height: 250px; background: #404040;
-    margin: 10px 0 5px 0;
-    border-radius: 5px;
-    box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);
-    overflow: auto;
-    max-height: 250px;
-}
+#project-selector {
+	max-height: 250px;
+	background: #404040;
+	margin: 10px 0 5px 0;
+	overflow: auto;
+	@include border-radius;
+	@include box-shadow;
 
-.user-wrapper {
-  max-height: 450px; 
-  width: 100%; 
-  overflow-y: auto; 
-  overflow-x: hidden;
-}
+	table {
+		td {
+			border: none;
+			border-bottom: 1px solid #666;
+			@include border(1px);
 
-#project-selector table td { border: none; border-bottom: 1px solid #666; }
-#project-selector table tr:last-child td { border: none; }
+		}
+
+		tr:last-child td {
+			border: none;
+		}
+	}
+}

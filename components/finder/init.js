@@ -105,7 +105,7 @@
 			console.log(name);
 			console.log(obj);
 
-			// var name = atheos.helpers.getNodeName(path);
+			// var name = atheos.common.getNodeName(path);
 			// name = path.replace(path, '').split('/').join('');
 
 			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
