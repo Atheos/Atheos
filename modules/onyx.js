@@ -17,7 +17,7 @@
 
 // https://github.com/finom/balalaika/blob/master/balalaika.umd.js
 // https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
- 
+
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -103,11 +103,8 @@
 		},
 
 		off: function(types, selector, callback) {
-
 			types.split(',').forEach(function(type) {
-
 				type = type.trim();
-
 				if (!activeEvents[type]) {
 					return;
 				}
@@ -132,9 +129,13 @@
 				callback(event);
 				events.off(types, selector, temp);
 			});
-		},
+		}
+	};
 
-		get: function() {
+
+	// Lazy method to list currently active listeners in events, useful for debugging.
+	window.events = {
+		list: function() {
 			var obj = {};
 			for (var type in activeEvents) {
 				if (activeEvents.hasOwnProperty(type)) {
@@ -144,15 +145,7 @@
 			return obj;
 		}
 	};
-	
-	
-	
-	// Lazy method to list currently active listeners in events, useful for debugging.
-	window.events = {
-		list: function() {
-			return events.get();
-		}
-	};
+
 
 
 	let argToElement = function(selector) {
@@ -193,18 +186,11 @@
 		}
 
 		let insertToAdjacent = (s) => function(e) {
-			console.log(e);
 			if (e instanceof HTMLElement) {
 				e.insertAdjacentElement(s, element);
 			} else {
 				e.element.insertAdjacentElement(s, element);
-
 			}
-			// e instanceof HTMLElement ?
-			// 	e.insertAdjacentElement(s, j) :
-			// 	e.element.insertAdjacentElement(s, j):
-			// 	element.insertAdjacentElement('afterend', j);
-
 		};
 
 		let insertAdjacent = (s) => function(sOrE) {
@@ -246,9 +232,7 @@
 
 
 		return {
-			focus: function() {
-				element.focus();
-			},
+			focus: () => element.focus(),
 			show: function() {
 				element.style.display = 'block';
 			},
@@ -269,7 +253,7 @@
 			},
 			css: function(a, v) {
 				if (typeof a === 'string') {
-					if(v) {
+					if (v) {
 						element.style[a] = v;
 					}
 					return element.style[a] || null;
@@ -280,36 +264,28 @@
 					}
 				}
 			},
-			data: function(d) {
-				if (d) {
-					element.data = d;
-				}
+			data: (d) => {
+				if (d) element.data = d;
 				return element.data;
 			},
-			html: function(h) {
-				if (h) {
-					element.innerHTML = h;
-				}
+			html: (h) => {
+				if (h) element.innerHTML = h;
 				return element.innerHTML;
 			},
-			text: function(t) {
-				if (t) {
-					element.innerText = t;
-				}
+			text: (t) => {
+				if (t) element.innerText = t;
 				return element.innerText;
 			},
-			value: function(v) {
-				if (v) {
-					element.value = v;
-				}
+			value: (v) => {
+				if (v) element.value = v;
 				return element.value;
 			},
 			addClass: function(c) {
 				element.classList.add(...c.split(' '));
 			},
 			removeClass: function(c) {
-				if(c) {
-				element.classList.remove(...c.split(' '));
+				if (c) {
+					element.classList.remove(...c.split(' '));
 				} else {
 					element.className = '';
 				}
@@ -324,9 +300,9 @@
 			toggleClass: function(t) {
 				return element.classList.toggle(t);
 			},
-			empty: function() {
-				element.innerHTML = '';
-			},
+
+			empty: () => element.innerHTML = '',
+
 			exists: function() {
 				return (element && element.nodeType);
 			},
@@ -336,13 +312,9 @@
 				}
 				return element.getAttribute(k);
 			},
-			removeAttr: function(k) {
-				element.removeAttribute(k);
-				return this;
-			},
-			parent: function() {
-				return onyx(element.parentNode);
-			},
+			removeAttr: () => element.removeAttribute(k),
+			parent: () => onyx(element.parentNode),
+
 			siblings: function(s) {
 				var siblings = [];
 				var sibling = element.parentNode.firstElementChild;
@@ -368,13 +340,21 @@
 
 				return children;
 			},
-			find: function(s) {
+			find: function(s, q) {
 				var nodes = element.querySelectorAll(s),
 					results = [];
 				for (var i = 0; i < nodes.length; i++) {
 					results.push(onyx(nodes[i]));
 				}
+
+				// const action = {
+				// 	first: results[0],
+				// 	last: results.slice(-1)[0],
+				// 	default: results
+				// };
+				// return action[q] || action.default;
 				return results;
+
 			},
 			remove: function() {
 				element.remove();
@@ -393,17 +373,9 @@
 			append: insertAdjacent('beforeend'),
 
 			offset: () => element.getBoundingClientRect(),
-			// outerHeight: element.outerHeight,
-			// outerWidth: element.outerWidth,
-			clientHeight: function() {
-				return element.clientHeight;
-			},
-			clientWidth: function() {
-				return element.clientWidth;
-			},
-			style: function() {
-				return element.style;
-			},
+			clientHeight: () => element.clientHeight,
+			clientWidth: () => element.clientWidth,
+			style: () => element.style,
 			el: element,
 
 			isOnyx: true
