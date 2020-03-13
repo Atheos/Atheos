@@ -227,49 +227,6 @@ class Filemanager extends Common
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// SEARCH
-	//////////////////////////////////////////////////////////////////
-
-	public function search() {
-		if (!function_exists('shell_exec')) {
-			$this->status = "error";
-			$this->message = "Shell_exec() Command Not Enabled.";
-		} else {
-			if ($_GET['type'] == 1) {
-				$this->path = WORKSPACE;
-			}
-			$return = array();
-
-			$input = str_replace('"', '', $this->searchString);
-			$cmd = 'find -L ' . escapeshellarg($this->path) . ' -iregex  '.escapeshellarg('.*' . $this->searchFileType).' -type f | xargs grep -i -I -n -R -H ' . escapeshellarg($input) . '';
-			$output = shell_exec($cmd);
-			$output_arr = explode("\n", $output);
-			foreach ($output_arr as $line) {
-				$data = explode(":", $line);
-				$da = array();
-				if (count($data) > 2) {
-					$file = str_replace($this->path, '', $data[0]);
-
-					$da['line'] = $data[1];
-					$da['name'] = str_replace($this->path, '', $data[0]);
-					$da['path'] = str_replace($this->root, '', $data[0]);
-					$da['string'] = str_replace($data[0] . ":" . $data[1] . ':', '', $line);
-					// $return[$file]['line'] = $data[1];
-					$return[$file][] = $da;
-				}
-			}
-			if (count($return) == 0) {
-				$this->status = "error";
-				$this->message = "No Results Returned";
-			} else {
-				$this->status = "success";
-				$this->data = json_encode($return);
-			}
-		}
-		$this->respond(true);
-	}
-
-	//////////////////////////////////////////////////////////////////
 	// OPEN (Returns the contents of a file)
 	//////////////////////////////////////////////////////////////////
 
@@ -497,7 +454,7 @@ class Filemanager extends Common
 
 		if (!file_exists($this->path)) {
 			$this->status = "error";
-			$this->message = "Invalid Source";
+			$this->message = "Invalid Source".$this->path;
 		}
 
 		function recurse_copy($src, $dst) {
@@ -519,10 +476,14 @@ class Filemanager extends Common
 			if (is_file($this->path)) {
 				copy($this->path, $this->destination);
 				$this->status = "success";
+				$this->message = "File Duplicated";
+
 			} else {
 				recurse_copy($this->path, $this->destination);
 				if (!$this->response) {
 					$this->status = "success";
+					$this->message = "Folder Duplicated";
+
 				}
 			}
 		}
