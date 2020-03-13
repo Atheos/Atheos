@@ -89,6 +89,28 @@ class Common {
 
 		session_start();
 
+		if (true) {
+			//Some security checks, helps with securing the service
+			if (isset($_SESSION['user']) && isset($_SESSION['_USER_LOOSE_IP'])) {
+				if ($_SESSION['_USER_LOOSE_IP'] != long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0")) || $_SESSION['_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['_USER_ACCEPT_ENCODING'] != $_SERVER['HTTP_ACCEPT_ENCODING'] || $_SESSION['_USER_ACCEPT_LANG'] != $_SERVER['HTTP_ACCEPT_LANGUAGE']) {
+					//Bad session detected, let's not allow any further data to be transfered and redirect to logout.
+					session_unset(); // Same as $_SESSION = array();
+					session_destroy(); // Destroy session on disk
+					setcookie("sid", "", 1);
+					header("Location: index.php");
+					die();
+				}
+				$_SESSION['_USER_LAST_ACTIVITY'] = time(); //Reset user activity timer
+			} else {
+				//Store identification data so we can detect malicous logins potentially. (Like XSS)
+				$_SESSION['_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT']; //Save user agent (Spoofable, so we have the other stuff below to check for as well which may or may not be a little more difficult to guess for an attacker.)
+				$_SESSION['_USER_ACCEPT_ENCODING'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
+				$_SESSION['_USER_ACCEPT_LANG'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+				$_SESSION['_USER_LOOSE_IP'] = long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
+				$_SESSION['_USER_LAST_ACTIVITY'] = time();
+			}
+		}
+
 		//Check for external authentification
 		if (defined('AUTH_PATH')) {
 			require_once(AUTH_PATH);
@@ -142,11 +164,7 @@ class Common {
 	// Localization
 	//////////////////////////////////////////////////////////////////
 
-	public static function i18n($key, $type = "echo") {
-		return Common::get_i18n($key, $type);
-	}
-
-	public static function get_i18n($key, $type = "return") {
+	public static function i18n($key, $type = "return") {
 		global $lang;
 		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
@@ -180,7 +198,7 @@ class Common {
 	// Get JSON
 	//////////////////////////////////////////////////////////////////
 
-	public static function getJSON($file, $namespace = "") {
+	public static function readJSON($file, $namespace = "") {
 		$json = false;
 
 		$path = DATA . "/" . $namespace . "/";
@@ -302,14 +320,16 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 
 	public static function checkPath($path) {
-		if (file_exists(DATA . "/" . $_SESSION['user'] . '_acl.php')) {
-			foreach (getJSON($_SESSION['user'] . '_acl.php') as $projects => $data) {
+		$user_acl = readJSON($_SESSION['user'] . "_acl");
+		
+		if ($user_acl) {
+			foreach ($user_acl as $projects => $data) {
 				if (strpos($path, $data) === 0) {
 					return true;
 				}
 			}
 		} else {
-			foreach (getJSON('projects.php') as $project => $data) {
+			foreach (readJSON('projects') as $project => $data) {
 				if (strpos($path, $data['path']) === 0) {
 					return true;
 				}
@@ -366,7 +386,10 @@ function checkSession() {
 	Common::checkSession();
 }
 function getJSON($file, $namespace = "") {
-	return Common::getJSON($file, $namespace);
+	return Common::readJSON($file, $namespace);
+}
+function readJSON($file, $namespace = "") {
+	return Common::readJSON($file, $namespace);
 }
 function saveJSON($file, $data, $namespace = "") {
 	Common::saveJSON($file, $data, $namespace);
