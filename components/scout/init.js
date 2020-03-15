@@ -43,7 +43,7 @@
 				path: path
 			});
 			atheos.modal.ready.then(function() {
-				atheos.modal.hideOverlay();
+				// atheos.modal.hideOverlay();
 				var table = o('#search_results');
 
 
