@@ -96,6 +96,8 @@ if (isset($_SESSION['theme'])) {
 		?>
 
 		<div id="workspace">
+			<?php require_once('components/contextmenu/menu.php'); ?>
+
 			<?php require_once('components/sidebars/sb-left.php'); ?>
 
 
