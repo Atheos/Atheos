@@ -1,119 +1,139 @@
 [{
 		"title": "New File",
+		"enabled": true,
 		"icon": "fas fa-plus-circle",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.create($('#context-menu').attr('data-path'),'file');"
 	},
 	{
 		"title": "New Folder",
+		"enabled": true,
 		"icon": "fas fa-folder",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.create($('#context-menu').attr('data-path'),'directory');"
 	},
 	{
 		"title": "Break",
+		"enabled": false,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
 		"title": "Search",
+		"enabled": false,
 		"icon": "fas fa-search",
 		"applies-to": "directory-only",
-		"onclick": "atheos.filemanager.search($('#context-menu').attr('data-path'));"
+		"onclick": "atheos.scout.search($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
 		"title": "Upload Files",
+		"enabled": true,
 		"icon": "fas fa-upload",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.upload($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Preview",
+		"enabled": true,
 		"icon": "fas fa-eye",
 		"applies-to": "both no-external",
 		"onclick": "atheos.filemanager.openInBrowser($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
 		"title": "Copy",
+		"enabled": true,
 		"icon": "fas fa-copy",
 		"applies-to": "both",
 		"onclick": "atheos.filemanager.copy($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Paste",
+		"enabled": true,
 		"icon": "fas fa-paste",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.paste($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Duplicate",
+		"enabled": true,
 		"icon": "fas fa-clone",
 		"applies-to": "both",
 		"onclick": "atheos.filemanager.duplicate($('#context-menu').attr('data-path'));"
 	},	
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "non-root",
 		"onclick": null
 	},
 	{
 		"title": "Rename",
+		"enabled": true,
 		"icon": "fas fa-pencil-alt",
 		"applies-to": "non-root",
 		"onclick": "atheos.filemanager.rename($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Rename Project",
+		"enabled": true,
 		"icon": "fas fa-pencil-alt",
 		"applies-to": "root-only",
 		"onclick": "atheos.project.rename($('#context-menu').attr('data-name'),$('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "non-root",
 		"onclick": null
 	},
 	{
 		"title": "Delete",
+		"enabled": true,
 		"icon": "fas fa-trash-alt",
 		"applies-to": "non-root",
 		"onclick": "atheos.filemanager.delete($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "both",
 		"onclick": null
 	},
 	{
 		"title": "Download",
+		"enabled": true,
 		"icon": "fas fa-download",
 		"applies-to": "both",
 		"onclick": "atheos.filemanager.download($('#context-menu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
+		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
 		"title": "Rescan",
+		"enabled": true,
 		"icon": "fas fa-sync-alt",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.rescan($('#context-menu').attr('data-path'));"
