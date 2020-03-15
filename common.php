@@ -221,8 +221,8 @@ class Common {
 
 		if ($json) {
 			$json = json_decode($json, true);
-			return $json;
 		}
+		return $json;
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -279,19 +279,24 @@ class Common {
 	// Format JSEND Response
 	//////////////////////////////////////////////////////////////////
 
-	public static function sendJSON($status, $data = false) {
+	public static function sendJSON($status, $message = false) {
+
+		$reply = array(
+			status => $status ?? "error",
+			message => $message ?? "no data"
+		);
+
 
 		/// Debug /////////////////////////////////////////////////
-		$debug = "";
 		if (count(Common::$debugMessageStack) > 0) {
-			$debug .= ',"debug":';
-			$debug .= json_encode(Common::$debugMessageStack);
+			$reply["debug"] = Common::$debugMessageStack;
 		}
 
 		// Success ///////////////////////////////////////////////
 		if ($status == "success") {
-			if ($data) {
-				$data["status"] = "success";
+			if ($message) {
+				$message["status"] = "success";
+				$message["debug"] = $debug;
 				$jsend = json_encode($data);
 			} else {
 				$jsend = '{"status":"success","data":null}';
@@ -303,7 +308,7 @@ class Common {
 		}
 
 		// Return ////////////////////////////////////////////////
-		echo $jsend;
+		echo json_encode($reply);
 
 	}
 
@@ -321,8 +326,8 @@ class Common {
 
 	public static function checkPath($path) {
 		$user_acl = readJSON($_SESSION['user'] . "_acl");
-		
-		if ($user_acl) {
+
+		if (is_array($user_acl)) {
 			foreach ($user_acl as $projects => $data) {
 				if (strpos($path, $data) === 0) {
 					return true;
