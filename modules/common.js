@@ -19,11 +19,19 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 
-var log = function(m, t) {
-	if (t) {
-		console.trace(m);
-	} else {
-		console.log(m);
+const log = function(m, t) {
+	try {
+		const json = JSON.parse(m);
+		const type = Object.prototype.toString.call(json);
+		if (type === '[object Object]' || type === '[object Array]') {
+			m = json;
+		}
+	} finally {
+		if (t) {
+			console.trace(m);
+		} else {
+			console.log(m);
+		}
 	}
 };
 
@@ -58,7 +66,7 @@ var log = function(m, t) {
 		getNodeType: function(path) {
 			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
 		},
-		
+
 		_basename: function(path, suffix) {
 			//  discuss at: http://phpjs.org/functions/basename/
 			var b = path;
