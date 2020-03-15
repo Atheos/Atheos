@@ -20,10 +20,14 @@ $files = [
 	"modules/amplify.js",
 	"modules/ajax.js",
 	"modules/file-icons.js",
+	"modules/i18n.js",
 	"modules/onyx.js",
 	"modules/synthetic.js",
+	"modules/types.js",
+	// Global components need to be above this line.
 	"modules/system.js",
 	"modules/alert.js",
+	"modules/animation.js",
 	"modules/chrono.js",
 	"modules/codiad.js",
 	"modules/common.js",
@@ -31,8 +35,7 @@ $files = [
 	"modules/keybind.js",
 	"modules/modal.js",
 	"modules/storage.js",
-	"modules/toast.js",
-	"modules/types.js"
+	"modules/toast.js"
 ];
 // This is a conditional that helps during developement of Atheos.
 if (true) {
