@@ -134,10 +134,11 @@
 
 			if (wrapper) {
 				var width = wrapper.clientWidth();
+				width = width > 1000 ? 1000 : width;
 				wrapper.css({
 					'top': '15%',
 					'left': 'calc(50% - ' + (width / 2) + 'px)',
-					'min-width': width + 'px'
+					'width': width + 'px'
 				});
 			}
 		},
