@@ -10,6 +10,9 @@ header("Feature-Policy: sync-xhr 'self'");
 
 require_once('common.php');
 
+require_once('public/class.sourcemanager.php');
+$SourceManager = new SourceManager;
+
 // Context Menu
 $context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
 $context_menu = json_decode($context_menu, true);
@@ -52,8 +55,11 @@ if (isset($_SESSION['theme'])) {
 	// Load System CSS Files
 	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
 
+	//////////////////////////////////////////////////////////////////
+	// LOAD MODULES
+	//////////////////////////////////////////////////////////////////
+	$SourceManager->echoScripts("modules", false);
 
-	require_once('public/minify-core-js.php');
 
 	// Load Plugin CSS Files
 	foreach ($plugins as $plugin) {
@@ -172,32 +178,21 @@ if (isset($_SESSION['theme'])) {
 			<ul id="suggestions"></ul>
 		</div>
 
+
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
 		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
 
-
-		<!-- COMPONENTS -->
 		<?php
-
 		//////////////////////////////////////////////////////////////////
 		// LOAD COMPONENTS
 		//////////////////////////////////////////////////////////////////
+		$SourceManager->echoScripts("components", true);
 
-		// JS
-		foreach ($components as $component) {
-			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
-				echo('<script src="components/'.$component.'/init.js"></script>"');
-			}
-		}
-
-		// require_once('plugins/minify-plugins-js.php');
-
-		foreach ($plugins as $plugin) {
-			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
-				echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
-			}
-		}
+		//////////////////////////////////////////////////////////////////
+		// LOAD PLUGINS
+		//////////////////////////////////////////////////////////////////
+		$SourceManager->echoScripts("plugins", true);
 	}
 
 	?>
