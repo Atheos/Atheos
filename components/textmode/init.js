@@ -41,22 +41,16 @@
 		// Send available text modes & file extensions to the Ace Editor.
 		//////////////////////////////////////////////////////////////////
 		setEditorTextModes: function(data) {
-			data = JSON.parse(data);
-			if (data.status !== 'error' && data.extensions !== undefined) {
-				atheos.editor.clearFileExtensionTextMode();
-
-				for (var ext in data.extensions) {
-					atheos.editor.addFileExtensionTextMode(ext, data.extensions[ext]);
-				}
-
-				if (data.textModes !== undefined && data.textModes !== []) {
-					textmode.availableTextModes = data.textModes;
-				}
-
-				/* Notify listeners. */
-				amplify.publish('textmode.loaded');
+			atheos.editor.clearFileExtensionTextMode();
+			for (var ext in data.extensions) {
+				atheos.editor.addFileExtensionTextMode(ext, data.extensions[ext]);
 			}
-			atheos.toast[data.status](data.message);
+
+			if (data.textModes !== undefined && data.textModes !== []) {
+				textmode.availableTextModes = data.textModes;
+			}
+			/* Notify listeners. */
+			amplify.publish('textmode.loaded');
 
 		},
 
@@ -89,7 +83,13 @@
 				url: textmode.controller,
 				type: 'post',
 				data: data,
-				success: textmode.setEditorTextModes
+				success: function(data) {
+					data = JSON.parse(data);
+					atheos.toast[data.status](data.message);
+					if (data.status !== 'error' && data.extensions !== undefined) {
+						textmode.setEditorTextModes(data);
+					}
+				}
 			});
 
 		},
