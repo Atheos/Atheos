@@ -281,30 +281,19 @@ class Common {
 
 	public static function sendJSON($status, $message = false) {
 
-		$reply = array(
-			status => $status ?? "error",
-			message => $message ?? "no data"
-		);
+		if (is_array($message)) {
+			$reply = $message;
+		} else {
+			$reply = array(
+				"message" => $message ?? "no data"
+			);
+		}
 
+		$reply["status"] = $status ?? "error";
 
 		/// Debug /////////////////////////////////////////////////
 		if (count(Common::$debugMessageStack) > 0) {
 			$reply["debug"] = Common::$debugMessageStack;
-		}
-
-		// Success ///////////////////////////////////////////////
-		if ($status == "success") {
-			if ($message) {
-				$message["status"] = "success";
-				$message["debug"] = $debug;
-				$jsend = json_encode($data);
-			} else {
-				$jsend = '{"status":"success","data":null}';
-			}
-
-			// Error /////////////////////////////////////////////////
-		} else {
-			$jsend = '{"status":"error","message":"'.$data.'"}';
 		}
 
 		// Return ////////////////////////////////////////////////
@@ -341,6 +330,28 @@ class Common {
 			}
 		}
 		return false;
+	}
+
+	public static function post($key) {
+		$data = false;
+		if (array_key_exists($key, $_POST)) {
+			$data = $_POST[$key];
+		}
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
+	}
+
+	public static function get($key) {
+		$data = false;
+		if (array_key_exists($key, $_GET)) {
+			$data = $_GET[$key];
+		}
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
 	}
 
 
