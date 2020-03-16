@@ -138,7 +138,7 @@
 				wrapper.css({
 					'top': '15%',
 					'left': 'calc(50% - ' + (width / 2) + 'px)',
-					'width': width + 'px'
+					'min-width': width + 'px'
 				});
 			}
 		},

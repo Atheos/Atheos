@@ -43,7 +43,7 @@
 		return arr.join('&');
 	}
 
-	return function(options) {
+	const ajax = function(options) {
 		options = options || {};
 		options.type = (options.type || 'GET').toUpperCase();
 		options.dataType = options.dataType || 'json';
@@ -83,7 +83,6 @@
 				xhr.send(params);
 			}
 		});
-		// return xhr;
 	};
-	
+	return ajax;
 });
