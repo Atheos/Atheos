@@ -24,7 +24,7 @@
 		amplify = global.amplify,
 		o = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.textmode.init());
+	amplify.subscribe('atheos.loaded', () => atheos.contextmenu.init());
 
 	atheos.contextmenu = {
 
