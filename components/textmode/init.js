@@ -1,142 +1,114 @@
-/*
-	*  (c) Codiad & ccvca (https://github.com/ccvca)
-	* @author ccvca (https://github.com/ccvca)
-	* This Code is released under the same licence as Codiad (https://github.com/Codiad/Codiad)
-	* See [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// TextMode
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
-	var self = null;
-	var codiad = global.codiad;
+(function(global) {
+	'use strict';
+	var textmode = null;
 
-	$(function() {
-		codiad.fileext_textmode.init();
-	});
+	var atheos = global.atheos,
+		amplify = global.amplify,
+		ajax = global.ajax,
+		oX = global.onyx;
 
-	global.codiad.fileext_textmode = {
+	amplify.subscribe('atheos.loaded', () => atheos.textmode.init());
+
+	atheos.textmode = {
 
 		dialog: 'components/textmode/dialog.php',
 		controller: 'components/textmode/controller.php',
-
-		//////////////////////////////////////////////////////////////////
-		//do a post request for the first associations of fileextensions and textmodes
-		//////////////////////////////////////////////////////////////////
 		availableTextModes: [],
 
 		init: function() {
-			self = this;
-			this.initEditorFileExtensionTextModes();
-
-			amplify.subscribe('settings.dialog.save', function() {
-				if ($('#FileExtTextModeDiv:visible').length !== 0) {
-					self.sendForm();
-				}
+			textmode = this;
+			ajax({
+				url: textmode.controller,
+				type: 'post',
+				data: {
+					'action': 'getTextModes'
+				},
+				success: textmode.setEditorTextModes
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////
-		//do a post request for the first associations of fileextensions and textmodes
+		// Send available text modes & file extensions to the Ace Editor.
 		//////////////////////////////////////////////////////////////////
-		initEditorFileExtensionTextModes: function() {
-			$.get(this.controller, {
-				'action': 'GetFileExtTextModes'
-			}, this.setEditorFileExtensionTextModes);
-		},
+		setEditorTextModes: function(data) {
+			data = JSON.parse(data);
+			if (data.status !== 'error' && data.extensions !== undefined) {
+				atheos.editor.clearFileExtensionTextMode();
 
-		//////////////////////////////////////////////////////////////////
-		//initial method to get the stored associations
-		//////////////////////////////////////////////////////////////////
-		setEditorFileExtensionTextModes: function(data) {
-			resp = $.parseJSON(data);
-			if (resp.status !== 'error' && resp.extensions !== undefined) {
-				codiad.editor.clearFileExtensionTextMode();
-
-				for (var i in resp.extensions) {
-					codiad.editor.addFileExtensionTextMode(i, resp.extensions[i]);
+				for (var ext in data.extensions) {
+					atheos.editor.addFileExtensionTextMode(ext, data.extensions[ext]);
 				}
 
-				if (resp.textModes !== undefined && resp.textModes !== []) {
-					self.availableTextModes = resp.textModes;
+				if (data.textModes !== undefined && data.textModes !== []) {
+					textmode.availableTextModes = data.textModes;
 				}
 
 				/* Notify listeners. */
-				amplify.publish('fileext_textmode.loadedExtensions');
+				amplify.publish('textmode.loaded');
 			}
-			self.showStatus(data);
+			atheos.toast[data.status](data.message);
+
 		},
 
-		formWidth: 400,
+		//////////////////////////////////////////////////////////////////
+		// Save the extensions to the server.
+		//////////////////////////////////////////////////////////////////
+		saveExtensions: function() {
+			var form = oX('#modal_content form').el;
+			var len = form.elements.length;
 
-		//////////////////////////////////////////////////////////////////
-		// Open the component dialog
-		//////////////////////////////////////////////////////////////////
-		open: function() {
-			//codiad.modal.unload();
-			codiad.modal.load(this.formWidth,
-				this.dialog + "?action=fileextension_textmode_form");
-			codiad.modal.hideOverlay();
-		},
-		//////////////////////////////////////////////////////////////////
-		//send the insert extesions and textmodes to the server.
-		//////////////////////////////////////////////////////////////////
-		sendForm: function() {
-			var $div = $('#FileExtTextModeDiv');
-			var extensions = $div.find('.FileExtension');
-			//data to send
-			var formData = {
-				'extension[]': [],
-				'textMode[]': []
+			var data = {
+				'action': 'setTextModes'
 			};
-			for (var i = 0; i < extensions.size(); ++i) {
-				formData['extension[]'].push(extensions[i].value);
+
+			for (var i = 0; i < len; i++) {
+				var field = form.elements[i];
+
+				if (field.name !== 'extension' && field.name !== 'textmode') {
+					continue;
+				}
+
+				if (data[field.name]) {
+					data[field.name].push(field.value);
+				} else {
+					data[field.name] = [field.value];
+				}
 			}
 
-			var textMode = $div.find('.textMode');
-			for (var i = 0; i < textMode.size(); ++i) {
-				formData['textMode[]'].push(textMode[i].value);
-			}
+			ajax({
+				url: textmode.controller,
+				type: 'post',
+				data: data,
+				success: textmode.setEditorTextModes
+			});
 
-			$.post(this.controller + '?action=FileExtTextModeForm', formData, self.setEditorFileExtensionTextModes);
 		},
+
 		//////////////////////////////////////////////////////////////////
-		//Add a new insert line to the form
+		//Add a new insert line to the extensions table
 		//////////////////////////////////////////////////////////////////
 		addFieldToForm: function() {
-			var $table = $('#FileExtTextModeTable');
-			var $tbody = $('#FileExtTextModeTableTbody');
+			var extensions = oX('#textmodes');
 
-			var code = '<tr><td><input class="FileExtension" type="text" name="extension[]" value="" /></td>';
-			code += '<td><select name="textMode[]" class="textMode">';
-			for (var i = 0; i < this.availableTextModes.length; ++i) {
-				code += '<option>' + this.availableTextModes[i] + '</option>';
-			}
+			var code = '<tr><td><input type="text" name="extension" value="" /></td>';
+			code += '<td><select name="textMode">';
+			textmode.availableTextModes.forEach(mode => {
+				code += '<option>' + mode + '</option>';
+			});
 
 			code += '</select></td></tr>';
 
-			$tbody.append(code);
-
-			//scroll as far down as possible
-			$table.scrollTop(1000000);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//showing the status and msg from a http-request
-		//////////////////////////////////////////////////////////////////
-		showStatus: function(resp) {
-			resp = $.parseJSON(resp);
-			if (resp.status !== undefined && resp.status !== '' && resp.msg !== undefined && resp.message !== '') {
-				switch (resp.status) {
-					case 'success':
-						codiad.toast.success(resp.msg);
-						break;
-					case 'error':
-						codiad.toast.error(resp.msg);
-						break;
-					case 'notice':
-						codiad.toast.notice(resp.msg);
-						break;
-				}
-			}
+			extensions.append(code);
 		}
 	};
-})(this, jQuery);
+})(this);
