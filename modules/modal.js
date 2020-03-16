@@ -10,15 +10,6 @@
 // modal functions, modal will always load center screen; I can re-add them
 // later if I decide that it was important.
 //
-// Event propagation from the overlay and the interactions within
-// the modal seem to be a bit twisted up. Once I sort out all the
-// plugins & components into a cohesive system, I'll need to clean
-// this mess up.
-//
-// It looks like the modal loader handles event management & even
-// loading the content for each modal, while I know a lot of the 
-// plugins seem to as well, this will have to be optimized.
-//
 // *Sigh* The jquery HTML function for loading the content also
 // executes the script tags contained within, which is a nightmare in
 // my opinion. I think the idea was to containerize each component &
@@ -27,9 +18,7 @@
 // the start.
 //
 // Modal module currently called from:
-//	Sidebars.js: Keep leftsidebar open if modal is open
-//	Settings/init.js: Check for AJAX return promise
-//	FileManager/init.js: Check for AJAX return promise
+//	Literally everywhere.
 //
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
