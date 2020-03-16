@@ -5,13 +5,15 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 // Notes: 
 // Module used to scan through a project's files by their contents.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
-	// 'use strict';
+	'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
