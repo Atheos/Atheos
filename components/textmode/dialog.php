@@ -1,77 +1,84 @@
 <?php
 
-/*
- *  (c) Codiad & ccvca (https://github.com/ccvca)
-* @author ccvca (https://github.com/ccvca)
-* This Code is released under the same licence as Codiad (https://github.com/Codiad/Codiad)
-* See [root]/license.txt for more. This information must remain intact.
-*/
+//////////////////////////////////////////////////////////////////////////////80
+// TextMode
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-require_once 'class.fileextension_textmode.php';
+require_once('../../common.php');
+require_once 'class.textmode.php';
 
-//check Session is done in constructor
-$fileExTM = new fileextension_textmode();
+Common::checkSession();
 
-if (!isset($_GET['action'])) {
-	die('Missing $_GET["action"]');
-}
-switch ($_GET['action']) {
-	//////////////////////////////////////////////////////////////////
-	//The form for edit the assotiations
-	//////////////////////////////////////////////////////////////////
-	case 'fileextension_textmode_form':
-		if (!Common::checkAccess()) {
-			die('You are not allowed to edit the file extensions.');
-		}
-		//////////////////////////////////////////////////////////////////
-		//Reading the current extensions
-		//////////////////////////////////////////////////////////////////
-		$ext = false;
-		//ignore warnings
-		$ext = @Common::getJSON(fileextension_textmode::storeFilename);
+$action = Common::get('action');
 
-		if (!is_array($ext)) {
-			//default extensions
-			$ext = $fileExTM->getDefaultExtensions();
-		}
+if ($action) {
+	
+	$TextMode = new TextMode();
 
-		$textModes = $fileExTM->getAvailiableTextModes();
+	switch ($action) {
+		case 'settings':
+			if (!Common::checkAccess()) {
+				die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
+			}
 
-		if (!@ksort($ext)) {
-			die(json_encode(array('status' => 'error', 'msg' => 'Internal PHP error.')));
-		}
-		?>
-		<label><span class="icon-pencil big-icon"></span><?php i18n("Extensions"); ?></label>
-		<div id="FileExtTextModeDiv">
-			<table id="FileExtTextModeTable">
-				<thead>
-					<tr>
-						<th><?php i18n("Extension"); ?></th>
-						<th><?php i18n("Mode"); ?></th>
-					</tr>
-				</thead>
-				<tbody id="FileExtTextModeTableTbody">
-					<?php
-					foreach ($ext as $ex => $mode) {
-						//////////////////////////////////////////////////////////////////
-						//print only valid assotiations
-						//////////////////////////////////////////////////////////////////
-						if (!$fileExTM->validTextMode($mode)) {
-							continue;
-						} ?>
+			$ext = Common::readJSON("extensions");
+
+			if (!is_array($ext)) {
+				$ext = $TextMode->getDefaultExtensions();
+			}
+
+			$textModes = $TextMode->getAvailiableTextModes();
+
+			if (!@ksort($ext)) {
+				die(Common::sendJSON("error", "PHP: Missing ksort"));
+			}
+
+			?>
+			<h2><i class="icon-pencil big-icon"></i><?php i18n("Extensions"); ?></h2>
+			<form>
+
+				<table>
+					<thead>
 						<tr>
-							<td><input class="FileExtension" type="text" name="extension[]" value="<?php echo $ex ?>" /></td>
-							<td><?php echo $fileExTM->getTextModeSelect($mode) ?></td>
+							<th><?php i18n("Extension"); ?></th>
+							<th><?php i18n("Mode"); ?></th>
 						</tr>
+					</thead>
+					<tbody id="textmodes">
 						<?php
-					}
-					?>
-				</tbody>
-			</table>
-		</div>
-		<br>
-		<button class="btn-left" onClick="codiad.fileext_textmode.addFieldToForm()"><?php i18n("New Extension"); ?></button>
-		<?php
-		break;
+						foreach ($ext as $ex => $mode) {
+							//////////////////////////////////////////////////////////////////
+							//print only valid assotiations
+							//////////////////////////////////////////////////////////////////
+							if (!$TextMode->validTextMode($mode)) {
+								continue;
+							} ?>
+							<tr>
+								<td><input class="FileExtension" type="text" name="extension" value="<?php echo $ex ?>" /></td>
+								<td><?php echo $TextMode->getTextModeSelect($mode) ?></td>
+							</tr>
+							<?php
+						}
+						?>
+					</tbody>
+				</table>
+				<br>
+				<button class="btn-left" onClick="atheos.textmode.addFieldToForm(); return false;"><?php i18n("New Extension"); ?></button>
+				<button class="btn-right" onClick="atheos.textmode.saveExtensions(); return false;"><?php i18n("Save Extensions"); ?></button>
+			</form>
+			<?php
+			break;
+		default:
+			die(Common::sendJSON("error", "invalid action"));
+			break;
+	}
+} else {
+	die(Common::sendJSON("error", "missing action"));
 }
 ?>
