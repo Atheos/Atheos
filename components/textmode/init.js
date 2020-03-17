@@ -33,7 +33,10 @@
 				data: {
 					'action': 'getTextModes'
 				},
-				success: textmode.setEditorTextModes
+				success: function(data) {
+					data = JSON.parse(data);
+					textmode.setEditorTextModes(data);
+				}
 			});
 		},
 
