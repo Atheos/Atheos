@@ -185,8 +185,8 @@ define("WSURL", BASE_URL . "/workspace");
 
 // Update Check
 define("UPDATEURL", "http://https://atheos.io/update?v={VER}&o={OS}&p={PHP}&w={WEB}&a={ACT}");
-define("ARCHIVEURL", "https://github.com/HLSiira/Atheos/archive/master.zip");
-define("COMMITURL", "https://api.github.com/repos/HLSiira/Atheos/commits");
+define("ARCHIVEURL", "https://github.com/Atheos/Atheos/archive/master.zip");
+define("COMMITURL", "https://api.github.com/repos/Atheos/Atheos/commits");
 ';
 
     saveFile($config, $config_data);
