@@ -1,196 +1,173 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+//////////////////////////////////////////////////////////////////////////////80
+// FileManager
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-require_once('class.user.php');
+require_once '../../common.php';
+require_once 'class.user.php';
 
-$action = '';
-
-if (isset($_GET['action'])) {
-	$action = $_GET['action'];
-}elseif(isset($_POST['action'])){
-	$action = $_POST['action'];
-} else {
-	die(Common::sendJSON("error", "Missing action"));
-}
-
+$action = Common::post('action');
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 if ($action != 'authenticate') {
-	checkSession();
+	Common::checkSession();
 }
 
-$User = new User();
+if ($action) {
 
-$username = false;
-$password = false;
-$project = false;
-$language = false;
-$theme = false;
+	$User = new User();
 
-if (isset($_POST["username"])) {
-	$username = User::CleanUsername($_POST["username"]);
-}
-if (isset($_POST["password"])) {
-	$password = $_POST["password"];
-}
-if (isset($_POST["project"])) {
-	$project = $_POST["project"];
-}
-if (isset($_POST["language"])) {
-	$lang = $_POST["language"];
-}
-if (isset($_POST["theme"])) {
-	$theme = $_POST["theme"];
-}
+	$username = Common::post('username');
+	$password = Common::post('password');
+	$activeProject = Common::post('activeProject');
+	$userACL = Common::post('project');
+	$language = Common::post('language');
+	$theme = Common::post('theme');
 
+	if ($username) {
+		$username = User::cleanUsername($username);
+	}
 
-switch ($action) {
-	//////////////////////////////////////////////////////////////////
-	// Authenticate / LogIn
-	//////////////////////////////////////////////////////////////////
-	case 'authenticate':
-		if ($username && $password) {
-			// $User->username = $_POST['username'];
-			$User->username = User::CleanUsername($username);
-			$User->password = $password;
+	switch ($action) {
+		//////////////////////////////////////////////////////////////////
+		// Authenticate / LogIn
+		//////////////////////////////////////////////////////////////////
+		case 'authenticate':
+			if ($username && $password) {
+				$User->username = $username;
+				$User->password = $password;
 
-			// check if the asked languages exist and is registered in languages/code.php
-
-			
 				require_once '../../languages/code.php';
 				if (isset($lang) && isset($languages[$lang])) {
 					$User->lang = $lang;
 				} else {
 					$User->lang = 'en';
 				}
-			
-			// theme
-			$User->theme = $theme;
-			$User->Authenticate();
-		} else {
-			die(Common::sendJSON("error", "Missing username or password"));
-		}
-		break;
 
-	//////////////////////////////////////////////////////////////////
-	// Logout
-	//////////////////////////////////////////////////////////////////
-	case 'logout':
-		session_unset();
-		session_destroy();
-		session_start();
+				// theme
+				$User->theme = $theme;
+				$User->authenticate();
+			} else {
+				die(Common::sendJSON("error", "Missing username or password"));
+			}
+			break;
 
-		break;
+		//////////////////////////////////////////////////////////////////
+		// Logout
+		//////////////////////////////////////////////////////////////////
+		case 'logout':
+			session_unset();
+			session_destroy();
+			session_start();
 
-	//////////////////////////////////////////////////////////////////
-	// Verify Session
-	//////////////////////////////////////////////////////////////////
-	case 'verify':
-		$User->username = $_SESSION['user'];
-		$User->Verify();
+			break;
 
-		break;
+		//////////////////////////////////////////////////////////////////
+		// Verify Session
+		//////////////////////////////////////////////////////////////////
+		case 'verify':
 
-	//////////////////////////////////////////////////////////////////
-	// Create User
-	//////////////////////////////////////////////////////////////////
-	case 'create':
+			$User->username = Common::session('user');
+			$User->verify();
 
-		if (checkAccess()) {
+			break;
+
+		//////////////////////////////////////////////////////////////////
+		// Create User
+		//////////////////////////////////////////////////////////////////
+		case 'create':
+
+			if (checkAccess()) {
+				if (!$username || !$password) {
+					die(Common::sendJSON("error", "Missing username or password"));
+				}
+
+				$User->username = User::cleanUsername($_POST['username']);
+				$User->password = $_POST['password'];
+				$User->create();
+			}
+
+			break;
+
+		//////////////////////////////////////////////////////////////////
+		// Delete User
+		//////////////////////////////////////////////////////////////////
+		case 'delete':
+
+			if (checkAccess()) {
+				if (!$username) {
+					die(Common::sendJSON("error", "Missing username"));
+				}
+
+				// $User->username = $_GET['username'];
+				$User->username = $username;
+				$User->delete();
+			}
+
+			break;
+
+		//////////////////////////////////////////////////////////////////
+		// Change Password
+		//////////////////////////////////////////////////////////////////
+
+		case 'password':
 			if (!$username || !$password) {
 				die(Common::sendJSON("error", "Missing username or password"));
 			}
 
-			$User->username = User::CleanUsername($_POST['username']);
-			$User->password = $_POST['password'];
-			$User->Create();
-		}
-
-		break;
-
-	//////////////////////////////////////////////////////////////////
-	// Delete User
-	//////////////////////////////////////////////////////////////////
-	case 'delete':
-
-		if (checkAccess()) {
-			if (!$username) {
-				die(Common::sendJSON("error", "Missing username"));
+			if (checkAccess() || $username == Common::session('user')) {
+				$User->username = $username;
+				$User->password = $password;
+				$User->changePassword();
 			}
 
-			// $User->username = $_GET['username'];
-			$User->username = $username;
-			$User->Delete();
-		}
+			break;
 
-		break;
-
-	//////////////////////////////////////////////////////////////////
-	// Change Password
-	//////////////////////////////////////////////////////////////////
-
-	case 'password':
-		if (!isset($_POST['username']) || !isset($_POST['password'])) {
-			die(Common::sendJSON("error", "Missing username or password"));
-		}
-
-		if (checkAccess() || $_POST['username'] == $_SESSION['user']) {
-			$User->username = $_POST['username'];
-			$User->password = $_POST['password'];
-			$User->Password();
-		}
-
-		break;
-
-	//////////////////////////////////////////////////////////////////
-	// Set Project Access
-	//////////////////////////////////////////////////////////////////
-	case 'setUserACL':
-		if (checkAccess()) {
-			if (!$username) {
-				die(Common::sendJSON("error", "Missing username"));
+		//////////////////////////////////////////////////////////////////
+		// Set Project Access
+		//////////////////////////////////////////////////////////////////
+		case 'changeUserACL':
+			if (checkAccess()) {
+				if (!$username) {
+					die(Common::sendJSON("error", "Missing username"));
+				}
+				$User->username = $username;
+				$User->userACL = $userACL;
+				$User->changeUserACL();
 			}
-			// $User->username = $_GET['username'];
-			$User->username = $username;
+			break;
 
-			//No project selected
-			if (isset($project)) {
-				$User->projects = $project;
-			} else {
-				$User->projects = array();
+		//////////////////////////////////////////////////////////////////
+		// Change Project
+		//////////////////////////////////////////////////////////////////
+
+		case 'saveActiveProject':
+			if (!isset($activeProject)) {
+				die(Common::sendJSON("error", "Missing project"));
 			}
-			$User->Project_Access();
-		}
-		break;
 
-	//////////////////////////////////////////////////////////////////
-	// Change Project
-	//////////////////////////////////////////////////////////////////
+			$User->username = Common::session('user');
+			$User->activeProject = $activeProject;
+			$User->saveActiveProject();
 
-	case 'saveActiveProject':
-		if (!isset($project)) {
-			die(Common::sendJSON("error", "Missing project"));
-		}
+			break;
 
-		$User->username = $_SESSION['user'];
-		$User->project = $project;
-		$User->Project();
-
-		break;
-
-	//////////////////////////////////////////////////////////////////
-	// Default: Invalid Action
-	//////////////////////////////////////////////////////////////////
-	default:
-		echo '{"status":"error","message":"Invalid action"}';
-		break;
+		//////////////////////////////////////////////////////////////////
+		// Default: Invalid Action
+		//////////////////////////////////////////////////////////////////
+		default:
+			echo '{"status":"error","message":"Invalid action"}';
+			break;
+	}
+} else {
+	die(Common::sendJSON("error", "missing action"));
 }
