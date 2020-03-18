@@ -292,7 +292,9 @@ class Common {
 		$reply["status"] = $status ?? "error";
 
 		/// Debug /////////////////////////////////////////////////
-		if (count(Common::$debugMessageStack) > 0) {
+		if (count(Common::$debugMessageStack) == 1) {
+			$reply["debug"] = Common::$debugMessageStack[0];
+		} elseif (count(Common::$debugMessageStack) > 0) {
 			$reply["debug"] = Common::$debugMessageStack;
 		}
 
@@ -302,11 +304,20 @@ class Common {
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// Check Function Availability
+	// Check if user can configure Atheos
 	//////////////////////////////////////////////////////////////////
-
 	public static function checkAccess() {
-		return !file_exists(DATA . "/" . $_SESSION['user'] . '_acl.php');
+		$users = Common::readJSON("users");
+		$username = Common::session("user");
+
+		$configure = false;
+
+		foreach ($users as $user => $data) {
+			if ($username === $data['username']) {
+				$configure = in_array("configure", $data['permissions']);
+			}
+		}
+		return $configure;
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -316,6 +327,14 @@ class Common {
 	public static function checkPath($path) {
 		$user_acl = readJSON($_SESSION['user'] . "_acl");
 
+		$users = Common::readJSON("users");
+		$username = Common::session("user");
+
+		foreach ($users as $user => $data) {
+			if ($username === $data['username']) {
+				$user_acl = $data["userACL"];
+			}
+		}
 		if (is_array($user_acl)) {
 			foreach ($user_acl as $projects => $data) {
 				if (strpos($path, $data) === 0) {
@@ -330,6 +349,17 @@ class Common {
 			}
 		}
 		return false;
+	}
+
+	public static function session($key) {
+		$data = false;
+		if (array_key_exists($key, $_SESSION)) {
+			$data = $_SESSION[$key];
+		}
+		$data = trim($data);
+		$data = stripslashes($data);
+		$data = htmlspecialchars($data);
+		return $data;
 	}
 
 	public static function post($key) {
@@ -358,7 +388,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check Function Availability
 	//////////////////////////////////////////////////////////////////
-
 	public static function isAvailable($func) {
 		if (ini_get('safe_mode')) return false;
 		$disabled = ini_get('disable_functions');
@@ -373,7 +402,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check If Path is absolute
 	//////////////////////////////////////////////////////////////////
-
 	public static function isAbsPath($path) {
 		return ($path[0] === '/' || $path[1] === ':')?true:false;
 	}
@@ -381,7 +409,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check If WIN based system
 	//////////////////////////////////////////////////////////////////
-
 	public static function isWINOS() {
 		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 	}
