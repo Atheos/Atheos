@@ -64,7 +64,7 @@ switch ($_GET['action']) {
 				}
 				?>
 			</table>
-			<button class="btn-left" onclick="atheos.user.createNew();"><?php i18n("New Account"); ?></button>
+			<button class="btn-left" onclick="atheos.user.create();"><?php i18n("New Account"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
 			<?php
 		}
@@ -99,27 +99,37 @@ switch ($_GET['action']) {
 
 		// Get project list
 		$projects = getJSON('projects.php');
+		$users = Common::readJSON("users");
+		$username = Common::get("username");		
 		// Get control list (if exists)
 		$projects_assigned = false;
-		if (file_exists(BASE_PATH . "/data/" . $_GET['username'] . '_acl.php')) {
-			$projects_assigned = getJSON($_GET['username'] . '_acl.php');
+		if (file_exists(BASE_PATH . "/data/" . $username . '_acl.php')) {
+			$projects_assigned = getJSON($username . '_acl.php');
+		}
+
+		$userACL = false;
+		foreach ($users as $user => $data) {
+			if ($username === $data['username']) {
+				$userACL = $data['userACL'] == "full" ? false : $data["userACL"];
+			}
 		}
 
 		?>
 		<form>
-			<input type="hidden" name="username" value="<?php echo($_GET['username']); ?>">
-			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($_GET['username'])); ?></label>
-			<select name="access_level" onchange="if($(this).val()=='0'){ $('#project-selector').slideUp(300); }else{ $('#project-selector').slideDown(300).css({'overflow-y':'scroll'}); }">
-				<option value="0" <?php if (!$projects_assigned) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
-				<option value="1" <?php if ($projects_assigned) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
+			<?php 		echo("text:" . $userACL); ?>
+			<input type="hidden" name="username" value="<?php echo($username); ?>">
+			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($username)); ?></label>
+			<select name="acl" onchange="if($(this).val()=='false'){ $('#project-selector').slideUp(300); }else{ $('#project-selector').slideDown(300).css({'overflow-y':'scroll'}); }">
+				<option value="false" <?php if (!$userACL) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
+				<option value="true" <?php if ($userACL) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
 			</select>
-			<div id="project-selector" <?php if (!$projects_assigned) { echo('style="display: none;"'); } ?>>
+			<div id="project-selector" <?php if (!$userACL) { echo('style="display: none;"'); } ?>>
 				<table>
 					<?php
 					// Build list
 					foreach ($projects as $project => $data) {
 						$sel = '';
-						if ($projects_assigned && in_array($data['path'], $projects_assigned)) {
+						if ($userACL && in_array($data['path'], $userACL)) {
 							$sel = 'checked="checked"';
 						}
 						echo('<tr><td width="5"><input type="checkbox" name="project" '.$sel.' id="'.$data['path'].'" value="'.$data['path'].'"></td><td>'.$data['name'].'</td></tr>');
