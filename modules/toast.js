@@ -21,9 +21,9 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		i18n = global.i18n;
-
-
+		i18n = global.i18n,
+		types = global.types;
+		
 	atheos.toast = {
 
 		icons: {
@@ -33,7 +33,6 @@
 			'warning': 'exclamation-triangle'
 		},
 		settings: {
-
 			stayTime: 3000,
 			text: '',
 			sticky: false,
@@ -76,10 +75,12 @@
 
 		showToast: function(options) {
 			options = atheos.common.extend(this.settings, options);
+			
+			options.text = options.raw ? options.text : i18n(options.text);
 
 			// declare variables
 			var container = document.querySelector('#toast-container') || this.createContainer(),
-				wrapper = this.createToast(i18n(options.text), options.type);
+				wrapper = this.createToast(options.text, options.type);
 
 			container.appendChild(wrapper);
 
@@ -97,27 +98,27 @@
 		},
 
 		success: function(message, options) {
-			options = (options && typeof options === 'object') ? options : {};
+			options = types.isObject(options) ? options : {};
 			options.text = message || 'Message undefined';
 			options.type = this.icons.success;
 			this.showToast(options);
 		},
 		error: function(message, options) {
-			options = (options && typeof options === 'object') ? options : {};
+			options = types.isObject(options) ? options : {};
 			options.text = message || 'Message undefined';
 			options.type = this.icons.error;
 			options.stayTime = 10000;
 			this.showToast(options);
 		},
 		warning: function(message, options) {
-			options = (options && typeof options === 'object') ? options : {};
+			options = types.isObject(options) ? options : {};
 			options.text = message || 'Message undefined';
 			options.type = this.icons.warning;
 			options.stayTime = 5000;
 			this.showToast(options);
 		},
 		notice: function(message, options) {
-			options = (options && typeof options === 'object') ? options : {};
+			options = types.isObject(options) ? options : {};
 			options.text = message || 'Message undefined';
 			options.type = this.icons.notice;
 			this.showToast(options);
