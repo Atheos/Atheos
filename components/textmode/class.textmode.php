@@ -241,7 +241,6 @@ class TextMode {
 
 			$extension = strtolower(trim($extension));
 			$mode = strtolower(trim($modes[$key]));
-			Common::$debugMessageStack[] = "$extension:$mode";
 
 			if (!$this->validateExtension($extension)) {
 				Common::sendJSON("error", 'Invalid Extension: '.htmlentities($extension));
