@@ -9,12 +9,10 @@ data/*
 !data/.htaccess
 workspace/*
 plugins/*
-!themes/*
-!themes/codiad/
 !themes/atheos/
-vendor/
-composer.lock
+
 js/*.disabled.*
 components/*/*.disabled.*
 
+notes.md
 restore.php
