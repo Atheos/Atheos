@@ -5,14 +5,16 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 // Notes: 
 // Goodness this file is very complex; it's going to take a very long time
 // to really get a grasp of what's going on in this file and how to 
 // refactor it.
 // The context menu should become an object stored within the filemanager, and
-// constructed based on the fules specified therein. The OBJ is created, and then
-// added to by each plugin based on it's requirements. The OBJ could even be 
-// cached.
+// constructed based on the fules specified therein. The OBJ is created, and
+// then added to by each plugin based on it's requirements. The OBJ could even
+// be cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -25,9 +27,7 @@
 		fileIcons = global.FileIcons,
 		o = global.onyx;
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.filemanager.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.filemanager.init());
 
 	atheos.filemanager = {
 
@@ -40,12 +40,7 @@
 		dialog: 'components/filemanager/dialog.php',
 		dialogUpload: 'components/filemanager/dialog_upload.php',
 
-		contextMenu: {},
-
 		init: function() {
-			//Prevent text selection in fie-manager
-			// $('#file-manager').on('selectstart', false);
-
 			// Initialize node listener
 			this.nodeListener();
 			// Load uploader
@@ -57,7 +52,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////
-
 		nodeListener: function() {
 
 			var checkAnchor = function(node) {
@@ -134,7 +128,7 @@
 
 				var list = node.siblings('ul')[0];
 				if (list) {
-					fileManager.slide('close', list.el, slideDuration);
+					atheos.animation.slide('close', list.el, slideDuration);
 					if (icon) {
 						icon.replaceClass('fa-minus', 'fa-plus');
 					}
@@ -180,7 +174,7 @@
 								node.after(appendage);
 								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
-									fileManager.slide('open', list.el, slideDuration);
+									atheos.animation.slide('open', list.el, slideDuration);
 								}
 							}
 							amplify.publish('filemanager.onIndex', {
@@ -420,10 +414,11 @@
 				ajax({
 					url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
 					success: function(response) {
+						console.log(response);
+
 						response = JSON.parse(response);
 						if (response.status !== 'error') {
-							fileManager.addToFileManager(path, path + '/' + nodeName, type);
-							atheos.modal.unload();
+							fileManager.addToFileManager(path + '/' + nodeName, type, path);
 							/* Notify listeners. */
 							amplify.publish('filemanager.onPaste', {
 								path: path,
@@ -491,25 +486,23 @@
 			atheos.modal.ready.then(function() {
 				o('#modal_content form').once('submit', function(e) {
 					e.preventDefault();
+
 					var newName = o('#modal_content form input[name="object_name"]').value();
 
 					// Build new path
-					var arr = path.split('/');
-					var temp = [];
-					for (var i = 0; i < arr.length - 1; i++) {
-						temp.push(arr[i]);
-					}
-					var newPath = temp.join('/') + '/' + newName;
+
+					var parent = path.split('/').slice(0, -1).join('/');
+					var newPath = parent + '/' + newName;
 
 					ajax({
-						url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(fileManager.clipboard)}'&destination='${encodeURIComponent(path + '/' + nodeName)}`,
+						url: `${fileManager.controller}?action=duplicate&path=${encodeURIComponent(path)}'&destination='${encodeURIComponent(newPath)}`,
 						success: function(response) {
 							response = JSON.parse(response);
 
 							atheos.toast[response.status](response.message);
 
 							if (response.status !== 'error') {
-								fileManager.addToFileManager(path, path + '/' + nodeName, type);
+								fileManager.addToFileManager(newPath, type, parent);
 								atheos.modal.unload();
 								/* Notify listeners. */
 								amplify.publish('filemanager.onPaste', {
@@ -803,145 +796,4 @@
 
 	};
 
-})(this);
-
-
-
-
-
-//////////////////////////////////////////////////////////////////
-// This search module needs it's own component sooner than later
-//////////////////////////////////////////////////////////////////
-
-(function(global) {
-	// 'use strict';
-	var atheos = global.atheos,
-		amplify = global.amplify,
-		ajax = global.ajax,
-		o = global.onyx;
-	//////////////////////////////////////////////////////////////////
-	// Search
-	//////////////////////////////////////////////////////////////////
-	atheos.filemanager.search = function(path) {
-		var filemanager = this;
-		atheos.modal.load(500, this.dialog, {
-			action: 'search',
-			path: path
-		});
-		atheos.modal.ready.then(function() {
-			atheos.modal.hideOverlay();
-			var table = o('#filemanager-search-results');
-
-
-			var lastSearched = JSON.parse(localStorage.getItem('lastSearched'));
-			if (lastSearched) {
-				o('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
-				o('#modal_content form input[name="search_file_type"]').value(lastSearched.fileExtension);
-				o('#modal_content form select[name="search_type"]').value(lastSearched.searchType);
-				if (lastSearched.searchResults !== '') {
-					table.html(lastSearched.searchResults);
-					filemanager.slide('open', table.el);
-					atheos.modal.resize();
-				}
-			}
-
-
-			var listener = function(e) {
-				e.preventDefault();
-
-				o('#filemanager-search-processing').show();
-
-				// amplify.subscribe('modal.unload', function() {
-				// 	o('#modal_content form').off('submit', listener);
-				// });
-
-				var searchString = o('#modal_content form input[name="search_string"]').value();
-				var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
-				var searchFileType = fileExtensions.trim();
-				if (searchFileType !== '') {
-					//season the string to use in find command
-					searchFileType = '\\(' + searchFileType.replace(/\s+/g, '\\|') + '\\)';
-				}
-
-				var searchType = o('#modal_content form select[name="search_type"]').value();
-
-				ajax({
-					type: 'post',
-					url: filemanager.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
-					data: {
-						search_string: searchString,
-						search_file_type: searchFileType,
-						searchString: searchString,
-						searchFileType: searchFileType
-					},
-					success: function(response) {
-						response = JSON.parse(response);
-						table.empty();
-						var results = '';
-						if (response.status !== 'error') {
-							var index = response.data;
-
-							for (var key in index) {
-								if (!index.hasOwnProperty(key)) {
-									continue;
-								}
-
-								var file = index[key];
-
-								if (key.substr(-1) === '/') {
-									key = key.substr(0, key.substr.length - 1);
-								}
-
-								var node = o('<div>'),
-									content = '<span><strong>File: </strong>' + key + '</span>';
-
-
-
-								node.addClass('file');
-
-								file.forEach(function(result) {
-									result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-									content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}
-												</a>`;
-								});
-
-								node.html(content);
-								table.append(node);
-
-							}
-
-							results = table.html();
-							filemanager.slide('open', table.el);
-
-						} else {
-							filemanager.slide('close', table.el);
-						}
-						filemanager.saveSearchResults(searchString, searchType, fileExtensions, results);
-						o('#filemanager-search-processing').hide();
-						atheos.modal.resize();
-
-					}
-				});
-
-			};
-
-			o('#modal_content form').on('submit', listener);
-
-		});
-
-
-	};
-
-	/////////////////////////////////////////////////////////////////
-	// saveSearchResults
-	/////////////////////////////////////////////////////////////////
-	atheos.filemanager.saveSearchResults = function(searchText, searchType, fileExtensions, searchResults) {
-		var lastSearched = {
-			searchText: searchText,
-			searchType: searchType,
-			fileExtension: fileExtensions,
-			searchResults: searchResults
-		};
-		localStorage.setItem('lastSearched', JSON.stringify(lastSearched));
-	};
 })(this);

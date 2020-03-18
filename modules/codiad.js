@@ -53,21 +53,21 @@
 	};
 
 	$.loadScript = function(url, arg1, arg2) {
-		console.warn('$.loadScript is depreciated, please use "atheos.common.loadScript"');
+		// console.warn('$.loadScript is depreciated, please use "atheos.common.loadScript"');
 		atheos.common.loadScript(url, arg1, arg2);
 	};
 
 	$.ctrl = function(key, callback, args) {
-		console.warn('$.ctrl is depreciated, please use "atheos.keybind.bind"');
+		// console.warn('$.ctrl is depreciated, please use "atheos.keybind.bind"');
 		atheos.keybind.bind(key, callback, args);
 	};
 
 	amplify.subscribe('contextmenu.show', function(obj) {
-		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.show');
+		// console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.show');
 		amplify.publish('context-menu.onShow', obj);
 	});
 	amplify.subscribe('contextmenu.hide', function(obj) {
-		console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.hide');
+		// console.warn('[Deprecation] context-menu amplify event: please subscribe to contextmenu.hide');
 		amplify.publish('context-menu.onHide', obj);
 	});	
 })(this);

@@ -1,6 +1,17 @@
 <?php
 
+header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
+header("X-Frame-Options: SAMEORIGIN");
+header("X-XSS-Protection: 1; mode=block");
+header("X-Content-Type-Options: nosniff");
+// header("Content-Security-Policy: script-src 'self' blob: 'unsafe-inline'");
+header("Referrer-Policy: no-referrer");
+header("Feature-Policy: sync-xhr 'self'");
+
 require_once('common.php');
+
+require_once('public/class.sourcemanager.php');
+$SourceManager = new SourceManager;
 
 // Context Menu
 $context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
@@ -40,25 +51,15 @@ if (isset($_SESSION['theme'])) {
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
-	<script>
-		var i18n = (function(lang) {
-			return function(word, args) {
-				var x;
-				var returnw = (word in lang) ? lang[word]: word;
-				for (x in args) {
-					returnw = returnw.replace("%{"+x+"}%", args[x]);
-				}
-				return returnw;
-			}
-		})(<?php echo json_encode($lang); ?>)
-	</script>
-
 	<?php
 	// Load System CSS Files
 	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
 
+	//////////////////////////////////////////////////////////////////
+	// LOAD MODULES
+	//////////////////////////////////////////////////////////////////
+	$SourceManager->echoScripts("modules", false);
 
-	require_once('public/minify-core-js.php');
 
 	// Load Plugin CSS Files
 	foreach ($plugins as $plugin) {
@@ -101,6 +102,8 @@ if (isset($_SESSION['theme'])) {
 		?>
 
 		<div id="workspace">
+			<?php require_once('components/contextmenu/menu.php'); ?>
+
 			<?php require_once('components/sidebars/sb-left.php'); ?>
 
 
@@ -175,32 +178,21 @@ if (isset($_SESSION['theme'])) {
 			<ul id="suggestions"></ul>
 		</div>
 
+
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
 		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
 
-
-		<!-- COMPONENTS -->
 		<?php
-
 		//////////////////////////////////////////////////////////////////
 		// LOAD COMPONENTS
 		//////////////////////////////////////////////////////////////////
+		$SourceManager->echoScripts("components", true);
 
-		// JS
-		foreach ($components as $component) {
-			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
-				echo('<script src="components/'.$component.'/init.js"></script>"');
-			}
-		}
-
-		// require_once('plugins/minify-plugins-js.php');
-
-		foreach ($plugins as $plugin) {
-			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
-				echo('<script src="plugins/'.$plugin.'/init.js"></script>"');
-			}
-		}
+		//////////////////////////////////////////////////////////////////
+		// LOAD PLUGINS
+		//////////////////////////////////////////////////////////////////
+		$SourceManager->echoScripts("plugins", true);
 	}
 
 	?>

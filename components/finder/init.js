@@ -69,12 +69,6 @@
 				$finderOptionsMenu.hide();
 			});
 
-			// Setup the menu for selection of finding strategy
-			o('#finder-quick').on('click', function(e) {
-				atheos.filemanager.search(atheos.project.getCurrent());
-				finder.contractFinder();
-			});
-
 			/*
 
 

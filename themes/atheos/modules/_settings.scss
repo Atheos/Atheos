@@ -35,5 +35,8 @@
 		height: 500px;
 		// border-left: $border-thin;
 		@include border(1px, left);
+		form {
+			padding: 0;
+		}
 	}
 }
