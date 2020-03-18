@@ -5,6 +5,8 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 // Notes:
 // The opening and closing functions for each sidebar originally had some sort 
 // of jquery proxy function, a timeout, and a data method for storing reference
@@ -13,19 +15,12 @@
 // Keeping this in mind in case I ever have to come back to it. 
 // JSFiddle Link: http://jsfiddle.net/npXQx/
 //
-// Honestly, there is a lot going on inside each of these functions in this file
-// and I don't like it. It's easy to get lost here, and readability is next to
-// performance and security in my mind. I know comments are important and
-// required but good clean code should be understandable at a glance and this
-// code will probably change a lot as I hit the grove of it.
-//
 // Currently, I'm not overly happy with the layout, but it is a lot easier to 
 // maintain I think. The left/right sidebars are seperate objects with their own
-// functions. I wish I knew more about passing scopes as I think it would really
-// cut down on the clutter in this file.
+// functions.
 //
-// Currently only the right sidebar can be set to click-trigger while the left is
-// default to hover-hover trigger if unlocked.
+// Need to implement changing the sidebar settings such as duration of hover and
+// the trigger event.
 //
 // Sidebar module currently called from:
 //	Components/Active/init.js
@@ -34,14 +29,15 @@
 
 (function(global) {
 	'use strict';
+	
+	var sidebars = null;
 
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.sidebars.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.sidebars.init());
+
 
 	atheos.sidebars = {
 		settings: {
@@ -59,9 +55,10 @@
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
+			
+			sidebars = this;
 
-			var sidebars = atheos.sidebars,
-				sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
+			var	sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
 				sbRightWidth = atheos.storage('sidebars.sb-right-width');
 
 			if (sbLeftWidth !== null) {
@@ -125,7 +122,6 @@
 			timeoutClose: null,
 			hoverDuration: 300,
 			init: function() {
-				var sidebars = atheos.sidebars;
 				this.sidebar = oX('#sb-left');
 				this.handle = oX('#sb-left-handle');
 				this.icon = oX('#sb-left-lock');
@@ -220,7 +216,6 @@
 			timeoutClose: null,
 			hoverDuration: 300,
 			init: function() {
-				var sidebars = atheos.sidebars;
 				this.sidebar = oX('#sb-right');
 				this.handle = oX('#sb-right-handle');
 				this.icon = oX('#sb-right-lock');
