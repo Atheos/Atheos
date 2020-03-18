@@ -14,5 +14,5 @@ plugins/*
 js/*.disabled.*
 components/*/*.disabled.*
 
-notes.md
+NOTES.md
 restore.php
