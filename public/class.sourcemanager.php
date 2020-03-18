@@ -118,7 +118,7 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					loadAndMinifyJS($minifiedFileName, $files);
+					$this->loadAndMinifyJS($minifiedFileName, $files);
 				}
 			} else {
 				$this->loadAndMinifyJS($minifiedFileName, $files);
