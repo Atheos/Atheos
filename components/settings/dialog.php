@@ -36,7 +36,7 @@ switch ($_GET['action']) {
 				if (COMMON::checkAccess()) {
 					?>
 					<li>
-						<a name="extension-settings" data-file="components/textmode/dialog.php?action=fileextension_textmode_form" data-name="fileext_textmode"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
+						<a name="extension-settings" data-file="components/textmode/dialog.php?action=settings" data-name="fileext_textmode"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
 					</li>
 					<?php
 				}

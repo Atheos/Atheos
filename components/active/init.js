@@ -6,16 +6,15 @@
 
 (function(global, $) {
 
-	var EditSession = ace.require('ace/edit_session')
-		.EditSession;
-	var UndoManager = ace.require('ace/undomanager')
-		.UndoManager;
+	var ace = global.ace,
+		amplify = global.amplify;
+
+	var EditSession = ace.require('ace/edit_session').EditSession;
+	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
 	var codiad = global.codiad;
 
-	$(function() {
-		codiad.active.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.active.init());
 
 	//////////////////////////////////////////////////////////////////
 	//
@@ -332,9 +331,8 @@
 
 		check: function(path) {
 			$.get(this.controller + '?action=check&path=' + encodeURIComponent(path),
-
 				function(data) {
-					var checkResponse = codiad.jsend.parse(data);
+					codiad.jsend.parse(data);
 				});
 		},
 
@@ -472,12 +470,11 @@
 			var session;
 			if (path) {
 				session = this.sessions[path];
-			}
-			else {
+			} else {
 				session = codiad.editor.getActive().getSession();
 			}
 			var content = session.getValue();
-			var path = session.path;
+			path = session.path;
 			var handleSuccess = function(mtime) {
 				var session = codiad.active.sessions[path];
 				if (typeof session !== 'undefined') {
@@ -487,7 +484,7 @@
 					if (session.tabThumb) session.tabThumb.removeClass('changed');
 				}
 				_this.removeDraft(path);
-			}
+			};
 			// Replicate the current content so as to avoid
 			// discrepancies due to content changes during
 			// computation of diff
@@ -522,7 +519,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		saveAll: function() {
-			var _this = this;
 			for (var session in this.sessions) {
 				if (this.sessions[session].listThumb.hasClass('changed')) {
 					codiad.active.save(session);
@@ -555,7 +551,7 @@
 			var _this = this;
 			var changed = false;
 
-			var opentabs = new Array();
+			var opentabs = [];
 			for (var session in _this.sessions) {
 				opentabs[session] = session;
 				if (_this.sessions[session].listThumb.hasClass('changed')) {
@@ -579,8 +575,8 @@
 				var history = [];
 				$.each(this.history, function(index) {
 					if (this != tab) history.push(this);
-				})
-				this.history = history
+				});
+				this.history = history;
 
 				delete this.sessions[tab];
 				this.removeDraft(tab);
@@ -619,8 +615,8 @@
 			var history = [];
 			$.each(this.history, function(index) {
 				if (this != path) history.push(this);
-			})
-			this.history = history
+			});
+			this.history = history;
 
 			/* Select all the tab tumbs except the one which is to be removed. */
 			var tabThumbs = $('#tab-list-active-files li[data-path!="' + path + '"]');
@@ -780,9 +776,9 @@
 					// Previous or rotate to the end
 					newActive = active.prev('li');
 					if (newActive.length === 0) {
-						newActive = $('#dropdown-list-active-files li:last-child')
+						newActive = $('#dropdown-list-active-files li:last-child');
 						if (newActive.length === 0) {
-							newActive = $('#tab-list-active-files li:last-child')
+							newActive = $('#tab-list-active-files li:last-child');
 						}
 					}
 				}
@@ -793,7 +789,7 @@
 					// Previous
 					newActive = active.prev('li');
 					if (newActive.length === 0) {
-						newActive = $('#tab-list-active-files li:last-child')
+						newActive = $('#tab-list-active-files li:last-child');
 					}
 				}
 
@@ -807,7 +803,7 @@
 					if (newActive.length === 0) {
 						newActive = $('#dropdown-list-active-files li:first-child');
 						if (newActive.length === 0) {
-							newActive = $('#tab-list-active-files li:first-child')
+							newActive = $('#tab-list-active-files li:first-child');
 						}
 					}
 				}
@@ -818,7 +814,7 @@
 					// Next or rotate to the beginning
 					newActive = active.next('li');
 					if (newActive.length === 0) {
-						newActive = $('#tab-list-active-files li:first-child')
+						newActive = $('#tab-list-active-files li:first-child');
 					}
 				}
 
@@ -862,7 +858,6 @@
 		},
 
 		toggleTabDropdownMenu: function() {
-			var _this = this;
 			var menu = $('#dropdown-list-active-files');
 
 			menu.css({
@@ -877,8 +872,8 @@
 				// handle click-out autoclosing
 				var fn = function() {
 					menu.hide();
-					$(window).off('click', fn)
-				}
+					$(window).off('click', fn);
+				};
 				$(window).on('click', fn);
 			}
 		},
@@ -889,7 +884,7 @@
 			}
 
 			tab.remove();
-			path = tab.attr('data-path');
+			var path = tab.attr('data-path');
 
 			var tabThumb = this.createMenuItemThumb(path);
 			if (prepend) $('#dropdown-list-active-files').prepend(tabThumb);
@@ -912,7 +907,7 @@
 			}
 
 			menuItem.remove();
-			path = menuItem.attr('data-path');
+			var path = menuItem.attr('data-path');
 
 			var tabThumb = this.createTabThumb(path);
 			if (prepend) $('#tab-list-active-files').prepend(tabThumb);
@@ -935,14 +930,14 @@
 			}
 
 			var tabs = $('#tab-list-active-files li');
-			var count = tabs.length
+			var count = tabs.length;
 			if (includeFictiveTab) count += 1;
 			if (count <= 1) return false;
 
 			var width = 0;
 			tabs.each(function(index) {
 				width += $(this).outerWidth(true);
-			})
+			});
 			if (includeFictiveTab) {
 				width += $(tabs[tabs.length - 1]).outerWidth(true);
 			}
@@ -1005,7 +1000,7 @@
 			return {
 				fileName: path.substring(index + 1),
 				directory: (path.indexOf('/') == 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
-			}
+			};
 		},
 
 		createListThumb: function(path) {
@@ -1013,14 +1008,14 @@
 		},
 
 		createTabThumb: function(path) {
-			split = this.splitDirectoryAndFileName(path);
+			var split = this.splitDirectoryAndFileName(path);
 			return $('<li class="tab-item" data-path="' + path + '"><a class="label" title="' + path + '">' +
 				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
 				'</a><a class="close"></a></li>');
 		},
 
 		createMenuItemThumb: function(path) {
-			split = this.splitDirectoryAndFileName(path);
+			var split = this.splitDirectoryAndFileName(path);
 			return $('<li data-path="' + path + '"><a title="' + path + '"><span class="label"></span><div class="label">' +
 				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
 				'</div></a></li>');
