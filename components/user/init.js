@@ -1,10 +1,14 @@
-/*
-	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// User
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
 	'use strict';
 	var user = null;
 
@@ -76,13 +80,11 @@
 				// Run controller to check session (also acts as keep-alive) & Check user
 				ajax({
 					url: atheos.user.controller,
-					type: 'post',
 					data: {
-						'action': 'verify'
+						'action': 'keepAlive'
 					},
 					success: function(data) {
-						data = JSON.parse(data);
-						if(data.debug) {
+						if (data.debug) {
 							console.log(data.debug);
 						}
 						if (data.pass === 'false') {
@@ -103,10 +105,8 @@
 			data.action = 'authenticate';
 			ajax({
 				url: user.controller,
-				type: 'post',
 				data: data,
 				success: function(response) {
-					response = JSON.parse(response);
 					if (response.status !== 'error') {
 						window.location.reload();
 					} else {
@@ -136,7 +136,6 @@
 				atheos.settings.save();
 				ajax({
 					url: user.controller,
-					type: 'post',
 					data: {
 						'action': 'logout'
 					},
@@ -181,15 +180,13 @@
 				if (password && username) {
 					ajax({
 						url: user.controller,
-						type: 'post',
 						data: {
 							'action': 'create',
 							'username': username,
 							'password': password
 						},
 						success: function(data) {
-							var createResponse = atheos.jsend.parse(data);
-							if (createResponse !== 'error') {
+							if (data.status !== 'error') {
 								atheos.toast.success(i18n('User Account Created'));
 								user.list();
 							}
@@ -213,14 +210,12 @@
 				var username = oX('#modal-content form input[name="username"]').value();
 				ajax({
 					url: user.controller,
-					type: 'post',
 					data: {
 						'action': 'delete',
 						'username': username
 					},
 					success: function(data) {
-						var deleteResponse = atheos.jsend.parse(data);
-						if (deleteResponse !== 'error') {
+						if (data.status !== 'error') {
 							atheos.toast.success('Account Deleted');
 							user.list();
 						}
@@ -248,14 +243,13 @@
 				if (data.acl === 'false') {
 					data.project = 'full';
 				}
-				
+
 				// Check and make sure if access level not full that at least on project is selected
 				if (data.acl === 'true' && !data.project) {
 					atheos.toast.error('At Least One Project Must Be Selected');
 				} else {
 					ajax({
 						url: user.controller,
-						type: 'post',
 						data: data,
 						success: function(data) {
 							atheos.modal.unload();
@@ -270,10 +264,21 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
+		// Show/Hide Project List in ACL dialog
+		//////////////////////////////////////////////////////////////////
+		toggleACL: function(e) {
+			var aclSelect = oX('#aclSelect');
+			if (aclSelect) {
+				var projectSelect = oX('#projectSelect').el;
+				var direction = aclSelect.value() === 'false' ? 'close' : 'open';
+				atheos.animation.slide(direction, projectSelect, 300);
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////
 		// Change Password
 		//////////////////////////////////////////////////////////////////
-
-		password: function(username) {
+		changePassword: function(username) {
 
 			atheos.modal.load(400, user.dialog + '?action=password&username=' + username);
 
@@ -291,15 +296,13 @@
 				} else {
 					ajax({
 						url: user.controller,
-						type: 'post',
 						data: {
 							'action': 'password',
 							'username': username,
 							'password': password
 						},
 						success: function(data) {
-							var passwordResponse = atheos.jsend.parse(data);
-							if (passwordResponse !== 'error') {
+							if (data.status !== 'error') {
 								atheos.toast.success(i18n('Password Changed'));
 								atheos.modal.unload();
 							}
@@ -315,13 +318,11 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Change Current Project
+		// Save active project to server
 		//////////////////////////////////////////////////////////////////
-
 		saveActiveProject: function(project) {
 			ajax({
 				url: this.controller,
-				type: 'post',
 				data: {
 					action: 'saveActiveProject',
 					activeProject: project
@@ -330,4 +331,4 @@
 		}
 	};
 
-})(this, jQuery);
+})(this);

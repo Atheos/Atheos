@@ -30,24 +30,21 @@
 
 	'use strict';
 
-	function formatParams(data, random) {
+	function formatParams(data) {
 		var arr = [];
 		if (data && typeof data === 'object') {
 			for (var name in data) {
 				arr.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
 			}
 		}
-		if (random) {
-			arr.push(('v=' + Math.random()).replace('.', ''));
-		}
 		return arr.join('&');
 	}
 
 	const ajax = function(options) {
 		options = options || {};
-		options.type = (options.type || 'GET').toUpperCase();
-		options.dataType = options.dataType || 'json';
-		var params = formatParams(options.data, false);
+		options.type = (options.data) ? 'POST' : 'GET';
+
+		var params = formatParams(options.data);
 		var xhr;
 
 		if (window.XMLHttpRequest) {
@@ -56,33 +53,41 @@
 			xhr = new ActiveXObject('Microsoft.XMLHTTP');
 		}
 
-		return new Promise(function(resolve, reject) {
+		var ajaxPromise = new Promise(function(resolve, reject) {
 			xhr.onreadystatechange = function() {
 				if (xhr.readyState === 4) {
-					var status = xhr.status;
-					if (status >= 200 && status < 300) {
+					if (xhr.status >= 200 && xhr.status < 300) {
 						if (options.success) {
-							options.success(xhr.responseText, xhr.responseXML);
+							var data = xhr.responseText;
+							try {
+								const json = JSON.parse(data);
+								data = json;
+
+							} catch (e) {} finally {
+								options.success(data);
+							}
 						}
 						resolve(xhr.responseText);
 					} else {
 						if (options.fail) {
-							options.fail(status);
+							options.fail(xhr.status);
 						}
-						reject(xhr.responseText);
 					}
 				}
 			};
-			if (options.type === 'GET') {
-				params = params ? '?' + params : '';
-				xhr.open('GET', options.url + params, true);
-				xhr.send(null);
-			} else if (options.type === 'POST') {
-				xhr.open('POST', options.url, true);
-				xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-				xhr.send(params);
-			}
 		});
+
+		if (options.type === 'GET') {
+			params = params ? '?' + params : '';
+			xhr.open('GET', options.url + params, true);
+			xhr.send(null);
+		} else if (options.type === 'POST') {
+			xhr.open('POST', options.url, true);
+			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.send(params);
+		}
+
+		return ajaxPromise;
 	};
 	return ajax;
 });
