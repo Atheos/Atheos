@@ -1,4 +1,4 @@
-<div id="context-menu" data-path="" data-type="">
+<div id="contextmenu" data-path="" data-type="">
 
 	<?php
 
