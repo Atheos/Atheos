@@ -1,17 +1,20 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & Kent Safranski (atheos.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+//////////////////////////////////////////////////////////////////////////////80
+// User
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
 
 switch ($_GET['action']) {
@@ -46,7 +49,7 @@ switch ($_GET['action']) {
 					?>
 					<tr>
 						<td><?php echo($data['username']); ?></td>
-						<td class="action"><a onclick="atheos.user.password('<?php echo($data['username']); ?>');" class="fas fa-key"></a></td>
+						<td class="action"><a onclick="atheos.user.changePassword('<?php echo($data['username']); ?>');" class="fas fa-key"></a></td>
 						<td class="action"><a onclick="atheos.user.showUserACL('<?php echo($data['username']); ?>');" class="fas fa-archive"></a></td>
 						<?php
 						if ($_SESSION['user'] == $data['username']) {
@@ -116,14 +119,13 @@ switch ($_GET['action']) {
 
 		?>
 		<form>
-			<?php 		echo("text:" . $userACL); ?>
 			<input type="hidden" name="username" value="<?php echo($username); ?>">
 			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($username)); ?></label>
-			<select name="acl" onchange="if($(this).val()=='false'){ $('#project-selector').slideUp(300); }else{ $('#project-selector').slideDown(300).css({'overflow-y':'scroll'}); }">
+			<select id="aclSelect" name="acl" onchange="atheos.user.toggleACL()">
 				<option value="false" <?php if (!$userACL) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
 				<option value="true" <?php if ($userACL) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
 			</select>
-			<div id="project-selector" <?php if (!$userACL) { echo('style="display: none;"'); } ?>>
+			<div id="projectSelect" <?php if (!$userACL) { echo('style="display: none;"'); } ?>>
 				<table>
 					<?php
 					// Build list
