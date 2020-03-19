@@ -156,6 +156,7 @@
 
 				/* Notify listeners. */
 				amplify.publish('contextmenu.show', {
+					menu: menu,
 					path: path,
 					type: type
 				});
