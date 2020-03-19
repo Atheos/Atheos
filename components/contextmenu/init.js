@@ -75,7 +75,7 @@
 
 				node.addClass('context-menu-active');
 
-				var menu = oX('#context-menu');
+				var menu = oX('#contextmenu');
 				var children = null;
 
 				switch (type) {
@@ -136,9 +136,9 @@
 
 				// Show faded 'paste' if nothing in clipboard
 				if (atheos.filemanager.clipboard === '') {
-					oX('#context-menu i.fa-paste').parent().hide();
+					oX('#contextmenu i.fa-paste').parent().hide();
 				} else {
-					oX('#context-menu i.fa-paste').parent().show();
+					oX('#contextmenu i.fa-paste').parent().show();
 				}
 
 				var hideContextMenu;
@@ -157,6 +157,7 @@
 				/* Notify listeners. */
 				amplify.publish('contextmenu.show', {
 					menu: menu,
+					name: name,
 					path: path,
 					type: type
 				});
@@ -169,7 +170,7 @@
 		},
 
 		hide: function() {
-			oX('#context-menu').hide();
+			oX('#contextmenu').hide();
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');
