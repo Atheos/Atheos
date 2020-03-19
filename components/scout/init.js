@@ -78,7 +78,6 @@
 					var searchType = o('#modal_content form select[name="search_type"]').value();
 
 					ajax({
-						type: 'post',
 						url: search.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
 						data: {
 							search_string: searchString,
@@ -87,7 +86,6 @@
 							searchFileType: searchFileType
 						},
 						success: function(response) {
-							response = JSON.parse(response);
 							table.empty();
 							var results = '';
 							if (response.status !== 'error') {
