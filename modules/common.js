@@ -26,7 +26,7 @@ const log = function(m, t) {
 		if (type === '[object Object]' || type === '[object Array]') {
 			m = json;
 		}
-	} finally {
+	} catch (e) {} finally {
 		if (t) {
 			console.trace(m);
 		} else {
