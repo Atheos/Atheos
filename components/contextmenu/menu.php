@@ -7,10 +7,12 @@
 	////////////////////////////////////////////////////////////
 
 	foreach ($context_menu as $menu_item => $data) {
-		if ($data['title'] == 'Break') {
-			echo('<hr class="'.$data['applies-to'].'">');
-		} elseif($data['enabled']) {
-			echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], 'return').'</a>');
+		if ($data['enabled']) {
+			if ($data['title'] == 'Break') {
+				echo('<hr class="'.$data['applies-to'].'">');
+			} else {
+				echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], 'return').'</a>');
+			}
 		}
 	}
 
