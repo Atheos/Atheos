@@ -80,7 +80,7 @@
     "title": "Password",
     "admin": false,
     "icon": "fas fa-key",
-    "onclick": "atheos.user.password();"
+    "onclick": "atheos.user.changePassword();"
   },
   {
     "title": "break",
