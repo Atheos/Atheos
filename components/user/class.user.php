@@ -1,10 +1,14 @@
 <?php
 
-/*
-*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-*  as-is and without warranty under the MIT License. See
-*  [root]/license.txt for more. This information must remain intact.
-*/
+//////////////////////////////////////////////////////////////////////////////80
+// User
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 class User
 {
@@ -103,11 +107,6 @@ class User
 			}
 		}
 		saveJSON('active', $this->actives);
-
-		// Remove access control list (if exists)
-		if (file_exists(BASE_PATH . "/data/" . $this->username . '_acl')) {
-			unlink(BASE_PATH . "/data/" . $this->username . '_acl');
-		}
 
 		// Response
 		echo formatJSEND("success", null);
