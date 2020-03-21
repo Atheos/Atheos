@@ -54,7 +54,7 @@ switch ($_GET['action']) {
 						<?php
 						if ($_SESSION['user'] == $data['username']) {
 							?>
-							<td class="action"><a onclick="atheos.toast.error('You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
+							<td class="action"><a onclick="atheos.toast.show('error', 'You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
 							<?php
 						} else {
 							?>
