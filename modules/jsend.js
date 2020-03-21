@@ -31,7 +31,7 @@
 				console.log(debug);
 			}
 			if (obj.status === 'error') {
-				atheos.toast.error(obj.message);
+				atheos.toast.show('error', obj.message);
 				return 'error';
 			} else {
 				return obj.data;
