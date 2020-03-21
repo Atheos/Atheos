@@ -279,13 +279,13 @@ class Common {
 	// Format JSEND Response
 	//////////////////////////////////////////////////////////////////
 
-	public static function sendJSON($status, $message = false) {
+	public static function sendJSON($status, $text = false) {
 
-		if (is_array($message)) {
-			$reply = $message;
+		if (is_array($text)) {
+			$reply = $text;
 		} else {
 			$reply = array(
-				"message" => $message ?? "no data"
+				"text" => $text ?? "no data"
 			);
 		}
 
