@@ -42,7 +42,7 @@
 
 	const ajax = function(options) {
 		options = options || {};
-		options.type = (options.data) ? 'POST' : 'GET';
+		options.type = options.type || ((options.data) ? 'POST' : 'GET');
 
 		var params = formatParams(options.data);
 		var xhr;
