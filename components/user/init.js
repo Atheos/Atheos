@@ -106,11 +106,11 @@
 			ajax({
 				url: user.controller,
 				data: data,
-				success: function(response) {
-					if (response.status !== 'error') {
+				success: function(data) {
+					if (data.status !== 'error') {
 						window.location.reload();
 					} else {
-						atheos.toast.error(response.message);
+						atheos.toast.show(data);
 
 					}
 				}
@@ -169,12 +169,12 @@
 
 				// Check matching passwords
 				if (!password) {
-					atheos.toast.error(i18n('Passwords Do Not Match'));
+					atheos.toast.show('error', 'Passwords Do Not Match');
 				}
 
 				// Check no spaces in username
 				if (!/^[a-z0-9]+$/i.test(username) || username.length === 0) {
-					atheos.toast.error(i18n('Username Must Be Alphanumeric String'));
+					atheos.toast.show('error', 'Username Must Be Alphanumeric String');
 					username = false;
 				}
 				if (password && username) {
@@ -187,7 +187,7 @@
 						},
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.success(i18n('User Account Created'));
+								atheos.toast.show('success','User Account Created');
 								user.list();
 							}
 						}
@@ -216,7 +216,7 @@
 					},
 					success: function(data) {
 						if (data.status !== 'error') {
-							atheos.toast.success('Account Deleted');
+							atheos.toast.show('success','Account Deleted');
 							user.list();
 						}
 					}
@@ -246,7 +246,7 @@
 
 				// Check and make sure if access level not full that at least on project is selected
 				if (data.acl === 'true' && !data.project) {
-					atheos.toast.error('At Least One Project Must Be Selected');
+					atheos.toast.show('error', 'At Least One Project Must Be Selected');
 				} else {
 					ajax({
 						url: user.controller,
@@ -292,7 +292,7 @@
 
 
 				if (!password) {
-					atheos.toast.error(i18n('Passwords Do Not Match'));
+					atheos.toast.show('error', 'Passwords Do Not Match');
 				} else {
 					ajax({
 						url: user.controller,
@@ -303,7 +303,7 @@
 						},
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.success(i18n('Password Changed'));
+								atheos.toast.show('success','Password Changed');
 								atheos.modal.unload();
 							}
 						}

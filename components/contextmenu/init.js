@@ -170,12 +170,19 @@
 		},
 
 		hide: function() {
-			oX('#contextmenu').hide();
+			var menu = oX('#contextmenu');
+			menu.hide();
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');
 			}
-			amplify.publish('contextmenu.hide');
+			
+			amplify.publish('contextmenu.hide', {
+					menu: menu,
+					name: menu.attr('data-name'),
+					path: menu.attr('data-path'),
+					type: menu.attr('data-type')				
+			});
 		},
 	};
 
