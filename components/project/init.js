@@ -64,6 +64,7 @@
 					'action': 'load'
 				},
 				success: function(data) {
+					atheos.toast.show(data, 'Project Loaded');
 					if (data.status != 'error') {
 						project.current = {
 							name: data.name,
@@ -78,7 +79,6 @@
 								</li></ul>`);
 						atheos.filemanager.openDir(data.path);
 						atheos.user.saveActiveProject(data.path);
-						atheos.toast.success('Project Loaded');
 					}
 				}
 			});
@@ -113,8 +113,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function() {
-			$('#modal_content form')
-				.die('submit'); // Prevent form bubbling
 			atheos.modal.load(500, this.dialog + '?action=list');
 		},
 
@@ -217,7 +215,7 @@
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
 						var renamedata = atheos.jsend.parse(data);
 						if (renamedata != 'error') {
-							atheos.toast.success('Project renamed');
+							atheos.toast.show('success','Project renamed');
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							atheos.modal.unload();
@@ -257,7 +255,7 @@
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
 							var deletedata = atheos.jsend.parse(data);
 							if (deletedata != 'error') {
-								atheos.toast.success('Project Deleted');
+								atheos.toast.show('success','Project Deleted');
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open

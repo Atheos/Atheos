@@ -70,15 +70,12 @@
 				ajax({
 					url: this.controller + '?action=install&type=' + type + '&name=' + name + '&repo=' + repo,
 					success: function(data) {
-						var response = atheos.jsend.parse(data);
-						if (response == 'error') {
-							atheos.toast.error(response.message);
-						}
+						atheos.toast.show(data);
 						market.list(page, true);
 					}
 				});
 			} else {
-				atheos.toast.error('No Repository URL');
+				atheos.toast.show('error', 'No Repository URL');
 			}
 		},
 
@@ -92,10 +89,7 @@
 			ajax({
 				url: this.controller + '?action=remove&type=' + type + '&name=' + name,
 				success: function(data) {
-					var response = atheos.jsend.parse(data);
-					if (response == 'error') {
-						atheos.toast.error(response.message);
-					}
+					atheos.toast.show(data);
 					market.list(page, true);
 				}
 			});
@@ -111,10 +105,7 @@
 			ajax({
 				url: this.controller + '?action=update&type=' + type + '&name=' + name,
 				success: function(data) {
-					var response = atheos.jsend.parse(data);
-					if (response == 'error') {
-						atheos.toast.error(response.message);
-					}
+					atheos.toast.show(data);
 					market.list(page, false);
 				}
 			});

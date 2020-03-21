@@ -175,7 +175,7 @@
 									atheos.animation.slide('open', list.el, slideDuration);
 								}
 							}
-							amplify.publish('filemanager.onIndex', {
+							amplify.publish('filemanager.openDir', {
 								path: path,
 								files: fileManager.indexFiles
 							});
@@ -270,7 +270,7 @@
 						this.openInModal(path);
 					}
 				} else {
-					atheos.toast.error('Unable to open file in Browser');
+					atheos.toast.show('error', 'Unable to open file in Browser');
 				}
 			}
 		},
@@ -307,7 +307,7 @@
 			var fileManager = this;
 
 			var notifySaveErr = function() {
-				atheos.toast.error('File could not be saved');
+				atheos.toast.show('error', 'File could not be saved');
 				if (typeof callbacks.error === 'function') {
 					var context = callbacks.context || fileManager;
 					callbacks.error.apply(context, [data]);
@@ -321,7 +321,7 @@
 					var context;
 
 					if (data.status === 'success') {
-						atheos.toast.success('File saved');
+						atheos.toast.show('success','File saved');
 						if (typeof callbacks.success === 'function') {
 							context = callbacks.context || fileManager;
 							callbacks.success.call(context, data.data.mtime);
@@ -351,7 +351,7 @@
 								}
 							});
 						} else {
-							atheos.toast.error('File could not be saved');
+							atheos.toast.show('error', 'File could not be saved');
 						}
 						if (typeof callbacks.error === 'function') {
 							context = callbacks.context || fileManager;
@@ -386,7 +386,7 @@
 
 		copy: function(path) {
 			this.clipboard = path;
-			atheos.toast.success('Copied to Clipboard');
+			atheos.toast.show('success','Copied to Clipboard');
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -421,10 +421,10 @@
 			};
 
 			if (this.clipboard === '') {
-				atheos.toast.error('Nothing in Your Clipboard');
+				atheos.toast.show('error', 'Nothing in Your Clipboard');
 
 			} else if (path === this.clipboard) {
-				atheos.toast.error('Cannot Paste Directory Into Itself');
+				atheos.toast.show('error', 'Cannot Paste Directory Into Itself');
 
 			} else {
 				var nodeName = common.getNodeName(fileManager.clipboard);
@@ -525,7 +525,7 @@
 						url: `${atheos.filemanager.controller}?action=create&path=${encodeURIComponent(newPath)}&type=${type}`,
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.success('File Created');
+								atheos.toast.show('success','File Created');
 								atheos.modal.unload();
 								// Add new element to filemanager screen
 								atheos.filemanager.addToFileManager(newPath, type, path);
@@ -628,14 +628,16 @@
 					var newPath = temp.join('/') + '/' + newName;
 					ajax({
 						url: fileManager.controller,
+						type: 'GET',
 						data: {
 							action: 'modify',
 							path: path,
 							newName: newName
 						},
 						success: function(data) {
+							console.log(data);
 							if (data.status !== 'error') {
-								atheos.toast.success('File Renamed');
+								atheos.toast.show('success','File Renamed');
 								var node = o('#file-manager a[data-path="' + path + '"]'),
 									icon = node.find('i:nth-child(2)')[0],
 									span = node.find('span')[0];
