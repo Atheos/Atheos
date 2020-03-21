@@ -68,7 +68,7 @@
 				var draft = _this.checkDraft(path);
 				if (draft) {
 					content = draft;
-					atheos.toast.success('Recovered unsaved content for: ' + path);
+					atheos.toast.show('success','Recovered unsaved content for: ' + path);
 				}
 
 				//var session = new EditSession(content, new Mode());
@@ -463,7 +463,7 @@
 
 			var _this = this;
 			if ((path && !this.isOpen(path)) || (!path && !atheos.editor.getActive())) {
-				atheos.toast.error('No Open Files to save');
+				atheos.toast.show('error', 'No Open Files to save');
 				return;
 			}
 			var session;
@@ -716,7 +716,7 @@
 			if (path) {
 				atheos.filemanager.openInBrowser(path);
 			} else {
-				atheos.toast.error('No Open Files');
+				atheos.toast.show('error', 'No Open Files');
 			}
 		},
 
@@ -733,7 +733,7 @@
 					atheos.editor.getActive()
 					.getSelectionRange());
 			} else {
-				atheos.toast.error('No Open Files or Selected Text');
+				atheos.toast.show('error', 'No Open Files or Selected Text');
 			}
 		},
 

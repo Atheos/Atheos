@@ -30,16 +30,18 @@
 			var scout = this;
 
 			o('#finder-quick').on('click', function(e) {
-				scout.search(atheos.project.getCurrent());
+				scout.search();
 			});
 
 		},
 		//////////////////////////////////////////////////////////////////
 		// Search
 		//////////////////////////////////////////////////////////////////
-		search: function(path) {
-
-			var search = this;
+		search: function() {
+			
+			var search = this,
+			path = atheos.project.current.path;
+			
 			atheos.modal.load(500, this.dialog, {
 				action: 'search',
 				path: path

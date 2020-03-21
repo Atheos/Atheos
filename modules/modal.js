@@ -92,6 +92,7 @@
 
 			this.ready = ajax({
 				url: url,
+				type: 'GET',
 				data: data,
 				success: function(data) {
 					$('#modal_content').html(data);
