@@ -15,7 +15,6 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-
 (function(global) {
 
 	'use strict';
@@ -148,7 +147,7 @@
 			if (this.types.hasOwnProperty(type)) {
 				options = extend(this.types[type], options);
 				options.text = options.message || text;
-
+				log(options);
 				this.showToast(options);
 			}
 
