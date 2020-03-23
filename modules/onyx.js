@@ -320,7 +320,15 @@
 				}
 			},
 			removeAttr: (k) => element.removeAttribute(k),
-			parent: () => onyx(element.parentNode),
+			parent: function(s) {
+				var parent = element;
+				if (s) {
+					while ((parent = parent.parentElement) && !((parent.matches || parent.matchesSelector).call(parent, s)));
+				} else {
+					parent = element.parentElement;
+				}
+				return onyx(parent);
+			},
 
 			siblings: function(s) {
 				var siblings = [];
@@ -397,7 +405,7 @@
 				var height = parseFloat(window.getComputedStyle(element, null).height.replace("px", ""));
 
 				this.css(init);
-				
+
 				return height;
 			},
 			clientWidth: () => element.clientWidth,
