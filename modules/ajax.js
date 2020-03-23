@@ -62,6 +62,9 @@
 							try {
 								const json = JSON.parse(data);
 								data = json;
+								if(data.debug) {
+									console.log(data.debug);
+								}
 
 							} catch (e) {} finally {
 								options.success(data);
