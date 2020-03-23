@@ -20,6 +20,20 @@
 
 
 const log = function(m, t) {
+	// var err = new Error().stack;
+	// var stack = err.split('\n');
+
+	// var regExp = /\(([^)]+)\)/;
+	// var caller = regExp.exec(stack[2])[1].split(':');
+
+	// var script = caller[1].split('/');
+	// var last = script.length - 1;
+	// script = script[last - 1] + '/' + script[last];
+	// var line = caller[2];
+
+	// console.log(stack[2].substring(stack[2].indexOf("("), stack[2].lastIndexOf(")") + 1));
+
+
 	try {
 		const json = JSON.parse(m);
 		const type = Object.prototype.toString.call(json);
@@ -27,9 +41,12 @@ const log = function(m, t) {
 			m = json;
 		}
 	} catch (e) {} finally {
+		// m = (`${m} `)
 		if (t) {
 			console.trace(m);
 		} else {
+			// console.log(script + ':' + line);
+
 			console.log(m);
 		}
 	}
@@ -96,12 +113,13 @@ const log = function(m, t) {
 		//////////////////////////////////////////////////////////////////////
 
 		extend: function(obj, src) {
+			var temp = JSON.parse(JSON.stringify(obj));
 			for (var key in src) {
 				if (src.hasOwnProperty(key)) {
-					obj[key] = src[key];
+					temp[key] = src[key];
 				}
 			}
-			return obj;
+			return temp;
 		},
 		//////////////////////////////////////////////////////////////////////
 		// SerializeForm
