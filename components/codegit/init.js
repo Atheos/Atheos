@@ -250,32 +250,6 @@
 			path = path || oX('#project-root').attr('data-path');
 			codegit.location = repo || codegit.location;
 			atheos.modal.load(600, codegit.dialog + '?action=loadPanel&panel=' + type + "&repo=" + repo + "&path=" + path);
-
-			// atheos.modal.ready.then(function() {
-			// 	if (type === 'blame') {
-			// 		var items = oX('#codegit_blame ul').find('.code');
-			// 		items.forEach((item) => {
-			// 			codegit.highlightCode(item);
-			// 		});
-			// 	}
-
-			// });
-		},
-
-		highlightCode: function(node) {
-			log(node);
-			var highlighter = ace.require("ace/ext/static_highlight");
-			var phpMode = ace.require("ace/mode/php").Mode;
-			var theme = ace.require("ace/theme/atheos");
-			var dom = ace.require("ace/lib/dom");
-
-			var data = node.text();
-
-			var highlighted = highlighter.render(data, new phpMode(), theme);
-
-			dom.importCssString(highlighted.css, "ace_highlight");
-			node.html(highlighted.html);
-
 		},
 
 		diff: function(path, repo) {
