@@ -158,6 +158,7 @@
 				amplify.publish('contextmenu.show', {
 					menu: menu,
 					name: name,
+					node: node,
 					path: path,
 					type: type
 				});
