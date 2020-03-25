@@ -15,7 +15,8 @@
 	// Editor modes that have been loaded
 	var editorModes = {};
 
-	var codiad = global.codiad;
+	var codiad = global.codiad,
+		oX = global.onyx;
 
 	var separatorWidth = 3;
 
@@ -1352,11 +1353,25 @@
 
 		promptLine: function() {
 			if (codiad.editor.getActive() !== null) {
-				var line = parseInt(prompt('Enter line number:'), 10);
-				if (!isNaN(line)) {
-					codiad.editor.gotoLine(line);
-					codiad.editor.focus();
-				}
+
+				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
+				atheos.modal.ready.then(function() {
+					oX('#modal_content form').on('submit', function(e) {
+						e.preventDefault();
+						var line = oX('#modal_content form input[name="line"]').value();
+
+
+						// var line = parseInt(prompt('Enter line number:'), 10);
+
+						if (!isNaN(line)) {
+							codiad.editor.gotoLine(line);
+							codiad.editor.focus();
+						}
+
+						atheos.modal.unload();
+					});
+				});
+
 			}
 		},
 
