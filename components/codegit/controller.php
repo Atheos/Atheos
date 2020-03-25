@@ -13,7 +13,7 @@ require_once('class.git.php');
 //////////////////////////////////////////////////////////////////
 Common::checkSession();
 
-set_time_limit(0);
+set_time_limit(0); 
 
 $action = Common::post('action') ?: Common::get('action');
 $path = Common::post('path') ?: Common::get('path');
@@ -24,7 +24,7 @@ if (!$action) {
 }
 
 if ($action !== 'scanForGit') {
-	$CodeGit = new Git();
+	$CodeGit = new Git($path, $repo);
 	define('CONFIG', 'git.' . $_SESSION['user'] . '.php');
 }
 
@@ -40,7 +40,7 @@ switch ($action) {
 			if (file_exists(getWorkspacePath($path . '/.git'))) {
 				$reply["message"] = "Repo found";
 				$reply["data"] = true;
-				
+
 			}
 			Common::sendJSON("success", 'test');
 		} else {
@@ -335,13 +335,13 @@ switch ($action) {
 		}
 		break;
 
-	case 'numstat':
+	case 'fileStatus':
 		if ($path) {
 			$result = $CodeGit->numstat(getWorkspacePath($path));
 			if ($result !== false) {
-				echo $result;
+				Common::sendJSON("success", $result);
 			} else {
-				echo '{"status":"error","message":"Failed to get numstat"}';
+				Common::sendJSON("error", "Failed to get file stats.");
 			}
 		} else {
 			Common::sendJSON("error", "Missing parameter.");

@@ -30,28 +30,52 @@ class Git {
 
 	function __construct($path = '', $repo = '') {
 		$this->path = $path;
-		$this->repo = $repo;
-
-		if (is_dir($repo)) {
-			chdir($repo);
-			$cmd = "git config --get remote.origin.url";
-
-			if ($path) {
-				$cmd .= " -- " . $path;
-			}
-
-			$result = $this->executeCommand($cmd);
-			if ($result !== 0) {
-				return false;
-			}
-			$result = $this->resultArray;
-			preg_match('/git@(.*?)\.git/s', $result[0], $repoURL);
-			$this->repoURL = $repoURL ? "https://www." . $repoURL[1] : false;
+		if ($repo) {
+			$this->repo = $repo;
+		} else {
+			$this->repo = $this->findRepo($path);
 		}
+		
+		// if (is_dir($repo)) {
+		// 	chdir($repo);
+		// 	$cmd = "git config --get remote.origin.url";
+
+		// 	if ($path) {
+		// 		$cmd .= " -- " . $path;
+		// 	}
+
+		// 	$result = $this->executeCommand($cmd);
+		// 	if ($result !== 0) {
+		// 		return false;
+		// 	}
+		// 	$result = $this->resultArray;
+		// 	preg_match('/git@(.*?)\.git/s', $result[0], $repoURL);
+		// 	$this->repoURL = $repoURL ? "https://www." . $repoURL[1] : false;
+		// }
 
 
 		foreach (getConfig() as $name => $value) {
 			$result = $this->executeCommand("git config " . $name . " " . $value);
+		}
+	}
+
+	public function findRepo($path) {
+		$path = $this->path;
+		if (!is_dir($path)) {
+			$path = pathinfo($path, PATHINFO_DIRNAME);
+		}
+		$repo = file_exists($path . "/.git");
+		$iter = 0;
+		while (!$repo && $iter < 10) {
+			if ($repo) break;
+			$path = pathinfo($path, PATHINFO_DIRNAME);
+			$repo = file_exists($path . "/.git");
+			$iter++;
+		}
+		if($repo) {
+			return $path;
+		} else {
+			return false;
 		}
 	}
 
@@ -138,7 +162,11 @@ class Git {
 		if (!is_dir($path)) return false;
 		chdir($path);
 		$result = $this->execute("git status --branch --porcelain");
-		$result = $this->parseChanges($result);
+		if ($result["code"]) {
+			$result = $this->parseChanges($result["data"]);
+		} else {
+			$result = "Git Status Failed";
+		}
 		return $result;
 	}
 
@@ -204,20 +232,20 @@ class Git {
 		}
 
 		$result = $this->execute($cmd);
-
-		if (!is_array($result)) {
-			return $result;
+		if (!$result["code"]) {
+			return "Error loading log";
 		}
+
 		// $result = $this->resultArray;
 		$pivot = array();
-		foreach ($result as $i => $item) {
+		foreach ($result["data"] as $i => $item) {
 			$item = explode('\\|', $item);
 			$pivot[] = array(
 				"hash" => $item[0],
 				"author" => $item[1],
 				"email" => $item[2],
 				"date" => $item[3],
-				"subject" => $item[4]
+				"message" => $item[4]
 			);
 		}
 
@@ -264,7 +292,7 @@ class Git {
 			$line = str_replace ("\t", "    ", $line);
 			$this->resultArray[$index] = htmlentities($line);
 		}
-		return '{"status":"success","data":'. json_encode($this->resultArray) .'}';
+		return $this->resultArray;
 	}
 
 	public function checkout($repo, $path) {
@@ -398,7 +426,10 @@ class Git {
 		if (!is_dir($this->repo)) return false;
 		chdir($this->repo);
 		$result = $this->execute("git rev-parse --abbrev-ref HEAD");
-		return $result[0];
+		if ($result["code"]) {
+			return $result["data"][0];
+		}
+		return false;
 	}
 
 	public function newBranch($path, $name) {
@@ -619,37 +650,36 @@ class Git {
 			$dirname = dirname($path);
 			$filename = basename($path);
 			chdir($dirname);
-			$result = $this->executeCommand("git status --branch --porcelain");
-			if ($result !== 0) {
-				return false;
-			}
-			$status = $this->parseGitStatus();
-			$result = -1;
-			$plus = 0;
-			$minus = 0;
-			if (in_array($filename, $status['untracked'])) {
-				$file = file_get_contents($filename);
-				$file = explode("\n", $file);
-				$plus = count($file);
-				$minus = 0;
-			} else {
-				$command = "git diff --numstat " . $filename;
-				$result = $this->executeCommand($command);
-				if ($result === 0) {
-					if ($this->result === "") {
-						$plus = 0;
-						$minus = 0;
-					} else {
-						$stats = explode("\t", $this->result);
-						$plus = $stats[0];
-						$minus = $stats[1];
-					}
+
+			$result = $this->execute("git diff --numstat " . $filename);
+			if ($result["code"]) {
+				if (count($result["data"]) > 0) {
+					$stats = explode("\t", $result["data"][0]);
+					$additions = $stats[0];
+					$deletions = $stats[1];
+
 				} else {
-					return false;
+					$result = $this->execute("git status --branch --porcelain");
+
+					if ($result["code"] && count($result["data"]) > 0) {
+						$status = $this->parseChanges($result["data"]);
+						if (in_array($filename, $status['untracked'])) {
+							$file = file_get_contents($filename);
+							$file = explode("\n", $file);
+							$additions = count($file);
+							$deletions = 0;
+						}
+					}
+
+
+
+					$additions = 0;
+					$deletions = 0;
 				}
 			}
-			$result = array("status" => "success", "data" => array("branch" => $status['branch'], "insertions" => $plus, "deletions" => $minus));
-			echo json_encode($result);
+
+			$result = array("branch" => $this->getCurrentBranch(), "insertions" => $additions, "deletions" => $deletions);
+			return $result;
 		} else {
 			return $this->returnMessage("error", "File Does Not Exist");
 		}
@@ -673,15 +703,13 @@ class Git {
 	public function blame($repo, $path) {
 		if (!is_dir($repo)) return false;
 		chdir($repo);
-		$result = $this->executeCommand("git blame --line-porcelain " . $path);
+		$result = $this->executeCommand("git blame -c " . $path);
+		$result = $this->executeCommand("git blame -c --date=format:'%b %d, %Y %H:%M' " . $path);
+
 		if ($result !== 0) {
 			return $this->returnMessage("error", "Failed to get git blame");
 		} else {
-			foreach ($this->resultArray as $index => $line) {
-				$line = str_replace ("\t", "    ", $line);
-				$this->resultArray[$index] = htmlentities($line);
-			}
-			return json_encode(array("status" => "success", "data" => $this->resultArray));
+			return $this->resultArray;
 		}
 	}
 
@@ -1032,18 +1060,37 @@ class Git {
 		return $result;
 	}
 
+
 	private function execute($cmd) {
 		$cmd = escapeshellcmd($cmd);
 		//Allow #
 		$cmd = str_replace("\#", "#", $cmd);
 		$cmd = str_replace("\(", "(", $cmd);
 		$cmd = str_replace("\)", ")", $cmd);
+
+		$array = array();
+
 		exec($cmd . ' 2>&1', $array, $result);
 
-		// $this->resultArray = array_filter($array);
+		return array(
+			"code" => $this->parseCommandCodes($result),
+			"data" => array_filter($array)
+		);
+	}
 
-		return $result === 0 ? array_filter($array) : $result;
+	private function parseCommandCodes($code) {
 
+		switch ($code) {
+			case 0:
+				return true;
+				break;
+			case 1:
+				return false;
+				break;
+			default:
+				return $code;
+				break;
+		}
 	}
 
 	private function getResultString() {
