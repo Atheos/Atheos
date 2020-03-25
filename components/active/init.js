@@ -545,7 +545,7 @@
 		removeAll: function(discard) {
 			discard = discard || false;
 			/* Notify listeners. */
-			amplify.publish('active.onRemoveAll');
+			amplify.publish('active.closeAll');
 
 			var _this = this;
 			var changed = false;
@@ -587,7 +587,7 @@
 
 		close: function(path) {
 			/* Notify listeners. */
-			amplify.publish('active.onClose', path);
+			amplify.publish('active.close', path);
 
 			var _this = this;
 			var session = this.sessions[path];
