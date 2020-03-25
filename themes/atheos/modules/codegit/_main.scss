@@ -37,24 +37,6 @@
 
 [id^="codegit_"].content {
 	height: 60vh;
-
-	.code {
-		
-		.ace-atheos {
-			display: inline-block;
-		}
-		
-		.ace-line {
-			padding-left: 0;
-		}
-
-		.ace_static_highlight {
-			.ace_gutter {
-				display: none;
-			}
-		}
-	}
-
 }
 
 
