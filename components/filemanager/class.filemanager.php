@@ -139,10 +139,24 @@ class Filemanager extends Common
 				$files = array();
 				foreach ($index as $item => $data) {
 					if ($data['type'] == 'directory') {
-						$folders[] = array("name" => $data['name'], "path" => $data['path'], "type" => $data['type'], "size" => $data['size']);
+
+						$repo = file_exists($data['path'] . "/.git");
+
+						$folders[] = array(
+							"name" => $data['name'],
+							"path" => $data['path'],
+							"type" => $data['type'],
+							"size" => $data['size'],
+							"repo" => $repo
+						);
 					}
 					if ($data['type'] == 'file') {
-						$files[] = array("name" => $data['name'], "path" => $data['path'], "type" => $data['type'], "size" => $data['size']);
+						$files[] = array(
+							"name" => $data['name'],
+							"path" => $data['path'],
+							"type" => $data['type'],
+							"size" => $data['size']
+						);
 					}
 				}
 
