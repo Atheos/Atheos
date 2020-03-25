@@ -176,8 +176,9 @@
 								}
 							}
 							amplify.publish('filemanager.openDir', {
-								path: path,
-								files: fileManager.indexFiles
+								files: fileManager.indexFiles,
+								node: node,
+								path: path
 							});
 						}
 						node.addClass('open');
@@ -321,7 +322,7 @@
 					var context;
 
 					if (data.status === 'success') {
-						atheos.toast.show('success','File saved');
+						atheos.toast.show('success', 'File saved');
 						if (typeof callbacks.success === 'function') {
 							context = callbacks.context || fileManager;
 							callbacks.success.call(context, data.data.mtime);
@@ -386,7 +387,7 @@
 
 		copy: function(path) {
 			this.clipboard = path;
-			atheos.toast.show('success','Copied to Clipboard');
+			atheos.toast.show('success', 'Copied to Clipboard');
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -525,7 +526,7 @@
 						url: `${atheos.filemanager.controller}?action=create&path=${encodeURIComponent(newPath)}&type=${type}`,
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.show('success','File Created');
+								atheos.toast.show('success', 'File Created');
 								atheos.modal.unload();
 								// Add new element to filemanager screen
 								atheos.filemanager.addToFileManager(newPath, type, path);
@@ -637,7 +638,7 @@
 						success: function(data) {
 							console.log(data);
 							if (data.status !== 'error') {
-								atheos.toast.show('success','File Renamed');
+								atheos.toast.show('success', 'File Renamed');
 								var node = o('#file-manager a[data-path="' + path + '"]'),
 									icon = node.find('i:nth-child(2)')[0],
 									span = node.find('span')[0];
