@@ -1,0 +1,66 @@
+#codegit_blame {
+	.file-info {
+		background-color: $blue;
+		font-size: 16px;
+		font-weight: bold;
+		padding: 5px;
+	}
+
+	ul {
+		background-color: $background;
+		// padding: 5px;
+		overflow-x: auto;
+	}
+
+	li {
+		font-family: 'Ubuntu-Fira';
+		position: relative;
+
+		span {
+			line-height: 18px;
+			// margin-left: 5px;
+			padding: 2px 0;
+
+			&.line {
+				@include border(1px, right);
+				color: $font-color-subtle;
+				white-space: pre;
+			}
+
+			&.code {
+				white-space: pre;
+			}
+
+			&.blame {
+				display: none;
+				position: absolute;
+				top: -1px;
+				width: 100%;
+				background-color: $background;
+
+				.date {
+					color: $blue;
+					float: right;
+					padding: 0;
+				}
+
+				.author {
+					color: $teal;
+				}
+
+				.hash {
+					@include border(1px, right);
+					color: $red;
+				white-space: pre;
+				}
+
+			}
+		}
+
+		&:hover {
+			span.blame {
+				display: block;
+			}
+		}
+	}
+}
