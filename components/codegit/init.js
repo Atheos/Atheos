@@ -111,12 +111,16 @@
 			directory.files.forEach(function(file, i) {
 				if (atheos.common.getNodeName(file.path) === '.git') {
 					directory.node.addClass('repo');
-					directory.node.append('<i class="repo-icon fas fa-code-branch"></i>');
+					if (directory.node.find('i.repo-icon').length === 0) {
+						directory.node.append('<i class="repo-icon fas fa-code-branch"></i>');
+					}
 				} else if (file.repo) {
 					//Deeper inspect
 					var repo = oX('#file-manager a[data-path="' + file.path + '"]');
 					repo.addClass('repo');
-					repo.append('<i class="repo-icon fas fa-code-branch"></i>');
+					if (repo.find('i.repo-icon').length === 0) {
+						repo.append('<i class="repo-icon fas fa-code-branch"></i>');
+					}
 				}
 			});
 			// Repo status
