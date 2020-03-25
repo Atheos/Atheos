@@ -47,6 +47,12 @@
     "onclick": null
   },
   {
+    "title": "CodeGit",
+    "admin": false,
+    "icon": "fas fa-code-branch",
+    "onclick": "atheos.codegit.showCodeGit();"
+  },  
+  {
     "title": "Marketplace",
     "admin": true,
     "icon": "fas fa-store",
