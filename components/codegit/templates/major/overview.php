@@ -1,20 +1,22 @@
-<?php
-$repo = $CodeGit->getWorkspacePath($repo);
-$changes = $CodeGit->loadChanges($repo);
-$line = 0;
-?>
+<div id="codegit_overview" class="content">
+	<input type="text" id="commit_message" placeholder="Enter commit message here...">
+	<button onclick="atheos.codegit.commit();">Commit</button>
+	<table>
+		<?php
+		$repo = $CodeGit->getWorkspacePath($repo);
+		$changes = $CodeGit->loadChanges($repo);
+		$line = 0;
+		?>
 
-<input type="text" id="commit_message" placeholder="Enter commit message here...">
-<button onclick="atheos.codegit.commit();">Commit</button>
-<div class="git_area">
-
-	<table id="codegit_overview" class="git_list">
 		<thead>
 			<tr>
-				<th class="col_1"><input type="checkbox" class="large" id="check_all"></th>
-				<th class="col_2">Status</th>
-				<th class="col_3">File</th>
-				<th class="col_4">Actions</th>
+				<th><input type="checkbox" class="large" id="check_all"></th>
+				<th>Status</th>
+				<th>File</th>
+				<th>
+					<button class="git_button git_diff" data-line="<?php echo $line ?>">Diff</button>
+					<button class="git_button git_undo" data-line="<?php echo $line ?>">Undo</button>
+				</th>
 			</tr>
 		</thead>
 		<tbody>
