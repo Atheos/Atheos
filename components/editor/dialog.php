@@ -49,6 +49,17 @@ checkSession();
 			<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 			<?php
 			break;
+		//////////////////////////////////////////////////////////////////
+		// Prompt for GotoLine
+		//////////////////////////////////////////////////////////////////
+		case 'promptLine':
+			?>
+			<h4><i class="fas fa-external-link-alt"></i> <?php i18n("Enter a line number:"); ?></h4>
+			<input type="text" name="line" autofocus="autofocus" autocomplete="off" value="">
+			<button class="btn-left"><?php i18n("Goto"); ?></button>
+			<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<?php
+			break;
 	}
 	?>
 </form>
