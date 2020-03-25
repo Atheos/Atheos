@@ -20,33 +20,31 @@ Common::checkSession();
 
 $action = Common::post('action');
 
-if ($action) {
-
-	$TextMode = new TextMode();
-
-	switch ($action) {
-		//////////////////////////////////////////////////////////////////
-		// Set custom text modes
-		//////////////////////////////////////////////////////////////////
-		case 'setTextModes':
-			if (Common::checkAccess()) {
-				$TextMode->setTextModes();
-			} else {
-				die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
-			}
-			break;
-
-		//////////////////////////////////////////////////////////////////
-		// Get text modes
-		//////////////////////////////////////////////////////////////////
-		case 'getTextModes':
-			$TextMode->getTextModes();
-			break;
-		default:
-			die(Common::sendJSON("error", "invalid action"));
-			break;
-	}
-
-} else {
+if (!$action) {
 	die(Common::sendJSON("error", "missing action"));
+}
+
+$TextMode = new TextMode();
+
+switch ($action) {
+	//////////////////////////////////////////////////////////////////
+	// Set custom text modes
+	//////////////////////////////////////////////////////////////////
+	case 'setTextModes':
+		if (Common::checkAccess()) {
+			$TextMode->setTextModes();
+		} else {
+			die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
+		}
+		break;
+
+	//////////////////////////////////////////////////////////////////
+	// Get text modes
+	//////////////////////////////////////////////////////////////////
+	case 'getTextModes':
+		$TextMode->getTextModes();
+		break;
+	default:
+		die(Common::sendJSON("error", "invalid action"));
+		break;
 }
