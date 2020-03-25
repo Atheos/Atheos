@@ -4,7 +4,10 @@
 @import "modules/util/animations";
 
 @import "modules/misc/todo";
+
 @import "modules/codegit";
+@import "modules/codegit/main";
+
 
 @import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/feedback/alert", "modules/feedback/common", "modules/feedback/finder", "modules/feedback/modal", "modules/feedback/toast";
