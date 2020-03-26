@@ -203,6 +203,10 @@ const log = function(m, t) {
 			document.body.appendChild(overlay.el);
 			return overlay;
 		},
+		
+		hideOverlay: function() {
+			oX('#overlay').hide();
+		},
 		//////////////////////////////////////////////////////////////////////
 		// Load Script: Used to add new JS to the page.
 		//  Notes: could probably be optimized to cache the scripts nodeArray
