@@ -102,7 +102,7 @@ switch ($action) {
 				Common::sendJSON("error", "Files could not be committed.");
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("error", "Missing parameter.$path");
 		}
 		break;
 
