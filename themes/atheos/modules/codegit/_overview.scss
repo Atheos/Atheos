@@ -12,8 +12,8 @@
 
 	tbody {
 		display: block;
-		height: 50vh;
-		overflow: auto;
+		max-height: 49vh;
+		overflow-y: scroll;
 	}
 
 	thead,
@@ -26,7 +26,9 @@
 
 	thead {
 		// Account for Scrollbar width
-		width: calc(100% - 10px)
+		overflow-y: scroll;
+		box-shadow: #333 $scrollbarWidth 0px;
+		width: calc(100% - 10px);
 	}
 
 	table th:nth-of-type(1),
