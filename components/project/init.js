@@ -32,21 +32,32 @@
 
 			var project = this;
 
-			o('#projects-create').on('click', function() {
-				atheos.project.create('true');
-			});
+			var projectCreate = o('#projects-create'),
+				projectManage = o('#projects-manage'),
+				projectCollpse = o('#projects-collapse');
 
-			o('#projects-manage').on('click', function() {
-				atheos.project.list();
-			});
+			if (projectCreate) {
+				projectCreate.on('click', function() {
+					atheos.project.create('true');
+				});
+			}
 
-			o('#projects-collapse').on('click', function() {
-				if (!project.sideExpanded) {
-					project.expand();
-				} else {
-					project.collapse();
-				}
-			});
+			if (projectManage) {
+				projectManage.on('click', function() {
+					atheos.project.list();
+				});
+			}
+
+			if (projectCollpse) {
+				projectCollpse.on('click', function() {
+					if (project.sideExpanded) {
+						project.collapse();
+					} else {
+						project.expand();
+					}
+				});
+			}
+
 			amplify.subscribe('chrono.mega', function() {
 				project.getCurrent();
 			});
@@ -120,8 +131,15 @@
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
 		loadSide: function() {
-			$('.sb-projects-content').load(this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'));
-			this.sideExpanded = true;
+			// $('.sb-projects-content').load();
+			ajax({
+				url: this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'),
+				success: function(reply) {
+					o('.sb-projects-content').html(reply);
+					// log(reply);
+					this.sideExpanded = true;
+				}
+			});
 		},
 
 		expand: function() {
@@ -204,7 +222,7 @@
 		rename: function(name, path) {
 			var _this = this;
 			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
-			
+
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -215,7 +233,7 @@
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
 						var renamedata = atheos.jsend.parse(data);
 						if (renamedata != 'error') {
-							atheos.toast.show('success','Project renamed');
+							atheos.toast.show('success', 'Project renamed');
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							atheos.modal.unload();
@@ -255,7 +273,7 @@
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
 							var deletedata = atheos.jsend.parse(data);
 							if (deletedata != 'error') {
-								atheos.toast.show('success','Project Deleted');
+								atheos.toast.show('success', 'Project Deleted');
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open
