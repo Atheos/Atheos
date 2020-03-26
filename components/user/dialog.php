@@ -103,7 +103,7 @@ switch ($_GET['action']) {
 		// Get project list
 		$projects = getJSON('projects.php');
 		$users = Common::readJSON("users");
-		$username = Common::get("username");		
+		$username = Common::data("username");		
 		// Get control list (if exists)
 		$projects_assigned = false;
 		if (file_exists(BASE_PATH . "/data/" . $username . '_acl.php')) {

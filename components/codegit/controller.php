@@ -15,9 +15,9 @@ Common::checkSession();
 
 set_time_limit(0); 
 
-$action = Common::post('action') ?: Common::get('action');
-$path = Common::post('path') ?: Common::get('path');
-$repo = Common::post('repo') ?: Common::get('repo');
+$action = Common::data('action');
+$path = Common::data('path');
+$repo = Common::data('repo');
 
 if (!$action) {
 	die(Common::sendJSON("error", "missing action"));
@@ -82,8 +82,8 @@ switch ($action) {
 		break;
 
 	case 'commit':
-		$message = Common::post('message');
-		$files = Common::post('files');
+		$message = Common::data('message');
+		$files = Common::data('files');
 		if ($path && $files && $message) {
 			$files = explode(',', $files);
 

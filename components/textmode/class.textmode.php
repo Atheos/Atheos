@@ -210,11 +210,11 @@ class TextMode {
 	//////////////////////////////////////////////////////////////////
 	public function setTextModes() {
 		//Store Fileextensions and Textmodes in File:
-		$modes = Common::post('textmode');
-		$extensions = Common::post('extension');
+		$modes = Common::data('textmode');
+		$extensions = Common::data('extension');
 
-		$modes = explode(",", $modes);
-		$extensions = explode(",", $extensions);
+		// $modes = explode(",", $modes);
+		// $extensions = explode(",", $extensions);
 
 		if (is_array($extensions) && is_array($modes)) {} else {
 			Common::sendJSON("error", "invalid data");

@@ -10,21 +10,21 @@
 require_once('../../common.php');
 require_once('class.update.php');
 
-//////////////////////////////////////////////////////////////////
-// Get Action
-//////////////////////////////////////////////////////////////////
-
-if (!empty($_GET['action'])) {
-	$action = $_GET['action'];
-} else {
-	exit('{"status":"error","data":{"error":"No Action Specified"}}');
-}
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
+
+
+//////////////////////////////////////////////////////////////////
+// Get Action
+//////////////////////////////////////////////////////////////////
+$action = Common::data("action");
+if (!$action) {
+	Common::sendJSON("error", "Missing Action");
+	die;
+}
 
 $update = new Update();
 
@@ -38,13 +38,13 @@ switch ($action) {
 		break;
 	case 'check':
 		$update->check();
-		break;			
+		break;
 	case 'get':
 		$update->getLocalData();
-		break;				
+		break;
 	case 'set':
 		$update->setLocalData();
-		break;		
+		break;
 	case 'optout':
 		if (checkAccess()) {
 			$update->optOut();
@@ -54,7 +54,9 @@ switch ($action) {
 		if (checkAccess()) {
 			$update->optIn();
 		}
-		break;		
+		break;
 	default:
-		exit('{"status":"fail","data":{"error":"Unknown Action"}}');
-	}
+		Common::sendJSON("error", "Invalid Action");
+		die;
+		break;
+}

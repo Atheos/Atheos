@@ -1,6 +1,6 @@
 <?php
 $repo = $CodeGit->getWorkspacePath($repo);
-$files = Common::post('files');
+$files = Common::data('files');
 
 if ($files) {
 	$files = explode(',', $files);

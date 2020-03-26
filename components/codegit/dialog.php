@@ -7,7 +7,7 @@
 require_once('../../common.php');
 
 
-switch (Common::get('action')) {
+switch (Common::data('action')) {
 	case 'branches':
 		include('templates/minor/branch.html');
 		break;
