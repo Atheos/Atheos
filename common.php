@@ -18,6 +18,7 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 
 	public static $debugMessageStack = array();
+	private static $data = array();
 
 	//////////////////////////////////////////////////////////////////
 	// METHODS
@@ -79,6 +80,7 @@ class Common {
 	public static function startSession() {
 		Common::construct();
 
+
 		global $cookie_lifetime;
 		if (isset($cookie_lifetime) && $cookie_lifetime != "") {
 			ini_set("session.cookie_lifetime", $cookie_lifetime);
@@ -122,12 +124,39 @@ class Common {
 		} else {
 			include BASE_PATH."/languages/".LANGUAGE.".php";
 		}
+
+		Common::loadData();
+
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Load and clean input data
+	//////////////////////////////////////////////////////////////////
+	public static function loadData() {
+		Common::$data["session"] = array();
+		Common::$data["post"] = array();
+		Common::$data["get"] = array();
+
+		if ($_SESSION && count($_SESSION) > 0) {
+			foreach ($_SESSION as $key => $value) {
+				Common::$data["session"][$key] = $value;
+			}
+		}
+		if ($_POST && count($_POST) > 0) {
+			foreach ($_POST as $key => $value) {
+				Common::$data["post"][$key] = $value;
+			}
+		}
+		if ($_GET && count($_GET) > 0) {
+			foreach ($_GET as $key => $value) {
+				Common::$data["get"][$key] = $value;
+			}
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// Read Content of directory
 	//////////////////////////////////////////////////////////////////
-
 	public static function readDirectory($foldername) {
 		$tmp = array();
 		$allFiles = scandir($foldername);
@@ -147,7 +176,6 @@ class Common {
 	// Messages will be displayed in the console when the response is
 	// made with the formatJSEND function.
 	//////////////////////////////////////////////////////////////////
-
 	public static function debug($message) {
 		Common::$debugMessageStack[] = $message;
 	}
@@ -155,7 +183,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// URLs
 	//////////////////////////////////////////////////////////////////
-
 	public static function getConstant($key, $default = null) {
 		return defined($key) ? constant($key) : $default;
 	}
@@ -163,7 +190,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Localization
 	//////////////////////////////////////////////////////////////////
-
 	public static function i18n($key, $type = "return") {
 		global $lang;
 		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
@@ -180,7 +206,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check Session / Key
 	//////////////////////////////////////////////////////////////////
-
 	public static function checkSession() {
 		// Set any API keys
 		$api_keys = array();
@@ -197,7 +222,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Get JSON
 	//////////////////////////////////////////////////////////////////
-
 	public static function readJSON($file, $namespace = "") {
 		$json = false;
 
@@ -308,7 +332,7 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	public static function checkAccess() {
 		$users = Common::readJSON("users");
-		$username = Common::session("user");
+		$username = Common::data("user", "session");
 
 		$configure = false;
 
@@ -323,12 +347,11 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check Path
 	//////////////////////////////////////////////////////////////////
-
 	public static function checkPath($path) {
 		$user_acl = readJSON($_SESSION['user'] . "_acl");
 
 		$users = Common::readJSON("users");
-		$username = Common::session("user");
+		$username = Common::data("user", "session");
 
 		foreach ($users as $user => $data) {
 			if ($username === $data['username']) {
@@ -351,39 +374,25 @@ class Common {
 		return false;
 	}
 
-	public static function session($key) {
-		$data = false;
-		if (array_key_exists($key, $_SESSION)) {
-			$data = $_SESSION[$key];
+	public static function data($key, $type = false) {
+		$data = Common::$data;
+		$value = false;
+		if (array_key_exists($key, $data["session"])) {
+			$value = $data["session"][$key];
+		} elseif (array_key_exists($key, $data["post"])) {
+			$value = $data["post"][$key];
+		} elseif (array_key_exists($key, $data["get"])) {
+			$value = $data["get"][$key];
 		}
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		return $data;
-	}
 
-	public static function post($key) {
-		$data = false;
-		if (array_key_exists($key, $_POST)) {
-			$data = $_POST[$key];
+		if ($type) {
+			$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
 		}
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		return $data;
-	}
 
-	public static function get($key) {
-		$data = false;
-		if (array_key_exists($key, $_GET)) {
-			$data = $_GET[$key];
-		}
-		$data = trim($data);
-		$data = stripslashes($data);
-		$data = htmlspecialchars($data);
-		return $data;
-	}
+		//$value = htmlspecialchars(strip_tags($value));
 
+		return $value;
+	}
 
 	//////////////////////////////////////////////////////////////////
 	// Check Function Availability
@@ -413,15 +422,38 @@ class Common {
 		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 	}
 
+	//////////////////////////////////////////////////////////////////
+	// Return full workspace path
+	//////////////////////////////////////////////////////////////////
+	public static function getWorkspacePath($path) {
+		if (!$path) {
+			return false;
+		}
+		//Security check
+		if (!Common::checkPath($path)) {
+			die('{"status":"error","message":"Invalid path"}');
+		}
+		if (strpos($path, "/") === 0) {
+			//Unix absolute path
+			return $path;
+		}
+		if (strpos($path, ":/") !== false) {
+			//Windows absolute path
+			return $path;
+		}
+		if (strpos($path, ":\\") !== false) {
+			//Windows absolute path
+			return $path;
+		}
+		return WORKSPACE . "/" . $path;
+	}
+
 }
 
 //////////////////////////////////////////////////////////////////
 // Wrapper for old method names
 //////////////////////////////////////////////////////////////////
 
-function debug($message) {
-	Common::debug($message);
-}
 function i18n($key, $type = "echo") {
 	return Common::i18n($key, $type);
 }
@@ -446,7 +478,5 @@ function checkAccess() {
 function checkPath($path) {
 	return Common::checkPath($path);
 }
-function isAvailable($func) {
-	return Common::isAvailable($func);
-}
+
 ?>

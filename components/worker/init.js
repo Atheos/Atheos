@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
 // Worker Manager
 //////////////////////////////////////////////////////////////////////////////80
@@ -11,72 +13,83 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
-	
-	var atheos = global.atheos;
+	'use strict';
+
+	var atheos = global.atheos,
+		amplify = global.amplify;
+
+	var self = null;
+
+	amplify.subscribe('atheos.loaded', () => atheos.workerManager.init());
+
 
 	atheos.workerManager = {
 		taskQueue: [],
+
+		init: function() {
+			self = this;
+		},
+
 		addTask: function(taskConfig, callback, context) {
-			var _this = this;
-			if (_this.worker !== null) {
-				this.taskQueue.push({
+			if (self.worker !== null) {
+				self.taskQueue.push({
 					config: taskConfig,
 					callback: callback,
 					context: context
 				});
 
-				this.clearSubsidableTasks(taskConfig.id);
+				self.clearSubsidableTasks(taskConfig.id);
 
-				if (!this.workerRunning()) {
-					var initStatus = this.initiateWorker();
+				if (!self.workerRunning()) {
+					var initStatus = self.initiateWorker();
 					if (!initStatus) {
 						callback(null, false);
 						return;
 					}
-					this.worker.addEventListener('message', function(e) {
-						_this.concludeTask(e.data);
+					self.worker.addEventListener('message', function(e) {
+						self.concludeTask(e.data);
 					}, false);
 				}
 
-				if (this.taskQueue.length === 1) {
-					this.scheduleNext();
+				if (self.taskQueue.length === 1) {
+					self.scheduleNext();
 				}
 			} else {
 				callback(false, taskConfig.id);
 			}
 		},
 		workerRunning: function() {
-			return !!this.worker;
+			return !!self.worker;
 		},
 		initiateWorker: function() {
 			if (typeof Worker !== 'undefined' && Worker !== null) {
-				this.worker = new Worker('components/worker/worker.js');
-				return !!this.worker;
+				self.worker = new Worker('components/worker/worker.js');
+				return !!self.worker;
 			}
 		},
 		clearSubsidableTasks: function(id) {
-			var i = this.taskQueue.length - 2;
+			var i = self.taskQueue.length - 2;
 			while (i > 0) {
-				if (this.taskQueue[i].id === id) {
-					this.taskQueue.splice(i, 1);
+				if (self.taskQueue[i].id === id) {
+					self.taskQueue.splice(i, 1);
 				}
 				i--;
 			}
 		},
 		scheduleNext: function() {
-			var taskConfig = this.taskQueue[0].config;
-			this.worker.postMessage(taskConfig);
+			var taskConfig = self.taskQueue[0].config;
+			self.worker.postMessage(taskConfig);
 		},
 		concludeTask: function(msg) {
-			if (this.taskQueue.length > 0) {
-				var tq = this.taskQueue[0];
+			if (self.taskQueue.length > 0) {
+				var tq = self.taskQueue[0];
 				var callback = tq.callback;
-				context = tq.context;
-				this.taskQueue.splice(0, 1);
-				if (this.taskQueue.length > 0) {
-					this.scheduleNext();
+				var context = tq.context;
+				self.taskQueue.splice(0, 1);
+				if (self.taskQueue.length > 0) {
+					self.scheduleNext();
 				}
-				tq.callback.apply(context, [msg.success, msg.result]);
+				callback.apply(context, [msg.success, msg.result]);
 			}
 		}
 	};
