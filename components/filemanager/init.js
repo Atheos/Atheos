@@ -258,7 +258,7 @@
 						if (data.status !== 'error') {
 							atheos.active.open(path, data.data.content, data.data.mtime, false, focus);
 							if (line) {
-								atheos.active.gotoLine(line);
+								setTimeout(atheos.active.gotoLine(line), 500);
 							}
 						}
 					}

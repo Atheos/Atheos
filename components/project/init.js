@@ -107,7 +107,7 @@
 				success: function(data) {
 					if (data.status != 'error') {
 						project.loadCurrent();
-						if (atheos.modal.settings.isModalVisible) {
+						if (atheos.modal.modalVisible) {
 							atheos.modal.unload();
 						}
 						atheos.user.saveActiveProject(path);

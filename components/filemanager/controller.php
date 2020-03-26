@@ -6,8 +6,8 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-require_once('../../common.php');
-require_once('class.filemanager.php');
+require_once("../../common.php");
+require_once("class.filemanager.php");
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
@@ -18,49 +18,40 @@ checkSession();
 //////////////////////////////////////////////////////////////////
 // Get Action
 //////////////////////////////////////////////////////////////////
-
-if (!empty($_GET['action'])) {
-	$action = $_GET['action'];
-} else {
-	$action = Common::post('action');
-	if (!$action) {
-		exit('{"status":"error","message":"No Action Specified"}');
-	}
+$action = Common::data("action");
+if (!$action) {
+	Common::sendJSON("error", "No Action Specified");
+	exit;
 }
 
 //////////////////////////////////////////////////////////////////
 // Ensure Project Has Been Loaded
 //////////////////////////////////////////////////////////////////
-
-if (!isset($_SESSION['project'])) {
-	$_GET['action'] = 'get_current';
-	$_GET['no_return'] = 'true';
+$project = Common::data("project", "session");
+$noReturn = Common::data("no_return");
+if (!$project) {
+	$action = "get_current";
+	$noReturn = 'true';
 	require_once('../project/controller.php');
 }
 
 //////////////////////////////////////////////////////////////////
 // Security Check
 //////////////////////////////////////////////////////////////////
-$path = Common::get('path');
-if(!$path) {
-	Common::post('path');
-}
+$path = Common::data('path');
+
 if (!checkPath($path)) {
-	die('{"status":"error","message":"Invalid Path"}');
+	Common::sendJSON("error", "Invalid Path");
+	exit;
 }
-
-//////////////////////////////////////////////////////////////////
-// Define Root
-//////////////////////////////////////////////////////////////////
-
-$_GET['root'] = WORKSPACE;
 
 //////////////////////////////////////////////////////////////////
 // Handle Action
 //////////////////////////////////////////////////////////////////
+$Filemanager = new Filemanager($_GET, $_POST);
+// $Filemanager->project = @$_SESSION['project']['path'];
 
-$Filemanager = new Filemanager($_GET, $_POST, $_FILES);
-$Filemanager->project = @$_SESSION['project']['path'];
+$Filemanager->root = WORKSPACE;
 
 switch ($action) {
 	case 'index':

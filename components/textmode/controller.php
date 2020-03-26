@@ -10,15 +10,15 @@
 // Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once '../../common.php';
-require_once 'class.textmode.php';
+require_once "../../common.php";
+require_once "class.textmode.php";
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
 Common::checkSession();
 
-$action = Common::post('action');
+$action = Common::data("action");
 
 if (!$action) {
 	die(Common::sendJSON("error", "missing action"));
