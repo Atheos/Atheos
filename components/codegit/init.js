@@ -48,6 +48,7 @@
 		controller: '/components/codegit/controller.php',
 		dialog: '/components/codegit/dialog.php',
 		location: '',
+		activeRepo: '',
 		line: 0,
 		files: [],
 		network_graph: {},
@@ -196,6 +197,7 @@
 
 		showCodeGit: function(repo) {
 			repo = repo || oX('#project-root').attr('data-path');
+			codegit.activeRepo = repo;
 
 			atheos.modal.load(800, codegit.dialog + '?action=codegit&repo=' + repo);
 
@@ -325,11 +327,12 @@
 
 		commit: function() {
 			var message = oX('#commit_message');
-			var path = this.getPath(codegit.location);
+			var path = this.getPath(codegit.activeRepo);
 
 			var data = {
 				files: [],
-				message: message.value()
+				message: message.value(),
+				path: path
 			};
 
 			var checkboxes = oX('#codegit_overview tbody').find('input[type="checkbox"]');
@@ -340,9 +343,10 @@
 			});
 
 			ajax({
-				url: this.controller + '?action=commit&path=' + path,
+				url: this.controller + '?action=commit',
 				data: data,
 				success: function(data) {
+					log(data);
 					atheos.toast.show(data);
 					if (data.status !== 'error') {
 						message.value('');
