@@ -43,7 +43,7 @@ if (isset($_GET['type']) && ($_GET['type']=='directory' || $_GET['type']=='root'
     //////////////////////////////////////////////////////////////////
     // Check system() command and a non windows OS
     //////////////////////////////////////////////////////////////////
-    if (isAvailable('system') && stripos(PHP_OS, 'win') === false) {
+    if (Common::isAvailable('system') && stripos(PHP_OS, 'win') === false) {
       # Execute the tar command and save file
         $filename .= '.tar.gz';
 

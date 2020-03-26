@@ -13,7 +13,7 @@
 require_once '../../common.php';
 require_once 'class.user.php';
 
-$action = Common::post('action');
+$action = Common::data('action');
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
@@ -26,12 +26,12 @@ if ($action) {
 
 	$User = new User();
 
-	$username = Common::post('username');
-	$password = Common::post('password');
-	$activeProject = Common::post('activeProject');
-	$userACL = Common::post('project');
-	$language = Common::post('language');
-	$theme = Common::post('theme');
+	$username = Common::data('username');
+	$password = Common::data('password');
+	$activeProject = Common::data('activeProject');
+	$userACL = Common::data('project');
+	$language = Common::data('language');
+	$theme = Common::data('theme');
 
 	if ($username) {
 		$username = User::cleanUsername($username);
@@ -66,7 +66,7 @@ if ($action) {
 		//////////////////////////////////////////////////////////////////
 		case 'keepAlive':
 
-			$User->username = Common::session('user');
+			$User->username = Common::data("user", "session");
 			$User->verify();
 
 			break;			
@@ -124,7 +124,7 @@ if ($action) {
 				die(Common::sendJSON("error", "Missing username or password"));
 			}
 
-			if (checkAccess() || $username == Common::session('user')) {
+			if (checkAccess() || $username === Common::data("user", "session")) {
 				$User->username = $username;
 				$User->password = $password;
 				$User->changePassword();
@@ -155,7 +155,8 @@ if ($action) {
 				die(Common::sendJSON("error", "Missing project"));
 			}
 
-			$User->username = Common::session('user');
+			$User->username = Common::data("user", "session");
+
 			$User->activeProject = $activeProject;
 			$User->saveActiveProject();
 
