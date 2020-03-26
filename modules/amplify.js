@@ -4,6 +4,9 @@
 		subscriptions = {};
 
 	var amplify = global.amplify = {
+		reset: function() {
+			subscriptions = {};
+		},
 		publish: function(topic) {
 			if (typeof topic !== 'string') {
 				throw new Error('You must provide a valid topic to publish.');
@@ -107,6 +110,15 @@
 						i--;
 						length--;
 					}
+				}
+			}
+		},
+		unsubscribeAll: function(topic) {
+			if (typeof topic === "string") {
+				delete subscriptions[topic];
+			} else {
+				for (var key in subscriptions) {
+					delete subscriptions[key];
 				}
 			}
 		}

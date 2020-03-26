@@ -22,27 +22,29 @@
 //
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
- 
+
+
 
 (function(global, $) {
 
 	'use strict';
-
-
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
 		oX = global.onyx;
 
+	var self = null;
+
+
 	atheos.modal = {
 
-		settings: {
-			isModalVisible: false
+		modalVisible: false,
+
+		init: function() {
+			self = this;
 		},
 
 		create: function() {
-			var modal = atheos.modal;
 			var wrapper = oX('<div>'),
 				content = oX('<div>'),
 				drag = oX('<i>'),
@@ -52,12 +54,12 @@
 			content.attr('id', 'modal_content');
 
 			close.addClass('close fas fa-times-circle');
-			close.on('click', atheos.modal.unload);
+			close.on('click', self.unload);
 
 			drag.addClass('drag fas fa-arrows-alt');
 			drag.on('mousedown', function() {
 				drag.addClass('active');
-				modal.drag(wrapper);
+				self.drag(wrapper);
 			}, false);
 
 			wrapper.append(close);
@@ -77,7 +79,7 @@
 			var overlay = oX('#overlay') || atheos.common.createOverlay(),
 				wrapper = oX('#modal_wrapper') || this.create(),
 				content = oX('#modal_content');
-				
+
 
 
 			$('#modal_content form').die('submit'); // Prevent form bubbling
@@ -116,7 +118,7 @@
 			wrapper.show();
 			oX('#overlay').show();
 
-			this.settings.isModalVisible = true;
+			self.modalVisible = true;
 		},
 
 		resize: function() {
@@ -133,20 +135,18 @@
 			}
 		},
 
-		hideOverlay: function() {
-			oX('#overlay').hide();
-		},
-
 		unload: function() {
 			amplify.publish('modal.unload');
+
+			amplify.unsubscribeAll('modal.loaded');
+
 
 			oX('#modal_content').off('submit');
 			oX('#overlay').hide();
 			oX('#modal_wrapper').hide();
 			oX('#modal_content').empty();
 
-
-			atheos.modal.settings.isModalVisible = false;
+			self.modalVisible = false;
 			atheos.editor.focus();
 
 		},

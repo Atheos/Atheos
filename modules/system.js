@@ -31,6 +31,7 @@
 
 			atheos.chrono.init();
 			atheos.keybind.init();
+			atheos.modal.init();
 			// atheos.sidebars.init();
 
 			atheos.codiad.init();
