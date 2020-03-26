@@ -2,10 +2,10 @@
 
 require_once('class.git.php');
 
-$action = Common::post('action') ?: Common::get('action');
-$path = Common::post('path') ?: Common::get('path');
-$panel = Common::post('panel') ?: Common::get('panel');
-$repo = Common::post('repo') ?: Common::get('repo');
+$action = Common::data('action');
+$path = Common::data('path');
+$panel = Common::data('panel');
+$repo = Common::data('repo');
 
 $CodeGit = new Git($path, $repo);
 

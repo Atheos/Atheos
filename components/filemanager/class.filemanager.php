@@ -5,7 +5,7 @@
 *  as-is and without warranty under the MIT License. See
 *  [root]/license.txt for more. This information must remain intact.
 */
-
+ 
 require_once('../../lib/diff_match_patch.php');
 require_once('../../common.php');
 
@@ -49,7 +49,7 @@ class Filemanager extends Common
 	// Construct
 	//////////////////////////////////////////////////////////////////
 
-	public function __construct($get, $post, $files) {
+	public function __construct($get, $post) {
 		$this->rel_path = Filemanager::cleanPath($get['path']);
 
 		if ($this->rel_path != "/") {
@@ -61,7 +61,7 @@ class Filemanager extends Common
 		if (!empty($get['options'])) {
 			$this->foptions = $get['options'];
 		}
-		$this->root = $get['root'];
+
 		if ($this->isAbsPath($get['path'])) {
 			$this->path = Filemanager::cleanPath($get['path']);
 		} else {
