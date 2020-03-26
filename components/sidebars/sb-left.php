@@ -3,7 +3,7 @@
 		<i id="sb-left-lock" class="fas fa-lock"></i>
 		<?php if (!common::isWINOS()) {
 			?>
-			<i id="finder-quick" class="fas fa-search"></i>
+			<i id="open_scout" class="fas fa-search"></i>
 			<i id="tree-search" class="fas fa-search"></i>
 			<h2 id="finder-label"> <?php i18n("Explore"); ?> </h2>
 			<div id="finder-wrapper">
