@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// Discover
+// Scout
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -17,7 +19,7 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
-		o = global.onyx;
+		oX = global.onyx;
 
 	amplify.subscribe('atheos.loaded', () => atheos.scout.init());
 
@@ -29,7 +31,7 @@
 		init: function() {
 			var scout = this;
 
-			o('#finder-quick').on('click', function(e) {
+			oX('#open_scout').on('click', function(e) {
 				scout.search();
 			});
 
@@ -38,24 +40,20 @@
 		// Search
 		//////////////////////////////////////////////////////////////////
 		search: function() {
-			
-			var search = this,
-			path = atheos.project.current.path;
-			
-			atheos.modal.load(500, this.dialog, {
-				action: 'search',
-				path: path
-			});
-			atheos.modal.ready.then(function() {
-				// atheos.modal.hideOverlay();
-				var table = o('#search_results');
 
+			var search = this,
+				path = atheos.project.current.path;
+
+			var listener = function() {
+				// atheos.modal.hideOverlay();
+				var table = oX('#search_results');
 
 				var lastSearched = JSON.parse(localStorage.getItem('lastSearched'));
+
 				if (lastSearched) {
-					o('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
-					o('#modal_content form input[name="search_file_type"]').value(lastSearched.fileExtension);
-					o('#modal_content form select[name="search_type"]').value(lastSearched.searchType);
+					oX('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
+					oX('#modal_content form input[name="search_file_type"]').value(lastSearched.fileExtension);
+					oX('#modal_content form select[name="search_type"]').value(lastSearched.searchType);
 					if (lastSearched.searchResults !== '') {
 						table.html(lastSearched.searchResults);
 						atheos.animation.slide('open', table.el);
@@ -63,71 +61,66 @@
 					}
 				}
 
-
 				var listener = function(e) {
 					e.preventDefault();
 
-					o('#search_processing').show();
+					oX('#search_processing').show();
 
-					var searchString = o('#modal_content form input[name="search_string"]').value();
-					var fileExtensions = o('#modal_content form input[name="search_file_type"]').value();
-					var searchFileType = fileExtensions.trim();
-					if (searchFileType !== '') {
+					var query = oX('#modal_content form input[name="search_string"]').value();
+					var fileExtensions = oX('#modal_content form input[name="search_file_type"]').value();
+					var filter = fileExtensions.trim();
+					if (filter !== '') {
 						//season the string to use in find command
-						searchFileType = '\\(' + searchFileType.replace(/\s+/g, '\\|') + '\\)';
+						filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
 					}
 
-					var searchType = o('#modal_content form select[name="search_type"]').value();
+					var type = oX('#modal_content form select[name="search_type"]').value();
 
 					ajax({
-						url: search.controller + '?action=search&path=' + encodeURIComponent(path) + '&type=' + searchType,
+						url: search.controller,
 						data: {
-							search_string: searchString,
-							search_file_type: searchFileType,
-							searchString: searchString,
-							searchFileType: searchFileType
+							action: 'search',
+							type: type,
+							path: path,
+							query: query,
+							filter: filter
 						},
-						success: function(response) {
+						success: function(reply) {
 							table.empty();
 							var results = '';
-							if (response.status !== 'error') {
-								var index = response.data;
+							if (reply.status === 'error') {
+								table.append('<p>' + reply.text + '</p>');
+								return;
+							}
+							for (var key in reply) {
+								if (!reply.hasOwnProperty(key) || key === 'status') continue;
 
-								for (var key in index) {
-									if (!index.hasOwnProperty(key)) {
-										continue;
-									}
+								var file = reply[key];
 
-									var file = index[key];
-
-									if (key.substr(-1) === '/') {
-										key = key.substr(0, key.substr.length - 1);
-									}
-
-									var node = o('<div>'),
-										content = '<span><strong>File: </strong>' + key + '</span>';
-
-									node.addClass('file');
-
-									file.forEach(function(result) {
-										result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-										content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}
-												</a>`;
-									});
-
-									node.html(content);
-									table.append(node);
-
+								if (key.substr(-1) === '/') {
+									key = key.substr(0, key.substr.length - 1);
 								}
 
-								results = table.html();
-								atheos.animation.slide('open', table.el);
+								var node = oX('<div>'),
+									content = '<span><strong>File: </strong>' + key + '</span>';
 
-							} else {
-								atheos.animation.slide('close', table.el);
+								node.addClass('file');
+
+								file.forEach(function(result) {
+									// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+									// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
+									content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}
+												</a>`;
+								});
+
+								node.html(content);
+								table.append(node);
 							}
-							search.saveSearchResults(searchString, searchType, fileExtensions, results);
-							o('#search_processing').hide();
+							results = table.html();
+							atheos.animation.slide('open', table.el);
+
+							search.saveSearchResults(query, type, filter, results);
+							oX('#search_processing').hide();
 							atheos.modal.resize();
 
 						}
@@ -135,11 +128,15 @@
 
 				};
 
-				o('#modal_content form').on('submit', listener);
+				oX('#modal_content form').on('submit', listener);
+			};
 
+			amplify.subscribe('modal.loaded', listener);
+
+			atheos.modal.load(500, this.dialog, {
+				action: 'search',
+				path: path
 			});
-
-
 		},
 
 		/////////////////////////////////////////////////////////////////

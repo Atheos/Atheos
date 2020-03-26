@@ -282,7 +282,6 @@
 			this._lastEntry = null;
 			amplify.subscribe('chrono.kilo', this.checkFinder);
 			$("#finder").focus();
-			$("#finder-quick").hide();
 			$("#sb-left-title").addClass('active');
 			$("#tree-search")
 				.removeClass('icon-search')
@@ -298,7 +297,6 @@
 			this._clearFilters();
 			amplify.unsubscribe('chrono.kilo', this.checkFinder);
 
-			$("#finder-quick").show();
 			$("#sb-left-title").removeClass('active');
 			$("#tree-search")
 				.removeClass('icon-cancel-squared active')

@@ -6,27 +6,27 @@
 *  [root]/license.txt for more. This information must remain intact.
 */
 
-require_once('../../common.php');
+require_once("../../common.php");
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
 
-?>
-<form onsubmit="return;">
-	<?php
+$action = Common::data("action");
+$path = Common::data("path");
 
-	switch ($_GET['action']) {
+switch ($action) {
 
-		//////////////////////////////////////////////////////////////////
-		// Search
-		//////////////////////////////////////////////////////////////////
-		case 'search':
-			?>
-			<input type="hidden" name="path" value="<?php echo($_GET['path']); ?>">
-			<table class="file-search-table">
+	//////////////////////////////////////////////////////////////////
+	// Search
+	//////////////////////////////////////////////////////////////////
+	case 'search':
+		?>
+		<form>
+
+			<input type="hidden" name="path" value="<?php echo $path; ?>">
+			<table id="scout_table">
 				<tr>
 					<td width="65%">
 						<label><?php i18n("Search Files:"); ?></label>
@@ -56,10 +56,9 @@ checkSession();
 			<div id="search_processing"></div>
 			<button class="btn-left"><?php i18n("Search"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
-			<?php
-			break;
+		</form>
+		<?php
+		break;
+}
 
-	}
-
-	?>
-</form>
+?>
