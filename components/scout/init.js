@@ -16,10 +16,13 @@
 
 (function(global) {
 	'use strict';
+	
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
 		oX = global.onyx;
+		
+	var self = null;
 
 	amplify.subscribe('atheos.loaded', () => atheos.scout.init());
 
@@ -29,10 +32,10 @@
 		dialog: 'components/scout/dialog.php',
 
 		init: function() {
-			var scout = this;
+			self = this;
 
 			oX('#open_scout').on('click', function(e) {
-				scout.search();
+				self.search();
 			});
 
 		},
@@ -41,14 +44,13 @@
 		//////////////////////////////////////////////////////////////////
 		search: function() {
 
-			var search = this,
-				path = atheos.project.current.path;
+			var path = atheos.project.current.path;
 
 			var listener = function() {
 				// atheos.modal.hideOverlay();
 				var table = oX('#search_results');
 
-				var lastSearched = JSON.parse(localStorage.getItem('lastSearched'));
+				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
 				if (lastSearched) {
 					oX('#modal_content form input[name="search_string"]').value(lastSearched.searchText);
@@ -77,7 +79,7 @@
 					var type = oX('#modal_content form select[name="search_type"]').value();
 
 					ajax({
-						url: search.controller,
+						url: self.controller,
 						data: {
 							action: 'search',
 							type: type,
@@ -119,7 +121,7 @@
 							results = table.html();
 							atheos.animation.slide('open', table.el);
 
-							search.saveSearchResults(query, type, filter, results);
+							self.saveSearchResults(query, type, filter, results);
 							oX('#search_processing').hide();
 							atheos.modal.resize();
 
@@ -149,7 +151,7 @@
 				fileExtension: fileExtensions,
 				searchResults: searchResults
 			};
-			localStorage.setItem('lastSearched', JSON.stringify(lastSearched));
+			atheos.storage('lastSearched', JSON.stringify(lastSearched));
 		}
 	};
 })(this);
