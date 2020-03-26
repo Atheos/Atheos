@@ -121,6 +121,7 @@
 			// $('#tab-list-active-files li.tab-item>a.label')
 			$('#tab-list-active-files li.tab-item')
 				.live('mousedown', function(e) {
+					if(e.target.classList.contains('close')) return;
 					if (e.which == 1) {
 						e.stopPropagation();
 						// _this.focus($(this).parent('li').attr('data-path'));
