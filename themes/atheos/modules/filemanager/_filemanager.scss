@@ -3,12 +3,17 @@
 	height: 100%;
 	float: left;
 	margin: 0;
-	padding-left: 5px;
+	// padding-left: 5px;
 	overflow-y: scroll;
+	
+	#project-root + ul {
+		padding-left: 5px;	
+	}
 
 	ul {
 		margin: 0;
 		padding: 0;
+		padding-left: 4px;
 		transition: height 500ms ease-in;
 		overflow: hidden;
 	}
@@ -35,6 +40,7 @@
 		padding: 2px 5px;
 		padding-left: 0px;
 		z-index: 80;
+		position: relative;
 
 		&:hover,
 		&.context-menu-active {
