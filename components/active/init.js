@@ -7,7 +7,7 @@
 (function(global, $) {
 
 	var ace = global.ace,
-      atheos = global.atheos,
+		atheos = global.atheos,
 		amplify = global.amplify;
 
 	var EditSession = ace.require('ace/edit_session').EditSession;
@@ -68,7 +68,7 @@
 				var draft = _this.checkDraft(path);
 				if (draft) {
 					content = draft;
-					atheos.toast.show('success','Recovered unsaved content for: ' + path);
+					atheos.toast.show('success', 'Recovered unsaved content for: ' + path);
 				}
 
 				//var session = new EditSession(content, new Mode());
@@ -118,11 +118,14 @@
 				});
 
 			// Focus on left button mousedown from tab.
-			$('#tab-list-active-files li.tab-item>a.label')
+			// $('#tab-list-active-files li.tab-item>a.label')
+			$('#tab-list-active-files li.tab-item')
 				.live('mousedown', function(e) {
 					if (e.which == 1) {
 						e.stopPropagation();
-						_this.focus($(this).parent('li').attr('data-path'));
+						// _this.focus($(this).parent('li').attr('data-path'));
+						_this.focus($(this).attr('data-path'));
+
 					}
 				});
 
