@@ -349,7 +349,7 @@
 					log(data);
 					atheos.toast.show(data);
 					if (data.status !== 'error') {
-						message.value('');
+						message.empty();
 						checkboxes.forEach((checkbox) => {
 							if (checkbox.el.checked) {
 								checkbox.parent('tr').remove();
