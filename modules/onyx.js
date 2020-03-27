@@ -301,7 +301,10 @@
 				return element.classList.toggle(t);
 			},
 
-			empty: () => element.innerHTML = '',
+			empty: () => {
+				element.innerHTML = '';
+				element.value = '';
+			},
 
 			exists: function() {
 				return (element && element.nodeType);
