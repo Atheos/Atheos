@@ -1,65 +1,45 @@
 <?php
 
-    /*
+/*
     *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
     *  as-is and without warranty under the MIT License. See
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-    require_once('../../common.php');
-    require_once('class.scout.php');
+require_once('../../common.php');
+require_once('class.scout.php');
 
-    //////////////////////////////////////////////////////////////////
-    // Verify Session or Key
-    //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Verify Session or Key
+//////////////////////////////////////////////////////////////////
+checkSession();
 
-    checkSession();
+//////////////////////////////////////////////////////////////////
+// Get Action & Path
+//////////////////////////////////////////////////////////////////
+$action = Common::data("action");
+$path = Common::data("path");
 
-    //////////////////////////////////////////////////////////////////
-    // Get Action
-    //////////////////////////////////////////////////////////////////
-
-if (!empty($_GET['action'])) {
-    $action = $_GET['action'];
-} else {
-    exit('{"status":"error","data":{"error":"No Action Specified"}}');
+if (!$action) {
+	Common::sendJSON("error", "Missing Action");
+	die;
+} elseif (!checkPath($path)) {
+	Common::sendJSON("error", "Invalid Path");
+	die;
 }
 
-    //////////////////////////////////////////////////////////////////
-    // Ensure Project Has Been Loaded
-    //////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////
+// Handle Action
+//////////////////////////////////////////////////////////////////
 
-if (!isset($_SESSION['project'])) {
-    $_GET['action']='get_current';
-    $_GET['no_return']='true';
-    require_once('../project/controller.php');
-}
-    
-    //////////////////////////////////////////////////////////////////
-    // Security Check
-    //////////////////////////////////////////////////////////////////
-
-if (!checkPath($_GET['path'])) {
-    die('{"status":"error","message":"Invalid Path"}');
-}
-
-    //////////////////////////////////////////////////////////////////
-    // Define Root
-    //////////////////////////////////////////////////////////////////
-
-    $_GET['root'] = WORKSPACE;
-
-    //////////////////////////////////////////////////////////////////
-    // Handle Action
-    //////////////////////////////////////////////////////////////////
-
-    $Scout = new Scout($_GET, $_POST, $_FILES);
-    $Scout->project = @$_SESSION['project']['path'];
+$Scout = new Scout();
 
 switch ($action) {
-    case 'search':
-            $Scout->search();
-            break;
-    default:
-			die(formatJSEND("error", "invalid action"));
+	case "search":
+		$Scout->search();
+		break;
+	default:
+		Common::sendJSON("error", "Invalid Action");
+		die;
+		break;
 }

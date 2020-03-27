@@ -22,7 +22,7 @@ if (!isset($_GET['path'])
             || preg_match('#^[\\\/]?$#i', trim($_GET['path'])) // download all Projects
             || preg_match('#[\:*?\"<>\|]#i', $_GET['path']) //illegal chars in filenames
             || substr_count($_GET['path'], './') > 0) { // change directory up to escape Workspace
-    exit('<script>parent.codiad.toast.error("Wrong data send")</script>');
+    exit('<script>parent.codiad.toast.show("error, "Wrong data send")</script>');
 }
 
     //////////////////////////////////////////////////////////////////
@@ -37,13 +37,13 @@ if (isset($_GET['type']) && ($_GET['type']=='directory' || $_GET['type']=='root'
     $targetPath = DATA . '/';
     $dir = WORKSPACE . '/' . $_GET['path'];
     if (!is_dir($dir)) {
-        exit('<script>parent.codiad.toast.error("Directory not found.")</script>');
+        exit('<script>parent.codiad.toast.show("error, "Directory not found.")</script>');
     }
 
     //////////////////////////////////////////////////////////////////
     // Check system() command and a non windows OS
     //////////////////////////////////////////////////////////////////
-    if (isAvailable('system') && stripos(PHP_OS, 'win') === false) {
+    if (Common::isAvailable('system') && stripos(PHP_OS, 'win') === false) {
       # Execute the tar command and save file
         $filename .= '.tar.gz';
 
@@ -57,7 +57,7 @@ if (isset($_GET['type']) && ($_GET['type']=='directory' || $_GET['type']=='root'
         $download_file = $targetPath.$filename;
         DirZip::zipDir($dir, $targetPath .$filename);
     } else {
-        exit('<script>parent.codiad.toast.error("Could not pack the folder, zip-extension missing")</script>');
+        exit('<script>parent.codiad.toast.show("error, "Could not pack the folder, zip-extension missing")</script>');
     }
 } else {
     $filename = explode("/", $_GET['path']);

@@ -16,7 +16,7 @@ class Filemanager extends Common
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////
 
-	public $root = "";
+	public $root = WORKSPACE;
 	public $project = "";
 	public $rel_path = "";
 	public $path = "";
@@ -49,7 +49,7 @@ class Filemanager extends Common
 	// Construct
 	//////////////////////////////////////////////////////////////////
 
-	public function __construct($get, $post, $files) {
+	public function __construct($get, $post) {
 		$this->rel_path = Filemanager::cleanPath($get['path']);
 
 		if ($this->rel_path != "/") {
@@ -61,7 +61,7 @@ class Filemanager extends Common
 		if (!empty($get['options'])) {
 			$this->foptions = $get['options'];
 		}
-		$this->root = $get['root'];
+
 		if ($this->isAbsPath($get['path'])) {
 			$this->path = Filemanager::cleanPath($get['path']);
 		} else {
@@ -109,7 +109,6 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public function index() {
-
 		if (file_exists($this->path)) {
 			$index = array();
 			if (is_dir($this->path) && $handle = opendir($this->path)) {
@@ -139,10 +138,24 @@ class Filemanager extends Common
 				$files = array();
 				foreach ($index as $item => $data) {
 					if ($data['type'] == 'directory') {
-						$folders[] = array("name" => $data['name'], "path" => $data['path'], "type" => $data['type'], "size" => $data['size']);
+
+						$repo = file_exists($data['path'] . "/.git");
+
+						$folders[] = array(
+							"name" => $data['name'],
+							"path" => $data['path'],
+							"type" => $data['type'],
+							"size" => $data['size'],
+							"repo" => $repo
+						);
 					}
 					if ($data['type'] == 'file') {
-						$files[] = array("name" => $data['name'], "path" => $data['path'], "type" => $data['type'], "size" => $data['size']);
+						$files[] = array(
+							"name" => $data['name'],
+							"path" => $data['path'],
+							"type" => $data['type'],
+							"size" => $data['size']
+						);
 					}
 				}
 
@@ -563,12 +576,12 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public static function cleanPath($path) {
-
 		// replace backslash with slash
 		$path = str_replace('\\', '/', $path);
 
 		// allow only valid chars in paths$
 		$path = preg_replace('/[^A-Za-z0-9\-\._\/]/', '', $path);
+
 		// maybe this is not needed anymore
 		// prevent Poison Null Byte injections
 		$path = str_replace(chr(0), '', $path);

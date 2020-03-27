@@ -32,6 +32,9 @@ switch ($_GET['action']) {
 				<li>
 					<a name="system-settings" data-file="components/settings/settings.system.php" data-name="system"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
 				</li>
+				<li>
+					<a name="codegit-settings" data-file="components/codegit/dialog.php?action=settings" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
+				</li>				
 				<?php
 				if (COMMON::checkAccess()) {
 					?>

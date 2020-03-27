@@ -58,7 +58,7 @@ if (isset($_SESSION['theme'])) {
 	//////////////////////////////////////////////////////////////////
 	// LOAD MODULES
 	//////////////////////////////////////////////////////////////////
-	$SourceManager->echoScripts("modules", false);
+	$SourceManager->echoScripts("modules", true);
 
 
 	// Load Plugin CSS Files
@@ -150,11 +150,11 @@ if (isset($_SESSION['theme'])) {
 					} ?>
 
 					<div class="divider"></div>
-					<a id="split" class="ico-wrapper"><i class="fas fa-column"></i><?php i18n("Split"); ?></a>
+					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
 					<div class="divider"></div>
-					<a id="current-mode"><i class="fas fa-column"></i></a>
+					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<div class="divider"></div>
-					<div id="current-file"></div>
+					<div id="current_file"></div>
 					<div id="cursor-position">
 						<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
 					</div>

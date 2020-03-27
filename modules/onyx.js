@@ -301,19 +301,37 @@
 				return element.classList.toggle(t);
 			},
 
-			empty: () => element.innerHTML = '',
+			empty: () => {
+				element.innerHTML = '';
+				element.value = '';
+			},
 
 			exists: function() {
 				return (element && element.nodeType);
 			},
 			attr: function(k, v) {
-				if (v) {
-					element.setAttribute(k, v);
+				if (typeof k === 'string') {
+					if (v) {
+						element.setAttribute(k, v);
+					}
+					return element.getAttribute(k);
+				} else if (typeof k === 'object') {
+					const entries = Object.entries(k);
+					for (const [key, value] of entries) {
+						element.setAttribute(key, value);
+					}
 				}
-				return element.getAttribute(k);
 			},
 			removeAttr: (k) => element.removeAttribute(k),
-			parent: () => onyx(element.parentNode),
+			parent: function(s) {
+				var parent = element;
+				if (s) {
+					while ((parent = parent.parentElement) && !((parent.matches || parent.matchesSelector).call(parent, s)));
+				} else {
+					parent = element.parentElement;
+				}
+				return onyx(parent);
+			},
 
 			siblings: function(s) {
 				var siblings = [];
@@ -374,6 +392,25 @@
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,
+			height: function() {
+				var init = {
+					'display': element.style.display,
+					'visibility': element.style.visibility,
+					'opacity': element.style.opacity
+				};
+
+				this.css({
+					'display': 'block',
+					'visibility': 'hidden',
+					'opacity': 0
+				});
+
+				var height = parseFloat(window.getComputedStyle(element, null).height.replace("px", ""));
+
+				this.css(init);
+
+				return height;
+			},
 			clientWidth: () => element.clientWidth,
 			style: () => element.style,
 			el: element,

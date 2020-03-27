@@ -18,28 +18,26 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
-	// 'use strict';
+(function(global) {
+	'use strict';
+	var contextmenu = null;
+
+
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		o = global.onyx;
+		oX = global.onyx;
 
 	amplify.subscribe('atheos.loaded', () => atheos.contextmenu.init());
 
 	atheos.contextmenu = {
 
-		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
-		noBrowser: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
-
-		controller: 'components/filemanager/controller.php',
-		dialog: 'components/filemanager/dialog.php',
-		dialogUpload: 'components/filemanager/dialog_upload.php',
-
 		contextMenu: {},
 
 		init: function() {
+			contextmenu = this;
+
 			var checkAnchor = function(node) {
-				node = o(node);
+				node = oX(node);
 				//////////////////////////////////////////////////////////////////
 				// This tagname business is due to the logical but annoying way
 				// event delegation is handled. I keep trying to avoid organizing
@@ -53,14 +51,14 @@
 					if (tagName === 'LI') {
 						node = node.find('a')[0];
 					} else {
-						node = o(node.parent());
+						node = oX(node.parent());
 					}
 				}
 				return node;
 			};
 
 			// Initialize node listener
-			o('#file-manager').on('contextmenu', function(e) { // Context Menu
+			oX('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 				atheos.contextmenu.show(e, checkAnchor(e.target));
 			});
@@ -69,7 +67,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Context Menu
 		//////////////////////////////////////////////////////////////////
-
 		show: function(e, node) {
 			if (node) {
 				var path = node.attr('data-path'),
@@ -78,40 +75,51 @@
 
 				node.addClass('context-menu-active');
 
+				var menu = oX('#contextmenu');
+				var children = null;
 
-				// Selective options
 				switch (type) {
 					case 'directory':
-						$('#context-menu .directory-only, #context-menu .non-root').show();
-						$('#context-menu .file-only, #context-menu .root-only').hide();
+						children = menu.find('.directory-only, .non-root');
+						children.forEach((child) => child.show());
+
+						children = menu.find('.file-only, .root-only');
+						children.forEach((child) => child.hide());
 						break;
 					case 'file':
-						$('#context-menu .directory-only, #context-menu .root-only').hide();
-						$('#context-menu .file-only,#context-menu .non-root').show();
+						children = menu.find('.directory-only, .root-only');
+						children.forEach((child) => child.hide());
+
+						children = menu.find('.file-only, .non-root');
+						children.forEach((child) => child.show());
 						break;
 					case 'root':
-						$('#context-menu .directory-only, #context-menu .root-only').show();
-						$('#context-menu .non-root, #context-menu .file-only').hide();
+						children = menu.find('.directory-only, .root-only');
+						children.forEach((child) => child.show());
+
+						children = menu.find('.file-only, .non-root');
+						children.forEach((child) => child.hide());
 						break;
 				}
 
-				if (atheos.project.isAbsPath(o('#file-manager a[data-type="root"]').attr('data-path'))) {
-					$('#context-menu .no-external').hide();
+				children = menu.find('.no-external');
+				if (atheos.project.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
+					children.forEach((child) => child.hide());
 				} else {
-					$('#context-menu .no-external').show();
+					children.forEach((child) => child.show());
 				}
 
 				// Show menu
 				var top = e.pageY;
-				if (top > $(window).height() - $('#context-menu').height()) {
-					top -= $('#context-menu').height();
+				var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+				if (top > windowHeight - menu.height()) {
+					top -= menu.height();
 				}
 				if (top < 10) {
 					top = 10;
 				}
 
-				var max = $(window).height() - top - 10;
-				var menu = o('#context-menu');
+				var max = windowHeight - top - 10;
 
 				menu.css({
 					'top': top + 'px',
@@ -120,27 +128,27 @@
 					'display': 'block'
 				});
 
-				menu.attr('data-path', path);
-				menu.attr('data-type', type);
-				menu.attr('data-name', name);
+				menu.attr({
+					'data-path': path,
+					'data-type': type,
+					'data-name': name
+				});
 
 				// Show faded 'paste' if nothing in clipboard
-				if (this.clipboard === '') {
-					$('#context-menu a[content="Paste"]').addClass('disabled');
+				if (atheos.filemanager.clipboard === '') {
+					oX('#contextmenu i.fa-paste').parent().hide();
 				} else {
-					$('#context-menu a[data-action="paste"]').removeClass('disabled');
+					oX('#contextmenu i.fa-paste').parent().show();
 				}
 
-				var contextMenu = this;
-
 				var hideContextMenu;
-				o('#context-menu').on('mouseout', function() {
+				menu.on('mouseout', function() {
 					hideContextMenu = setTimeout(function() {
-						contextMenu.hide();
+						contextmenu.hide();
 					}, 500);
 				});
 
-				o('#context-menu').on('mouseover', function() {
+				menu.on('mouseover', function() {
 					if (hideContextMenu) {
 						clearTimeout(hideContextMenu);
 					}
@@ -148,54 +156,35 @@
 
 				/* Notify listeners. */
 				amplify.publish('contextmenu.show', {
+					menu: menu,
+					name: name,
+					node: node,
 					path: path,
 					type: type
 				});
 
 				// Hide on click
-				o('#context-menu').on('click', function() {
-					contextMenu.hide();
+				menu.on('click', function() {
+					contextmenu.hide();
 				});
 			}
 		},
 
 		hide: function() {
-			o('#context-menu').hide();
-			var active = o('#file-manager a.context-menu-active');
+			var menu = oX('#contextmenu');
+			menu.hide();
+			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');
 			}
-			amplify.publish('contextmenu.hide');
-		},
-
-
-		//////////////////////////////////////////////////////////////////
-		// Return type
-		//////////////////////////////////////////////////////////////////
-
-		getType: function(path) {
-			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
-		},
-
-
-		//////////////////////////////////////////////////////////////////
-		// Upload
-		//////////////////////////////////////////////////////////////////
-
-		uploadToNode: function(path) {
-			atheos.modal.load(500, this.dialogUpload, {
-				path: path
+			
+			amplify.publish('contextmenu.hide', {
+					menu: menu,
+					name: menu.attr('data-name'),
+					path: menu.attr('data-path'),
+					type: menu.attr('data-type')				
 			});
 		},
-
-		//////////////////////////////////////////////////////////////////
-		// Download
-		//////////////////////////////////////////////////////////////////
-
-		download: function(path) {
-			var type = this.getType(path);
-			o('#download').attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
-		}
 	};
 
-})(this, jQuery);
+})(this);

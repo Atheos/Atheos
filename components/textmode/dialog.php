@@ -15,7 +15,7 @@ require_once 'class.textmode.php';
 
 Common::checkSession();
 
-$action = Common::get('action');
+$action = Common::data('action');
 
 if ($action) {
 	
