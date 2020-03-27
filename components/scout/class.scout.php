@@ -8,35 +8,11 @@
 
 require_once('../../common.php');
 
-class Scout extends Common
-{
+class Scout {
 
 	//////////////////////////////////////////////////////////////////
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////
-
-	public $root = "";
-	public $project = "";
-	public $rel_path = "";
-	public $path = "";
-	public $patch = "";
-	public $type = "";
-	public $newName = "";
-	public $content = "";
-	public $destination = "";
-	public $upload = "";
-	public $controller = "";
-	public $upload_json = "";
-	public $searchString = "";
-
-	public $searchFileType = "";
-	public $query = "";
-	public $foptions = "";
-
-	// JSEND Return Contents
-	public $status = "";
-	public $data = "";
-	public $message = "";
 
 	//////////////////////////////////////////////////////////////////
 	// METHODS
@@ -44,140 +20,66 @@ class Scout extends Common
 
 	// -----------------------------||----------------------------- //
 
-	//////////////////////////////////////////////////////////////////
-	// Construct
-	//////////////////////////////////////////////////////////////////
-
-	public function __construct($get, $post, $files) {
-		$this->rel_path = Scout::cleanPath($get['path']);
-
-		if ($this->rel_path != "/") {
-			$this->rel_path .= "/";
-		}
-		if (!empty($get['query'])) {
-			$this->query = $get['query'];
-		}
-		if (!empty($get['options'])) {
-			$this->foptions = $get['options'];
-		}
-		$this->root = $get['root'];
-		if ($this->isAbsPath($get['path'])) {
-			$this->path = Scout::cleanPath($get['path']);
-		} else {
-			$this->root .= '/';
-			$this->path = $this->root . Scout::cleanPath($get['path']);
-		}
-		// Search
-		if (!empty($post['searchString'])) {
-			$this->searchString = ($post['searchString']);
-		}
-		if (!empty($post['searchFileType'])) {
-			$this->searchFileType = ($post['searchFileType']);
-		}
-		// Create
-		if (!empty($get['type'])) {
-			$this->type = $get['type'];
-		}
-		// Modify\Create
-		if (!empty($get['newName'])) {
-			$this->newName = $get['newName'];
-		}
-
-		foreach (array('content', 'mtime', 'patch') as $key) {
-			if (!empty($post[$key])) {
-				if (get_magic_quotes_gpc()) {
-					$this->$key = stripslashes($post[$key]);
-				} else {
-					$this->$key = $post[$key];
-				}
-			}
-		}
-		// Duplicate
-		if (!empty($get['destination'])) {
-			$get['destination'] = Scout::cleanPath($get['destination']);
-			if ($this->isAbsPath($get['path'])) {
-				$this->destination = $get['destination'];
-			} else {
-				$this->destination = $this->root . $get['destination'];
-			}
-		}
-	}
-
 
 	//////////////////////////////////////////////////////////////////
 	// SEARCH
 	//////////////////////////////////////////////////////////////////
-
 	public function search() {
 		if (!function_exists('shell_exec')) {
-			$this->status = "error";
-			$this->message = "Shell_exec() Command Not Enabled.";
+			Common::sendJSON("error", "Shell_exec() Command Not Enabled.");
 		} else {
-			if ($_GET['type'] == 1) {
-				$this->path = WORKSPACE;
-			}
-			$return = array();
 
-			$input = str_replace('"', '', $this->searchString);
-			$cmd = 'find -L ' . escapeshellarg($this->path) . ' -iregex  '.escapeshellarg('.*' . $this->searchFileType).' -type f | xargs grep -i -I -n -R -H ' . escapeshellarg($input) . '';
+			$type = Common::data("type");
+			$path = Common::data("path");
+			// $path = $this->cleanPath($path);
+			$query = Common::data("query");
+			$filter = Common::data("filter");
+
+
+			if ($type === 1) {
+				$path = WORKSPACE;
+			} else {
+				$path = Common::getWorkspacePath($path);
+			}
+
+
+			$root = WORKSPACE;
+
+			$results = array();
+			// $query =
+
+			$query = str_replace('"', '', $query);
+
+			$searchPath = escapeshellarg($path);
+			$query = escapeshellarg($query);
+			$filter = escapeshellarg(".*$filter");
+
+
+			$cmd = "find -L $searchPath -iregex $filter -type f | xargs grep -i -I -n -R -H $query";
+
 			$output = shell_exec($cmd);
-			$output_arr = explode("\n", $output);
-			foreach ($output_arr as $line) {
+			$output = explode("\n", $output);
+
+			foreach ($output as $line) {
 				$data = explode(":", $line);
-				$da = array();
+				$result = array();
 				if (count($data) > 2) {
-					$file = str_replace($this->path, '', $data[0]);
+					$file = str_replace($path, '', $data[0]);
 
-					$da['line'] = $data[1];
-					$da['name'] = str_replace($this->path, '', $data[0]);
-					$da['path'] = str_replace($this->root, '', $data[0]);
-					$da['string'] = str_replace($data[0] . ":" . $data[1] . ':', '', $line);
+					$result['line'] = $data[1];
+					$result['path'] = str_replace("$root/", '', $data[0]);
+					// Common::debug(str_replace("$path", '', $data[0]));
+					$result['string'] = htmlentities(str_replace($data[0] . ":" . $data[1] . ':', '', $line));
 					// $return[$file]['line'] = $data[1];
-					$return[$file][] = $da;
+					$results[$file][] = $result;
 				}
 			}
-			if (count($return) == 0) {
-				$this->status = "error";
-				$this->message = "No Results Returned";
+			if (count($results) > 0) {
+				Common::sendJSON("success", $results);
 			} else {
-				$this->status = "success";
-				$this->data = json_encode($return);
+				Common::sendJSON("error", "No Results Found");
 			}
 		}
-		$this->respond(true);
-	}
-
-
-	//////////////////////////////////////////////////////////////////
-	// RESPOND (Outputs data in JSON [JSEND] format)
-	//////////////////////////////////////////////////////////////////
-
-	public function respond($adjusted = false) {
-
-		// Success ///////////////////////////////////////////////
-		if ($this->status == "success") {
-			if ($this->data) {
-				if ($adjusted == true) {
-					$json = '{"status":"success","data":'.$this->data.'}';
-				} else {
-					$json = '{"status":"success","data":{'.$this->data.'}}';
-
-				}
-			} else {
-				$json = '{"status":"success","data":null}';
-			}
-
-			// Upload JSON ///////////////////////////////////////////
-		} elseif ($this->upload_json != '') {
-			$json = $this->upload_json;
-
-			// Error /////////////////////////////////////////////////
-		} else {
-			$json = '{"status":"error","message":"'.$this->message.'"}';
-		}
-
-		// Output ////////////////////////////////////////////////
-		echo($json);
 	}
 
 	//////////////////////////////////////////////////////////////////

@@ -15,7 +15,8 @@
 	// Editor modes that have been loaded
 	var editorModes = {};
 
-	var codiad = global.codiad;
+	var codiad = global.codiad,
+		oX = global.onyx;
 
 	var separatorWidth = 3;
 
@@ -623,7 +624,7 @@
 			var maxOptionsColumn = 15;
 			var firstOption = 0;
 
-			this.initMenuHandler($('#current-mode'), _thisMenu);
+			this.initMenuHandler($('#current_mode'), _thisMenu);
 
 			availableTextModes.sort();
 			$.each(availableTextModes, function(i) {
@@ -712,9 +713,9 @@
 			var currMode = session.getMode().$id;
 			if (currMode) {
 				currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
-				$('#current-mode').html(currMode);
+				$('#current_mode>span').html(currMode);
 			} else {
-				$('#current-mode').html('text');
+				$('#current_mode>span').html('text');
 			}
 		},
 
@@ -728,8 +729,8 @@
 			$('.editor').remove();
 			$('.editor-wrapper').remove();
 			$('#editor-region').append($('<div>').attr('id', 'editor'));
-			$('#current-file').html('');
-			$('#current-mode').html('');
+			$('#current_file').html('');
+			$('#current_mode>span').html('');
 			this.instances = [];
 			this.activeInstance = null;
 		},
@@ -747,8 +748,8 @@
 					this.instances[k].setSession(replacementSession);
 				}
 			}
-			if ($('#current-file').text() === session.path) {
-				$('#current-file').text(replacementSession.path);
+			if ($('#current_file').text() === session.path) {
+				$('#current_file').text(replacementSession.path);
 			}
 
 			this.setModeDisplay(replacementSession);
@@ -806,7 +807,7 @@
 				var path = i.getSession().path;
 				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
 
-				$('#current-file').text(path);
+				$('#current_file').text(path);
 				this.setModeDisplay(i.getSession());
 			}
 		},
@@ -1352,11 +1353,25 @@
 
 		promptLine: function() {
 			if (codiad.editor.getActive() !== null) {
-				var line = parseInt(prompt('Enter line number:'), 10);
-				if (!isNaN(line)) {
-					codiad.editor.gotoLine(line);
-					codiad.editor.focus();
-				}
+
+				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
+				atheos.modal.ready.then(function() {
+					oX('#modal_content form').on('submit', function(e) {
+						e.preventDefault();
+						var line = oX('#modal_content form input[name="line"]').value();
+
+
+						// var line = parseInt(prompt('Enter line number:'), 10);
+
+						if (!isNaN(line)) {
+							codiad.editor.gotoLine(line);
+							codiad.editor.focus();
+						}
+
+						atheos.modal.unload();
+					});
+				});
+
 			}
 		},
 
@@ -1480,7 +1495,7 @@
 					type);
 				codiad.modal.hideOverlay();
 			} else {
-				codiad.toast.error('No Open Files');
+				codiad.toast.show('error', 'No Open Files');
 			}
 		},
 

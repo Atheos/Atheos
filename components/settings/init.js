@@ -1,25 +1,35 @@
-/*
-	*  Copyright (c) atheos, distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+/*jshint esversion: 6 */
+
+//////////////////////////////////////////////////////////////////////////////80
+// Settings
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(global, $) {
+	'use strict';
+
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
 
+	var self = null;
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.settings.init();
-	});
+
+	amplify.subscribe('atheos.loaded', () => atheos.settings.init());
 
 	atheos.settings = {
 
 		controller: 'components/settings/controller.php',
+		dialog: 'components/settings/dialog.php',
 
 		init: function() {
+			self = this;
 			/*
 				*  Storage Event:
 				*  Note: Event fires only if change was made in different window and not in this one
@@ -97,7 +107,7 @@
 			if (target) {
 				var setting = target.attr('data-setting');
 				var value = target.value();
-				this.publish(setting, value);
+				self.publish(setting, value);
 			} else {
 				var settings = {};
 				var systemRegex = /^atheos/;
@@ -126,9 +136,9 @@
 				settings.syncSystem = syncSystem;
 				settings.syncPlugin = syncPlugin;
 
-				console.log(settings);
+				// console.log(settings);
 
-				$.post(this.controller + '?action=save', {
+				$.post(self.controller + '?action=save', {
 					settings: JSON.stringify(settings)
 				}, function(data) {
 					var parsed = atheos.jsend.parse(data);
@@ -145,7 +155,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		load: function() {
-			$.get(this.controller + '?action=load', function(data) {
+			$.get(self.controller + '?action=load', function(data) {
 				var parsed = atheos.jsend.parse(data);
 				if (parsed !== 'error') {
 					$.each(parsed, function(i, item) {
@@ -167,17 +177,13 @@
 		//////////////////////////////////////////////////////////////////
 
 		show: function(dataFile) {
-			var settings = this;
-			atheos.modal.load(800, 'components/settings/dialog.php?action=settings');
-
-			atheos.modal.ready.then(function() {
-
+			var listener = function() {
 				oX('#modal_wrapper').on('change', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					var type = target.el.type;
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
-						settings.save(target);
+						self.save(target);
 					}
 				});
 
@@ -185,18 +191,21 @@
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					if (tagName === 'A') {
-						settings.showTab(target.attr('data-file'));
+						self.showTab(target.attr('data-file'));
 					}
 				});
 
 				$('.settings-view .config-menu li').click(function() {});
 
 				if (typeof(dataFile) == 'string') {
-					settings.showTab(dataFile);
+					self.showTab(dataFile);
 				} else {
-					settings.loadTabValues('components/settings/settings.editor.php');
+					self.loadTabValues('components/settings/settings.editor.php');
 				}
-			});
+			};
+			amplify.subscribe('modal.loaded', listener);
+			atheos.modal.load(800, self.dialog + '?action=settings');
+
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -210,10 +219,9 @@
 		//////////////////////////////////////////////////////////////////
 
 		showTab: function(dataFile) {
-			var settings = this;
 			if (typeof(dataFile) === 'string') {
 
-				settings.save(false);
+				self.save(false);
 
 				oX('#panel_menu .active').removeClass('active');
 				oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
@@ -224,7 +232,7 @@
 				// $('#settings panel_view').append('<div class="panel active" data-file="' + dataFile + '"></div>');
 				$('#panel_view').load(dataFile, function() {
 					//TODO Show and hide loading information
-					settings.loadTabValues(dataFile);
+					self.loadTabValues(dataFile);
 				});
 
 			}

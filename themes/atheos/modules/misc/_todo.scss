@@ -227,7 +227,7 @@ hr {
 	color: #999;
 }
 
-#current-mode,
+#current_mode,
 #settings,
 #split {
 	/* Disable text selection on buttons clicks */
@@ -239,12 +239,12 @@ hr {
 	user-select: none;
 }
 
-#current-file,
-#current-mode {
+#current_file,
+#current_mode {
 	float: left;
 }
 
-#current-mode:hover {
+#current_mode:hover {
 	color: #fff;
 }
 

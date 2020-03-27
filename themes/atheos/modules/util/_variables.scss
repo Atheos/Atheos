@@ -8,15 +8,17 @@ $tab-color:$accent-color;
 $font-size: 14px;
 $font-size-lg: 16px;
 
-$font-color-main: $base07;
+$font-color-primary: $base07;
 $font-color-secondary: $base04;
 $font-color-subtle:$font-color-secondary;
 
 $foreground: $base01;
-$background: $base00;
+$background: #191919;
 
 $animation-duration: 0.2s;
 $transition-duration: 0.2s;
+
+$scrollbarWidth: 10px;
 
 
 // #303030 -> Base01

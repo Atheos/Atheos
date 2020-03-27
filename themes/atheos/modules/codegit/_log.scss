@@ -1,0 +1,45 @@
+/* Git log */
+#codegit_log {
+
+	.commit {
+		@include border(1px, bottom);
+		padding: 8px 5px;
+
+		p {
+			// padding-top: 2px;
+			line-height: 18px;
+		}
+	}
+
+	.hash {
+		display: inline;
+		color: $font-color-subtle;
+
+		a,
+		span {
+			font-family: 'Ubuntu-Fira';
+			// color: $dark-yellow;
+			color: $olive;
+		}
+	}
+
+	.date {
+		color: $font-color-subtle;
+		user-select: none;
+		float: right;
+	}
+
+	.author {
+		display: block;
+		color: $font-color-subtle;
+
+		span {
+			color: $blue;
+		}
+	}
+
+	.message {
+		color: $font-color-primary;
+		margin: 5px 0;
+	}
+}

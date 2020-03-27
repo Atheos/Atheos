@@ -115,7 +115,7 @@ switch ($_GET['action']) {
 								if (checkAccess()) {
 									if ($_SESSION['project'] == $data['path']) {
 										?>
-										<td class="action"><a onclick="codiad.toast.error('Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+										<td class="action"><a onclick="codiad.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
 										<?php
 									} else {
 										?>
