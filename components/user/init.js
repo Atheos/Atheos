@@ -157,7 +157,6 @@
 		// Create User
 		//////////////////////////////////////////////////////////////////
 		create: function() {
-			atheos.modal.load(400, this.dialog + '?action=create');
 			var listener = function(e) {
 				e.preventDefault();
 
@@ -187,24 +186,23 @@
 						},
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.show('success','User Account Created');
+								atheos.toast.show('success', 'User Account Created');
 								user.list();
 							}
 						}
 					});
 				}
 			};
-			atheos.modal.ready.then(function() {
+			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').on('submit', listener);
 			});
+			atheos.modal.load(400, this.dialog + '?action=create');
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Delete User
 		//////////////////////////////////////////////////////////////////
 		delete: function(username) {
-			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
-
 			var listener = function(e) {
 				e.preventDefault();
 				var username = oX('#modal-content form input[name="username"]').value();
@@ -216,24 +214,24 @@
 					},
 					success: function(data) {
 						if (data.status !== 'error') {
-							atheos.toast.show('success','Account Deleted');
+							atheos.toast.show('success', 'Account Deleted');
 							user.list();
 						}
 					}
 				});
 			};
 
-			atheos.modal.ready.then(function() {
+			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').on('submit', listener);
 			});
+			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
+
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Set Project Access
 		//////////////////////////////////////////////////////////////////
 		showUserACL: function(username) {
-			atheos.modal.load(400, user.dialog + '?action=projects&username=' + username);
-
 			var listener = function(e) {
 				e.preventDefault();
 
@@ -258,9 +256,10 @@
 				}
 			};
 
-			atheos.modal.ready.then(function() {
+			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').on('submit', listener);
 			});
+			atheos.modal.load(400, user.dialog + '?action=projects&username=' + username);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -279,9 +278,6 @@
 		// Change Password
 		//////////////////////////////////////////////////////////////////
 		changePassword: function(username) {
-
-			atheos.modal.load(400, user.dialog + '?action=password&username=' + username);
-
 			var listener = function(e) {
 				e.preventDefault();
 				var username = oX('#modal_content form input[name="username"]').value();
@@ -303,7 +299,7 @@
 						},
 						success: function(data) {
 							if (data.status !== 'error') {
-								atheos.toast.show('success','Password Changed');
+								atheos.toast.show('success', 'Password Changed');
 								atheos.modal.unload();
 							}
 						}
@@ -311,9 +307,10 @@
 				}
 			};
 
-			atheos.modal.ready.then(function() {
+			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').on('submit', listener);
 			});
+			atheos.modal.load(400, user.dialog + '?action=password&username=' + username);
 
 		},
 
