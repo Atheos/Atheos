@@ -31,26 +31,31 @@ class Scout {
 
 			$type = Common::data("type");
 			$path = Common::data("path");
-			$path = $this->cleanPath($path);
+			// $path = $this->cleanPath($path);
 			$query = Common::data("query");
 			$filter = Common::data("filter");
 
+
 			if ($type === 1) {
 				$path = WORKSPACE;
+			} else {
+				$path = Common::getWorkspacePath($path);
 			}
 
-			$results = array();
 
+			$root = WORKSPACE;
+
+			$results = array();
 			// $query =
 
 			$query = str_replace('"', '', $query);
 
-			$path = escapeshellarg($path);
+			$searchPath = escapeshellarg($path);
 			$query = escapeshellarg($query);
 			$filter = escapeshellarg(".*$filter");
 
 
-			$cmd = "find -L $path -iregex $filter -type f | xargs grep -i -I -n -R -H $query";
+			$cmd = "find -L $searchPath -iregex $filter -type f | xargs grep -i -I -n -R -H $query";
 
 			$output = shell_exec($cmd);
 			$output = explode("\n", $output);
@@ -59,16 +64,17 @@ class Scout {
 				$data = explode(":", $line);
 				$result = array();
 				if (count($data) > 2) {
-					$file = str_replace($this->path, '', $data[0]);
+					$file = str_replace($path, '', $data[0]);
 
 					$result['line'] = $data[1];
-					$result['path'] = str_replace($this->root, '', $data[0]);
+					$result['path'] = str_replace("$root/", '', $data[0]);
+					// Common::debug(str_replace("$path", '', $data[0]));
 					$result['string'] = htmlentities(str_replace($data[0] . ":" . $data[1] . ':', '', $line));
 					// $return[$file]['line'] = $data[1];
 					$results[$file][] = $result;
 				}
 			}
-			if (count($results) >= 0) {
+			if (count($results) > 0) {
 				Common::sendJSON("success", $results);
 			} else {
 				Common::sendJSON("error", "No Results Found");
