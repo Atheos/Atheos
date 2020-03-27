@@ -29,11 +29,12 @@
 			textmode = this;
 			ajax({
 				url: textmode.controller,
-				type: 'post',
 				data: {
 					'action': 'getTextModes'
 				},
-				success: textmode.setEditorTextModes
+				success: function(data) {
+					textmode.setEditorTextModes(data);
+				}
 			});
 		},
 
@@ -81,10 +82,8 @@
 
 			ajax({
 				url: textmode.controller,
-				type: 'post',
 				data: data,
 				success: function(data) {
-					data = JSON.parse(data);
 					atheos.toast[data.status](data.message);
 					if (data.status !== 'error' && data.extensions !== undefined) {
 						textmode.setEditorTextModes(data);

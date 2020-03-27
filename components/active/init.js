@@ -1,5 +1,5 @@
 /*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
 	*  as-is and without warranty under the MIT License. See
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
@@ -7,24 +7,23 @@
 (function(global, $) {
 
 	var ace = global.ace,
+		atheos = global.atheos,
 		amplify = global.amplify;
 
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
-	var codiad = global.codiad;
-
 	amplify.subscribe('atheos.loaded', () => atheos.active.init());
 
 	//////////////////////////////////////////////////////////////////
 	//
-	// Active Files Component for Codiad
+	// Active Files Component for atheos
 	// ---------------------------------
 	// Track and manage EditSession instaces of files being edited.
 	//
 	//////////////////////////////////////////////////////////////////
 
-	codiad.active = {
+	atheos.active = {
 
 		controller: 'components/active/controller.php',
 
@@ -58,8 +57,8 @@
 				if (focus) this.focus(path);
 				return;
 			}
-			var ext = codiad.common.getNodeExtension(path);
-			var mode = codiad.editor.selectMode(ext);
+			var ext = atheos.common.getNodeExtension(path);
+			var mode = atheos.editor.selectMode(ext);
 			var fn = function() {
 				//var Mode = require('ace/mode/' + mode)
 				//    .Mode;
@@ -69,7 +68,7 @@
 				var draft = _this.checkDraft(path);
 				if (draft) {
 					content = draft;
-					codiad.toast.success('Recovered unsaved content for: ' + path);
+					atheos.toast.show('success', 'Recovered unsaved content for: ' + path);
 				}
 
 				//var session = new EditSession(content, new Mode());
@@ -81,7 +80,7 @@
 				_this.sessions[path] = session;
 				session.untainted = content.slice(0);
 				if (!inBackground && focus) {
-					codiad.editor.setSession(session);
+					atheos.editor.setSession(session);
 				}
 				_this.add(path, session, focus);
 				/* Notify listeners. */
@@ -89,7 +88,7 @@
 			};
 
 			// Assuming the mode file has no dependencies
-			codiad.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
+			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
 				fn);
 		},
 
@@ -119,11 +118,15 @@
 				});
 
 			// Focus on left button mousedown from tab.
-			$('#tab-list-active-files li.tab-item>a.label')
+			// $('#tab-list-active-files li.tab-item>a.label')
+			$('#tab-list-active-files li.tab-item')
 				.live('mousedown', function(e) {
+					if(e.target.classList.contains('close')) return;
 					if (e.which == 1) {
 						e.stopPropagation();
-						_this.focus($(this).parent('li').attr('data-path'));
+						// _this.focus($(this).parent('li').attr('data-path'));
+						_this.focus($(this).attr('data-path'));
+
 					}
 				});
 
@@ -251,10 +254,10 @@
 
 			// Open saved-state active files on load
 			$.get(_this.controller + '?action=list', function(data) {
-				var listResponse = codiad.jsend.parse(data);
+				var listResponse = atheos.jsend.parse(data);
 				if (listResponse !== null) {
 					$.each(listResponse, function(index, data) {
-						codiad.filemanager.openFile(data.path, data.focused);
+						atheos.filemanager.openFile(data.path, data.focused);
 					});
 				}
 			});
@@ -283,7 +286,7 @@
 						// Get changed content and path
 						var path = $(this)
 							.attr('data-path');
-						var content = codiad.active.sessions[path].getValue();
+						var content = atheos.active.sessions[path].getValue();
 
 						// TODO: Add some visual indication about draft getting saved.
 
@@ -317,7 +320,7 @@
 
 		getPath: function() {
 			try {
-				return codiad.editor.getActive()
+				return atheos.editor.getActive()
 					.getSession()
 					.path;
 			} catch (e) {
@@ -332,7 +335,7 @@
 		check: function(path) {
 			$.get(this.controller + '?action=check&path=' + encodeURIComponent(path),
 				function(data) {
-					codiad.jsend.parse(data);
+					atheos.jsend.parse(data);
 				});
 		},
 
@@ -386,7 +389,7 @@
 			this.highlightEntry(path, moveToTabList);
 
 			if (path != this.getPath()) {
-				codiad.editor.setSession(this.sessions[path]);
+				atheos.editor.setSession(this.sessions[path]);
 				this.history.push(path);
 				$.get(this.controller, {
 					'action': 'focused',
@@ -463,20 +466,20 @@
 			amplify.publish('active.onSave', path);
 
 			var _this = this;
-			if ((path && !this.isOpen(path)) || (!path && !codiad.editor.getActive())) {
-				codiad.toast.error('No Open Files to save');
+			if ((path && !this.isOpen(path)) || (!path && !atheos.editor.getActive())) {
+				atheos.toast.show('error', 'No Open Files to save');
 				return;
 			}
 			var session;
 			if (path) {
 				session = this.sessions[path];
 			} else {
-				session = codiad.editor.getActive().getSession();
+				session = atheos.editor.getActive().getSession();
 			}
 			var content = session.getValue();
 			path = session.path;
 			var handleSuccess = function(mtime) {
-				var session = codiad.active.sessions[path];
+				var session = atheos.active.sessions[path];
 				if (typeof session !== 'undefined') {
 					session.untainted = newContent;
 					session.serverMTime = mtime;
@@ -491,24 +494,24 @@
 
 			var newContent = content.slice(0);
 			if (session.serverMTime && session.untainted) {
-				codiad.workerManager.addTask({
+				atheos.workerManager.addTask({
 					taskType: 'diff',
 					id: path,
 					original: session.untainted,
 					changed: newContent
 				}, function(success, patch) {
 					if (success) {
-						codiad.filemanager.savePatch(path, patch, session.serverMTime, {
+						atheos.filemanager.savePatch(path, patch, session.serverMTime, {
 							success: handleSuccess
 						});
 					} else {
-						codiad.filemanager.saveFile(path, newContent, {
+						atheos.filemanager.saveFile(path, newContent, {
 							success: handleSuccess
 						});
 					}
 				}, this);
 			} else {
-				codiad.filemanager.saveFile(path, newContent, {
+				atheos.filemanager.saveFile(path, newContent, {
 					success: handleSuccess
 				});
 			}
@@ -521,7 +524,7 @@
 		saveAll: function() {
 			for (var session in this.sessions) {
 				if (this.sessions[session].listThumb.hasClass('changed')) {
-					codiad.active.save(session);
+					atheos.active.save(session);
 				}
 			}
 		},
@@ -535,7 +538,7 @@
 			var session = this.sessions[path];
 			var closeFile = true;
 			if (session.listThumb.hasClass('changed')) {
-				codiad.modal.load(450, 'components/active/dialog.php?action=confirm&path=' + encodeURIComponent(path));
+				atheos.modal.load(450, 'components/active/dialog.php?action=confirm&path=' + encodeURIComponent(path));
 				closeFile = false;
 			}
 			if (closeFile) {
@@ -546,7 +549,7 @@
 		removeAll: function(discard) {
 			discard = discard || false;
 			/* Notify listeners. */
-			amplify.publish('active.onRemoveAll');
+			amplify.publish('active.closeAll');
 
 			var _this = this;
 			var changed = false;
@@ -559,7 +562,7 @@
 				}
 			}
 			if (changed && !discard) {
-				codiad.modal.load(450, 'components/active/dialog.php?action=confirmAll');
+				atheos.modal.load(450, 'components/active/dialog.php?action=confirmAll');
 				return;
 			}
 
@@ -581,14 +584,14 @@
 				delete this.sessions[tab];
 				this.removeDraft(tab);
 			}
-			codiad.editor.exterminate();
+			atheos.editor.exterminate();
 			$('#list-active-files').html('');
 			$.get(this.controller + '?action=removeall');
 		},
 
 		close: function(path) {
 			/* Notify listeners. */
-			amplify.publish('active.onClose', path);
+			amplify.publish('active.close', path);
 
 			var _this = this;
 			var session = this.sessions[path];
@@ -622,7 +625,7 @@
 			var tabThumbs = $('#tab-list-active-files li[data-path!="' + path + '"]');
 
 			if (tabThumbs.length == 0) {
-				codiad.editor.exterminate();
+				atheos.editor.exterminate();
 			} else {
 
 				var nextPath = '';
@@ -632,7 +635,7 @@
 					nextPath = $(tabThumbs[0]).attr('data-path');
 				}
 				var nextSession = this.sessions[nextPath];
-				codiad.editor.removeSession(session, nextSession);
+				atheos.editor.removeSession(session, nextSession);
 
 				this.focus(nextPath);
 			}
@@ -650,7 +653,7 @@
 				var tabThumb = this.sessions[oldPath].tabThumb;
 				tabThumb.attr('data-path', newPath);
 				var title = newPath;
-				if (codiad.project.isAbsPath(newPath)) {
+				if (atheos.project.isAbsPath(newPath)) {
 					title = newPath.substring(1);
 				}
 				tabThumb.find('.label')
@@ -669,23 +672,23 @@
 				// A file was renamed
 				switchSessions.apply(this, [oldPath, newPath]);
 				// pass new sessions instance to setactive
-				for (var k = 0; k < codiad.editor.instances.length; k++) {
-					if (codiad.editor.instances[k].getSession().path === newPath) {
-						codiad.editor.setActive(codiad.editor.instances[k]);
+				for (var k = 0; k < atheos.editor.instances.length; k++) {
+					if (atheos.editor.instances[k].getSession().path === newPath) {
+						atheos.editor.setActive(atheos.editor.instances[k]);
 					}
 				}
 
 				var newSession = this.sessions[newPath];
 
 				// Change Editor Mode
-				var ext = codiad.common.getNodeExtension(newPath);
-				var mode = codiad.editor.selectMode(ext);
+				var ext = atheos.common.getNodeExtension(newPath);
+				var mode = atheos.editor.selectMode(ext);
 
 				// handle async mode change
 				var fn = function() {
-					codiad.editor.setModeDisplay(newSession);
+					atheos.editor.setModeDisplay(newSession);
 					newSession.removeListener('changeMode', fn);
-				}
+				};
 
 				newSession.on("changeMode", fn);
 				newSession.setMode("ace/mode/" + mode);
@@ -715,9 +718,9 @@
 		openInBrowser: function() {
 			var path = this.getPath();
 			if (path) {
-				codiad.filemanager.openInBrowser(path);
+				atheos.filemanager.openInBrowser(path);
 			} else {
-				codiad.toast.error('No Open Files');
+				atheos.toast.show('error', 'No Open Files');
 			}
 		},
 
@@ -731,10 +734,10 @@
 
 			if (path && this.isOpen(path)) {
 				return session.getTextRange(
-					codiad.editor.getActive()
+					atheos.editor.getActive()
 					.getSelectionRange());
 			} else {
-				codiad.toast.error('No Open Files or Selected Text');
+				atheos.toast.show('error', 'No Open Files or Selected Text');
 			}
 		},
 
@@ -743,7 +746,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		insertText: function(val) {
-			codiad.editor.getActive()
+			atheos.editor.getActive()
 				.insert(val);
 		},
 
@@ -752,7 +755,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		gotoLine: function(line) {
-			codiad.editor.getActive()
+			atheos.editor.getActive()
 				.gotoLine(line, 0, true);
 		},
 
@@ -948,12 +951,12 @@
 				* to handle all the offsets, so afterwards we add a fixed offset
 				* just t be sure. */
 			var lsbarWidth = $(".sidebar-handle").width();
-			if (codiad.sidebars.settings.isLeftSidebarOpen) {
+			if (atheos.sidebars.settings.isLeftSidebarOpen) {
 				lsbarWidth = $("#sb-left").width();
 			}
 
 			var rsbarWidth = $(".sidebar-handle").width();
-			if (codiad.sidebars.settings.isRightSidebarOpen) {
+			if (atheos.sidebars.settings.isRightSidebarOpen) {
 				rsbarWidth = $("#sb-right").width();
 			}
 

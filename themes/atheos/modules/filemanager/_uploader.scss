@@ -1,51 +1,4 @@
-/* SEARCH */
-
-#search_results {
-	// display: none;
-	height: 250px;
-	overflow: scroll !important;
-	border: 1px solid #262626;
-	padding: 0;
-
-	div {
-		padding: 4px 6px;
-		overflow: hidden;
-
-		strong {
-			font-weight: 700;
-				color: $blue;
-		}
-
-		a {
-			display: block;
-			white-space: nowrap;
-
-
-			span:nth-child(1) {
-				padding: 4px 6px 3px 6px;
-				color: $teal;
-				width: 10%;
-				display: inline-block;
-			}
-
-			&:hover {
-				background-color: rgb(26, 26, 26);
-			}
-		}
-	}
-}
-
-#search_processing {
-	display: none;
-	margin: 10px 0 0 0;
-	width: 32px;
-	height: 32px;
-	float: right;
-	background: url(images/default/loading.gif) no-repeat;
-}
-
 /* UPLOADER */
-
 #upload-drop-zone {
 	height: 200px;
 	padding-top: 60px;
@@ -110,12 +63,4 @@
 	font-size: 18px;
 	margin: 10px 0;
 	color: #fff;
-}
-
-
-/* SEARCH */
-
-.file-search-table tr td {
-	border: none;
-	padding: 0;
 }

@@ -5,12 +5,16 @@
 
 @import "modules/misc/todo";
 
+@import "modules/codegit";
+@import "modules/codegit/main";
+
+
 @import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/feedback/alert", "modules/feedback/common", "modules/feedback/finder", "modules/feedback/modal", "modules/feedback/toast";
 @import "modules/autocomplete";
 @import "modules/graphics/icons";
 @import "modules/textmode", "modules/market";
-@import "modules/filemanager/filemanager", "modules/filemanager/context_menu", "modules/filemanager/search";
+@import "modules/filemanager/filemanager", "modules/filemanager/context_menu", "modules/filemanager/scout", "modules/filemanager/uploader";
 @import "modules/misc/title", "modules/misc/logo", "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
 @import "modules/input/checkbox", "modules/input/button";
 @import "modules/misc/tables";
@@ -19,7 +23,7 @@
  
 /* WEBKIT SCROLLBARS */
 ::-webkit-scrollbar {
-	width: 10px;
+	width: $scrollbarWidth;
 	height: 10px;
 }
 

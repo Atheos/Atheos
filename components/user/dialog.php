@@ -1,17 +1,20 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & Kent Safranski (atheos.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+//////////////////////////////////////////////////////////////////////////////80
+// User
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
 
 switch ($_GET['action']) {
@@ -46,12 +49,12 @@ switch ($_GET['action']) {
 					?>
 					<tr>
 						<td><?php echo($data['username']); ?></td>
-						<td class="action"><a onclick="atheos.user.password('<?php echo($data['username']); ?>');" class="fas fa-key"></a></td>
+						<td class="action"><a onclick="atheos.user.changePassword('<?php echo($data['username']); ?>');" class="fas fa-key"></a></td>
 						<td class="action"><a onclick="atheos.user.showUserACL('<?php echo($data['username']); ?>');" class="fas fa-archive"></a></td>
 						<?php
 						if ($_SESSION['user'] == $data['username']) {
 							?>
-							<td class="action"><a onclick="atheos.toast.error('You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
+							<td class="action"><a onclick="atheos.toast.show('error', 'You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
 							<?php
 						} else {
 							?>
@@ -64,7 +67,7 @@ switch ($_GET['action']) {
 				}
 				?>
 			</table>
-			<button class="btn-left" onclick="atheos.user.createNew();"><?php i18n("New Account"); ?></button>
+			<button class="btn-left" onclick="atheos.user.create();"><?php i18n("New Account"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
 			<?php
 		}
@@ -99,27 +102,36 @@ switch ($_GET['action']) {
 
 		// Get project list
 		$projects = getJSON('projects.php');
+		$users = Common::readJSON("users");
+		$username = Common::data("username");		
 		// Get control list (if exists)
 		$projects_assigned = false;
-		if (file_exists(BASE_PATH . "/data/" . $_GET['username'] . '_acl.php')) {
-			$projects_assigned = getJSON($_GET['username'] . '_acl.php');
+		if (file_exists(BASE_PATH . "/data/" . $username . '_acl.php')) {
+			$projects_assigned = getJSON($username . '_acl.php');
+		}
+
+		$userACL = false;
+		foreach ($users as $user => $data) {
+			if ($username === $data['username']) {
+				$userACL = $data['userACL'] == "full" ? false : $data["userACL"];
+			}
 		}
 
 		?>
 		<form>
-			<input type="hidden" name="username" value="<?php echo($_GET['username']); ?>">
-			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($_GET['username'])); ?></label>
-			<select name="access_level" onchange="if($(this).val()=='0'){ $('#project-selector').slideUp(300); }else{ $('#project-selector').slideDown(300).css({'overflow-y':'scroll'}); }">
-				<option value="0" <?php if (!$projects_assigned) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
-				<option value="1" <?php if ($projects_assigned) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
+			<input type="hidden" name="username" value="<?php echo($username); ?>">
+			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($username)); ?></label>
+			<select id="aclSelect" name="acl" onchange="atheos.user.toggleACL()">
+				<option value="false" <?php if (!$userACL) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
+				<option value="true" <?php if ($userACL) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
 			</select>
-			<div id="project-selector" <?php if (!$projects_assigned) { echo('style="display: none;"'); } ?>>
+			<div id="projectSelect" <?php if (!$userACL) { echo('style="display: none;"'); } ?>>
 				<table>
 					<?php
 					// Build list
 					foreach ($projects as $project => $data) {
 						$sel = '';
-						if ($projects_assigned && in_array($data['path'], $projects_assigned)) {
+						if ($userACL && in_array($data['path'], $userACL)) {
 							$sel = 'checked="checked"';
 						}
 						echo('<tr><td width="5"><input type="checkbox" name="project" '.$sel.' id="'.$data['path'].'" value="'.$data['path'].'"></td><td>'.$data['name'].'</td></tr>');

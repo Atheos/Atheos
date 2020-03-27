@@ -14,7 +14,14 @@ require_once('../../common.php');
 
 checkSession();
 
-switch ($_GET['action']) {
+$action = Common::data("action");
+
+if (!$action) {
+	Common::sendJSON("error", "Missing Action");
+	die;
+}
+
+switch ($action) {
 
 	//////////////////////////////////////////////////////////////////////
 	// Update
@@ -54,7 +61,7 @@ switch ($_GET['action']) {
 					<?php
 
 				} ?>
-				 <?php if (false) {
+				<?php if (false) {
 					?>
 					<br><em class="note"><?php i18n("Note: Your installation is a nightly build. Atheos might be unstable."); ?></em><br>
 					<?php
@@ -64,11 +71,11 @@ switch ($_GET['action']) {
 					echo '<button class="btn-left" onclick="codiad.update.download();return false;">'.i18n("Download Atheos").'</button>&nbsp;';
 				}
 				?><button class="btn-right" onclick="codiad.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
-				<form>
-					<?php
-				}
-				break;
+			</form>
+			<?php
+		}
+		break;
 
-			}
+}
 
-			?>
+?>
