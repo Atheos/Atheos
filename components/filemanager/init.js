@@ -80,7 +80,7 @@
 					node = o(node);
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
 						this.openDir(node.attr('data-path'));
-					} else {
+					} else if (node.attr('data-type') === 'file' ) {
 						this.openFile(node.attr('data-path'));
 					}
 				}
