@@ -824,8 +824,9 @@
 					if (reply.status !== 'error') {
 						text = `${codegit.icon}${reply.branch}: +${reply.insertions}, -${reply.deletions}`;
 					}
-					codegit.fileStatus.html(text);
-
+					if (codegit.fileStatus) {
+						codegit.fileStatus.html(text);
+					}
 				}
 			})
 		},

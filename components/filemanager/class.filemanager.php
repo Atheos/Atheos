@@ -5,7 +5,7 @@
 *  as-is and without warranty under the MIT License. See
 *  [root]/license.txt for more. This information must remain intact.
 */
- 
+
 require_once('../../lib/diff_match_patch.php');
 require_once('../../common.php');
 
@@ -16,7 +16,7 @@ class Filemanager extends Common
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////
 
-	public $root = "";
+	public $root = WORKSPACE;
 	public $project = "";
 	public $rel_path = "";
 	public $path = "";
@@ -109,7 +109,6 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public function index() {
-
 		if (file_exists($this->path)) {
 			$index = array();
 			if (is_dir($this->path) && $handle = opendir($this->path)) {
@@ -577,12 +576,12 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public static function cleanPath($path) {
-
 		// replace backslash with slash
 		$path = str_replace('\\', '/', $path);
 
 		// allow only valid chars in paths$
 		$path = preg_replace('/[^A-Za-z0-9\-\._\/]/', '', $path);
+
 		// maybe this is not needed anymore
 		// prevent Poison Null Byte injections
 		$path = str_replace(chr(0), '', $path);

@@ -113,15 +113,6 @@
 
 			var node = o('#file-manager a[data-path="' + path + '"]');
 			let icon = node.find('.expand')[0];
-			// if (icon && !icon.hasClass('none')) {
-			// 	if (icon.hasClass('fa-plus')) {
-			// 		icon.removeClass('fa-plus');
-			// 		icon.addClass('fa-minus');
-			// 	} else {
-			// 		icon.removeClass('fa-minus');
-			// 		icon.addClass('fa-plus');
-			// 	}
-			// }
 
 			if (node.hasClass('open') && !rescan) {
 				node.removeClass('open');
@@ -142,8 +133,9 @@
 					icon.addClass('loading');
 				}
 				ajax({
-					url: this.controller + '?action=index&path=' + encodeURIComponent(path),
+					url: this.controller + '?action=index&path=' + path,
 					success: function(data) {
+						log(data);
 						if (data.status !== 'error') {
 							/* Notify listener */
 							fileManager.indexFiles = data.data.index;
