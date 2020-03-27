@@ -47,6 +47,12 @@
     "onclick": null
   },
   {
+    "title": "CodeGit",
+    "admin": false,
+    "icon": "fas fa-code-branch",
+    "onclick": "atheos.codegit.showCodeGit();"
+  },  
+  {
     "title": "Marketplace",
     "admin": true,
     "icon": "fas fa-store",
@@ -80,7 +86,7 @@
     "title": "Password",
     "admin": false,
     "icon": "fas fa-key",
-    "onclick": "atheos.user.password();"
+    "onclick": "atheos.user.changePassword();"
   },
   {
     "title": "break",

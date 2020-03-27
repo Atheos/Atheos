@@ -6,15 +6,14 @@
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// Currently the icons are hard coded: Close/Types. They'll need to be migrated
-// to css classes modifiable by the themes for consistancy.
-//
 // Currently, the langauge translations are done on each call to the Toast
 // message, even though I think it would make more sense for Toast to handle
 // the translation. For Future consideration.
+//
+// The toast messages should have settings options to allow the user to choose 
+// durations, and whether they auto close or not.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
 
 (function(global) {
 
@@ -22,29 +21,43 @@
 
 	var atheos = global.atheos,
 		i18n = global.i18n,
-		types = global.types;
-		
+		types = global.types,
+		extend = atheos.common.extend;
+
 	atheos.toast = {
 
-		icons: {
-			'error': 'exclamation-circle',
-			'notice': 'info-circle',
-			'success': 'check-circle',
-			'warning': 'exclamation-triangle'
-		},
-		settings: {
-			stayTime: 3000,
-			text: '',
-			sticky: false,
-			type: 'info-circle',
+		global: {
 			position: 'bottom-right', // top-left, top-center, top-right, middle-left, middle-center, middle-right
-			close: null
+			sticky: false,
+			text: 'Message undefined'
+		},
+		types: {
+			success: {
+				icon: 'check-circle',
+				sticky: false,
+				stayTime: 3000,
+			},
+			error: {
+				icon: 'exclamation-circle',
+				sticky: false,
+				stayTime: 10000,
+			},
+			warning: {
+				icon: 'exclamation-triangle',
+				sticky: false,
+				stayTime: 5000,
+			},
+			notice: {
+				icon: 'info-circle',
+				sticky: false,
+				stayTime: 3000,
+			},
 		},
 
-		createContainer: function() {
+		createContainer: function(position) {
 			var container = document.createElement('div');
 			container.id = 'toast-container';
-			container.classList.add('toast-position-' + this.settings.position);
+			container.classList.add('toast-position-' + position);
 			document.body.appendChild(container);
 			return container;
 		},
@@ -74,13 +87,12 @@
 		},
 
 		showToast: function(options) {
-			options = atheos.common.extend(this.settings, options);
-			
+			options = extend(this.global, options);
 			options.text = options.raw ? options.text : i18n(options.text);
 
 			// declare variables
-			var container = document.querySelector('#toast-container') || this.createContainer(),
-				wrapper = this.createToast(options.text, options.type);
+			var container = document.querySelector('#toast-container') || this.createContainer(options.position),
+				wrapper = this.createToast(options.text, options.icon);
 
 			container.appendChild(wrapper);
 
@@ -99,29 +111,45 @@
 
 		success: function(message, options) {
 			options = types.isObject(options) ? options : {};
-			options.text = message || 'Message undefined';
-			options.type = this.icons.success;
+			options = extend(this.types.success, options);
+			options.text = message;
+
 			this.showToast(options);
 		},
 		error: function(message, options) {
 			options = types.isObject(options) ? options : {};
-			options.text = message || 'Message undefined';
-			options.type = this.icons.error;
-			options.stayTime = 10000;
+			options = extend(this.types.error, options);
+			options.text = message;
+
 			this.showToast(options);
 		},
 		warning: function(message, options) {
 			options = types.isObject(options) ? options : {};
-			options.text = message || 'Message undefined';
-			options.type = this.icons.warning;
-			options.stayTime = 5000;
+			options = extend(this.types.warning, options);
+			options.text = message;
+
 			this.showToast(options);
 		},
 		notice: function(message, options) {
 			options = types.isObject(options) ? options : {};
-			options.text = message || 'Message undefined';
-			options.type = this.icons.notice;
+			options = extend(this.types.notice, options);
+			options.text = message;
+
 			this.showToast(options);
+		},
+		show: function(type, text, options) {
+			if (types.isObject(type)) {
+				options = type;
+				type = options.status;
+			} else {
+				options = types.isObject(options) ? options : {};
+			}
+			if (this.types.hasOwnProperty(type)) {
+				options = extend(this.types[type], options);
+				options.text = options.message || text;
+				this.showToast(options);
+			}
+
 		},
 		hide: function(wrapper) {
 			wrapper.classList.remove('toast-active');

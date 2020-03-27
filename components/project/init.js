@@ -11,9 +11,8 @@
 		i18n = global.i18n,
 		o = global.onyx;
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.project.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.project.init());
+
 
 	atheos.project = {
 
@@ -33,21 +32,32 @@
 
 			var project = this;
 
-			o('#projects-create').on('click', function() {
-				atheos.project.create('true');
-			});
+			var projectCreate = o('#projects-create'),
+				projectManage = o('#projects-manage'),
+				projectCollpse = o('#projects-collapse');
 
-			o('#projects-manage').on('click', function() {
-				atheos.project.list();
-			});
+			if (projectCreate) {
+				projectCreate.on('click', function() {
+					atheos.project.create('true');
+				});
+			}
 
-			o('#projects-collapse').on('click', function() {
-				if (!project.sideExpanded) {
-					project.expand();
-				} else {
-					project.collapse();
-				}
-			});
+			if (projectManage) {
+				projectManage.on('click', function() {
+					atheos.project.list();
+				});
+			}
+
+			if (projectCollpse) {
+				projectCollpse.on('click', function() {
+					if (project.sideExpanded) {
+						project.collapse();
+					} else {
+						project.expand();
+					}
+				});
+			}
+
 			amplify.subscribe('chrono.mega', function() {
 				project.getCurrent();
 			});
@@ -61,28 +71,25 @@
 			var project = this;
 			ajax({
 				url: this.controller,
-				type: 'post',
 				data: {
 					'action': 'load'
 				},
-				success: function(response) {
-					response = JSON.parse(response);
-
-					if (response.status != 'error') {
+				success: function(data) {
+					atheos.toast.show(data, 'Project Loaded');
+					if (data.status != 'error') {
 						project.current = {
-							name: response.name,
-							path: response.path
+							name: data.name,
+							path: data.path
 						};
 						o('#file-manager').empty();
 						o('#file-manager').html(`<ul><li>
-									<a id="project-root" data-type="root" data-path="${response.path}">
+									<a id="project-root" data-type="root" data-path="${data.path}">
 									<i class="root fa fa-folder medium-blue"></i>
-									<span>${response.name}</span>
+									<span>${data.name}</span>
 									</a>
 								</li></ul>`);
-						atheos.filemanager.openDir(response.path);
-						atheos.user.saveActiveProject(response.path);
-						atheos.toast.success('Project Loaded');
+						atheos.filemanager.openDir(data.path);
+						atheos.user.saveActiveProject(data.path);
 					}
 				}
 			});
@@ -97,12 +104,11 @@
 			atheos.finder.contractFinder();
 			ajax({
 				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
-				success: function(response) {
-
-					response = JSON.parse(response);
-					if (response.status != 'error') {
+				success: function(data) {
+					log(data);
+					if (data.status != 'error') {
 						project.loadCurrent();
-						if (atheos.modal.settings.isModalVisible) {
+						if (atheos.modal.modalVisible) {
 							atheos.modal.unload();
 						}
 						atheos.user.saveActiveProject(path);
@@ -119,8 +125,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function() {
-			$('#modal_content form')
-				.die('submit'); // Prevent form bubbling
 			atheos.modal.load(500, this.dialog + '?action=list');
 		},
 
@@ -128,8 +132,15 @@
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
 		loadSide: function() {
-			$('.sb-projects-content').load(this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'));
-			this.sideExpanded = true;
+			// $('.sb-projects-content').load();
+			ajax({
+				url: this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'),
+				success: function(reply) {
+					o('.sb-projects-content').html(reply);
+					// log(reply);
+					this.sideExpanded = true;
+				}
+			});
 		},
 
 		expand: function() {
@@ -168,9 +179,9 @@
 						gitBranch = $('#modal_content form input[name="git_branch"]').val();
 					var create = function() {
 						$.get(_this.controller + '?action=create&project_name=' + encodeURIComponent(projectName) + '&project_path=' + encodeURIComponent(projectPath) + '&git_repo=' + gitRepo + '&git_branch=' + gitBranch, function(data) {
-							var createResponse = atheos.jsend.parse(data);
-							if (createResponse !== 'error') {
-								_this.open(createResponse.path);
+							var createdata = atheos.jsend.parse(data);
+							if (createdata !== 'error') {
+								_this.open(createdata.path);
 								atheos.modal.unload();
 								_this.loadSide();
 								/* Notify listeners. */
@@ -212,7 +223,7 @@
 		rename: function(name, path) {
 			var _this = this;
 			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
-			
+
 			$('#modal_content form')
 				.live('submit', function(e) {
 					e.preventDefault();
@@ -221,9 +232,9 @@
 					var projectName = $('#modal_content form input[name="project_name"]')
 						.val();
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
-						var renameResponse = atheos.jsend.parse(data);
-						if (renameResponse != 'error') {
-							atheos.toast.success('Project renamed');
+						var renamedata = atheos.jsend.parse(data);
+						if (renamedata != 'error') {
+							atheos.toast.show('success', 'Project renamed');
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							atheos.modal.unload();
@@ -261,9 +272,9 @@
 					}
 					$.get(atheos.filemanager.controller + action, function(d) {
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
-							var deleteResponse = atheos.jsend.parse(data);
-							if (deleteResponse != 'error') {
-								atheos.toast.success('Project Deleted');
+							var deletedata = atheos.jsend.parse(data);
+							if (deletedata != 'error') {
+								atheos.toast.show('success', 'Project Deleted');
 								_this.list();
 								_this.loadSide();
 								// Remove any active files that may be open
@@ -302,14 +313,12 @@
 			var project = this;
 			ajax({
 				url: this.controller,
-				type: 'post',
 				data: {
 					action: "current"
 				},
-				success: function(response) {
-					response = JSON.parse(response);
-					if (response.status === 'success') {
-						project.current.path = response.path;
+				success: function(data) {
+					if (data.status === 'success') {
+						project.current.path = data.path;
 					}
 				}
 			});

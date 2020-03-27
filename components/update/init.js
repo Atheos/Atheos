@@ -41,13 +41,13 @@
 			ajax({
 				url: update.controller + '?action=init',
 				success: function(data) {
-					update.local = JSON.parse(data);
+					update.local = data;
 				}
 			});
 			ajax({
 				url: update.repo,
 				success: function(data) {
-					update.remote = JSON.parse(data);
+					update.remote = data;
 				}
 			});
 		},

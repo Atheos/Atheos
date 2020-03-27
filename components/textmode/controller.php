@@ -10,33 +10,41 @@
 // Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-require_once 'class.textmode.php';
+require_once "../../common.php";
+require_once "class.textmode.php";
 
+//////////////////////////////////////////////////////////////////
+// Verify Session or Key
+//////////////////////////////////////////////////////////////////
 Common::checkSession();
 
-$action = Common::post('action');
+$action = Common::data("action");
 
-if ($action) {
-	
-	$TextMode = new TextMode();
-
-	switch ($action) {
-		case 'setTextModes':
-			if (Common::checkAccess()) {
-				$TextMode->setTextModes();
-			} else {
-				die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
-			}
-			break;
-		case 'getTextModes':
-			$TextMode->getTextModes();
-			break;
-		default:
-			die(Common::sendJSON("error", "invalid action"));
-			break;
-	}
-
-} else {
+if (!$action) {
 	die(Common::sendJSON("error", "missing action"));
+}
+
+$TextMode = new TextMode();
+
+switch ($action) {
+	//////////////////////////////////////////////////////////////////
+	// Set custom text modes
+	//////////////////////////////////////////////////////////////////
+	case 'setTextModes':
+		if (Common::checkAccess()) {
+			$TextMode->setTextModes();
+		} else {
+			die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
+		}
+		break;
+
+	//////////////////////////////////////////////////////////////////
+	// Get text modes
+	//////////////////////////////////////////////////////////////////
+	case 'getTextModes':
+		$TextMode->getTextModes();
+		break;
+	default:
+		die(Common::sendJSON("error", "invalid action"));
+		break;
 }
