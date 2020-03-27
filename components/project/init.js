@@ -105,6 +105,7 @@
 			ajax({
 				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
 				success: function(data) {
+					log(data);
 					if (data.status != 'error') {
 						project.loadCurrent();
 						if (atheos.modal.modalVisible) {
