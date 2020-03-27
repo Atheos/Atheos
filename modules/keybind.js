@@ -39,9 +39,19 @@
 				atheos.active.openInBrowser();
 			});
 
+			// Open Scout [CTRL+E] /////////////////////////////////////////////
+			this.bind(69, function() {
+				atheos.scout.search();
+			});
+
 			// Find [CTRL+F] /////////////////////////////////////////////
 			this.bind(70, function() {
 				atheos.editor.openSearch('find');
+			});
+
+			// GotoLine [CTRL+G] /////////////////////////////////////////////
+			this.bind(71, function() {
+				atheos.editor.promptLine();
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////
@@ -64,11 +74,11 @@
 			//     atheos.autocomplete.suggest();
 			// });
 
-			this.bind(71, function() {
-				if (atheos.finder) {
-					atheos.finder.expandFinder();
-				}
-			});
+			// this.bind(71, function() {
+			// 	if (atheos.finder) {
+			// 		atheos.finder.expandFinder();
+			// 	}
+			// });
 		},
 
 		//////////////////////////////////////////////////////////////////////

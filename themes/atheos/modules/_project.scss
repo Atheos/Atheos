@@ -54,9 +54,9 @@ $tab-color: #3E50B4;
 .sb-projects-content {
 	height: calc(100% - 35px);
 	width: 100%;
-	overflow: auto;
+	overflow-y: scroll;
 	position: absolute;
-	padding: 5px;
+	padding-left: 5px;
 }
 
 .sb-projects-content li:hover {

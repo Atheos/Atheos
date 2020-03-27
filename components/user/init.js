@@ -1,10 +1,16 @@
-/*
-	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// User
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
+	'use strict';
+	var user = null;
 
 	var atheos = global.atheos,
 		ajax = global.ajax,
@@ -13,9 +19,8 @@
 		oX = global.onyx;
 
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.user.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.user.init());
+
 
 	atheos.user = {
 
@@ -28,7 +33,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		init: function() {
-			var user = this;
+			user = this;
 
 			if (user.loginForm) {
 				user.loginForm.on('submit', function(e) {
@@ -74,9 +79,15 @@
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				ajax({
-					url: atheos.user.controller + '?action=verify',
+					url: atheos.user.controller,
+					data: {
+						'action': 'keepAlive'
+					},
 					success: function(data) {
-						if (data === 'false') {
+						if (data.debug) {
+							console.log(data.debug);
+						}
+						if (data.pass === 'false') {
 							atheos.user.logout();
 						}
 					}
@@ -90,16 +101,16 @@
 		//////////////////////////////////////////////////////////////////
 
 		authenticate: function() {
+			var data = atheos.common.serializeForm(user.loginForm.el);
+			data.action = 'authenticate';
 			ajax({
-				url: this.controller + '?action=authenticate',
-				type: 'post',
-				data: atheos.common.serializeForm(this.loginForm.el),
-				success: function(response) {
-					response = JSON.parse(response);
-					if (response.status !== 'error') {
+				url: user.controller,
+				data: data,
+				success: function(data) {
+					if (data.status !== 'error') {
 						window.location.reload();
 					} else {
-						atheos.toast.error(response.message);
+						atheos.toast.show(data);
 
 					}
 				}
@@ -124,7 +135,10 @@
 				amplify.publish('user.logout');
 				atheos.settings.save();
 				ajax({
-					url: this.controller + '?action=logout',
+					url: user.controller,
+					data: {
+						'action': 'logout'
+					},
 					success: function() {
 						window.location.reload();
 					}
@@ -135,7 +149,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Open the user manager dialog
 		//////////////////////////////////////////////////////////////////
-
 		list: function() {
 			atheos.modal.load(400, this.dialog + '?action=list');
 		},
@@ -143,153 +156,176 @@
 		//////////////////////////////////////////////////////////////////
 		// Create User
 		//////////////////////////////////////////////////////////////////
+		create: function() {
+			var listener = function(e) {
+				e.preventDefault();
 
-		createNew: function() {
-			var user = this;
-			atheos.modal.load(400, this.dialog + '?action=create');
-			$('#modal_content form')
-				.live('submit', function(e) {
-					e.preventDefault();
-					var pass = true;
-					var username = $('#modal_content form input[name="username"]')
-						.val();
-					var password1 = $('#modal_content form input[name="password1"]')
-						.val();
-					var password2 = $('#modal_content form input[name="password2"]')
-						.val();
+				var username = oX('#modal_content form input[name="username"]').value();
+				var password1 = oX('#modal_content form input[name="password1"]').value();
+				var password2 = oX('#modal_content form input[name="password2"]').value();
 
-					// Check matching passwords
-					if (password1 !== password2) {
-						atheos.toast.error(i18n('Passwords Do Not Match'));
-						pass = false;
-					}
+				var password = password1 === password2 ? password1 : false;
 
-					// Check no spaces in username
-					if (!/^[a-z0-9]+$/i.test(username) || username.length === 0) {
-						atheos.toast.error(i18n('Username Must Be Alphanumeric String'));
-						pass = false;
-					}
+				// Check matching passwords
+				if (!password) {
+					atheos.toast.show('error', 'Passwords Do Not Match');
+				}
 
-					if (pass) {
-						$.post(user.controller + '?action=create', {
+				// Check no spaces in username
+				if (!/^[a-z0-9]+$/i.test(username) || username.length === 0) {
+					atheos.toast.show('error', 'Username Must Be Alphanumeric String');
+					username = false;
+				}
+				if (password && username) {
+					ajax({
+						url: user.controller,
+						data: {
+							'action': 'create',
 							'username': username,
-							'password': password1
-						}, function(data) {
-							var createResponse = atheos.jsend.parse(data);
-							if (createResponse !== 'error') {
-								atheos.toast.success(i18n('User Account Created'));
+							'password': password
+						},
+						success: function(data) {
+							if (data.status !== 'error') {
+								atheos.toast.show('success', 'User Account Created');
 								user.list();
 							}
-						});
-					}
-				});
+						}
+					});
+				}
+			};
+			amplify.subscribe('modal.loaded', function() {
+				oX('#modal_content form').on('submit', listener);
+			});
+			atheos.modal.load(400, this.dialog + '?action=create');
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Delete User
 		//////////////////////////////////////////////////////////////////
-
 		delete: function(username) {
-			var user = this;
-			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
-			$('#modal_content form')
-				.live('submit', function(e) {
-					e.preventDefault();
-					var username = $('#modal-content form input[name="username"]')
-						.val();
-					$.get(user.controller + '?action=delete&username=' + username, function(data) {
-						var deleteResponse = atheos.jsend.parse(data);
-						if (deleteResponse !== 'error') {
-							atheos.toast.success(i18n('Account Deleted'));
+			var listener = function(e) {
+				e.preventDefault();
+				var username = oX('#modal-content form input[name="username"]').value();
+				ajax({
+					url: user.controller,
+					data: {
+						'action': 'delete',
+						'username': username
+					},
+					success: function(data) {
+						if (data.status !== 'error') {
+							atheos.toast.show('success', 'Account Deleted');
 							user.list();
 						}
-					});
+					}
 				});
+			};
+
+			amplify.subscribe('modal.loaded', function() {
+				oX('#modal_content form').on('submit', listener);
+			});
+			atheos.modal.load(400, this.dialog + '?action=delete&username=' + username);
+
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Set Project Access
 		//////////////////////////////////////////////////////////////////
 		showUserACL: function(username) {
-			atheos.modal.load(400, this.dialog + '?action=projects&username=' + username);
-			var user = this;
+			var listener = function(e) {
+				e.preventDefault();
 
-			atheos.modal.ready.then(function() {
-				oX('#modal_content').on('submit', function(e) {
-					e.preventDefault();
+				var data = atheos.common.serializeForm(oX('#modal_content form').el);
+				data.action = 'changeUserACL';
 
-					var data = atheos.common.serializeForm(oX('#modal_content form').el);
-					data.action = 'setUserACL';
+				if (data.acl === 'false') {
+					data.project = 'full';
+				}
 
-					if (data.access_level === 0) {
-						data.projects = 0;
-					}
+				// Check and make sure if access level not full that at least on project is selected
+				if (data.acl === 'true' && !data.project) {
+					atheos.toast.show('error', 'At Least One Project Must Be Selected');
+				} else {
+					ajax({
+						url: user.controller,
+						data: data,
+						success: function(data) {
+							atheos.modal.unload();
+						}
+					});
+				}
+			};
 
-					// Check and make sure if access level not full that at least on project is selected
-					if (data.access_level === 1 && !data.projects) {
-						atheos.toast.error(i18n('At Least One Project Must Be Selected'));
-					} else {
-						ajax({
-							url: user.controller,
-							type: 'post',
-							data: data,
-							success: function(data) {
-								atheos.modal.unload();
-							}
-						});
-					}
-
-				});
+			amplify.subscribe('modal.loaded', function() {
+				oX('#modal_content form').on('submit', listener);
 			});
+			atheos.modal.load(400, user.dialog + '?action=projects&username=' + username);
+		},
+
+		//////////////////////////////////////////////////////////////////
+		// Show/Hide Project List in ACL dialog
+		//////////////////////////////////////////////////////////////////
+		toggleACL: function(e) {
+			var aclSelect = oX('#aclSelect');
+			if (aclSelect) {
+				var projectSelect = oX('#projectSelect').el;
+				var direction = aclSelect.value() === 'false' ? 'close' : 'open';
+				atheos.animation.slide(direction, projectSelect, 300);
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Change Password
 		//////////////////////////////////////////////////////////////////
+		changePassword: function(username) {
+			var listener = function(e) {
+				e.preventDefault();
+				var username = oX('#modal_content form input[name="username"]').value();
+				var password1 = oX('#modal_content form input[name="password1"]').value();
+				var password2 = oX('#modal_content form input[name="password2"]').value();
 
-		password: function(username) {
-			var _this = this;
-			atheos.modal.load(400, this.dialog + '?action=password&username=' + username);
-			$('#modal_content form')
-				.live('submit', function(e) {
-					e.preventDefault();
-					var username = $('#modal_content form input[name="username"]')
-						.val();
-					var password1 = $('#modal_content form input[name="password1"]')
-						.val();
-					var password2 = $('#modal_content form input[name="password2"]')
-						.val();
-					if (password1 !== password2) {
-						atheos.toast.error(i18n('Passwords Do Not Match'));
-					} else {
-						$.post(_this.controller + '?action=password', {
+				var password = password1 === password2 ? password1 : false;
+
+
+				if (!password) {
+					atheos.toast.show('error', 'Passwords Do Not Match');
+				} else {
+					ajax({
+						url: user.controller,
+						data: {
+							'action': 'password',
 							'username': username,
-							'password': password1
-						}, function(data) {
-							var passwordResponse = atheos.jsend.parse(data);
-							if (passwordResponse !== 'error') {
-								atheos.toast.success(i18n('Password Changed'));
+							'password': password
+						},
+						success: function(data) {
+							if (data.status !== 'error') {
+								atheos.toast.show('success', 'Password Changed');
 								atheos.modal.unload();
 							}
-						});
-					}
-				});
+						}
+					});
+				}
+			};
+
+			amplify.subscribe('modal.loaded', function() {
+				oX('#modal_content form').on('submit', listener);
+			});
+			atheos.modal.load(400, user.dialog + '?action=password&username=' + username);
+
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Change Current Project
+		// Save active project to server
 		//////////////////////////////////////////////////////////////////
-
 		saveActiveProject: function(project) {
 			ajax({
 				url: this.controller,
-				type: 'post',
 				data: {
 					action: 'saveActiveProject',
-					project: project
+					activeProject: project
 				}
 			});
 		}
 	};
 
-})(this, jQuery);
+})(this);
