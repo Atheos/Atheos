@@ -405,7 +405,7 @@
 					'opacity': 0
 				});
 
-				var height = parseFloat(window.getComputedStyle(element, null).height.replace("px", ""));
+				var height = parseFloat(window.getComputedStyle(element, null).height.replace('px', ''));
 
 				this.css(init);
 
