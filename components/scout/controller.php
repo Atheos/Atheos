@@ -40,7 +40,7 @@ switch ($action) {
 		break;
 	case "filter":
 		$Scout->filter();
-		break;		
+		break;
 	default:
 		Common::sendJSON("error", "Invalid Action");
 		die;
