@@ -113,6 +113,7 @@
 				}
 			}
 		},
+		
 		unsubscribeAll: function(topic) {
 			if (typeof topic === "string") {
 				delete subscriptions[topic];
