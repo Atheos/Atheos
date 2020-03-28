@@ -57,9 +57,6 @@ switch ($action) {
 	case 'index':
 		$Filemanager->index();
 		break;
-	case 'find':
-		$Filemanager->find();
-		break;
 	case 'open':
 		$Filemanager->open();
 		break;

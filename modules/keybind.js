@@ -41,7 +41,7 @@
 
 			// Open Scout [CTRL+E] /////////////////////////////////////////////
 			this.bind(69, function() {
-				atheos.scout.search();
+				atheos.scout.probe();
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////
