@@ -379,16 +379,16 @@
              * marker uses word character so that it won't be discarded by a
              * word split. */
             var markerString = '__autocomplete_marker__';
-            var text = doc.getLines(0, position.row - 1).join("\n") + "\n";
+            var text = doc.getLines(0, position.row - 1).join('\n') + '\n';
             var currentLine = doc.getLine(position.row);
             text += currentLine.substr(0, position.column);
             text += markerString;
             if (position.column === currentLine.length) {
                 // position is at end of line, add a break line.
-                text += "\n";
+                text += '\n';
             }
             text += currentLine.substr(position.column + 1);
-            text += doc.getLines(position.row + 1, doc.getLength()).join("\n") + "\n";
+            text += doc.getLines(position.row + 1, doc.getLength()).join('\n') + '\n';
 
             /* Split the text into words. */
             var suggestions = text.split(this.wordRegex);
@@ -533,7 +533,7 @@
 
             /* Escape the characters that have a special meaning for regex in
              * the prefix. */
-            var localPrefix = prefix.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, "\\$&");
+            var localPrefix = prefix.replace(/[-[\]{}()*+?.,\\^$|#\s]/g, '\\$&');
 
             var fuzzyRegex = '^.*?';
             for (var i = 0; i < localPrefix.length; ++i) {

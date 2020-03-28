@@ -277,7 +277,7 @@
 			ajax({
 				url: self.controller + '?action=open_in_browser&path=' + encodeURIComponent(path),
 				success: function(data) {
-					if (data.success != 'error') {
+					if (data.success !== 'error') {
 						window.open(data.url, '_newtab');
 					}
 				},
