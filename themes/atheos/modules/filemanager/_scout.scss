@@ -1,6 +1,6 @@
-/* SEARCH */
+/* PROBE */
 
-#search_results {
+#probe_results {
 	// display: none;
 	height: 250px;
 	overflow: scroll !important;
@@ -13,7 +13,7 @@
 
 		strong {
 			font-weight: 700;
-				color: $blue;
+			color: $blue;
 		}
 
 		a {
@@ -34,7 +34,7 @@
 	}
 }
 
-#search_processing {
+#probe_processing {
 	display: none;
 	margin: 10px 0 0 0;
 	width: 32px;
@@ -43,7 +43,41 @@
 	background: url(images/default/loading.gif) no-repeat;
 }
 
-#scout_table tr td {
+#probe_table tr td {
 	border: none;
 	padding: 0;
+}
+
+/* Filter */
+#filter_open {}
+
+
+#filter_wrapper {
+	position: absolute;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0px;
+	background-color: $foreground;
+	display: none;
+}
+
+#finder-inner-wrapper {
+	left: 0;
+	right: 30px;
+	top: 5px;
+	bottom: 3px;
+	position: absolute;
+}
+
+#filter_input {
+	display: inline-block;
+	width: calc(100% - 65px);
+	margin: 2px 5px;
+}
+
+#filter_strategy {
+	top: 35px;
+	right: 0;
 }
