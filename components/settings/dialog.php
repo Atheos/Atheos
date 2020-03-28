@@ -6,19 +6,21 @@
     *  [root]/license.txt for more. This information must remain intact.
     */
 
-require_once('../../common.php');
+require_once("../../common.php");
 
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
 
-if (!isset($_GET['action'])) {
-	$_GET['action'] = "settings";
+$action = Common::data("action");
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
 }
 
-switch ($_GET['action']) {
+switch ($action) {
 	case "settings":
 		?>
 		<h1><i class="fas fa-cog"></i><?php i18n("Settings"); ?></h1>
@@ -34,7 +36,7 @@ switch ($_GET['action']) {
 				</li>
 				<li>
 					<a name="codegit-settings" data-file="components/codegit/dialog.php?action=settings" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
-				</li>				
+				</li>
 				<?php
 				if (COMMON::checkAccess()) {
 					?>
@@ -98,6 +100,7 @@ switch ($_GET['action']) {
 		<?php
 		break;
 	default:
+		Common::sendJSON("E401i");
 		break;
 }
 ?>

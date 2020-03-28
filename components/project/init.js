@@ -106,13 +106,13 @@
 				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
 				success: function(data) {
 					log(data);
-					if (data.status != 'error') {
+					if (data.status !== 'error') {
 						project.loadCurrent();
 						if (atheos.modal.modalVisible) {
 							atheos.modal.unload();
 						}
 						atheos.user.saveActiveProject(path);
-						localStorage.removeItem("lastSearched");
+						localStorage.removeItem('lastSearched');
 						/* Notify listeners. */
 						amplify.publish('project.onOpen', path);
 					}
@@ -186,10 +186,10 @@
 								_this.loadSide();
 								/* Notify listeners. */
 								amplify.publish('project.onCreate', {
-									"name": projectName,
-									"path": projectPath,
-									"git_repo": gitRepo,
-									"git_branch": gitBranch
+									'name': projectName,
+									'path': projectPath,
+									'git_repo': gitRepo,
+									'git_branch': gitBranch
 								});
 							}
 						});
@@ -233,15 +233,15 @@
 						.val();
 					$.get(_this.controller + '?action=rename&project_path=' + encodeURIComponent(projectPath) + '&project_name=' + encodeURIComponent(projectName), function(data) {
 						var renamedata = atheos.jsend.parse(data);
-						if (renamedata != 'error') {
+						if (renamedata !== 'error') {
 							atheos.toast.show('success', 'Project renamed');
 							_this.loadSide();
 							$('#file-manager a[data-type="root"]').html(projectName);
 							atheos.modal.unload();
 							/* Notify listeners. */
 							amplify.publish('project.onRename', {
-								"path": projectPath,
-								"name": projectName
+								'path': projectPath,
+								'name': projectName
 							});
 						}
 					});
@@ -273,7 +273,7 @@
 					$.get(atheos.filemanager.controller + action, function(d) {
 						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
 							var deletedata = atheos.jsend.parse(data);
-							if (deletedata != 'error') {
+							if (deletedata !== 'error') {
 								atheos.toast.show('success', 'Project Deleted');
 								_this.list();
 								_this.loadSide();
@@ -288,8 +288,8 @@
 									});
 								/* Notify listeners. */
 								amplify.publish('project.onDelete', {
-									"path": projectPath,
-									"name": name
+									'path': projectPath,
+									'name': name
 								});
 							}
 						});
@@ -302,7 +302,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		isAbsPath: function(path) {
-			return (path.indexOf("/") == 0) ? true : false;
+			return (path.indexOf('/') === 0) ? true : false;
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -314,7 +314,7 @@
 			ajax({
 				url: this.controller,
 				data: {
-					action: "current"
+					action: 'current'
 				},
 				success: function(data) {
 					if (data.status === 'success') {
