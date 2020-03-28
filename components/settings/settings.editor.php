@@ -1,4 +1,5 @@
 <?php require_once('../../common.php'); ?>
+
 <h2><i class="fas fa-home"></i><?php i18n("Editor Settings"); ?></h2>
 <table class="settings">
 	<tr>
