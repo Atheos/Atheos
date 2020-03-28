@@ -77,7 +77,7 @@
 			width = width > 400 ? width : 400;
 
 			var overlay = oX('#overlay') || atheos.common.createOverlay(),
-				wrapper = oX('#modal_wrapper') || this.create(),
+				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
 
 
@@ -92,7 +92,7 @@
 
 			content.html('<div id="modal_loading"></div>');
 
-			this.ready = ajax({
+			ajax({
 				url: url,
 				type: 'GET',
 				data: data,

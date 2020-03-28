@@ -17,7 +17,7 @@
 // seemed to work.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-
+ 
 (function() {
 	var method;
 	var noop = function() {};
@@ -91,7 +91,7 @@
 
 			b = b.replace(/^.*[\/\\]/g, '');
 
-			if (typeof suffix === 'string' && b.substr(b.length - suffix.length) == suffix) {
+			if (typeof suffix === 'string' && b.substr(b.length - suffix.length) === suffix) {
 				b = b.substr(0, b.length - suffix.length);
 			}
 
