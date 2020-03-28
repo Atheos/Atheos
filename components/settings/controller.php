@@ -9,38 +9,50 @@
 require_once('../../common.php');
 require_once('class.settings.php');
 
-if (!isset($_GET['action'])) {
-	die(formatJSEND("error", "Missing parameter"));
-}
-
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
+
+$action = Common::data("action");
+$settings = Common::data("settings");
+$user = Common::data("user", "session");
+
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
+}
 
 $Settings = new Settings();
 
-//////////////////////////////////////////////////////////////////
-// Save User Settings
-//////////////////////////////////////////////////////////////////
+switch ($action) {
 
-if ($_GET['action'] == 'save') {
-	if (!isset($_POST['settings'])) {
-		die(formatJSEND("error", "Missing settings"));
-	}
+	//////////////////////////////////////////////////////////////////
+	// Save User Settings
+	//////////////////////////////////////////////////////////////////
+	case "save":
+		if ($settings) {
+			$Settings->username = $user;
+			$Settings->settings = json_decode($settings, true);
+			$Settings->Save();
+		} else {
+			Common::sendJSON("E403m", "Settings");
 
-	$Settings->username = $_SESSION['user'];
-	$Settings->settings = json_decode($_POST['settings'], true);
-	$Settings->Save();
+		}
+
+		break;
+
+	//////////////////////////////////////////////////////////////////
+	// Load User Settings
+	//////////////////////////////////////////////////////////////////
+	case "load":
+		$Settings->username = $user;
+		$Settings->Load();
+
+		break;
+	default:
+		Common::sendJSON("E401i");
+		break;
+
 }
-
-//////////////////////////////////////////////////////////////////
-// Load User Settings
-//////////////////////////////////////////////////////////////////
-
-if ($_GET['action'] == 'load') {
-	$Settings->username = $_SESSION['user'];
-	$Settings->Load();
-}
-

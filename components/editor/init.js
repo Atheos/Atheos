@@ -455,7 +455,7 @@
 					if (localValue === null) {
 						return;
 					}
-					_this.settings[key] = (localValue == 'true');
+					_this.settings[key] = (localValue === 'true');
 				});
 			$.each(['printMarginColumn'],
 				function(idx, key) {
@@ -517,7 +517,7 @@
 				chIdx = null;
 			var _this = this;
 
-			if (this.instances.length == 0) {
+			if (this.instances.length === 0) {
 				// el.appendTo($('#editor-region'));
 				el.appendTo($('#root-editor-wrapper'));
 			} else {
@@ -705,8 +705,8 @@
 
 		closeMenus: function(exclude) {
 			var menuId = exclude.attr('id');
-			if (menuId != 'split-options-menu') $('#split-options-menu').hide();
-			if (menuId != 'changemode-menu') $('#changemode-menu').hide();
+			if (menuId !== 'split-options-menu') $('#split-options-menu').hide();
+			if (menuId !== 'changemode-menu') $('#changemode-menu').hide();
 		},
 
 		setModeDisplay: function(session) {
@@ -861,7 +861,7 @@
 		/////////////////////////////////////////////////////////////////
 
 		selectMode: function(e) {
-			if (typeof(e) != 'string') {
+			if (typeof(e) !== 'string') {
 				return 'text';
 			}
 			e = e.toLowerCase();
@@ -884,7 +884,7 @@
 		/////////////////////////////////////////////////////////////////
 
 		addFileExtensionTextMode: function(extension, mode) {
-			if (typeof(extension) != 'string' || typeof(mode) != 'string') {
+			if (typeof(extension) !== 'string' || typeof(mode) !== 'string') {
 				if (console) {
 					console.warn('wrong usage of addFileExtensionTextMode, both parameters need to be string');
 				}
@@ -1354,8 +1354,7 @@
 		promptLine: function() {
 			if (codiad.editor.getActive() !== null) {
 
-				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
-				atheos.modal.ready.then(function() {
+				var listener = function() {
 					oX('#modal_content form').on('submit', function(e) {
 						e.preventDefault();
 						var line = oX('#modal_content form input[name="line"]').value();
@@ -1370,7 +1369,11 @@
 
 						atheos.modal.unload();
 					});
-				});
+				};
+				
+				amplify.subscribe('modal.loaded', listener);
+				
+				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
 
 			}
 		},
