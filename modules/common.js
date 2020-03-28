@@ -18,39 +18,35 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
+(function() {
+	var method;
+	var noop = function() {};
+	var methods = [
+		'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+		'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+		'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+		'timeStamp', 'trace', 'warn'
+	];
+	var length = methods.length;
+	var console = (window.console = window.console || {});
 
-const log = function(m, t) {
-	// var err = new Error().stack;
-	// var stack = err.split('\n');
+	while (length--) {
+		method = methods[length];
 
-	// var regExp = /\(([^)]+)\)/;
-	// var caller = regExp.exec(stack[2])[1].split(':');
-
-	// var script = caller[1].split('/');
-	// var last = script.length - 1;
-	// script = script[last - 1] + '/' + script[last];
-	// var line = caller[2];
-
-	// console.log(stack[2].substring(stack[2].indexOf("("), stack[2].lastIndexOf(")") + 1));
-
-
-	try {
-		const json = JSON.parse(m);
-		const type = Object.prototype.toString.call(json);
-		if (type === '[object Object]' || type === '[object Array]') {
-			m = json;
-		}
-	} catch (e) {} finally {
-		// m = (`${m} `)
-		if (t) {
-			console.trace(m);
-		} else {
-			// console.log(script + ':' + line);
-
-			console.log(m);
+		// Only stub undefined methods.
+		if (!console[method]) {
+			console[method] = noop;
 		}
 	}
-};
+
+	if (Function.prototype.bind) {
+		window.log = Function.prototype.bind.call(console.log, console);
+	} else {
+		window.log = function() {
+			Function.prototype.apply.call(console.log, console, arguments);
+		};
+	}
+})();
 
 (function(global) {
 	'use strict';
@@ -203,7 +199,7 @@ const log = function(m, t) {
 			document.body.appendChild(overlay.el);
 			return overlay;
 		},
-		
+
 		hideOverlay: function() {
 			oX('#overlay').hide();
 		},
