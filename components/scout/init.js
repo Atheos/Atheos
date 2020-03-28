@@ -23,7 +23,6 @@
 		oX = global.onyx;
 
 	var self = null;
-	var finder = null;
 
 	amplify.subscribe('atheos.loaded', () => atheos.scout.init());
 
@@ -38,7 +37,6 @@
 
 		init: function() {
 			self = this;
-			finder = atheos.finder;
 
 			oX('#open_probe').on('click', function(e) {
 				self.probe();
