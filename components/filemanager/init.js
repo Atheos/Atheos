@@ -76,6 +76,7 @@
 			};
 
 			var nodeFunctions = (function(node) {
+				log('running');
 				if (node) {
 					node = o(node);
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
@@ -135,7 +136,6 @@
 				ajax({
 					url: this.controller + '?action=index&path=' + path,
 					success: function(data) {
-						log(data);
 						if (data.status !== 'error') {
 							/* Notify listener */
 							fileManager.indexFiles = data.data.index;

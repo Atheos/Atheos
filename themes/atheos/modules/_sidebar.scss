@@ -22,10 +22,6 @@ $sidebar-handle-width: 15px;
 	white-space: nowrap;
 }
 
-#tree-search {
-	display: none;
-}
-
 .sidebar#sb-left {
 	width: 300px;
 	left: 0;
@@ -39,13 +35,14 @@ $sidebar-handle-width: 15px;
 	left: 0;
 	right: 15px;
 	height: 35px;
-	background-color: #303030;
-	overflow: hidden;
+	background-color: $foreground;
 	@include box-shadow;
-}
 
-#sb-left-title.active {
-	border-bottom: 1px solid gray;
+	h2 {
+		font-size: 15px;
+		margin: 10px;
+		display: inline-block;
+	}
 }
 
 .sidebar#sb-right {
@@ -144,18 +141,10 @@ $sidebar-handle-width: 15px;
 	color: $icon-color;
 	// z-index: 99999;
 	cursor: pointer;
-	margin: 10px 5px;
+	margin: 9px 5px;
 	float: right;
 }
 
-#sb-left-title h2 {
-	float: left;
-	font-size: 15px;
-	font-weight: 500;
-	color: #ffffff;
-	display: block;
-	margin: 10px;
-}
 
 #sb-right-title {
 	position: absolute;
@@ -174,7 +163,7 @@ $sidebar-handle-width: 15px;
 	color: $icon-color;
 	z-index: 99999;
 	cursor: pointer;
-	margin: 10px 5px;
+	margin: 9px 5px;
 	float: left;
 }
 

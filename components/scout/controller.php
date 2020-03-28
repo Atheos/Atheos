@@ -35,9 +35,12 @@ if (!$action) {
 $Scout = new Scout();
 
 switch ($action) {
-	case "search":
-		$Scout->search();
+	case "probe":
+		$Scout->probe();
 		break;
+	case "filter":
+		$Scout->filter();
+		break;		
 	default:
 		Common::sendJSON("error", "Invalid Action");
 		die;
