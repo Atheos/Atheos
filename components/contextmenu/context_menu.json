@@ -24,7 +24,7 @@
 		"enabled": false,
 		"icon": "fas fa-search",
 		"applies-to": "directory-only",
-		"onclick": "atheos.scout.search(onyx('#contextmenu').attr('data-path'));"
+		"onclick": "atheos.scout.probe(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
 		"title": "Break",

@@ -53,32 +53,27 @@
 			xhr = new ActiveXObject('Microsoft.XMLHTTP');
 		}
 
-		var ajaxPromise = new Promise(function(resolve, reject) {
-			xhr.onreadystatechange = function() {
-				if (xhr.readyState === 4) {
-					if (xhr.status >= 200 && xhr.status < 300) {
-						if (options.success) {
-							var data = xhr.responseText;
-							try {
-								const json = JSON.parse(data);
-								data = json;
-								if(data.debug) {
-									console.log(data.debug);
-								}
-
-							} catch (e) {} finally {
-								options.success(data);
-							}
-						}
-						resolve(xhr.responseText);
-					} else {
-						if (options.fail) {
-							options.fail(xhr.status);
-						}
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState === 4) {
+				var data = xhr.responseText;
+				try {
+					data = JSON.parse(data);
+					if (data.debug) {
+						console.log(data.debug);
+						delete data.debug;
+					}
+				} catch (e) {}
+				if (xhr.status >= 200 && xhr.status < 300) {
+					if (options.success) {
+						options.success(data, xhr.status);
+					}
+				} else {
+					if (options.fail) {
+						options.fail(data, xhr.status);
 					}
 				}
-			};
-		});
+			}
+		};
 
 		if (options.type === 'GET') {
 			params = params ? '?' + params : '';
@@ -89,8 +84,6 @@
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.send(params);
 		}
-
-		return ajaxPromise;
 	};
 	return ajax;
 });

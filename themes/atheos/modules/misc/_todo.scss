@@ -158,41 +158,6 @@ hr {
 	overflow: hidden;
 }
 
-.options-menu {
-	position: absolute;
-	z-index: 9999;
-	background-color: #2E2E2E;
-	border: 3px solid #666666;
-	display: none;
-	@include border-radius;
-}
-
-.options-menu li {
-	border-bottom: 1px solid black;
-	padding: 0;
-}
-
-.options-menu li a {
-	display: block;
-	color: #7F7F7F;
-	text-decoration: none;
-	padding: 10px;
-	cursor: pointer;
-}
-
-.options-menu li:hover {
-	background-color: #7F7F7F;
-}
-
-.options-menu li:hover a {
-	color: white;
-}
-
-.options-menu td {
-	padding: 0;
-	margin: 0;
-}
-
 .splitter {
 	background-color: black;
 	z-index: 9999;
