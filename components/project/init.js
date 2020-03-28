@@ -101,7 +101,7 @@
 
 		open: function(path) {
 			var project = this;
-			atheos.finder.contractFinder();
+			atheos.scout.hideFilter();
 			ajax({
 				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
 				success: function(data) {
