@@ -1496,7 +1496,7 @@
 				codiad.modal.load(400,
 					'components/editor/dialog.php?action=search&type=' +
 					type);
-				codiad.modal.hideOverlay();
+				codiad.common.hideOverlay();
 			} else {
 				codiad.toast.show('error', 'No Open Files');
 			}
