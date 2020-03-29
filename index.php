@@ -51,9 +51,24 @@ if (isset($_SESSION['theme'])) {
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
+	<script>
+		var i18n = (function(lang) {
+			return function(word, args) {
+				var x;
+				var returnw = (word in lang) ? lang[word]: word;
+				for (x in args) {
+					returnw = returnw.replace("%{"+x+"}%", args[x]);
+				}
+				return returnw;
+			}
+		})(<?php echo json_encode($lang); ?>)
+	</script>
+
 	<?php
 	// Load System CSS Files
 	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
+
+
 
 	//////////////////////////////////////////////////////////////////
 	// LOAD MODULES

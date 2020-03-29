@@ -83,7 +83,7 @@
 			var path = atheos.project.current.path;
 
 			var listener = function() {
-				// atheos.modal.hideOverlay();
+				// atheos.common.hideOverlay();
 				var table = oX('#probe_results');
 
 				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
