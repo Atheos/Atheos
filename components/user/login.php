@@ -25,7 +25,6 @@
 			<label><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
 			<select name="theme" id="theme">
 				<?php
-				include 'languages/code.php';
 				foreach ($themes as $theme):
 				if (file_exists(THEMES."/" . $theme . "/theme.json")) {
 					$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
