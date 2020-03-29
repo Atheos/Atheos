@@ -656,7 +656,7 @@ class Git {
 				if (count($result["data"]) > 0) {
 					$stats = explode("\t", $result["data"][0]);
 					$additions = $stats[0];
-					$deletions = $stats[1];
+					$deletions = $stats[1] ?? 0;
 
 				} else {
 					$result = $this->execute("git status --branch --porcelain");
