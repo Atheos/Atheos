@@ -17,6 +17,27 @@ $desktop-width: 959px;
 @import 'visualization';
 // @import 'media';
 
+.background {
+	display: block;
+	height: 100%;
+	width: 100%;
+	position: relative;
+}
+
+#synthetic {
+	left: -20px;
+	position: absolute;
+	top: -20px;
+	z-index: -1;
+	pointer-events: none;
+	height: 120%;
+	width: 120%;
+	background-color: #000;
+	/*background: linear-gradient(-45deg, #000 40%, #0074D7 50%, #000 60%);*/
+	/*background-size: 600% 600%;*/
+	/*animation: gradient 10s linear infinite;*/
+}
+
 /* WEBKIT SCROLLBARS */
 ::-webkit-scrollbar {
 	width: 10px;

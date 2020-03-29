@@ -39,15 +39,7 @@
 		"url": "https://github.com/Andr3as/Codiad-AutoPrefixer"
 	},
 	{
-		"author": "daeks",
-		"name": "AutoUpdate",
-		"description": "Hooks into the Codiad updater to allow for automatic update",
-		"category": "Admin",
-		"status": "active",
-		"url": "https://github.com/daeks-archive/Codiad-AutoUpdate"
-	},
-	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "Beautify",
 		"description": "Beautify js, json, html or css files",
 		"category": "Beautify",
@@ -95,9 +87,9 @@
 		"url": "https://github.com/Andr3as/Codiad-CodeDocs"
 	},
 	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "CodeGit",
-		"description": "Git integration for Codiad",
+		"description": "Git integration for Atheos",
 		"category": "Development",
 		"status": "active",
 		"url": "https://github.com/HLSiira/Atheos-CodeGit"
@@ -168,15 +160,7 @@
 		"url": "https://github.com/ViniciusGerevini/Codiad-Compass"
 	},
 	{
-		"author": "Andr3as",
-		"name": "CompletePlus",
-		"description": "Alternative autocomplete; Expandable by plugins",
-		"category": "Development",
-		"status": "active",
-		"url": "https://github.com/Andr3as/Codiad-CompletePlus"
-	},
-	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "Compress",
 		"description": "Compress CSS and JS Files",
 		"category": "Utility",
@@ -208,7 +192,7 @@
 		"url": "https://github.com/Fluidbyte/Codiad-DocHub"
 	},
 	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "DragDrop",
 		"description": "Drag and Drop within the filemanager",
 		"category": "Admin",
@@ -216,7 +200,7 @@
 		"url": "https://github.com/HLSiira/Atheos-DragDrop"
 	},
 	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "Duplicate",
 		"description": "Duplicate files directly through the filemanager",
 		"category": "Admin",
@@ -280,7 +264,7 @@
 		"url": "https://github.com/Andr3as/Codiad-Iconbar"
 	},
 	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "Ignore",
 		"description": "Hide/Ignore files and directories in the filemanager",
 		"category": "Admin",
@@ -392,7 +376,7 @@
 		"url": "https://github.com/tholum/Codiad-SVN"
 	},
 	{
-		"author": "Andr3as",
+		"author": "HLSiira",
 		"name": "SassCompiler",
 		"description": "Sass/Scss Compiler for Codiad",
 		"category": "Development",

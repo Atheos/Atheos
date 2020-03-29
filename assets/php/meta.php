@@ -17,4 +17,4 @@
 
 <title>Atheos IDE</title>
 
-<link rel="stylesheet" type="text/css" href="/assets/scss/style.css" media="screen" />
+<link rel="stylesheet" type="text/css" href="/assets/scss/style.min.css" media="screen" />

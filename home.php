@@ -51,7 +51,7 @@
 	Atheos consists of three panels; a left panel which houses the file manager and active files, center panel which is where editors reside, and a right panel which contains system and other controls. The right &amp; left side panels collapse providing maximum real-estate to the editor.
 </p>
 
-<img src="images/atheos.png" alt="Atheos Screenshot">
+<img src="assets/images/atheos.png" alt="Atheos Screenshot">
 
 <h3>Requirements</h3>
 
@@ -87,14 +87,3 @@
 	But everyone loves a little bit of recognition and I'm not exception.
 	A nice supportive email or message would do me just fine.
 </p>
-<p>
-	Well then why the BuyMeACoffee button? Because it lets me know that there are people behind me that want me to succeed and stay focused on the job.
-	I'll probably keep working on Atheos as long as I know there are people interested in it, but please, I can't stress this enough: I don't want you to feel like you have to support me or Atheos.
-</p>
-<p class="right">
-	From Liam Siira
-</p>
-<a id="coffee" target="_blank" href="https://www.buymeacoffee.com/Hlsiira">
-	<img src="https://cdn.buymeacoffee.com/buttons/bmc-new-btn-logo.svg" alt="Buy me a coffee">
-	<span style="margin-left:15px;font-size:19px !important;">Support Atheos</span>
-</a>

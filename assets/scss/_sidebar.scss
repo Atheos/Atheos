@@ -8,8 +8,9 @@ sidebar {
 	height: 100%;
 	border-right: 1px solid $silver;
 	flex: 1;
-	background-color: $black;
 	z-index: 99;
+	@include foreground;
+	
 
 }
 

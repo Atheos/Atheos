@@ -28,22 +28,27 @@ if ($request == 'raw') {
 	</head>
 
 	<body>
+
 		<sidebar>
-			<div class="trigger">
-				<i class="icon-menu"></i>
-				<h1>Atheos</h1>
+			<div class="background">
+				<div class="trigger">
+					<i class="icon-menu"></i>
+					<h1>Atheos</h1>
+				</div>
+				<header>
+					<a id="logo" href="/"><img src="/assets/images/logo-new.png"></a>
+					<h1>Atheos<small id="version_tag">v.1.0</small></h1>
+					<h2>Web Based, Cloud IDE</h2>
+				</header>
+				<?php include "assets/php/navagation.php"; ?>
+				<!--<canvas id="synthetic" width="1024" height="762"></canvas>-->
 			</div>
-			<header>
-				<a id="logo" href="/"><img src="/assets/images/logo-new.png"></a>
-				<h1>Atheos<small id="version_tag">v.1.0</small></h1>
-				<h2>Web Based, Cloud IDE</h2>
-			</header>
-			<?php include "assets/php/navagation.php"; ?>
 		</sidebar>
 		<?php include "assets/php/main.php"; ?>
 
 		<?php include "assets/php/footer.php"; ?>
 		<?php include "assets/php/scripts.php"; ?>
+		<!--<script src="https://cdn.jsdelivr.net/gh/hlsiira/synthetic/synthetic.min.js"></script>-->
 	</body>
 </html>
 <?php

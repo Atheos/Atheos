@@ -10,15 +10,21 @@
 }
 
 @font-face {
-	font-family: 'Ubuntu';
-	src: url('/assets/fonts/UW/ubuntu-webfont.eot');
-	src: url('/assets/fonts/UW/ubuntu-webfont.eot?#iefix') format('embedded-opentype'),
-		url('/assets/fonts/UW/ubuntu-webfont.woff') format('woff'),
-		url('/assets/fonts/UW/ubuntu-webfont.ttf') format('truetype'),
-		url('/assets/fonts/UW/ubuntu-webfont.svg#ubunturegular') format('svg');
-	font-weight: normal;
-	font-style: normal;
+    font-family: 'Ubuntu';
+    src: url('/assets/fonts/UW/Ubuntu-Regular.woff2') format('woff2'),
+        url('/assets/fonts/UW/Ubuntu-Regular.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
 }
+
+@font-face {
+    font-family: 'Ubuntu';
+    src: url('/assets/fonts/UW/Ubuntu-Bold.woff2') format('woff2'),
+        url('/assets/fonts/UW/Ubuntu-Bold.woff') format('woff');
+    font-weight: bold;
+    font-style: normal;
+}
+
 
 body {
 	font-family: 'Ubuntu', 'Helvetica Neue', Helvetica, Arial, serif;
@@ -48,7 +54,7 @@ h2 {
 h3 {
 	font-size: 22px;
 	font-weight: bold;
-	margin: 16px 0 8px 0;
+	margin: 8px 0 8px 0;
 }
 
 small {

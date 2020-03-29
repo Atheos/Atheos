@@ -13,7 +13,8 @@ function breadcrumbs($separator = ' &raquo; ', $home = 'Atheos') {
 	$breadcrumbs = Array();
 
 	// Find out the index for the last value in our path array
-	$last = end(array_keys($path));
+	$keys = array_keys($path);
+	$last = end($keys);
 
 	$href = '';
 

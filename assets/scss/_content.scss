@@ -1,14 +1,19 @@
 #content {
 	// width: 95%;
-	padding: 1rem 1rem;
-	margin: 0 auto
+	margin: 0.5rem 0.5rem;
+	padding: 0.5rem 0.5rem;
+	// margin: 0 auto
+	@include foreground;
 }
+
 /* Desktop View */
 @media (min-width: $desktop-width) {
 
 	#content {
 		// width: 95%;
-		padding: 1rem 2rem;
-		margin: 0 auto
+		margin: 0.5rem 1rem;
+		padding: 0.5rem 1rem;
+
+		// margin: 0 auto
 	}
 }
