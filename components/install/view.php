@@ -288,6 +288,7 @@
 			<label><?php i18n("Timezone"); ?></label>
 			<select name="timezone">
 				<?php
+				$timezones = '';
 				foreach ($location as $key => $city) {
 					if ($autocomplete['timezone'] == $key) {
 						$timezones .= '<option selected="selected" value="' . $key . '">' . $city . '</option>';
