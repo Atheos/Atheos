@@ -53,7 +53,7 @@
 
 	var atheos = global.atheos,
 		ajax = global.ajax,
-		o = global.onyx;
+		oX = global.onyx;
 
 
 
@@ -77,7 +77,7 @@
 		},
 
 		getNodeType: function(path) {
-			return o('#file-manager a[data-path="' + path + '"]').attr('data-type');
+			return oX('#file-manager a[data-path="' + path + '"]').attr('data-type');
 		},
 
 		_basename: function(path, suffix) {
@@ -183,7 +183,7 @@
 			}
 		},
 		createOverlay: function() {
-			var overlay = o('<div>');
+			var overlay = oX('<div>');
 
 			overlay.attr('id', 'overlay');
 			overlay.on('click', atheos.alert.unload);
