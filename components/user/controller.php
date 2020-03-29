@@ -47,8 +47,9 @@ if ($action) {
 				$User->password = $password;
 
 				require_once '../../languages/code.php';
-				if (isset($lang) && isset($languages[$lang])) {
-					$User->lang = $lang;
+				if ($language && isset($languages[$language])) {
+					// if (isset($lang) && isset($languages[$lang])) {
+					$User->lang = $language;
 				} else {
 					$User->lang = 'en';
 				}
@@ -57,7 +58,8 @@ if ($action) {
 				$User->theme = $theme;
 				$User->authenticate();
 			} else {
-				die(Common::sendJSON("error", "Missing username or password"));
+				Common::sendJSON("E403g");
+				die;
 			}
 			break;
 
@@ -69,7 +71,7 @@ if ($action) {
 			$User->username = Common::data("user", "session");
 			$User->verify();
 
-			break;			
+			break;
 
 		//////////////////////////////////////////////////////////////////
 		// Logout
