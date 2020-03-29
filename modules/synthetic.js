@@ -28,6 +28,7 @@
 				this.canvas = this.createCanvas();
 			}
 			this.drawSynthetic();
+			// document.querySelector('main').style.opacity = '0';
 		},
 
 		createCanvas: function() {
@@ -50,8 +51,8 @@
 
 			hex.height = Math.sin(hex.angle) * hex.sideLength;
 			hex.radius = Math.cos(hex.angle) * hex.sideLength;
-			hex.rectangleHeight = hex.sideLength + 2 * hex.height;
-			hex.rectangleWidth = 2 * hex.radius;
+			hex.rectangleHeight = (hex.sideLength + 2 * hex.height);
+			hex.rectangleWidth = (2 * hex.radius);
 
 			this.canvas.width = document.body.clientWidth + (hex.rectangleWidth * 2); //document.width is obsolete
 			this.canvas.height = document.body.clientHeight + (hex.rectangleHeight * 2); //document.height is obsolete
@@ -61,7 +62,7 @@
 
 			if (this.canvas.getContext) {
 				var ctx = this.canvas.getContext('2d');
-				ctx.lineWidth = 1.5;
+				ctx.lineWidth = 1;
 
 				this.drawBoard(ctx, boardWidth, boardHeight, hex);
 			}
@@ -72,18 +73,24 @@
 				j,
 				gradientX = 255 / width,
 				gradientY = 255 / height,
-				clrFill = ['#0F0F0F', '#090909', '#0B0B0B', '#0D0D0D'];
+				clrFill = ['#070707', '#090909', '#0D0D0D', '#070707', '#090909', '#0B0B0B'];
+
+			clrFill = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"];
+
+
+			// clrFill = ['#070707', '#0D0D0D', '#111111', '#161616', '#191919'];
+
 
 			ctx.strokeStle = 'rgba(0,0,0)';
 
 			for (i = 0; i < width; ++i) {
 
 				for (j = 0; j < height; ++j) {
-					ctx.fillStyle = clrFill[Math.floor(Math.random() * clrFill.length)];
+					ctx.fillStyle = clrFill[Math.floor(Math.random() * 5)];
 					this.draw(
 						ctx,
-						i * hex.rectangleWidth + ((j % 2) * hex.radius),
-						j * (hex.sideLength + hex.height),
+						(i * 1.02) * hex.rectangleWidth + ((j % 2) * hex.radius),
+						(j * 1.02) * (hex.sideLength + hex.height),
 						hex
 					);
 				}
