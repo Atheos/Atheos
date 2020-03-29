@@ -24,7 +24,7 @@ class SourceManager {
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
-		"modules/i18n.js",
+		// "modules/i18n.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
 		"modules/types.js",
