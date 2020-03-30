@@ -6,16 +6,7 @@
 *  [root]/license.txt for more. This information must remain intact.
 */
 
-class Update
-{
-
-	//////////////////////////////////////////////////////////////////
-	// PROPERTIES
-	//////////////////////////////////////////////////////////////////
-
-    public $remote = "";
-    public $commits = "";
-    public $archive = "";
+class Update {
 
 	//////////////////////////////////////////////////////////////////
 	// METHODS
@@ -40,14 +31,23 @@ class Update
 		if (file_exists(DATA ."/version.json")) {
 			$local = $this->getLocalData();
 
-			echo json_encode(array(
+			$local["last_heard"] = date("Y/m/d");
+			$local["php_version"] = phpversion();
+			$local["server_os"] = Common::data("SERVER_SOFTWARE", "server");
+			$local["client_os"] = $this->getBrowserName();
+			$local["language"] = LANGUAGE;
+			$local["location"] = LANGUAGE;
+			$local["plugins"] = PLUGINS;
+
+
+			$reply = array(
 				"local" => $local,
-				"php_version" => phpversion(),
-				"server_operating_system" => $_SERVER['SERVER_SOFTWARE'],
-				"language" => LANGUAGE,
-				"location" => $_SERVER['SERVER_ADDR'],
-				"plugins" => Common::readDirectory(PLUGINS),
-			));
+				"remote" => UPDATEURL,
+				"github" => GITHUBAPI
+			);
+
+			Common::sendJSON("success", $reply);
+
 		}
 	}
 	//////////////////////////////////////////////////////////////////
@@ -56,21 +56,10 @@ class Update
 
 	public function check() {
 		$local = $this->getLocalData();
-		$remote = $this->getRemoteVersion();
 
 		return json_encode(array(
-			"local" => $local,
-			"remote" => $remote,
+			"local" => $local
 		));
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// Get Remote Version
-	//////////////////////////////////////////////////////////////////
-
-	public function getRemoteVersion() {
-		$remoteurl = Common::getConstant('UPDATEURL', $this->remote);
-		return json_decode(file_get_contents($remoteurl), true);
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -78,10 +67,8 @@ class Update
 	//////////////////////////////////////////////////////////////////
 
 	public function getLocalData() {
-		if (file_exists(DATA."/version.json")) {
-			$data = getJSON("/version.json");
-		}
-		return $data;
+		$current = Common::readJSON('version');
+		return $current;
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -89,26 +76,38 @@ class Update
 	//////////////////////////////////////////////////////////////////
 
 	public function setLocalData() {
-		$current = getJSON('version.json');
-		$data = json_decode(file_get_contents("php://input"));
-		saveJSON('version.json', $current);
+		$current = Common::readJSON('version');
+		Common::saveJSON('version', $current);
 	}
 	//////////////////////////////////////////////////////////////////
 	// OptOut
 	//////////////////////////////////////////////////////////////////
 
 	public function optOut() {
-		$current = getJSON('version.json');
+		$current = Common::readJSON('version');
 		$current['optOut'] = false;
-		saveJSON('version.json', $current);
+		Common::saveJSON('version', $current);
 	}
 	//////////////////////////////////////////////////////////////////
 	// OptIn
 	//////////////////////////////////////////////////////////////////
 
 	public function optIn() {
-		$current = getJSON('version.json');
+		$current = Common::readJSON('version');
 		$current['optOut'] = true;
-		saveJSON('version.json', $current);
+		Common::saveJSON('version', $current);
+	}
+
+	public function getBrowserName() {
+
+		$userAgent = Common::data("HTTP_USER_AGENT", "server");
+		if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) return 'Opera';
+		elseif (strpos($userAgent, 'Edge')) return 'Edge';
+		elseif (strpos($userAgent, 'Chrome')) return 'Chrome';
+		elseif (strpos($userAgent, 'Safari')) return 'Safari';
+		elseif (strpos($userAgent, 'Firefox')) return 'Firefox';
+		elseif (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) return 'Internet Explorer';
+
+		return 'Other';
 	}
 }
