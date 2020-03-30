@@ -7,7 +7,6 @@
 	max-width: 90vw;
 	// overflow: auto;
 	// overflow-y:scroll;
-	background: #333;
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
@@ -16,26 +15,29 @@
 }
 
 #modal_content {
-	
+	background-color: $background;
+
 	form {
 		padding: 10px;
+		background-color: $foreground;
 	}
 
 	h1 {
 		font-size: 24px;
 		padding: 2px 8px;
 		font-weight: 700;
+		// background-color: $dark-blue;
+		background-color: $foreground;
 
 		i {
 			margin-right: 5px;
-			display:none;
+			display: none;
 		}
 	}
 
 	h2 {
 		font-size: 20px;
 		padding: 0;
-		margin-bottom: 5px;
 
 		i {
 			margin-right: 5px;

@@ -1,5 +1,3 @@
-$input-background: #222;
-
 /* GLOBALS */
 a,
 a:link,
@@ -82,54 +80,6 @@ label .icon {
 	font-size: 180%;
 	padding-right: 4px;
 	display: none;
-}
-
-#dependencies,
-button,
-input,
-select,
-textarea {
-	display: block;
-	width: 100%;
-	padding: 7px 10px;
-	margin: 5px 0;
-	background: $input-background;
-	border: none;
-	border-bottom: 2px solid #595959;
-	color: #fff;
-	line-height: normal;
-	@include border-radius;
-}
-
-#dependencies .error {
-	color: red;
-}
-
-#dependencies .success {
-	color: green;
-}
-
-select option {
-	background: $input-background;
-}
-
-textarea {
-	min-height: 100px;
-}
-
-input:focus,
-select:focus,
-textarea:focus {
-	outline: none;
-	background: $input-background;
-	border-bottom: 2px solid #ccc;
-}
-
-input[type="checkbox"] {
-	width: 20px;
-	position: relative;
-	margin: 5px 0 0;
-	padding: 0;
 }
 
 pre {

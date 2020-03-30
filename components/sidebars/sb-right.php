@@ -39,8 +39,8 @@ $right_bar = json_decode($right_bar, true);
 						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
 							$pdata = json_decode($pdata, true);
-							if (isset($pdata[0]['rightbar'])) {
-								foreach ($pdata[0]['rightbar'] as $rightbar) {
+							if (isset($pdata['rightbar'])) {
+								foreach ($pdata['rightbar'] as $rightbar) {
 									if ((!isset($rightbar['admin']) || ($rightbar['admin']) && checkAccess()) || !$rightbar['admin']) {
 										if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
 											echo('<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.i18n($rightbar['title'], "return").'</a>');
