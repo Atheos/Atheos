@@ -7,6 +7,8 @@ header("X-Content-Type-Options: nosniff");
 // header("Content-Security-Policy: script-src 'self' blob: 'unsafe-inline'");
 header("Referrer-Policy: no-referrer");
 header("Feature-Policy: sync-xhr 'self'");
+// header("Access-Control-Allow-Origin: https://www.atheos.io");
+header("Access-Control-Allow-Origin: *");
 
 require_once('common.php');
 
@@ -151,8 +153,8 @@ if (isset($_SESSION['theme'])) {
 						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
 							$pdata = json_decode($pdata, true);
-							if (isset($pdata[0]['bottombar'])) {
-								foreach ($pdata[0]['bottombar'] as $bottommenu) {
+							if (isset($pdata['bottombar'])) {
+								foreach ($pdata['bottombar'] as $bottommenu) {
 									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
 										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
 											echo('<div class="divider"></div>');
