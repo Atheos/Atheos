@@ -1,6 +1,8 @@
-[{
-  "author": "Atheos Team",
-  "version": "0.2",
-  "name": "Atheos Theme",
-  "url": "https://github.com/Atheos/Atheos.git"
-}]
+{
+	"author": "Atheos Team",
+	"description": "The default Atheos theme",
+	"name": "Atheos",
+	"status": "available",
+	"url": "https://github.com/Atheos/Atheos.git",
+	"version": "4.0.0"
+}

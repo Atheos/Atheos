@@ -449,8 +449,13 @@ class Common {
 		}
 
 		if ($type) {
-			$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
+			if ($type === "server") {
+				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
+			} else {
+				$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
+			}
 		}
+
 
 		//$value = htmlspecialchars(strip_tags($value));
 

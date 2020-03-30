@@ -10,12 +10,12 @@
 
 (function(global) {
 	'use strict';
-	var textmode = null;
-
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
 		oX = global.onyx;
+
+	var self = null;
 
 	amplify.subscribe('atheos.loaded', () => atheos.textmode.init());
 
@@ -26,14 +26,14 @@
 		availableTextModes: [],
 
 		init: function() {
-			textmode = this;
+			self = this;
 			ajax({
-				url: textmode.controller,
+				url: self.controller,
 				data: {
 					'action': 'getTextModes'
 				},
 				success: function(data) {
-					textmode.setEditorTextModes(data);
+					self.setEditorTextModes(data);
 				}
 			});
 		},
@@ -48,7 +48,7 @@
 			}
 
 			if (data.textModes !== undefined && data.textModes !== []) {
-				textmode.availableTextModes = data.textModes;
+				self.availableTextModes = data.textModes;
 			}
 			/* Notify listeners. */
 			amplify.publish('textmode.loaded');
@@ -81,12 +81,12 @@
 			}
 
 			ajax({
-				url: textmode.controller,
+				url: self.controller,
 				data: data,
 				success: function(data) {
 					atheos.toast[data.status](data.message);
 					if (data.status !== 'error' && data.extensions !== undefined) {
-						textmode.setEditorTextModes(data);
+						self.setEditorTextModes(data);
 					}
 				}
 			});
@@ -101,7 +101,7 @@
 
 			var code = '<tr><td><input type="text" name="extension" value="" /></td>';
 			code += '<td><select name="textMode">';
-			textmode.availableTextModes.forEach(mode => {
+			self.availableTextModes.forEach(mode => {
 				code += '<option>' + mode + '</option>';
 			});
 

@@ -26,8 +26,8 @@
 
 
 (function(global, $) {
-
 	'use strict';
+
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
@@ -150,6 +150,15 @@
 			atheos.editor.focus();
 
 		},
+
+		setLoadingScreen: function(text) {
+			if (text) {
+				oX('#modal_content').html('<div id="modal_loading"></div><div align="center">' + text + '</div><br>');
+			} else {
+				oX('#modal_content').html('<div id="modal_loading"></div>');
+			}
+		},
+
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
