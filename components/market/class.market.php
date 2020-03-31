@@ -76,8 +76,6 @@ class Market
 		$cache = json_decode($string);
 		Common::debug($cache);
 
-
-
 		Common::saveJSON("market", $cache, "cache");
 		Common::sendJSON("success", $cache);
 
@@ -91,6 +89,8 @@ class Market
 		if (substr($repo, -4) == '.git') {
 			$repo = substr($repo, 0, -4);
 		}
+
+		// For manual install, there will be no type, so it checks the github repo to detect the type.
 		if ($type == '') {
 			$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/plugin.json'));
 			if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
@@ -104,29 +104,40 @@ class Market
 				}
 			}
 		} else {
-			$reponame = explode('/', $repo);
-			$tmp = file_get_contents($this->url.'/?t='.rtrim($type, "s").'&i='.str_replace("-master", "", $reponame[sizeof($repo)-1]));
+			//Used to ping the market server to let Atheos that it was installed. Tracking / Stats; no need right now.
+			// $reponame = explode('/', $repo);
+			// $tmp = file_get_contents($this->url.'/?t='.rtrim($type, "s").'&i='.str_replace("-master", "", $reponame[sizeof($repo)-1]));
 		}
+
 		if (file_put_contents(BASE_PATH.'/'.$type.'/'.$name.'.zip', fopen($repo.'/archive/master.zip', 'r'))) {
 			$zip = new ZipArchive;
 			$res = $zip->open(BASE_PATH.'/'.$type.'/'.$name.'.zip');
+
 			// open downloaded archive
 			if ($res === true) {
 				// extract archive
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					die(formatJSEND("error", "Unable to open ".$name.".zip"));
+					Common::sendJSON("error", "Unable to extract Archive.");
+					die;
 				}
+
 			} else {
-				die(formatJSEND("error", "ZIP Extension not found"));
+				Common::sendJSON("error", "ZIP Extension not found.");
+				die;
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
+			$path = glob(BASE_PATH . "/$type/*$name*")[0];
+			if (path) {
+				rename($path, BASE_PATH. "/$type/$name");
+			}
 			// Response
-			echo formatJSEND("success", null);
+			Common::sendJSON("success", "Successfully installed $repo.");
 		} else {
-			die(formatJSEND("error", "Unable to download ".$repo));
+			Common::sendJSON("error", "Unable to download $repo.");
+			die;
 		}
 	}
 

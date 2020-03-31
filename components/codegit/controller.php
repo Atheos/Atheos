@@ -44,7 +44,7 @@ switch ($action) {
 			}
 			Common::sendJSON("success", 'test');
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -56,7 +56,7 @@ switch ($action) {
 				echo '{"status":"error","message":"' . $CodeGit->result . '!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -64,7 +64,7 @@ switch ($action) {
 		if ($path && $repo && isset($_GET['init_submodules'])) {
 			echo $CodeGit->cloneRepo(getWorkspacePath($path), $repo, $_GET['init_submodules']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -77,7 +77,7 @@ switch ($action) {
 				Common::sendJSON("success", $result);
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -102,7 +102,7 @@ switch ($action) {
 				Common::sendJSON("error", "Files could not be committed.");
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.$path");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -115,7 +115,7 @@ switch ($action) {
 				echo $result;
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -127,7 +127,7 @@ switch ($action) {
 				echo '{"status":"error","message":"Failed to undo changes!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -140,7 +140,7 @@ switch ($action) {
 				echo '{"status":"success","data":'. json_encode($result) .'}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -166,7 +166,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Remote removed!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -179,7 +179,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Remote renamed!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -192,7 +192,7 @@ switch ($action) {
 				echo '{"status":"success","data":'. json_encode($result) .'}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -205,7 +205,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Remote checkedout!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -218,7 +218,7 @@ switch ($action) {
 				echo '{"status":"success","data":'. json_encode($result) .'}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -231,7 +231,7 @@ switch ($action) {
 				echo '{"status":"success","message": "New branch created."}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -244,7 +244,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Branch deleted!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -257,7 +257,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Switched to branch: ' . $_GET['name'] .'!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -283,7 +283,7 @@ switch ($action) {
 				echo '{"status":"success","message":"Branch merged!"}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -291,7 +291,7 @@ switch ($action) {
 		if ($path && isset($_GET['remote']) && isset($_GET['branch'])) {
 			echo $CodeGit->push(getWorkspacePath($path), $_GET['remote'], $_GET['branch']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -299,7 +299,7 @@ switch ($action) {
 		if ($path && isset($_GET['remote']) && isset($_GET['branch'])) {
 			echo $CodeGit->pull(getWorkspacePath($path), $_GET['remote'], $_GET['branch']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -307,7 +307,7 @@ switch ($action) {
 		if ($path && isset($_GET['remote'])) {
 			echo $CodeGit->fetch(getWorkspacePath($path), $_GET['remote']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -315,7 +315,7 @@ switch ($action) {
 		if ($path && isset($_GET['old_name']) && isset($_GET['new_name'])) {
 			echo $CodeGit->renameItem(getWorkspacePath($path), $_GET['old_name'], $_GET['new_name']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -323,7 +323,7 @@ switch ($action) {
 		if ($repo && $path && isset($_GET['submodule'])) {
 			echo $CodeGit->submodule(getWorkspacePath($repo), $path, $_GET['submodule']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -331,7 +331,7 @@ switch ($action) {
 		if ($path) {
 			echo $CodeGit->initSubmodule(getWorkspacePath($path));
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -344,7 +344,7 @@ switch ($action) {
 				Common::sendJSON("error", "Failed to get file stats.");
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -352,7 +352,7 @@ switch ($action) {
 		if ($path && isset($_GET['commit'])) {
 			echo $CodeGit->showCommit(getWorkspacePath($path), $_GET['commit']);
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -365,7 +365,7 @@ switch ($action) {
 				echo $result;
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -378,7 +378,7 @@ switch ($action) {
 				echo '{"status":"success","data":'. json_encode($result) .'}';
 			}
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -387,7 +387,7 @@ switch ($action) {
 			$settings = $CodeGit->getSettings(getWorkspacePath($path));
 			echo '{"status":"success","data":'. json_encode($settings) .'}';
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
@@ -406,7 +406,7 @@ switch ($action) {
 			$CodeGit->setSettings($settings, getWorkspacePath($path));
 			echo '{"status":"success","message":"Settings saved"}';
 		} else {
-			Common::sendJSON("error", "Missing parameter.");
+			Common::sendJSON("E403g");
 		}
 		break;
 
