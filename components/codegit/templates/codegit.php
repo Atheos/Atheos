@@ -24,8 +24,8 @@ if ($action === "loadPanel") {
 		case 'log':
 			include('major/log.php');
 			break;
-		case 'push':
-			include('major/push.html');
+		case 'pull_push':
+			include('major/pull_push.php');
 			break;
 		case 'remote':
 			include('major/remote.html');
