@@ -81,6 +81,22 @@
 				};
 			});
 
+			// for (var key in self.addons) {
+			// 	addon = self.addons[key];
+
+			// 	if (temp.hasOwnProperty(key)) {
+			// 		var iVersion = addon.version,
+			// 			uVersion = temp[key].version;
+
+			// 		if (self.compareVersions(iVersion, uVersion) < 0) {
+			// 			addon = temp[key];
+			// 			addon.status = 'updatable';
+			// 		}
+
+			// 		delete self.cache[key];
+			// 	}
+			// }
+
 			self.cache = temp;
 
 		},
@@ -169,13 +185,13 @@
 				}
 
 				if (addon.status === 'updatable') {
-					addon.action = `<a class="fas fa-sync-alt" onclick="atheos.market.update(${key});return false;"></a>`;
-					addon.action += `<a class="fas fa-times-circle" onclick="atheos.market.uninstall(${key});return false;"></a>`;
+					addon.action = `<a class="fas fa-sync-alt" onclick="atheos.market.update('${key}');return false;"></a>`;
+					addon.action += `<a class="fas fa-times-circle" onclick="atheos.market.uninstall('${key}');return false;"></a>`;
 				} else {
-					addon.action = `<a class="fas fa-times-circle" onclick="atheos.market.uninstall(${key});return false;"></a>`;
+					addon.action = `<a class="fas fa-times-circle" onclick="atheos.market.uninstall('${key}');return false;"></a>`;
 				}
 
-				addon.action += `<a class="fas fa-external-link-alt" onclick="atheos.market.open(${key});return false;"></a>`;
+				addon.action += `<a class="fas fa-external-link-alt" onclick="atheos.market.openLink('${key}');return false;"></a>`;
 
 
 				element = `<tr>
@@ -195,8 +211,8 @@
 			for (key in self.cache) {
 				addon = self.cache[key];
 
-				addon.action = `<a class="fas fa-plus-circle" onclick="atheos.market.install(${key});return false;"></a>`;
-				addon.action += `<a class="fas fa-external-link-alt" onclick="atheos.market.open(${key});return false;"></a>`;
+				addon.action = `<a class="fas fa-plus-circle" onclick="atheos.market.install('${key}');return false;"></a>`;
+				addon.action += `<a class="fas fa-external-link-alt" onclick="atheos.market.openLink('${key}');return false;"></a>`;
 
 				element = `<tr>
 				<td>${addon.name}</td>
@@ -214,6 +230,18 @@
 			// self.addons.forEach(function(addon) {
 
 			// });
+		},
+
+		findAddon: function(name) {
+			var addon = false;
+			if (self.cache.hasOwnProperty(name)) {
+				addon = self.cache[name];
+
+			} else if (self.addons.hasOwnProperty(name)) {
+				addon = self.addons[name];
+
+			}
+			return addon;
 		},
 
 		compareVersions: function(v1, v2) {
@@ -237,7 +265,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Search marketplace
 		//////////////////////////////////////////////////////////////////
-
 		search: function(e, query, note) {
 			var key = e.charCode || e.keyCode || e.which;
 			if (query !== '' && key == 13) {
@@ -252,52 +279,65 @@
 		//////////////////////////////////////////////////////////////////
 		// Open in browser
 		//////////////////////////////////////////////////////////////////                
-
-		openInBrowser: function(path) {
-			window.open(path, '_newtab');
+		openLink: function(name) {
+			var addon = self.findAddon(name);
+			if (addon) {
+				window.open(addon.url, '_newtab');
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Install
 		//////////////////////////////////////////////////////////////////
-
-		install: function(page, type, name, repo) {
-			if (repo !== '') {
-				atheos.modal.setLoadingScreen('Installing ' + name + '...');
-				ajax({
-					url: self.controller,
-					data: {
-						action: 'install',
-						type: 'type',
-						name: 'name',
-						repo: 'repo'
-					},
-					success: function(data) {
-						atheos.toast.show(data);
-						self.list(page, true);
-					}
-				});
-			} else {
+		install: function(name, manual) {
+			var addon = self.findAddon(name);
+			log(addon);
+			log(name);
+			if (!addon) {
 				atheos.toast.show('error', 'No Repository URL');
+				return;
 			}
+
+			atheos.modal.setLoadingScreen('Installing ' + name + '...');
+
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'install',
+					type: addon.type,
+					name: addon.name,
+					repo: addon.url
+				},
+				success: function(data) {
+					atheos.toast.show(data);
+					atheos.market.list();
+
+				}
+			});
+
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Remove
 		//////////////////////////////////////////////////////////////////
+		remove: function(name) {
+			var addon = self.findAddon(name);
+			if (!addon) {
+				atheos.toast.show('error', 'No Repository URL');
+				return;
+			}
 
-		remove: function(page, type, name) {
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
 			ajax({
 				url: self.controller,
 				data: {
-					action: 'remove',
-					type: 'type',
-					name: 'name'
+					action: 'remote',
+					type: addon.type,
+					name: addon.name
 				},
 				success: function(data) {
 					atheos.toast.show(data);
-					self.list(page, true);
+					atheos.market.list();
 				}
 			});
 		},
@@ -305,19 +345,27 @@
 		//////////////////////////////////////////////////////////////////
 		// Update
 		//////////////////////////////////////////////////////////////////
+		update: function(name) {
+			var addon = self.findAddon(name);
+			if (!addon) {
+				atheos.toast.show('error', 'No Repository URL');
+				return;
+			}
 
-		update: function(page, type, name) {
 			atheos.modal.setLoadingScreen('Updating ' + name + '...');
+
 			ajax({
 				url: self.controller,
 				data: {
 					action: 'update',
-					type: 'type',
-					name: 'name'
+					type: addon.type,
+					name: addon.name,
+					repo: addon.url
 				},
 				success: function(data) {
 					atheos.toast.show(data);
-					self.list(page, false);
+					atheos.market.list();
+
 				}
 			});
 		},

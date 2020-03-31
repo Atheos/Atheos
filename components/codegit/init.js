@@ -366,10 +366,11 @@
 
 
 		push: function() {
-			var codegit = this;
-			var remote = $('.git_push_area #git_remotes').val();
-			var branch = $('.git_push_area #git_branches').val();
-			this.showDialog('overview', this.location);
+			var remote = oX('.git_push_area #git_remotes').value();
+			var branch = oX('.git_push_area #git_branches').value();
+			
+			// this.showDialog('overview', this.location);
+			
 			$.getJSON(this.path + 'controller.php?action=push&path=' + this.location + '&remote=' + remote + '&branch=' + branch, function(result) {
 				if (result.status == 'login_required') {
 					atheos.toast.show('error', result.message);

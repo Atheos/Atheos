@@ -621,7 +621,6 @@
 							newName: newName
 						},
 						success: function(data) {
-							console.log(data);
 							if (data.status !== 'error') {
 								atheos.toast.show('success', 'File Renamed');
 								var node = oX('#file-manager a[data-path="' + path + '"]'),
@@ -632,7 +631,10 @@
 								span.text(newName);
 								if (type === 'file') { // Change icons for file
 									icon.removeClass();
-									icon.addClass(fileIcons.getClassWithColor(newName));
+									var ico = fileIcons.getClassWithColor(newName);
+									if (ico) {
+										icon.addClass(fileIcons.getClassWithColor(newName));
+									}
 								} else { // Change pathing on any sub-files/directories
 									self.repathChildren(path, newPath);
 								}
