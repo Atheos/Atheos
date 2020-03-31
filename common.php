@@ -190,12 +190,18 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Localization
 	//////////////////////////////////////////////////////////////////
-	public static function i18n($key, $type = "return") {
+	public static function i18n($key, $type = "echo", $args = array()) {
+		if (is_array($type)) {
+			$args = $type;
+			$type = "echo";
+		}
 		global $lang;
 		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
-		// foreach ($args as $k => $v)
-		// $return = str_replace("%{".$k."}%", $v, $return);
+
+		foreach ($args as $k => $v) {
+			$return = str_replace("%{".$k."}%", $v, $return);
+		}
 		if ($type == "echo") {
 			echo $return;
 		} else {
@@ -522,8 +528,8 @@ class Common {
 // Wrapper for old method names
 //////////////////////////////////////////////////////////////////
 
-function i18n($key, $type = "echo") {
-	return Common::i18n($key, $type);
+function i18n($key, $type = "echo", $args = array()) {
+	return Common::i18n($key, $type, $args);
 }
 function checkSession() {
 	Common::checkSession();
