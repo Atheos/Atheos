@@ -103,7 +103,7 @@ switch ($_GET['action']) {
 		// Get project list
 		$projects = getJSON('projects.php');
 		$users = Common::readJSON("users");
-		$username = Common::data("username");		
+		$username = Common::data("username");
 		// Get control list (if exists)
 		$projects_assigned = false;
 		if (file_exists(BASE_PATH . "/data/" . $username . '_acl.php')) {
@@ -155,7 +155,7 @@ switch ($_GET['action']) {
 		<form>
 			<input type="hidden" name="username" value="<?php echo($_GET['username']); ?>">
 			<label><?php i18n("Confirm User Deletion"); ?></label>
-			<pre><?php i18n("Account:"); ?> <?php echo($_GET['username']); ?></pre>
+			<pre><?php i18n("Account:"); echo($_GET['username']); ?></pre>
 			<button class="btn-left"><?php i18n("Confirm"); ?></button>
 			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
@@ -167,12 +167,13 @@ switch ($_GET['action']) {
 	//////////////////////////////////////////////////////////////////////
 
 	case 'password':
-
-		if ($_GET['username'] == 'undefined') {
-			$username = $_SESSION['user'];
-		} else {
-			$username = $_GET['username'];
+		$username = Common::data("username");
+		
+		if (!$username || $username === "undefined") {
+			$username = Common::data("user", "session");
 		}
+
+		$username = ucfirst($username);
 
 		?>
 		<form>
@@ -181,7 +182,7 @@ switch ($_GET['action']) {
 			<input type="password" name="password1" autofocus="autofocus">
 			<label><?php i18n("Confirm Password"); ?></label>
 			<input type="password" name="password2">
-			<button class="btn-left"><?php i18n("Change %{username}%&apos;s Password", array("username" => ucfirst($username))) ?></button>
+			<button class="btn-left"><?php i18n("Change %{username}%&apos;s Password", array("username" => $username)) ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 		<?php

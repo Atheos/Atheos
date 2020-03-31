@@ -42,7 +42,7 @@ switch ($action) {
 			<form>
 				<input type="hidden" name="archive" value="">
 				<input type="hidden" name="remoteversion" value="">
-				<label><?php i18n("Update Check"); ?></label>
+				<h1><?php i18n("Update Check"); ?></h1>
 				<br><table>
 					<tr><td width="40%"><?php i18n("Your Version"); ?></td><td><?php echo $local['atheos_version']; ?></td></tr>
 					<tr><td width="40%"><?php i18n("Latest Version"); ?></td><td id="remote_latest"></td></tr>
