@@ -1,4 +1,5 @@
 <?php
+// Germantranslation
 $lang = array(
 	"No"													=> "Nein",
 	"On"													=> "An",
@@ -104,7 +105,6 @@ $lang = array(
 	"Search Files:"											=> "Datei suchen:",
 	"New Extension"											=> "Neues Erweiterung",
 	"Initial Setup"											=> "Erst Einrichtung",
-	"Reload Codiad"											=> "Atheos neu laden",
 	"Indent Guides"											=> "Indent Guides",
 	"Inline Preview"										=> "Inline-Vorschau",
 	"Close Uploader"										=> "Uploader schließen",
@@ -118,7 +118,6 @@ $lang = array(
 	"Current Project"										=> "Aktuelles Projekt",
 	"Editor Settings"										=> "Editor Einstellungen",
 	"System Settings"										=> "Systemeinstellungen",
-	"Download Codiad"										=> "Atheos herunterladen",
 	"Account Deleted"                                       => "Benutzer gelöscht",
 	"Create Duplicate"										=> "Duplikat erstellen",
 	"Confirm Password"										=> "Passwort bestätigung",
@@ -128,11 +127,9 @@ $lang = array(
 	"...from Git Repo"										=> "...vom Git Repo",
 	"Persistent Modal"										=> "Persistent Modal",
 	"Split Vertically"										=> "Bildschirm vertikal teilen",
-	"Changes on Codiad"										=> "Änderungen bei Atheos",
 	"Overwrite Original"									=> "Original überschreiben",
 	"Workspace Projects"									=> "Meine Projekte",
 	"Installation Error"									=> "Installationsfehler",
-	"Codiad Marketplace"									=> "Atheos Marktplatz",
 	"Regular expression"									=> "Regulärer Ausdruck",
 	"Split Horizontally"									=> "Bildschirm horizontal teilen",
 	"Close Unsaved File?"									=> "Nicht gesicherte Dateien schließen?",
@@ -181,8 +178,21 @@ $lang = array(
 	"Would you like to overwrite or duplicate the following:"																		=> "Möchten Sie das Folgende überschreiben oder duplizieren:",
 	"Please make sure the following exist and are writeable:"																		=> "Bitte vergewissern Sie sich, dass die folgenden Informationen vorhanden und beschreibbar sind:",
 	"Please make sure these environmental variables are set:"																		=> "Bitte stellen Sie sicher, dass diese Umgebungsvariablen eingestellt sind:",
-	"Note: Your installation is a nightly build. Codiad might be unstable."															=> "Hinweis: Ihre Installation ist ein Nightly Build. Atheos könnte instabil sein.",
 	"Connection to the market place can not be made. Please check your internet connection."										=> "Die Verbindung zum Marktplatz kann nicht hergestellt werden. Bitte überprüfen Sie Ihre Internetverbindung.",
-	"Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."		=> "Hinweis: Dies funktioniert nur, wenn Ihr Git-Repo NICHT eine interaktive Authentifizierung erfordert und Ihr Server Git installiert hat."
+	"Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."		=> "Hinweis: Dies funktioniert nur, wenn Ihr Git-Repo NICHT eine interaktive Authentifizierung erfordert und Ihr Server Git installiert hat.",
+// new / renamed since v4.0.0
+	"File Manager"						=> "Datei-Manager",
+	"CodeGit Settings"					=> "CodeGit-Einstellungen",
+	"Indent Guides" 					=> "Hinweise einrücken.",
+	"Left Sidebar Trigger"				=> "Linker Sidebar-Auslöser",
+	"Disable repo-wide status"			=> "Repo-weiten Status deaktivieren",
+	"Disable repo-wide status header"	=> "Repo-weiten Status-Header deaktivieren",
+	"Suppress diff on commit"			=> "Diff bei der Übergabe unterdrücken",
+	"Save Extensions"					=> "Erweiterungen speichern",
+	"Changes On Atheos"					=> "Änderungen bei Atheos",
+	"Reload Atheos"						=> "Atheos neu laden",
+	"Download Atheos"					=> "Atheos herunterladen",
+	"Atheos Marketplace"				=> "Atheos Marktplatz",
+	"Note: Your installation is a nightly build. Codiad might be unstable."		=> "Hinweis: Ihre Installation ist ein Nightly Build. Atheos könnte instabil sein."
 );
 ?>
