@@ -41,7 +41,7 @@
 					// Save Language
 					atheos.storage('language', oX('#language').value());
 					// Save Theme
-					atheos.storage('theme', oX('#theme').value());
+					atheos.storage('editor.theme', oX('#theme').value());
 					user.authenticate();
 				});
 
