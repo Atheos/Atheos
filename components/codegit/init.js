@@ -1073,17 +1073,17 @@
 		},
 
 		repoBannerDisabled: function() {
-			var setting = atheos.storage('plugin.codegit.disableRepoBanner');
+			var setting = atheos.storage('codegit.disableRepoBanner');
 			return setting || false;
 		},
 
 		fileStatusDisabled: function() {
-			var setting = atheos.storage('plugin.codegit.disableFileStatus');
+			var setting = atheos.storage('codegit.disableFileStatus');
 			return setting || false;
 		},
 
 		suppressCommitDiff: function() {
-			var setting = atheos.storage('plugin.codegit.suppressCommitDiff');
+			var setting = atheos.storage('codegit.suppressCommitDiff');
 			return setting || false;
 		}
 	};

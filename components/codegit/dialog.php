@@ -35,9 +35,6 @@ switch (Common::data('action')) {
 	case 'checkoutRemote':
 		include('templates/minor/checkoutRemote.html');
 		break;
-	case 'settings':
-		include('templates/minor/settings.html');
-		break;
 	case 'showCommit':
 		include('templates/minor/showCommit.html');
 		break;
