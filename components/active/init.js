@@ -951,12 +951,12 @@
 				* to handle all the offsets, so afterwards we add a fixed offset
 				* just t be sure. */
 			var lsbarWidth = $(".sidebar .handle").width();
-			if (atheos.sidebars.settings.isLeftSidebarOpen) {
+			if (atheos.sidebars.isLeftSidebarOpen) {
 				lsbarWidth = $("#sb_left").width();
 			}
 
 			var rsbarWidth = $(".sidebar .handle").width();
-			if (atheos.sidebars.settings.isRightSidebarOpen) {
+			if (atheos.sidebars.isRightSidebarOpen) {
 				rsbarWidth = $("#sb_right").width();
 			}
 
