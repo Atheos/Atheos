@@ -10,6 +10,8 @@
 @import "modules/codegit";
 @import "modules/codegit/main";
 
+@import "modules/sidebar/main";
+
 
 @import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
 @import "modules/feedback/alert", "modules/feedback/common", "modules/feedback/modal", "modules/feedback/toast";
@@ -21,7 +23,7 @@
 @import "modules/input/checkbox", "modules/input/text", "modules/input/button";
 @import "modules/misc/tables";
 
-@import "modules/project", "modules/settings", "modules/user", "modules/sidebar";
+@import "modules/settings", "modules/user";
  
 /* WEBKIT SCROLLBARS */
 ::-webkit-scrollbar {

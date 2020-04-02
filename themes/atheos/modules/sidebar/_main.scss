@@ -1,0 +1,62 @@
+$sidebar-handle-width: 15px;
+
+.sidebar {
+	position: fixed;
+	top: 0;
+	height: 100%;
+	z-index: 99999;
+	-moz-user-select: none;
+	-khtml-user-select: none;
+	-webkit-user-select: none;
+	user-select: none;
+	background: #1a1a1a;
+	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
+	// letter-spacing: -0.4px;
+	white-space: nowrap;
+}
+
+#sb_left {
+	width: 300px;
+	left: 0;
+	overflow: hidden;
+}
+
+#sb_right {
+	width: 200px;
+	right: -185px;
+	z-index: 99999;
+
+	.category {
+		font-size: $font-size-lg;
+		font-weight: 600;
+		// color:#7F7F7F;
+		color: $accent-color;
+		padding-bottom: 5px;
+		margin-left: 5px;
+	}
+
+	a {
+		margin-left: 5px;
+		display: block;
+		min-width: 100%;
+		cursor: pointer;
+		padding: 5px;
+		@include border-radius;
+
+		&:hover {
+			background-color: #333;
+
+		}
+	}
+
+	hr {
+		height: 0;
+		border: none;
+		border-top: 1px solid #333;
+		padding: 0;
+		margin: 10px 0;
+	}
+
+}
+
+@import "content", "handle", "project_dock", "title";

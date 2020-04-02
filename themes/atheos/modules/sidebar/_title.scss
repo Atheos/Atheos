@@ -1,0 +1,50 @@
+.title {
+	position: absolute;
+	top: 0;
+	height: $topBarHeight;
+
+
+	@include box-shadow;
+	background-color: $foreground;
+	z-index: 9998;
+
+	h2 {
+		font-size: 15px;
+		margin: 10px;
+		display: inline-block;
+	}
+
+	i {
+		display: block;
+		font-size: 15px;
+		color: $icon-color;
+		z-index: 99999;
+		cursor: pointer;
+		margin: 9px 5px;
+		float: left;
+
+		&.active,
+		&:hover {
+			color: $hover;
+		}
+	}
+
+}
+
+#sb_right .title {
+	right: 0;
+	left: $sidebar-handle-width;
+
+	i {
+		float: left;
+	}
+}
+
+#sb_left .title {
+	right: $sidebar-handle-width;
+	left: 0;
+
+	i {
+		float: right;
+	}
+}
