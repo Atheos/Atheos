@@ -29,7 +29,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.filemanager.init());
+	amplify.subscribe('system.loadMajor', () => atheos.filemanager.init());
 
 	atheos.filemanager = {
 
@@ -41,6 +41,7 @@
 		controller: 'components/filemanager/controller.php',
 		dialog: 'components/filemanager/dialog.php',
 		dialogUpload: 'components/filemanager/dialog_upload.php',
+		openTrigger: 'single',
 
 		init: function() {
 			self = this;
@@ -50,6 +51,14 @@
 			common.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
 			common.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
 			common.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
+
+			amplify.subscribe('settings.loaded', function() {
+				var local = atheos.storage('filemanager.openTrigger');
+				if (local === 'single' || local === 'double') {
+					log(local);
+					self.openTrigger = local;
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -72,7 +81,7 @@
 					if (tagName === 'LI') {
 						node = node.find('a')[0];
 					} else {
-						node = oX(node.parent());
+						node = node.parent();
 					}
 				}
 				return node;
@@ -80,7 +89,6 @@
 
 			var nodeFunctions = (function(node) {
 				if (node) {
-					node = oX(node);
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
 						this.openDir(node.attr('data-path'));
 					} else if (node.attr('data-type') === 'file') {
@@ -90,13 +98,13 @@
 			}).bind(this);
 
 			oX('#file-manager').on('click', function(e) {
-				if (!atheos.editor.settings.fileManagerTrigger) {
+				if (self.openTrigger === 'single') {
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
 
 			oX('#file-manager').on('dblclick', function(e) {
-				if (atheos.editor.settings.fileManagerTrigger) {
+				if (self.openTrigger === 'double') {
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
