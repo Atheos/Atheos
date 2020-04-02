@@ -84,16 +84,16 @@
 						break;
 					case 'filemanager.openTrigger':
 						atheos.filemanager.openTrigger = value;
-						break;							
+						break;
 					case 'project.openTrigger':
 						atheos.project.openTrigger = value;
-						break;								
+						break;
 					case 'sidebars.leftOpenOnClick':
 						atheos.sidebars.left.changeTrigger(boolean);
 						break;
 					case 'sidebars.rightOpenOnClick':
 						atheos.sidebars.right.changeTrigger(boolean);
-						break;						
+						break;
 					case 'editor.persistentModal':
 						atheos.editor.setPersistentModal(boolean);
 						break;
@@ -111,7 +111,7 @@
 		// Save Settings
 		//////////////////////////////////////////////////////////////////
 		save: function(key, value) {
-			if (!key || !value) {
+			if (!key || (!value && value !== false)) {
 				return;
 			}
 
@@ -123,9 +123,10 @@
 					value
 				},
 				success: function(reply) {
-					log(reply);
+					if(reply.status === 'error') {
+						atheos.toast.show(reply);
+					}
 				}
-
 			});
 
 			amplify.publish('settings.save');
@@ -148,7 +149,7 @@
 							storage(key, reply[key]);
 						}
 					}
-					
+
 					log(reply);
 
 					amplify.publish('settings.loaded', reply);
