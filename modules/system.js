@@ -37,6 +37,14 @@
 			atheos.codiad.init();
 
 		}
+		// Atheos has three levels of priority loading:
+		//	Critical components should load on major
+		//	Features should load on minor
+		//	Plugins should load on extra
+		amplify.publish('system.loadMajor');
+		amplify.publish('system.loadMinor');
+		amplify.publish('system.loadExtra');
+
 		amplify.publish('atheos.loaded');
 		amplify.publish('atheos.plugins');
 	});

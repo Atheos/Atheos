@@ -9,9 +9,11 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		i18n = global.i18n,
-		o = global.onyx;
+		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.project.init());
+	var self = null;
+
+	amplify.subscribe('system.loadMinor', () => atheos.project.init());
 
 
 	atheos.project = {
@@ -21,46 +23,87 @@
 
 		//projectmanager
 		sideExpanded: true,
+		openTrigger: 'single',
 		current: {
 			name: '',
 			path: ''
 		},
 
 		init: function() {
-			this.loadCurrent();
-			this.loadSide();
+			self = this;
 
-			var project = this;
+			self.loadCurrent();
+			self.loadSide();
 
-			var projectCreate = o('#projects-create'),
-				projectManage = o('#projects-manage'),
-				projectCollpse = o('#projects-collapse');
+			var projectCreate = oX('#projects-create'),
+				projectManage = oX('#projects-manage'),
+				projectCollpse = oX('#projects-collapse');
 
 			if (projectCreate) {
 				projectCreate.on('click', function() {
-					atheos.project.create('true');
+					self.create('true');
 				});
 			}
 
 			if (projectManage) {
 				projectManage.on('click', function() {
-					atheos.project.list();
+					self.list();
 				});
 			}
 
 			if (projectCollpse) {
 				projectCollpse.on('click', function() {
-					if (project.sideExpanded) {
-						project.collapse();
+					if (self.sideExpanded) {
+						self.collapse();
 					} else {
-						project.expand();
+						self.expand();
 					}
 				});
 			}
 
 			amplify.subscribe('chrono.mega', function() {
-				project.getCurrent();
+				self.getCurrent();
 			});
+
+			amplify.subscribe('settings.loaded', function() {
+				var local = atheos.storage('project.openTrigger');
+				if (local === 'single' || local === 'double') {
+					log(local);
+					self.openTrigger = local;
+				}
+			});
+
+			self.nodeListener();
+		},
+
+		nodeListener: function() {
+
+			var nodeFunctions = (function(node) {
+				node = oX(node);
+
+				var tagName = node.el.tagName;
+
+				if (tagName === 'UL') {
+					return false;
+				} else if (tagName !== 'LI') {
+					node = node.parent();
+				}
+				self.open(node.attr('data-project'));
+
+			}).bind(this);
+
+			oX('#project_list .content').on('click', function(e) {
+				if (self.openTrigger === 'single') {
+					nodeFunctions(e.target);
+				}
+			});
+
+			oX('#project_list .content').on('dblclick', function(e) {
+				if (self.openTrigger === 'double') {
+					nodeFunctions(e.target);
+				}
+			});
+
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -81,8 +124,8 @@
 							name: data.name,
 							path: data.path
 						};
-						o('#file-manager').empty();
-						o('#file-manager').html(`<ul><li>
+						oX('#file-manager').empty();
+						oX('#file-manager').html(`<ul><li>
 									<a id="project-root" data-type="root" data-path="${data.path}">
 									<i class="root fa fa-folder medium-blue"></i>
 									<span>${data.name}</span>
@@ -133,9 +176,9 @@
 		loadSide: function() {
 			// $('.sb-projects-content').load();
 			ajax({
-				url: this.dialog + '?action=sidelist&trigger=' + localStorage.getItem('atheos.editor.fileManagerTrigger'),
+				url: this.dialog + '?action=sidelist&',
 				success: function(reply) {
-					o('.sb-projects-content').html(reply);
+					oX('#project_list .content').html(reply);
 					// log(reply);
 					this.sideExpanded = true;
 				}
