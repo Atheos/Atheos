@@ -13,7 +13,7 @@
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
-	amplify.subscribe('atheos.loaded', () => atheos.active.init());
+	amplify.subscribe('system.loadMajor', () => atheos.active.init());
 
 	//////////////////////////////////////////////////////////////////
 	//
@@ -436,7 +436,7 @@
 			} else if (this.history.length > 0) {
 				var prevPath = this.history[this.history.length - 1];
 				var prevSession = this.sessions[prevPath];
-				if ($('#dropdown-list-active-files').has(prevSession.tabThumb).length > 0) {
+				if (prevSession && $('#dropdown-list-active-files').has(prevSession.tabThumb).length > 0) {
 					/* Hide the dropdown menu if needed */
 					this.hideTabDropdownMenu();
 				}
@@ -950,14 +950,14 @@
 				* do we have enough room for the tab list? Its kind of complicated
 				* to handle all the offsets, so afterwards we add a fixed offset
 				* just t be sure. */
-			var lsbarWidth = $(".sidebar-handle").width();
+			var lsbarWidth = $(".sidebar .handle").width();
 			if (atheos.sidebars.settings.isLeftSidebarOpen) {
-				lsbarWidth = $("#sb-left").width();
+				lsbarWidth = $("#sb_left").width();
 			}
 
-			var rsbarWidth = $(".sidebar-handle").width();
+			var rsbarWidth = $(".sidebar .handle").width();
 			if (atheos.sidebars.settings.isRightSidebarOpen) {
-				rsbarWidth = $("#sb-right").width();
+				rsbarWidth = $("#sb_right").width();
 			}
 
 			// var tabListWidth = $("#tab-list-active-files").width();
