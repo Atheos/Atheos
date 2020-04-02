@@ -9,54 +9,61 @@
 class Settings
 {
 
-    //////////////////////////////////////////////////////////////////
-    // PROPERTIES
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// PROPERTIES
+	//////////////////////////////////////////////////////////////////
 
-    public $username    = '';
-    public $settings    = '';
+	public $username = '';
 
-    //////////////////////////////////////////////////////////////////
-    // METHODS
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// METHODS
+	//////////////////////////////////////////////////////////////////
 
-    // -----------------------------||----------------------------- //
+	// -----------------------------||----------------------------- //
 
-    //////////////////////////////////////////////////////////////////
-    // Construct
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Construct
+	//////////////////////////////////////////////////////////////////
 
-    public function __construct()
-    {
-    }
+	public function __construct() {}
 
-    //////////////////////////////////////////////////////////////////
-    // Save User Settings
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Save User Settings
+	//////////////////////////////////////////////////////////////////
 
-    public function Save()
-    {
-        if (!file_exists(DATA . "/settings.php")) {
-            saveJSON('settings.php', array($this->username => array('codiad.username' => $this->username)));
-        }
-        $settings = getJSON('settings.php');
-        // Security: prevent user side overwritten value
-        $this->settings['username'] = $this->username;
-        $settings[$this->username] = $this->settings;
-        saveJSON('settings.php', $settings);
-        echo formatJSEND("success", null);
-    }
+	public function save($key, $value) {
+		$temp = Common::readJSON("settings");
 
-    //////////////////////////////////////////////////////////////////
-    // Load User Settings
-    //////////////////////////////////////////////////////////////////
+		if (!$temp) {
+			$temp = array(
+				$this->username => array("atheos.username" => $this->username)
+			);
+		}
 
-    public function Load()
-    {
-        if (!file_exists(DATA . "/settings.php")) {
-            saveJSON('settings.php', array($this->username => array('codiad.username' => $this->username)));
-        }
-        $settings = getJSON('settings.php');
-        echo formatJSEND("success", $settings[$this->username]);
-    }
+		// Security: prevent user side overwritten value
+		$this->settings["username"] = $this->username;
+
+		$temp[$this->username][$key] = $value;
+
+		Common::saveJSON("settings", $temp);
+
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Load User Settings
+	//////////////////////////////////////////////////////////////////
+
+	public function load() {
+		$temp = Common::readJSON("settings");
+
+		if (!$temp) {
+			$temp = array(
+				$this->username => array("atheos.username" => $this->username)
+			);
+			Common::saveJSON("settings", $temp);
+		}
+
+		Common::sendJSON("success", $temp[$this->username]);
+	}
 }
