@@ -1,0 +1,18 @@
+.sidebar .content {
+	position: absolute;
+	top: $topBarHeight;
+	min-width: 185px;
+	width: 100%;
+}
+
+#sb_left .content {
+	left: 0;
+	right: $sidebar-handle-width;
+	bottom: 280px;
+}
+
+#sb_right .content {
+	left: $sidebar-handle-width;
+	right: 0;
+	height: calc(100% - $topBarHeight);
+}
