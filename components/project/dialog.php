@@ -35,7 +35,7 @@ switch ($_GET['action']) {
 			<?php
 
 			// Get projects JSON data
-			$projects = getJSON('projects.php');
+			$projects = Common::readJSON('projects');
 			sort($projects);
 			foreach ($projects as $project => $data) {
 				$show = true;
@@ -43,19 +43,10 @@ switch ($_GET['action']) {
 					$show = false;
 				}
 				if ($show) {
-					if ($_GET['trigger'] == 'true') {
-						?>
-						<li onclick="codiad.project.open('<?php echo($data['path']); ?>');"><i class="fas fa-archive"></i>
-							<?php echo($data['name']); ?></li>
-
-						<?php
-					} else {
-						?>
-						<li ondblclick="codiad.project.open('<?php echo($data['path']); ?>');"><i class="fas fa-archive"></i>
-							<?php echo($data['name']); ?></li>
-
-						<?php
-					}
+					?>
+					<li data-project="<?php echo($data['path']); ?>"><i class="fas fa-archive"></i>
+						<?php echo($data['name']); ?></li>
+					<?php
 				}
 			}
 			?>
