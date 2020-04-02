@@ -29,7 +29,7 @@
 
 (function(global) {
 	'use strict';
-	
+
 	var sidebars = null;
 
 	var atheos = global.atheos,
@@ -55,54 +55,55 @@
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
-			
 			sidebars = this;
-
-			var	sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
-				sbRightWidth = atheos.storage('sidebars.sb-right-width');
-
-			if (sbLeftWidth !== null) {
-				oX('#sb-left').css({
-					'width': sbLeftWidth + 'px',
-					// 'left': 0 - (sbLeftWidth - 15) + 'px'
-				});
-			}
-			if (sbRightWidth !== null) {
-				oX('#sb-right').css({
-					'width': sbRightWidth + 'px',
-					'right': -(sbRightWidth - 15) + 'px'
-				});
-			}
 
 			this.sbLeft.init();
 			this.sbRight.init();
 
+			amplify.subscribe('settings.loaded', function() {
 
-			sidebars.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
-			sidebars.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
 
-			if (atheos.storage('sidebars.leftLockedVisible') === false) {
-				oX('#sb-left-lock').trigger('click');
-				sidebars.sbLeft.close();
-			}
+				var sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
+					sbRightWidth = atheos.storage('sidebars.sb-right-width');
 
-			if (atheos.storage('sidebars.rightLockedVisible')) {
-				oX('#sb-right-lock').trigger('click');
-				sidebars.sbRight.open();
-			}
+				if (sbLeftWidth !== null) {
+					oX('#sb_left').css({
+						'width': sbLeftWidth + 'px',
+						// 'left': 0 - (sbLeftWidth - 15) + 'px'
+					});
+				}
+				if (sbRightWidth !== null) {
+					oX('#sb_right').css({
+						'width': sbRightWidth + 'px',
+						'right': -(sbRightWidth - 15) + 'px'
+					});
+				}
 
-			amplify.subscribe('settings.loaded', function(settings) {
-				var handleWidth = oX('#sb-left-handle').clientWidth();
+
+				sidebars.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
+				sidebars.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
+
+				if (atheos.storage('sidebars.leftLockedVisible') === false) {
+					oX('#sb_left .lock').trigger('click');
+					sidebars.sbLeft.close();
+				}
+
+				if (atheos.storage('sidebars.rightLockedVisible')) {
+					oX('#sb_right .lock').trigger('click');
+					sidebars.sbRight.open();
+				}
+
+				var handleWidth = oX('.handle').clientWidth();
 
 				var marginL = handleWidth,
 					marginR = handleWidth;
 
 				if (atheos.sidebars.settings.leftLockedVisible) {
-					marginL = oX('#sb-left').clientWidth();
+					marginL = oX('#sb_left').clientWidth();
 				}
 
 				if (atheos.sidebars.settings.rightLockedVisible) {
-					marginR = oX('#sb-right').clientWidth();
+					marginR = oX('#sb_right').clientWidth();
 				}
 
 				oX('#editor-region').css({
@@ -122,9 +123,9 @@
 			timeoutClose: null,
 			hoverDuration: 300,
 			init: function() {
-				this.sidebar = oX('#sb-left');
-				this.handle = oX('#sb-left-handle');
-				this.icon = oX('#sb-left-lock');
+				this.sidebar = oX('#sb_left');
+				this.handle = oX('#sb_left .handle');
+				this.icon = oX('#sb_left .lock');
 
 				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
@@ -132,8 +133,8 @@
 					sidebars.sbLeft.lock();
 				});
 
-				this.handle.on('mousedown', function(e) {
-					sidebars.resize(oX('#sb-left').el, 'left');
+				this.handle.on('mousedown', () => {
+					sidebars.resize(this.sidebar.el, 'left');
 				});
 
 				this.handle.on('click', function() {
@@ -178,7 +179,7 @@
 					clearTimeout(this.timeoutOpen);
 				}
 
-				sidebarWidth = oX('#sb-left').clientWidth();
+				sidebarWidth = this.sidebar.clientWidth();
 
 				this.timeoutClose = setTimeout((function() {
 
@@ -197,13 +198,19 @@
 			lock: function() {
 				var settings = atheos.sidebars.settings;
 				if (settings.leftLockedVisible) {
-					this.icon.replaceClass('fas fa-lock', 'fas fa-unlock');
+					this.icon.replaceClass('fa-lock', 'fa-unlock');
 				} else {
-					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
+					this.icon.replaceClass('fa-unlock', 'fa-lock');
 				}
 				settings.leftLockedVisible = !(settings.leftLockedVisible);
+				atheos.settings.save('sidebars.leftLockedVisible', settings.leftLockedVisible);
+
 				atheos.storage('sidebars.leftLockedVisible', settings.leftLockedVisible);
-			}
+			},
+			changeTrigger: function(t) {
+				settings.leftOpenOnClick = t;
+				storage('sidebars.leftSidebarTrigger', t);
+			},
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Right Sidebar
@@ -216,9 +223,9 @@
 			timeoutClose: null,
 			hoverDuration: 300,
 			init: function() {
-				this.sidebar = oX('#sb-right');
-				this.handle = oX('#sb-right-handle');
-				this.icon = oX('#sb-right-lock');
+				this.sidebar = oX('#sb_right');
+				this.handle = oX('#sb_right .handle');
+				this.icon = oX('#sb_right .lock');
 
 				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
@@ -226,8 +233,8 @@
 					sidebars.sbRight.lock();
 				});
 
-				this.handle.on('mousedown', function(e) {
-					sidebars.resize(oX('#sb-right').el, 'right');
+				this.handle.on('mousedown', () => {
+					sidebars.resize(this.sidebar.el, 'right');
 				});
 
 				this.handle.on('click', function() {
@@ -297,13 +304,18 @@
 			lock: function() {
 				var settings = atheos.sidebars.settings;
 				if (settings.rightLockedVisible) {
-					this.icon.replaceClass('fas fa-lock', 'fas fa-unlock');
+					this.icon.replaceClass('fa-lock', 'fa-unlock');
 				} else {
-					this.icon.replaceClass('fas fa-unlock', 'fas fa-lock');
+					this.icon.replaceClass('fa-unlock', 'fa-lock');
 				}
 				settings.rightLockedVisible = !(settings.rightLockedVisible);
+				atheos.settings.save('sidebars.rightLockedVisible', settings.rightLockedVisible);
 				atheos.storage('sidebars.rightLockedVisible', settings.rightLockedVisible);
-			}
+			},
+			changeTrigger: function(t) {
+				settings.rightOpenOnClick = t;
+				storage('sidebars.rightOpenOnClick', t);
+			},
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Resize Function
@@ -338,9 +350,10 @@
 			function removeListeners() {
 				setTimeout(function() {
 					editor.css('margin-' + side, sidebar.clientWidth + 'px');
+					atheos.settings.save('sidebars.sb-' + side + '-width', sidebar.clientWidth + 'px');
 				}, 200);
 
-				var width = oX('#sb-' + side).clientWidth();
+				var width = oX('#sb_' + side).clientWidth();
 				width = width > 14 ? width : 15;
 
 				atheos.storage('sidebars.sb-' + side + '-width', width);
