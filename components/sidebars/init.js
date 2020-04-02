@@ -35,27 +35,29 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		oX = global.onyx;
+		
+		var self = null;
 
 	amplify.subscribe('atheos.loaded', () => atheos.sidebars.init());
 
 
 	atheos.sidebars = {
-		settings: {
-			leftLockedVisible: true,
-			rightLockedVisible: false,
-			leftOpenOnClick: false,
-			rightOpenOnClick: false,
-			isLeftSidebarOpen: true,
-			isRightSidebarOpen: false,
-			leftSidebarClickOpen: false,
-			rightSidebarClickOpen: false,
-			hoverDuration: 300
-		},
+
+		leftLockedVisible: true,
+		rightLockedVisible: false,
+		leftOpenOnClick: false,
+		rightOpenOnClick: false,
+		isLeftSidebarOpen: true,
+		isRightSidebarOpen: false,
+		leftSidebarClickOpen: false,
+		rightSidebarClickOpen: false,
+		hoverDuration: 300,
+
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
-			sidebars = this;
+			self = this;
 
 			this.sbLeft.init();
 			this.sbRight.init();
@@ -80,8 +82,8 @@
 				}
 
 
-				sidebars.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
-				sidebars.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
+				self.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
+				self.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
 
 				if (atheos.storage('sidebars.leftLockedVisible') === false) {
 					oX('#sb_left .lock').trigger('click');
@@ -90,7 +92,7 @@
 
 				if (atheos.storage('sidebars.rightLockedVisible')) {
 					oX('#sb_right .lock').trigger('click');
-					sidebars.sbRight.open();
+					self.sbRight.open();
 				}
 
 				var handleWidth = oX('.handle').clientWidth();
@@ -98,11 +100,11 @@
 				var marginL = handleWidth,
 					marginR = handleWidth;
 
-				if (atheos.sidebars.settings.leftLockedVisible) {
+				if (self.leftLockedVisible) {
 					marginL = oX('#sb_left').clientWidth();
 				}
 
-				if (atheos.sidebars.settings.rightLockedVisible) {
+				if (self.rightLockedVisible) {
 					marginR = oX('#sb_right').clientWidth();
 				}
 
@@ -130,25 +132,25 @@
 				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
-					sidebars.sbLeft.lock();
+					self.sbLeft.lock();
 				});
 
 				this.handle.on('mousedown', () => {
-					sidebars.resize(this.sidebar.el, 'left');
+					self.resize(this.sidebar.el, 'left');
 				});
 
 				this.handle.on('click', function() {
-					if (sidebars.settings.leftOpenOnClick) { // if trigger set to Click
-						sidebars.sbLeft.open();
+					if (self.leftOpenOnClick) { // if trigger set to Click
+						self.sbLeft.open();
 					}
 				});
 
 				this.sidebar.on('mouseout', function() {
-					sidebars.sbLeft.close();
+					self.sbLeft.close();
 				});
 				this.sidebar.on('mouseover', function() {
-					if (!sidebars.settings.leftOpenOnClick) { // if trigger set to Hover
-						sidebars.sbLeft.open();
+					if (!self.leftOpenOnClick) { // if trigger set to Hover
+						self.sbLeft.open();
 					}
 				});
 			},
@@ -164,7 +166,7 @@
 					oX('#editor-region').css('margin-left', sidebarWidth + 'px');
 
 					setTimeout(function() {
-						atheos.sidebars.settings.isLeftSidebarOpen = true;
+						atheos.sidebars.isLeftSidebarOpen = true;
 						atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
 						atheos.active.updateTabDropdownVisibility();
 					}, 300);
@@ -183,32 +185,31 @@
 
 				this.timeoutClose = setTimeout((function() {
 
-					if (!atheos.sidebars.settings.leftLockedVisible) {
+					if (!self.leftLockedVisible) {
 
 						this.sidebar.css('left', (-sidebarWidth + sidebarHandleWidth) + 'px');
 						oX('#editor-region').css('margin-left', '15px');
 
 						setTimeout(function() {
-							atheos.sidebars.settings.isLeftSidebarOpen = false;
+							atheos.sidebars.isLeftSidebarOpen = false;
 							atheos.active.updateTabDropdownVisibility();
 						}, 300);
 					}
 				}).bind(this), this.hoverDuration);
 			},
 			lock: function() {
-				var settings = atheos.sidebars.settings;
-				if (settings.leftLockedVisible) {
+				if (self.leftLockedVisible) {
 					this.icon.replaceClass('fa-lock', 'fa-unlock');
 				} else {
 					this.icon.replaceClass('fa-unlock', 'fa-lock');
 				}
-				settings.leftLockedVisible = !(settings.leftLockedVisible);
-				atheos.settings.save('sidebars.leftLockedVisible', settings.leftLockedVisible);
+				self.leftLockedVisible = !(self.leftLockedVisible);
+				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible);
 
-				atheos.storage('sidebars.leftLockedVisible', settings.leftLockedVisible);
+				atheos.storage('sidebars.leftLockedVisible', self.leftLockedVisible);
 			},
 			changeTrigger: function(t) {
-				settings.leftOpenOnClick = t;
+				self.leftOpenOnClick = t;
 				storage('sidebars.leftSidebarTrigger', t);
 			},
 		},
@@ -230,24 +231,24 @@
 				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
-					sidebars.sbRight.lock();
+					self.sbRight.lock();
 				});
 
 				this.handle.on('mousedown', () => {
-					sidebars.resize(this.sidebar.el, 'right');
+					self.resize(this.sidebar.el, 'right');
 				});
 
 				this.handle.on('click', function() {
-					if (sidebars.settings.rightOpenOnClick) { // if trigger set to Click
-						sidebars.sbRight.open();
+					if (self.rightOpenOnClick) { // if trigger set to Click
+						self.sbRight.open();
 					}
 				});
 				this.sidebar.on('mouseout', function() {
-					sidebars.sbRight.close();
+					self.sbRight.close();
 				});
 				this.sidebar.on('mouseover', function() {
-					if (!sidebars.settings.rightOpenOnClick) { // if trigger set to Click
-						sidebars.sbRight.open();
+					if (!self.rightOpenOnClick) { // if trigger set to Click
+						self.sbRight.open();
 					}
 				});
 			},
@@ -267,7 +268,7 @@
 					oX('#editor-region').css('margin-right', sidebarWidth + 'px');
 
 					setTimeout(function() {
-						atheos.sidebars.settings.isRightSidebarOpen = true;
+						self.isRightSidebarOpen = true;
 						atheos.active.updateTabDropdownVisibility();
 					}, 300);
 
@@ -285,14 +286,13 @@
 				}
 
 				this.timeoutClose = setTimeout((function() {
-					if (!atheos.sidebars.settings.rightLockedVisible) {
+					if (!self.rightLockedVisible) {
 						this.sidebar.css('right', -(sidebarWidth - sidebarHandleWidth) + 'px');
 
 						oX('#editor-region').css('margin-right', '15px');
 
 						setTimeout(function() {
-							atheos.sidebars.settings.isRightSidebarOpen = false;
-							atheos.sidebars.sbRight.sidebar.trigger('h-resize-init');
+							self.isRightSidebarOpen = false;
 							atheos.active.updateTabDropdownVisibility();
 						}, 300);
 						// oX('#tab-close').style.marginRight = '0px';
@@ -302,18 +302,17 @@
 
 			},
 			lock: function() {
-				var settings = atheos.sidebars.settings;
-				if (settings.rightLockedVisible) {
+				if (self.rightLockedVisible) {
 					this.icon.replaceClass('fa-lock', 'fa-unlock');
 				} else {
 					this.icon.replaceClass('fa-unlock', 'fa-lock');
 				}
-				settings.rightLockedVisible = !(settings.rightLockedVisible);
-				atheos.settings.save('sidebars.rightLockedVisible', settings.rightLockedVisible);
-				atheos.storage('sidebars.rightLockedVisible', settings.rightLockedVisible);
+				self.rightLockedVisible = !(self.rightLockedVisible);
+				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible);
+				atheos.storage('sidebars.rightLockedVisible', self.rightLockedVisible);
 			},
 			changeTrigger: function(t) {
-				settings.rightOpenOnClick = t;
+				self.rightOpenOnClick = t;
 				storage('sidebars.rightOpenOnClick', t);
 			},
 		},
