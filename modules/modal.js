@@ -87,7 +87,8 @@
 			wrapper.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
-				'min-width': width + 'px'
+				'min-width': width + 'px',
+				'height': ''
 			});
 
 			content.html('<div id="modal_loading"></div>');
@@ -152,11 +153,26 @@
 		},
 
 		setLoadingScreen: function(text) {
-			if (text) {
-				oX('#modal_content').html('<div id="modal_loading"></div><div align="center">' + text + '</div><br>');
-			} else {
-				oX('#modal_content').html('<div id="modal_loading"></div>');
+			text = text || 'Loading...';
+
+			var wrapText = "";
+
+			for (var i = 0; i < text.length; i++) {
+				wrapText += '<em>' + text.charAt(i) + '</em>';
 			}
+
+			var loading = `
+			<div class="loader">
+				<div class="ring"></div>
+				<div class="ring"></div>
+				<div class="dot"></div>
+				<h2>${wrapText}</h2>
+			</div>
+			`;
+
+			var screen = oX('#modal_content');
+			screen.css('height', screen.height() + 'px');
+			screen.html(loading);
 		},
 
 		drag: function(wrapper) {
