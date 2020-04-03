@@ -1,51 +1,102 @@
 .handle {
-	width: $sidebar-handle-width;
+	width: $sidebarHandleWidth;
 	height: 100%;
 	z-index: 99999;
 	margin: 0;
 	padding: 0;
-	background: #474747;
+	background: $midground;
 	/*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);*/
 	cursor: col-resize;
 
 	span {
 		display: block;
 		position: absolute;
-		width: 14px;
-		top: 50%;
+		width: 11px;
+		height: 70px;
+		top: calc(50% - 35px);
+		line-height: 66px;
+		font-size: 20px;
 		text-align: center;
-		letter-spacing: -1px;
-		color: #000;
+		letter-spacing: -2px;
+		color: $fontColorMinor;
+	}
+
+	&.unlocked span {
+		width: 30px;
+		background: $midground;
+		z-index: 10;
+		letter-spacing: 0;
+		@include box-shadow;
+
+		&:before,
+		&:after {
+			content: '';
+			height: 20px;
+			width: 18px;
+			position: absolute;
+			background-color: $midground;
+		}
+
+		&:before {
+			top: -6px;
+			border-top: solid 2px $borderLight;
+
+		}
+
+		&:after {
+			bottom: -6px;
+			border-bottom: solid 2px $borderLight;
+		}
 	}
 }
-
-
 
 /* Left Sidebar */
 #sb_left .handle {
 	position: absolute;
 	right: 0;
+	border-right: solid 2px $borderLight;
+
+	&.unlocked span {
+		margin-left: 3px;
+		border-right: 2px solid $borderLight;
+
+		&:before,
+		&:after {
+			right: -2px;
+			border-right: 2px solid $borderLight;
+		}
+
+		&:before {
+			transform: skew(0deg, 30deg);
+		}
+
+		&:after {
+			transform: skew(0deg, -30deg);
+		}
+
+	}
 }
 
-.unlocked .sidebar-handle span {
-	width: 18px;
-	height: 30px;
-	margin-left: -18px;
-	background: #474747;
-	// border-radius: 5px 0px 0px 5px;
-	// border-radius: $border-radius;
-	/*box-shadow: -8px 0px 10px 0px rgba(0, 0, 0, .7);*/
-	// border-left: 2px solid #707070;
-	// color: #c2c2c2;
-	color: $icon-color;
+#sb_right .handle {
+	border-left: solid 2px $borderLight;
 
-	a {
-		font-size: 22px;
-		padding-top: 5px;
+	&.unlocked span {
+		margin-left: -20px;
+		border-left: 2px solid $borderLight;
 
-		&:hover {
-			background-color: transparent;
-
+		&:before,
+		&:after {
+			left: -2px;
+			border-left: 2px solid $borderLight;
 		}
+
+		&:before {
+			transform: skew(0deg, -30deg);
+		}
+
+		&:after {
+			transform: skew(0deg, 30deg);
+		}
+
 	}
 }
