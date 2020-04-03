@@ -23,7 +23,7 @@
 
 @import "modules/textmode", "modules/market";
 
-@import "modules/graphics/icons", "modules/graphics/loading", "modules/graphics/logo";
+@import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
 
 
 @import "modules/misc/contextmenu", "modules/misc/scout";
@@ -32,7 +32,7 @@
 
 @import "modules/settings", "modules/user";
  
-
+// @import "modules/util/cursor";
 
 /* DOCUMENT */
 body,

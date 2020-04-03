@@ -4,13 +4,13 @@ $checkbox-size-lg: 1.5rem;
 
 input[type="checkbox"] {
 
-		width: $checkbox-size-md;
-		height: $checkbox-size-md;
-		position: relative;
-		font-size: $checkbox-size-md;
-		line-height: $checkbox-size-md;
-		font-family: 'Font Awesome 5 Free';
-
+	width: $checkbox-size-md;
+	height: $checkbox-size-md;
+	position: relative;
+	font-size: $checkbox-size-md;
+	line-height: $checkbox-size-md;
+	font-family: 'Font Awesome 5 Free';
+	cursor: pointer;
 
 	&.large {
 		width: $checkbox-size-lg;
@@ -27,7 +27,7 @@ input[type="checkbox"] {
 		bottom: 0;
 		left: 0;
 		color: rgba($background, 0);
-		background-color: $font-color-primary;
+		background-color: $fontColorMajor;
 		box-shadow: inset 0 0 0 1px $background;
 
 		font: {
