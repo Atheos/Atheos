@@ -5,7 +5,7 @@ $right_bar = json_decode($right_bar, true);
 ?>
 <div id="sb_right" class="sidebar">
 
-	<div class="handle">
+	<div class="handle unlocked">
 		<span>|||</span>
 	</div>
 

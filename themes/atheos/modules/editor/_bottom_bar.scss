@@ -1,0 +1,56 @@
+#editor-bottom-bar {
+	//position  : fixed;
+	//bottom    : 0;
+	position: relative;
+	z-index: 1;
+	height: 23px;
+	padding: 5px 15px;
+	background: $foreground;
+	font-size: 12px;
+	color: $font-color-subtle;
+	// border-top: 2px solid #202020;
+	width: 100%;
+	/*box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .9);*/
+}
+
+#cursor-position {
+	position: absolute;
+	right: 30px;
+	bottom: 4px;
+	font-size: 12px;
+	z-index: 99;
+	color: #999;
+}
+
+#current_mode,
+#settings,
+#split {
+	/* Disable text selection on buttons clicks */
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#current_file,
+#current_mode,
+#split {
+	float: left;
+}
+
+#current_mode:hover,
+#split:hover {
+	color: #fff;
+}
+
+.divider {
+	display: block;
+	float: left;
+	height: 14px;
+	width: 1px;
+	background: #333;
+	margin: 0 15px;
+	/*box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, .5);*/
+}

@@ -20,7 +20,7 @@
 		color: $icon-color;
 		z-index: 99999;
 		cursor: pointer;
-		margin: 9px 5px;
+		margin: 9px 4px;
 		float: left;
 
 		&.active,
@@ -33,7 +33,7 @@
 
 #sb_right .title {
 	right: 0;
-	left: $sidebar-handle-width;
+	left: $sidebarHandleWidth;
 
 	i {
 		float: left;
@@ -41,7 +41,7 @@
 }
 
 #sb_left .title {
-	right: $sidebar-handle-width;
+	right: $sidebarHandleWidth;
 	left: 0;
 
 	i {

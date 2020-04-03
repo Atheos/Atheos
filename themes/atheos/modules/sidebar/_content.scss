@@ -2,17 +2,17 @@
 	position: absolute;
 	top: $topBarHeight;
 	min-width: 185px;
-	width: 100%;
+	width: calc(100% - #{$sidebarHandleWidth});
 }
 
 #sb_left .content {
 	left: 0;
-	right: $sidebar-handle-width;
+	right: $sidebarHandleWidth;
 	bottom: 280px;
 }
 
 #sb_right .content {
-	left: $sidebar-handle-width;
+	left: $sidebarHandleWidth;
 	right: 0;
-	height: calc(100% - $topBarHeight);
+	height: calc(100% - #{$topBarHeight});
 }

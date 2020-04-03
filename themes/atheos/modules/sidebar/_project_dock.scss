@@ -8,11 +8,12 @@
 	height: 280px;
 	bottom: 0;
 	left: 0;
-	right: $sidebar-handle-width;
+	right: $sidebarHandleWidth;
 
 	.content {
 		height: calc(100% - #{$topBarHeight});
 		overflow-y: scroll;
+		width: 100%;
 
 		i {
 			color: $accent-color;
