@@ -55,8 +55,6 @@ if ($action === "loadPanel") {
 			<li>
 				<a data-panel="user_config"><i class="fas fa-user-cog"></i><?php i18n("User Config"); ?></a>
 			</li>
-
-			<button class="bottom" onclick="return false;"><?php i18n("Commit"); ?></button>
 		</ul>
 		<div id="panel_view" class="panel">
 			<?php	include('major/overview.php'); ?>
