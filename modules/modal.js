@@ -90,9 +90,11 @@
 				'min-width': width + 'px',
 				'height': ''
 			});
-
-			content.html('<div id="modal_loading"></div>');
-
+			
+			if (self.modalVisible) {
+				self.setLoadingScreen();
+			}
+			
 			ajax({
 				url: url,
 				type: 'GET',
@@ -170,9 +172,10 @@
 			</div>
 			`;
 
-			var screen = oX('#modal_content');
+			var screen = oX('#modal_wrapper');
+			log(screen.height());
 			screen.css('height', screen.height() + 'px');
-			screen.html(loading);
+			oX('#modal_content').html(loading);
 		},
 
 		drag: function(wrapper) {
