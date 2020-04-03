@@ -14,20 +14,13 @@
  * Close All & Dropdown Buttons
  ************************/
 
-#tab-close {
-	right: 20px;
 
-}
-
-#tab-dropdown {
-	right: 45px;
-}
 
 #tab-close,
 #tab-dropdown {
 	position: absolute;
 	top: 8px;
-	height: 35px;
+	height: $topBarHeight;
 	transition: margin-right $animation-duration ease-in-out;
 
 	a {
@@ -39,4 +32,13 @@
 
 		}
 	}
+}
+
+#tab-close {
+	right: 20px;
+
+}
+
+#tab-dropdown {
+	right: 45px;
 }
