@@ -5,9 +5,9 @@
 	margin: 0;
 	// padding-left: 5px;
 	overflow-y: scroll;
-	
-	#project-root + ul {
-		padding-left: 5px;	
+
+	#project-root+ul {
+		padding-left: 5px;
 	}
 
 	ul {
@@ -37,6 +37,7 @@
 		// position: relative;
 		min-width: 100%;
 		cursor: pointer;
+
 		padding: 2px 5px;
 		padding-left: 0px;
 		z-index: 80;
