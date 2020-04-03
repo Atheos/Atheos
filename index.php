@@ -75,7 +75,7 @@ if (isset($_SESSION['theme'])) {
 	//////////////////////////////////////////////////////////////////
 	// LOAD MODULES
 	//////////////////////////////////////////////////////////////////
-	$SourceManager->echoScripts("modules", false);
+	$SourceManager->echoScripts("modules", true);
 
 
 	// Load Plugin CSS Files
@@ -142,6 +142,10 @@ if (isset($_SESSION['theme'])) {
 
 				<div id="editor-bottom-bar">
 					<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
+					<!--<div class="divider"></div>-->
+					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
+					<div class="divider"></div>
+					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 
 					<?php
 
@@ -166,10 +170,6 @@ if (isset($_SESSION['theme'])) {
 						}
 					} ?>
 
-					<div class="divider"></div>
-					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
-					<div class="divider"></div>
-					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<div class="divider"></div>
 					<div id="current_file"></div>
 					<div id="cursor-position">
@@ -204,7 +204,7 @@ if (isset($_SESSION['theme'])) {
 		//////////////////////////////////////////////////////////////////
 		// LOAD COMPONENTS
 		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("components", false);
+		$SourceManager->echoScripts("components", true);
 
 		//////////////////////////////////////////////////////////////////
 		// LOAD PLUGINS

@@ -1,0 +1,61 @@
+/* GLOBALS */
+a,
+a:link,
+a:visited {
+	cursor: pointer;
+}
+
+.hide {
+	display: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.right {
+	float: right;
+}
+
+.left {
+	float: left;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.strong {
+	font-weight: bold;
+}
+
+/* FORMS */
+label {
+	display: block;
+	padding: 0 0 5px;
+	font-size: 14px;
+	font-weight: normal;
+	text-shadow: 0 1px 1px #000;
+}
+
+label .icon {
+	font-weight: normal;
+	font-size: 180%;
+	padding-right: 4px;
+	display: none;
+}
+
+pre {
+	background: $input-background;
+	padding: 10px;
+	margin: 5px 0;
+	font-family: monospace;
+	overflow: auto;
+	@include border-radius;
+	@include box-shadow;
+
+}
+
+hr {
+	margin: 0;
+}

@@ -412,6 +412,25 @@
 				return height;
 			},
 			clientWidth: () => element.clientWidth,
+			width: function() {
+				var init = {
+					'display': element.style.display,
+					'visibility': element.style.visibility,
+					'opacity': element.style.opacity
+				};
+
+				this.css({
+					'display': 'block',
+					'visibility': 'hidden',
+					'opacity': 0
+				});
+
+				var width = parseFloat(window.getComputedStyle(element, null).width.replace('px', ''));
+
+				this.css(init);
+
+				return width;
+			},
 			style: () => element.style,
 			el: element,
 
