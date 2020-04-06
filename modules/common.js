@@ -17,7 +17,7 @@
 // seemed to work.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
+
 (function() {
 	var method;
 	var noop = function() {};
@@ -78,6 +78,14 @@
 
 		getNodeType: function(path) {
 			return oX('#file-manager a[data-path="' + path + '"]').attr('data-type');
+		},
+
+		splitDirectoryAndFileName: function(path) {
+			var index = path.lastIndexOf('/');
+			return {
+				fileName: path.substring(index + 1),
+				directory: (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
+			};
 		},
 
 		_basename: function(path, suffix) {
