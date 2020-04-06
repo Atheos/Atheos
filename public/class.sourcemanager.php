@@ -20,7 +20,7 @@ class SourceManager {
 
 	private $modules = array(
 		"modules/jquery-1.7.2.min.js",
-		"modules/jquery-ui-1.8.23.custom.min.js",
+		// "modules/jquery-ui-1.8.23.custom.min.js",
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
