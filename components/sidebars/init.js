@@ -274,9 +274,6 @@
 						atheos.active.updateTabDropdownVisibility();
 					}, 300);
 
-					// oX('#tab-close').css('margin-right', (sidebarWidth - 10) + 'px');
-					// oX('#tab-dropdown').css('margin-right', (sidebarWidth - 10) + 'px');
-
 				}).bind(this), this.hoverDuration);
 			},
 			close: function() {
@@ -297,8 +294,6 @@
 							self.isRightSidebarOpen = false;
 							atheos.active.updateTabDropdownVisibility();
 						}, 300);
-						// oX('#tab-close').style.marginRight = '0px';
-						// oX('#tab-dropdown').style.marginRight = '0px';
 					}
 				}).bind(this), this.hoverDuration);
 
@@ -344,8 +339,8 @@
 					editor.css('margin-' + side, sidebar.clientWidth + 'px');
 
 					if (side === 'right') {
-						oX('#tab-close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
-						oX('#tab-dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+						oX('#tab_close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
+						oX('#tab_dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
 					}
 				}
 			}

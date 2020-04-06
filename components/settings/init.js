@@ -149,11 +149,7 @@
 							storage(key, reply[key]);
 						}
 					}
-
-					log(reply);
-
 					amplify.publish('settings.loaded', reply);
-
 				}
 			});
 		},
