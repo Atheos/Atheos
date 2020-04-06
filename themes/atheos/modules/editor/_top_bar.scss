@@ -16,29 +16,27 @@
 
 
 
-#tab-close,
-#tab-dropdown {
+#tab_close,
+#tab_dropdown {
 	position: absolute;
 	top: 8px;
 	height: $topBarHeight;
 	transition: margin-right $animation-duration ease-in-out;
 
-	a {
-		font-size: 16px;
-		color: $icon-color;
+	font-size: 16px;
+	color: $icon-color;
 
-		&:hover {
-			color: lighten($icon-color, 30%);
+	&:hover {
+		color: lighten($icon-color, 30%);
 
-		}
 	}
 }
 
-#tab-close {
-	right: 20px;
+#tab_close {
+	right: 10px;
 
 }
 
-#tab-dropdown {
-	right: 45px;
+#tab_dropdown {
+	right: 35px;
 }

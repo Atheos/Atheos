@@ -8,7 +8,10 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		amplify = global.amplify;
+		amplify = global.amplify,
+		oX = global.onyx;
+
+	var self = null;
 
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
@@ -27,233 +30,78 @@
 
 		controller: 'components/active/controller.php',
 
+		tabList: oX('#tab-list-active-files'),
+		dropDownMenu: oX('#dropdown-list-active-files'),
+
 		// Path to EditSession instance mapping
 		sessions: {},
 
 		// History of opened files
 		history: [],
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// Check if a file is open.
-		//
-		// Parameters:
-		//   path - {String}
-		//
-		//////////////////////////////////////////////////////////////////
+		init: function() {
+			self = this;
 
-		isOpen: function(path) {
-			return !!this.sessions[path];
-		},
+			self.initTabDropdownMenu();
+			self.updateTabDropdownVisibility();
 
-		open: function(path, content, mtime, inBackground, focus) {
-			if (focus === undefined) {
-				focus = true;
-			}
+			var activeListener = function(e) {
+				e.stopPropagation();
 
-			var _this = this;
+				var tagName = e.target.tagName;
+				var node = oX(e.target);
 
-			if (this.isOpen(path)) {
-				if (focus) this.focus(path);
-				return;
-			}
-			var ext = atheos.common.getNodeExtension(path);
-			var mode = atheos.editor.selectMode(ext);
-			var fn = function() {
-				//var Mode = require('ace/mode/' + mode)
-				//    .Mode;
-
-				// TODO: Ask for user confirmation before recovering
-				// And maybe show a diff
-				var draft = _this.checkDraft(path);
-				if (draft) {
-					content = draft;
-					atheos.toast.show('success', 'Recovered unsaved content for: ' + path);
+				if (tagName === 'UL') {
+					return;
+				}
+				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
+					node = node.parent('LI');
 				}
 
-				//var session = new EditSession(content, new Mode());
-				var session = new EditSession(content);
-				session.setMode("ace/mode/" + mode);
-				session.setUndoManager(new UndoManager());
-				session.path = path;
-				session.serverMTime = mtime;
-				_this.sessions[path] = session;
-				session.untainted = content.slice(0);
-				if (!inBackground && focus) {
-					atheos.editor.setSession(session);
+				var path = node.attr('data-path');
+
+				//LeftClick = Open
+				if (e.which === 1 && tagName !== 'I') {
+					self.focus(path);
+
+					//MiddleClick = Close
+				} else if (e.which === 2 || tagName === 'I') {
+					var activePath = self.getPath();
+
+					self.remove(path);
+					if (activePath !== null && activePath !== path) {
+						self.focus(activePath);
+					}
+					self.updateTabDropdownVisibility();
 				}
-				_this.add(path, session, focus);
-				/* Notify listeners. */
-				amplify.publish('active.onOpen', path);
 			};
 
-			// Assuming the mode file has no dependencies
-			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
-				fn);
-		},
+			self.tabList.on('click', function(e) {
+				activeListener(e);
+			});
 
-		init: function() {
+			self.dropDownMenu.on('click', function(e) {
+				activeListener(e);
+			});
 
-			var _this = this;
+			self.tabList.on('drag', function(e) {
+				atheos.animation.handleDrag(e.target);
+			});
 
-			_this.initTabDropdownMenu();
-			_this.updateTabDropdownVisibility();
+			self.tabList.on('dragend', function(e) {
+				atheos.animation.handleDrop(e.target);
+			});
 
-			// Focus from list.
-			$('#list-active-files a')
-				.live('click', function(e) {
-					e.stopPropagation();
-					_this.focus($(this).parent('li').attr('data-path'));
-				});
+			self.dropDownMenu.on('drag', function(e) {
+				atheos.animation.handleDrag(e.target);
+			});
 
-			// Focus on left button click from dropdown.
-			$('#dropdown-list-active-files a')
-				.live('click', function(e) {
-					if (e.which == 1) {
-						/* Do not stop propagation of the event,
-							* it will be catch by the dropdown menu
-							* and close it. */
-						_this.focus($(this).parent('li').attr('data-path'));
-					}
-				});
-
-			// Focus on left button mousedown from tab.
-			// $('#tab-list-active-files li.tab-item>a.label')
-			$('#tab-list-active-files li.tab-item')
-				.live('mousedown', function(e) {
-					if(e.target.classList.contains('close')) return;
-					if (e.which == 1) {
-						e.stopPropagation();
-						// _this.focus($(this).parent('li').attr('data-path'));
-						_this.focus($(this).attr('data-path'));
-
-					}
-				});
-
-			// Remove from list.
-			$('#list-active-files a>span')
-				.live('click', function(e) {
-					e.stopPropagation();
-					_this.remove($(this)
-						.parent('a')
-						.parent('li')
-						.attr('data-path'));
-				});
-
-			// Remove from dropdown.
-			$('#dropdown-list-active-files a>span')
-				.live('click', function(e) {
-					e.stopPropagation();
-					/* Get the active editor before removing anything. Remove the
-						* tab, then put back the focus on the previously active
-						* editor if it was not removed. */
-					var activePath = _this.getPath();
-					var pathToRemove = $(this).parents('li').attr('data-path');
-					_this.remove(pathToRemove);
-					if (activePath !== null && activePath !== pathToRemove) {
-						_this.focus(activePath);
-					}
-					_this.updateTabDropdownVisibility();
-				});
-
-			// Remove from tab.
-			$('#tab-list-active-files a.close')
-				.live('click', function(e) {
-					e.stopPropagation();
-					/* Get the active editor before removing anything. Remove the
-						* tab, then put back the focus on the previously active
-						* editor if it was not removed. */
-					var activePath = _this.getPath();
-					var pathToRemove = $(this).parent('li').attr('data-path');
-					_this.remove(pathToRemove);
-					if (activePath !== null && activePath !== pathToRemove) {
-						_this.focus(activePath);
-					}
-					_this.updateTabDropdownVisibility();
-				});
-
-			// Remove from middle button click on dropdown.
-			$('#dropdown-list-active-files li')
-				.live('mouseup', function(e) {
-					if (e.which == 2) {
-						e.stopPropagation();
-						/* Get the active editor before removing anything. Remove the
-							* tab, then put back the focus on the previously active
-							* editor if it was not removed. */
-						var activePath = _this.getPath();
-						var pathToRemove = $(this).attr('data-path');
-						_this.remove(pathToRemove);
-						if (activePath !== null && activePath !== pathToRemove) {
-							_this.focus(activePath);
-						}
-						_this.updateTabDropdownVisibility();
-					}
-				});
-
-			// Remove from middle button click on tab.
-			$('.tab-item')
-				.live('mouseup', function(e) {
-					if (e.which == 2) {
-						e.stopPropagation();
-						/* Get the active editor before removing anything. Remove the
-							* tab, then put back the focus on the previously active
-							* editor if it was not removed. */
-						var activePath = _this.getPath();
-						var pathToRemove = $(this).attr('data-path');
-						_this.remove(pathToRemove);
-						if (activePath !== null && activePath !== pathToRemove) {
-							_this.focus(activePath);
-						}
-						_this.updateTabDropdownVisibility();
-					}
-				});
-
-			// Make list sortable
-			$('#list-active-files')
-				.sortable({
-					placeholder: 'active-sort-placeholder',
-					tolerance: 'intersect',
-					start: function(e, ui) {
-						ui.placeholder.height(ui.item.height());
-					}
-				});
-
-			// Make dropdown sortable.
-			$('#dropdown-list-active-files')
-				.sortable({
-					axis: 'y',
-					tolerance: 'pointer',
-					start: function(e, ui) {
-						ui.placeholder.height(ui.item.height());
-					}
-				});
-
-			// Make tabs sortable.
-			$('#tab-list-active-files')
-				.sortable({
-					items: '> li',
-					axis: 'x',
-					tolerance: 'pointer',
-					containment: 'parent',
-					start: function(e, ui) {
-						ui.placeholder.css('background', 'transparent');
-						ui.helper.css('width', '200px');
-					},
-					stop: function(e, ui) {
-						// Reset css
-						ui.item.css('z-index', '');
-						ui.item.css('position', '');
-					}
-				});
-			/* Woaw, so tricky! At initialization, the tab-list is empty, so
-				* it is not marked as float so it is not detected as an horizontal
-				* list by the sortable plugin. Workaround is to mark it as
-				* floating at initialization time. See bug report
-				* http://bugs.jqueryui.com/ticket/6702. */
-			$('#tab-list-active-files').data('sortable').floating = true;
+			self.dropDownMenu.on('dragend', function(e) {
+				atheos.animation.handleDrop(e.target);
+			});
 
 			// Open saved-state active files on load
-			$.get(_this.controller + '?action=list', function(data) {
+			$.get(self.controller + '?action=list', function(data) {
 				var listResponse = atheos.jsend.parse(data);
 				if (listResponse !== null) {
 					$.each(listResponse, function(index, data) {
@@ -264,7 +112,7 @@
 
 			// Prompt if a user tries to close window without saving all filess
 			window.onbeforeunload = function(e) {
-				if ($('#list-active-files li.changed')
+				if ($('#tab-list-active-files li.changed')
 					.length > 0) {
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
@@ -295,6 +143,54 @@
 
 					});
 			});
+		},
+
+		isOpen: function(path) {
+			return !!self.sessions[path];
+		},
+
+		open: function(path, content, mtime, inBackground, focus) {
+			if (focus === undefined) {
+				focus = true;
+			}
+
+			if (self.isOpen(path)) {
+				if (focus) self.focus(path);
+				return;
+			}
+			var ext = atheos.common.getNodeExtension(path);
+			var mode = atheos.editor.selectMode(ext);
+			var fn = function() {
+				//var Mode = require('ace/mode/' + mode)
+				//    .Mode;
+
+				// TODO: Ask for user confirmation before recovering
+				// And maybe show a diff
+				var draft = self.checkDraft(path);
+				if (draft) {
+					content = draft;
+					atheos.toast.show('success', 'Recovered unsaved content for: ' + path);
+				}
+
+				//var session = new EditSession(content, new Mode());
+				var session = new EditSession(content);
+				session.setMode("ace/mode/" + mode);
+				session.setUndoManager(new UndoManager());
+				session.path = path;
+				session.serverMTime = mtime;
+				self.sessions[path] = session;
+				session.untainted = content.slice(0);
+				if (!inBackground && focus) {
+					atheos.editor.setSession(session);
+				}
+				self.add(path, session, focus);
+				/* Notify listeners. */
+				amplify.publish('active.onOpen', path);
+			};
+
+			// Assuming the mode file has no dependencies
+			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js',
+				fn);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -350,7 +246,6 @@
 
 			var listThumb = this.createListThumb(path);
 			session.listThumb = listThumb;
-			$('#list-active-files').append(listThumb);
 
 			/* If the tab list would overflow with the new tab. Move the
 				* first tab to dropdown, then add a new tab. */
@@ -359,7 +254,7 @@
 				this.moveTabToDropdownMenu(tab);
 			}
 
-			var tabThumb = this.createTabThumb(path);
+			var tabThumb = this.createTabItem(path);
 			$('#tab-list-active-files').append(tabThumb);
 			session.tabThumb = tabThumb;
 
@@ -409,14 +304,11 @@
 				moveToTabList = true;
 			}
 
-			$('#list-active-files li')
-				.removeClass('active');
+			var active = self.tabList.find('.active');
+			active.forEach(function(item) {
+				item.removeClass('active');
+			});
 
-			$('#tab-list-active-files li')
-				.removeClass('active');
-
-			$('#dropdown-list-active-files li')
-				.removeClass('active');
 
 			var session = this.sessions[path];
 
@@ -585,7 +477,6 @@
 				this.removeDraft(tab);
 			}
 			atheos.editor.exterminate();
-			$('#list-active-files').html('');
 			$.get(this.controller + '?action=removeall');
 		},
 
@@ -834,8 +725,8 @@
 			var _this = this;
 
 			var menu = $('#dropdown-list-active-files');
-			var button = $('#tab-dropdown-button');
-			var closebutton = $('#tab-close-button');
+			var button = $('#tab_dropdown');
+			var closebutton = $('#tab_close');
 
 			menu.appendTo($('body'));
 
@@ -863,9 +754,11 @@
 		toggleTabDropdownMenu: function() {
 			var menu = $('#dropdown-list-active-files');
 
+			var rightSidebarWidth = $('#sb_right').width();
+
 			menu.css({
 				top: $("#editor-top-bar").height() + 1 + 'px',
-				right: '22px',
+				right: rightSidebarWidth + 'px',
 				width: '300px'
 			});
 
@@ -889,7 +782,7 @@
 			tab.remove();
 			var path = tab.attr('data-path');
 
-			var tabThumb = this.createMenuItemThumb(path);
+			var tabThumb = this.createDropDownMenuItem(path);
 			if (prepend) $('#dropdown-list-active-files').prepend(tabThumb);
 			else $('#dropdown-list-active-files').append(tabThumb);
 
@@ -912,7 +805,7 @@
 			menuItem.remove();
 			var path = menuItem.attr('data-path');
 
-			var tabThumb = this.createTabThumb(path);
+			var tabThumb = this.createTabItem(path);
 			if (prepend) $('#tab-list-active-files').prepend(tabThumb);
 			else $('#tab-list-active-files').append(tabThumb);
 
@@ -961,9 +854,9 @@
 			}
 
 			// var tabListWidth = $("#tab-list-active-files").width();
-			var dropdownWidth = $('#tab-dropdown').width();
-			var closeWidth = $('#tab-close').width();
-			var room = window.innerWidth - lsbarWidth - rsbarWidth - dropdownWidth - closeWidth - width - 40;
+			var dropdownWidth = $('#tab_dropdown').width();
+			var closeWidth = $('#tab_close').width();
+			var room = window.innerWidth - lsbarWidth - rsbarWidth - dropdownWidth - closeWidth - width - 50;
 			return (room < 0);
 		},
 
@@ -1010,18 +903,29 @@
 			return $('<li data-path="' + path + '"><a title="' + path + '"><span></span><div>' + path + '</div></a></li>');
 		},
 
-		createTabThumb: function(path) {
-			var split = this.splitDirectoryAndFileName(path);
-			return $('<li class="tab-item" data-path="' + path + '"><a class="label" title="' + path + '">' +
+		createTabItem: function(path) {
+			var split = atheos.common.splitDirectoryAndFileName(path);
+
+			var item = '<li draggable="true" class="tab-item" data-path="' + path + '"><a>' +
 				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
-				'</a><a class="close"></a></li>');
+				'</a><i class="close fas fa-times-circle"></i></li>';
+
+			// item = oX(item);
+			return $(item);
 		},
 
-		createMenuItemThumb: function(path) {
-			var split = this.splitDirectoryAndFileName(path);
-			return $('<li data-path="' + path + '"><a title="' + path + '"><span class="label"></span><div class="label">' +
+		createDropDownMenuItem: function(path) {
+			var split = atheos.common.splitDirectoryAndFileName(path);
+
+			var item = '<li draggable="true" data-path="' + path + '"><a>' +
 				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
-				'</div></a></li>');
+				'</a><i class="close fas fa-times-circle"></i></li>'
+
+
+			// item = oX(item);
+
+			return $(item);
+
 		},
 
 	};
