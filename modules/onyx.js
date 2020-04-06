@@ -151,10 +151,15 @@
 	let argToElement = function(selector) {
 		if (selector) {
 			if (typeof selector === 'string') {
-				const tagName = /^<(\w+)>$/.exec(selector);
+				const tagName = /^<(.+)>$/.exec(selector);
 
 				if (tagName !== null) {
-					return document.createElement(tagName[1]);
+					// https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+					var template = document.createElement('template');
+					selector = selector.trim(); // Never return a text node of whitespace as the result
+					template.innerHTML = selector;
+					return template.content.firstChild;
+					// return document.createElement(tagName[1]);
 				} else {
 					return document.querySelector(selector);
 				}
