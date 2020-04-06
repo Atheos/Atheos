@@ -19,7 +19,7 @@
 	atheos.animation = {
 
 		slide: function(direction, target, duration = 500) {
-			
+
 			//Source: https://w3bits.com/javascript-slidetoggle/
 			target.style.overflow = 'hidden';
 			target.style.transitionProperty = 'height, margin, padding';
@@ -65,6 +65,38 @@
 					target.style.display = 'none';
 				}, duration);
 			}
+		},
+
+		handleDrag: function(item) {
+			// Source: https://codepen.io/fitri/pen/VbrZQm?editors=1010
+			// Made with love by @fitri
+
+			const selectedItem = item,
+				list = selectedItem.parentNode,
+				x = event.clientX,
+				y = event.clientY;
+
+			selectedItem.style.opacity = 0;
+
+			selectedItem.classList.add('dragActive');
+			let swapItem = document.elementFromPoint(x, y) === null ? selectedItem : document.elementFromPoint(x, y);
+
+			if (swapItem.tagName !== 'LI' && swapItem.parentNode.tagName === 'LI') {
+				swapItem = swapItem.parentNode;
+			}
+
+			if (list === swapItem.parentNode) {
+				swapItem = swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
+				list.insertBefore(selectedItem, swapItem);
+			}
+		},
+		
+		handleDrop: function(item) {
+			// Source: https://codepen.io/fitri/pen/VbrZQm?editors=1010
+			// Made with love by @fitri
+			
+			item.style.opacity = 1;
+			item.classList.remove('dragActive');
 		}
 
 
