@@ -126,16 +126,10 @@ if (isset($_SESSION['theme'])) {
 
 			<div id="editor-region">
 				<div id="editor-top-bar">
-					<ul id="tab-list-active-files">
-					</ul>
-					<div id="tab-dropdown">
-						<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
-					</div>
-					<div id="tab-close">
-						<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
-					</div>
+					<ul id="tab-list-active-files" class="customSortable"></ul>
+					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
+					<a id="tab_close" class="fas fa-times-circle"></a>
 					<ul id="dropdown-list-active-files"></ul>
-					<div class="bar"></div>
 				</div>
 
 				<div id="root-editor-wrapper"></div>
