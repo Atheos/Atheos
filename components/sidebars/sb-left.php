@@ -31,8 +31,6 @@
 
 		<div id="file-manager"></div>
 
-		<ul id="list-active-files"></ul>
-
 	</div>
 
 	<div id="project_list">
