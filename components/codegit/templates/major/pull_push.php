@@ -4,25 +4,26 @@
 	$repo = $CodeGit->getWorkspacePath($repo);
 
 	$remotes = $CodeGit->getRemotes($repo, $path);
-	$branches = $CodeGit->loadLog($repo, $path);
+	$branches = $CodeGit->getBranches($repo, $path);
 
-	// $url = $CodeGit->repoURL . "/commit/";
-	// onclick="window.open('<?php echo $url . $item["hash"]
-
-	$remoteOptions = '';
-	// $branches = '';
-
+	$remoteOptions = array();
+	$brancheOptions = '';
+	
+	
 	foreach ($remotes as $i => $item) {
-		// echo $item;
-		$item = explode("\n", $item);
-		foreach($item as $x => $line) {
-			// if(preg_match("/^\* remote (.+)/")) {
-				// $item = $line;
-				echo $x . ":" .$line;
-			// }
+		$item = preg_replace("(\(fetch\)|\(push\))", "", $item);
+		$remoteOptions[] = "<option value=\"$item\">$item</option>";
+	}
+	
+	$remoteOptions = array_unique($remoteOptions);
+	$remoteOptions = implode("", $remoteOptions);
+
+	foreach ($branches["branches"] as $i => $item) {
+		if ($item === $branches["current"]) {
+			$brancheOptions .= "<option selected value=\"$item\">$item</option>";
+		} else {
+			$brancheOptions .= "<option value=\"$item\">$item</option>";
 		}
-		// echo $item[0];
-		$remoteOptions .= "<option value=\"$item\">$item</option>";
 	}
 
 	?>
@@ -37,7 +38,9 @@
 		</tr>
 		<tr>
 			<td>Branch:</td>
-			<td><select id="git_branches"></select></td>
+			<td><select id="git_branches">
+				<?php echo $brancheOptions; ?>
+			</select></td>
 		</tr>
 	</table>
 </div>
