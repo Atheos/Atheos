@@ -11,7 +11,7 @@ if ($files) {
 
 $diffs = array();
 foreach ($files as $i => $file) {
-	$diffs[] = $CodeGit->diff($repo, $file);
+	$diffs[] = $CodeGit->loadDiff($repo, $file);
 }
 
 echo "<div id=\"codegit_diff\" class=\"content\">";
