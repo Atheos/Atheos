@@ -309,18 +309,19 @@ class Common {
 	// Format JSON Responses
 	//////////////////////////////////////////////////////////////////
 	public static function sendJSON($status, $text = false) {
-
-		if (is_array($text)) {
-			$reply = $text;
-		} elseif (preg_match('/^[SEWN][0-9]{4}$/', $status)) {
+		if (preg_match('/^[SEWN][0-9]{4}$/', $status)) {
 			$reply = Common::parseStatusCodes($status, $text);
+		} elseif (is_array($text)) {
+			$reply = $text;
+			$reply["status"] = $status ?? "error";
 		} else {
 			$reply = array(
-				"text" => $text ?? "no data"
+				"text" => $text ?? "no data",
+				"status" => $status ?? "error"
 			);
 		}
 
-		$reply["status"] = $status ?? "error";
+
 
 		/// Debug /////////////////////////////////////////////////
 		if (count(Common::$debugMessageStack) == 1) {
@@ -369,7 +370,7 @@ class Common {
 			$reply = array();
 		}
 
-		$reply["code"] = $code;
+		// $reply["code"] = $code;
 
 		if (in_array($code, $codes)) {
 			$reply["text"] = $codes[$code];
