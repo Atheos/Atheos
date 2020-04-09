@@ -146,7 +146,7 @@
 			}
 			if (this.types.hasOwnProperty(type)) {
 				options = extend(this.types[type], options);
-				options.text = options.message || text;
+				options.text = options.message || options.text || text;
 				this.showToast(options);
 			}
 

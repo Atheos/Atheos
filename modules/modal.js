@@ -76,7 +76,7 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var overlay = oX('#overlay') || atheos.common.createOverlay(),
+			var overlay = atheos.common.createOverlay('modal'),
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
 
@@ -119,7 +119,7 @@
 
 
 			wrapper.show();
-			oX('#overlay').show();
+			overlay.show();
 
 			self.modalVisible = true;
 		},
@@ -145,13 +145,12 @@
 
 
 			oX('#modal_content').off('submit');
-			oX('#overlay').hide();
+			oX('#overlay').remove();
 			oX('#modal_wrapper').hide();
 			oX('#modal_content').empty();
 
 			self.modalVisible = false;
 			atheos.editor.focus();
-
 		},
 
 		setLoadingScreen: function(text) {
