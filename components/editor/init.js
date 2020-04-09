@@ -429,7 +429,6 @@
 
 
 			$(window).resize(function() {
-				log("test');");
 				$('#editor-region').trigger('h-resize-init').trigger('v-resize-init');
 			});
 		},
@@ -1316,12 +1315,8 @@
 						e.preventDefault();
 						var line = oX('#modal_content form input[name="line"]').value();
 
-
-						// var line = parseInt(prompt('Enter line number:'), 10);
-
 						if (!isNaN(line)) {
 							atheos.editor.gotoLine(line);
-							atheos.editor.focus();
 						}
 
 						atheos.modal.unload();
@@ -1339,6 +1334,7 @@
 			i = i || this.getActive();
 			if (!i) return;
 			i.gotoLine(line, 0, true);
+			atheos.editor.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////

@@ -61,6 +61,9 @@
 				return;
 			} else {
 				switch (setting) {
+					case 'active.loopBehavior':
+						atheos.active.loopBehavior = value;
+						break;					
 					case 'editor.theme':
 						atheos.editor.setTheme(value);
 						break;
