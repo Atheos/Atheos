@@ -406,10 +406,10 @@
 
 				var height = parseFloat(computedStyle.height.replace('px', ''));
 				if (outerWidth) {
-					width += parseFloat(computedStyle.marginTop.replace('px', ''));
-					width += parseFloat(computedStyle.marginBottom.replace('px', ''));
-					width += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
-					width += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
+					height += parseFloat(computedStyle.marginTop.replace('px', ''));
+					height += parseFloat(computedStyle.marginBottom.replace('px', ''));
+					height += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
+					height += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
 				}
 				this.css(init);
 
