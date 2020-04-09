@@ -190,19 +190,15 @@
 				}
 			}
 		},
-		createOverlay: function() {
+		createOverlay: function(type) {
 			var overlay = oX('<div>');
 
 			overlay.attr('id', 'overlay');
-			overlay.on('click', atheos.alert.unload);
-			overlay.on('click', atheos.modal.unload);
-
-			// overlay.on('click', function(event) {
-			// 	if (event.target.id !== 'modal_overlay') {
-			// 		return;
-			// 	}
-			// 	modal.unload();
-			// }, false);
+			if (type === 'alert') {
+				overlay.on('click', atheos.alert.unload);
+			} else {
+				overlay.on('click', atheos.modal.unload);
+			}
 
 			document.body.appendChild(overlay.el);
 			return overlay;
