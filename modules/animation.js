@@ -14,11 +14,14 @@
 
 (function(global) {
 	'use strict';
+	
 	var atheos = global.atheos;
 
 	atheos.animation = {
 
 		slide: function(direction, target, duration = 500) {
+			
+			// var ogStyles = target.getAttribute('style');
 
 			//Source: https://w3bits.com/javascript-slidetoggle/
 			target.style.overflow = 'hidden';
@@ -98,8 +101,6 @@
 			item.style.opacity = 1;
 			item.classList.remove('dragActive');
 		}
-
-
 	};
 
 })(this);
