@@ -6,8 +6,11 @@
 	color: $font-color-subtle;
 	background: $foreground;
 	/*box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .9);*/
-	overflow: hidden;
+	// overflow: hidden;
 	position: relative;
+	transition: border $transition-duration ease;
+			height: $topBarHeight;
+
 }
 
 /************************
