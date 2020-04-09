@@ -68,7 +68,6 @@
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('project.openTrigger');
 				if (local === 'single' || local === 'double') {
-					log(local);
 					self.openTrigger = local;
 				}
 			});
