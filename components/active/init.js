@@ -1,8 +1,14 @@
-/*
-	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+/*jshint esversion: 6 */
+
+//////////////////////////////////////////////////////////////////////////////80
+// Active
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 
@@ -356,7 +362,7 @@
 			var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
 
 			if (session.status === 'changed') {
-				dialog = {
+				var dialog = {
 					banner: 'Close unsaved file?',
 					data: fileName,
 					actions: {
@@ -398,7 +404,7 @@
 			}
 
 			if (changed) {
-				dialog = {
+				var dialog = {
 					banner: 'Close unsaved file?',
 					data: changedTabs,
 					actions: {
@@ -463,7 +469,7 @@
 					action: 'remove',
 					path: path
 				}
-			})
+			});
 		},
 
 		removeAll: function() {
@@ -552,7 +558,7 @@
 				url: self.controller,
 				data: {
 					action: 'rename',
-					path: path,
+					path: oldPath,
 					newPath: newPath
 				},
 				success: function() {
@@ -561,7 +567,7 @@
 						"newPath": newPath
 					});
 				}
-			})
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -608,7 +614,7 @@
 
 			activeTabs.forEach(function(tab, i) {
 				index = tab.hasClass('active') ? i : index;
-			})
+			});
 
 			if (index === false || activeTabs.length === 0) {
 				return;
@@ -618,7 +624,6 @@
 
 			if (direction === 'up') {
 				index = (index === 0) ? (activeTabs.length - 1) : (index - 1);
-				log(index);
 				newActive = activeTabs[index];
 			} else {
 				index = (index + 1) % activeTabs.length;
@@ -753,7 +758,6 @@
 		},
 
 		moveDropdownMenuItemToTab: function(oldListItem, direction) {
-			log('move');
 			direction = direction || false;
 
 			var path = oldListItem.attr('data-path');
@@ -817,7 +821,7 @@
 			while (!self.isTabListOverflowed(true)) {
 				var menuItem = self.dropDownMenu.find('li:last-child')[0];
 				if (menuItem) {
-					self.moveDropdownMenuItemToTab(menuItem)
+					self.moveDropdownMenuItemToTab(menuItem);
 				} else break;
 			}
 
