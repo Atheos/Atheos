@@ -2,7 +2,16 @@
 <h2><i class="fas fa-sliders-h"></i><?php i18n("System Settings"); ?></h2>
 <table class="settings">
 	<tr>
-		<td><?php i18n("Sidebar Hover Duartion"); ?></td>
+		<td><?php i18n("Active File Loop Behavior"); ?></td>
+		<td>
+			<select class="setting" data-setting="active.loopBehavior">
+				<option value="loopActive" default><?php i18n("Loop only active tabs") ?></option>
+				<option value="loopBoth"><?php i18n("Include Dropdown menu") ?></option>
+			</select>
+		</td>
+	</tr>	
+	<tr>
+		<td><?php i18n("Sidebar Hover Duration"); ?></td>
 		<td>
 			<select class="setting" data-setting="sidebars.hoverDuration">
 				<option value="0">0ms</option>
