@@ -66,7 +66,6 @@
 			wrapper.append(drag);
 			wrapper.append(content);
 
-			// overlay.appendChild(wrapper);
 			document.body.appendChild(wrapper.el);
 
 			return wrapper;
@@ -90,17 +89,21 @@
 				'min-width': width + 'px',
 				'height': ''
 			});
-			
+
 			if (self.modalVisible) {
 				self.setLoadingScreen();
 			}
-			
+
 			ajax({
 				url: url,
 				type: 'GET',
 				data: data,
 				success: function(data) {
 					$('#modal_content').html(data);
+
+					wrapper.css({
+						'height': ''
+					});
 
 					// oX(content).html(data);
 					// var script = oX(oX(content).find('script'));
