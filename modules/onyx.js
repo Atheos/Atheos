@@ -190,32 +190,24 @@
 			return;
 		}
 
-		let insertToAdjacent = (s) => function(e) {
-			if (e instanceof HTMLElement) {
-				e.insertAdjacentElement(s, element);
-			} else {
-				e.element.insertAdjacentElement(s, element);
+		let insertToAdjacent = (location) => function(target) {
+			if (target instanceof HTMLElement) {
+				target.insertAdjacentElement(location, element);
+			} else if ('isOnyx' in target) {
+				target = target.el;
+				target.insertAdjacentElement(location, element);
 			}
 		};
 
-		let insertAdjacent = (s) => function(sOrE) {
-			if (typeof sOrE !== 'string') {
-				if (sOrE instanceof HTMLElement) {
-					element.insertAdjacentElement(s, sOrE);
-				} else if ('isOnyx' in sOrE) {
-					const osel = sOrE.el;
-
-					element.insertAdjacentElement(s, osel);
-
-					for (let i = 1; i < osel.length; i++) {
-						osel.insertAdjacentElement('afterend', osel[i]);
-					}
-				}
-			} else {
-				element.insertAdjacentHTML(s, sOrE);
+		let insertAdjacent = (location) => function(addition) {
+			if (typeof addition === 'string') {
+				element.insertAdjacentHTML(location, addition);
+			} else if (addition instanceof HTMLElement) {
+				element.insertAdjacentElement(location, addition);
+			} else if ('isOnyx' in addition) {
+				addition = addition.el;
+				element.insertAdjacentElement(location, addition);
 			}
-
-			return this;
 		};
 
 		let triggerEvent = function(event) {
@@ -397,7 +389,7 @@
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,
-			height: function() {
+			height: function(outerHeight) {
 				var init = {
 					'display': element.style.display,
 					'visibility': element.style.visibility,
@@ -410,14 +402,21 @@
 					'opacity': 0
 				});
 
-				var height = parseFloat(window.getComputedStyle(element, null).height.replace('px', ''));
+				var computedStyle = window.getComputedStyle(element);
 
+				var height = parseFloat(computedStyle.height.replace('px', ''));
+				if (outerWidth) {
+					width += parseFloat(computedStyle.marginTop.replace('px', ''));
+					width += parseFloat(computedStyle.marginBottom.replace('px', ''));
+					width += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
+					width += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
+				}
 				this.css(init);
 
 				return height;
 			},
 			clientWidth: () => element.clientWidth,
-			width: function() {
+			width: function(outerWidth) {
 				var init = {
 					'display': element.style.display,
 					'visibility': element.style.visibility,
@@ -430,7 +429,15 @@
 					'opacity': 0
 				});
 
-				var width = parseFloat(window.getComputedStyle(element, null).width.replace('px', ''));
+				var computedStyle = window.getComputedStyle(element);
+
+				var width = parseFloat(computedStyle.width.replace('px', ''));
+				if (outerWidth) {
+					width += parseFloat(computedStyle.marginLeft.replace('px', ''));
+					width += parseFloat(computedStyle.marginRight.replace('px', ''));
+					width += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
+					width += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
+				}
 
 				this.css(init);
 
