@@ -172,7 +172,6 @@
 			`;
 
 			var screen = oX('#modal_wrapper');
-			log(screen.height());
 			screen.css('height', screen.height() + 'px');
 			oX('#modal_content').html(loading);
 		},
