@@ -38,7 +38,7 @@ if (isset($_SESSION['theme'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
 	<link defer rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
-	<link defer rel="stylesheet" href="fonts/ubuntu-webfont/webfont.css">
+	<link defer rel="stylesheet" href="fonts/ubuntu/webfont.css">
 	<!--<link rel="stylesheet" href="fonts/victor-mono/webfont.css">-->
 	<link defer rel="stylesheet" href="fonts/file-icons/webfont.css">
 
