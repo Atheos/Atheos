@@ -584,22 +584,6 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Get Selected Text
-		//////////////////////////////////////////////////////////////////
-		getSelectedText: function() {
-			var path = self.getPath();
-			var session = self.sessions[path];
-
-			if (path && self.isOpen(path)) {
-				return session.getTextRange(
-					atheos.editor.getActive()
-					.getSelectionRange());
-			} else {
-				atheos.toast.show('error', 'No Open Files or Selected Text');
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////
 		// Move Up (Key Combo)
 		//////////////////////////////////////////////////////////////////
 		move: function(direction) {
