@@ -60,17 +60,9 @@
 	atheos.common = {
 
 
-		//////////////////////////////////////////////////////////////////
-		// Return the node name (sans path)
-		//////////////////////////////////////////////////////////////////
-
 		getNodeName: function(path) {
 			return path.split('/').pop();
 		},
-
-		//////////////////////////////////////////////////////////////////
-		// Return extension from path
-		//////////////////////////////////////////////////////////////////
 
 		getNodeExtension: function(path) {
 			return path.split('.').pop();
@@ -191,9 +183,12 @@
 			}
 		},
 		createOverlay: function(type) {
-			var overlay = oX('<div>');
+			var overlay = oX('#overlay');
+			if (overlay) {
+				overlay.remove();
+			}
+			overlay = oX('<div id="overlay">');
 
-			overlay.attr('id', 'overlay');
 			if (type === 'alert') {
 				overlay.on('click', atheos.alert.unload);
 			} else {

@@ -353,7 +353,7 @@
 			if (!self.isOpen(path)) return;
 			var session = self.sessions[path];
 
-			var fileName = self.splitDirectoryAndFileName(path).fileName;
+			var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
 
 			if (session.status === 'changed') {
 				dialog = {
@@ -363,11 +363,11 @@
 						'Save & Close': function() {
 							amplify.publish('active.close', path);
 							self.save(path);
-							self.close(path);
+							self.remove(path);
 						},
 						'Discard Changes': function() {
 							amplify.publish('active.close', path);
-							self.close(path);
+							self.remove(path);
 						},
 						'Cancel': function() {
 							// Cancel
@@ -391,7 +391,7 @@
 			var changedTabs = '';
 			for (var path in self.sessions) {
 				if (self.sessions[path].status === 'changed') {
-					var fileName = self.splitDirectoryAndFileName(path).fileName;
+					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
 					changedTabs += fileName + '\n';
 					changed = true;
 				}
@@ -838,13 +838,7 @@
 		// Factory
 		//////////////////////////////////////////////////////////////////
 
-		splitDirectoryAndFileName: function(path) {
-			var index = path.lastIndexOf('/');
-			return {
-				fileName: path.substring(index + 1),
-				directory: (path.indexOf('/') == 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
-			};
-		},
+
 
 		createListItem: function(path) {
 			var split = atheos.common.splitDirectoryAndFileName(path);
