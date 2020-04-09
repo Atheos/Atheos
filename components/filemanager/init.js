@@ -55,7 +55,6 @@
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('filemanager.openTrigger');
 				if (local === 'single' || local === 'double') {
-					log(local);
 					self.openTrigger = local;
 				}
 			});
@@ -255,11 +254,11 @@
 			if (self.noOpen.indexOf(ext) < 0) {
 				ajax({
 					url: self.controller + '?action=open&path=' + encodeURIComponent(path),
-					success: function(data) {
-						if (data.status !== 'error') {
-							atheos.active.open(path, data.data.content, data.data.mtime, false, focus);
+					success: function(reply) {
+						if (reply.status !== 'error') {
+							atheos.active.open(path, reply.data.content, reply.data.mtime, false, focus);
 							if (line) {
-								setTimeout(atheos.active.gotoLine(line), 500);
+								setTimeout(atheos.editor.gotoLine(line), 500);
 							}
 						}
 					}
@@ -337,8 +336,7 @@
 								positive: {
 									message: 'Yes',
 									fnc: function() {
-										atheos.active.close(path);
-										atheos.active.removeDraft(path);
+										atheos.active.remove(path);
 										self.openFile(path);
 									}
 								},
@@ -434,21 +432,16 @@
 						banner: 'Path already exists!',
 						message: 'Would you like to overwrite or duplicate the file?',
 						data: `/${path}/${nodeName}`,
-						actions: [{
-								message: 'Overwrite',
-								fnc: function() {
-									console.log('Overwrite');
-									processPaste(path, false);
-								}
+						actions: {
+							'Overwrite': function() {
+								console.log('Overwrite');
+								processPaste(path, false);
 							},
-							{
-								message: 'Duplicate',
-								fnc: function() {
-									console.log('Duplicate');
-									processPaste(path, true);
-								}
+							'Duplicate': function() {
+								console.log('Duplicate');
+								processPaste(path, true);
 							}
-						]
+						}
 					});
 				} else {
 					processPaste(path, false);
