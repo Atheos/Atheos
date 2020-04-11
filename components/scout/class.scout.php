@@ -68,7 +68,6 @@ class Scout {
 
 					$result['line'] = $data[1];
 					$result['path'] = str_replace("$root/", '', $data[0]);
-					// Common::debug(str_replace("$path", '', $data[0]));
 					$result['string'] = htmlentities(str_replace($data[0] . ":" . $data[1] . ':', '', $line));
 					// $return[$file]['line'] = $data[1];
 					$results[$file][] = $result;
@@ -131,8 +130,6 @@ class Scout {
 					array_push($results, $f);
 				}
 			}
-			Common::debug($path);
-
 
 			if (count($results) > 0) {
 				Common::sendJSON("success", $results);

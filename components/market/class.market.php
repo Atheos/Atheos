@@ -74,7 +74,6 @@ class Market
 	public function saveCache($cache) {
 		$string = Common::data('string');
 		$cache = json_decode($string);
-		Common::debug($cache);
 
 		Common::saveJSON("market", $cache, "cache");
 		Common::sendJSON("success", $cache);
