@@ -270,7 +270,7 @@
 			if (aclSelect) {
 				var projectSelect = oX('#projectSelect').el;
 				var direction = aclSelect.value() === 'false' ? 'close' : 'open';
-				atheos.animation.slide(direction, projectSelect, 300);
+				atheos.ux.slide(direction, projectSelect, 300);
 			}
 		},
 
