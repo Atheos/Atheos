@@ -108,6 +108,15 @@
 				}
 			});
 
+			oX('#file-manager').on('drag', function(e) {
+				log('test');
+				// atheos.ux.handleDrag(e.target);
+			});
+
+			oX('#file-manager').on('dragend', function(e) {
+				// atheos.ux.handleDrop(e.target);
+			});
+
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -128,7 +137,7 @@
 
 				var list = node.siblings('ul')[0];
 				if (list) {
-					atheos.animation.slide('close', list.el, slideDuration);
+					atheos.flow.slide('close', list.el, slideDuration);
 					if (icon) {
 						icon.replaceClass('fa-minus', 'fa-plus');
 					}
@@ -172,7 +181,7 @@
 								node.after(appendage);
 								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
-									atheos.animation.slide('open', list.el, slideDuration);
+									atheos.flow.slide('open', list.el, slideDuration);
 								}
 							}
 							amplify.publish('filemanager.openDir', {
@@ -216,7 +225,7 @@
 
 			fileClass = fileClass || 'fa fa-file medium-green';
 
-			return `<li>
+			return `<li draggable="true">
 						<a data-type="${type}" data-path="${path}">
 							<i class="expand ${nodeClass}"></i>
 							<i class="${fileClass}"></i>
@@ -256,7 +265,7 @@
 					url: self.controller + '?action=open&path=' + encodeURIComponent(path),
 					success: function(reply) {
 						if (reply.status !== 'error') {
-							atheos.active.open(path, reply.data.content, reply.data.mtime, false, focus);
+							atheos.active.open(path, reply.data.content, reply.data.mtime, focus);
 							if (line) {
 								setTimeout(atheos.editor.gotoLine(line), 500);
 							}

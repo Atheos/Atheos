@@ -94,7 +94,7 @@
 					oX('#modal_content form select[name="probe_type"]').value(lastSearched.searchType);
 					if (lastSearched.searchResults !== '') {
 						table.html(lastSearched.searchResults);
-						atheos.animation.slide('open', table.el);
+						atheos.ux.slide('open', table.el);
 						atheos.modal.resize();
 					}
 				}
@@ -156,7 +156,7 @@
 								table.append(node);
 							}
 							results = table.html();
-							atheos.animation.slide('open', table.el);
+							atheos.ux.slide('open', table.el);
 
 							self.saveSearchResults(query, type, filter, results);
 							atheos.modal.resize();

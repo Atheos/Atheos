@@ -14,13 +14,22 @@
 
 (function(global) {
 	'use strict';
-	
+
 	var atheos = global.atheos;
 
-	atheos.animation = {
+	var self = null;
+
+	amplify.subscribe('atheos.loadMinor', () => atheos.flow.init());
+
+
+	atheos.flow = {
+
+		init: function() {
+			self = this;
+		},
 
 		slide: function(direction, target, duration = 500) {
-			
+
 			// var ogStyles = target.getAttribute('style');
 
 			//Source: https://w3bits.com/javascript-slidetoggle/
@@ -70,7 +79,34 @@
 			}
 		},
 
-		handleDrag: function(item) {
+		dragNdrop: function(e) {
+			log(e.type);
+
+			var efunction = {
+				mousedown: self.dragStart(e),
+				mousemove: self.dragMove(e),
+				mouseup: self.dragEnd(e),
+				mouseout: self.dragEnd(e)
+			};
+
+
+
+
+
+
+		},
+
+		dragStart: function(e) {
+
+		},
+		dragMove: function(e) {
+
+		},
+		dragEnd: function(e) {
+
+		},
+
+		handleDrag: function(item, event) {
 			// Source: https://codepen.io/fitri/pen/VbrZQm?editors=1010
 			// Made with love by @fitri
 
@@ -93,11 +129,11 @@
 				list.insertBefore(selectedItem, swapItem);
 			}
 		},
-		
+
 		handleDrop: function(item) {
 			// Source: https://codepen.io/fitri/pen/VbrZQm?editors=1010
 			// Made with love by @fitri
-			
+
 			item.style.opacity = 1;
 			item.classList.remove('dragActive');
 		}
