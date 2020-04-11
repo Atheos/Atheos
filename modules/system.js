@@ -27,16 +27,8 @@
 		//Synthetic Login Overlay
 		if (document.querySelector('#login') || document.querySelector('#installer')) {
 			global.synthetic.init();
-		} else {
-
-			atheos.chrono.init();
-			atheos.keybind.init();
-			atheos.modal.init();
-			// atheos.sidebars.init();
-
-			atheos.codiad.init();
-
-		}
+		} 
+		
 		// Atheos has three levels of priority loading:
 		//	Critical components should load on major
 		//	Features should load on minor
@@ -47,6 +39,10 @@
 
 		amplify.publish('atheos.loaded');
 		amplify.publish('atheos.plugins');
+
+		// Settings are initialized last in order to ensure all listeners are attached
+		atheos.settings.init();
+
 	});
 
 })(this);
