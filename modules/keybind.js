@@ -16,6 +16,11 @@
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
+	var self = null;
+
+	amplify.subscribe('atheos.loadMinor', () => atheos.keybind.init());
+
+
 	//////////////////////////////////////////////////////////////////////
 	// Bindings
 	//////////////////////////////////////////////////////////////////////
@@ -23,49 +28,50 @@
 	atheos.keybind = {
 
 		init: function() {
+			self = this;
 
 			// Close Modals [Esc] ////////////////////////////////////////
-			this.bind(27, function() {
+			self.bind(27, function() {
 				atheos.modal.unload();
 			});
 
 			// Save [CTRL+S] /////////////////////////////////////////////
-			this.bind(83, function() {
+			self.bind(83, function() {
 				atheos.active.save();
 			});
 
 			// Open in browser [CTRL+O] //////////////////////////////////
-			this.bind(79, function() {
+			self.bind(79, function() {
 				atheos.filemanager.openInBrowser();
 			});
 
 			// Open Scout [CTRL+E] /////////////////////////////////////////////
-			this.bind(69, function() {
+			self.bind(69, function() {
 				atheos.scout.probe();
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////
-			this.bind(70, function() {
+			self.bind(70, function() {
 				atheos.editor.openSearch('find');
 			});
 
 			// GotoLine [CTRL+G] /////////////////////////////////////////////
-			this.bind(71, function() {
+			self.bind(71, function() {
 				atheos.editor.promptLine();
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////
-			this.bind(82, function() {
+			self.bind(82, function() {
 				atheos.editor.openSearch('replace');
 			});
 
 			// Active List Previous [CTRL+UP] ////////////////////////////
-			this.bind(38, function() {
+			self.bind(38, function() {
 				atheos.active.move('up');
 			});
 
 			// Active List Next [CTRL+DOWN] //////////////////////////////
-			this.bind(40, function() {
+			self.bind(40, function() {
 				atheos.active.move('down');
 			});
 

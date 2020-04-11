@@ -35,6 +35,7 @@
 
 	var self = null;
 
+	amplify.subscribe('atheos.loadMinor', () => atheos.modal.init());
 
 	atheos.modal = {
 
