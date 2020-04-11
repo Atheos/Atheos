@@ -35,10 +35,10 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		oX = global.onyx;
-		
-		var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.sidebars.init());
+	var self = null;
+
+	amplify.subscribe('atheos.loadMinor', () => atheos.sidebars.init());
 
 
 	atheos.sidebars = {
@@ -145,12 +145,26 @@
 					}
 				});
 
-				this.sidebar.on('mouseout', function() {
-					self.sbLeft.close();
-				});
 				this.sidebar.on('mouseover', function() {
 					if (!self.leftOpenOnClick) { // if trigger set to Hover
 						self.sbLeft.open();
+					}
+				});
+
+				this.sidebar.on('mouseout', function() {
+					// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
+					// In order to achieve MouseLeave with events, I needed to create a method that capture
+					// the mouseout event, and converts it into a mouseleave. This function checks if
+					// elment the mouse moved to is the target element, or a child of; if it is, then the 
+					// mouse did not leave the parent element.
+					// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
+
+					var trigger = self.sbLeft.sidebar.el,
+						destination = event.toElement || event.relatedTarget,
+						mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
+
+					if (mouseLeft) {
+						self.sbLeft.close();
 					}
 				});
 			},
@@ -209,11 +223,7 @@
 				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible);
 
 				atheos.storage('sidebars.leftLockedVisible', self.leftLockedVisible);
-			},
-			changeTrigger: function(t) {
-				self.leftOpenOnClick = t;
-				storage('sidebars.leftSidebarTrigger', t);
-			},
+			}
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Right Sidebar
@@ -240,17 +250,32 @@
 					self.resize(this.sidebar.el, 'right');
 				});
 
-				this.handle.on('click', function() {
+				this.handle.on('click', function(e) {
 					if (self.rightOpenOnClick) { // if trigger set to Click
 						self.sbRight.open();
 					}
 				});
-				this.sidebar.on('mouseout', function() {
-					self.sbRight.close();
-				});
-				this.sidebar.on('mouseover', function() {
-					if (!self.rightOpenOnClick) { // if trigger set to Click
+				this.sidebar.on('mouseover', function(e) {
+					if (!self.rightOpenOnClick) { // if trigger set to Hover
 						self.sbRight.open();
+					}
+				});
+
+
+				this.sidebar.on('mouseout', function(e) {
+					// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
+					// In order to achieve MouseLeave with events, I needed to create a method that capture
+					// the mouseout event, and converts it into a mouseleave. This function checks if
+					// elment the mouse moved to is the target element, or a child of; if it is, then the 
+					// mouse did not leave the parent element.
+					// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
+
+					var trigger = self.sbRight.sidebar.el,
+						destination = event.toElement || event.relatedTarget,
+						mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
+
+					if (mouseLeft) {
+						self.sbRight.close();
 					}
 				});
 			},
@@ -309,11 +334,7 @@
 				self.rightLockedVisible = !(self.rightLockedVisible);
 				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible);
 				atheos.storage('sidebars.rightLockedVisible', self.rightLockedVisible);
-			},
-			changeTrigger: function(t) {
-				self.rightOpenOnClick = t;
-				storage('sidebars.rightOpenOnClick', t);
-			},
+			}
 		},
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Resize Function
