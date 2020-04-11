@@ -66,10 +66,11 @@
 					if (reply.status !== 'success') {
 						return;
 					}
+					log(reply);
 					delete reply.status;
-					for (var key in reply) {
-						var file = reply[key];
-						atheos.filemanager.openFile(file.path, file.focused);
+					for (var path in reply) {
+						var focused = reply[path] === 'focus' ? true : false;
+						atheos.filemanager.openFile(path, focused);
 					}
 
 				}
@@ -98,7 +99,7 @@
 			window.onresize = self.updateTabDropdownVisibility;
 
 			amplify.subscribe('settings.loaded', function() {
-				self.loopBehavior = atheos.storage('active.loopBehavior');
+				self.loopBehavior = atheos.storage('active.loopBehavior') || self.loopBehavior;
 			});
 		},
 
@@ -568,19 +569,6 @@
 					});
 				}
 			});
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Open in Browser
-		//////////////////////////////////////////////////////////////////
-
-		openInBrowser: function() {
-			var path = self.getPath();
-			if (path) {
-				atheos.filemanager.openInBrowser(path);
-			} else {
-				atheos.toast.show('error', 'No Open Files');
-			}
 		},
 
 		//////////////////////////////////////////////////////////////////
