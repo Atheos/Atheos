@@ -66,7 +66,6 @@
 					if (reply.status !== 'success') {
 						return;
 					}
-					log(reply);
 					delete reply.status;
 					for (var path in reply) {
 						var focused = reply[path] === 'focus' ? true : false;
@@ -103,11 +102,86 @@
 			});
 		},
 
-		isOpen: function(path) {
-			return !!self.sessions[path];
+		initTabListeners: function() {
+			var activeListener = function(e) {
+				log(e.which);
+				e.stopPropagation();
+
+				var tagName = e.target.tagName;
+				var node = oX(e.target);
+
+				if (tagName === 'UL') {
+					return;
+				}
+				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
+					node = node.parent('LI');
+				}
+
+				var path = node.attr('data-path');
+
+				//LeftClick = Open
+				if (e.which === 1 && tagName !== 'I') {
+					self.focus(path);
+
+					//MiddleClick = Close
+				} else if (e.which === 2 || tagName === 'I') {
+					var activePath = self.getPath();
+
+					self.close(path);
+					if (activePath !== null && activePath !== path) {
+						self.focus(activePath);
+					}
+					self.updateTabDropdownVisibility();
+				}
+			};
+
+			self.tabList.on('click, auxclick', function(e) {
+				activeListener(e);
+			});
+
+			self.dropDownMenu.on('click, auxclick', function(e) {
+				activeListener(e);
+			});
+
+			self.tabList.on('mousedown, mouseover, mouseup', function(e) {
+				atheos.flow.dragNdrop(e);
+			});
+
+			// self.dropDownMenu.on('drag', function(e) {
+			// 	atheos.ux.handleDrag(e.target, e);
+			// });
+
+			// self.dropDownMenu.on('dragend', function(e) {
+			// 	atheos.ux.handleDrop(e.target, e);
+			// });
 		},
 
-		open: function(path, content, mtime, inBackground, focus) {
+		//////////////////////////////////////////////////////////////////
+		// Dropdown Menu
+		//////////////////////////////////////////////////////////////////
+
+		initTabDropdownMenu: function() {
+			var toggleDropDown = oX('#tab_dropdown');
+			var closeAll = oX('#tab_close');
+
+			self.dropDownMenu.hide();
+
+			toggleDropDown.on('click', function(e) {
+				e.stopPropagation();
+				if (self.dropDownOpen) {
+					self.hideDropDownMenu();
+				} else {
+					self.showDropDownMenu();
+				}
+			});
+
+			closeAll.on('click', function(e) {
+				e.stopPropagation();
+				self.closeAll();
+			});
+		},
+
+		open: function(path, content, modifyTime, focus) {
 			if (focus === undefined) {
 				focus = true;
 			}
@@ -128,22 +202,27 @@
 				session.setMode("ace/mode/" + mode);
 				session.setUndoManager(new UndoManager());
 				session.path = path;
-				session.serverMTime = mtime;
+				session.serverMTime = modifyTime;
 				self.sessions[path] = session;
 				session.untainted = content.slice(0);
 
-				if (!inBackground && focus) {
+				if (focus) {
 					atheos.editor.setSession(session);
 				}
 
 				self.add(path, session, focus);
 				/* Notify listeners. */
-				amplify.publish('active.onOpen', path);
+				amplify.publish('active.open', path);
 			};
 
 			// Assuming the mode file has no dependencies
 			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', fn);
 		},
+
+		isOpen: function(path) {
+			return !!self.sessions[path];
+		},
+
 
 		//////////////////////////////////////////////////////////////////
 		// Get active editor path
@@ -171,7 +250,7 @@
 					path: path
 				},
 				success: function(reply) {
-					if(reply.status === 'warning') {
+					if (reply.status === 'warning') {
 						atheos.toast.show(reply);
 					}
 				}
@@ -390,21 +469,17 @@
 			}
 		},
 
-		closeAll: function(discard) {
-			discard = discard || false;
-			/* Notify listeners. */
-			var changed = false;
-
+		closeAll: function() {
 			var changedTabs = '';
+
 			for (var path in self.sessions) {
 				if (self.sessions[path].status === 'changed') {
 					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
 					changedTabs += fileName + '\n';
-					changed = true;
 				}
 			}
 
-			if (changed) {
+			if (changedTabs !== '') {
 				var dialog = {
 					banner: 'Close unsaved file?',
 					data: changedTabs,
@@ -611,98 +686,16 @@
 			}
 		},
 
-		initTabListeners: function() {
-			var activeListener = function(e) {
-				e.stopPropagation();
-
-				var tagName = e.target.tagName;
-				var node = oX(e.target);
-
-				if (tagName === 'UL') {
-					return;
-				}
-				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
-					node = node.parent('LI');
-				}
-
-				var path = node.attr('data-path');
-
-				//LeftClick = Open
-				if (e.which === 1 && tagName !== 'I') {
-					self.focus(path);
-
-					//MiddleClick = Close
-				} else if (e.which === 2 || tagName === 'I') {
-					var activePath = self.getPath();
-
-					self.close(path);
-					if (activePath !== null && activePath !== path) {
-						self.focus(activePath);
-					}
-					self.updateTabDropdownVisibility();
-				}
-			};
-
-			self.tabList.on('click', function(e) {
-				activeListener(e);
-			});
-
-			self.dropDownMenu.on('click', function(e) {
-				activeListener(e);
-			});
-
-			self.tabList.on('drag', function(e) {
-				atheos.animation.handleDrag(e.target);
-			});
-
-			self.tabList.on('dragend', function(e) {
-				atheos.animation.handleDrop(e.target);
-			});
-
-			self.dropDownMenu.on('drag', function(e) {
-				atheos.animation.handleDrag(e.target);
-			});
-
-			self.dropDownMenu.on('dragend', function(e) {
-				atheos.animation.handleDrop(e.target);
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Dropdown Menu
-		//////////////////////////////////////////////////////////////////
-
-		initTabDropdownMenu: function() {
-			var toggleDropDown = oX('#tab_dropdown');
-			var closeAll = oX('#tab_close');
-
-			self.dropDownMenu.hide();
-
-			toggleDropDown.on('click', function(e) {
-				e.stopPropagation();
-				if (self.dropDownOpen) {
-					self.hideDropDownMenu();
-				} else {
-					self.showDropDownMenu();
-				}
-			});
-
-			closeAll.on('click', function(e) {
-				e.stopPropagation();
-				self.closeAll();
-			});
-		},
-
 		showDropDownMenu: function() {
 			oX('#tab_dropdown').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
-			atheos.animation.slide('open', self.dropDownMenu.el);
+			atheos.flow.slide('open', self.dropDownMenu.el);
 			window.addEventListener('click', self.hideDropDownMenu);
 			self.dropDownOpen = true;
 		},
 
 		hideDropDownMenu: function() {
 			oX('#tab_dropdown').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
-			atheos.animation.slide('close', self.dropDownMenu.el);
+			atheos.flow.slide('close', self.dropDownMenu.el);
 			window.removeEventListener('click', self.hideDropDownMenu);
 			self.dropDownOpen = false;
 		},
@@ -824,6 +817,7 @@
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
+
 			return item;
 		}
 
