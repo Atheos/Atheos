@@ -281,6 +281,13 @@
 		//////////////////////////////////////////////////////////////////
 
 		openInBrowser: function(path) {
+			path = path || atheos.active.getPath();
+
+			if (!path) {
+				atheos.toast.show('error', 'No file selected');
+				return;
+			}
+
 			ajax({
 				url: self.controller + '?action=open_in_browser&path=' + encodeURIComponent(path),
 				success: function(data) {
@@ -291,6 +298,7 @@
 				async: false
 			});
 		},
+
 		openInModal: function(path) {
 			atheos.modal.load(250, self.dialog, {
 				action: 'preview',
