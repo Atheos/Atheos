@@ -5,10 +5,15 @@
 	width: calc(100% - #{$sidebarHandleWidth});
 }
 
-#sb_left .content {
-	left: 0;
-	right: $sidebarHandleWidth;
-	bottom: 280px;
+#sb_left {
+	.content {
+		left: 0;
+		right: $sidebarHandleWidth;
+		bottom: $fileManagerHeight;
+	}
+	&>.content {
+		transition: bottom ease-in-out $transitionDuration;
+	}
 }
 
 #sb_right .content {

@@ -9,25 +9,26 @@
 
 require_once('../../common.php');
 require_once('class.project.php');
-
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
+
+$action = Common::data("action");
+
+$projectName = Common::data("projectName");
+$projectPath = Common::data("projectPath");
+
+$gitRepo = Common::data("gitRepo");
+$gitBranch = Common::data("gitBranch");
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
+}
 
 $Project = new Project();
 
-//////////////////////////////////////////////////////////////////
-// Get Current Project
-//////////////////////////////////////////////////////////////////
-
-$action = false;
-if (isset($_POST["action"])) {
-	$action = $_POST["action"];
-} elseif (isset($_GET["action"])) {
-	$action = $_GET["action"];
-}
 
 
 switch ($action) {
@@ -36,16 +37,16 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	case 'create':
 		if (checkAccess()) {
-			$Project->name = $_GET['project_name'];
-			if ($_GET['project_path'] != '') {
-				$Project->path = $_GET['project_path'];
+			$Project->name = $projectName;
+			if ($projectPath) {
+				$Project->path = $projectPath;
 			} else {
-				$Project->path = $_GET['project_name'];
+				$Project->path = $projectName;
 			}
 			// Git Clone?
-			if (!empty($_GET['git_repo'])) {
-				$Project->gitrepo = $_GET['git_repo'];
-				$Project->gitbranch = $_GET['git_branch'];
+			if ($gitRepo) {
+				$Project->gitrepo = $gitRepo;
+				$Project->gitbranch = $gitBranch;
 			}
 			$Project->Create();
 		}
@@ -110,10 +111,11 @@ switch ($action) {
 	// Rename Project
 	//////////////////////////////////////////////////////////////////
 	case 'rename':
-		if (!checkPath($_GET['project_path'])) {
+		if (!checkPath($projectPath)) {
 			die(formatJSEND("error", "No Access"));
 		}
-		$Project->path = $_GET['project_path'];
+		$Project->name = $projectName;
+		$Project->path = $projectPath;
 		$Project->Rename();
 		break;
 	default:

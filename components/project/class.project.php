@@ -220,7 +220,7 @@ class Project extends Common
             }
         }
         $revised_array[] = $this->projects[] = array(
-            "name" => $_GET['project_name'],
+            "name" => $this->name,
             "path" => $this->path
         );
         // Save array back to JSON
