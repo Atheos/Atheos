@@ -350,6 +350,8 @@ class Common {
 			"E403g" => "Invalid Parameter.",
 			"E403i" => "Invalid Parameter:",
 			"E403m" => "Missing Parameter:",
+			
+			"E404g" => "No Content.",
 
 			"E430u" => "User does not have access.",
 			"E430c" => "Client does not have access.",
