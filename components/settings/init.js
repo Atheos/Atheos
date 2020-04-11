@@ -20,9 +20,6 @@
 
 	var self = null;
 
-
-	amplify.subscribe('atheos.loaded', () => atheos.settings.init());
-
 	atheos.settings = {
 
 		controller: 'components/settings/controller.php',
@@ -92,10 +89,10 @@
 						atheos.project.openTrigger = value;
 						break;
 					case 'sidebars.leftOpenOnClick':
-						atheos.sidebars.left.changeTrigger(boolean);
+						atheos.sidebars.leftOpenOnClick = boolean;
 						break;
 					case 'sidebars.rightOpenOnClick':
-						atheos.sidebars.right.changeTrigger(boolean);
+						atheos.sidebars.rightOpenOnClick = boolean;
 						break;
 					case 'editor.persistentModal':
 						atheos.editor.setPersistentModal(boolean);
@@ -117,7 +114,7 @@
 			if (!key || (!value && value !== false)) {
 				return;
 			}
-
+			
 			ajax({
 				url: self.controller,
 				data: {
@@ -138,7 +135,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Load Settings
 		//////////////////////////////////////////////////////////////////
-
 		load: function() {
 			ajax({
 				url: self.controller,
@@ -166,10 +162,9 @@
 		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
-
 		show: function(dataFile) {
 			var listener = function() {
-
+				
 				oX('#modal_wrapper').on('change', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
@@ -177,6 +172,7 @@
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
 						var key = target.attr('data-setting');
 						var value = target.value();
+						storage(key, value);
 						self.save(key, value);
 						self.publish(key, value);
 					}
