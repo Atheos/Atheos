@@ -5,10 +5,11 @@
 
 
 	position: absolute;
-	height: 280px;
+	height: $fileManagerHeight;
 	bottom: 0;
 	left: 0;
 	right: $sidebarHandleWidth;
+	transition: height ease-in-out $transitionDuration;
 
 	.content {
 		height: calc(100% - #{$topBarHeight});
