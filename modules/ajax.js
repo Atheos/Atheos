@@ -58,7 +58,7 @@
 				var data = xhr.responseText;
 				try {
 					data = JSON.parse(data);
-					if (data.debug) {
+					if (typeof(data.debug) !== 'undefined') {
 						console.log(data.debug);
 						delete data.debug;
 					}
