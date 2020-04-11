@@ -250,7 +250,7 @@
 			},
 			css: function(a, v) {
 				if (typeof a === 'string') {
-					if (v) {
+					if (typeof(v) !== 'undefined') {
 						element.style[a] = v;
 					}
 					return element.style[a] || null;
