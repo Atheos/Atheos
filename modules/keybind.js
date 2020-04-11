@@ -36,7 +36,7 @@
 
 			// Open in browser [CTRL+O] //////////////////////////////////
 			this.bind(79, function() {
-				atheos.active.openInBrowser();
+				atheos.filemanager.openInBrowser();
 			});
 
 			// Open Scout [CTRL+E] /////////////////////////////////////////////

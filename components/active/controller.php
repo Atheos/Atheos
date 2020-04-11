@@ -53,7 +53,7 @@ switch ($action) {
 		
 		$Active->username = $user;
 		$Active->path = $path;
-		$Active->new_path = $newPath;
+		$Active->newPath = $newPath;
 		$Active->rename();
 		break;
 
