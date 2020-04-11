@@ -52,16 +52,15 @@ switch ($action) {
 
 				foreach ($plugins as $plugin) {
 					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-						$datas = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
-						foreach ($datas as $data) {
-							if (isset($data['config'])) {
-								foreach ($data['config'] as $config) {
-									if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-										echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
-									}
+						$data = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
+						if (isset($data['config'])) {
+							foreach ($data['config'] as $config) {
+								if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
+									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
 								}
 							}
 						}
+
 					}
 				}
 				?>
