@@ -18,7 +18,7 @@
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
-	amplify.subscribe('atheos.loadMinor', () => atheos.chrono.init());
+	amplify.subscribe('system.loadMinor', () => atheos.chrono.init());
 
 	atheos.chrono = {
 
