@@ -28,7 +28,7 @@
 		amplify = global.amplify,
 		$ = global.jQuery;
 		
-	amplify.subscribe('atheos.loadExtra', () => atheos.codiad.init());
+	amplify.subscribe('system.loadExtra', () => atheos.codiad.init());
 		
 	global.codiad = global.atheos;
 
