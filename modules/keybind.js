@@ -18,7 +18,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loadMinor', () => atheos.keybind.init());
+	amplify.subscribe('system.loadMinor', () => atheos.keybind.init());
 
 
 	//////////////////////////////////////////////////////////////////////
