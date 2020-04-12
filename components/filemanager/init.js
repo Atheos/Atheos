@@ -78,7 +78,7 @@
 					return false;
 				} else if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						node = node.find('a')[0];
+						node = node.find('a');
 					} else {
 						node = node.parent();
 					}
@@ -108,15 +108,13 @@
 				}
 			});
 
-			oX('#file-manager').on('drag', function(e) {
-				log('test');
-				// atheos.ux.handleDrag(e.target);
+			oX('#file-manager').on('mousedown', function(e) {
+				var options = {
+					dragZone: oX('#file-manager').el,
+					direction: 'vertical'
+				};
+				atheos.flow.dragNdrop(e, options);
 			});
-
-			oX('#file-manager').on('dragend', function(e) {
-				// atheos.ux.handleDrop(e.target);
-			});
-
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -130,7 +128,7 @@
 			rescan = rescan || false;
 
 			var node = oX('#file-manager a[data-path="' + path + '"]');
-			let icon = node.find('.expand')[0];
+			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {
 				node.removeClass('open');
@@ -225,7 +223,7 @@
 
 			fileClass = fileClass || 'fa fa-file medium-green';
 
-			return `<li draggable="true">
+			return `<li class="draggable">
 						<a data-type="${type}" data-path="${path}">
 							<i class="expand ${nodeClass}"></i>
 							<i class="${fileClass}"></i>
@@ -242,7 +240,7 @@
 		rescan: function(path) {
 			if (self.rescanCounter === 0) {
 				var list = oX('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
-				var openNodes = list.find('a.open');
+				var openNodes = list.findAll('a.open');
 
 				for (var i = 0; i < openNodes.length; i++) {
 					self.rescanChildren.push(openNodes[i].attr('data-path'));
@@ -578,8 +576,8 @@
 						parentNode.append(list.el);
 					}
 				} else {
-					if (parentNode.find('.expand')[0]) {
-						parentNode.find('.expand')[0].replaceClass('none', 'fa fa-plus');
+					if (parentNode.find('.expand')) {
+						parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
 					}
 				}
 			}
@@ -642,8 +640,8 @@
 							if (data.status !== 'error') {
 								atheos.toast.show('success', 'File Renamed');
 								var node = oX('#file-manager a[data-path="' + path + '"]'),
-									icon = node.find('i:nth-child(2)')[0],
-									span = node.find('span')[0];
+									icon = node.find('i:nth-child(2)'),
+									span = node.find('span');
 								// Change pathing and name for node
 								node.attr('data-path', newPath);
 								span.text(newName);
