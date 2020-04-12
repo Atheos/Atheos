@@ -61,15 +61,15 @@
 
 			if (options.banner) {
 				element.append(document.createElement('h1'));
-				element.find('h1')[0].text(i18n(options.banner));
+				element.find('h1').text(i18n(options.banner));
 			}
 			if (options.message) {
 				element.append(document.createElement('h2'));
-				element.find('h2')[0].text(i18n(options.message));
+				element.find('h2').text(i18n(options.message));
 			}
 			if (options.data) {
 				element.append(document.createElement('pre'));
-				element.find('pre')[0].text(i18n(options.data));
+				element.find('pre').text(i18n(options.data));
 			}
 			if (options.actions || (options.positive && options.negative)) {
 				var actions = oX('<div>');
