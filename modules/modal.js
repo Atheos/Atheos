@@ -35,7 +35,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loadMinor', () => atheos.modal.init());
+	amplify.subscribe('system.loadMinor', () => atheos.modal.init());
 
 	atheos.modal = {
 
@@ -113,7 +113,7 @@
 					// }
 
 					// Fix for Firefox autofocus goofiness
-					var input = wrapper.find('input[autofocus="autofocus"]')[0];
+					var input = wrapper.find('input[autofocus="autofocus"]');
 					if (input) {
 						input.focus();
 					}

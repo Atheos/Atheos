@@ -19,7 +19,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loadMinor', () => atheos.flow.init());
+	amplify.subscribe('system.loadMinor', () => atheos.flow.init());
 
 
 	atheos.flow = {
@@ -79,31 +79,106 @@
 			}
 		},
 
-		dragNdrop: function(e) {
-			log(e.type);
+		dragNdrop: function(event, options) {
+			options = options || {};
+			var target = event.target;
+			var dragZone = options.dragZone;
+			var clone, startEX, startEY, startMX, startMY, timeout;
 
-			var efunction = {
-				mousedown: self.dragStart(e),
-				mousemove: self.dragMove(e),
-				mouseup: self.dragEnd(e),
-				mouseout: self.dragEnd(e)
-			};
+			var xMax, yMax;
+			var xAxis = (options.direction !== 'vertical') ? true : false,
+				yAxis = (options.direction !== 'horizontal') ? true : false;
 
+			if (!target.classList.contains('draggable')) {
+				target = target.closest('.draggable');
+			}
 
+			if (!target || !dragZone) {
+				return;
+			}
 
+			timeout = setTimeout(() => dragStart(), 200);
+			document.addEventListener("mouseup", dragEnd);
 
+			function dragStart() {
+				timeout = false;
 
+				event.stopPropagation();
 
-		},
+				startEX = target.offsetLeft;
+				startEY = target.offsetTop;
 
-		dragStart: function(e) {
+				startMX = event.screenX;
+				startMY = event.screenY;
 
-		},
-		dragMove: function(e) {
+				clone = target.cloneNode(true);
+				clone.style.left = startEX + "px";
+				clone.style.top = startEY + "px";
+				clone.style.position = 'absolute';
+				clone.style.cursor = 'grabbing';
 
-		},
-		dragEnd: function(e) {
+				dragZone.append(clone);
+				target.style.opacity = 0;
 
+				xMax = dragZone.offsetWidth - clone.offsetWidth;
+				yMax = dragZone.offsetHeight - clone.offsetHeight;
+
+				document.addEventListener("mousemove", dragMove);
+			}
+
+			function dragMove(event) {
+				var x, y;
+
+				x = xAxis ? startEX + event.screenX - startMX : startEX;
+				y = yAxis ? startEY + event.screenY - startMY : startEY;
+
+				setPos(x, y);
+				if (timeout === false) {
+					// In an attempt at optimization, I am setting a timeout
+					// on the moveTarget such that it runs only once every
+					// 100ms.
+					timeout = setTimeout(() => moveTarget(event), 50);
+				}
+			}
+
+			function setPos(x, y) {
+				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
+				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
+
+				clone.style.left = x + "px";
+				clone.style.top = y + "px";
+			}
+
+			function moveTarget(event) {
+				timeout = false;
+
+				var swap = [].slice.call(dragZone.querySelectorAll(".draggable"));
+				swap = swap.filter((item) => {
+					var rect = item.getBoundingClientRect();
+					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) return false;
+					if (yAxis && (event.clientY < rect.top || event.clientY >= rect.bottom)) return false;
+					if (item === clone) return false;
+					return true;
+				});
+				if (swap.length !== 1) {
+					return;
+				} else {
+					swap = swap[0];
+				}
+
+				if (dragZone.contains(swap)) {
+					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
+					swap.parentNode.insertBefore(target, swap);
+				}
+			}
+
+			function dragEnd() {
+				clearTimeout(timeout);
+				target.style.opacity = '';
+				if (clone) clone.remove();
+				document.removeEventListener("mousemove", dragMove);
+				document.removeEventListener("mouseup", dragEnd);
+			}
 		},
 
 		handleDrag: function(item, event) {
