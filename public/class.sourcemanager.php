@@ -20,7 +20,6 @@ class SourceManager {
 
 	private $modules = array(
 		"modules/jquery-1.7.2.min.js",
-		// "modules/jquery-ui-1.8.23.custom.min.js",
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
@@ -31,7 +30,7 @@ class SourceManager {
 		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",
-		"modules/animation.js",
+		"modules/flow.js",
 		"modules/chrono.js",
 		"modules/codiad.js",
 		"modules/common.js",
