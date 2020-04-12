@@ -239,7 +239,7 @@
 			//Load settings
 			var key, value;
 
-			var children = oX('#panel_view').find('[data-setting]');
+			var children = oX('#panel_view').findAll('[data-setting]');
 
 			children.forEach(function(child) {
 				key = oX(child).attr('data-setting');
