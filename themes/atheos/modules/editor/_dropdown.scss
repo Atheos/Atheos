@@ -12,9 +12,10 @@
 
 	li {
 		position: relative;
+		user-select: none;
 	}
 
-	i {
+	.close {
 		position: absolute;
 		right: 9px;
 		top: 6px;
