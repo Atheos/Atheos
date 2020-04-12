@@ -25,10 +25,12 @@
 	document.addEventListener('DOMContentLoaded', function() {
 
 		//Synthetic Login Overlay
-		if (document.querySelector('#login') || document.querySelector('#installer')) {
+		if (document.querySelector('#login')) {
 			global.synthetic.init();
-		} 
-		
+						atheos.user.init();
+		} else if (document.querySelector('#installer')) {
+			global.synthetic.init();
+		} else {
 		// Atheos has three levels of priority loading:
 		//	Critical components should load on major
 		//	Features should load on minor
@@ -42,7 +44,7 @@
 
 		// Settings are initialized last in order to ensure all listeners are attached
 		atheos.settings.init();
-
+}
 	});
 
 })(this);
