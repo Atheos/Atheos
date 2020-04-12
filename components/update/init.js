@@ -76,10 +76,10 @@
 			var listener = function() {
 				var form = oX('#modal_content form');
 				if (form) {
-					form.find('input[name="archive"')[0].value(self.remote.zipball_url);
-					form.find('input[name="remoteversion"')[0].value(self.remote.tag_name);
-					form.find('#remote_latest')[0].text(self.remote.tag_name);
-					form.find('#remote_body')[0].text(self.remote.body);
+					form.find('input[name="archive"').value(self.remote.zipball_url);
+					form.find('input[name="remoteversion"').value(self.remote.tag_name);
+					form.find('#remote_latest').text(self.remote.tag_name);
+					form.find('#remote_body').text(self.remote.body);
 				}
 			};
 

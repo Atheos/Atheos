@@ -49,10 +49,9 @@
 				// Get Theme
 				var theme = atheos.storage('theme');
 				var select = oX('#theme');
-				if (select && select.find('option') > 1) {
-					select.find('option').forEach(function(option) {
+				if (select && select.findAll('option').length > 1) {
+					select.findAll('option').forEach(function(option) {
 						if (option.value() === theme) {
-							console.log('found');
 							option.attr('selected', 'selected');
 						}
 					});
@@ -61,8 +60,8 @@
 				// Get Language
 				var language = atheos.storage('language');
 				select = oX('#language');
-				if (select && select.find('option') > 1) {
-					select.find('option').forEach(function(option) {
+				if (select && select.findAll('option').length > 1) {
+					select.findAll('option').forEach(function(option) {
 						if (option.value() === language) {
 							option.attr('selected', 'selected');
 						}
