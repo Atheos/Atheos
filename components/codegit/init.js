@@ -73,7 +73,7 @@
 			amplify.subscribe('contextmenu.show', this.showContextMenu);
 
 			amplify.subscribe('contextmenu.hide', function(obj) {
-				var children = obj.menu.find('.codegit');
+				var children = obj.menu.findAll('.codegit');
 				children.forEach((child) => child.remove());
 			});
 
@@ -114,14 +114,14 @@
 			directory.files.forEach(function(file, i) {
 				if (atheos.common.getNodeName(file.path) === '.git') {
 					directory.node.addClass('repo');
-					if (directory.node.find('i.repo-icon').length === 0) {
+					if (!directory.node.find('i.repo-icon')) {
 						directory.node.append('<i class="repo-icon fas fa-code-branch"></i>');
 					}
 				} else if (file.repo) {
 					//Deeper inspect
 					var repo = oX('#file-manager a[data-path="' + file.path + '"]');
 					repo.addClass('repo');
-					if (repo.find('i.repo-icon').length === 0) {
+					if (!repo.find('i.repo-icon')) {
 						repo.append('<i class="repo-icon fas fa-code-branch"></i>');
 					}
 				}
@@ -339,7 +339,7 @@
 				path: path
 			};
 
-			var checkboxes = oX('#codegit_overview tbody').find('input[type="checkbox"]');
+			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 			checkboxes.forEach((checkbox) => {
 				if (checkbox.el.checked) {
 					data.files.push(checkbox.parent('tr').attr('data-file'));
@@ -1045,7 +1045,7 @@
 
 		monitorCheckBoxes: function() {
 			var checkboxAll = oX('#codegit_overview #check_all');
-			var checkboxes = oX('#codegit_overview tbody').find('input[type="checkbox"]');
+			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 
 			checkboxAll.on('click', function() {
 				var status = checkboxAll.el.checked;

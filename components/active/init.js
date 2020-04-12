@@ -77,8 +77,8 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-				var changed = self.tabList.find('li.changed');
-				changed = changed.concat(self.dropDownMenu.find('li.changed'));
+				var changed = self.tabList.findAll('li.changed');
+				changed = changed.concat(self.dropDownMenu.findAll('li.changed'));
 				if (changed.length > 0) {
 					var path = changed[0].attr('data-path');
 					self.focus(path);
@@ -104,7 +104,6 @@
 
 		initTabListeners: function() {
 			var activeListener = function(e) {
-				log(e.which);
 				e.stopPropagation();
 
 				var tagName = e.target.tagName;
@@ -143,8 +142,12 @@
 				activeListener(e);
 			});
 
-			self.tabList.on('mousedown, mouseover, mouseup', function(e) {
-				atheos.flow.dragNdrop(e);
+			self.tabList.on('mousedown', function(e) {
+				var options = {
+					dragZone: self.tabList.el,
+					direction: 'horizontal'
+				};
+				atheos.flow.dragNdrop(e, options);
 			});
 
 			// self.dropDownMenu.on('drag', function(e) {
@@ -271,7 +274,7 @@
 			/* If the tab list would overflow with the new tab. Move the
 				* first tab to dropdown, then add a new tab. */
 			if (self.isTabListOverflowed(true)) {
-				var tab = self.tabList.find('li:first-child')[0];
+				var tab = self.tabList.find('li:first-child');
 				self.moveTabToDropdownMenu(tab);
 			}
 
@@ -325,13 +328,13 @@
 		highlightEntry: function(path, direction) {
 			direction = direction || false;
 
-			var active = self.tabList.find('.active');
+			var active = self.tabList.findAll('.active');
 			active.forEach(function(item) {
 				item.removeClass('active');
 			});
 
 			var session = self.sessions[path];
-			var dropDown = self.dropDownMenu.find('[data-path="' + path + '"]')[0];
+			var dropDown = self.dropDownMenu.find('[data-path="' + path + '"]');
 
 			if (dropDown) {
 				var listItem = session.listItem;
@@ -339,9 +342,9 @@
 
 				var tab;
 				if (direction === 'up') {
-					tab = self.tabList.find('li:last-child')[0];
+					tab = self.tabList.find('li:last-child');
 				} else {
-					tab = self.tabList.find('li:first-child')[0];
+					tab = self.tabList.find('li:first-child');
 				}
 				self.moveTabToDropdownMenu(tab, direction);
 			}
@@ -520,7 +523,7 @@
 			self.history = temp;
 
 			/* Select all the tab tumbs except the one which is to be removed. */
-			var tabs = self.tabList.find('li');
+			var tabs = self.tabList.findAll('li');
 
 			if (tabs.length === 0) {
 				atheos.editor.exterminate();
@@ -580,7 +583,7 @@
 					title = newPath.substring(1);
 				}
 
-				listItem.find('.file-name')[0].text(title);
+				listItem.find('.file-name').text(title);
 
 				self.sessions[newPath] = self.sessions[oldPath];
 				self.sessions[newPath].path = newPath;
@@ -651,9 +654,9 @@
 		//////////////////////////////////////////////////////////////////
 		move: function(direction) {
 
-			var activeTabs = self.tabList.find('li');
+			var activeTabs = self.tabList.findAll('li');
 			if (self.loopBehavior === 'loopBoth') {
-				var dropDownChildren = self.dropDownMenu.find('li');
+				var dropDownChildren = self.dropDownMenu.findAll('li');
 				activeTabs = activeTabs.concat(dropDownChildren);
 			}
 
@@ -751,7 +754,7 @@
 		isTabListOverflowed: function(includeFictiveTab) {
 			includeFictiveTab = includeFictiveTab || false;
 
-			var tabs = self.tabList.find('li');
+			var tabs = self.tabList.findAll('li');
 			var count = includeFictiveTab ? tabs.length + 1 : tabs.length;
 
 			if (count <= 1) {
@@ -777,26 +780,26 @@
 
 		updateTabDropdownVisibility: function() {
 			while (self.isTabListOverflowed()) {
-				var tab = self.tabList.find('li:last-child')[0];
+				var tab = self.tabList.find('li:last-child');
 				if (tab) {
 					self.moveTabToDropdownMenu(tab);
 				} else break;
 			}
 
 			while (!self.isTabListOverflowed(true)) {
-				var menuItem = self.dropDownMenu.find('li:last-child')[0];
+				var menuItem = self.dropDownMenu.find('li:last-child');
 				if (menuItem) {
 					self.moveDropdownMenuItemToTab(menuItem);
 				} else break;
 			}
 
-			if (self.dropDownMenu.find('li').length > 0) {
+			if (self.dropDownMenu.findAll('li').length > 0) {
 				oX('#tab_dropdown').show();
 			} else {
 				oX('#tab_dropdown').hide();
 			}
 
-			if (self.tabList.find('li').length > 1) {
+			if (self.tabList.findAll('li').length > 1) {
 				oX('#tab_close').show();
 			} else {
 				oX('#tab_close').hide();
@@ -812,7 +815,7 @@
 		createListItem: function(path) {
 			var split = atheos.common.splitDirectoryAndFileName(path);
 
-			var item = '<li draggable="true" data-path="' + path + '"><a>' +
+			var item = '<li class="draggable" data-path="' + path + '"><a>' +
 				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 

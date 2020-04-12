@@ -38,7 +38,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loadMinor', () => atheos.sidebars.init());
+	amplify.subscribe('system.loadMinor', () => atheos.sidebars.init());
 
 
 	atheos.sidebars = {
