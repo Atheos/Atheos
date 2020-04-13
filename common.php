@@ -439,12 +439,9 @@ class Common {
 		$projects = Common::readJSON('projects');
 		$pathWithinProject = false;
 
-		foreach ($projects as $project => $data) {
-			$pathWithinProject = strpos($path, $data['path']) === 0 ? true : $pathWithinProject;
+		foreach ($projects as $projectPath => $projectName) {
+			$pathWithinProject = strpos($path, $projectPath) === 0 ? true : $pathWithinProject;
 		}
-
-		Common::debug("$path: $userHasAccess && $pathWithinProject");
-
 
 		return $userHasAccess && $pathWithinProject;
 
