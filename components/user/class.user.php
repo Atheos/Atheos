@@ -39,16 +39,16 @@ class User {
 	public function __construct() {
 		$this->users = Common::readJSON('users');
 		$this->activeFiles = Common::readJSON('active');
-		
+
 		// Check if array is Associative or Sequential. Sequential is
 		// the old file format, so it needs to be pivoted.
-		if(array_keys($this->users) === range(0, count($this->users) - 1)) {
+		if (array_keys($this->users) === range(0, count($this->users) - 1)) {
 			$this->pivotUsers();
 		}
 
 		// Check if array is Associative or Sequential. Sequential is
 		// the old file format, so it needs to be pivoted.
-		if(array_keys($this->activeFiles) === range(0, count($this->activeFiles) - 1)) {
+		if (array_keys($this->activeFiles) === range(0, count($this->activeFiles) - 1)) {
 			$this->pivotActives();
 		}
 
@@ -204,6 +204,16 @@ class User {
 	// Pivot ActiveFiles from the old format to the new file format
 	//////////////////////////////////////////////////////////////////
 	private function pivotActives() {
-		// return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
+		$revisedArray = array();
+		foreach ($this->users as $user => $data) {
+			if (isset($data["username"])) {
+				$focus = $data["focused"] ? "focus" : "active";
+				$revisedArray[$data["username"]] = array($data["path"] => $focus);
+			}
+		}
+		if (count($revisedArray) > 0) {
+			Common::saveJSON('actives', $revisedArray);
+		}
 	}
+
 }
