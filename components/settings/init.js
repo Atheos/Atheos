@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 //////////////////////////////////////////////////////////////////////////////80
-// Settings
+// Settings Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -14,6 +14,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
+      ajax = global.ajax,
 		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
@@ -245,8 +246,6 @@
 				key = oX(child).attr('data-setting');
 
 				value = storage(key);
-
-				log(key + ':' + value);
 
 				if (value !== null) {
 					oX(child).value(value);

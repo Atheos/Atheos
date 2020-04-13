@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager
+// Context Menu Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -8,9 +10,6 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// Goodness this file is very complex; it's going to take a very long time
-// to really get a grasp of what's going on in this file and how to 
-// refactor it.
 // The context menu should become an object stored within the filemanager, and
 // constructed based on the fules specified therein. The OBJ is created, and then
 // added to by each plugin based on it's requirements. The OBJ could even be 

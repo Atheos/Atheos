@@ -230,7 +230,6 @@
 						strategy: self.strategy
 					},
 					success: function(reply) {
-						log(reply);
 						if (reply.status === 'success') {
 							self.renderTree(reply);
 						} else {
@@ -276,7 +275,6 @@
 				} else {
 					pathArray = path.split('/');
 				}
-				log(path);
 
 				pathArray.forEach(function(fragment, index) {
 					if (fragment === "") return;
