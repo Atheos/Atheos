@@ -269,7 +269,7 @@
 					}
 				});
 			} else {
-				if (!atheos.project.isAbsPath(path)) {
+				if (!atheos.common.isAbsPath(path)) {
 					if (self.noBrowser.indexOf(ext) < 0) {
 						self.download(path);
 					} else {
