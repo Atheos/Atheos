@@ -350,7 +350,7 @@ class Common {
 			"E403g" => "Invalid Parameter.",
 			"E403i" => "Invalid Parameter:",
 			"E403m" => "Missing Parameter:",
-			
+
 			"E404g" => "No Content.",
 
 			"E430u" => "User does not have access.",
@@ -402,48 +402,52 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check if user can configure Atheos
 	//////////////////////////////////////////////////////////////////
-	public static function checkAccess() {
+	public static function checkAccess($permission = "configure") {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
 
-		$configure = false;
-
-		foreach ($users as $user => $data) {
-			if ($username === $data['username']) {
-				$configure = in_array("configure", $data['permissions']);
-			}
+		if (array_key_exists($username, $users)) {
+			$permissions = $users[$username]["permissions"];
+			return in_array($permission, $permissions);
+		} else {
+			return false;
 		}
-		return $configure;
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// Check Path
 	//////////////////////////////////////////////////////////////////
 	public static function checkPath($path) {
-		$user_acl = readJSON($_SESSION['user'] . "_acl");
-
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
 
-		foreach ($users as $user => $data) {
-			if ($username === $data['username']) {
-				$user_acl = $data["userACL"];
-			}
-		}
-		if (is_array($user_acl)) {
-			foreach ($user_acl as $projects => $data) {
-				if (strpos($path, $data) === 0) {
-					return true;
-				}
-			}
-		} else {
-			foreach (readJSON('projects') as $project => $data) {
-				if (strpos($path, $data['path']) === 0) {
-					return true;
+
+		$userHasAccess = false;
+
+		if (array_key_exists($username, $users)) {
+			$userACL = $users[$username]["userACL"];
+			$userHasAccess = $userACL === "full" ? true : false;
+			if ($userACL === "full") {
+				$userHasAccess = true;
+			} else {
+				foreach ($userACL as $project) {
+					$userHasAccess = strpos($path, $project) === 0 ? true : $userHasAccess;
 				}
 			}
 		}
-		return false;
+
+		$projects = Common::readJSON('projects');
+		$pathWithinProject = false;
+
+		foreach ($projects as $project => $data) {
+			$pathWithinProject = strpos($path, $data['path']) === 0 ? true : $pathWithinProject;
+		}
+
+		Common::debug("$path: $userHasAccess && $pathWithinProject");
+
+
+		return $userHasAccess && $pathWithinProject;
+
 	}
 
 	public static function data($key, $type = false) {
