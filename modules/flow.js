@@ -15,7 +15,8 @@
 (function(global) {
 	'use strict';
 
-	var atheos = global.atheos;
+	var atheos = global.atheos,
+		amplify = global.amplify;
 
 	var self = null;
 
@@ -93,17 +94,6 @@
 			var xAxis = (options.direction !== 'vertical') ? true : false,
 				yAxis = (options.direction !== 'horizontal') ? true : false;
 
-			if (!target.classList.contains('draggable')) {
-				target = target.closest('.draggable');
-			}
-
-			if (!target || !dragZone) {
-				return;
-			}
-
-			timeout = setTimeout(() => dragStart(), 200);
-			document.addEventListener("mouseup", dragEnd);
-
 			function dragStart() {
 				timeout = false;
 
@@ -116,8 +106,8 @@
 				startMY = event.screenY;
 
 				clone = target.cloneNode(true);
-				clone.style.left = (startEX - dragZone.scrollLeft) + "px";
-				clone.style.top = (startEY - dragZone.scrollTop) + "px";
+				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
+				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
 				clone.style.position = 'absolute';
 				clone.style.cursor = 'grabbing';
 
@@ -127,7 +117,40 @@
 				xMax = dragZone.offsetWidth - clone.offsetWidth;
 				yMax = dragZone.offsetHeight - clone.offsetHeight;
 
-				document.addEventListener("mousemove", dragMove);
+				document.addEventListener('mousemove', dragMove);
+			}
+
+			function setPos(x, y) {
+				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
+				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
+
+				clone.style.left = (x - dragZone.scrollLeft) + 'px';
+				clone.style.top = (y - dragZone.scrollTop) + 'px';
+			}
+
+			function moveTarget(event) {
+				timeout = false;
+
+				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
+
+				swap = swap.filter((item) => {
+					var rect = item.getBoundingClientRect();
+					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) return false;
+					if (yAxis && (event.clientY < rect.top || event.clientY >= rect.bottom)) return false;
+					if (item === clone) return false;
+					return true;
+				});
+
+				if (swap.length === 0) {
+					return;
+				} else {
+					swap = swap[swap.length - 1];
+				}
+
+				if (dragZone.contains(swap)) {
+					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
+					if (swap) swap.parentNode.insertBefore(target, swap);
+				}
 			}
 
 			function dragMove(event) {
@@ -145,47 +168,30 @@
 				}
 			}
 
-			function setPos(x, y) {
-				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
-				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
-
-				clone.style.left = (x - dragZone.scrollLeft) + "px";
-				clone.style.top = (y - dragZone.scrollTop) + "px";
-			}
-
-			function moveTarget(event) {
-				timeout = false;
-
-				var swap = [].slice.call(dragZone.querySelectorAll(".draggable"));
-
-				swap = swap.filter((item) => {
-					var rect = item.getBoundingClientRect();
-					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) return false;
-					if (yAxis && (event.clientY < rect.top || event.clientY >= rect.bottom)) return false;
-					if (item === clone) return false;
-					return true;
-				});
-				log(swap);
-				if (swap.length === 0) {
-					return;
-				} else {
-					swap = swap[swap.length - 1];
-				}
-
-				if (dragZone.contains(swap)) {
-					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
-					if (swap) swap.parentNode.insertBefore(target, swap);
-				}
-			}
-
 			function dragEnd() {
 				clearTimeout(timeout);
 				target.style.opacity = '';
-				if (clone) clone.remove();
-				if (options.drop) options.drop(target);
-				document.removeEventListener("mousemove", dragMove);
-				document.removeEventListener("mouseup", dragEnd);
+				if (clone) {
+					clone.remove();
+				}
+				if (options.drop) {
+					options.drop(target);
+				}
+				document.removeEventListener('mousemove', dragMove);
+				document.removeEventListener('mouseup', dragEnd);
 			}
+
+			if (!target.classList.contains('draggable')) {
+				target = target.closest('.draggable');
+			}
+
+			if (!target || !dragZone) {
+				return;
+			}
+
+			timeout = setTimeout(() => dragStart(), 200);
+			document.addEventListener('mouseup', dragEnd);
+
 		},
 
 		handleDrag: function(item, event) {

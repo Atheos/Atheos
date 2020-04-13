@@ -447,7 +447,9 @@
 		// Clsoe file
 		//////////////////////////////////////////////////////////////////
 		close: function(path) {
-			if (!self.isOpen(path)) return;
+			if (!self.isOpen(path)) {
+				return;
+			}
 			var session = self.sessions[path];
 
 			var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
@@ -746,12 +748,12 @@
 				self.tabList.append(listItem);
 			}
 
-			if (oldListItem.hasClass("changed")) {
-				listItem.addClass("changed");
+			if (oldListItem.hasClass('changed')) {
+				listItem.addClass('changed');
 			}
 
-			if (oldListItem.hasClass("active")) {
-				listItem.addClass("active");
+			if (oldListItem.hasClass('active')) {
+				listItem.addClass('active');
 			}
 
 			self.sessions[path].listItem = listItem;
@@ -798,7 +800,9 @@
 				var menuItem = self.dropDownMenu.find('li:last-child');
 				if (menuItem) {
 					self.moveDropdownMenuItemToTab(menuItem);
-				} else break;
+				} else {
+					break;
+				}
 			}
 
 			if (self.dropDownMenu.findAll('li').length > 0) {

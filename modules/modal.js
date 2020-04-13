@@ -160,7 +160,7 @@
 		setLoadingScreen: function(text) {
 			text = text || 'Loading...';
 
-			var wrapText = "";
+			var wrapText = '';
 
 			for (var i = 0; i < text.length; i++) {
 				wrapText += '<em>' + text.charAt(i) + '</em>';
