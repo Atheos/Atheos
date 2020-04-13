@@ -130,7 +130,7 @@
 						'action': 'logout'
 					},
 					success: function() {
-						// window.location.reload();
+						window.location.reload();
 					}
 				});
 			};
