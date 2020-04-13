@@ -11,7 +11,6 @@
 // The Update component is used to check for Atheos updates, pinging the home
 // server, as well as handling all client tracking/statistics.
 //
-//
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 

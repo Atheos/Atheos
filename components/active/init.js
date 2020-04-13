@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 //////////////////////////////////////////////////////////////////////////////80
-// Active
+// Active Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -463,7 +463,6 @@
 							self.remove(path);
 						},
 						'Discard Changes': function() {
-							log('test');
 							amplify.publish('active.close', path);
 							self.remove(path);
 						},
