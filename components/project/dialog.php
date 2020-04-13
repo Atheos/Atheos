@@ -12,10 +12,17 @@ require_once('../../common.php');
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
 
-switch ($_GET['action']) {
+$action = Common::data("action");
+$user = Common::data("user", "session");
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
+}
+
+switch ($action) {
 
 	//////////////////////////////////////////////////////////////
 	// List Projects Mini Sidebar
@@ -24,7 +31,8 @@ switch ($_GET['action']) {
 
 		// Get access control data
 		$projects_assigned = false;
-		if (file_exists(BASE_PATH . "/data/" . $_SESSION['user'] . '_acl.php')) {
+		$userACL = Common::readJSON("users");
+		if (file_exists(BASE_PATH . "/data/" . $user . "_acl.php")) {
 			$projects_assigned = getJSON($_SESSION['user'] . '_acl.php');
 		}
 
