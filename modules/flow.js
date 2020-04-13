@@ -94,32 +94,6 @@
 			var xAxis = (options.direction !== 'vertical') ? true : false,
 				yAxis = (options.direction !== 'horizontal') ? true : false;
 
-			function dragStart() {
-				timeout = false;
-
-				event.stopPropagation();
-
-				startEX = target.offsetLeft;
-				startEY = target.offsetTop;
-
-				startMX = event.screenX;
-				startMY = event.screenY;
-
-				clone = target.cloneNode(true);
-				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
-				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
-				clone.style.position = 'absolute';
-				clone.style.cursor = 'grabbing';
-
-				dragZone.append(clone);
-				target.style.opacity = 0;
-
-				xMax = dragZone.offsetWidth - clone.offsetWidth;
-				yMax = dragZone.offsetHeight - clone.offsetHeight;
-
-				document.addEventListener('mousemove', dragMove);
-			}
-
 			function setPos(x, y) {
 				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
 				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
@@ -135,9 +109,15 @@
 
 				swap = swap.filter((item) => {
 					var rect = item.getBoundingClientRect();
-					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) return false;
-					if (yAxis && (event.clientY < rect.top || event.clientY >= rect.bottom)) return false;
-					if (item === clone) return false;
+					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) {
+						return false;
+					}
+					if (yAxis && (event.clientY < rect.top || event.clientY >= rect.bottom)) {
+						return false;
+					}
+					if (item === clone) {
+						return false;
+					}
 					return true;
 				});
 
@@ -166,6 +146,32 @@
 					// 100ms.
 					timeout = setTimeout(() => moveTarget(event), 50);
 				}
+			}
+
+			function dragStart() {
+				timeout = false;
+
+				event.stopPropagation();
+
+				startEX = target.offsetLeft;
+				startEY = target.offsetTop;
+
+				startMX = event.screenX;
+				startMY = event.screenY;
+
+				clone = target.cloneNode(true);
+				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
+				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
+				clone.style.position = 'absolute';
+				clone.style.cursor = 'grabbing';
+
+				dragZone.append(clone);
+				target.style.opacity = 0;
+
+				xMax = dragZone.offsetWidth - clone.offsetWidth;
+				yMax = dragZone.offsetHeight - clone.offsetHeight;
+
+				document.addEventListener('mousemove', dragMove);
 			}
 
 			function dragEnd() {
