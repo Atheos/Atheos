@@ -6,19 +6,21 @@
 
 (function(global, $) {
 
+
+
+	// Editor modes that have been loaded
+	var editorModes = {};
+	var ace = global.ace,
+		atheos = global.atheos,
+		amplify = global.amplify,
+		oX = global.onyx,
+		storage = atheos.storage;
+
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
 	var Editor = ace.require('ace/editor').Editor;
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
-
-	// Editor modes that have been loaded
-	var editorModes = {};
-
-	var atheos = global.atheos,
-		amplify = global.amplify,
-		oX = global.onyx,
-		storage = atheos.storage;
 
 	var separatorWidth = 3;
 
@@ -420,8 +422,7 @@
 
 			editor.on('h-resize-init', function() {
 				$('#editor-region > .editor-wrapper').width($(this).width()).trigger('h-resize');
-
-			})
+			});
 
 			editor.on('v-resize-init', function() {
 				$('#editor-region > .editor-wrapper').height($(this).height()).trigger('v-resize');
@@ -536,7 +537,7 @@
 				// var root = oX('<div class="editor-wrapper">');
 				// 	root.height(ch.height());
 				// 	root.width(ch.width());
-					
+
 				// 	root.addClass('editor-wrapper-' + chType);
 				// 	root.appendTo(ch.parent());
 
