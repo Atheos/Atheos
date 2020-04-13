@@ -94,7 +94,7 @@
 					oX('#modal_content form select[name="probe_type"]').value(lastSearched.searchType);
 					if (lastSearched.searchResults !== '') {
 						table.html(lastSearched.searchResults);
-						atheos.animation.slide('open', table.el);
+						atheos.flow.slide('open', table.el);
 						atheos.modal.resize();
 					}
 				}
@@ -156,7 +156,7 @@
 								table.append(node);
 							}
 							results = table.html();
-							atheos.animation.slide('open', table.el);
+							atheos.flow.slide('open', table.el);
 
 							self.saveSearchResults(query, type, filter, results);
 							atheos.modal.resize();
@@ -230,7 +230,6 @@
 						strategy: self.strategy
 					},
 					success: function(reply) {
-						log(reply);
 						if (reply.status === 'success') {
 							self.renderTree(reply);
 						} else {
@@ -276,7 +275,6 @@
 				} else {
 					pathArray = path.split('/');
 				}
-				log(path);
 
 				pathArray.forEach(function(fragment, index) {
 					if (fragment === "") return;

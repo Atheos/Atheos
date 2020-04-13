@@ -1,0 +1,102 @@
+.handle {
+	width: $sidebarHandleWidth;
+	height: 100%;
+	z-index: 99999;
+	margin: 0;
+	padding: 0;
+	background: $midground;
+	/*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);*/
+	cursor: col-resize;
+
+	span {
+		display: block;
+		position: absolute;
+		width: 11px;
+		height: 70px;
+		top: calc(50% - 35px);
+		line-height: 66px;
+		font-size: 20px;
+		text-align: center;
+		letter-spacing: -2px;
+		color: $fontColorMinor;
+	}
+
+	&.unlocked span {
+		width: 30px;
+		background: $midground;
+		z-index: 10;
+		letter-spacing: 0;
+		@include box-shadow;
+
+		&:before,
+		&:after {
+			content: '';
+			height: 20px;
+			width: 18px;
+			position: absolute;
+			background-color: $midground;
+		}
+
+		&:before {
+			top: -6px;
+			border-top: solid 2px $borderLight;
+
+		}
+
+		&:after {
+			bottom: -6px;
+			border-bottom: solid 2px $borderLight;
+		}
+	}
+}
+
+/* Left Sidebar */
+#sb_left .handle {
+	position: absolute;
+	right: 0;
+	border-right: solid 2px $borderLight;
+
+	&.unlocked span {
+		margin-left: 3px;
+		border-right: 2px solid $borderLight;
+
+		&:before,
+		&:after {
+			right: -2px;
+			border-right: 2px solid $borderLight;
+		}
+
+		&:before {
+			transform: skew(0deg, 30deg);
+		}
+
+		&:after {
+			transform: skew(0deg, -30deg);
+		}
+
+	}
+}
+
+#sb_right .handle {
+	border-left: solid 2px $borderLight;
+
+	&.unlocked span {
+		margin-left: -20px;
+		border-left: 2px solid $borderLight;
+
+		&:before,
+		&:after {
+			left: -2px;
+			border-left: 2px solid $borderLight;
+		}
+
+		&:before {
+			transform: skew(0deg, -30deg);
+		}
+
+		&:after {
+			transform: skew(0deg, 30deg);
+		}
+
+	}
+}

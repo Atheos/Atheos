@@ -53,7 +53,11 @@ switch ($action) {
 				</tr>
 			</table>
 			<pre id="probe_results"></pre>
-			<div id="probe_processing"></div>
+			<div id="probe_processing" class="loader">
+				<div class="ring"></div>
+				<!--<div class="ring"></div>-->
+				<div class="dot"></div>
+			</div>
 			<button class="btn-left"><?php i18n("Search"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
 		</form>

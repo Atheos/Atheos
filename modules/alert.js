@@ -6,7 +6,7 @@
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// https://codepen.io/tlongren/pen/pnkij?editors=0010
+// https://codepen.io/tlongren/pen/pnkij?editors=0010asd
 // Currently the icons are hard coded: Close/Types. They'll need to be migrated
 // to css classes modifiable by the themes for consistancy.
 //
@@ -28,8 +28,8 @@
 
 		create: function(text, type) {
 			var element = oX('<div>');
-				// drag = oX('<i>'),
-				// close = oX('<i>');
+			// drag = oX('<i>'),
+			// close = oX('<i>');
 
 			element.attr('id', 'alert');
 
@@ -49,68 +49,76 @@
 		},
 
 		show: function(options) {
-			if (options && typeof options === 'object') {
-				var alert = this;
-				var overlay = oX('#overlay') || atheos.common.createOverlay(),
-					element = oX('#alert') || this.create();
+			if (!options || typeof options !== 'object') {
+				return;
+			}
+			var alert = this;
+			var overlay = atheos.common.createOverlay('alert'),
+				element = oX('#alert') || this.create();
 
-				overlay.show();
-				element.show();
+			overlay.show();
+			element.show();
 
-				if (options.banner) {
-					element.append(document.createElement('h1'));
-					element.find('h1')[0].text(i18n(options.banner));
-				}
-				if (options.message) {
-					element.append(document.createElement('h2'));
-					element.find('h2')[0].text(i18n(options.message));
-				}
-				if (options.data) {
-					element.append(document.createElement('pre'));
-					element.find('pre')[0].text(i18n(options.data));
-				}
-				if (options.actions || (options.positive && options.negative)) {
-					var actions = oX('<div>');
-					actions.addClass('actions');
-					element.append(actions);
+			if (options.banner) {
+				element.append(document.createElement('h1'));
+				element.find('h1').text(i18n(options.banner));
+			}
+			if (options.message) {
+				element.append(document.createElement('h2'));
+				element.find('h2').text(i18n(options.message));
+			}
+			if (options.data) {
+				element.append(document.createElement('pre'));
+				element.find('pre').text(i18n(options.data));
+			}
+			if (options.actions || (options.positive && options.negative)) {
+				var actions = oX('<div>');
+				actions.addClass('actions');
+				element.append(actions);
 
-					if (options.actions) {
-						options.actions.forEach(function(action) {
-							let button = document.createElement('button');
-							button.innerText = i18n(action.message);
-							button.addEventListener('click', function() {
-								action.fnc();
-								alert.hide();
-							});
-							actions.append(button);
+				if (options.actions) {
+					for (var key in options.actions) {
+						let button = document.createElement('button');
+						button.innerText = i18n(key);
+						button.addEventListener('click', function() {
+							options.actions[button.innerText]();
+							button.remove();
+							alert.unload();
 						});
-					} else {
-						var positive = document.createElement('button');
-						var negative = document.createElement('button');
-
-						positive.innerText = i18n(options.positive.message);
-						negative.innerText = i18n(options.negative.message);
-
-						positive.addEventListener('click', function() {
-							options.positive.fnc();
-							alert.hide();
-
-						});
-						negative.addEventListener('click', function() {
-							options.negative.fnc();
-							alert.hide();
-						});
-						actions.append(positive);
-						actions.append(negative);
+						actions.append(button);
 					}
+				} else {
+					var positive = document.createElement('button');
+					var negative = document.createElement('button');
+
+					positive.innerText = i18n(options.positive.message);
+					negative.innerText = i18n(options.negative.message);
+
+					positive.addEventListener('click', function() {
+						options.positive.fnc();
+						alert.unload();
+
+					});
+					negative.addEventListener('click', function() {
+						options.negative.fnc();
+						alert.unload();
+					});
+					actions.append(positive);
+					actions.append(negative);
 				}
 			}
+			
+			element.css({
+				'top': '15%',
+				'left': 'calc(50% - ' + (element.width() / 2) + 'px)',
+			});
+			
 		},
-		hide: function() {
+		unload: function() {
 			var overlay = oX('#overlay');
 			var element = oX('#alert');
 			if (overlay) {
-				overlay.hide();
+				overlay.remove();
 			}
 			if (element) {
 				element.empty();

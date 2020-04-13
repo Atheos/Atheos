@@ -15,5 +15,5 @@ public/*.min.js
 js/*.disabled.*
 components/*/*.disabled.*
 
-NOTES.md
+notes/*
 restore.php

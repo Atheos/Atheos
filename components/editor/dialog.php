@@ -67,7 +67,7 @@ checkSession();
 	$(function() {
 		<?php if ($_GET['action'] == 'search') {
 			?>
-			$('input[name="find"]').val(codiad.active.getSelectedText());
+			$('input[name="find"]').val(codiad.editor.getSelectedText());
 			<?php
 		} ?>
 });

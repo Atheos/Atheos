@@ -45,6 +45,7 @@ switch ($action) {
 		$TextMode->getTextModes();
 		break;
 	default:
-		die(Common::sendJSON("error", "invalid action"));
+		Common::sendJSON("E401i");
+		die;
 		break;
 }

@@ -1,0 +1,24 @@
+.splitter {
+	background-color: black;
+	z-index: 9999;
+}
+
+.h-splitter {
+	background-image: linear-gradient(left, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -o-linear-gradient(left, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -moz-linear-gradient(left, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -webkit-linear-gradient(left, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -ms-linear-gradient(left, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -webkit-gradient(linear, left top, right top, color-stop(0.29, rgb(120, 120, 120)), color-stop(0.77, rgb(77, 77, 77)));
+	cursor: col-resize;
+}
+
+.v-splitter {
+	background-image: linear-gradient(top, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -o-linear-gradient(top, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -moz-linear-gradient(top, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -webkit-linear-gradient(top, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -ms-linear-gradient(top, rgb(120, 120, 120) 29%, rgb(77, 77, 77) 77%);
+	background-image: -webkit-gradient(linear, left top, left bottom, color-stop(0.29, rgb(120, 120, 120)), color-stop(0.77, rgb(77, 77, 77)));
+	cursor: row-resize;
+}

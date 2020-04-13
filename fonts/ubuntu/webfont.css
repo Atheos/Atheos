@@ -1,0 +1,28 @@
+@charset "UTF-8";
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url('Ubuntu-Regular.woff2') format('woff2'),
+		url('Ubuntu-Regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: url('Ubuntu-Bold.woff2') format('woff2'),
+		url('Ubuntu-Bold.woff') format('woff');
+    font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ubuntu-Fira';
+	src: url('Ubuntu-Fira.woff2') format('woff2'),
+		url('Ubuntu-Fira.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}

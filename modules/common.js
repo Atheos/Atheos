@@ -17,7 +17,7 @@
 // seemed to work.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
- 
+
 (function() {
 	var method;
 	var noop = function() {};
@@ -60,17 +60,9 @@
 	atheos.common = {
 
 
-		//////////////////////////////////////////////////////////////////
-		// Return the node name (sans path)
-		//////////////////////////////////////////////////////////////////
-
 		getNodeName: function(path) {
 			return path.split('/').pop();
 		},
-
-		//////////////////////////////////////////////////////////////////
-		// Return extension from path
-		//////////////////////////////////////////////////////////////////
 
 		getNodeExtension: function(path) {
 			return path.split('.').pop();
@@ -78,6 +70,14 @@
 
 		getNodeType: function(path) {
 			return oX('#file-manager a[data-path="' + path + '"]').attr('data-type');
+		},
+
+		splitDirectoryAndFileName: function(path) {
+			var index = path.lastIndexOf('/');
+			return {
+				fileName: path.substring(index + 1),
+				directory: (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
+			};
 		},
 
 		_basename: function(path, suffix) {
@@ -182,19 +182,18 @@
 				}
 			}
 		},
-		createOverlay: function() {
-			var overlay = oX('<div>');
+		createOverlay: function(type) {
+			var overlay = oX('#overlay');
+			if (overlay) {
+				overlay.remove();
+			}
+			overlay = oX('<div id="overlay">');
 
-			overlay.attr('id', 'overlay');
-			overlay.on('click', atheos.alert.unload);
-			overlay.on('click', atheos.modal.unload);
-
-			// overlay.on('click', function(event) {
-			// 	if (event.target.id !== 'modal_overlay') {
-			// 		return;
-			// 	}
-			// 	modal.unload();
-			// }, false);
+			if (type === 'alert') {
+				overlay.on('click', atheos.alert.unload);
+			} else {
+				overlay.on('click', atheos.modal.unload);
+			}
 
 			document.body.appendChild(overlay.el);
 			return overlay;
