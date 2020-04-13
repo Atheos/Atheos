@@ -356,18 +356,16 @@
 				return children;
 			},
 			find: function(s, q) {
+				var node = element.querySelector(s);
+				return onyx(node);
+
+			},
+			findAll: function(s, q) {
 				var nodes = element.querySelectorAll(s),
 					results = [];
 				for (var i = 0; i < nodes.length; i++) {
 					results.push(onyx(nodes[i]));
 				}
-
-				// const action = {
-				// 	first: results[0],
-				// 	last: results.slice(-1)[0],
-				// 	default: results
-				// };
-				// return action[q] || action.default;
 				return results;
 
 			},
