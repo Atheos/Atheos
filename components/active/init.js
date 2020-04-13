@@ -726,8 +726,8 @@
 				self.dropDownMenu.append(listItem);
 			}
 
-			if (oldListItem.hasClass("changed")) {
-				listItem.addClass("changed");
+			if (oldListItem.hasClass('changed')) {
+				listItem.addClass('changed');
 			}
 
 			self.sessions[path].listItem = listItem;
@@ -793,7 +793,9 @@
 				var tab = self.tabList.find('li:last-child');
 				if (tab) {
 					self.moveTabToDropdownMenu(tab);
-				} else break;
+				} else {
+					break;
+				}
 			}
 
 			while (!self.isTabListOverflowed(true)) {
