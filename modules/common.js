@@ -64,6 +64,11 @@
 			return path.split('/').pop();
 		},
 
+		getDirectory: function(path) {
+			var index = path.lastIndexOf('/');
+			return (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1);
+		},
+
 		getNodeExtension: function(path) {
 			return path.split('.').pop();
 		},
@@ -80,34 +85,9 @@
 			};
 		},
 
-		_basename: function(path, suffix) {
-			//  discuss at: http://phpjs.org/functions/basename/
-			var b = path;
-			var lastChar = b.charAt(b.length - 1);
-
-			if (lastChar === '/' || lastChar === '\\') {
-				b = b.slice(0, -1);
-			}
-
-			b = b.replace(/^.*[\/\\]/g, '');
-
-			if (typeof suffix === 'string' && b.substr(b.length - suffix.length) === suffix) {
-				b = b.substr(0, b.length - suffix.length);
-			}
-
-			return b;
-		},
-
-		_dirname: function(path) {
-			// discuss at: http://phpjs.org/functions/dirname/
-			return path.replace(/\\/g, '/')
-				.replace(/\/[^\/]*\/?$/, '');
-		},
-
 		//////////////////////////////////////////////////////////////////////
 		// Extend
 		//////////////////////////////////////////////////////////////////////
-
 		extend: function(obj, src) {
 			var temp = JSON.parse(JSON.stringify(obj));
 			for (var key in src) {
@@ -117,6 +97,7 @@
 			}
 			return temp;
 		},
+
 		//////////////////////////////////////////////////////////////////////
 		// SerializeForm
 		//////////////////////////////////////////////////////////////////////
@@ -154,34 +135,7 @@
 			}
 			return o;
 		},
-		//////////////////////////////////////////////////////////////////////
-		// Trigger
-		//////////////////////////////////////////////////////////////////////
-		trigger: function(selector, event) {
-			console.warn('Trigger Helper will be depreciated on next release');
-			if (event && selector) {
-				var element;
-				if (selector.self === window) {
-					element = selector;
-				} else {
-					element = selector.nodeType === Node.ELEMENT_NODE ? selector : document.querySelector(selector);
-				}
-				if (element) {
-					var e;
-					if ('createEvent' in document) {
-						// modern browsers, IE9+
-						e = document.createEvent('HTMLEvents');
-						e.initEvent(event, false, true);
-						element.dispatchEvent(e);
-					} else {
-						// IE 8
-						e = document.createEventObject();
-						e.eventType = event;
-						element.fireEvent('on' + e.eventType, e);
-					}
-				}
-			}
-		},
+
 		createOverlay: function(type) {
 			var overlay = oX('#overlay');
 			if (overlay) {
@@ -277,18 +231,3 @@
 	};
 
 })(this);
-
-// (function(global) {
-// 	'use strict';
-
-// 	var atheos = global.atheos,
-// 		ajax = global.ajax,
-// 		o = global.onyx;
-
-// 	atheos.common = {
-
-
-
-// 	};
-
-// })(this);
