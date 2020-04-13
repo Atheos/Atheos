@@ -1,5 +1,10 @@
-<div id="sb-left" class="sidebar">
-	<div id="sb-left-title">
+<div id="sb_left" class="sidebar">
+
+	<div class="handle">
+		<span>|||</span>
+	</div>
+
+	<div class="title">
 		<h2> <?php i18n("File Manager"); ?> </h2>
 
 		<div id="filter_wrapper">
@@ -16,41 +21,35 @@
 			</ul>
 		</div>
 
-		<i id="sb-left-lock" class="fas fa-lock"></i>
+		<i class="lock fas fa-lock"></i>
 		<i id="open_probe" class="fas fa-search"></i>
 		<i id="filter_open"class="fas fa-filter"></i>
 
 	</div>
 
-	<div class="sb-left-content">
+	<div class="content">
 
 		<div id="file-manager"></div>
 
-		<ul id="list-active-files"></ul>
-
 	</div>
 
-	<div id="side-projects" class="sb-left-projects">
-		<div id="project-list" class="sb-project-list">
+	<div id="project_list">
 
-			<div class="project-list-title">
-				<h2><?php i18n("Projects"); ?></h2>
-				<a id="projects-collapse" class="fas fa-chevron-circle-down" alt="<?php i18n("Collapse"); ?>"></a>
-				<?php if (checkAccess()) {
-					?>
-					<a id="projects-manage" class="fas fa-archive"></a>
-					<a id="projects-create" class="fas fa-plus-circle" alt="<?php i18n("Create Project"); ?>"></a>
-					<?php
-				} ?>
-			</div>
-
-			<div class="sb-projects-content"></div>
-
+		<div class="title">
+			<h2><?php i18n("Projects"); ?></h2>
+			<i id="projects-collapse" class="fas fa-chevron-circle-down" alt="<?php i18n("Collapse"); ?>"></i>
+			<?php if (checkAccess()) {
+				?>
+				<i id="projects-manage" class="fas fa-archive"></i>
+				<i id="projects-create" class="fas fa-plus-circle" alt="<?php i18n("Create Project"); ?>"></i>
+				<?php
+			} ?>
 		</div>
+
+		<div class="content"></div>
+
 	</div>
 
-	<div id="sb-left-handle">
-		<span>|||</span>
-	</div>
+
 
 </div>

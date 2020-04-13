@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 //////////////////////////////////////////////////////////////////////////////80
-// Settings
+// Settings Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -10,18 +10,16 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
 	'use strict';
 
 	var atheos = global.atheos,
+      ajax = global.ajax,
 		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
 
 	var self = null;
-
-
-	amplify.subscribe('atheos.loaded', () => atheos.settings.init());
 
 	atheos.settings = {
 
@@ -40,13 +38,14 @@
 				*  
 				*  Workaround for Storage-Event:
 				*/
-			$('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
+			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
 
 
 			oX('#settings_open').on('click', function() {
 				atheos.settings.show();
 			});
-			this.load();
+
+			self.load();
 		},
 
 
@@ -60,6 +59,9 @@
 				return;
 			} else {
 				switch (setting) {
+					case 'active.loopBehavior':
+						atheos.active.loopBehavior = value;
+						break;					
 					case 'editor.theme':
 						atheos.editor.setTheme(value);
 						break;
@@ -81,11 +83,17 @@
 					case 'editor.wrapMode':
 						atheos.editor.setWrapMode(boolean);
 						break;
-					case 'editor.rightSidebarTrigger':
-						atheos.editor.setRightSidebarTrigger(boolean);
+					case 'filemanager.openTrigger':
+						atheos.filemanager.openTrigger = value;
 						break;
-					case 'editor.fileManagerTrigger':
-						atheos.editor.setFileManagerTrigger(boolean);
+					case 'project.openTrigger':
+						atheos.project.openTrigger = value;
+						break;
+					case 'sidebars.leftOpenOnClick':
+						atheos.sidebars.leftOpenOnClick = boolean;
+						break;
+					case 'sidebars.rightOpenOnClick':
+						atheos.sidebars.rightOpenOnClick = boolean;
 						break;
 					case 'editor.persistentModal':
 						atheos.editor.setPersistentModal(boolean);
@@ -103,65 +111,45 @@
 		//////////////////////////////////////////////////////////////////
 		// Save Settings
 		//////////////////////////////////////////////////////////////////
-		save: function(target) {
-			if (target) {
-				var setting = target.attr('data-setting');
-				var value = target.value();
-				self.publish(setting, value);
-			} else {
-				var settings = {};
-				var systemRegex = /^atheos/;
-				var pluginRegex = /^atheos.plugin/;
-
-
-				var syncSystem = storage('syncSystem');
-				var syncPlugin = storage('syncPlugin');
-
-				var panel = oX('#settings #panel_view');
-
-				if (syncSystem || syncPlugin) {
-					for (var i = 0; i < localStorage.length; i++) {
-						var key = localStorage.key(i);
-						if (systemRegex.test(key) && !pluginRegex.test(key) && syncSystem) {
-							settings[key] = localStorage.getItem(key);
-						}
-						if (pluginRegex.test(key) && syncPlugin) {
-							settings[key] = localStorage.getItem(key);
-						}
+		save: function(key, value) {
+			if (!key || (!value && value !== false)) {
+				return;
+			}
+			
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'save',
+					key,
+					value
+				},
+				success: function(reply) {
+					if(reply.status === 'error') {
+						atheos.toast.show(reply);
 					}
 				}
+			});
 
-				// atheos.common.serialize(panel);
-
-				settings.syncSystem = syncSystem;
-				settings.syncPlugin = syncPlugin;
-
-				// console.log(settings);
-
-				$.post(self.controller + '?action=save', {
-					settings: JSON.stringify(settings)
-				}, function(data) {
-					var parsed = atheos.jsend.parse(data);
-				});
-
-				amplify.publish('settings.save');
-
-			}
-
+			amplify.publish('settings.save');
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Load Settings
 		//////////////////////////////////////////////////////////////////
-
 		load: function() {
-			$.get(self.controller + '?action=load', function(data) {
-				var parsed = atheos.jsend.parse(data);
-				if (parsed !== 'error') {
-					$.each(parsed, function(i, item) {
-						localStorage.setItem(i, item);
-					});
-					amplify.publish('settings.loaded', parsed);
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'load',
+				},
+				success: function(reply) {
+					if (reply.status === 'success') {
+						delete reply.status;
+						for (var key in reply) {
+							storage(key, reply[key]);
+						}
+					}
+					amplify.publish('settings.loaded', reply);
 				}
 			});
 		},
@@ -175,15 +163,19 @@
 		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
-
 		show: function(dataFile) {
 			var listener = function() {
+				
 				oX('#modal_wrapper').on('change', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					var type = target.el.type;
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
-						self.save(target);
+						var key = target.attr('data-setting');
+						var value = target.value();
+						storage(key, value);
+						self.save(key, value);
+						self.publish(key, value);
 					}
 				});
 
@@ -195,12 +187,10 @@
 					}
 				});
 
-				$('.settings-view .config-menu li').click(function() {});
-
-				if (typeof(dataFile) == 'string') {
+				if (typeof(dataFile) === 'string') {
 					self.showTab(dataFile);
 				} else {
-					self.loadTabValues('components/settings/settings.editor.php');
+					self.loadTabValues();
 				}
 			};
 			amplify.subscribe('modal.loaded', listener);
@@ -223,18 +213,17 @@
 
 				self.save(false);
 
-				oX('#panel_menu .active').removeClass('active');
-				oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
+				ajax({
+					url: dataFile,
+					success: function(reply) {
 
-				oX('#panel_view').empty();
+						oX('#panel_menu .active').removeClass('active');
+						oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
+						oX('#panel_view').html(reply);
 
-				//Load panel
-				// $('#settings panel_view').append('<div class="panel active" data-file="' + dataFile + '"></div>');
-				$('#panel_view').load(dataFile, function() {
-					//TODO Show and hide loading information
-					self.loadTabValues(dataFile);
+						self.loadTabValues(dataFile);
+					}
 				});
-
 			}
 		},
 
@@ -247,17 +236,23 @@
 		//  dataFile - {String} - Location of settings file based on BASE_URL
 		//
 		//////////////////////////////////////////////////////////////////
-		loadTabValues: function(dataFile) {
+		loadTabValues: function() {
 			//Load settings
 			var key, value;
-			$('.settings-view .panel[data-file="' + dataFile + '"] .setting').each(function(i, item) {
-				key = $(item).attr('data-setting');
-				value = localStorage.getItem(key);
+
+			var children = oX('#panel_view').findAll('[data-setting]');
+
+			children.forEach(function(child) {
+				key = oX(child).attr('data-setting');
+
+				value = storage(key);
+
 				if (value !== null) {
-					$(item).val(value);
+					oX(child).value(value);
 				}
 			});
+
 		}
 	};
 
-})(this, jQuery);
+})(this);

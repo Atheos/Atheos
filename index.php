@@ -7,6 +7,8 @@ header("X-Content-Type-Options: nosniff");
 // header("Content-Security-Policy: script-src 'self' blob: 'unsafe-inline'");
 header("Referrer-Policy: no-referrer");
 header("Feature-Policy: sync-xhr 'self'");
+// header("Access-Control-Allow-Origin: https://www.atheos.io");
+header("Access-Control-Allow-Origin: *");
 
 require_once('common.php');
 
@@ -36,7 +38,7 @@ if (isset($_SESSION['theme'])) {
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>Atheos IDE</title>
 	<link defer rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
-	<link defer rel="stylesheet" href="fonts/ubuntu-webfont/webfont.css">
+	<link defer rel="stylesheet" href="fonts/ubuntu/webfont.css">
 	<!--<link rel="stylesheet" href="fonts/victor-mono/webfont.css">-->
 	<link defer rel="stylesheet" href="fonts/file-icons/webfont.css">
 
@@ -124,22 +126,20 @@ if (isset($_SESSION['theme'])) {
 
 			<div id="editor-region">
 				<div id="editor-top-bar">
-					<ul id="tab-list-active-files">
-					</ul>
-					<div id="tab-dropdown">
-						<a id="tab-dropdown-button" class="fas fa-chevron-circle-down"></a>
-					</div>
-					<div id="tab-close">
-						<a id="tab-close-button" class="fas fa-times-circle" title="<?php i18n("Close All") ?>"></a>
-					</div>
+					<ul id="tab-list-active-files" class="customSortable"></ul>
+					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
+					<a id="tab_close" class="fas fa-times-circle"></a>
 					<ul id="dropdown-list-active-files"></ul>
-					<div class="bar"></div>
 				</div>
 
 				<div id="root-editor-wrapper"></div>
 
 				<div id="editor-bottom-bar">
 					<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
+					<!--<div class="divider"></div>-->
+					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
+					<div class="divider"></div>
+					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 
 					<?php
 
@@ -151,8 +151,8 @@ if (isset($_SESSION['theme'])) {
 						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
 							$pdata = json_decode($pdata, true);
-							if (isset($pdata[0]['bottombar'])) {
-								foreach ($pdata[0]['bottombar'] as $bottommenu) {
+							if (isset($pdata['bottombar'])) {
+								foreach ($pdata['bottombar'] as $bottommenu) {
 									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
 										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
 											echo('<div class="divider"></div>');
@@ -164,10 +164,6 @@ if (isset($_SESSION['theme'])) {
 						}
 					} ?>
 
-					<div class="divider"></div>
-					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
-					<div class="divider"></div>
-					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<div class="divider"></div>
 					<div id="current_file"></div>
 					<div id="cursor-position">

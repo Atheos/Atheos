@@ -43,7 +43,7 @@ if ($action) {
 			<h2><i class="icon-pencil big-icon"></i><?php i18n("Extensions"); ?></h2>
 			<form>
 
-				<table>
+				<table id="textmode">
 					<thead>
 						<tr>
 							<th><?php i18n("Extension"); ?></th>
@@ -60,7 +60,7 @@ if ($action) {
 								continue;
 							} ?>
 							<tr>
-								<td><input class="FileExtension" type="text" name="extension" value="<?php echo $ex ?>" /></td>
+								<td><input type="text" name="extension" value="<?php echo $ex ?>" /></td>
 								<td><?php echo $TextMode->getTextModeSelect($mode) ?></td>
 							</tr>
 							<?php

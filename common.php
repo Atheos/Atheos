@@ -190,12 +190,18 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Localization
 	//////////////////////////////////////////////////////////////////
-	public static function i18n($key, $type = "return") {
+	public static function i18n($key, $type = "echo", $args = array()) {
+		if (is_array($type)) {
+			$args = $type;
+			$type = "echo";
+		}
 		global $lang;
 		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
-		// foreach ($args as $k => $v)
-		// $return = str_replace("%{".$k."}%", $v, $return);
+
+		foreach ($args as $k => $v) {
+			$return = str_replace("%{".$k."}%", $v, $return);
+		}
 		if ($type == "echo") {
 			echo $return;
 		} else {
@@ -303,18 +309,19 @@ class Common {
 	// Format JSON Responses
 	//////////////////////////////////////////////////////////////////
 	public static function sendJSON($status, $text = false) {
-
-		if (is_array($text)) {
-			$reply = $text;
-		} elseif (preg_match('/^[SEWN][0-9]{4}$/', $status)) {
+		if (preg_match('/^[SEWN][0-9]{4}$/', $status)) {
 			$reply = Common::parseStatusCodes($status, $text);
+		} elseif (is_array($text)) {
+			$reply = $text;
+			$reply["status"] = $status ?? "error";
 		} else {
 			$reply = array(
-				"text" => $text ?? "no data"
+				"text" => $text ?? "no data",
+				"status" => $status ?? "error"
 			);
 		}
 
-		$reply["status"] = $status ?? "error";
+
 
 		/// Debug /////////////////////////////////////////////////
 		if (count(Common::$debugMessageStack) == 1) {
@@ -344,6 +351,8 @@ class Common {
 			"E403i" => "Invalid Parameter:",
 			"E403m" => "Missing Parameter:",
 
+			"E404g" => "No Content.",
+
 			"E430u" => "User does not have access.",
 			"E430c" => "Client does not have access.",
 			"E430a" => "Atheos does not have access.",
@@ -363,7 +372,7 @@ class Common {
 			$reply = array();
 		}
 
-		$reply["code"] = $code;
+		// $reply["code"] = $code;
 
 		if (in_array($code, $codes)) {
 			$reply["text"] = $codes[$code];
@@ -393,48 +402,49 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Check if user can configure Atheos
 	//////////////////////////////////////////////////////////////////
-	public static function checkAccess() {
+	public static function checkAccess($permission = "configure") {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
 
-		$configure = false;
-
-		foreach ($users as $user => $data) {
-			if ($username === $data['username']) {
-				$configure = in_array("configure", $data['permissions']);
-			}
+		if (array_key_exists($username, $users)) {
+			$permissions = $users[$username]["permissions"];
+			return in_array($permission, $permissions);
+		} else {
+			return false;
 		}
-		return $configure;
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// Check Path
 	//////////////////////////////////////////////////////////////////
 	public static function checkPath($path) {
-		$user_acl = readJSON($_SESSION['user'] . "_acl");
-
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
 
-		foreach ($users as $user => $data) {
-			if ($username === $data['username']) {
-				$user_acl = $data["userACL"];
-			}
-		}
-		if (is_array($user_acl)) {
-			foreach ($user_acl as $projects => $data) {
-				if (strpos($path, $data) === 0) {
-					return true;
-				}
-			}
-		} else {
-			foreach (readJSON('projects') as $project => $data) {
-				if (strpos($path, $data['path']) === 0) {
-					return true;
+
+		$userHasAccess = false;
+
+		if (array_key_exists($username, $users)) {
+			$userACL = $users[$username]["userACL"];
+			$userHasAccess = $userACL === "full" ? true : false;
+			if ($userACL === "full") {
+				$userHasAccess = true;
+			} else {
+				foreach ($userACL as $project) {
+					$userHasAccess = strpos($path, $project) === 0 ? true : $userHasAccess;
 				}
 			}
 		}
-		return false;
+
+		$projects = Common::readJSON('projects');
+		$pathWithinProject = false;
+
+		foreach ($projects as $projectPath => $projectName) {
+			$pathWithinProject = strpos($path, $projectPath) === 0 ? true : $pathWithinProject;
+		}
+
+		return $userHasAccess && $pathWithinProject;
+
 	}
 
 	public static function data($key, $type = false) {
@@ -449,8 +459,13 @@ class Common {
 		}
 
 		if ($type) {
-			$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
+			if ($type === "server") {
+				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
+			} else {
+				$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
+			}
 		}
+
 
 		//$value = htmlspecialchars(strip_tags($value));
 
@@ -517,8 +532,8 @@ class Common {
 // Wrapper for old method names
 //////////////////////////////////////////////////////////////////
 
-function i18n($key, $type = "echo") {
-	return Common::i18n($key, $type);
+function i18n($key, $type = "echo", $args = array()) {
+	return Common::i18n($key, $type, $args);
 }
 function checkSession() {
 	Common::checkSession();

@@ -1,17 +1,10 @@
 <?php
 
 /*
-    *  Copyright (c) Codiad & daeks (codiad.com), distributed
+    *  Copyright (c) atheos & daeks (atheos.com), distributed
     *  as-is and without warranty under the MIT License. See
     *  [root]/license.txt for more. This information must remain intact.
     */
-
-/*	TODO:
-    *		Each button produces and undefined type, and isn't used on the the called function
-    *		Clean up the window, it could use some love
-    *
-    */
-
 
 require_once('../../common.php');
 
@@ -21,137 +14,46 @@ require_once('../../common.php');
 
 checkSession();
 
-switch ($_GET['action']) {
+$action = Common::data("action");
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
+}
+
+if (!checkAccess()) {
+	Common::sendJSON("E430u");
+	die;
+}
+
+switch ($action) {
 
 	//////////////////////////////////////////////////////////////
 	// Marketplace
 	//////////////////////////////////////////////////////////////
 
 	case 'list':
-		if (!checkAccess()) {
-			?>
-			<label><?php i18n("Restricted"); ?></label>
-			<pre><?php i18n("You can not access the marketplace"); ?></pre>
-			<button onclick="codiad.modal.unload();return false;"><?php i18n("Close"); ?></button>
-			<?php
-		} else {
-			require_once('class.market.php');
-			$market = new Market();
-			if (sizeof($market->remote) == 0) {
-				?>
-				<label><?php i18n("Connection Error"); ?></label>
-				<pre><?php i18n("Connection to the market place can not be made. Please check your internet connection."); ?></pre>
-				<button onclick="codiad.modal.unload();return false;"><?php i18n("Close"); ?></button>
-				<?php
-			} else {
-				?>
-				<label><?php i18n("Codiad Marketplace"); ?></label>
-				<div id="market-list">
-					<table width="100%">
-						<tr>
-							<!--<th valign="middle" align="center" width="40px">-->
-							<!--	<button onclick="window.location.reload();return false;"><?php i18n("Reload Codiad"); ?></button>-->
-							<!--</th>-->
-							<th valign="middle">
-								<input style="margin:0;display:inline;width:60%" id="repourl" placeholder="<?php i18n("Enter GitHub Repository Url..."); ?>">
-								<!--</th>-->
-								<!--<th valign="middle" align="right" style="white-space:nowrap;">-->
-								<button class="btn-left" onclick="codiad.market.install('<?php echo $_GET['type']; ?>', '', 'Manually', getElementById('repourl').value);return false;"><?php i18n("Install Manually"); ?></button>
-							</th>
-						</tr>
-						<tr>
-							<th valign="middle" style="white-space:nowrap;">
-								<input style="margin:0;display:inline;width:60%" onkeyup="codiad.market.search(event, this.value,'<?php echo $_GET['note']; ?>')" value="<?php if (isset($_GET['query'])) echo $_GET['query']; ?>" placeholder="<?php i18n("Press Enter to Search"); ?>">
-								<!--</th>                	-->
-								<!--<th valign="middle" style="white-space:nowrap;">-->
-								<button style="margin:0;" class="btn-left" onclick="codiad.market.list();return false;"><?php i18n("All"); ?></button>
-								<button class="btn-mid" style="margin:0;" onclick="codiad.market.list('plugins');return false;"><?php i18n("Plugins"); ?></button>
-								<button class="btn-right" style="margin:0;" onclick="codiad.market.list('themes');return false;"><?php i18n("Themes"); ?></button>
-							</th>
-						</tr>
-					</table>
-					<div class="market-wrapper">
-						<table width="100%">
-							<?php
-							$marketplace = array();
-							foreach ($market->remote as $data) {
-								if (!isset($data['category']) || $data['category'] == '') {
-									$data['category'] = 'Common';
-								}
-								if (!array_key_exists($data['remote'], $marketplace)) {
-									$marketplace[$data['remote']] = array();
-								}
-								if (!array_key_exists($data['type'], $marketplace[$data['remote']])) {
-									$marketplace[$data['remote']][$data['type']] = array();
-								}
-								if (!array_key_exists($data['category'], $marketplace[$data['remote']][$data['type']])) {
-									$marketplace[$data['remote']][$data['type']][$data['category']] = array();
-								}
-								array_push($marketplace[$data['remote']][$data['type']][$data['category']], $data);
-							}
-							ksort($marketplace);
-
-							$extLoaded = (extension_loaded('zip') && extension_loaded('openssl') && ini_get('allow_url_fopen') == 1);
-							function sort_name($a, $b) {
-								return strnatcmp($a['name'], $b['name']);
-							}
-
-							foreach ($marketplace as $remote => $markettype) {
-								ksort($markettype);
-								echo '<tr><th class="market-remote-title">';
-								if (!$remote) {
-									echo i18n("Installed");
-								} else {
-									echo i18n("Available");
-								}
-								echo '</th></tr>';
-								foreach ($markettype as $type => $data) {
-									ksort($data);
-									if ($_GET['type'] == 'undefined' || $_GET['type'] == $type) {
-										foreach ($data as $category => $subdata) {
-											usort($subdata, 'sort_name');
-											foreach ($subdata as $addon) {
-												if (isset($_GET['query']) && (strpos(strtolower(trim($addon['name'])), strtolower(trim($_GET['query']))) === false)) {
-													continue;
-												}
-												echo '<tr><td><div style="position:relative;height:100px">';
-												$left = 0;
-												$right = 0;
-												echo '<div style="position:absolute;top:2px;left:'.($left+10).'px;"><a style="font-weight:bold;font-size:14px" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');return false;">'.$addon['name'].'</a></div>';
-												echo '<div style="position:absolute;top:15px;left:'.($left+10).'px;"><font style="font-size:10px">'.i18n(ucfirst(rtrim($type, 's'))).' - '.i18n(ucfirst($category)).' | <a style="font-weight:bold;text-decoration:underline;" onclick="codiad.market.openInBrowser(\'https://github.com/'.$addon['author'].'\');return false;">'.$addon['author'].'</a> | '.$addon['count'].' '.i18n("Users").'</font></div>';
-												echo '<div style="position:absolute;top:25px;left:5px;"><pre style="height:60px;color:#a8a6a8;width:'.(550-$right).'px;white-space: pre-wrap;">'.$addon['description'].'</pre></div>';
-												if (!$addon['remote']) {
-													if (!isset($addon['update'])) {
-														echo '<div style="position:absolute;top:7px;left:570px;"><font style="color:green">'.i18n("Latest Version").' v'.$addon['version'].'</font></div>';
-													} else {
-														if ($extLoaded && is_writable(BASE_PATH.'/'.$type.'/'.$addon['folder'])) {
-															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="color: blue; width:150px;white-space:nowrap;" onclick="codiad.market.update(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.i18n("Update ".ucfirst(rtrim($type, 's'))).'</button></div>';
-														} else {
-															echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
-														}
-													}
-													if (is_writable(BASE_PATH.'/'.$type.'/'.$addon['folder'])) {
-														echo '<div style="position:absolute;top:30px;left:570px;"><button style="color: red; width:150px;white-space:nowrap;" onclick="codiad.market.remove(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['folder'].'\');return false;">'.i18n("Delete ".ucfirst(rtrim($type, 's'))).'</button><div>';
-													}
-												} else {
-													if ($extLoaded && is_writable(BASE_PATH.'/'.$type)) {
-														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.install(\''.$_GET['type'].'\',\''.$type.'\', \''.$addon['name'].'\',\''.$addon['url'].'\');return false;">'.i18n("Install ".ucfirst(rtrim($type, 's'))).'</button><div>';
-													} else {
-														echo '<div style="position:absolute;top:-5px;left:570px;"><button style="width:150px;white-space:nowrap;" onclick="codiad.market.openInBrowser(\''.$addon['url'].'\');">'.i18n("Download ".ucfirst(rtrim($type, 's'))).'</button><div>';
-													}
-												}
-												echo '</div></td></tr>';
-											}
-										}
-									}
-								}
-							}
-							?>
-						</table>
-					</div>
-				</div>
-				<?php
-			} ?>
-			<?php
-		} break;
+		?>
+		<h1><?php i18n("Atheos Marketplace"); ?></h1>
+		<div id="market">
+			<table width="100%">
+				<tr>
+					<!--<th valign="middle" align="center" width="40px">-->
+					<!--	<button onclick="window.location.reload();return false;"><?php i18n("Reload atheos"); ?></button>-->
+					<!--</th>-->
+					<th valign="middle">
+						<input type="text" id="manual_repo" placeholder="<?php i18n("Enter GitHub Repository Url..."); ?>">
+						<button class="btn-left" id="manual_install"><?php i18n("Install Manually"); ?></button>
+					</th>
+				</tr>
+			</table>
+			<table id="market_table" width="100%">
+			</table>
+		</div>
+		<?php
+		break;
+	default:
+		Common::sendJSON("E401i");
+		die;
+		break;
 } ?>

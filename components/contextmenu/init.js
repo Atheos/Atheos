@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager
+// Context Menu Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -8,9 +10,6 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// Goodness this file is very complex; it's going to take a very long time
-// to really get a grasp of what's going on in this file and how to 
-// refactor it.
 // The context menu should become an object stored within the filemanager, and
 // constructed based on the fules specified therein. The OBJ is created, and then
 // added to by each plugin based on it's requirements. The OBJ could even be 
@@ -49,7 +48,7 @@
 					return false;
 				} else if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						node = node.find('a')[0];
+						node = node.find('a');
 					} else {
 						node = oX(node.parent());
 					}
@@ -71,7 +70,7 @@
 			if (node) {
 				var path = node.attr('data-path'),
 					type = node.attr('data-type'),
-					name = node.find('span')[0].html();
+					name = node.find('span').html();
 
 				node.addClass('context-menu-active');
 
@@ -80,29 +79,29 @@
 
 				switch (type) {
 					case 'directory':
-						children = menu.find('.directory-only, .non-root');
+						children = menu.findAll('.directory-only, .non-root');
 						children.forEach((child) => child.show());
 
-						children = menu.find('.file-only, .root-only');
+						children = menu.findAll('.file-only, .root-only');
 						children.forEach((child) => child.hide());
 						break;
 					case 'file':
-						children = menu.find('.directory-only, .root-only');
+						children = menu.findAll('.directory-only, .root-only');
 						children.forEach((child) => child.hide());
 
-						children = menu.find('.file-only, .non-root');
+						children = menu.findAll('.file-only, .non-root');
 						children.forEach((child) => child.show());
 						break;
 					case 'root':
-						children = menu.find('.directory-only, .root-only');
+						children = menu.findAll('.directory-only, .root-only');
 						children.forEach((child) => child.show());
 
-						children = menu.find('.file-only, .non-root');
+						children = menu.findAll('.file-only, .non-root');
 						children.forEach((child) => child.hide());
 						break;
 				}
 
-				children = menu.find('.no-external');
+				children = menu.findAll('.no-external');
 				if (atheos.project.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
 					children.forEach((child) => child.hide());
 				} else {

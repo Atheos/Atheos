@@ -35,7 +35,7 @@ switch ($action) {
 					<a name="system-settings" data-file="components/settings/settings.system.php" data-name="system"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
 				</li>
 				<li>
-					<a name="codegit-settings" data-file="components/codegit/dialog.php?action=settings" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
+					<a name="codegit-settings" data-file="components/settings/settings.codegit.php" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
 				</li>
 				<?php
 				if (COMMON::checkAccess()) {
@@ -52,27 +52,23 @@ switch ($action) {
 
 				foreach ($plugins as $plugin) {
 					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-						$datas = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
-						foreach ($datas as $data) {
-							if (isset($data['config'])) {
-								foreach ($data['config'] as $config) {
-									if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-										echo('<li>
-                                                        <a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
-									}
+						$data = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
+						if (isset($data['config'])) {
+							foreach ($data['config'] as $config) {
+								if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
+									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
 								}
 							}
 						}
+
 					}
 				}
 				?>
-				<!--<button class="bottom" onclick="atheos.settings.save(); return false;"><?php i18n("Save"); ?></button>-->
 			</ul>
-			<div id="panel_view" class="panel active" data-file="components/settings/settings.editor.php">
+			<div id="panel_view">
 				<?php include('settings.editor.php'); ?>
 			</div>
 		</div>
-		<!--<button class="bottom-left" onclick="atheos.settings.save(); return false;"><?php i18n("Save"); ?></button>-->
 		<?php
 		break;
 	case "iframe":

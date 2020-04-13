@@ -73,7 +73,7 @@
 			amplify.subscribe('contextmenu.show', this.showContextMenu);
 
 			amplify.subscribe('contextmenu.hide', function(obj) {
-				var children = obj.menu.find('.codegit');
+				var children = obj.menu.findAll('.codegit');
 				children.forEach((child) => child.remove());
 			});
 
@@ -114,14 +114,14 @@
 			directory.files.forEach(function(file, i) {
 				if (atheos.common.getNodeName(file.path) === '.git') {
 					directory.node.addClass('repo');
-					if (directory.node.find('i.repo-icon').length === 0) {
+					if (!directory.node.find('i.repo-icon')) {
 						directory.node.append('<i class="repo-icon fas fa-code-branch"></i>');
 					}
 				} else if (file.repo) {
 					//Deeper inspect
 					var repo = oX('#file-manager a[data-path="' + file.path + '"]');
 					repo.addClass('repo');
-					if (repo.find('i.repo-icon').length === 0) {
+					if (!repo.find('i.repo-icon')) {
 						repo.append('<i class="repo-icon fas fa-code-branch"></i>');
 					}
 				}
@@ -339,7 +339,7 @@
 				path: path
 			};
 
-			var checkboxes = oX('#codegit_overview tbody').find('input[type="checkbox"]');
+			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 			checkboxes.forEach((checkbox) => {
 				if (checkbox.el.checked) {
 					data.files.push(checkbox.parent('tr').attr('data-file'));
@@ -366,10 +366,11 @@
 
 
 		push: function() {
-			var codegit = this;
-			var remote = $('.git_push_area #git_remotes').val();
-			var branch = $('.git_push_area #git_branches').val();
-			this.showDialog('overview', this.location);
+			var remote = oX('.git_push_area #git_remotes').value();
+			var branch = oX('.git_push_area #git_branches').value();
+			
+			// this.showDialog('overview', this.location);
+			
 			$.getJSON(this.path + 'controller.php?action=push&path=' + this.location + '&remote=' + remote + '&branch=' + branch, function(result) {
 				if (result.status == 'login_required') {
 					atheos.toast.show('error', result.message);
@@ -1044,7 +1045,7 @@
 
 		monitorCheckBoxes: function() {
 			var checkboxAll = oX('#codegit_overview #check_all');
-			var checkboxes = oX('#codegit_overview tbody').find('input[type="checkbox"]');
+			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 
 			checkboxAll.on('click', function() {
 				var status = checkboxAll.el.checked;
@@ -1072,17 +1073,17 @@
 		},
 
 		repoBannerDisabled: function() {
-			var setting = atheos.storage('plugin.codegit.disableRepoBanner');
+			var setting = atheos.storage('codegit.disableRepoBanner');
 			return setting || false;
 		},
 
 		fileStatusDisabled: function() {
-			var setting = atheos.storage('plugin.codegit.disableFileStatus');
+			var setting = atheos.storage('codegit.disableFileStatus');
 			return setting || false;
 		},
 
 		suppressCommitDiff: function() {
-			var setting = atheos.storage('plugin.codegit.suppressCommitDiff');
+			var setting = atheos.storage('codegit.suppressCommitDiff');
 			return setting || false;
 		}
 	};

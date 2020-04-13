@@ -45,9 +45,9 @@
 	$autocomplete = array(
 		'username' => '',
 		'password' => '',
-		'password_confirm' => '',
-		'project_name' => '',
-		'project_path' => '',
+		'confirm' => '',
+		'projectName' => '',
+		'projectPath' => '',
 		'timezone' => '',
 	);
 
@@ -177,7 +177,7 @@
 			<div style="float:left; width: 48%;">
 
 				<label><?php i18n("Confirm Password"); ?></label>
-				<input type="password" name="password_confirm" value="<?php echo($autocomplete['password_confirm']); ?>">
+				<input type="password" name="confirm" value="<?php echo($autocomplete['confirm']); ?>">
 
 			</div>
 
@@ -186,9 +186,9 @@
 			<hr>
 
 			<label><?php i18n("New Project Name"); ?></label>
-			<input type="text" name="project_name" value="<?php echo($autocomplete['project_name']); ?>">
+			<input type="text" name="projectName" value="<?php echo($autocomplete['projectName']); ?>">
 			<label><?php i18n("Folder Name or Absolute Path"); ?></label>
-			<input type="text" name="project_path" value="<?php echo($autocomplete['project_path']); ?>">
+			<input type="text" name="projectPath" value="<?php echo($autocomplete['projectPath']); ?>">
 			<hr>
 			<?php
 			$location = array(
@@ -307,82 +307,3 @@
 	?>
 
 </div>
-<script>
-
-	$(function () {
-
-		$('html, body').css('overflow', 'auto');
-
-		// Automatically select first timezone with the appropriate GMT offset
-		function getTimeZoneString() {
-			var num = new Date().getTimezoneOffset();
-			if (num === 0) {
-				return "GMT";
-			} else {
-				var hours = Math.floor(num / 60);
-				var minutes = Math.floor((num - (hours * 60)));
-
-				if (hours < 10) hours = "0" + Math.abs(hours);
-				if (minutes < 10) minutes = "0" + Math.abs(minutes);
-
-				return "GMT" + (num < 0 ? "+": "-") + hours + ":" + minutes;
-			}
-		}
-
-		var timezone = getTimeZoneString();
-		$("[name=timezone] option").each(function () {
-			if ($(this).text().indexOf(timezone) > -1) $("[name=timezone]").val($(this).val());
-		})
-
-		$('#install').on('submit',
-			function (e) {
-				e.preventDefault();
-
-				// Check empty fields
-
-				empty_fields = false;
-				$('input').each(function () {
-					if ($(this).val() == '' && $(this).attr('name') != 'path') {
-						empty_fields = true;
-					}
-				});
-
-				if (empty_fields) {
-					alert('All fields must be filled out');
-				}
-
-				// Check password
-				password_match = true;
-				if ($('input[name="password"]').val() != $('input[name="password_confirm"]').val()) {
-					password_match = false;
-				}
-
-				// Check Path
-				check_path = true;
-				projectPath = '';
-				if ($('input[name="project_path"]').length) {
-					projectPath = $('input[name="project_path"]').val();
-				}
-
-				if (projectPath.indexOf("/") == 0) {
-					check_path = confirm('Do you really want to create project with absolute path "' + projectPath + '"?');
-				}
-
-				if (!password_match) {
-					alert('The passwords entered do not match');
-				}
-
-				if (!empty_fields && password_match && check_path) {
-					$.post('components/install/process.php', $('#install').serialize(), function (data) {
-						if (data == 'success') {
-							window.location.reload();
-						} else {
-							alert("An Error Occurred<br><br>" + data);
-						}
-					});
-				}
-
-			});
-	});
-
-</script>

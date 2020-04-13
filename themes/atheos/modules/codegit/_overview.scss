@@ -8,8 +8,6 @@
 		width: 100%;
 	}
 
-
-
 	tbody {
 		display: block;
 		max-height: 49vh;
@@ -46,14 +44,11 @@
 		// width: 300px;
 	}
 
-	table th:nth-of-type(4) {
-		// width: 205px;
-		text-align: center;
-	}
-
 	table th:nth-of-type(4),
 	table td:nth-of-type(4) {
 		width: 195px;
+		text-align: center;
+		padding: 0;
 	}
 
 

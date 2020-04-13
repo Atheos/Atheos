@@ -9,8 +9,15 @@
 //////////////////////////////////////////////////////////////////////
 // Paths
 //////////////////////////////////////////////////////////////////////
+$data = array();
+if ($_POST && count($_POST) > 0) {
+	foreach ($_POST as $key => $value) {
+		Common::$data[$key] = $value;
+	}
+}
 
-$path = $_POST['path'];
+
+$path = $data['path'] || false;
 
 $rel = str_replace('/components/install/process.php', '', $_SERVER['REQUEST_URI']);
 
@@ -25,7 +32,7 @@ $config = $path . "/config.php";
 //////////////////////////////////////////////////////////////////////
 
 function saveFile($file, $data) {
-	$write = fopen($file, 'w') or die("can't open file");
+	$write = fopen($file, 'w') or die("Unable to open file:$file");
 	fwrite($write, $data);
 	fclose($write);
 }
@@ -44,11 +51,10 @@ function isAbsPath($path) {
 }
 
 function cleanPath($path) {
-
 	// prevent Poison Null Byte injections
 	$path = str_replace(chr(0), '', $path);
 
-	// prevent go out of the workspace
+	// prevent escaping out of the workspace
 	while (strpos($path, '../') !== false) {
 		$path = str_replace('../', '', $path);
 	}
@@ -65,70 +71,61 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////
 
-	$username = cleanUsername($_POST['username']);
-	$password = password_hash($_POST['password'], PASSWORD_DEFAULT);
-	$project_name = $_POST['project_name'];
-	if (isset($_POST['project_path'])) {
-		$project_path = $_POST['project_path'];
-	} else {
-		$project_path = $project_name;
-	}
-	$timezone = $_POST['timezone'];
+	$username = cleanUsername($data['username']);
+	$password = password_hash($data['password'], PASSWORD_DEFAULT);
+	$projectName = $data['projectName'] || false;
+	$projectPath = $data["projectPath"] || $projectName;
+	$timezone = $data['timezone'] || false;
 
 	//////////////////////////////////////////////////////////////////
 	// Create Projects files
 	//////////////////////////////////////////////////////////////////
 
-	$project_path = cleanPath($project_path);
+	$projectPath = cleanPath($projectPath);
 
-	if (!isAbsPath($project_path)) {
-		$project_path = str_replace(" ", "_", preg_replace('/[^\w-\.]/', '', $project_path));
-		mkdir($workspace . "/" . $project_path);
+	if (!isAbsPath($projectPath)) {
+		$projectPath = str_replace(" ", "_", preg_replace('/[^\w-\.]/', '', $projectPath));
+		mkdir($workspace . "/" . $projectPath);
 	} else {
-		$project_path = cleanPath($project_path);
-		if (substr($project_path, -1) == '/') {
-			$project_path = substr($project_path, 0, strlen($project_path)-1);
+		if (substr($projectPath, -1) == '/') {
+			$projectPath = substr($projectPath, 0, strlen($projectPath)-1);
 		}
-		if (!file_exists($project_path)) {
-			if (!mkdir($project_path.'/', 0755, true)) {
+		if (!file_exists($projectPath)) {
+			if (!mkdir($projectPath.'/', 0755, true)) {
 				die("Unable to create Absolute Path");
 			}
 		} else {
-			if (!is_writable($project_path) || !is_readable($project_path)) {
+			if (!is_writable($projectPath) || !is_readable($projectPath)) {
 				die("No Read/Write Permission");
 			}
 		}
 	}
-	$project_data = array("name" => $project_name, "path" => $project_path);
+	$projectData = array("name" => $projectName, "path" => $projectPath);
 
-	saveJSON($projects, array($project_data));
+	saveJSON($projects, array($projectData));
 
 	//////////////////////////////////////////////////////////////////
 	// Create Users file
 	//////////////////////////////////////////////////////////////////
-
-	$user_data = array(
-		"username" => $username,
+	$userData = array();
+	$userData[$username] = array(
 		"password" => $password,
-		"activeProject" => $project_path,
+		"activeProject" => $projectPath,
 		"permissions" => ["configure", "read", "write"],
 		"userACL" => "full"
 	);
 
-	saveJSON($users, array($user_data));
+	saveJSON($users, array($userData));
 
 	//////////////////////////////////////////////////////////////////
 	// Create Active file
 	//////////////////////////////////////////////////////////////////
-
 	saveJSON($active, array(''));
 
 	//////////////////////////////////////////////////////////////////
 	// Create Config
 	//////////////////////////////////////////////////////////////////
-
-
-	$config_data = '<?php
+	$configData = '<?php
 
 /*
 *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
@@ -156,7 +153,7 @@ define("WHITEPATHS", BASE_PATH . ",/home");
 $cookie_lifetime = "0";
 
 // TIMEZONE
-date_default_timezone_set("' . $_POST['timezone'] . '");
+date_default_timezone_set("' . $timezone . '");
 
 // External Authentification
 //define("AUTH_PATH", "/path/to/customauth.php");
@@ -184,7 +181,7 @@ define("ARCHIVEURL", "https://github.com/Atheos/Atheos/archive/master.zip");
 define("COMMITURL", "https://api.github.com/repos/Atheos/Atheos/commits");
 	';
 
-	saveFile($config, $config_data);
+	saveFile($config, $configData);
 
 	echo("success");
 }
