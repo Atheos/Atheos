@@ -6,7 +6,7 @@
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// https://codepen.io/tlongren/pen/pnkij?editors=0010
+// https://codepen.io/tlongren/pen/pnkij?editors=0010asd
 // Currently the icons are hard coded: Close/Types. They'll need to be migrated
 // to css classes modifiable by the themes for consistancy.
 //
@@ -81,7 +81,7 @@
 						let button = document.createElement('button');
 						button.innerText = i18n(key);
 						button.addEventListener('click', function() {
-							options.actions[key]();
+							options.actions[button.innerText]();
 							button.remove();
 							alert.unload();
 						});
