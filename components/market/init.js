@@ -267,7 +267,7 @@
 		//////////////////////////////////////////////////////////////////
 		search: function(e, query, note) {
 			var key = e.charCode || e.keyCode || e.which;
-			if (query !== '' && key == 13) {
+			if (query !== '' && key === 13) {
 				atheos.modal.load(800, self.dialog, {
 					action: 'list',
 					query: query,

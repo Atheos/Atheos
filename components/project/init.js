@@ -123,7 +123,7 @@
 				},
 				success: function(data) {
 					atheos.toast.show(data, 'Project Loaded');
-					if (data.status != 'error') {
+					if (data.status !== 'error') {
 						project.current = {
 							name: data.name,
 							path: data.path

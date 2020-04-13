@@ -270,7 +270,7 @@
 
 				currentLevel = tree;
 
-				if (atheos.project.isAbsPath(path)) {
+				if (atheos.common.isAbsPath(path)) {
 					pathArray = path.replace(this.rootPath, this.rootName).split('/');
 				} else {
 					pathArray = path.split('/');
@@ -288,7 +288,7 @@
 						if (type === 'file') {
 							currentLevel[fragment].path = path;
 						} else {
-							if (atheos.project.isAbsPath(path)) {
+							if (atheos.common.isAbsPath(path)) {
 								currentLevel[fragment].path = pathArray.slice(0, index + 1).join('/').replace(this.rootName, this.rootPath);
 							} else {
 								currentLevel[fragment].path = pathArray.slice(0, index + 1).join('/');

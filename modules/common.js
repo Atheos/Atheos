@@ -202,6 +202,17 @@
 		hideOverlay: function() {
 			oX('#overlay').hide();
 		},
+
+		//////////////////////////////////////////////////////////////////////
+		// Check Absolute Path
+		//////////////////////////////////////////////////////////////////////
+		isAbsPath: function(path) {
+			if (path.indexOf("/") === 0) {
+				return true;
+			} else {
+				return false;
+			}
+		},
 		//////////////////////////////////////////////////////////////////////
 		// Load Script: Used to add new JS to the page.
 		//  Notes: could probably be optimized to cache the scripts nodeArray
