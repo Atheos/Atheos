@@ -589,7 +589,7 @@
 				var listItem = self.sessions[oldPath].listItem;
 				listItem.attr('data-path', newPath);
 				var title = newPath;
-				if (atheos.project.isAbsPath(newPath)) {
+				if (atheos.common.isAbsPath(newPath)) {
 					title = newPath.substring(1);
 				}
 
