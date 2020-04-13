@@ -98,7 +98,6 @@
 
 		a:before {
 			background: linear-gradient(to left, transparent 90%, #{darken($tabListBackground, 15%)});
-
 		}
 	}
 
@@ -127,9 +126,17 @@
 	}
 
 
-	li.changed,
-	li.changed:before,
-	li.changed:after {
+	li.changed {
 		background-color: $green;
+
+		&:before,
+		&:after {
+			background-color: $green;
+
+		}
+
+		a:before {
+			background: linear-gradient(to left, transparent 90%, #{$green});
+		}
 	}
 }
