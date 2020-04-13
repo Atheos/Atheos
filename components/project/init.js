@@ -146,7 +146,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Open Project
 		//////////////////////////////////////////////////////////////////
-
 		open: function(path) {
 			var project = this;
 			atheos.scout.hideFilter();
@@ -180,7 +179,7 @@
 		//////////////////////////////////////////////////////////////////
 		loadSide: function() {
 			ajax({
-				url: this.dialog + '?action=sidelist&',
+				url: this.dialog + '?action=sidelist',
 				success: function(reply) {
 					oX('#project_list .content').html(reply);
 				}
