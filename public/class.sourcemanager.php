@@ -34,7 +34,6 @@ class SourceManager {
 		"modules/chrono.js",
 		"modules/codiad.js",
 		"modules/common.js",
-		"modules/jsend.js",
 		"modules/keybind.js",
 		"modules/modal.js",
 		"modules/storage.js",
