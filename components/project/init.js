@@ -1,7 +1,7 @@
 /*jshint esversion: 6 */
 
 //////////////////////////////////////////////////////////////////////////////80
-// Project
+// Project Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global, $) {
+(function(global) {
 
 	var atheos = global.atheos,
 		ajax = global.ajax,
@@ -39,7 +39,7 @@
 			self = this;
 
 			self.loadCurrent();
-			self.loadSide();
+			self.loadDock();
 
 			var projectCreate = oX('#projects-create'),
 				projectManage = oX('#projects-manage'),
@@ -146,14 +146,17 @@
 		//////////////////////////////////////////////////////////////////
 		// Open Project
 		//////////////////////////////////////////////////////////////////
-		open: function(path) {
-			var project = this;
+		open: function(projectPath) {
 			atheos.scout.hideFilter();
 			ajax({
-				url: this.controller + '?action=open&path=' + encodeURIComponent(path),
+				url: self.controller,
+				data: {
+					action: 'open',
+					projectPath
+				},
 				success: function(data) {
 					if (data.status !== 'error') {
-						project.loadCurrent();
+						self.loadCurrent();
 						if (atheos.modal.modalVisible) {
 							atheos.modal.unload();
 						}
@@ -171,15 +174,20 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function() {
-			atheos.modal.load(500, this.dialog + '?action=list');
+			atheos.modal.load(500, this.dialog, {
+				action: 'list'
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
-		loadSide: function() {
+		loadDock: function() {
 			ajax({
-				url: this.dialog + '?action=sidelist',
+				url: this.dialog,
+				data: {
+					action: 'projectDock'
+				},
 				success: function(reply) {
 					oX('#project_list .content').html(reply);
 				}
@@ -208,7 +216,7 @@
 		//////////////////////////////////////////////////////////////////
 		// Create Project
 		//////////////////////////////////////////////////////////////////
-		create: function(close) {
+		create: function() {
 
 			var projectName, projectPath, gitRepo, gitBranch;
 
@@ -239,10 +247,10 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				projectName = oX('#modal_content form input[name="project_name"]').value();
-				projectPath = oX('#modal_content form input[name="project_path"]').value();
-				gitRepo = oX('#modal_content form input[name="git_repo"]').value();
-				gitBranch = oX('#modal_content form input[name="git_branch"]').value();
+				projectName = oX('#modal_content form input[name="projectName"]').value();
+				projectPath = oX('#modal_content form input[name="projectPath"]').value();
+				gitRepo = oX('#modal_content form input[name="gitRepo"]').value();
+				gitBranch = oX('#modal_content form input[name="gitBranch"]').value();
 
 
 				if (projectPath.indexOf('/') === 0) {
@@ -263,23 +271,30 @@
 
 			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').once('submit', listener);
-			});
-			atheos.modal.load(500, this.dialog + '?action=create&close=' + close);
 
+				// More Selector
+				oX('#show_git_options').on('click', function(e) {
+					e.preventDefault();
+					oX(e.target).hide();
+					atheos.flow.slide('open', oX('#git_options').el);
+				});
+
+			});
+			atheos.modal.load(500, self.dialog, {
+				action: 'create'
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Rename Project
 		//////////////////////////////////////////////////////////////////
 
-		rename: function(name, path) {
-			atheos.modal.load(500, this.dialog + '?action=rename&path=' + encodeURIComponent(path) + '&name=' + name);
+		rename: function(projectName, projectPath) {
 
 			var listener = function(e) {
 				e.preventDefault();
 
-				var projectPath = oX('#modal_content form input[name="project_path"]').value();
-				var projectName = oX('#modal_content form input[name="project_name"]').value();
+				projectName = oX('#modal_content form input[name="projectName"]').value();
 
 				var data = {
 					action: 'rename',
@@ -306,70 +321,69 @@
 			amplify.subscribe('modal.loaded', function() {
 				oX('#modal_content form').once('submit', listener);
 			});
-			atheos.modal.load(500, this.dialog + '?action=create&close=' + close);
+			atheos.modal.load(500, self.dialog, {
+				action: 'rename',
+				projectName
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Delete Project
 		//////////////////////////////////////////////////////////////////
 
-		delete: function(name, path) {
-			var _this = this;
-			atheos.modal.load(500, this.dialog + '?action=delete&name=' + encodeURIComponent(name) + '&path=' + encodeURIComponent(path));
-			$('#modal_content form')
-				.live('submit', function(e) {
-					e.preventDefault();
-					var projectPath = $('#modal_content form input[name="project_path"]')
-						.val();
-					var deletefiles = $('input:checkbox[name="delete"]:checked').val();
-					var followlinks = $('input:checkbox[name="follow"]:checked').val();
-					var action = '?action=delete';
-					if (typeof deletefiles !== 'undefined') {
-						if (typeof followlinks !== 'undefined') {
-							action += '&follow=true&path=' + encodeURIComponent(projectPath);
-						} else {
-							action += '&path=' + encodeURIComponent(projectPath);
-						}
-					}
-					$.get(atheos.filemanager.controller + action, function(d) {
-						$.get(_this.controller + '?action=delete&project_path=' + encodeURIComponent(projectPath), function(data) {
-							var deletedata = atheos.jsend.parse(data);
-							if (deletedata !== 'error') {
-								atheos.toast.show('success', 'Project Deleted');
-								_this.list();
-								_this.loadSide();
-								// Remove any active files that may be open
-								$('#active-files a')
-									.each(function() {
-										var curPath = $(this)
-											.attr('data-path');
-										if (curPath.indexOf(projectPath) === 0) {
-											atheos.active.remove(curPath);
-										}
-									});
-								/* Notify listeners. */
-								amplify.publish('project.onDelete', {
-									'path': projectPath,
-									'name': name
-								});
+		delete: function(projectName, projectPath) {
+			var listener = function(e) {
+				e.preventDefault();
+
+				var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
+				var followLinks = oX('input:checkbox[name="follow"]:checked').value();
+
+				ajas({
+					url: self.controller,
+					data: {
+						action: 'delete',
+						projectPath,
+						projectName,
+						deleteFiles,
+						followLinks
+					},
+					success: function(data) {
+						if (data.status === 'success') {
+							atheos.toast.show('success', 'Project Deleted');
+							atheos.toast.show('notice', 'Project file deletion not implemented');
+							self.list();
+							self.loadDock();
+
+							for (path in atheos.active.sessions) {
+								if (path.indexOf(projectPath) === 0) {
+									atheos.active.remove(path);
+								}
 							}
-						});
-					});
+
+							amplify.publish('project.delete', {
+								'path': projectPath,
+								'name': projectName
+							});
+						}
+
+					}
 				});
+			};
+
+			amplify.subscribe('modal.loaded', function() {
+				oX('#modal_content form').once('submit', listener);
+			});
+			atheos.modal.load(500, self.dialog, {
+				action: 'rename',
+				projectName,
+				projectPath
+			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Check Absolute Path
-		//////////////////////////////////////////////////////////////////
-
-		isAbsPath: function(path) {
-			return (path.indexOf('/') === 0) ? true : false;
-		},
 
 		//////////////////////////////////////////////////////////////////
 		// Get Current (Path)
 		//////////////////////////////////////////////////////////////////
-
 		getCurrent: function() {
 			ajax({
 				url: self.controller,
@@ -385,4 +399,4 @@
 			return self.current.path;
 		}
 	};
-})(this, jQuery);
+})(this);
