@@ -69,7 +69,9 @@ class Scout {
 					$result['line'] = $data[1];
 					$result['path'] = str_replace("$root/", '', $data[0]);
 					$result['string'] = htmlentities(str_replace($data[0] . ":" . $data[1] . ':', '', $line));
-					// $return[$file]['line'] = $data[1];
+					if (strlen($result["string"]) > 500) {
+						$result["string"] = substr($result["string"], 0, 497) . '...';
+					}
 					$results[$file][] = $result;
 				}
 			}
