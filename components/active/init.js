@@ -87,7 +87,7 @@
 					}
 				}
 
-				if (changedTabs.length !== '') {
+				if (changedTabs.length > 0) {
 					path = changedTabs[0].attr('data-path');
 					self.focus(path);
 					e = e || window.event;
@@ -320,7 +320,7 @@
 				ajax({
 					url: self.controller,
 					data: {
-						'action': 'focused',
+						'action': 'setFocus',
 						'path': path
 					}
 				});
