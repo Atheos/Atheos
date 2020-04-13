@@ -80,7 +80,6 @@ class Active {
 	//////////////////////////////////////////////////////////////////
 
 	public function add() {
-		$process_add = true;
 		$this->activeFiles[$this->username][$this->path] = "active";
 		Common::saveJSON('active', $this->activeFiles);
 		Common::sendJSON("S2000");
