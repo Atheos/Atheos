@@ -151,10 +151,15 @@
 	let argToElement = function(selector) {
 		if (selector) {
 			if (typeof selector === 'string') {
-				const tagName = /^<(\w+)>$/.exec(selector);
+				const tagName = /^<(.+)>$/.exec(selector);
 
 				if (tagName !== null) {
-					return document.createElement(tagName[1]);
+					// https://stackoverflow.com/questions/494143/creating-a-new-dom-element-from-an-html-string-using-built-in-dom-methods-or-pro
+					var template = document.createElement('template');
+					selector = selector.trim(); // Never return a text node of whitespace as the result
+					template.innerHTML = selector;
+					return template.content.firstChild;
+					// return document.createElement(tagName[1]);
 				} else {
 					return document.querySelector(selector);
 				}
@@ -185,32 +190,24 @@
 			return;
 		}
 
-		let insertToAdjacent = (s) => function(e) {
-			if (e instanceof HTMLElement) {
-				e.insertAdjacentElement(s, element);
-			} else {
-				e.element.insertAdjacentElement(s, element);
+		let insertToAdjacent = (location) => function(target) {
+			if (target instanceof HTMLElement) {
+				target.insertAdjacentElement(location, element);
+			} else if ('isOnyx' in target) {
+				target = target.el;
+				target.insertAdjacentElement(location, element);
 			}
 		};
 
-		let insertAdjacent = (s) => function(sOrE) {
-			if (typeof sOrE !== 'string') {
-				if (sOrE instanceof HTMLElement) {
-					element.insertAdjacentElement(s, sOrE);
-				} else if ('isOnyx' in sOrE) {
-					const osel = sOrE.el;
-
-					element.insertAdjacentElement(s, osel);
-
-					for (let i = 1; i < osel.length; i++) {
-						osel.insertAdjacentElement('afterend', osel[i]);
-					}
-				}
-			} else {
-				element.insertAdjacentHTML(s, sOrE);
+		let insertAdjacent = (location) => function(addition) {
+			if (typeof addition === 'string') {
+				element.insertAdjacentHTML(location, addition);
+			} else if (addition instanceof HTMLElement) {
+				element.insertAdjacentElement(location, addition);
+			} else if ('isOnyx' in addition) {
+				addition = addition.el;
+				element.insertAdjacentElement(location, addition);
 			}
-
-			return this;
 		};
 
 		let triggerEvent = function(event) {
@@ -253,7 +250,7 @@
 			},
 			css: function(a, v) {
 				if (typeof a === 'string') {
-					if (v) {
+					if (typeof(v) !== 'undefined') {
 						element.style[a] = v;
 					}
 					return element.style[a] || null;
@@ -359,18 +356,16 @@
 				return children;
 			},
 			find: function(s, q) {
+				var node = element.querySelector(s);
+				return onyx(node);
+
+			},
+			findAll: function(s, q) {
 				var nodes = element.querySelectorAll(s),
 					results = [];
 				for (var i = 0; i < nodes.length; i++) {
 					results.push(onyx(nodes[i]));
 				}
-
-				// const action = {
-				// 	first: results[0],
-				// 	last: results.slice(-1)[0],
-				// 	default: results
-				// };
-				// return action[q] || action.default;
 				return results;
 
 			},
@@ -392,7 +387,7 @@
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,
-			height: function() {
+			height: function(outerHeight) {
 				var init = {
 					'display': element.style.display,
 					'visibility': element.style.visibility,
@@ -405,13 +400,47 @@
 					'opacity': 0
 				});
 
-				var height = parseFloat(window.getComputedStyle(element, null).height.replace('px', ''));
+				var computedStyle = window.getComputedStyle(element);
 
+				var height = parseFloat(computedStyle.height.replace('px', ''));
+				if (outerWidth) {
+					height += parseFloat(computedStyle.marginTop.replace('px', ''));
+					height += parseFloat(computedStyle.marginBottom.replace('px', ''));
+					height += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
+					height += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
+				}
 				this.css(init);
 
 				return height;
 			},
 			clientWidth: () => element.clientWidth,
+			width: function(outerWidth) {
+				var init = {
+					'display': element.style.display,
+					'visibility': element.style.visibility,
+					'opacity': element.style.opacity
+				};
+
+				this.css({
+					'display': 'block',
+					'visibility': 'hidden',
+					'opacity': 0
+				});
+
+				var computedStyle = window.getComputedStyle(element);
+
+				var width = parseFloat(computedStyle.width.replace('px', ''));
+				if (outerWidth) {
+					width += parseFloat(computedStyle.marginLeft.replace('px', ''));
+					width += parseFloat(computedStyle.marginRight.replace('px', ''));
+					width += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
+					width += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
+				}
+
+				this.css(init);
+
+				return width;
+			},
 			style: () => element.style,
 			el: element,
 

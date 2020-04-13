@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager
+// FileManager Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -11,10 +13,6 @@
 // Goodness this file is very complex; it's going to take a very long time
 // to really get a grasp of what's going on in this file and how to 
 // refactor it.
-// The context menu should become an object stored within the filemanager, and
-// constructed based on the fules specified therein. The OBJ is created, and
-// then added to by each plugin based on it's requirements. The OBJ could even
-// be cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -29,7 +27,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.filemanager.init());
+	amplify.subscribe('system.loadMajor', () => atheos.filemanager.init());
 
 	atheos.filemanager = {
 
@@ -41,6 +39,7 @@
 		controller: 'components/filemanager/controller.php',
 		dialog: 'components/filemanager/dialog.php',
 		dialogUpload: 'components/filemanager/dialog_upload.php',
+		openTrigger: 'single',
 
 		init: function() {
 			self = this;
@@ -50,6 +49,13 @@
 			common.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
 			common.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
 			common.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
+
+			amplify.subscribe('settings.loaded', function() {
+				var local = atheos.storage('filemanager.openTrigger');
+				if (local === 'single' || local === 'double') {
+					self.openTrigger = local;
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -70,9 +76,9 @@
 					return false;
 				} else if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						node = node.find('a')[0];
+						node = node.find('a');
 					} else {
-						node = oX(node.parent());
+						node = node.parent();
 					}
 				}
 				return node;
@@ -80,7 +86,6 @@
 
 			var nodeFunctions = (function(node) {
 				if (node) {
-					node = oX(node);
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
 						this.openDir(node.attr('data-path'));
 					} else if (node.attr('data-type') === 'file') {
@@ -90,17 +95,24 @@
 			}).bind(this);
 
 			oX('#file-manager').on('click', function(e) {
-				if (!atheos.editor.settings.fileManagerTrigger) {
+				if (self.openTrigger === 'single') {
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
 
 			oX('#file-manager').on('dblclick', function(e) {
-				if (atheos.editor.settings.fileManagerTrigger) {
+				if (self.openTrigger === 'double') {
 					nodeFunctions(checkAnchor(e.target));
 				}
 			});
 
+			oX('#file-manager').on('mousedown', function(e) {
+				//var options = {
+				//	dragZone: oX('#file-manager').el,
+				//	direction: 'vertical'
+				//};
+				// atheos.flow.dragNdrop(e, options);
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -114,14 +126,14 @@
 			rescan = rescan || false;
 
 			var node = oX('#file-manager a[data-path="' + path + '"]');
-			let icon = node.find('.expand')[0];
+			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {
 				node.removeClass('open');
 
 				var list = node.siblings('ul')[0];
 				if (list) {
-					atheos.animation.slide('close', list.el, slideDuration);
+					atheos.flow.slide('close', list.el, slideDuration);
 					if (icon) {
 						icon.replaceClass('fa-minus', 'fa-plus');
 					}
@@ -165,7 +177,7 @@
 								node.after(appendage);
 								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
-									atheos.animation.slide('open', list.el, slideDuration);
+									atheos.flow.slide('open', list.el, slideDuration);
 								}
 							}
 							amplify.publish('filemanager.openDir', {
@@ -209,7 +221,7 @@
 
 			fileClass = fileClass || 'fa fa-file medium-green';
 
-			return `<li>
+			return `<li class="draggable">
 						<a data-type="${type}" data-path="${path}">
 							<i class="expand ${nodeClass}"></i>
 							<i class="${fileClass}"></i>
@@ -226,7 +238,7 @@
 		rescan: function(path) {
 			if (self.rescanCounter === 0) {
 				var list = oX('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
-				var openNodes = list.find('a.open');
+				var openNodes = list.findAll('a.open');
 
 				for (var i = 0; i < openNodes.length; i++) {
 					self.rescanChildren.push(openNodes[i].attr('data-path'));
@@ -247,11 +259,11 @@
 			if (self.noOpen.indexOf(ext) < 0) {
 				ajax({
 					url: self.controller + '?action=open&path=' + encodeURIComponent(path),
-					success: function(data) {
-						if (data.status !== 'error') {
-							atheos.active.open(path, data.data.content, data.data.mtime, false, focus);
+					success: function(reply) {
+						if (reply.status !== 'error') {
+							atheos.active.open(path, reply.data.content, reply.data.mtime, focus);
 							if (line) {
-								setTimeout(atheos.active.gotoLine(line), 500);
+								setTimeout(atheos.editor.gotoLine(line), 500);
 							}
 						}
 					}
@@ -274,6 +286,13 @@
 		//////////////////////////////////////////////////////////////////
 
 		openInBrowser: function(path) {
+			path = path || atheos.active.getPath();
+
+			if (!path) {
+				atheos.toast.show('error', 'No file selected');
+				return;
+			}
+
 			ajax({
 				url: self.controller + '?action=open_in_browser&path=' + encodeURIComponent(path),
 				success: function(data) {
@@ -284,6 +303,7 @@
 				async: false
 			});
 		},
+
 		openInModal: function(path) {
 			atheos.modal.load(250, self.dialog, {
 				action: 'preview',
@@ -298,14 +318,6 @@
 		//////////////////////////////////////////////////////////////////
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
-
-			var notifySaveErr = function() {
-				atheos.toast.show('error', 'File could not be saved');
-				if (typeof callbacks.error === 'function') {
-					var context = callbacks.context || self;
-					callbacks.error.apply(context, [data]);
-				}
-			};
 
 			ajax({
 				url: self.controller + '?action=modify&path=' + encodeURIComponent(path),
@@ -329,8 +341,7 @@
 								positive: {
 									message: 'Yes',
 									fnc: function() {
-										atheos.active.close(path);
-										atheos.active.removeDraft(path);
+										atheos.active.remove(path);
 										self.openFile(path);
 									}
 								},
@@ -426,21 +437,16 @@
 						banner: 'Path already exists!',
 						message: 'Would you like to overwrite or duplicate the file?',
 						data: `/${path}/${nodeName}`,
-						actions: [{
-								message: 'Overwrite',
-								fnc: function() {
-									console.log('Overwrite');
-									processPaste(path, false);
-								}
+						actions: {
+							'Overwrite': function() {
+								console.log('Overwrite');
+								processPaste(path, false);
 							},
-							{
-								message: 'Duplicate',
-								fnc: function() {
-									console.log('Duplicate');
-									processPaste(path, true);
-								}
+							'Duplicate': function() {
+								console.log('Duplicate');
+								processPaste(path, true);
 							}
-						]
+						}
 					});
 				} else {
 					processPaste(path, false);
@@ -560,8 +566,8 @@
 						parentNode.append(list.el);
 					}
 				} else {
-					if (parentNode.find('.expand')[0]) {
-						parentNode.find('.expand')[0].replaceClass('none', 'fa fa-plus');
+					if (parentNode.find('.expand')) {
+						parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
 					}
 				}
 			}
@@ -621,18 +627,20 @@
 							newName: newName
 						},
 						success: function(data) {
-							console.log(data);
 							if (data.status !== 'error') {
 								atheos.toast.show('success', 'File Renamed');
 								var node = oX('#file-manager a[data-path="' + path + '"]'),
-									icon = node.find('i:nth-child(2)')[0],
-									span = node.find('span')[0];
+									icon = node.find('i:nth-child(2)'),
+									span = node.find('span');
 								// Change pathing and name for node
 								node.attr('data-path', newPath);
 								span.text(newName);
 								if (type === 'file') { // Change icons for file
 									icon.removeClass();
-									icon.addClass(fileIcons.getClassWithColor(newName));
+									var ico = fileIcons.getClassWithColor(newName);
+									if (ico) {
+										icon.addClass(fileIcons.getClassWithColor(newName));
+									}
 								} else { // Change pathing on any sub-files/directories
 									self.repathChildren(path, newPath);
 								}

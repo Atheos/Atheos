@@ -1,0 +1,46 @@
+div {
+	scrollbar-base-color: #1a1a1a;
+	scrollbar-3d-light-color: #1a1a1a;
+	scrollbar-arrow-color: #303030;
+	scrollbar-darkshadow-color: #303030;
+	scrollbar-face-color: #1a1a1a;
+	scrollbar-highlight-color: #303030;
+	scrollbar-shadow-color: #303030;
+	scrollbar-track-color: #303030;
+}
+
+/* WEBKIT SCROLLBARS */
+::-webkit-scrollbar {
+	width: $scrollbarWidth;
+	height: $scrollbarWidth;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: $background;
+	@include border-radius;
+
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	height: 5px;
+	background-color: #666;
+	@include border-radius;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+	background-color: #999;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	width: 5px;
+	background-color: #666;
+	@include border-radius;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background-color: #999;
+}
+
+::-webkit-scrollbar-corner {
+	background-color: $background;
+}

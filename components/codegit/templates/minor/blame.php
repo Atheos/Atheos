@@ -10,7 +10,7 @@ if ($files) {
 
 $blames = array();
 foreach ($files as $i => $file) {
-	$blames[] = $CodeGit->blame($repo, $file);
+	$blames[] = $CodeGit->loadBlame($repo, $file);
 }
 
 echo "<div id=\"codegit_blame\" class=\"content\">";

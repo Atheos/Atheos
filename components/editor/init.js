@@ -1,10 +1,20 @@
 /*
-	*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
+	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
 	*  as-is and without warranty under the MIT License. See
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
 
 (function(global, $) {
+
+
+
+	// Editor modes that have been loaded
+	var editorModes = {};
+	var ace = global.ace,
+		atheos = global.atheos,
+		amplify = global.amplify,
+		oX = global.onyx,
+		storage = atheos.storage;
 
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -12,17 +22,13 @@
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
-	// Editor modes that have been loaded
-	var editorModes = {};
-
-	var codiad = global.codiad,
-		oX = global.onyx;
-
 	var separatorWidth = 3;
 
-	$(function() {
-		codiad.editor.init();
-	});
+	var self = null;
+
+
+	amplify.subscribe('system.loadMajor', () => atheos.editor.init());
+
 
 	// modes available for selecting
 	var availableTextModes = new Array(
@@ -161,7 +167,7 @@
 	);
 
 	function SplitContainer(root, children, splitType) {
-		var _this = this;
+		var self = this;
 
 		this.root = root;
 		this.splitType = splitType;
@@ -178,30 +184,30 @@
 			.draggable({
 				axis: (splitType === 'horizontal' ? 'x' : 'y'),
 				drag: function(e, ui) {
-					if (_this.splitType === 'horizontal') {
+					if (self.splitType === 'horizontal') {
 						var w1, w2;
 						w1 = ui.position.left - separatorWidth / 2;
-						w2 = _this.root.width() - ui.position.left -
+						w2 = self.root.width() - ui.position.left -
 							separatorWidth / 2;
-						_this.splitProp = w1 / _this.root.width();
-						_this.childElements[0]
+						self.splitProp = w1 / self.root.width();
+						self.childElements[0]
 							.width(w1)
 							.trigger('h-resize', [true, true]);
-						_this.childElements[1]
+						self.childElements[1]
 							.width(w2)
 							.css('left', w1 + separatorWidth + 'px')
 							.trigger('h-resize', [true, true]);
-						_this.splitProp = ui.position.left / _this.root.width();
+						self.splitProp = ui.position.left / self.root.width();
 					} else {
 						var h1, h2;
 						h1 = ui.position.top - separatorWidth / 2;
-						h2 = _this.root.width() - ui.position.top -
+						h2 = self.root.width() - ui.position.top -
 							separatorWidth / 2;
-						_this.splitProp = h1 / _this.root.height();
-						_this.childElements[0]
+						self.splitProp = h1 / self.root.height();
+						self.childElements[0]
 							.height(h1)
 							.trigger('v-resize', [true, true]);
-						_this.childElements[1]
+						self.childElements[1]
 							.height(h2)
 							.css('top', h1 + separatorWidth + 'px')
 							.trigger('v-resize', [true, true]);
@@ -223,71 +229,71 @@
 
 		this.root.on('h-resize', function(e, percolateUp, percolateDown) {
 			e.stopPropagation();
-			if (_this.splitType === 'horizontal') {
+			if (self.splitType === 'horizontal') {
 				var w1, w2;
-				w1 = _this.root.width() * _this.splitProp -
+				w1 = self.root.width() * self.splitProp -
 					separatorWidth / 2;
-				w2 = _this.root.width() * (1 - _this.splitProp) -
+				w2 = self.root.width() * (1 - self.splitProp) -
 					separatorWidth / 2;
-				_this.childElements[0]
+				self.childElements[0]
 					.width(w1);
-				_this.childElements[1]
+				self.childElements[1]
 					.width(w2)
 					.css('left', w1 + separatorWidth);
-				_this.splitter.css('left', w1);
-			} else if (_this.splitType === 'vertical') {
-				var w = _this.root.width();
-				_this.childElements[0]
+				self.splitter.css('left', w1);
+			} else if (self.splitType === 'vertical') {
+				var w = self.root.width();
+				self.childElements[0]
 					.width(w);
-				_this.childElements[1]
+				self.childElements[1]
 					.width(w);
-				_this.splitter.width(w);
+				self.splitter.width(w);
 			}
 			if (percolateUp) {
-				_this.root.parent('.editor-wrapper')
+				self.root.parent('.editor-wrapper')
 					.trigger('h-resize', [true, false]);
 			}
 			if (!percolateDown) return;
-			if (_this.childContainers[0]) {
-				_this.childContainers[0].root
+			if (self.childContainers[0]) {
+				self.childContainers[0].root
 					.trigger('h-resize', [false, true]);
-			} else if (_this.childContainers[1]) {
-				_this.childContainers[1].root
+			} else if (self.childContainers[1]) {
+				self.childContainers[1].root
 					.trigger('h-resize', [false, true]);
 			}
 		});
 
 		this.root.on('v-resize', function(e, percolateUp, percolateDown) {
 			e.stopPropagation();
-			if (_this.splitType === 'horizontal') {
-				var h = _this.root.height();
-				_this.childElements[0]
+			if (self.splitType === 'horizontal') {
+				var h = self.root.height();
+				self.childElements[0]
 					.height(h);
-				_this.childElements[1]
+				self.childElements[1]
 					.height(h);
-				_this.splitter.height(h);
-			} else if (_this.splitType === 'vertical') {
-				var h1 = _this.root.height() * _this.splitProp -
+				self.splitter.height(h);
+			} else if (self.splitType === 'vertical') {
+				var h1 = self.root.height() * self.splitProp -
 					separatorWidth / 2;
-				var h2 = _this.root.height() * (1 - _this.splitProp) -
+				var h2 = self.root.height() * (1 - self.splitProp) -
 					separatorWidth / 2;
-				_this.childElements[0]
+				self.childElements[0]
 					.height(h1);
-				_this.childElements[1]
+				self.childElements[1]
 					.height(h2)
 					.css('top', h1 + separatorWidth);
-				_this.splitter.css('top', h1);
+				self.splitter.css('top', h1);
 			}
 			if (percolateUp) {
-				_this.root.parent('.editor-wrapper')
+				self.root.parent('.editor-wrapper')
 					.trigger('v-resize', [true, false]);
 			}
 			if (!percolateDown) return;
-			if (_this.childContainers[0]) {
-				_this.childContainers[0].root
+			if (self.childContainers[0]) {
+				self.childContainers[0].root
 					.trigger('v-resize', [false, true]);
-			} else if (_this.childContainers[1]) {
-				_this.childContainers[1].root
+			} else if (self.childContainers[1]) {
+				self.childContainers[1].root
 					.trigger('v-resize', [false, true]);
 			}
 		});
@@ -368,13 +374,13 @@
 
 	//////////////////////////////////////////////////////////////////
 	//
-	// Editor Component for Codiad
+	// Editor Component for atheos
 	// ---------------------------
 	// Manage the lifecycle of Editor instances
 	//
 	//////////////////////////////////////////////////////////////////
 
-	codiad.editor = {
+	atheos.editor = {
 
 		/// Editor instances - One instance corresponds to an editor
 		/// pane in the user interface. Different EditSessions
@@ -395,7 +401,6 @@
 			wrapMode: false,
 			softTabs: false,
 			persistentModal: true,
-			fileManagerTrigger: false,
 			tabSize: 4
 		},
 
@@ -404,28 +409,28 @@
 		fileExtensionTextMode: {},
 
 		init: function() {
+			self = this;
+
 			this.createSplitMenu();
 			this.createModeMenu();
 			this.cursorTracking();
 
-			var er = $('#editor-region');
+			var editor = $('#editor-region');
 
-			er.on('h-resize-init', function() {
-				$('#editor-region > .editor-wrapper')
-					.width($(this).width())
-					.trigger('h-resize');
+			// editor = oX('#editor-region');
 
-			}).on('v-resize-init', function() {
-				$('#editor-region > .editor-wrapper')
-					.height($(this).height())
-					.trigger('v-resize');
+
+			editor.on('h-resize-init', function() {
+				$('#editor-region > .editor-wrapper').width($(this).width()).trigger('h-resize');
+			});
+
+			editor.on('v-resize-init', function() {
+				$('#editor-region > .editor-wrapper').height($(this).height()).trigger('v-resize');
 			});
 
 
 			$(window).resize(function() {
-				$('#editor-region')
-					.trigger('h-resize-init')
-					.trigger('v-resize-init');
+				$('#editor-region').trigger('h-resize-init').trigger('v-resize-init');
 			});
 		},
 
@@ -436,36 +441,27 @@
 		//////////////////////////////////////////////////////////////////
 
 		getSettings: function() {
-			var boolVal = null;
-			var theme = localStorage.getItem('codiad.editor.theme');
+			var boolVal = null,
+				local = null,
+				settings = null;
 
-			var _this = this;
-
-			$.each(['theme', 'fontSize', 'tabSize'], function(idx, key) {
-				var localValue = localStorage.getItem('codiad.editor.' + key);
-				if (localValue !== null) {
-					_this.settings[key] = localValue;
+			settings = ['theme', 'fontSize', 'tabSize'];
+			settings.forEach(function(key) {
+				local = storage('editor.' + key);
+				if (local !== null) {
+					self.settings[key] = local;
 				}
 			});
 
-			$.each(['printMargin', 'highlightLine', 'indentGuides', 'wrapMode', 'fileManagerTrigger', 'softTabs', 'persistentModal'],
-				function(idx, key) {
-					var localValue =
-						localStorage.getItem('codiad.editor.' + key);
-					if (localValue === null) {
-						return;
-					}
-					_this.settings[key] = (localValue === 'true');
-				});
-			$.each(['printMarginColumn'],
-				function(idx, key) {
-					var localValue =
-						localStorage.getItem('codiad.editor.' + key);
-					if (localValue === null) {
-						return;
-					}
-					_this.settings[key] = localValue;
-				});
+
+			settings = ['printMargin', 'printMarginColumn', 'highlightLine', 'indentGuides', 'wrapMode', 'softTabs', 'persistentModal'];
+			settings.forEach(function(key) {
+				local = storage('editor.' + key);
+				if (local !== null) {
+					self.settings[key] = local;
+				}
+			});
+
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -511,32 +507,39 @@
 		//////////////////////////////////////////////////////////////////
 
 		addInstance: function(session, where) {
-			var el = $('<div class="editor">');
+			var editor = $('<div class="editor">');
 			var chType, chArr = [],
 				sc = null,
 				chIdx = null;
-			var _this = this;
+			var self = this;
 
 			if (this.instances.length === 0) {
 				// el.appendTo($('#editor-region'));
-				el.appendTo($('#root-editor-wrapper'));
+				editor.appendTo($('#root-editor-wrapper'));
 			} else {
 
 				var ch = this.activeInstance.el;
-				var root;
+
 
 				chIdx = (where === 'top' || where === 'left') ? 0 : 1;
-				chType = (where === 'top' || where === 'bottom') ?
-					'vertical' : 'horizontal';
+				chType = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 
-				chArr[chIdx] = el;
+				chArr[chIdx] = editor;
 				chArr[1 - chIdx] = ch;
 
-				root = $('<div class="editor-wrapper">')
+				var root = $('<div class="editor-wrapper">')
 					.height(ch.height())
 					.width(ch.width())
 					.addClass('editor-wrapper-' + chType)
 					.appendTo(ch.parent());
+
+
+				// var root = oX('<div class="editor-wrapper">');
+				// 	root.height(ch.height());
+				// 	root.width(ch.width());
+
+				// 	root.addClass('editor-wrapper-' + chType);
+				// 	root.appendTo(ch.parent());
 
 				sc = new SplitContainer(root, chArr, chType);
 
@@ -547,7 +550,7 @@
 				}
 			}
 
-			var i = ace.edit(el[0]);
+			var i = ace.edit(editor[0]);
 			var resizeEditor = function() {
 				i.resize();
 			};
@@ -565,7 +568,7 @@
 
 				if (this.instances.length === 1) {
 					var re = function() {
-						_this.instances[0].resize();
+						self.instances[0].resize();
 					};
 					sc.root
 						.on('h-resize', re)
@@ -573,7 +576,7 @@
 				}
 			}
 
-			i.el = el;
+			i.el = editor;
 			this.setSession(session, i);
 
 			this.changeListener(i);
@@ -583,48 +586,48 @@
 			this.instances.push(i);
 
 			i.on('focus', function() {
-				_this.focus(i);
+				self.focus(i);
 			});
 
 			return i;
 		},
 
 		createSplitMenu: function() {
-			var _this = this;
+			var self = this;
 			var _splitOptionsMenu = $('#split-options-menu');
 
 			this.initMenuHandler($('#split'), _splitOptionsMenu);
 
 			$('#split-horizontally a').click(function(e) {
 				e.stopPropagation();
-				_this.addInstance(_this.activeInstance.getSession(), 'bottom');
+				self.addInstance(self.activeInstance.getSession(), 'bottom');
 				_splitOptionsMenu.hide();
 			});
 
 			$('#split-vertically a').click(function(e) {
 				e.stopPropagation();
-				_this.addInstance(_this.activeInstance.getSession(), 'right');
+				self.addInstance(self.activeInstance.getSession(), 'right');
 				_splitOptionsMenu.hide();
 			});
 
 			$('#merge-all a').click(function(e) {
 				e.stopPropagation();
-				var s = _this.activeInstance.getSession();
-				_this.exterminate();
-				_this.addInstance(s);
+				var s = self.activeInstance.getSession();
+				self.exterminate();
+				self.addInstance(s);
 				_splitOptionsMenu.hide();
 			});
 		},
 
 		createModeMenu: function() {
-			var _this = this;
-			var _thisMenu = $('#changemode-menu');
+			var self = this;
+			var selfMenu = $('#changemode-menu');
 			var modeColumns = new Array();
 			var modeOptions = new Array();
 			var maxOptionsColumn = 15;
 			var firstOption = 0;
 
-			this.initMenuHandler($('#current_mode'), _thisMenu);
+			this.initMenuHandler($('#current_mode'), selfMenu);
 
 			availableTextModes.sort();
 			$.each(availableTextModes, function(i) {
@@ -651,28 +654,28 @@
 			}
 
 			html += '</tr></table>';
-			_thisMenu.html(html);
+			selfMenu.html(html);
 
 			$('#changemode-menu a').click(function(e) {
 				e.stopPropagation();
 				var newMode = 'ace/mode/' + $(e.currentTarget).text();
-				var actSession = _this.activeInstance.getSession();
+				var actSession = self.activeInstance.getSession();
 
 				// handle async mode change
 				var fn = function() {
-					_this.setModeDisplay(actSession);
+					self.setModeDisplay(actSession);
 					actSession.removeListener('changeMode', fn);
 				};
 				actSession.on('changeMode', fn);
 
 				actSession.setMode(newMode);
-				_thisMenu.hide();
+				selfMenu.hide();
 
 			});
 		},
 
 		initMenuHandler: function(button, menu) {
-			var _this = this;
+			var self = this;
 			var thisButton = button;
 			var thisMenu = menu;
 
@@ -684,7 +687,7 @@
 				e.stopPropagation();
 
 				// close other menus
-				_this.closeMenus(thisMenu);
+				self.closeMenus(thisMenu);
 
 				thisMenu.css({
 					// display: 'block',
@@ -710,6 +713,9 @@
 		},
 
 		setModeDisplay: function(session) {
+			if (!session) {
+				return;
+			}
 			var currMode = session.getMode().$id;
 			if (currMode) {
 				currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
@@ -966,7 +972,7 @@
 				}
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.theme', t);
+			localStorage.setItem('atheos.editor.theme', t);
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -1008,7 +1014,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.fontSize', s);
+			localStorage.setItem('atheos.editor.fontSize', s);
 		},
 
 
@@ -1033,7 +1039,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.highlightLine', h);
+			localStorage.setItem('atheos.editor.highlightLine', h);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1056,7 +1062,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.printMargin', p);
+			localStorage.setItem('atheos.editor.printMargin', p);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1079,7 +1085,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.printMarginColumn', p);
+			localStorage.setItem('atheos.editor.printMarginColumn', p);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1102,7 +1108,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.indentGuides', g);
+			localStorage.setItem('atheos.editor.indentGuides', g);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1144,7 +1150,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.wrapMode', w);
+			localStorage.setItem('atheos.editor.wrapMode', w);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1160,57 +1166,8 @@
 		setPersistentModal: function(t, i) {
 			this.settings.persistentModal = t;
 			// LocalStorage
-			localStorage.setItem('codiad.editor.persistentModal', t);
+			localStorage.setItem('atheos.editor.persistentModal', t);
 		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Set trigger for opening the left sidebar
-		//
-		// Parameters:
-		//   t - {Boolean} (false for Hover, true for Click)
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setLeftSidebarTrigger: function(t, i) {
-			codiad.sidebars.settings.leftSidebarTrigger = t;
-			// LocalStorage
-			localStorage.setItem('codiad.sidebars.leftSidebarTrigger', t);
-		},
-		//////////////////////////////////////////////////////////////////
-		//
-		// Set trigger for opening the right sidebar
-		//
-		// Parameters:
-		//   t - {Boolean} (false for Hover, true for Click)
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setRightSidebarTrigger: function(t, i) {
-			codiad.sidebars.settings.rightSidebarTrigger = t;
-			// LocalStorage
-			localStorage.setItem('codiad.sidebars.rightSidebarTrigger', t);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Set trigger for clicking on the filemanager
-		//
-		// Parameters:
-		//   t - {Boolean} (false for Hover, true for Click)
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setFileManagerTrigger: function(t, i) {
-			this.settings.fileManagerTrigger = t;
-			// LocalStorage
-			localStorage.setItem('codiad.editor.fileManagerTrigger', t);
-			codiad.project.loadSide();
-		},
-
 
 		//////////////////////////////////////////////////////////////////
 		//
@@ -1231,7 +1188,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.tabSize', s);
+			localStorage.setItem('atheos.editor.tabSize', s);
 
 		},
 
@@ -1254,7 +1211,7 @@
 				});
 			}
 			// LocalStorage
-			localStorage.setItem('codiad.editor.softTabs', t);
+			localStorage.setItem('atheos.editor.softTabs', t);
 
 		},
 
@@ -1304,9 +1261,9 @@
 		//////////////////////////////////////////////////////////////////
 
 		changeListener: function(i) {
-			var _this = this;
+			var self = this;
 			i.on('change', function() {
-				codiad.active.markChanged(_this.getActive().getSession().path);
+				atheos.active.markChanged(self.getActive().getSession().path);
 			});
 		},
 
@@ -1352,27 +1309,23 @@
 		//////////////////////////////////////////////////////////////////
 
 		promptLine: function() {
-			if (codiad.editor.getActive() !== null) {
+			if (atheos.editor.getActive() !== null) {
 
 				var listener = function() {
 					oX('#modal_content form').on('submit', function(e) {
 						e.preventDefault();
 						var line = oX('#modal_content form input[name="line"]').value();
 
-
-						// var line = parseInt(prompt('Enter line number:'), 10);
-
 						if (!isNaN(line)) {
-							codiad.editor.gotoLine(line);
-							codiad.editor.focus();
+							atheos.editor.gotoLine(line);
 						}
 
 						atheos.modal.unload();
 					});
 				};
-				
+
 				amplify.subscribe('modal.loaded', listener);
-				
+
 				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
 
 			}
@@ -1382,6 +1335,7 @@
 			i = i || this.getActive();
 			if (!i) return;
 			i.gotoLine(line, 0, true);
+			atheos.editor.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -1398,7 +1352,7 @@
 			this.setActive(i);
 			if (!i) return;
 			i.focus();
-			codiad.active.focus(i.getSession().path);
+			atheos.active.focus(i.getSession().path);
 			// this.cursorTracking(i);
 		},
 
@@ -1413,7 +1367,7 @@
 
 		cursorTracking: function(i) {
 			amplify.subscribe('chrono.kilo', function() {
-				var i = codiad.editor.getActive();
+				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();
 					$('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
@@ -1432,7 +1386,7 @@
 
 		bindKeys: function(i) {
 
-			var _this = this;
+			var self = this;
 
 			// Find
 			i.commands.addCommand({
@@ -1442,7 +1396,7 @@
 					mac: 'Command-F'
 				},
 				exec: function(e) {
-					_this.openSearch('find');
+					self.openSearch('find');
 				}
 			});
 
@@ -1454,7 +1408,7 @@
 					mac: 'Command-R'
 				},
 				exec: function(e) {
-					_this.openSearch('replace');
+					self.openSearch('replace');
 				}
 			});
 
@@ -1465,7 +1419,7 @@
 					mac: 'Command-up'
 				},
 				exec: function(e) {
-					codiad.active.move('up');
+					atheos.active.move('up');
 				}
 			});
 
@@ -1476,7 +1430,7 @@
 					mac: 'Command-up'
 				},
 				exec: function(e) {
-					codiad.active.move('down');
+					atheos.active.move('down');
 				}
 			});
 
@@ -1493,12 +1447,12 @@
 
 		openSearch: function(type) {
 			if (this.getActive()) {
-				codiad.modal.load(400,
+				atheos.modal.load(400,
 					'components/editor/dialog.php?action=search&type=' +
 					type);
-				codiad.common.hideOverlay();
+				atheos.common.hideOverlay();
 			} else {
-				codiad.toast.show('error', 'No Open Files');
+				atheos.toast.show('error', 'No Open Files');
 			}
 		},
 

@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
 // Update Init
 //////////////////////////////////////////////////////////////////////////////80
@@ -9,7 +11,6 @@
 // The Update component is used to check for Atheos updates, pinging the home
 // server, as well as handling all client tracking/statistics.
 //
-//
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -18,36 +19,48 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
-		o = global.onyx;
+		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', function(settings) {
-		atheos.update.init();
-	});
+	amplify.subscribe('atheos.loaded', () => atheos.update.init());
+
+	var self = null;
 
 	atheos.update = {
 
 		controller: 'components/update/controller.php',
 		dialog: 'components/update/dialog.php',
-		home: 'https://www.atheos.io/update',
-		repo: 'https://api.github.com/repos/Atheos/Atheos/releases/latest',
-		local: '',
+		home: null,
+		repo: null,
+		local: null,
+		remote: null,
 
 		//////////////////////////////////////////////////////////////////
 		// Initilization
 		//////////////////////////////////////////////////////////////////
 
 		init: function() {
-			var update = this;
+			self = this;
 			ajax({
-				url: update.controller + '?action=init',
+				url: self.controller,
+				data: {
+					action: 'init'
+				},
 				success: function(data) {
-					update.local = data;
+					self.local = data.local;
+					self.home = data.remote;
+					self.repo = data.github;
+
+					self.loadLatest();
 				}
 			});
+
+		},
+
+		loadLatest() {
 			ajax({
-				url: update.repo,
+				url: self.repo,
 				success: function(data) {
-					update.remote = data;
+					self.remote = data;
 				}
 			});
 		},
@@ -57,7 +70,21 @@
 		//////////////////////////////////////////////////////////////////
 
 		check: function() {
-			atheos.modal.load(500, this.dialog + '?action=check');
+			atheos.modal.load(500, self.dialog, {
+				action: 'check'
+			});
+
+			var listener = function() {
+				var form = oX('#modal_content form');
+				if (form) {
+					form.find('input[name="archive"').value(self.remote.zipball_url);
+					form.find('input[name="remoteversion"').value(self.remote.tag_name);
+					form.find('#remote_latest').text(self.remote.tag_name);
+					form.find('#remote_body').text(self.remote.body);
+				}
+			};
+
+			amplify.subscribe('modal.loaded', listener);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -65,10 +92,13 @@
 		//////////////////////////////////////////////////////////////////
 
 		download: function() {
-			var archive = $('#modal_content form input[name="archive"]').val();
-			o('#download').attr('src', archive);
+			var archive = oX('#modal_content form input[name="archive"]').value();
+			oX('#download').attr('src', archive);
 			ajax({
-				url: this.controller + '?action=clear',
+				url: self.controller,
+				data: {
+					action: 'clear'
+				}
 			});
 			atheos.modal.unload();
 		}

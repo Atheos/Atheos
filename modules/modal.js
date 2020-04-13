@@ -26,8 +26,8 @@
 
 
 (function(global, $) {
-
 	'use strict';
+
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
@@ -35,6 +35,7 @@
 
 	var self = null;
 
+	amplify.subscribe('system.loadMinor', () => atheos.modal.init());
 
 	atheos.modal = {
 
@@ -66,7 +67,6 @@
 			wrapper.append(drag);
 			wrapper.append(content);
 
-			// overlay.appendChild(wrapper);
 			document.body.appendChild(wrapper.el);
 
 			return wrapper;
@@ -76,7 +76,7 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var overlay = oX('#overlay') || atheos.common.createOverlay(),
+			var overlay = atheos.common.createOverlay('modal'),
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
 
@@ -87,10 +87,13 @@
 			wrapper.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
-				'min-width': width + 'px'
+				'min-width': width + 'px',
+				'height': ''
 			});
 
-			content.html('<div id="modal_loading"></div>');
+			if (self.modalVisible) {
+				self.setLoadingScreen();
+			}
 
 			ajax({
 				url: url,
@@ -99,6 +102,10 @@
 				success: function(data) {
 					$('#modal_content').html(data);
 
+					wrapper.css({
+						'height': ''
+					});
+
 					// oX(content).html(data);
 					// var script = oX(oX(content).find('script'));
 					// if (script) {
@@ -106,7 +113,7 @@
 					// }
 
 					// Fix for Firefox autofocus goofiness
-					var input = wrapper.find('input[autofocus="autofocus"]')[0];
+					var input = wrapper.find('input[autofocus="autofocus"]');
 					if (input) {
 						input.focus();
 					}
@@ -116,7 +123,7 @@
 
 
 			wrapper.show();
-			oX('#overlay').show();
+			overlay.show();
 
 			self.modalVisible = true;
 		},
@@ -142,14 +149,37 @@
 
 
 			oX('#modal_content').off('submit');
-			oX('#overlay').hide();
+			oX('#overlay').remove();
 			oX('#modal_wrapper').hide();
 			oX('#modal_content').empty();
 
 			self.modalVisible = false;
 			atheos.editor.focus();
-
 		},
+
+		setLoadingScreen: function(text) {
+			text = text || 'Loading...';
+
+			var wrapText = '';
+
+			for (var i = 0; i < text.length; i++) {
+				wrapText += '<em>' + text.charAt(i) + '</em>';
+			}
+
+			var loading = `
+			<div class="loader">
+				<div class="ring"></div>
+				<div class="ring"></div>
+				<div class="dot"></div>
+				<h2>${wrapText}</h2>
+			</div>
+			`;
+
+			var screen = oX('#modal_wrapper');
+			screen.css('height', screen.height() + 'px');
+			oX('#modal_content').html(loading);
+		},
+
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 

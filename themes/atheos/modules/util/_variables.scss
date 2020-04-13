@@ -12,14 +12,34 @@ $font-color-primary: $base07;
 $font-color-secondary: $base04;
 $font-color-subtle:$font-color-secondary;
 
+
+// THESE ARE THE ONES TO USE
+$fontColorMajor: $base07;
+$fontColorMinor: $base04;
+
 $foreground: $base01;
 $background: #191919;
+$midground: #474747;
 $highlight: #393939;
+$borderLight: #8c8c8c;
+
+$hover: $blue;
+$tabListBackground:$accent-color;
+
 
 $animation-duration: 0.2s;
 $transition-duration: 0.2s;
 
+$animationDuration: 0.2s;
+$transitionDuration: 0.2s;
+
 $scrollbarWidth: 10px;
+$topBarHeight: 33px;
+$sidebarHandleWidth: 15px;
+$fileManagerHeight: 280px;
+
+$input-background: #1D1D1D;
+
 
 
 // #303030 -> Base01

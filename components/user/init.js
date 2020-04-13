@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// User
+// User Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -15,7 +17,6 @@
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		i18n = global.i18n,
 		oX = global.onyx;
 
 
@@ -41,7 +42,7 @@
 					// Save Language
 					atheos.storage('language', oX('#language').value());
 					// Save Theme
-					atheos.storage('theme', oX('#theme').value());
+					atheos.storage('editor.theme', oX('#theme').value());
 					user.authenticate();
 				});
 
@@ -49,10 +50,9 @@
 				// Get Theme
 				var theme = atheos.storage('theme');
 				var select = oX('#theme');
-				if (select && select.find('option') > 1) {
-					select.find('option').forEach(function(option) {
+				if (select && select.findAll('option').length > 1) {
+					select.findAll('option').forEach(function(option) {
 						if (option.value() === theme) {
-							console.log('found');
 							option.attr('selected', 'selected');
 						}
 					});
@@ -61,8 +61,8 @@
 				// Get Language
 				var language = atheos.storage('language');
 				select = oX('#language');
-				if (select && select.find('option') > 1) {
-					select.find('option').forEach(function(option) {
+				if (select && select.findAll('option').length > 1) {
+					select.findAll('option').forEach(function(option) {
 						if (option.value() === language) {
 							option.attr('selected', 'selected');
 						}
@@ -122,16 +122,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		logout: function() {
-			var forcelogout = true;
-			var unsaved = oX('#list-active-files').find('li.changed');
-			if (unsaved.length > 0) {
-				forcelogout = confirm(i18n('You have unsaved files.'));
-			}
-			if (forcelogout) {
-				unsaved.forEach(function(changed) {
-					changed.removeClass('changed');
-				});
-
+			var postLogout = function() {
 				amplify.publish('user.logout');
 				atheos.settings.save();
 				ajax({
@@ -143,6 +134,40 @@
 						window.location.reload();
 					}
 				});
+			};
+
+			var changedTabs = '';
+
+			for (var path in atheos.active.sessions) {
+				if (atheos.active.sessions[path].status === 'changed') {
+					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
+					changedTabs += fileName + '\n';
+				}
+			}
+
+			if (changedTabs !== '') {
+				var dialog = {
+					banner: 'You have unsaved changes.',
+					data: changedTabs,
+					actions: {
+						'Save All & Close': function() {
+							atheos.active.saveAll();
+							postLogout();
+						},
+						'Discard Changes': function() {
+							for (var path in atheos.active.sessions) {
+								atheos.active.sessions[path].status = 'current';
+							}
+							postLogout();
+						},
+						'Cancel': function() {
+							// Cancel
+						}
+					}
+				};
+				atheos.alert.show(dialog);
+			} else {
+				postLogout();
 			}
 		},
 
@@ -270,7 +295,7 @@
 			if (aclSelect) {
 				var projectSelect = oX('#projectSelect').el;
 				var direction = aclSelect.value() === 'false' ? 'close' : 'open';
-				atheos.animation.slide(direction, projectSelect, 300);
+				atheos.ux.slide(direction, projectSelect, 300);
 			}
 		},
 

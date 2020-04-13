@@ -1,33 +1,38 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
-
+//////////////////////////////////////////////////////////////////////////////80
+// Project Controller
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
 require_once('class.project.php');
-
 //////////////////////////////////////////////////////////////////
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////
-
 checkSession();
+
+$action = Common::data("action");
+
+$activeProject = Common::data("project", "session");
+$projectName = Common::data("projectName");
+$projectPath = Common::data("projectPath");
+
+$gitRepo = Common::data("gitRepo");
+$gitBranch = Common::data("gitBranch");
+
+if (!$action) {
+	Common::sendJSON("E401m");
+	die;
+}
 
 $Project = new Project();
 
-//////////////////////////////////////////////////////////////////
-// Get Current Project
-//////////////////////////////////////////////////////////////////
-
-$action = false;
-if (isset($_POST["action"])) {
-	$action = $_POST["action"];
-} elseif (isset($_GET["action"])) {
-	$action = $_GET["action"];
-}
 
 
 switch ($action) {
@@ -35,19 +40,18 @@ switch ($action) {
 	// Create Project
 	//////////////////////////////////////////////////////////////////
 	case 'create':
-		if (checkAccess()) {
-			$Project->name = $_GET['project_name'];
-			if ($_GET['project_path'] != '') {
-				$Project->path = $_GET['project_path'];
-			} else {
-				$Project->path = $_GET['project_name'];
-			}
+		if (checkAccess("configure")) {
+			$Project->name = $projectName;
+			$Project->path = $projectPath ?: $projectName;
+
 			// Git Clone?
-			if (!empty($_GET['git_repo'])) {
-				$Project->gitrepo = $_GET['git_repo'];
-				$Project->gitbranch = $_GET['git_branch'];
+			if ($gitRepo) {
+				$Project->gitRepo = $gitRepo;
+				$Project->gitBranch = $gitBranch;
 			}
-			$Project->Create();
+			$Project->create();
+		} else {
+			Common::sendJSON("E430u");
 		}
 		break;
 
@@ -55,16 +59,10 @@ switch ($action) {
 	// Return Current
 	//////////////////////////////////////////////////////////////////
 	case 'current':
-		if (isset($_SESSION["project"])) {
-			echo json_encode(array(
-				"status" => "success",
-				"path" => $_SESSION["project"]
-			));
+		if ($activeProject) {
+			Common::sendJSON("success", array("path" => $activeProject));
 		} else {
-			echo json_encode(array(
-				"status" => "error",
-				"message" => "no project loaded"
-			));
+			Common::sendJSON("error", "No active project");
 		}
 		break;
 
@@ -72,9 +70,9 @@ switch ($action) {
 	// Delete Project
 	//////////////////////////////////////////////////////////////////
 	case 'delete':
-		if (checkAccess()) {
-			$Project->path = $_GET['project_path'];
-			$Project->Delete();
+		if (checkAccess("configure")) {
+			$Project->path = $projectPath;
+			$Project->delete();
 		}
 		break;
 
@@ -82,15 +80,15 @@ switch ($action) {
 	// Load Project
 	//////////////////////////////////////////////////////////////////
 	case 'load':
-		if (!isset($_SESSION['project'])) {
-			// Load default/first project
-			$Project->GetFirst();
-		} else {
+		if ($activeProject) {
 			// Load current
-			$Project->path = $_SESSION['project'];
-			$project_name = $Project->GetName();
-			echo json_encode(array("status" => "success", "name" => $project_name, "path" => $_SESSION['project']));
-
+			$Project->path = $activeProject;
+			$projectName = $Project->getProjectName();
+			Common::sendJSON("success", array("name" => $projectName, "path" => $activeProject));
+		} else {
+			// Load default/first project
+			$default = $Project->getDefault();
+			Common::sendJSON("success", $default);
 		}
 		break;
 
@@ -98,11 +96,13 @@ switch ($action) {
 	// Open Project
 	//////////////////////////////////////////////////////////////////
 	case 'open':
-		if (!checkPath($_GET['path'])) {
-			die(formatJSEND("error", "No Access"));
+		if (Common::checkPath($projectPath)) {
+			$Project->path = $projectPath;
+			$Project->open();
+		} else {
+			Common::sendJSON("E430u");
 		}
-		$Project->path = $_GET['path'];
-		$Project->Open();
+
 		break;
 
 
@@ -110,15 +110,17 @@ switch ($action) {
 	// Rename Project
 	//////////////////////////////////////////////////////////////////
 	case 'rename':
-		if (!checkPath($_GET['project_path'])) {
-			die(formatJSEND("error", "No Access"));
+		if (Common::checkAccess("configure")) {
+			$Project->name = $projectName;
+			$Project->path = $projectPath;
+			$Project->rename();
+		} else {
+			Common::sendJSON("E430u");
 		}
-		$Project->path = $_GET['project_path'];
-		$Project->Rename();
+
 		break;
+
 	default:
-		exit(json_encode(array(
-			"status" => "error",
-			"message" => "unkown action"
-		)));
-	}
+		Common::sendJSON("E401i");
+		break;
+}

@@ -8,166 +8,134 @@
 
 require_once('../../common.php');
 
-class Active extends Common
-{
+class Active {
 
-    //////////////////////////////////////////////////////////////////
-    // PROPERTIES
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// PROPERTIES
+	//////////////////////////////////////////////////////////////////
 
-    public $username    = "";
-    public $path        = "";
-    public $new_path    = "";
-    public $actives     = "";
+	public $username = "";
+	public $path = "";
+	public $newPath = "";
+	public $activeFiles = "";
 
-    //////////////////////////////////////////////////////////////////
-    // METHODS
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// METHODS
+	//////////////////////////////////////////////////////////////////
 
-    // -----------------------------||----------------------------- //
+	// -----------------------------||----------------------------- //
 
-    //////////////////////////////////////////////////////////////////
-    // Construct
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Construct
+	//////////////////////////////////////////////////////////////////
 
-    public function __construct()
-    {
-        $this->actives = getJSON('active.php');
-    }
+	public function __construct() {
+		$this->activeFiles = Common::readJSON('active');
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // List User's Active Files
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// List User's Active Files
+	//////////////////////////////////////////////////////////////////
 
-    public function ListActive()
-    {
-        $active_list = array();
-        $tainted = false;
-        $root = WORKSPACE;
-        if ($this->actives) {
-            foreach ($this->actives as $active => $data) {
-                if (is_array($data) && isset($data['username']) && $data['username']==$this->username) {
-                    if ($this->isAbsPath($data['path'])) {
-                        $root = "";
-                    } else {
-                        $root = $root.'/';
-                    }
-                    if (file_exists($root.$data['path'])) {
-                        $focused = isset($data['focused']) ? $data['focused'] : false;
-                        $active_list[] = array('path'=>$data['path'], 'focused'=>$focused);
-                    } else {
-                        unset($this->actives[$active]);
-                        $tainted = true;
-                    }
-                }
-            }
-        }
-        if ($tainted) {
-            saveJSON('active.php', $this->actives);
-        }
-        echo formatJSEND("success", $active_list);
-    }
+	public function listActive() {
 
-    //////////////////////////////////////////////////////////////////
-    // Check File
-    //////////////////////////////////////////////////////////////////
+		if (!$this->activeFiles || !$this->activeFiles[$this->username]) {
+			Common::sendJSON("E404g");
+		} else {
 
-    public function Check()
-    {
-        $cur_users = array();
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username']) && $data['username']!=$this->username && $data['path']==$this->path) {
-                $cur_users[] = $data['username'];
-            }
-        }
-        if (count($cur_users)!=0) {
-            echo formatJSEND("error", "Warning: File ".substr($this->path, strrpos($this->path, "/")+1)." Currently Opened By: " . implode(", ", $cur_users));
-        } else {
-            echo formatJSEND("success");
-        }
-    }
+			$userActiveFiles = $this->activeFiles[$this->username];
 
-    //////////////////////////////////////////////////////////////////
-    // Add File
-    //////////////////////////////////////////////////////////////////
+			foreach ($userActiveFiles as $path => $status) {
+				$fullPath = Common::isAbsPath($path) ? $path : WORKSPACE. "/$path";
 
-    public function Add()
-    {
-        $process_add = true;
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username']) && $data['username']==$this->username && $data['path']==$this->path) {
-                $process_add = false;
-            }
-        }
-        if ($process_add) {
-            $this->actives[] = array("username"=>$this->username,"path"=>$this->path);
-            saveJSON('active.php', $this->actives);
-            echo formatJSEND("success");
-        }
-    }
+				$userActiveFiles[$path] = file_exists($fullPath) ? $status : "invalid";
+			}
+			Common::sendJSON("S2000", $userActiveFiles);
+		}
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // Rename File
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Check File
+	//////////////////////////////////////////////////////////////////
 
-    public function Rename()
-    {
-        $revised_actives = array();
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username'])) {
-                $revised_actives[] = array("username"=>$data['username'],"path"=>str_replace($this->path, $this->new_path, $data['path']));
-            }
-        }
-        saveJSON('active.php', $revised_actives);
-        echo formatJSEND("success");
-    }
+	public function check() {
+		$activeUsers = array();
+		foreach ($this->activeFiles as $user => $data) {
+			if ($user === $this->username) {
+				continue;
+			} elseif (isset($this->activeFiles[$user][$this->path])) {
+				$activeUsers[] = ucfirst($user);
+			}
+		}
+		if (count($activeUsers) !== 0) {
+			$file = substr($this->path, strrpos($this->path, "/") + 1);
+			Common::sendJSON("warning", "File '$file' currently opened by: " . implode(", ", $activeUsers));
+		} else {
+			Common::sendJSON("S2000");
+		}
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // Remove File
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Add File
+	//////////////////////////////////////////////////////////////////
 
-    public function Remove()
-    {
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username']) && $this->username==$data['username'] && $this->path==$data['path']) {
-                unset($this->actives[$active]);
-            }
-        }
-        saveJSON('active.php', $this->actives);
-        echo formatJSEND("success");
-    }
-    
-    //////////////////////////////////////////////////////////////////
-    // Remove All Files
-    //////////////////////////////////////////////////////////////////
+	public function add() {
+		$this->activeFiles[$this->username][$this->path] = "active";
+		Common::saveJSON('active', $this->activeFiles);
+		Common::sendJSON("S2000");
+	}
 
-    public function RemoveAll()
-    {
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username']) && $this->username==$data['username']) {
-                unset($this->actives[$active]);
-            }
-        }
-        saveJSON('active.php', $this->actives);
-        echo formatJSEND("success");
-    }
-    
-    //////////////////////////////////////////////////////////////////
-    // Mark File As Focused
-    //  All other files will be marked as non-focused.
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Rename File
+	//////////////////////////////////////////////////////////////////
+	public function rename() {
+		$revisedActiveFiles = array();
+		foreach ($this->activeFiles as $user) {
+			foreach ($this->activeFiles[$user] as $path => $status) {
+				if ($path === $this->path) {
+					$revisedActiveFiles[$user][$newPath] = $status;
+				} else {
+					$revisedActiveFiles[$user][$path] = $status;
+				}
+			}
+		}
 
-    public function MarkFileAsFocused()
-    {
-        foreach ($this->actives as $active => $data) {
-            if (is_array($data) && isset($data['username']) && $this->username==$data['username']) {
-                $this->actives[$active]['focused']=false;
-                if ($this->path==$data['path']) {
-                    $this->actives[$active]['focused']=true;
-                }
-            }
-        }
-        saveJSON('active.php', $this->actives);
-        echo formatJSEND("success");
-    }
+		Common::saveJSON('active', $revisedActiveFiles);
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Remove File
+	//////////////////////////////////////////////////////////////////
+	public function remove() {
+		unset($this->activeFiles[$this->username][$this->path]);
+		Common::saveJSON('active', $this->activeFiles);
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Remove All Files
+	//////////////////////////////////////////////////////////////////
+	public function removeAll() {
+		unset($this->activeFiles[$this->username]);
+		Common::saveJSON('active', $this->activeFiles);
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Mark File As Focused
+	//  All other files will be marked as non-focused.
+	//////////////////////////////////////////////////////////////////
+	public function markFileAsFocused() {
+		$userActiveFiles = $this->activeFiles[$this->username];
+
+		foreach ($userActiveFiles as $path => $status) {
+			$userActiveFiles[$path] = $path === $this->path ? "focus": "active";
+		}
+
+		$this->activeFiles[$this->username] = $userActiveFiles;
+
+		Common::saveJSON('active', $this->activeFiles);
+		Common::sendJSON("S2000");
+	}
 }
