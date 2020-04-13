@@ -13,13 +13,13 @@
 	li {
 		position: relative;
 		user-select: none;
+		cursor: pointer;
 	}
 
 	.close {
 		position: absolute;
 		right: 9px;
 		top: 6px;
-		cursor: pointer;
 	}
 
 
