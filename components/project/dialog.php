@@ -1,11 +1,14 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
-
+//////////////////////////////////////////////////////////////////////////////80
+// Project Dialog
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
 
@@ -17,6 +20,9 @@ checkSession();
 $action = Common::data("action");
 $user = Common::data("user", "session");
 
+$path = Common::data("path");
+$name = Common::data("name");
+
 if (!$action) {
 	Common::sendJSON("E401m");
 	die;
@@ -27,38 +33,23 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////
 	// List Projects Mini Sidebar
 	//////////////////////////////////////////////////////////////
-	case 'sidelist':
+	case 'projectDock':
 
 		// Get access control data
-		$projects_assigned = false;
-		$userACL = Common::readJSON("users");
-		if (file_exists(BASE_PATH . "/data/" . $user . "_acl.php")) {
-			$projects_assigned = getJSON($_SESSION['user'] . '_acl.php');
+		$userACL = Common::readJSON("users")[$user]["userACL"];
+		// Get projects JSON data
+		$projects = Common::readJSON('projects');
+		asort($projects);
+		$projectList = '';
+		foreach ($projects as $projectPath => $projectName) {
+			if ($userACL === "full" || in_array($projectPath, $userACL)) {
+				$projectList .= "<li data-project=\"$projectPath\"><i class=\"fas fa-archive\"></i> $projectName</li>" . PHP_EOL;
+			}
 		}
-
 		?>
 
 		<ul>
-
-			<?php
-
-			// Get projects JSON data
-			$projects = Common::readJSON('projects');
-			sort($projects);
-			foreach ($projects as $project => $data) {
-				$show = true;
-				if ($projects_assigned && !in_array($data['path'], $projects_assigned)) {
-					$show = false;
-				}
-				if ($show) {
-					?>
-					<li data-project="<?php echo($data['path']); ?>"><i class="fas fa-archive"></i>
-						<?php echo($data['name']); ?></li>
-					<?php
-				}
-			}
-			?>
-
+			<?php echo($projectList); ?>
 		</ul>
 
 		<?php
@@ -77,6 +68,17 @@ switch ($action) {
 			$projects_assigned = getJSON($_SESSION['user'] . '_acl.php');
 		}
 
+		$userACL = Common::readJSON("users")[$user]["userACL"];
+		// Get projects JSON data
+		$projects = Common::readJSON('projects');
+		asort($projects);
+		$projectList = array();
+		foreach ($projects as $projectPath => $projectName) {
+			if ($userACL === "full" || in_array($projectPath, $userACL)) {
+				$projectList[$projectPath] = $projectName;
+			}
+		}
+
 		?>
 		<h1><i class="fas fa-archive"></i><?php i18n("Project List"); ?></h1>
 
@@ -87,7 +89,7 @@ switch ($action) {
 						<th class="action"><?php i18n("Open"); ?></th>
 						<th><?php i18n("Project Name"); ?></th>
 						<th><?php i18n("Path"); ?></th>
-						<?php if (checkAccess()) {
+						<?php if (checkAccess("configure")) {
 							?>
 							<th class="action"><?php i18n("Delete"); ?></th>
 							<th class="action"><?php i18n("Rename"); ?></th>
@@ -95,46 +97,38 @@ switch ($action) {
 						} ?>
 					</tr>
 					<?php
-
-					// Get projects JSON data
-					$projects = getJSON('projects.php');
-					sort($projects);
-					foreach ($projects as $project => $data) {
-						$show = true;
-						if ($projects_assigned && !in_array($data['path'], $projects_assigned)) {
-							$show = false;
-						}
-						if ($show) {
-							?>
-							<tr>
-								<td class="action"><a onclick="codiad.project.open('<?php echo($data['path']); ?>');" class="fas fa-archive"></a></td>
-								<td><?php echo($data['name']); ?></td>
-								<td><?php echo($data['path']); ?></td>
-								<?php
-								if (checkAccess()) {
-									if ($_SESSION['project'] == $data['path']) {
-										?>
-										<td class="action"><a onclick="codiad.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
-										<?php
-									} else {
-										?>
-										<td class="action"><a onclick="codiad.project.delete('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-trash-alt"></a></td>
-										<?php
-									}
+					$activeProject = Common::data("project", "session");
+					foreach ($projectList as $projectPath => $projectName) {
+						?>
+						<tr>
+							<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive"></a></td>
+							<td><?php echo($projectName); ?></td>
+							<td><?php echo($projectPath); ?></td>
+							<?php
+							if (checkAccess()) {
+								if ($activeProject == $projectPath) {
 									?>
-									<td class="action"><a onclick="codiad.project.rename('<?php echo($data['name']); ?>','<?php echo($data['path']); ?>');" class="fas fa-pencil-alt"></a></td>
+									<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+									<?php
+								} else {
+									?>
+									<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt"></a></td>
 									<?php
 								}
 								?>
-							</tr>
-							<?php
-						}
+								<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt"></a></td>
+								<?php
+							}
+							?>
+						</tr>
+						<?php
+
 					}
 					?>
 				</table>
 			</div>
-			<?php if (checkAccess()) {
-				?><button class="btn-left" onclick="codiad.project.create();"><?php i18n("New Project"); ?></button><?php
+			<?php if (checkAccess("configure")) {
+				?><button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button><?php
 			} ?>
 		</form>
 		<?php
@@ -148,40 +142,34 @@ switch ($action) {
 	case 'create':
 
 		?>
-		<form>
+		<form style="width: 500px;">
 			<label><?php i18n("Project Name"); ?></label>
-			<input name="project_name" autofocus="autofocus" autocomplete="off">
+			<input name="projectName" autofocus="autofocus" autocomplete="off">
 			<label><?php i18n("Folder Name or Absolute Path"); ?></label>
-			<input name="project_path" autofocus="off" autocomplete="off">
+			<input name="projectPath" autofocus="off" autocomplete="off">
 
 			<!-- Clone From GitHub -->
-			<div style="width: 500px;">
-				<table class="hide" id="git-clone">
+			<!--<div style="width: 500px;">-->
+				<table style="display: none;" id="git_options">
 					<tr>
 						<td>
 							<label><?php i18n("Git Repository"); ?></label>
-							<input name="git_repo">
+							<input name="gitRepo">
 						</td>
 						<td width="5%">&nbsp;</td>
 						<td width="25%">
 							<label><?php i18n("Branch"); ?></label>
-							<input name="git_branch" value="master">
+							<input name="gitBranch" value="master">
 						</td>
 					</tr>
 					<tr>
 						<td colspan="3" class="note"><?php i18n("Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."); ?></td>
 					</tr>
 				</table>
-			</div>
-			<!-- /Clone From GitHub --><?php
-			$action = 'codiad.project.list();';
-			if ($_GET['close'] == 'true') {
-				$action = 'codiad.modal.unload();';
-			}
-			?>
+			<!--// </div>-->
 			<button class="btn-left"><?php i18n("Create Project"); ?></button>
-			<button onclick="$('#git-clone').slideDown(300); $(this).hide(); return false;" class="btn-mid"><?php i18n("...From Git Repo"); ?></button>
-			<button class="btn-right" onclick="<?php echo $action; ?>return false;"><?php i18n("Cancel"); ?></button>
+			<button id="show_git_options" class="btn-mid"><?php i18n("...From Git Repo"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 		<?php
 		break;
@@ -192,10 +180,9 @@ switch ($action) {
 	case 'rename':
 		?>
 		<form>
-			<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
 			<label><i class="fas fa-pencil-alt"></i><?php i18n("Rename Project"); ?></label>
-			<input type="text" name="project_name" autofocus="autofocus" autocomplete="off" value="<?php echo($_GET['name']); ?>">
-			<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($projectName); ?>">
+			<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 		<?php
 		break;
@@ -208,14 +195,13 @@ switch ($action) {
 
 		?>
 		<form>
-			<input type="hidden" name="project_path" value="<?php echo($_GET['path']); ?>">
 			<label><?php i18n("Confirm Project Deletion"); ?></label>
-			<pre><?php i18n("Name:"); ?> <?php echo($_GET['name']); ?>, <?php i18n("Path:") ?> <?php echo($_GET['path']); ?></pre>
+			<pre><?php i18n("Name:"); ?> <?php echo($projectName); ?>, <?php i18n("Path:") ?> <?php echo($projectPath); ?></pre>
 			<table>
 				<tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
 				<tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>
 			</table>
-			<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="codiad.project.list();return false;"><?php i18n("Cancel"); ?></button>
+			<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 
 		<?php
