@@ -102,7 +102,7 @@
 				}
 
 				children = menu.findAll('.no-external');
-				if (atheos.project.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
+				if (atheos.common.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
 					children.forEach((child) => child.hide());
 				} else {
 					children.forEach((child) => child.show());

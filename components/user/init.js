@@ -84,9 +84,6 @@
 						'action': 'keepAlive'
 					},
 					success: function(data) {
-						if (data.debug) {
-							console.log(data.debug);
-						}
 						if (data.pass === 'false') {
 							atheos.user.logout();
 						}
