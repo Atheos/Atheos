@@ -1,308 +1,271 @@
 <?php
 
-/*
-* 	Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-* 	as-is and without warranty under the MIT License. See
-* 	[root]/license.txt for more. This information must remain intact.
-*/
-
-
-//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // Project Class
-//////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
 
-class Project extends Common
+class Project
 {
 
-    //////////////////////////////////////////////////////////////////
-    // PROPERTIES
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// PROPERTIES
+	//////////////////////////////////////////////////////////////////
 
-    public $name = '';
-    public $path = '';
-    public $gitrepo = false;
-    public $gitbranch = '';
-    public $projects = '';
-    public $no_return = false;
-    public $assigned = false;
-    public $command_exec = '';
+	public $name = '';
+	public $path = '';
+	public $gitRepo = false;
+	public $gitBranch = '';
+	private $projects = '';
+	public $no_return = false;
+	private $activeUser = '';
+	private $userACL = false;
+	public $command_exec = '';
 
-    //////////////////////////////////////////////////////////////////
-    // METHODS
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// METHODS
+	//////////////////////////////////////////////////////////////////
 
-    // -----------------------------||----------------------------- //
+	// -----------------------------||----------------------------- //
 
-    //////////////////////////////////////////////////////////////////
-    // Construct
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Construct
+	//////////////////////////////////////////////////////////////////
 
-    public function __construct() {
-        $this->projects = getJSON('projects.php');
-        if (file_exists(BASE_PATH . "/data/" . $_SESSION['user'] . '_acl.php')) {
-            $this->assigned = getJSON($_SESSION['user'] . '_acl.php');
-        }
-    }
+	public function __construct() {
+		$this->projects = Common::readJSON('projects');
+		$this->activeUser = Common::data("user", "session");
+		$this->userACL = Common::readJSON("users")[$this->activeUser];
 
-    //////////////////////////////////////////////////////////////////
-    // Get First (Default, none selected)
-    //////////////////////////////////////////////////////////////////
+		// Check if array is Associative or Sequential. Sequential is
+		// the old file format, so it needs to be pivoted.
+		if (array_keys($this->projects) === range(0, count($this->projects) - 1)) {
+			$this->pivotProjects();
+		}
 
-    public function GetFirst() {
+	}
 
-        $projects_assigned = false;
-        if ($this->assigned) {
-            foreach ($this->projects as $project => $data) {
-                if (in_array($data['path'], $this->assigned)) {
-                    $this->name = $data['name'];
-                    $this->path = $data['path'];
-                    break;
-                }
-            }
-        } else {
-            $this->name = $this->projects[0]['name'];
-            $this->path = $this->projects[0]['path'];
-        }
-        // Set Sessions
-        $_SESSION['project'] = $this->path;
+	//////////////////////////////////////////////////////////////////
+	// Get First (Default, none selected)
+	//////////////////////////////////////////////////////////////////
+	public function getDefault() {
+		$path = false;
 
-        if (!$this->no_return) {
-            echo formatJSEND("success", array(
-                "name" => $this->name,
-                "path" => $this->path
-            ));
-        }
-    }
+		$projects_assigned = false;
+		if ($this->userACL !== "full") {
+			$this->path = reset($this->userACL);
+			$this->name = $this->projects[$this->path];
+		} else {
+			$this->path = reset($this->projects);
+			$this->name = $this->projects[$this->path];
+		}
+		// Set Sessions
+		$_SESSION['project'] = $this->path;
+		return  array(
+			"name" => $this->name,
+			"path" => $this->path
+		);
 
-    //////////////////////////////////////////////////////////////////
-    // Get Name From Path
-    //////////////////////////////////////////////////////////////////
+	}
 
-    public function GetName() {
-        foreach ($this->projects as $project => $data) {
-            if ($data['path'] == $this->path) {
-                $this->name = $data['name'];
-            }
-        }
-        return $this->name;
-    }
+	//////////////////////////////////////////////////////////////////
+	// Get Name From Path
+	//////////////////////////////////////////////////////////////////
+	public function getProjectName() {
+		$this->name = $this->projects[$this->path];
+		return $this->name;
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // Open Project
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Open Project
+	//////////////////////////////////////////////////////////////////
+	public function open() {
+		if (isset($this->projects[$this->path])) {
+			$this->name = $this->projects[$this->path];
+			$_SESSION['project'] = $this->path;
+			Common::sendJSON("success", array("name" => $this->name, "path" => $this->path));
+		} else {
+			Common::sendJSON("error", "Project Not Found");
+		}
+	}
 
-    public function Open() {
-        $pass = false;
-        foreach ($this->projects as $project => $data) {
-            if ($data['path'] == $this->path) {
-                $pass = true;
-                $this->name = $data['name'];
-                $_SESSION['project'] = $data['path'];
-            }
-        }
-        if ($pass) {
-            echo formatJSEND("success", array(
-                "name" => $this->name,
-                "path" => $this->path
-            ));
-        } else {
-            echo formatJSEND("error", "Error Opening Project");
-        }
-    }
+	//////////////////////////////////////////////////////////////////
+	// Create
+	//////////////////////////////////////////////////////////////////
 
-    //////////////////////////////////////////////////////////////////
-    // Create
-    //////////////////////////////////////////////////////////////////
+	public function create() {
+		if (!$this->name && !$this->path) {
+			Common::sendJSON("E403m", "Name & Path");
+			die;
+		}
+		$this->path = $this->cleanPath();
+		$this->name = htmlspecialchars($this->name);
+		if (!Common::isAbsPath($this->path)) {
+			$this->path = $this->sanitizePath();
+		}
 
-    public function Create() {
-        if ($this->name != '' && $this->path != '') {
-            $this->path = $this->cleanPath();
-            $this->name = htmlspecialchars($this->name);
-            if (!$this->isAbsPath($this->path)) {
-                $this->path = $this->SanitizePath();
-            }
-            if ($this->path != '') {
-                $pass = $this->checkDuplicate();
-                if ($pass) {
-                    if (!$this->isAbsPath($this->path)) {
-                        mkdir(WORKSPACE . '/' . $this->path);
-                    } else {
-                        if (defined('WHITEPATHS')) {
-                            $allowed = false;
-                            foreach (explode(",", WHITEPATHS) as $whitepath) {
-                                if (strpos($this->path, $whitepath) === 0) {
-                                    $allowed = true;
-                                }
-                            }
-                            if (!$allowed) {
-                                die(formatJSEND("error", "Absolute Path Only Allowed for " . WHITEPATHS));
-                            }
-                        }
-                        if (!file_exists($this->path)) {
-                            if (!mkdir($this->path . '/', 0755, true)) {
-                                die(formatJSEND("error", "Unable to create Absolute Path"));
-                            }
-                        } else {
-                            if (!is_writable($this->path) || !is_readable($this->path)) {
-                                die(formatJSEND("error", "No Read/Write Permission"));
-                            }
-                        }
-                    }
-                    $this->projects[] = array(
-                        "name" => $this->name,
-                        "path" => $this->path
-                    );
-                    saveJSON('projects.php', $this->projects);
+		if ($this->checkDuplicate()) {
+			Common::sendJSON("W490s", "A Project With the Same Name or Path Exists.");
+			die;
+		}
 
-                    // Pull from Git Repo?
-                    if ($this->gitrepo && filter_var($this->gitrepo, FILTER_VALIDATE_URL) !== false) {
-                        $this->gitbranch = $this->SanitizeGitBranch();
-                        if (!$this->isAbsPath($this->path)) {
-                            $this->command_exec = "cd " . escapeshellarg(WORKSPACE . '/' . $this->path) . " && git init && git remote add origin " . escapeshellarg($this->gitrepo) . " && git pull origin " . escapeshellarg($this->gitbranch);
-                        } else {
-                            $this->command_exec = "cd " . escapeshellarg($this->path) . " && git init && git remote add origin " . escapeshellarg($this->gitrepo) . " && git pull origin " . escapeshellarg($this->gitbranch);
-                        }
-                        $this->ExecuteCMD();
-                    }
+		if (!Common::isAbsPath($this->path)) {
+			mkdir(WORKSPACE . '/' . $this->path);
+		} else {
+			if (!file_exists($this->path)) {
+				if (!mkdir($this->path . '/', 0755, true)) {
+					Common::sendJSON("E5001", "Unable to create Absolute Path.");
+					die;
+				}
+			} else {
+				if (!is_writable($this->path) || !is_readable($this->path)) {
+					Common::sendJSON("E5001", "No Read/Write Permission.");
+					die;
+				}
+			}
+		}
 
-                    echo formatJSEND("success", array(
-                        "name" => $this->name,
-                        "path" => $this->path
-                    ));
-                } else {
-                    echo formatJSEND("error", "A Project With the Same Name or Path Exists");
-                }
-            } else {
-                echo formatJSEND("error", "Project Name/Folder not allowed");
-            }
-        } else {
-            echo formatJSEND("error", "Project Name/Folder is empty");
-        }
-    }
+		$this->projects[$this->path] = $this->name;
 
-    //////////////////////////////////////////////////////////////////
-    // Sanitize GitBranch
-    //////////////////////////////////////////////////////////////////
+		Common::saveJSON('projects', $this->projects);
 
-    public function SanitizeGitBranch() {
-        $sanitized = str_replace(array(
-            "..",
-            chr(40),
-            chr(177),
-            "~",
-            "^",
-            ":",
-            "?",
-            "*",
-            "[",
-            "@{",
-            "\\"
-        ), array(
-            ""
-        ), $this->gitbranch);
-        return $sanitized;
-    }
+		// Pull from Git Repo?
+		if ($this->gitRepo && filter_var($this->gitRepo, FILTER_VALIDATE_URL) !== false) {
+			$this->gitBranch = $this->sanitizeGitBranch();
+			if (!Common::isAbsPath($this->path)) {
+				$this->command_exec = "cd " . escapeshellarg(WORKSPACE . '/' . $this->path) . " && git init && git remote add origin " . escapeshellarg($this->gitRepo) . " && git pull origin " . escapeshellarg($this->gitBranch);
+			} else {
+				$this->command_exec = "cd " . escapeshellarg($this->path) . " && git init && git remote add origin " . escapeshellarg($this->gitRepo) . " && git pull origin " . escapeshellarg($this->gitBranch);
+			}
+			$this->ExecuteCMD();
+		}
 
-    //////////////////////////////////////////////////////////////////
-    // Rename
-    //////////////////////////////////////////////////////////////////
+		Common::sendJSON("success", array("name" => $this->name, "path" => $this->path));
 
-    public function Rename() {
-        $revised_array = array();
-        foreach ($this->projects as $project => $data) {
-            if ($data['path'] != $this->path) {
-                $revised_array[] = array(
-                    "name" => $data['name'],
-                    "path" => $data['path']
-                );
-            }
-        }
-        $revised_array[] = $this->projects[] = array(
-            "name" => $this->name,
-            "path" => $this->path
-        );
-        // Save array back to JSON
-        saveJSON('projects.php', $revised_array);
-        // Response
-        echo formatJSEND("success", null);
-    }
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // Delete Project
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Rename
+	//////////////////////////////////////////////////////////////////
+	public function rename() {
+		// Change project name
+		$this->projects[$this->path] = $this->name;
 
-    public function Delete() {
-        $revised_array = array();
-        foreach ($this->projects as $project => $data) {
-            if ($data['path'] != $this->path) {
-                $revised_array[] = array(
-                    "name" => $data['name'],
-                    "path" => $data['path']
-                );
-            }
-        }
-        // Save array back to JSON
-        saveJSON('projects.php', $revised_array);
-        // Response
-        echo formatJSEND("success", null);
-    }
+		// Save array back to JSON
+		Common::saveJSON('projects', $this->projects);
+
+		// Response
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Delete Project
+	//////////////////////////////////////////////////////////////////
+	public function delete() {
+		// Remove Project
+		unset($this->projects[$this->path]);
+
+		// Save array back to JSON
+		Common::saveJSON('projects', $this->projects);
+
+		// Response
+		Common::sendJSON("S2000");
+	}
 
 
-    //////////////////////////////////////////////////////////////////
-    // Check Duplicate
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Check Duplicate
+	//////////////////////////////////////////////////////////////////
+	public function checkDuplicate() {
+		if (array_key_exists($this->path, $this->projects)) {
+			return true;
+		}
+		foreach ($this->projects as $path => $name) {
+			if ($name === $this->name) return true;
+		}
+		return false;
+	}
 
-    public function CheckDuplicate() {
-        $pass = true;
-        foreach ($this->projects as $project => $data) {
-            if ($data['name'] == $this->name || $data['path'] == $this->path) {
-                $pass = false;
-            }
-        }
-        return $pass;
-    }
+	//////////////////////////////////////////////////////////////////
+	// Sanitize Path
+	//////////////////////////////////////////////////////////////////
+	public function sanitizePath() {
+		$sanitized = str_replace(" ", "_", $this->path);
+		return preg_replace('/[^\w-]/', '', $sanitized);
+	}
 
-    //////////////////////////////////////////////////////////////////
-    // Sanitize Path
-    //////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////
+	// Sanitize gitBranch
+	//////////////////////////////////////////////////////////////////
+	public function sanitizeGitBranch() {
+		$sanitized = str_replace(array(
+			"..",
+			chr(40),
+			chr(177),
+			"~",
+			"^",
+			":",
+			"?",
+			"*",
+			"[",
+			"@{",
+			"\\"
+		), array(
+			""
+		), $this->gitBranch);
+		return $sanitized;
+	}
 
-    public function SanitizePath() {
-        $sanitized = str_replace(" ", "_", $this->path);
-        return preg_replace('/[^\w-]/', '', $sanitized);
-    }
+	//////////////////////////////////////////////////////////////////
+	// Clean Path
+	//////////////////////////////////////////////////////////////////
+	public function cleanPath() {
 
-    //////////////////////////////////////////////////////////////////
-    // Clean Path
-    //////////////////////////////////////////////////////////////////
+		// prevent Poison Null Byte injections
+		$path = str_replace(chr(0), '', $this->path);
 
-    public function cleanPath() {
+		// prevent go out of the workspace
+		while (strpos($path, '../') !== false) {
+			$path = str_replace('../', '', $path);
+		}
 
-        // prevent Poison Null Byte injections
-        $path = str_replace(chr(0), '', $this->path);
+		return $path;
+	}
 
-        // prevent go out of the workspace
-        while (strpos($path, '../') !== false) {
-            $path = str_replace('../', '', $path);
-        }
+	//////////////////////////////////////////////////////////////////
+	// Execute Command
+	//////////////////////////////////////////////////////////////////
+	public function ExecuteCMD() {
+		if (function_exists('system')) {
+			ob_start();
+			system($this->command_exec);
+			ob_end_clean();
+		} elseif (function_exists('exec')) {
+			exec($this->command_exec, $this->output);
+		} elseif (function_exists('shell_exec')) {
+			shell_exec($this->command_exec);
+		}
+	}
 
-        return $path;
-    }
-
-    //////////////////////////////////////////////////////////////////
-    // Execute Command
-    //////////////////////////////////////////////////////////////////
-
-    public function ExecuteCMD() {
-        if (function_exists('system')) {
-            ob_start();
-            system($this->command_exec);
-            ob_end_clean();
-        } elseif (function_exists('exec')) {
-            exec($this->command_exec, $this->output);
-        } elseif (function_exists('shell_exec')) {
-            shell_exec($this->command_exec);
-        }
-    }
+	//////////////////////////////////////////////////////////////////
+	// Pivot the Users from the old file format to the new file format
+	//////////////////////////////////////////////////////////////////
+	private function pivotProjects() {
+		$revisedArray = array();
+		foreach ($this->projects as $project => $data) {
+			if (isset($data["path"])) {
+				$revisedArray[$data["path"]] = $data["name"];
+			}
+		}
+		if (count($revisedArray) > 0) {
+			Common::saveJSON('projects', $revisedArray);
+		}
+	}
 }
