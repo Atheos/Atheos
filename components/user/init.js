@@ -121,16 +121,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		logout: function() {
-			var forcelogout = true;
-			var unsaved = oX('#list-active-files').find('li.changed');
-			if (unsaved.length > 0) {
-				forcelogout = confirm(i18n('You have unsaved files.'));
-			}
-			if (forcelogout) {
-				unsaved.forEach(function(changed) {
-					changed.removeClass('changed');
-				});
-
+			var postLogout = function() {
 				amplify.publish('user.logout');
 				atheos.settings.save();
 				ajax({
@@ -139,9 +130,43 @@
 						'action': 'logout'
 					},
 					success: function() {
-						window.location.reload();
+						// window.location.reload();
 					}
 				});
+			};
+
+			var changedTabs = '';
+
+			for (var path in atheos.active.sessions) {
+				if (atheos.active.sessions[path].status === 'changed') {
+					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
+					changedTabs += fileName + '\n';
+				}
+			}
+
+			if (changedTabs !== '') {
+				var dialog = {
+					banner: 'You have unsaved changes.',
+					data: changedTabs,
+					actions: {
+						'Save All & Close': function() {
+							atheos.active.saveAll();
+							postLogout();
+						},
+						'Discard Changes': function() {
+							for (var path in atheos.active.sessions) {
+								atheos.active.sessions[path].status = 'current';
+							}
+							postLogout();
+						},
+						'Cancel': function() {
+							// Cancel
+						}
+					}
+				};
+				atheos.alert.show(dialog);
+			} else {
+				postLogout();
 			}
 		},
 
