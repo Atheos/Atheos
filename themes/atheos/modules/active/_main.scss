@@ -26,6 +26,7 @@
 
 	font-size: 16px;
 	color: $icon-color;
+	cursor: pointer;
 
 	&:hover {
 		color: lighten($icon-color, 30%);
