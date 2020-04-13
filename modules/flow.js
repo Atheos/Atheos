@@ -80,6 +80,10 @@
 		},
 
 		dragNdrop: function(event, options) {
+			// Inspired By: https://codepen.io/fitri/pen/VbrZQm
+			// Made with love by @fitri
+			// & https://github.com/io-developer/js-dragndrop
+
 			options = options || {};
 			var target = event.target;
 			var dragZone = options.dragZone;
@@ -112,8 +116,8 @@
 				startMY = event.screenY;
 
 				clone = target.cloneNode(true);
-				clone.style.left = startEX + "px";
-				clone.style.top = startEY + "px";
+				clone.style.left = (startEX - dragZone.scrollLeft) + "px";
+				clone.style.top = (startEY - dragZone.scrollTop) + "px";
 				clone.style.position = 'absolute';
 				clone.style.cursor = 'grabbing';
 
@@ -145,14 +149,15 @@
 				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
 				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
 
-				clone.style.left = x + "px";
-				clone.style.top = y + "px";
+				clone.style.left = (x - dragZone.scrollLeft) + "px";
+				clone.style.top = (y - dragZone.scrollTop) + "px";
 			}
 
 			function moveTarget(event) {
 				timeout = false;
 
 				var swap = [].slice.call(dragZone.querySelectorAll(".draggable"));
+
 				swap = swap.filter((item) => {
 					var rect = item.getBoundingClientRect();
 					if (xAxis && (event.clientX < rect.left || event.clientX >= rect.right)) return false;
@@ -160,15 +165,16 @@
 					if (item === clone) return false;
 					return true;
 				});
-				if (swap.length !== 1) {
+				log(swap);
+				if (swap.length === 0) {
 					return;
 				} else {
-					swap = swap[0];
+					swap = swap[swap.length - 1];
 				}
 
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
-					swap.parentNode.insertBefore(target, swap);
+					if (swap) swap.parentNode.insertBefore(target, swap);
 				}
 			}
 
@@ -176,6 +182,7 @@
 				clearTimeout(timeout);
 				target.style.opacity = '';
 				if (clone) clone.remove();
+				if (options.drop) options.drop(target);
 				document.removeEventListener("mousemove", dragMove);
 				document.removeEventListener("mouseup", dragEnd);
 			}
