@@ -15,7 +15,6 @@
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		i18n = global.i18n,
 		oX = global.onyx;
 
 	var self = null;
@@ -160,10 +159,10 @@
 						if (atheos.modal.modalVisible) {
 							atheos.modal.unload();
 						}
-						atheos.user.saveActiveProject(path);
+						atheos.user.saveActiveProject(projectPath);
 						localStorage.removeItem('lastSearched');
 						/* Notify listeners. */
-						amplify.publish('project.onOpen', path);
+						amplify.publish('project.onOpen', projectPath);
 					}
 				}
 			});
@@ -338,7 +337,7 @@
 				var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
 				var followLinks = oX('input:checkbox[name="follow"]:checked').value();
 
-				ajas({
+				ajax({
 					url: self.controller,
 					data: {
 						action: 'delete',
@@ -354,7 +353,7 @@
 							self.list();
 							self.loadDock();
 
-							for (path in atheos.active.sessions) {
+							for (var path in atheos.active.sessions) {
 								if (path.indexOf(projectPath) === 0) {
 									atheos.active.remove(path);
 								}
