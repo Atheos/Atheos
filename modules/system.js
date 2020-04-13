@@ -27,24 +27,26 @@
 		//Synthetic Login Overlay
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
-						atheos.user.init();
+			atheos.user.init();
 		} else if (document.querySelector('#installer')) {
 			global.synthetic.init();
+			atheos.install.init();
+
 		} else {
-		// Atheos has three levels of priority loading:
-		//	Critical components should load on major
-		//	Features should load on minor
-		//	Plugins should load on extra
-		amplify.publish('system.loadMajor');
-		amplify.publish('system.loadMinor');
-		amplify.publish('system.loadExtra');
+			// Atheos has three levels of priority loading:
+			//	Critical components should load on major
+			//	Features should load on minor
+			//	Plugins should load on extra
+			amplify.publish('system.loadMajor');
+			amplify.publish('system.loadMinor');
+			amplify.publish('system.loadExtra');
 
-		amplify.publish('atheos.loaded');
-		amplify.publish('atheos.plugins');
+			amplify.publish('atheos.loaded');
+			amplify.publish('atheos.plugins');
 
-		// Settings are initialized last in order to ensure all listeners are attached
-		atheos.settings.init();
-}
+			// Settings are initialized last in order to ensure all listeners are attached
+			atheos.settings.init();
+		}
 	});
 
 })(this);
