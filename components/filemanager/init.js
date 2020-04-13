@@ -113,7 +113,7 @@
 					dragZone: oX('#file-manager').el,
 					direction: 'vertical'
 				};
-				atheos.flow.dragNdrop(e, options);
+				// atheos.flow.dragNdrop(e, options);
 			});
 		},
 
