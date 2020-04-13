@@ -1,0 +1,41 @@
+#sb_left #project_list {
+	.title {
+		right: 0;
+	}
+
+
+	position: absolute;
+	height: $fileManagerHeight;
+	bottom: 0;
+	left: 0;
+	right: $sidebarHandleWidth;
+	transition: height ease-in-out $transitionDuration;
+
+	.content {
+		height: calc(100% - #{$topBarHeight});
+		overflow-y: scroll;
+		width: 100%;
+
+		i {
+			color: $accent-color;
+		}
+
+		ul {
+			height: 100%;
+			display: block;
+		}
+
+
+		li {
+			padding: 5px;
+			white-space: nowrap;
+			cursor: pointer;
+			@include border-radius;
+
+			&:hover {
+				background-color: #333;
+			}
+		}
+	}
+
+}

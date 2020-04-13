@@ -3,61 +3,36 @@
 @import "modules/util/mixins", "modules/util/colours", "modules/util/shades", "modules/util/variables";
 @import "modules/util/animations";
 
-@import "modules/misc/todo";
-@import "modules/misc/optionsmenu";
+@import "modules/util/scrollbars";
 
 
-@import "modules/codegit";
+@import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/text", "modules/common/button";
+@import "modules/common/tables";
+@import "modules/common/typography";
+
+@import "modules/active/main";
 @import "modules/codegit/main";
+@import "modules/editor/main";
+@import "modules/feedback/main";
+@import "modules/filemanager/main";
+@import "modules/sidebar/main";
 
 
-@import "modules/editor/active", "modules/editor/editor", "modules/editor/top-bar", "modules/editor/active-tabs", "modules/editor/bottom-bar";
-@import "modules/feedback/alert", "modules/feedback/common", "modules/feedback/modal", "modules/feedback/toast";
-@import "modules/autocomplete";
-@import "modules/graphics/icons";
+
+// @import "modules/graphics/icons";
+
 @import "modules/textmode", "modules/market";
-@import "modules/filemanager/filemanager", "modules/filemanager/context_menu", "modules/filemanager/scout", "modules/filemanager/uploader";
-@import "modules/misc/title", "modules/misc/logo", "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
-@import "modules/input/checkbox", "modules/input/button";
-@import "modules/misc/tables";
 
-@import "modules/project", "modules/settings", "modules/user", "modules/sidebar";
+@import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
+
+
+@import "modules/misc/contextmenu", "modules/misc/scout";
+
+@import "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
+
+@import "modules/settings", "modules/user";
  
-/* WEBKIT SCROLLBARS */
-::-webkit-scrollbar {
-	width: $scrollbarWidth;
-	height: 10px;
-}
-
-::-webkit-scrollbar-track-piece {
-	background-color: #333;
-	@include border-radius;
-
-}
-
-::-webkit-scrollbar-thumb:vertical {
-	height: 5px;
-	background-color: #666;
-	@include border-radius;
-}
-
-::-webkit-scrollbar-thumb:vertical:hover {
-	background-color: #999;
-}
-
-::-webkit-scrollbar-thumb:horizontal {
-	width: 5px;
-	background-color: #666;
-	@include border-radius;
-}
-
-::-webkit-scrollbar-thumb:horizontal:hover {
-	background-color: #999;
-}
-
-::-webkit-scrollbar-corner {
-	background-color: #2D2D2D;
-}
+// @import "modules/util/cursor";
 
 /* DOCUMENT */
 body,
@@ -70,13 +45,18 @@ html {
 	overflow: hidden;
 }
 
-div {
-	scrollbar-base-color: #1a1a1a;
-	scrollbar-3d-light-color: #1a1a1a;
-	scrollbar-arrow-color: #303030;
-	scrollbar-darkshadow-color: #303030;
-	scrollbar-face-color: #1a1a1a;
-	scrollbar-highlight-color: #303030;
-	scrollbar-shadow-color: #303030;
-	scrollbar-track-color: #303030;
+/* MAIN */
+#workspace {
+	color: #fff;
+	margin: 0;
+	padding: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 1;
+	overflow: hidden;
+}
+
+/* Download iFrame */
+#download {
+	display: none;
 }

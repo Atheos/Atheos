@@ -15,7 +15,10 @@ require_once('class.settings.php');
 checkSession();
 
 $action = Common::data("action");
-$settings = Common::data("settings");
+
+$key = Common::data("key");
+$value = Common::data("value");
+
 $user = Common::data("user", "session");
 
 
@@ -32,15 +35,14 @@ switch ($action) {
 	// Save User Settings
 	//////////////////////////////////////////////////////////////////
 	case "save":
-		if ($settings) {
+		if ($key && $value) {
 			$Settings->username = $user;
-			$Settings->settings = json_decode($settings, true);
-			$Settings->Save();
+
+			$Settings->save($key, $value);
 		} else {
-			Common::sendJSON("E403m", "Settings");
+			Common::sendJSON("E403g");
 
 		}
-
 		break;
 
 	//////////////////////////////////////////////////////////////////
@@ -48,11 +50,11 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	case "load":
 		$Settings->username = $user;
-		$Settings->Load();
+		$Settings->load();
 
 		break;
+
 	default:
 		Common::sendJSON("E401i");
 		break;
-
 }

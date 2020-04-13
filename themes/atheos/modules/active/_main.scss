@@ -1,0 +1,46 @@
+#editor-top-bar {
+	//top       : 0;
+	//position  : fixed;
+	//height    : 35px;
+	width: 100%;
+	color: $font-color-subtle;
+	background: $foreground;
+	/*box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .9);*/
+	// overflow: hidden;
+	position: relative;
+	transition: border $transition-duration ease;
+}
+
+/************************
+ * Close All & Dropdown Buttons
+ ************************/
+
+
+
+#tab_close,
+#tab_dropdown {
+	position: absolute;
+	top: 8px;
+	height: $topBarHeight;
+	transition: margin-right $animation-duration ease-in-out;
+
+	font-size: 16px;
+	color: $icon-color;
+	cursor: pointer;
+
+	&:hover {
+		color: lighten($icon-color, 30%);
+
+	}
+}
+
+#tab_close {
+	right: 10px;
+
+}
+
+#tab_dropdown {
+	right: 35px;
+}
+
+@import "dropdown", "tabs";

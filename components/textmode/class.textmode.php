@@ -291,7 +291,7 @@ class TextMode {
 	public function getTextModeSelect($extension) {
 		$extension = trim(strtolower($extension));
 		$find = false;
-		$html = '<select name="textmode" class="textMode">'."\n";
+		$html = '<select name="textmode">'."\n";
 		foreach ($this->getAvailiableTextModes() as $textmode) {
 			$html .= '	<option';
 			if ($textmode == $extension) {

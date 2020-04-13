@@ -40,4 +40,28 @@
 			padding: 0;
 		}
 	}
+
+	.settings td {
+		border: none;
+		border-bottom: 1px solid #666;
+		padding: 10px 0;
+	}
+
+	.settings td:first-child {
+		padding-right: 20px;
+		font-weight: bold;
+	}
+
+	.settings select {
+		margin: 0;
+	}
+
+	.settings tr:last-child td {
+		border: none;
+	}
+}
+
+#settings_open {
+	float: left;
+	display: none;
 }
