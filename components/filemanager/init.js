@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager
+// FileManager Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -11,10 +13,6 @@
 // Goodness this file is very complex; it's going to take a very long time
 // to really get a grasp of what's going on in this file and how to 
 // refactor it.
-// The context menu should become an object stored within the filemanager, and
-// constructed based on the fules specified therein. The OBJ is created, and
-// then added to by each plugin based on it's requirements. The OBJ could even
-// be cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -109,10 +107,10 @@
 			});
 
 			oX('#file-manager').on('mousedown', function(e) {
-				var options = {
-					dragZone: oX('#file-manager').el,
-					direction: 'vertical'
-				};
+				//var options = {
+				//	dragZone: oX('#file-manager').el,
+				//	direction: 'vertical'
+				//};
 				// atheos.flow.dragNdrop(e, options);
 			});
 		},
@@ -320,14 +318,6 @@
 		//////////////////////////////////////////////////////////////////
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
-
-			var notifySaveErr = function() {
-				atheos.toast.show('error', 'File could not be saved');
-				if (typeof callbacks.error === 'function') {
-					var context = callbacks.context || self;
-					callbacks.error.apply(context, [data]);
-				}
-			};
 
 			ajax({
 				url: self.controller + '?action=modify&path=' + encodeURIComponent(path),

@@ -1,5 +1,7 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// User
+// User Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -15,7 +17,6 @@
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
-		i18n = global.i18n,
 		oX = global.onyx;
 
 
