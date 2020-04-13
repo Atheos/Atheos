@@ -98,7 +98,7 @@
 					if (reply === 'success') {
 						window.location.reload();
 					} else {
-						alert("An Error Occurred<br><br>" + data);
+						alert('An Error Occurred<br><br>' + data);
 					}
 				}
 			});
@@ -107,15 +107,19 @@
 		getTimeZone: function() {
 			var num = new Date().getTimezoneOffset();
 			if (num === 0) {
-				return "GMT";
+				return 'GMT';
 			} else {
 				var hours = Math.floor(num / 60);
 				var minutes = Math.floor((num - (hours * 60)));
 
-				if (hours < 10) hours = "0" + Math.abs(hours);
-				if (minutes < 10) minutes = "0" + Math.abs(minutes);
+				if (hours < 10) {
+					hours = '0' + Math.abs(hours);
+				}
+				if (minutes < 10) {
+					minutes = '0' + Math.abs(minutes);
+				}
 
-				return "GMT" + (num < 0 ? "+" : "-") + hours + ":" + minutes;
+				return 'GMT' + (num < 0 ? '+' : '-') + hours + ':' + minutes;
 			}
 		}
 	};
