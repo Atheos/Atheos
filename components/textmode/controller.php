@@ -37,6 +37,15 @@ switch ($action) {
 			die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
 		}
 		break;
+	//////////////////////////////////////////////////////////////////
+	// Load defauly text modes
+	//////////////////////////////////////////////////////////////////
+	case 'loadAceTextModes':
+		$textModes = Common::readJSON("textmodes");
+		Common::sendJSON("success", $textModes);
+
+		break;
+	
 
 	//////////////////////////////////////////////////////////////////
 	// Get text modes

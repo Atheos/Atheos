@@ -49,20 +49,15 @@
 				self.hideFilter();
 			});
 
+			atheos.common.initMenuHandler(oX('#filter_options'), oX('#filter_strategy'));
 
-			var filterStrategy = oX('#filter_strategy');
-
-			oX('#filter_options').on('click', function() {
-				filterStrategy.show();
-			});
-
-			filterStrategy.on('click', function(e) {
+			var strategyMenu = oX('#filter_strategy');
+			strategyMenu.on('click', function(e) {
 				var node = oX(e.target);
-				filterStrategy.find('.active').removeClass('active');
+				strategyMenu.find('.active').removeClass('active');
 				if (e.target.tagname === 'A') {
 					self.strategy = node.attr('data-option');
 					node.parent().addClass('active');
-					filterStrategy.hide();
 				}
 			});
 
