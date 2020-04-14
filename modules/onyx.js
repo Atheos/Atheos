@@ -251,6 +251,9 @@
 			css: function(a, v) {
 				if (typeof a === 'string') {
 					if (typeof(v) !== 'undefined') {
+						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v)) {
+							v = v + 'px';
+						}
 						element.style[a] = v;
 					}
 					return element.style[a] || null;
