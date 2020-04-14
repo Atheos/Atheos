@@ -41,9 +41,9 @@
 			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
 
 
-			oX('#settings_open').on('click', function() {
-				atheos.settings.show();
-			});
+			// oX('#settings_open').on('click', function() {
+			// 	atheos.settings.show();
+			// });
 
 			self.load();
 		},
