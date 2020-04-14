@@ -129,15 +129,15 @@ if (isset($_SESSION['theme'])) {
 					<ul id="tab-list-active-files" class="customSortable"></ul>
 					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
 					<a id="tab_close" class="fas fa-times-circle"></a>
-					<ul id="dropdown-list-active-files"></ul>
+					<ul id="dropdown-list-active-files" style="display: none;"></ul>
 				</div>
 
 				<div id="root-editor-wrapper"></div>
 
 				<div id="editor-bottom-bar">
-					<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>
+					<!--<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>-->
 					<!--<div class="divider"></div>-->
-					<a id="split" class="ico-wrapper"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
+					<a id="split"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
 					<div class="divider"></div>
 					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 
@@ -165,18 +165,16 @@ if (isset($_SESSION['theme'])) {
 					} ?>
 
 					<div class="divider"></div>
-					<div id="current_file"></div>
-					<div id="cursor-position">
-						<?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0
-					</div>
+					<span id="current_file"></span>
+					<span id="cursor-position"><?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0</span>
+					<div id="changemode-menu" style="display:none;" class="options-menu"></div>
+					<ul id="split-options-menu" style="display:none;" class="options-menu">
+						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php i18n("Split Horizontally"); ?> </a></li>
+						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php i18n("Split Vertically"); ?> </a></li>
+						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php i18n("Merge all"); ?> </a></li>
+					</ul>
 				</div>
-				<div id="changemode-menu" class="options-menu">
-				</div>
-				<ul id="split-options-menu" class="options-menu">
-					<li id="split-horizontally"><a> <?php i18n("Split Horizontally"); ?> </a></li>
-					<li id="split-vertically"><a> <?php i18n("Split Vertically"); ?> </a></li>
-					<li id="merge-all"><a> <?php i18n("Merge all"); ?> </a></li>
-				</ul>
+
 			</div>
 			<?php require_once('components/sidebars/sb-right.php'); ?>
 
