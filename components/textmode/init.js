@@ -23,10 +23,14 @@
 
 		dialog: 'components/textmode/dialog.php',
 		controller: 'components/textmode/controller.php',
-		availableTextModes: [],
+		availableTextModes: [], //Should be extensions
+		defaultTextModes: [], //Should be availableTextModes
+		textModeMenuOpen: false,
+
 
 		init: function() {
 			self = this;
+
 			ajax({
 				url: self.controller,
 				data: {
@@ -35,6 +39,106 @@
 				success: function(data) {
 					self.setEditorTextModes(data);
 				}
+			});
+
+			ajax({
+				url: self.controller,
+				data: {
+					'action': 'loadAceTextModes'
+				},
+				success: function(reply) {
+					if (reply.status === 'success') {
+						delete reply.status;
+						for (var key in reply) {
+							self.defaultTextModes.push(reply[key]);
+						}
+						self.createModeMenu();
+
+					}
+				}
+			});
+
+			atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
+
+
+			// oX('#current_mode').on('click', function(e) {
+			// 	e.stopPropagation();
+			// 	if (self.textModeMenuOpen) {
+			// 		self.hideModeMenu();
+			// 	} else {
+			// 		self.showModeMenu();
+			// 	}
+			// });
+		},
+
+		showModeMenu: function() {
+			var menu = oX('#changemode-menu');
+			atheos.flow.slide('open', menu.el, 200);
+			window.addEventListener('click', self.hideModeMenu);
+			self.textModeMenuOpen = true;
+		},
+
+		hideModeMenu: function() {
+			var menu = oX('#changemode-menu');
+			atheos.flow.slide('close', menu.el, 200);
+			window.removeEventListener('click', self.hideModeMenu);
+			self.textModeMenuOpen = false;
+		},
+
+
+		createModeMenu: function() {
+			var menu = oX('#changemode-menu');
+
+			var modeColumns = [];
+			var modeOptions = [];
+			var maxOptionsColumn = 15;
+			var firstOption = 0;
+
+			var max;
+
+			self.defaultTextModes.sort();
+			self.defaultTextModes.forEach((mode) => {
+				modeOptions.push('<li><a>' + mode + '</a></li>');
+
+			});
+
+			var html = '<table><tr>';
+			while (true) {
+				html += '<td><ul>';
+				if ((modeOptions.length - firstOption) < maxOptionsColumn) {
+					max = modeOptions.length;
+				} else {
+					max = firstOption + maxOptionsColumn;
+				}
+				var currentcolumn = modeOptions.slice(firstOption, max);
+				for (var option in currentcolumn) {
+					html += currentcolumn[option];
+				}
+				html += '</ul></td>';
+				firstOption = firstOption + maxOptionsColumn;
+				if (firstOption >= modeOptions.length) {
+					break;
+				}
+			}
+
+			html += '</tr></table>';
+			menu.html(html);
+
+			$('#changemode-menu a').click(function(e) {
+				e.stopPropagation();
+				var newMode = 'ace/mode/' + $(e.currentTarget).text();
+				var actSession = self.activeInstance.getSession();
+
+				// handle async mode change
+				var fn = function() {
+					self.setModeDisplay(actSession);
+					actSession.removeListener('changeMode', fn);
+				};
+				actSession.on('changeMode', fn);
+
+				actSession.setMode(newMode);
+				atheos.flow.slide('close', menu.el, 200);
+
 			});
 		},
 
