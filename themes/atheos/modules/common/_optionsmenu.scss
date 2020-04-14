@@ -2,7 +2,6 @@
 	position: absolute;
 	z-index: 9999;
 	background-color: $background;
-	display: none;
 	@include border(1px);
 	@include border-radius;
 
