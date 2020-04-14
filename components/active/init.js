@@ -53,9 +53,15 @@
 		init: function() {
 			self = this;
 
-			self.initTabDropdownMenu();
 			self.updateTabDropdownVisibility();
 			self.initTabListeners();
+
+			atheos.common.initMenuHandler(oX('#tab_dropdown'), self.dropDownMenu, ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
+
+			oX('#tab_close').on('click', function(e) {
+				e.stopPropagation();
+				self.closeAll();
+			});
 
 			ajax({
 				url: self.controller,
@@ -107,6 +113,11 @@
 
 			amplify.subscribe('settings.loaded', function() {
 				self.loopBehavior = atheos.storage('active.loopBehavior') || self.loopBehavior;
+
+				// This timeout is an effort to double check the tab visibility
+				// after everything has been loaded. The default route has some 
+				// minor issues on loading such that it doesn't quite meet spec
+				setTimeout(self.updateTabDropdownVisibility, 500);
 			});
 		},
 
@@ -165,31 +176,6 @@
 			// self.dropDownMenu.on('dragend', function(e) {
 			// 	atheos.ux.handleDrop(e.target, e);
 			// });
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Dropdown Menu
-		//////////////////////////////////////////////////////////////////
-
-		initTabDropdownMenu: function() {
-			var toggleDropDown = oX('#tab_dropdown');
-			var closeAll = oX('#tab_close');
-
-			self.dropDownMenu.hide();
-
-			toggleDropDown.on('click', function(e) {
-				e.stopPropagation();
-				if (self.dropDownOpen) {
-					self.hideDropDownMenu();
-				} else {
-					self.showDropDownMenu();
-				}
-			});
-
-			closeAll.on('click', function(e) {
-				e.stopPropagation();
-				self.closeAll();
-			});
 		},
 
 		open: function(path, content, modifyTime, focus) {
@@ -697,20 +683,6 @@
 					self.focus(newActive.attr('data-path'));
 				}
 			}
-		},
-
-		showDropDownMenu: function() {
-			oX('#tab_dropdown').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
-			atheos.flow.slide('open', self.dropDownMenu.el);
-			window.addEventListener('click', self.hideDropDownMenu);
-			self.dropDownOpen = true;
-		},
-
-		hideDropDownMenu: function() {
-			oX('#tab_dropdown').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
-			atheos.flow.slide('close', self.dropDownMenu.el);
-			window.removeEventListener('click', self.hideDropDownMenu);
-			self.dropDownOpen = false;
 		},
 
 		moveTabToDropdownMenu: function(oldListItem, direction) {

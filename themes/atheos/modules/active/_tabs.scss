@@ -33,6 +33,7 @@
 			direction: rtl;
 			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 			padding-bottom: 1px;
+			cursor: inherit;
 
 			.file-name {
 				color: lighten($fontColorMinor, 20%);

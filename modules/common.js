@@ -60,6 +60,9 @@
 	atheos.common = {
 
 
+		//////////////////////////////////////////////////////////////////////
+		// Path helper functions
+		//////////////////////////////////////////////////////////////////////
 		getNodeName: function(path) {
 			return path.split('/').pop();
 		},
@@ -86,7 +89,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////
-		// Extend
+		// Extend / Combine JS objects
 		//////////////////////////////////////////////////////////////////////
 		extend: function(obj, src) {
 			var temp = JSON.parse(JSON.stringify(obj));
@@ -96,6 +99,63 @@
 				}
 			}
 			return temp;
+		},
+
+		//////////////////////////////////////////////////////////////////////
+		// Options Menu Event Handlers
+		//////////////////////////////////////////////////////////////////////
+		optionMenus: [],
+
+		initMenuHandler: function(button, menu, switchClasses) {
+			var menuOpen = false;
+
+			menu.close = function() {
+				if (menuOpen) {
+					if (types.isArray(switchClasses)) {
+						// I could have made a nice If statement to switch the appropriate classes
+						// on menu open vs close, however converting the boolean value to a number
+						// was an inspirational moment and seemed really cool.
+						button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+					}
+					atheos.flow.slide('close', menu.el);
+					window.removeEventListener('click', menu.close);
+					menuOpen = false;
+				}
+			};
+
+			this.optionMenus.push(menu);
+
+			button.on('click', (e) => {
+				log(e);
+
+				e.stopPropagation();
+
+				// Close other menus
+				this.closeMenus(menu);
+
+				if (types.isArray(switchClasses)) {
+					// I could have made a nice If statement to switch the appropriate classes
+					// on menu open vs close, however converting the boolean value to a number
+					// was an inspirational moment and seemed really cool.
+					button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+				}
+				if (menuOpen) {
+					menu.close();
+				} else {
+					atheos.flow.slide('open', menu.el);
+					menuOpen = true;
+					window.addEventListener('click', menu.close);
+				}
+			});
+		},
+
+		closeMenus: function(exclude) {
+			log('close');
+			this.optionMenus.forEach((menu) => {
+				if (menu !== exclude) {
+					menu.close();
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////
