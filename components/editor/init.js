@@ -570,22 +570,6 @@
 
 		//////////////////////////////////////////////////////////////////
 		//
-		// Set last position of modal to be saved
-		//
-		// Parameters:
-		//   t - {Boolean} (false for Automatic Position, true for Last Position)
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setPersistentModal: function(t, i) {
-			this.settings.persistentModal = t;
-			// LocalStorage
-			localStorage.setItem('atheos.editor.persistentModal', t);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
 		// set Tab Size
 		//
 		// Parameters:
