@@ -210,20 +210,14 @@
 			}
 		};
 
-		let triggerEvent = function(event) {
-			if (element && event) {
-				var e;
-				if ('createEvent' in document) {
-					// modern browsers, IE9+
-					e = document.createEvent('HTMLEvents');
-					e.initEvent(event, false, true);
-					element.dispatchEvent(e);
-				} else {
-					// IE 8
-					e = document.createEventObject();
-					e.eventType = event;
-					event.fireEvent('on' + e.eventType, e);
-				}
+		let triggerEvent = function(type) {
+			if (element && type) {
+				
+				var event = new CustomEvent(type,{
+					bubbles: true,
+					cancelable: true
+				});
+				return element.dispatchEvent(event);
 			}
 		};
 
