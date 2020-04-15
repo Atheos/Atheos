@@ -25,10 +25,7 @@ $plugins = Common::readDirectory(PLUGINS);
 $themes = Common::readDirectory(THEMES);
 
 // Theme
-$theme = THEME;
-if (isset($_SESSION['theme'])) {
-	$theme = $_SESSION['theme'];
-}
+$theme = Common::data("theme", "session") ?: THEME;
 
 ?>
 <!doctype html>
@@ -92,30 +89,12 @@ if (isset($_SESSION['theme'])) {
 <body>
 
 	<?php
-
+	$activeUser = Common::data("user", "session");
 	//////////////////////////////////////////////////////////////////
-	// NOT LOGGED IN
+	// LOGGED IN
 	//////////////////////////////////////////////////////////////////
 
-	if (!isset($_SESSION['user'])) {
-		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
-
-		$users = file_exists($path . "/data/users.php") || file_exists($path . "/data/users.json");
-		$projects = file_exists($path . "/data/projects.php") || file_exists($path . "/data/projects.json");
-		$active = file_exists($path . "/data/active.php") || file_exists($path . "/data/active.json");
-
-		if (!$users && !$projects && !$active) {
-			// Installer
-			require_once('components/install/view.php');
-		} else {
-			// Login form
-			require_once('components/user/login.php');
-		}
-
-		//////////////////////////////////////////////////////////////////
-		// AUTHENTICATED
-		//////////////////////////////////////////////////////////////////
-	} else {
+	if ($activeUser) {
 		?>
 
 		<div id="workspace">
@@ -202,6 +181,24 @@ if (isset($_SESSION['theme'])) {
 		// LOAD PLUGINS
 		//////////////////////////////////////////////////////////////////
 		$SourceManager->echoScripts("plugins", true);
+	} else {
+		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
+
+		$users = file_exists($path . "/data/users.php") || file_exists($path . "/data/users.json");
+		$projects = file_exists($path . "/data/projects.php") || file_exists($path . "/data/projects.json");
+		$active = file_exists($path . "/data/active.php") || file_exists($path . "/data/active.json");
+
+		if (!$users && !$projects && !$active) {
+			// Installer
+			require_once('components/install/view.php');
+		} else {
+			// Login form
+			require_once('components/user/login.php');
+		}
+
+		//////////////////////////////////////////////////////////////////
+		// AUTHENTICATED
+		//////////////////////////////////////////////////////////////////
 	}
 
 	?>
