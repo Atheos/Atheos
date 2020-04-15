@@ -8,9 +8,6 @@
 
 
 
-	// Editor modes that have been loaded
-	var editorModes = {};
-	
 	var ace = global.ace,
 		atheos = global.atheos,
 		amplify = global.amplify,
@@ -72,18 +69,21 @@
 
 			// editor = oX('#editor-region');
 
-
 			editor.on('h-resize-init', function() {
-				$('#editor-region > .editor-wrapper').width($(this).width()).trigger('h-resize');
+				var width = editor.css('width');
+				// $('#editor-region > .editor-wrapper').css('width', width);
+				$('#editor-region > .editor-wrapper').width($(this).width());
+				$('#editor-region > .editor-wrapper').trigger('h-resize');
 			});
 
 			editor.on('v-resize-init', function() {
-				$('#editor-region > .editor-wrapper').height($(this).height()).trigger('v-resize');
+				$('#editor-region > .editor-wrapper').height($(this).height());
+				$('#editor-region > .editor-wrapper').trigger('v-resize');
 			});
 
-
-			$(window).resize(function() {
-				$('#editor-region').trigger('h-resize-init').trigger('v-resize-init');
+			window.addEventListener('resize', function() {
+				editor.trigger('h-resize-init');
+				editor.trigger('v-resize-init');
 			});
 		},
 
@@ -92,29 +92,14 @@
 		// Retrieve editor settings from localStorage
 		//
 		//////////////////////////////////////////////////////////////////
-
 		getSettings: function() {
-			var boolVal = null,
-				local = null,
-				settings = null;
-
-			settings = ['theme', 'fontSize', 'tabSize'];
+			var settings = ['theme', 'fontSize', 'tabSize', 'printMargin', 'printMarginColumn', 'highlightLine', 'indentGuides', 'wrapMode', 'softTabs'];
 			settings.forEach(function(key) {
-				local = storage('editor.' + key);
+				var local = storage('editor.' + key);
 				if (local !== null) {
 					self.settings[key] = local;
 				}
 			});
-
-
-			settings = ['printMargin', 'printMarginColumn', 'highlightLine', 'indentGuides', 'wrapMode', 'softTabs', 'persistentModal'];
-			settings.forEach(function(key) {
-				local = storage('editor.' + key);
-				if (local !== null) {
-					self.settings[key] = local;
-				}
-			});
-
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -125,14 +110,13 @@
 		//   i - {Editor}
 		//
 		/////////////////////////////////////////////////////////////////
-
-		applySettings: function(i) {
+		applySettings: function(instance) {
 			// Check user-specified settings
-			this.getSettings();
+			self.getSettings();
 
 			// Apply the current configuration settings:
-			i.setTheme('ace/theme/' + this.settings.theme);
-			i.setOptions({
+			instance.setTheme('ace/theme/' + self.settings.theme);
+			instance.setOptions({
 				// fontFamily: 'VictorMono-Bold',
 				fontFamily: 'Ubuntu-Fira',
 				enableBasicAutocompletion: true,
@@ -140,14 +124,14 @@
 				enableLiveAutocompletion: false
 			});
 
-			i.setFontSize(this.settings.fontSize);
-			i.setPrintMarginColumn(this.settings.printMarginColumn);
-			i.setShowPrintMargin(this.settings.printMargin);
-			i.setHighlightActiveLine(this.settings.highlightLine);
-			i.setDisplayIndentGuides(this.settings.indentGuides);
-			i.getSession().setUseWrapMode(this.settings.wrapMode);
-			this.setTabSize(this.settings.tabSize, i);
-			this.setSoftTabs(this.settings.softTabs, i);
+			instance.setFontSize(self.settings.fontSize);
+			instance.setPrintMarginColumn(self.settings.printMarginColumn);
+			instance.setShowPrintMargin(self.settings.printMargin);
+			instance.setHighlightActiveLine(self.settings.highlightLine);
+			instance.setDisplayIndentGuides(self.settings.indentGuides);
+			instance.getSession().setUseWrapMode(self.settings.wrapMode);
+			self.setTabSize(self.settings.tabSize, instance);
+			self.setSoftTabs(self.settings.softTabs, instance);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -158,17 +142,17 @@
 		//   session - {EditSession} Session to be used for new Editor instance
 		//
 		//////////////////////////////////////////////////////////////////
-
 		addInstance: function(session, where) {
-			var editor = $('<div class="editor">');
+			// var editor = $('<div class="editor">');
+			var editor = oX('<div class="editor"></div>');
+
 			var chType, chArr = [],
-				sc = null,
-				chIdx = null;
-			var self = this;
+				chIdx = null,
+				splitContainer = null;
 
 			if (this.instances.length === 0) {
-				// el.appendTo($('#editor-region'));
-				editor.appendTo($('#root-editor-wrapper'));
+				oX('#root-editor-wrapper').append(editor);
+				// editor.appendTo($('#root-editor-wrapper'));
 			} else {
 
 				var ch = this.activeInstance.el;
@@ -194,28 +178,29 @@
 				// 	root.addClass('editor-wrapper-' + chType);
 				// 	root.appendTo(ch.parent());
 
-				sc = new SplitContainer(root, chArr, chType);
+				splitContainer = new SplitContainer(root, chArr, chType);
 
 				if (this.instances.length > 1) {
 					var pContainer = this.activeInstance.splitContainer;
 					var idx = this.activeInstance.splitIdx;
-					pContainer.setChild(idx, sc);
+					pContainer.setChild(idx, splitContainer);
 				}
 			}
 
-			var i = ace.edit(editor[0]);
+			// var i = ace.edit(editor[0]);
+			var i = ace.edit(editor.el);
 			var resizeEditor = function() {
 				i.resize();
 			};
 
-			if (sc) {
-				i.splitContainer = sc;
+			if (splitContainer) {
+				i.splitContainer = splitContainer;
 				i.splitIdx = chIdx;
 
-				this.activeInstance.splitContainer = sc;
+				this.activeInstance.splitContainer = splitContainer;
 				this.activeInstance.splitIdx = 1 - chIdx;
 
-				sc.root
+				splitContainer.root
 					.on('h-resize', resizeEditor)
 					.on('v-resize', resizeEditor);
 
@@ -223,7 +208,7 @@
 					var re = function() {
 						self.instances[0].resize();
 					};
-					sc.root
+					splitContainer.root
 						.on('h-resize', re)
 						.on('v-resize', re);
 				}
@@ -239,23 +224,11 @@
 			this.instances.push(i);
 
 			i.on('focus', function() {
+
 				self.focus(i);
 			});
 
 			return i;
-		},
-
-		setModeDisplay: function(session) {
-			if (!session) {
-				return;
-			}
-			var currMode = session.getMode().$id;
-			if (currMode) {
-				currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
-				$('#current_mode>span').html(currMode);
-			} else {
-				$('#current_mode>span').html('text');
-			}
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -263,15 +236,15 @@
 		// Remove all Editor instances and clean up the DOM
 		//
 		//////////////////////////////////////////////////////////////////
-
 		exterminate: function() {
-			$('.editor').remove();
-			$('.editor-wrapper').remove();
-			$('#editor-region').append($('<div>').attr('id', 'editor'));
-			$('#current_file').html('');
-			$('#current_mode>span').html('');
-			this.instances = [];
-			this.activeInstance = null;
+			var editors = oX('#editor-region').findAll('.editor');
+			editors.forEach((editor) => {
+				editor.remove();
+			});
+			oX('#current_file').html('');
+			oX('#current_mode>span').html('');
+			self.instances = [];
+			self.activeInstance = null;
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -280,23 +253,22 @@
 		// them with replacementSession
 		//
 		//////////////////////////////////////////////////////////////////
-
 		removeSession: function(session, replacementSession) {
-			for (var k = 0; k < this.instances.length; k++) {
-				if (this.instances[k].getSession().path === session.path) {
-					this.instances[k].setSession(replacementSession);
+			for (var k = 0; k < self.instances.length; k++) {
+				if (self.instances[k].getSession().path === session.path) {
+					self.instances[k].setSession(replacementSession);
 				}
 			}
-			if ($('#current_file').text() === session.path) {
-				$('#current_file').text(replacementSession.path);
+			if (oX('#current_file').text() === session.path) {
+				oX('#current_file').text(replacementSession.path);
 			}
 
-			this.setModeDisplay(replacementSession);
+			atheos.textmode.setModeDisplay(replacementSession);
 		},
 
 		isOpen: function(session) {
-			for (var k = 0; k < this.instances.length; k++) {
-				if (this.instances[k].getSession().path === session.path) {
+			for (var k = 0; k < self.instances.length; k++) {
+				if (self.instances[k].getSession().path === session.path) {
 					return true;
 				}
 			}
@@ -311,10 +283,9 @@
 		//   fn - {Function} callback called with each member as an argument
 		//
 		/////////////////////////////////////////////////////////////////
-
 		forEach: function(fn) {
-			for (var k = 0; k < this.instances.length; k++) {
-				fn.call(this, this.instances[k]);
+			for (var k = 0; k < self.instances.length; k++) {
+				fn.call(self, self.instances[k]);
 			}
 		},
 
@@ -326,9 +297,8 @@
 		// editor pane user is currently working on.
 		//
 		/////////////////////////////////////////////////////////////////
-
 		getActive: function() {
-			return this.activeInstance;
+			return self.activeInstance;
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -339,15 +309,14 @@
 		//   i - {Editor}
 		//
 		/////////////////////////////////////////////////////////////////
-
-		setActive: function(i) {
-			if (i) {
-				this.activeInstance = i;
-				var path = i.getSession().path;
+		setActive: function(instance) {
+			if (instance) {
+				self.activeInstance = instance;
+				var path = instance.getSession().path;
 				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
 
-				$('#current_file').text(path);
-				this.setModeDisplay(i.getSession());
+				oX('#current_file').text(path);
+				atheos.textmode.setModeDisplay(instance.getSession());
 			}
 		},
 
@@ -357,17 +326,16 @@
 		//
 		// Parameters:
 		//   session - {EditSession}
-		//   i - {Editor}
+		//   instance - {Editor}
 		//
 		/////////////////////////////////////////////////////////////////
-
-		setSession: function(session, i) {
-			i = i || this.getActive();
+		setSession: function(session, instance) {
+			instance = instance || this.activeInstance;
 			if (!this.isOpen(session)) {
-				if (!i) {
-					i = this.addInstance(session);
+				if (!instance) {
+					instance = this.addInstance(session);
 				} else {
-					i.setSession(session);
+					instance.setSession(session);
 				}
 			} else {
 				// Proxy session is required because scroll-position and
@@ -379,101 +347,15 @@
 				proxySession.path = session.path;
 				proxySession.listThumb = session.listThumb;
 				proxySession.tabThumb = session.tabThumb;
-				if (!i) {
-					i = this.addInstance(proxySession);
+				if (!instance) {
+					instance = this.addInstance(proxySession);
 				} else {
-					i.setSession(proxySession);
+					instance.setSession(proxySession);
 				}
 			}
-			this.applySettings(i);
+			this.applySettings(instance);
 
-			this.setActive(i);
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// Select file mode by extension case insensitive
-		//
-		// Parameters:
-		// e - {String} File extension
-		//
-		/////////////////////////////////////////////////////////////////
-
-		selectMode: function(e) {
-			if (typeof(e) !== 'string') {
-				return 'text';
-			}
-			e = e.toLowerCase();
-
-			if (e in this.fileExtensionTextMode) {
-				return this.fileExtensionTextMode[e];
-			} else {
-				return 'text';
-			}
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// Add an text mode for an extension
-		//
-		// Parameters:
-		// extension - {String} File Extension
-		// mode - {String} TextMode for this extension
-		//
-		/////////////////////////////////////////////////////////////////
-
-		addFileExtensionTextMode: function(extension, mode) {
-			if (typeof(extension) !== 'string' || typeof(mode) !== 'string') {
-				if (console) {
-					console.warn('wrong usage of addFileExtensionTextMode, both parameters need to be string');
-				}
-				return;
-			}
-			mode = mode.toLowerCase();
-			this.fileExtensionTextMode[extension] = mode;
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// clear all extension-text mode joins
-		//
-		/////////////////////////////////////////////////////////////////
-
-		clearFileExtensionTextMode: function() {
-			this.fileExtensionTextMode = {};
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// Set the editor mode
-		//
-		// Parameters:
-		//   m - {TextMode} mode
-		//   i - {Editor} Editor (Defaults to active editor)
-		//
-		/////////////////////////////////////////////////////////////////
-
-		setMode: function(m, i) {
-			i = i || this.getActive();
-
-			// Check if mode is already loaded
-			if (!editorModes[m]) {
-
-				// Load the Mode
-				var modeFile = 'components/editor/ace-editor/mode-' + m + '.js';
-				$.loadScript(modeFile, function() {
-
-					// Mark the mode as loaded
-					editorModes[m] = true;
-					var EditorMode = ace.require('ace/mode/' + m).Mode;
-					i.getSession().setMode(new EditorMode());
-				}, true);
-			} else {
-
-				var EditorMode = ace.require('ace/mode/' + m).Mode;
-				i.getSession().setMode(new EditorMode());
-
-			}
+			this.setActive(instance);
 		},
 
 		/////////////////////////////////////////////////////////////////

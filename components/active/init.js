@@ -191,7 +191,7 @@
 			}
 
 			var ext = atheos.common.getNodeExtension(path);
-			var mode = atheos.editor.selectMode(ext);
+			var mode = atheos.textmode.selectMode(ext);
 
 			var fn = function() {
 				//var session = new EditSession(content, new Mode());
