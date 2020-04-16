@@ -65,7 +65,7 @@ class User {
 				$_SESSION['user'] = $this->username;
 				$_SESSION['lang'] = $this->lang;
 				$_SESSION['theme'] = $this->theme;
-				if ($user['activeProject'] != '') {
+				if ($user['activeProject'] !== '') {
 					$_SESSION['project'] = $user['activeProject'];
 				}
 
@@ -206,7 +206,7 @@ class User {
 	//////////////////////////////////////////////////////////////////
 	private function pivotActives() {
 		$revisedArray = array();
-		foreach ($this->users as $user => $data) {
+		foreach ($this->actives as $active => $data) {
 			if (isset($data["username"])) {
 				$focus = $data["focused"] ? "focus" : "active";
 				$revisedArray[$data["username"]] = array($data["path"] => $focus);
