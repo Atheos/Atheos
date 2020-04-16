@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// User
+// User Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -143,13 +143,14 @@ class User {
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////
 
-	public function changeUserACL() {
+	public function updateACL() {
 		// Access set to all projects
+		Common::debug($this->userACL);
+
 		if ($this->userACL !== "full") {
 			$this->userACL = explode(",", $this->userACL);
 		}
 		$this->users[$this->username]["userACL"] = $this->userACL;
-
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
 		// Response
