@@ -90,8 +90,8 @@ switch ($action) {
 				die(Common::sendJSON("error", "Missing username or password"));
 			}
 
-			$User->username = User::cleanUsername($_POST['username']);
-			$User->password = $_POST['password'];
+			$User->username = User::cleanUsername($username);
+			$User->password = $password;
 			$User->create();
 		}
 		break;
