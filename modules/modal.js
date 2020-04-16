@@ -72,7 +72,8 @@
 			return wrapper;
 		},
 
-		load: function(width, url, data) {
+		load: function(width, url, data, callback) {
+			callback = types.isFunction(data) ? data : callback;
 			data = data || {};
 			width = width > 400 ? width : 400;
 
@@ -93,6 +94,9 @@
 
 			if (self.modalVisible) {
 				self.setLoadingScreen();
+			}
+			if(content.find('form')) {
+				content.find('form').off('submit');
 			}
 
 			ajax({
@@ -118,6 +122,9 @@
 						input.focus();
 					}
 					amplify.publish('modal.loaded');
+					if (callback) {
+						callback();
+					}
 				}
 			});
 
@@ -149,6 +156,9 @@
 
 
 			oX('#modal_content').off('submit');
+			if(oX('#modal_content form')) {
+			oX('#modal_content form').off('submit');
+			}
 			oX('#overlay').remove();
 			oX('#modal_wrapper').hide();
 			oX('#modal_content').empty();
