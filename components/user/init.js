@@ -83,8 +83,8 @@
 					data: {
 						'action': 'keepAlive'
 					},
-					success: function(data) {
-						if (data.pass === 'false') {
+					success: function(reply) {
+						if (reply.pass === 'false') {
 							atheos.user.logout();
 						}
 					}
@@ -102,11 +102,11 @@
 			ajax({
 				url: self.controller,
 				data: data,
-				success: function(data) {
-					if (data.status !== 'error') {
+				success: function(reply) {
+					if (reply.status !== 'error') {
 						window.location.reload();
 					} else {
-						atheos.toast.show(data);
+						atheos.toast.show(reply);
 
 					}
 				}
@@ -122,9 +122,7 @@
 
 				var password1 = oX('#modal_content form input[name="password1"]').value();
 				var password2 = oX('#modal_content form input[name="password2"]').value();
-
 				var password = password1 === password2 ? password1 : false;
-
 
 				if (!password) {
 					atheos.toast.show('error', 'Passwords do not match.');
@@ -136,8 +134,8 @@
 							'username': username,
 							'password': password
 						},
-						success: function(data) {
-							if (data.status !== 'error') {
+						success: function(reply) {
+							if (reply.status !== 'error') {
 								atheos.toast.show('success', 'Password Changed');
 								atheos.modal.unload();
 							}
@@ -186,8 +184,8 @@
 							'username': username,
 							'password': password
 						},
-						success: function(data) {
-							if (data.status !== 'error') {
+						success: function(reply) {
+							if (reply.status !== 'error') {
 								atheos.toast.show('success', 'User Account Created');
 								self.list();
 							}
@@ -216,10 +214,10 @@
 						'action': 'delete',
 						'username': username
 					},
-					success: function(data) {
-						if (data.status !== 'error') {
+					success: function(reply) {
+						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'Account Deleted');
-							self.list();
+							self.showUserList();
 						}
 					}
 				});
@@ -332,7 +330,7 @@
 					ajax({
 						url: self.controller,
 						data: data,
-						success: function(data) {
+						success: function() {
 							atheos.modal.unload();
 						}
 					});
