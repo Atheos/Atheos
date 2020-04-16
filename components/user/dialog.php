@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// User
+// User Dialog
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -18,7 +18,7 @@ checkSession();
 
 $action = Common::data("action");
 $activeUser = Common::data("user", "session");
-		$username = Common::data("username");
+$username = Common::data("username");
 
 if (!$action) {
 	Common::sendJSON("E401m");
@@ -27,14 +27,70 @@ if (!$action) {
 
 switch ($action) {
 
+	//////////////////////////////////////////////////////////////////////
+	// Change Password
+	//////////////////////////////////////////////////////////////////////
+	case 'changePassword':
+		if (!$username || $username === "undefined") {
+			$username = $activeUser;
+		}
+
+		if (!Common::checkAccess("configure") && $username !== $activeUser) {
+			Common::sendJSON("E430u");
+			die;
+		}
+
+		?>
+		<form>
+			<label><?php i18n("New Password"); ?></label>
+			<input type="password" name="password1" autofocus="autofocus">
+			<label><?php i18n("Confirm Password"); ?></label>
+			<input type="password" name="password2">
+			<button class="btn-left"><?php i18n("Change %{username}%&apos;s Password", array("username" => ucfirst($username))) ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
+		</form>
+		<?php
+		break;
+
+	//////////////////////////////////////////////////////////////////////
+	// Create New User
+	//////////////////////////////////////////////////////////////////////
+	case 'create':
+		?>
+		<form>
+			<label><?php i18n("Username"); ?></label>
+			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
+			<label><?php i18n("Password"); ?></label>
+			<input type="password" name="password1">
+			<label><?php i18n("Confirm Password"); ?></label>
+			<input type="password" name="password2">
+			<button class="btn-left"><?php i18n("Create Account"); ?></button>
+			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
+		</form>
+		<?php
+		break;
+
+	//////////////////////////////////////////////////////////////////////
+	// Delete User
+	//////////////////////////////////////////////////////////////////////
+	case 'delete':
+
+		?>
+		<form>
+			<label><?php i18n("Confirm User Deletion"); ?></label>
+			<pre><?php i18n("Account:"); echo(ucfirst($username)); ?></pre>
+			<button class="btn-left"><?php i18n("Confirm"); ?></button>
+			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
+		</form>
+		<?php
+		break;
+
 	//////////////////////////////////////////////////////////////
 	// List Projects
 	//////////////////////////////////////////////////////////////
-
 	case 'list':
 
-		$projects_assigned = false;
-		if (!checkAccess("configure")) {
+		if (!Common::checkAccess("configure")) {
 			?>
 			<label><?php i18n("Restricted"); ?></label>
 			<pre><?php i18n("You can not edit the user list"); ?></pre>
@@ -51,7 +107,6 @@ switch ($action) {
 				<th width="70"><?php i18n("Delete"); ?></th>
 				<?php
 
-				// Get projects JSON data
 				$users = Common::readJSON('users');
 				foreach ($users as $user => $data) {
 					?>
@@ -79,34 +134,12 @@ switch ($action) {
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
 			<?php
 		}
-
-		break;
-
-	//////////////////////////////////////////////////////////////////////
-	// Create New User
-	//////////////////////////////////////////////////////////////////////
-
-	case 'create':
-
-		?>
-		<form>
-			<label><?php i18n("Username"); ?></label>
-			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
-			<label><?php i18n("Password"); ?></label>
-			<input type="password" name="password1">
-			<label><?php i18n("Confirm Password"); ?></label>
-			<input type="password" name="password2">
-			<button class="btn-left"><?php i18n("Create Account"); ?></button>
-			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-		<?php
 		break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////
-
-	case 'projects':
+	case 'showUserACL':
 
 		// Get project list
 		$projects = Common::readJSON('projects');
@@ -116,13 +149,12 @@ switch ($action) {
 
 		?>
 		<form>
-			<input type="hidden" name="username" value="<?php echo($username); ?>">
 			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($username)); ?></label>
-			<select id="aclSelect" name="acl" onchange="atheos.user.toggleACL()">
-				<option value="false" <?php if (!$userACL) { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
-				<option value="true" <?php if ($userACL) { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
+			<select id="aclSelect" name="userACL" onchange="atheos.user.toggleACL()">
+				<option value="full" <?php if ($userACL === "full") { echo('selected="selected"'); } ?>><?php i18n("Access ALL Projects"); ?></option>
+				<option value="limited" <?php if ($userACL !== "full") { echo('selected="selected"'); } ?>><?php i18n("Only Selected Projects"); ?></option>
 			</select>
-			<div id="projectSelect" <?php if (!$userACL) { echo('style="display: none;"'); } ?>>
+			<div id="projectSelect" <?php if ($userACL === "full") { echo('style="display: none;"'); } ?>>
 				<table>
 					<?php
 					// Build list
@@ -131,60 +163,17 @@ switch ($action) {
 						if ($userACL !== "full" && in_array($projectPath, $userACL)) {
 							$sel = 'checked="checked"';
 						}
-						echo("<tr><td width=\"5\"><input type=\"checkbox\" name=\"project\" $sel id=\"$projectPath\" value=\"$projectPath\"></td><td>$projectName</td></tr>");
+						echo("<tr><td width=\"5\"><input type=\"checkbox\" name=\"project\" $sel value=\"$projectPath\"></td><td>$projectName</td></tr>");
 					}
 					?>
 				</table>
 			</div>
-			<button class="btn-left"><?php i18n("Confirm"); ?></button>
+			<button class="btn-left"><?php i18n("Update"); ?></button>
 			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Close"); ?></button>
 		</form>
 		<?php
 		break;
 
-	//////////////////////////////////////////////////////////////////////
-	// Delete User
-	//////////////////////////////////////////////////////////////////////
-
-	case 'delete':
-
-		?>
-		<form>
-			<input type="hidden" name="username" value="<?php echo($username); ?>">
-			<label><?php i18n("Confirm User Deletion"); ?></label>
-			<pre><?php i18n("Account:"); echo($username); ?></pre>
-			<button class="btn-left"><?php i18n("Confirm"); ?></button>
-			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-		<?php
-		break;
-
-	//////////////////////////////////////////////////////////////////////
-	// Change Password
-	//////////////////////////////////////////////////////////////////////
-
-	case 'password':
-		if (!$username || $username === "undefined") {
-			$username = $activeUser;
-		}
-		
-		if(!Common::checkAccess("configure") && $username !== $activeUser) {
-			Common::sendJSON("E430u");
-			die;
-		}
-
-		?>
-		<form>
-			<input type="hidden" name="username" value="<?php echo($username); ?>">
-			<label><?php i18n("New Password"); ?></label>
-			<input type="password" name="password1" autofocus="autofocus">
-			<label><?php i18n("Confirm Password"); ?></label>
-			<input type="password" name="password2">
-			<button class="btn-left"><?php i18n("Change %{username}%&apos;s Password", array("username" => ucfirst($username))) ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-		<?php
-		break;
 	default:
 		Common::sendJSON("E401i");
 		break;
