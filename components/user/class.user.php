@@ -79,6 +79,37 @@ class User {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
+	// Change Password
+	//////////////////////////////////////////////////////////////////////////80
+	public function changePassword() {
+		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
+		$this->users[$this->username]["password"] = $this->password;
+
+		// Save array back to JSON
+		Common::saveJSON('users', $this->users);
+		// Response
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Change Permissions
+	//////////////////////////////////////////////////////////////////////////80
+	public function changePermissions() {
+		$this->users[$this->username]["permissions"] = $this->permissions;
+		// Save array back to JSON
+		Common::saveJSON('users', $this->users);
+		// Response
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Clean Username
+	//////////////////////////////////////////////////////////////////////////80
+	public static function cleanUsername($username) {
+		return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Create Account
 	//////////////////////////////////////////////////////////////////////////80
 	public function create() {
@@ -115,11 +146,41 @@ class User {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Change Password
+	// Pivot the Users from the old file format to the new file format
 	//////////////////////////////////////////////////////////////////////////80
-	public function changePassword() {
-		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
-		$this->users[$this->username]["password"] = $this->password;
+	private function pivotUsers() {
+		$revisedArray = array();
+		foreach ($this->users as $user => $data) {
+			if (isset($data["username"])) {
+				$revisedArray[$data["username"]] = array("password" => $data["password"], "activeProject" => $data["activeProject"], "permissions" => $data["permissions"], "userACL" => $data["userACL"]);
+			}
+		}
+		if (count($revisedArray) > 0) {
+			Common::saveJSON('users', $revisedArray);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Pivot ActiveFiles from the old format to the new file format
+	//////////////////////////////////////////////////////////////////////////80
+	private function pivotActives() {
+		$revisedArray = array();
+		foreach ($this->actives as $active => $data) {
+			if (isset($data["username"])) {
+				$focus = $data["focused"] ? "focus" : "active";
+				$revisedArray[$data["username"]] = array($data["path"] => $focus);
+			}
+		}
+		if (count($revisedArray) > 0) {
+			Common::saveJSON('actives', $revisedArray);
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Set Current Project
+	//////////////////////////////////////////////////////////////////////////80
+	public function saveActiveProject() {
+		$this->users[$this->username]["activeProject"] = $this->activeProject;
 
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
@@ -128,18 +189,7 @@ class User {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Change Permissions
-	//////////////////////////////////////////////////////////////////////////80
-	public function changePermissions() {
-		$this->users[$this->username]["permissions"] = $this->permissions;
-		// Save array back to JSON
-		Common::saveJSON('users', $this->users);
-		// Response
-		Common::sendJSON("S2000");
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Set Project Access
+	// Update Project ACL
 	//////////////////////////////////////////////////////////////////////////80
 	public function updateACL() {
 		// Access set to all projects
@@ -156,18 +206,6 @@ class User {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Set Current Project
-	//////////////////////////////////////////////////////////////////////////80
-	public function saveActiveProject() {
-		$this->users[$this->username]["activeProject"] = $this->activeProject;
-
-		// Save array back to JSON
-		Common::saveJSON('users', $this->users);
-		// Response
-		Common::sendJSON("S2000");
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
 	// Verify Account Exists
 	//////////////////////////////////////////////////////////////////////////80
 	public function verify() {
@@ -175,44 +213,6 @@ class User {
 			Common::sendJSON("S2000");
 		} else {
 			Common::sendJSON("E404g");
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Clean username
-	//////////////////////////////////////////////////////////////////////////80
-	public static function cleanUsername($username) {
-		return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Pivot the Users from the old file format to the new file format
-	//////////////////////////////////////////////////////////////////////////80
-	private function pivotUsers() {
-		$revisedArray = array();
-		foreach ($this->users as $user => $data) {
-			if (isset($data["username"])) {
-				$revisedArray[$data["username"]] = array("password" => $data["password"], "activeProject" => $data["activeProject"], "permissions" => $data["permissions"], "userACL" => $data["userACL"]);
-			}
-		}
-		if (count($revisedArray) > 0) {
-			Common::saveJSON('users', $revisedArray);
-		}
-	}
-	
-	//////////////////////////////////////////////////////////////////////////80
-	// Pivot ActiveFiles from the old format to the new file format
-	//////////////////////////////////////////////////////////////////////////80
-	private function pivotActives() {
-		$revisedArray = array();
-		foreach ($this->actives as $active => $data) {
-			if (isset($data["username"])) {
-				$focus = $data["focused"] ? "focus" : "active";
-				$revisedArray[$data["username"]] = array($data["path"] => $focus);
-			}
-		}
-		if (count($revisedArray) > 0) {
-			Common::saveJSON('actives', $revisedArray);
 		}
 	}
 }
