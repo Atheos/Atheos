@@ -12,16 +12,15 @@
 
 (function(global) {
 	'use strict';
-	var self = null;
 
 	var atheos = global.atheos,
 		ajax = global.ajax,
 		amplify = global.amplify,
 		oX = global.onyx;
 
+	var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.user.init());
-
+	amplify.subscribe('system.loadMinor', () => atheos.user.init());
 
 	atheos.user = {
 
@@ -32,7 +31,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
-
 		init: function() {
 			self = this;
 
@@ -84,7 +82,7 @@
 						'action': 'keepAlive'
 					},
 					success: function(reply) {
-						if (reply.pass === 'false') {
+						if (reply.status === 'error') {
 							atheos.user.logout();
 						}
 					}
