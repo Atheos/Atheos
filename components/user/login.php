@@ -7,10 +7,7 @@
 		<path class="delay-3" style="fill:#0074d9" d="M960 980L520 740v80l440 240 440-220v-80z" />
 	</svg>
 </div>
-<!--<div id="title">-->
-<!--	<h1 class="">Atheos</h1>-->
-<!--	<span>IDE</span>-->
-<!--</div>-->
+
 <form id="login" method="post">
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
@@ -62,5 +59,4 @@
 		<a id="show_login_options"><?php i18n("More"); ?></a>
 	</fieldset>
 </form>
-</div>
 <script src="components/user/init.js"></script>
