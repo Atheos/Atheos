@@ -9,23 +9,18 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
-// Notes: 
-// Module used to scan through a project's files by their contents.
-//												- Liam Siira
-//////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
 		ajax = global.ajax,
+		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.scout.init());
-
+	amplify.subscribe('system.loadExtra', () => atheos.scout.init());
 
 	atheos.scout = {
 		controller: 'components/scout/controller.php',
@@ -35,13 +30,15 @@
 		rootName: null,
 		strategy: 'left_prefix',
 
+		//////////////////////////////////////////////////////////////////////80
+		// Initilization
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self = this;
 
 			oX('#open_probe').on('click', function(e) {
 				self.probe();
 			});
-
 			oX('#filter_open').on('click', function() {
 				self.showFilter();
 			});
@@ -63,22 +60,95 @@
 
 			var changeTimeout = false;
 			oX('#filter_input').on('change, keydown, paste, input', function() {
-				if (changeTimeout !== false) clearTimeout(changeTimeout);
+				if (changeTimeout !== false) {
+					clearTimeout(changeTimeout);
+				}
 				changeTimeout = setTimeout(function() {
 					self.filterTree();
 					changeTimeout = false;
-				}, 1000);
+				}, 500);
 			});
 		},
+
 		//////////////////////////////////////////////////////////////////
-		// Search
+		// Probe file contents
 		//////////////////////////////////////////////////////////////////
 		probe: function() {
 
 			var path = atheos.project.current.path;
 
-			var listener = function() {
-				// atheos.common.hideOverlay();
+			var listener = function(e) {
+				e.preventDefault();
+
+				var table = oX('#probe_results');
+
+				oX('#probe_processing').show();
+
+				var query = oX('#modal_content form input[name="probe_query"]').value();
+				var fileExtensions = oX('#modal_content form input[name="probe_filter"]').value();
+				var filter = fileExtensions.trim();
+				if (filter !== '') {
+					//season the string to use in find command
+					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
+				}
+
+				var type = oX('#modal_content form select[name="probe_type"]').value();
+
+				ajax({
+					url: self.controller,
+					data: {
+						action: 'probe',
+						type: type,
+						path: path,
+						query: query,
+						filter: filter
+					},
+					success: function(reply) {
+						table.empty();
+						oX('#probe_processing').hide();
+						var results = '';
+						if (reply.status === 'error') {
+							table.append('<p>' + reply.text + '</p>');
+							return;
+						}
+
+						delete reply.status;
+
+						for (var key in reply) {
+
+							var file = reply[key];
+
+							if (key.substr(-1) === '/') {
+								key = key.substr(0, key.substr.length - 1);
+							}
+
+							var node = oX('<div>'),
+								content = '<span><strong>File: </strong>' + key + '</span>';
+
+							node.addClass('file');
+
+							file.forEach(function(result) {
+								// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+								// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
+								content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
+							});
+
+							node.html(content);
+							table.append(node);
+						}
+						results = table.html();
+						atheos.flow.slide('open', table.el);
+
+						self.saveSearchResults(query, type, filter, results);
+						atheos.modal.resize();
+
+					}
+				});
+			};
+
+			atheos.modal.load(500, self.dialog, {
+				action: 'probe'
+			}, () => {
 				var table = oX('#probe_results');
 
 				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
@@ -94,81 +164,7 @@
 					}
 				}
 
-				var listener = function(e) {
-					e.preventDefault();
-
-					oX('#probe_processing').show();
-
-					var query = oX('#modal_content form input[name="probe_query"]').value();
-					var fileExtensions = oX('#modal_content form input[name="probe_filter"]').value();
-					var filter = fileExtensions.trim();
-					if (filter !== '') {
-						//season the string to use in find command
-						filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
-					}
-
-					var type = oX('#modal_content form select[name="probe_type"]').value();
-
-					ajax({
-						url: self.controller,
-						data: {
-							action: 'probe',
-							type: type,
-							path: path,
-							query: query,
-							filter: filter
-						},
-						success: function(reply) {
-							table.empty();
-							oX('#probe_processing').hide();
-							var results = '';
-							if (reply.status === 'error') {
-								table.append('<p>' + reply.text + '</p>');
-								return;
-							}
-							for (var key in reply) {
-								if (!reply.hasOwnProperty(key) || key === 'status') continue;
-
-								var file = reply[key];
-
-								if (key.substr(-1) === '/') {
-									key = key.substr(0, key.substr.length - 1);
-								}
-
-								var node = oX('<div>'),
-									content = '<span><strong>File: </strong>' + key + '</span>';
-
-								node.addClass('file');
-
-								file.forEach(function(result) {
-									// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-									// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
-									content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}
-												</a>`;
-								});
-
-								node.html(content);
-								table.append(node);
-							}
-							results = table.html();
-							atheos.flow.slide('open', table.el);
-
-							self.saveSearchResults(query, type, filter, results);
-							atheos.modal.resize();
-
-						}
-					});
-
-				};
-
-				oX('#modal_content form').on('submit', listener);
-			};
-
-			amplify.subscribe('modal.loaded', listener);
-
-			atheos.modal.load(500, this.dialog, {
-				action: 'probe',
-				path: path
+				oX('#modal_content').on('submit', listener);
 			});
 		},
 
@@ -192,12 +188,12 @@
 
 			self.currentlyFiltering = null;
 
-			oX("#filter_wrapper").show();
-			oX("#filter_input").focus();
+			oX('#filter_wrapper').show();
+			oX('#filter_input').focus();
 		},
 
 		hideFilter: function() {
-			oX("#filter_wrapper").hide();
+			oX('#filter_wrapper').hide();
 
 			if (self.cachedFileTree) {
 				oX('#file-manager').html(self.cachedFileTree);
@@ -214,34 +210,34 @@
 
 			if (!input || input === this.currentlyFiltering) {
 				return;
-			} else {
-				self.currentlyFiltering = input;
-				ajax({
-					url: self.controller,
-					data: {
-						action: 'filter',
-						filter: input,
-						path: self.rootPath,
-						strategy: self.strategy
-					},
-					success: function(reply) {
-						if (reply.status === 'success') {
-							self.renderTree(reply);
-						} else {
-							self.noResults();
-						}
-					}
-				});
 			}
+
+			self.currentlyFiltering = input;
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'filter',
+					filter: input,
+					path: self.rootPath,
+					strategy: self.strategy
+				},
+				success: function(reply) {
+					if (reply.status === 'success') {
+						delete reply.status;
+						self.renderTree(reply);
+					} else {
+						self.noResults();
+					}
+				}
+			});
+
 		},
 
 		// Use query response returned by server to filter the directory tree
 		renderTree: function(data) {
 			var tree = this.createHierarchy(data);
 			var domTree = this.createDirectory(tree);
-
 			oX('#project-root').siblings('ul')[0].html(domTree);
-
 		},
 
 		// Empty the tree and notify that no files were found
@@ -258,7 +254,7 @@
 				currentLevel = {};
 
 			for (var key in data) {
-				if (!data.hasOwnProperty(key) || key === 'status') continue;
+
 				var result = data[key],
 					path = result.path,
 					type = result.type;
@@ -272,7 +268,9 @@
 				}
 
 				pathArray.forEach(function(fragment, index) {
-					if (fragment === "") return;
+					if (fragment === '') {
+						return;
+					}
 
 					if (!currentLevel[fragment]) {
 						type = index < (pathArray.length - 1) ? 'directory' : result.type;
@@ -300,12 +298,12 @@
 		// Construct DOM tree from internal data-structure representing
 		// the filtered directory tree
 		createDirectory: function(tree) {
-			var str = "<ul>";
+			var str = '<ul>';
 
 			for (var key in tree) {
 				str += this.createDirectoryItem(key, tree[key]);
 			}
-			str += "</ul>";
+			str += '</ul>';
 			return str;
 		},
 
