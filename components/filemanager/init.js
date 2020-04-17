@@ -148,13 +148,13 @@
 				}
 				ajax({
 					url: self.controller + '?action=index&path=' + path,
-					success: function(data) {
-						if (data.status !== 'error') {
+					success: function(reply) {
+						if (reply.status !== 'error') {
 							/* Notify listener */
-							self.indexFiles = data.data.index;
+							self.indexFiles = reply.index;
 
 							var files = self.indexFiles;
-							if (files.length > 0) {
+							if (files && files.length > 0) {
 								if (icon) {
 									icon.replaceClass('fa-plus', 'fa-minus');
 								}
@@ -261,7 +261,7 @@
 					url: self.controller + '?action=open&path=' + encodeURIComponent(path),
 					success: function(reply) {
 						if (reply.status !== 'error') {
-							atheos.active.open(path, reply.data.content, reply.data.mtime, focus);
+							atheos.active.open(path, reply.content, reply.mtime, focus);
 							if (line) {
 								setTimeout(atheos.editor.gotoLine(line), 500);
 							}
