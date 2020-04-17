@@ -31,6 +31,61 @@ class Scout {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
+	// Filter File Tree
+	//////////////////////////////////////////////////////////////////////////80
+	public function filter() {
+		$path = Common::data("path");
+		$path = Common::getWorkspacePath($path);
+		$strategy = Common::data("strategy");
+		$filter = Common::data("filter");
+
+
+		chdir($path);
+		$query = str_replace('"', '', $filter);
+		$cmd = 'find -L ';
+
+		switch ($strategy) {
+			case 'substring':
+				$cmd = "$cmd -iname ".escapeshellarg('*' . $query . '*');
+				break;
+			case 'regexp':
+				$cmd = "$cmd -regex ".escapeshellarg($query);
+				break;
+			case 'left_prefix':
+				default:
+					$cmd = "$cmd -iname ".escapeshellarg($query . '*');
+					break;
+		}
+
+		$cmd .= " -printf \"%h/%f %y\n\"";
+		$output = shell_exec($cmd);
+		// $output = array();
+		$output = explode("\n", $output);
+		$results = array();
+
+		foreach ($output as $i => $line) {
+			$line = explode(" ", $line);
+			$fname = trim($line[0]);
+			if ($line[1] == 'f') {
+				$ftype = 'file';
+			} else {
+				$ftype = 'directory';
+			}
+			if (strlen($fname) != 0) {
+				$fname = substr($fname, 2);
+				$f = array('path' => $fname, 'type' => $ftype);
+				array_push($results, $f);
+			}
+		}
+
+		if (count($results) > 0) {
+			Common::sendJSON("success", $results);
+		} else {
+			Common::sendJSON("error", "No Results Found");
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Probe: Deep file content search
 	//////////////////////////////////////////////////////////////////////////80
 	public function probe() {
@@ -80,62 +135,6 @@ class Scout {
 				$results[$file][] = $result;
 			}
 		}
-		if (count($results) > 0) {
-			Common::sendJSON("success", $results);
-		} else {
-			Common::sendJSON("error", "No Results Found");
-		}
-
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Filter File Tree
-	//////////////////////////////////////////////////////////////////////////80
-	public function filter() {
-		$path = Common::data("path");
-		$path = Common::getWorkspacePath($path);
-		$strategy = Common::data("strategy");
-		$filter = Common::data("filter");
-
-
-		chdir($path);
-		$query = str_replace('"', '', $filter);
-		$cmd = 'find -L ';
-
-		switch ($strategy) {
-			case 'substring':
-				$cmd = "$cmd -iname ".escapeshellarg('*' . $query . '*');
-				break;
-			case 'regexp':
-				$cmd = "$cmd -regex ".escapeshellarg($query);
-				break;
-			case 'left_prefix':
-				default:
-					$cmd = "$cmd -iname ".escapeshellarg($query . '*');
-					break;
-		}
-
-		$cmd .= " -printf \"%h/%f %y\n\"";
-		$output = shell_exec($cmd);
-		// $output = array();
-		$output = explode("\n", $output);
-		$results = array();
-
-		foreach ($output as $i => $line) {
-			$line = explode(" ", $line);
-			$fname = trim($line[0]);
-			if ($line[1] == 'f') {
-				$ftype = 'file';
-			} else {
-				$ftype = 'directory';
-			}
-			if (strlen($fname) != 0) {
-				$fname = substr($fname, 2);
-				$f = array('path' => $fname, 'type' => $ftype);
-				array_push($results, $f);
-			}
-		}
-
 		if (count($results) > 0) {
 			Common::sendJSON("success", $results);
 		} else {

@@ -70,9 +70,9 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Probe file contents
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		probe: function() {
 
 			var path = atheos.project.current.path;
@@ -168,9 +168,9 @@
 			});
 		},
 
-		/////////////////////////////////////////////////////////////////
-		// saveSearchResults
-		/////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Save Search Results
+		//////////////////////////////////////////////////////////////////////80
 		saveSearchResults: function(searchText, searchType, fileExtensions, searchResults) {
 			var lastSearched = {
 				searchText: searchText,
@@ -181,6 +181,9 @@
 			atheos.storage('lastSearched', JSON.stringify(lastSearched));
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Show Filter
+		//////////////////////////////////////////////////////////////////////80
 		showFilter: function() {
 			self.cachedFileTree = oX('#file-manager').html();
 			self.rootPath = oX('#project-root').attr('data-path');
@@ -192,6 +195,9 @@
 			oX('#filter_input').focus();
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Hide Filter
+		//////////////////////////////////////////////////////////////////////80
 		hideFilter: function() {
 			oX('#filter_wrapper').hide();
 
@@ -199,16 +205,18 @@
 				oX('#file-manager').html(self.cachedFileTree);
 				self.cachedFileTree = null;
 			}
-
 			oX('#filter_input').empty();
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Filter File Manager
+		//////////////////////////////////////////////////////////////////////80
 		filterTree: function() {
 			var input = oX('#filter_input').value();
 
 			input = input.replace(/^\s+|\s+$/g, '');
 
-			if (!input || input === this.currentlyFiltering) {
+			if (!input || input === self.currentlyFiltering) {
 				return;
 			}
 
@@ -224,36 +232,28 @@
 				success: function(reply) {
 					if (reply.status === 'success') {
 						delete reply.status;
-						self.renderTree(reply);
+
+						var domTree = self.createHierarchy(reply);
+						oX('#project-root').siblings('ul')[0].html(domTree);
 					} else {
-						self.noResults();
+						var notice = '<ul><li><a><i class="fas fa-info-circle medium-blue"></i><span>No Results.</span></a></li</ul>';
+						oX('#project-root').siblings('ul')[0].html(notice);
 					}
 				}
 			});
 
 		},
 
-		// Use query response returned by server to filter the directory tree
-		renderTree: function(data) {
-			var tree = this.createHierarchy(data);
-			var domTree = this.createDirectory(tree);
-			oX('#project-root').siblings('ul')[0].html(domTree);
-		},
-
-		// Empty the tree and notify that no files were found
-		noResults: function() {
-			var notice = '<ul><li><a><i class="fas fa-info-circle medium-blue"></i><span>No Results.</span></a></li</ul>';
-			oX('#project-root').siblings('ul')[0].html(notice);
-		},
-
-		// Construct internal representation for filtered directory tree
-		// from array returned by server
+		//////////////////////////////////////////////////////////////////////80
+		// Create Hierarchry Representing Filtered Tree
+		//////////////////////////////////////////////////////////////////////80
 		createHierarchy: function(data) {
 			var tree = {},
 				pathArray = [],
-				currentLevel = {};
+				currentLevel = {},
+				key;
 
-			for (var key in data) {
+			for (key in data) {
 
 				var result = data[key],
 					path = result.path,
@@ -290,39 +290,40 @@
 					}
 					currentLevel = currentLevel[fragment].children;
 				});
-
 			}
-			return tree;
+
+			var domTree = '<ul>';
+			for (key in tree) {
+				var obj = tree[key];
+				domTree += this.createDirectoryItem(`${self.rootPath}/${obj.path}`, obj.type, obj.size);
+			}
+
+			for (key in tree) {
+				domTree += this.createDirectoryItem(key, tree[key]);
+			}
+			domTree += '</ul>';
+			return domTree;
 		},
 
-		// Construct DOM tree from internal data-structure representing
-		// the filtered directory tree
-		createDirectory: function(tree) {
-			var str = '<ul>';
-
-			for (var key in tree) {
-				str += this.createDirectoryItem(key, tree[key]);
-			}
-			str += '</ul>';
-			return str;
-		},
-
-		// Create DOM node for a particular tree element
+		//////////////////////////////////////////////////////////////////////80
+		// Create Filtered Directory Item
+		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
-			// var name = atheos.common.getNodeName(path);
-			// name = path.replace(path, '').split('/').join('');
+			
 			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : global.FileIcons.getClassWithColor(name);
 
 			var nodeClass = 'none';
+			var isOpen = '';
 			if (obj.type === 'directory' && (obj.children)) {
-				nodeClass = 'fa fa-plus';
+				nodeClass = 'fa fa-minus';
+				isOpen = 'class="open"';
 			}
 
 			fileClass = fileClass || 'fa fa-file medium-green';
 
 			var node = '<li>';
 
-			node += `<a data-type="${obj.type}" data-path="${self.rootPath}/${obj.path}">
+			node += `<a data-type="${obj.type}" data-path="${self.rootPath}/${obj.path}" ${isOpen}>
 						<i class="expand ${nodeClass}"></i>
 						<i class="${fileClass}"></i>
 						<span>${name}</span>
