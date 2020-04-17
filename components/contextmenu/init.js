@@ -63,9 +63,9 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Context Menu
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Show Context Menu
+		//////////////////////////////////////////////////////////////////////80
 		show: function(e, node) {
 			if (node) {
 				var path = node.attr('data-path'),
@@ -168,7 +168,10 @@
 				});
 			}
 		},
-
+		
+		//////////////////////////////////////////////////////////////////////80
+		// Hide Context Menu
+		//////////////////////////////////////////////////////////////////////80
 		hide: function() {
 			var menu = oX('#contextmenu');
 			menu.hide();
@@ -176,12 +179,12 @@
 			if (active) {
 				active.removeClass('context-menu-active');
 			}
-			
+
 			amplify.publish('contextmenu.hide', {
-					menu: menu,
-					name: menu.attr('data-name'),
-					path: menu.attr('data-path'),
-					type: menu.attr('data-type')				
+				menu: menu,
+				name: menu.attr('data-name'),
+				path: menu.attr('data-path'),
+				type: menu.attr('data-type')
 			});
 		},
 	};
