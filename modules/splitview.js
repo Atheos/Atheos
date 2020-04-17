@@ -1,33 +1,32 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
-// Codiad
+// SplitView Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Description: 
-// The System Module initializes the core Atheos object and puts the engine in
-// motion, calling the initilization of other modules, and publishing the
-// Amplify 'atheos.loaded' event.
-//
-// Notes:
-// This file also houses the wrapper functions for older APIs to get to newer
-// newer systems, while pushing warnings about said depreciation.
-//
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
+// Notes: 
+// The context menu should become an object stored within the filemanager, and
+// constructed based on the fules specified therein. The OBJ is created, and then
+// added to by each plugin based on it's requirements. The OBJ could even be 
+// cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 
 (function(global) {
 
-	//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Collection of wrapper functions for depreciated calls.
-	//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		oX = global.onyx,
-		$ = global.jQuery;
+		oX = global.onyx;
 
 	amplify.subscribe('system.loadExtra', () => atheos.splitview.init());
 
@@ -41,9 +40,6 @@
 			self = this;
 
 			atheos.common.initMenuHandler(oX('#split'), oX('#split-options-menu'));
-
-
-			// atheos.editor.initMenuHandler($('#split'), splitOptionsMenu);
 
 			oX('#split-vertically').on('click', function(e) {
 				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'bottom');
@@ -66,7 +62,8 @@
 var separatorWidth = 5;
 
 function SplitContainer(root, children, splitType) {
-	var self = this;
+	var self = this,
+		css = self.css;
 
 	self.root = root;
 	self.splitType = splitType;
@@ -74,200 +71,203 @@ function SplitContainer(root, children, splitType) {
 	self.childElements = {};
 	self.splitProp = 0.5;
 
-	self.setChild(0, children[0]);
-	self.setChild(1, children[1]);
+	var cMajor = self.cMajor = children[0];
+	var cMinor = self.cMinor = children[1];
+	var border = self.border = document.createElement('div');
+	var rHeight = css(self.root).height();
+	var rWidth = css(self.root).width();
 
-	self.splitter = onyx('<div class="splitter"></div>');
-	root.append(self.splitter.el);
+	self.setChild(0, self.cMajor);
+	self.setChild(1, self.cMinor);
 
-	self.splitter.on('mousedown', (e) => self.drag(e));
 
 	if (splitType === 'vertical') {
-		this.splitter.addClass('h-splitter');
-		this.splitter.css('width', separatorWidth);
-		this.splitter.css('height', root.height());
+		border.classList.add('splitter', 'h-splitter');
+		css(border).width(separatorWidth);
+		css(border).height(rHeight);
 
 	} else if (splitType === 'horizontal') {
-		this.splitter.addClass('v-splitter');
-		this.splitter.css('height', separatorWidth);
-		this.splitter.css('width', root.width());
+		border.classList.add('splitter', 'v-splitter');
+		css(border).height(separatorWidth);
+		css(border).width(rWidth);
 	}
 
-	this.root.on('h-resize', function(e, percolateUp, percolateDown) {
-		e.stopPropagation();
+	root.append(border);
+
+	// You might be tempted in removing the arrow function here, but it would 
+	// break scope on this/self down in the Drag function.
+	css(border).on('mousedown', (e) => self.drag(e));
+
+	css(self.root).on('h-resize', function(e) {
+
 		if (self.splitType === 'vertical') {
-			var w1 = self.root.width() * self.splitProp - separatorWidth / 2;
-			var w2 = self.root.width() * (1 - self.splitProp) - separatorWidth / 2;
-			self.childElements[0].css('width', w1);
-			self.childElements[1].css('width', w2);
-			self.childElements[1].css('left', w1 + separatorWidth);
-			self.splitter.css('left', w1);
+			var w1 = rWidth * self.splitProp - separatorWidth / 2;
+			var w2 = rWidth * (1 - self.splitProp) - separatorWidth / 2;
+
+			css(cMajor).width(w1);
+			css(cMinor).width(w2);
+			css(cMinor).left(w1 + separatorWidth);
+			// Border top might already be set by the drag.
+			css(border).left(w1);
 
 
 		} else if (self.splitType === 'horizontal') {
-			var w = self.root.width();
-			self.childElements[0].css('width', w);
-			self.childElements[1].css('width', w);
-			self.splitter.css('width', w);
+			css(cMajor).width(rWidth);
+			css(cMinor).width(rWidth);
+			css(border).width(rWidth);
 		}
-		if (percolateUp) {
-			self.root.parent('.editor-wrapper').trigger('h-resize', [true, false]);
-		}
-		if (!percolateDown) return;
-		if (self.childContainers[0]) {
-			self.childContainers[0].root.trigger('h-resize', [false, true]);
-		} else if (self.childContainers[1]) {
-			self.childContainers[1].root.trigger('h-resize', [false, true]);
-		}
+
+		css(cMajor).trigger('v-resize');
+		css(cMinor).trigger('h-resize');
+
 	});
 
-	this.root.on('v-resize', function(e, percolateUp, percolateDown) {
-		e.stopPropagation();
+	css(self.root).on('v-resize', function(e) {
+		rHeight = css(self.root).height();
+
 		if (self.splitType === 'vertical') {
-			var h = self.root.height();
-			self.childElements[0].css('height', h);
-			self.childElements[1].css('height', h);
-			self.splitter.css('height', h);
+			css(cMajor).height(rHeight);
+			css(cMinor).height(rHeight);
+			css(border).height(rHeight);
 
 		} else if (self.splitType === 'horizontal') {
-			var h1 = self.root.height() * self.splitProp - separatorWidth / 2;
-			var h2 = self.root.height() * (1 - self.splitProp) - separatorWidth / 2;
+			var h1 = rHeight * self.splitProp - separatorWidth / 2;
+			var h2 = rHeight * (1 - self.splitProp) - separatorWidth / 2;
 
-			self.childElements[0].css('height', h1);
-			self.childElements[1].css('height', h2);
-			self.childElements[1].css('top', h1 + separatorWidth);
-			self.splitter.css('top', h1);
+			css(cMajor).height(h1);
+			css(cMinor).height(h2);
+			css(cMinor).top(h1 + separatorWidth);
+			// Border top might already be set by the drag.
+			css(border).top(h1);
 		}
-		if (percolateUp) {
-			self.root.parent('.editor-wrapper').trigger('v-resize', [true, false]);
-		}
-		if (!percolateDown) return;
-		if (self.childContainers[0]) {
-			self.childContainers[0].root.trigger('v-resize', [false, true]);
-		} else if (self.childContainers[1]) {
-			self.childContainers[1].root.trigger('v-resize', [false, true]);
-		}
+
+		css(cMajor).trigger('v-resize');
+		css(cMinor).trigger('v-resize');
 	});
 
-	this.root.trigger('h-resize', [false, false]).trigger('v-resize', [false, false]);
+	css(self.root).trigger('h-resize');
+	css(self.root).trigger('v-resize');
 }
 
 SplitContainer.prototype = {
 	setChild: function(splitID, element) {
-
 		if (element instanceof SplitContainer) {
-			this.childElements[splitID] = element.root;
-			this.childContainers[splitID] = element;
+			if (splitID === 0) {
+				this.cMajor = element.root;
+			} else {
+				this.cMinor = element.root;
+			}
+		trace(splitID);
+			log(element);
+			log(splitID);
+
 			element.splitID = splitID;
-		} else {
-			this.childElements[splitID] = element;
+			element = element.root;
+			// this.childContainers[splitID] = element;
 		}
 
-		this.childElements[splitID].appendTo(this.root);
-		this.cssInit(splitID, this.childElements[splitID]);
+		this.root.append(element);
+		this.cssInit(splitID, element);
+
 	},
 	cssInit: function(splitID, element) {
-		var properties = {};
-		var h1, h2, w1, w2, rh, rw;
+		var self = this,
+			css = self.css;
+		var h1, h2, w1, w2;
 
-		rh = this.root.height();
-		rw = this.root.width();
+		var rHeight = css(self.root).height();
+		var rWidth = css(self.root).width();
 
-		if (this.splitType === 'vertical') {
+		if (self.splitType === 'vertical') {
 
-			w1 = rw * this.splitProp - separatorWidth / 2;
-			w2 = rw * (1 - this.splitProp) - separatorWidth / 2;
+			w1 = rWidth * self.splitProp - (separatorWidth / 2);
+			w2 = rWidth * (1 - self.splitProp) - (separatorWidth / 2);
 
 			if (splitID === 0) {
-				properties = {
-					left: 0,
-					width: w1,
-					height: rh,
-					top: 0
-				};
+				css(element).top(0);
+				css(element).left(0);
+				css(element).width(w1);
+				css(element).height(rHeight);
 			} else {
-				properties = {
-					left: w1 + separatorWidth,
-					width: w2,
-					height: rh,
-					top: 0
-				};
+				css(element).top(0);
+				css(element).left(w1 + separatorWidth);
+				css(element).width(w2);
+				css(element).height(rHeight);
 			}
 
-		} else if (this.splitType === 'horizontal') {
+		} else if (self.splitType === 'horizontal') {
 
-			h1 = rh * this.splitProp - separatorWidth / 2;
-			h2 = rh * (1 - this.splitProp) - separatorWidth / 2;
+			h1 = rHeight * self.splitProp - (separatorWidth / 2);
+			h2 = rHeight * (1 - self.splitProp) - (separatorWidth / 2);
 
 			if (splitID === 0) {
-				properties = {
-					top: 0,
-					height: h1,
-					width: rw,
-					left: 0
-				};
+				css(element).top(0);
+				css(element).left(0);
+				css(element).width(h1);
+				css(element).height(rWidth);
 			} else {
-				properties = {
-					top: h1 + separatorWidth,
-					height: h2,
-					width: rw,
-					left: 0
-				};
+				css(element).top(h1 + separatorWidth);
+				css(element).left(0);
+				css(element).width(h2);
+				css(element).height(rWidth);
 			}
 
 		}
-
-		element.css(properties);
 	},
 	drag: function(event) {
 		//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-		var self = this;
-		var splitter = event.target;
+		var self = this,
+			css = self.css;
 
-		var mouseX = window.event.clientX,
+		var border = event.target,
+			mouseX = window.event.clientX,
 			mouseY = window.event.clientY,
-			splitX = splitter.offsetLeft,
-			splitY = splitter.offsetTop;
+			splitX = border.offsetLeft,
+			splitY = border.offsetTop;
+
+		var rHeight = css(self.root).height();
+		var rWidth = css(self.root).width();
+		var timeout = false;
 
 		function effectChange(top, left) {
-
-
+			timeout = false;
 			if (self.splitType === 'vertical') {
-				var w1 = left - separatorWidth / 2;
-				var w2 = self.root.width() - left - separatorWidth / 2;
-				self.splitProp = w1 / self.root.width();
-				self.childElements[0].css('width', w1);
-				self.childElements[1].css('width', w2);
-				self.childElements[1].css('left', w1 + separatorWidth)
 
-				self.childElements[0].trigger('h-resize', [true, true]);
-				self.childElements[1].trigger('h-resize', [true, true]);
-				self.splitProp = left / self.root.width();
+				// var w1 = left;
+				// var w2 = rWidth - left;
 
+				self.splitProp = left / rWidth;
+
+				// css(self.cMajor).width(w1);
+				// css(self.cMinor).width(w2);
+				// css(self.cMinor).left(w1 + separatorWidth);
+
+				css(self.root).trigger('h-resize');
+				// css(self.cMinor).trigger('h-resize');
 
 			} else {
-				var h1 = top - separatorWidth / 2;
-				var h2 = self.root.width() - top - separatorWidth / 2;
-				self.splitProp = h1 / self.root.height();
-				self.childElements[0].css('height', h1);
-				self.childElements[1].css('height', h2);
-				self.childElements[1].css('top', h1 + separatorWidth);
 
-				self.childElements[0].trigger('v-resize', [true, true]);
-				self.childElements[1].trigger('v-resize', [true, true]);
+				// var h1 = top - separatorWidth / 2;
+				// var h2 = rWidth - top - separatorWidth / 2;
+				self.splitProp = top / rHeight;
+
+				// css(self.cMajor).height(h1);
+				// css(self.cMinor).height(h2);
+				// css(self.cMinor).top(h1 + separatorWidth);
+
+				css(self.root).trigger('v-resize');
+				// css(self.cMinor).trigger('v-resize');
 
 			}
-		};
-
-
+		}
 
 		function moveElement(event) {
-			if (splitter) {
-				var left = splitX + event.clientX - mouseX,
-					top = splitY + event.clientY - mouseY;
-				splitter.style.left = self.splitType === 'vertical' ? left + 'px' : '';
-				splitter.style.top = self.splitType === 'horizontal' ? top + 'px' : '';
-				effectChange(top, left);
+			var left = splitX + event.clientX - mouseX,
+				top = splitY + event.clientY - mouseY;
+			border.style.left = self.splitType === 'vertical' ? left + 'px' : '';
+			border.style.top = self.splitType === 'horizontal' ? top + 'px' : '';
+			if (timeout === false) {
+				timeout = setTimeout(() => effectChange(top, left), 10);
 			}
 		}
 
@@ -286,7 +286,57 @@ SplitContainer.prototype = {
 		document.addEventListener('mousemove', moveElement, false);
 		document.addEventListener('mouseup', removeListeners, false);
 		window.addEventListener('selectstart', disableSelect);
+	},
+	css: function(element) {
 
+		let cssInit = {
+			'display': element.style.display,
+			'visibility': element.style.visibility,
+			'opacity': element.style.opacity
+		};
+
+		let setCSS = (o) => {
+			const entries = Object.entries(o);
+			for (const [key, value] of entries) {
+				element.style[key] = value;
+			}
+		};
+
+		let setSize = (t, v) => {
+			if (v) {
+				element.style[t] = v + 'px';
+			}
+			setCSS({
+				'display': 'block',
+				'visibility': 'hidden',
+				'opacity': 0
+			});
+
+			var computedStyle = window.getComputedStyle(element);
+			var size = parseFloat(computedStyle[t].replace('px', ''));
+			setCSS(cssInit);
+
+			return size;
+		};
+
+		let triggerEvent = (type) => {
+			return element.dispatchEvent(new CustomEvent(type, {
+				bubbles: false,
+				cancelable: true
+			}));
+		};
+
+		return {
+			top: (v) => element.style.top = v + 'px',
+			left: (v) => element.style.left = v + 'px',
+			right: (v) => element.style.right = v + 'px',
+			bottom: (v) => element.style.bottom = v + 'px',
+			width: (v) => setSize('width', v),
+			height: (v) => setSize('height', v),
+			on: (t, f) => element.addEventListener(t, f),
+			off: (t, f) => element.removeEventListener(t, f),
+			trigger: (t) => triggerEvent(t)
+		};
 	}
 
 };
