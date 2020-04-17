@@ -41,9 +41,13 @@
 
 	if (Function.prototype.bind) {
 		window.log = Function.prototype.bind.call(console.log, console);
+		window.trace = Function.prototype.bind.call(console.trace, console);
 	} else {
 		window.log = function() {
 			Function.prototype.apply.call(console.log, console, arguments);
+		};
+		window.trace = function() {
+			Function.prototype.apply.call(console.trace, console, arguments);
 		};
 	}
 })();
@@ -126,8 +130,6 @@
 			this.optionMenus.push(menu);
 
 			button.on('click', (e) => {
-				log(e);
-
 				e.stopPropagation();
 
 				// Close other menus
@@ -150,7 +152,6 @@
 		},
 
 		closeMenus: function(exclude) {
-			log('close');
 			this.optionMenus.forEach((menu) => {
 				if (menu !== exclude) {
 					menu.close();
