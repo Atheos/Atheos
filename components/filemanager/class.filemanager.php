@@ -18,7 +18,7 @@ class Filemanager extends Common
 
 	public $root = WORKSPACE;
 	public $project = "";
-	public $rel_path = "";
+	public $relativePath = "";
 	public $path = "";
 	public $patch = "";
 	public $type = "";
@@ -28,11 +28,6 @@ class Filemanager extends Common
 	public $upload = "";
 	public $controller = "";
 	public $upload_json = "";
-	public $searchString = "";
-
-	public $searchFileType = "";
-	public $query = "";
-	public $foptions = "";
 
 	// JSEND Return Contents
 	public $status = "";
@@ -50,56 +45,54 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public function __construct($get, $post) {
-		$this->rel_path = Filemanager::cleanPath($get['path']);
-
-		if ($this->rel_path != "/") {
-			$this->rel_path .= "/";
-		}
-		if (!empty($get['query'])) {
-			$this->query = $get['query'];
-		}
-		if (!empty($get['options'])) {
-			$this->foptions = $get['options'];
+		foreach (array('type', 'newName') as $key) {
+			$temp = Common::data($key);
+			if ($temp) {
+				$this->$key = $temp;
+			}
 		}
 
-		if ($this->isAbsPath($get['path'])) {
-			$this->path = Filemanager::cleanPath($get['path']);
-		} else {
+		foreach (array('path', 'destination') as $key) {
+			$temp = Common::data($key);
+			if ($temp) {
+				$this->$key = Common::cleanPath($temp);
+			} else {
+				$this->$key = false;
+			}
+		}
+		$this->relativePath = Common::cleanPath($this->path);
+
+
+		if ($this->relativePath !== "/") {
+			$this->relativePath .= "/";
+		}
+
+		if (!Common::isAbsPath($this->path)) {
+			Common::debug("Not ABS: " . $this->path);
 			$this->root .= '/';
-			$this->path = $this->root . Filemanager::cleanPath($get['path']);
+			$this->path = $this->root . $this->path;
 		}
-		// Search
-		if (!empty($post['searchString'])) {
-			$this->searchString = ($post['searchString']);
-		}
-		if (!empty($post['searchFileType'])) {
-			$this->searchFileType = ($post['searchFileType']);
-		}
-		// Create
-		if (!empty($get['type'])) {
-			$this->type = $get['type'];
-		}
-		// Modify\Create
-		if (!empty($get['newName'])) {
-			$this->newName = $get['newName'];
-		}
+
+
 
 		foreach (array('content', 'mtime', 'patch') as $key) {
-			if (!empty($post[$key])) {
+			$temp = Common::data($key);
+			if ($temp) {
 				if (get_magic_quotes_gpc()) {
-					$this->$key = stripslashes($post[$key]);
+					$this->$key = stripslashes($temp);
 				} else {
-					$this->$key = $post[$key];
+					$this->$key = $temp;
 				}
+			} else {
+				$this->$key = false;
 			}
 		}
 		// Duplicate
-		if (!empty($get['destination'])) {
-			$get['destination'] = Filemanager::cleanPath($get['destination']);
-			if ($this->isAbsPath($get['path'])) {
-				$this->destination = $get['destination'];
+		if ($this->destination) {
+			if (Common::isAbsPath($path)) {
+				$this->destination = $destination;
 			} else {
-				$this->destination = $this->root . $get['destination'];
+				$this->destination = $this->root . $destination;
 			}
 		}
 	}
@@ -109,107 +102,102 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 
 	public function index() {
-		if (file_exists($this->path)) {
-			$index = array();
-			if (is_dir($this->path) && $handle = opendir($this->path)) {
-				while (false !== ($object = readdir($handle))) {
-					if ($object != "." && $object != ".." && $object != $this->controller) {
-						if (is_dir($this->path.'/'.$object)) {
-							$type = "directory";
-							$size = count(glob($this->path.'/'.$object.'/*'));
-						} else {
-							$type = "file";
-							$size = @filesize($this->path.'/'.$object);
-						}
-						$index[] = array(
-							"name" => $this->rel_path . $object,
-							"path" => $this->rel_path . $object,
-							"type" => $type,
-							"size" => $size
-						);
-					}
-				}
-
-				//////////////////////////////////////////////////////////////////
-				// The name return should be returned soon as it's only here currently for backwards compatability
-				//////////////////////////////////////////////////////////////////
-
-				$folders = array();
-				$files = array();
-				foreach ($index as $item => $data) {
-					if ($data['type'] == 'directory') {
-
-						$repo = file_exists($data['path'] . "/.git");
-
-						$folders[] = array(
-							"name" => $data['name'],
-							"path" => $data['path'],
-							"type" => $data['type'],
-							"size" => $data['size'],
-							"repo" => $repo
-						);
-					}
-					if ($data['type'] == 'file') {
-						$files[] = array(
-							"name" => $data['name'],
-							"path" => $data['path'],
-							"type" => $data['type'],
-							"size" => $data['size']
-						);
-					}
-				}
-
-				function sorter($a, $b, $key = 'path') {
-					return strnatcmp($a[$key], $b[$key]);
-				}
-
-				usort($folders, "sorter");
-				usort($files, "sorter");
-
-				$output = array_merge($folders, $files);
-
-				$this->status = "success";
-				$this->data = '"index":' . json_encode($output);
-			} else {
-				$this->status = "error";
-				$this->message = "Not A Directory";
-			}
-		} else {
-			$this->status = "error";
-			$this->message = "Path Does Not Exist";
+		if (!file_exists($this->path)) {
+			Common::sendJSON("E402m");
+			die;
 		}
 
-		$this->respond();
+		$index = array();
+		if (!is_dir($this->path) || !($handle = opendir($this->path))) {
+			Common::sendJSON("error", "Not a valid directory.");
+			die;
+		}
+
+		while (false !== ($object = readdir($handle))) {
+			if ($object === "." || $object === ".." || $object === $this->controller) {
+				continue;
+			}
+
+			if (is_dir($this->path.'/'.$object)) {
+				$type = "directory";
+				$size = count(glob($this->path.'/'.$object.'/*'));
+			} else {
+				$type = "file";
+				$size = @filesize($this->path.'/'.$object);
+			}
+
+			$index[] = array(
+				"name" => $this->relativePath . $object,
+				"path" => $this->relativePath . $object,
+				"type" => $type,
+				"size" => $size
+			);
+		}
+
+		//////////////////////////////////////////////////////////////////
+		// The name return should be removed soon as it's only here currently for backwards compatability
+		//////////////////////////////////////////////////////////////////
+		$folders = array();
+		$files = array();
+		foreach ($index as $item => $data) {
+			if ($data['type'] == 'directory') {
+
+				$repo = file_exists($data['path'] . "/.git");
+
+				$folders[] = array(
+					"name" => $data['name'],
+					"path" => $data['path'],
+					"type" => $data['type'],
+					"size" => $data['size'],
+					"repo" => $repo
+				);
+			}
+			if ($data['type'] == 'file') {
+				$files[] = array(
+					"name" => $data['name'],
+					"path" => $data['path'],
+					"type" => $data['type'],
+					"size" => $data['size']
+				);
+			}
+		}
+
+		function sorter($a, $b, $key = 'path') {
+			return strnatcmp($a[$key], $b[$key]);
+		}
+
+		usort($folders, "sorter");
+		usort($files, "sorter");
+
+		$output = array_merge($folders, $files);
+
+		Common::sendJSON("success", array("index" => $output));
+
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// OPEN (Returns the contents of a file)
 	//////////////////////////////////////////////////////////////////
-
 	public function open() {
-		if (is_file($this->path)) {
-			$output = file_get_contents($this->path);
+		if (!is_file($this->path)) {
+			Common::debug($this->path);
+			Common::sendJSON("error", "Not a valid file.");
+			die;
+		}
+		$output = file_get_contents($this->path);
 
-			if (extension_loaded('mbstring')) {
-				if (!mb_check_encoding($output, 'UTF-8')) {
-					if (mb_check_encoding($output, 'ISO-8859-1')) {
-						$output = utf8_encode($output);
-					} else {
-						$output = mb_convert_encoding($content, 'UTF-8');
-					}
+		if (extension_loaded('mbstring')) {
+			if (!mb_check_encoding($output, 'UTF-8')) {
+				if (mb_check_encoding($output, 'ISO-8859-1')) {
+					$output = utf8_encode($output);
+				} else {
+					$output = mb_convert_encoding($content, 'UTF-8');
 				}
 			}
-
-			$this->status = "success";
-			$this->data = '"content":' . json_encode($output);
-			$mtime = filemtime($this->path);
-			$this->data .= ', "mtime":'.$mtime;
-		} else {
-			$this->status = "error";
-			$this->message = "Not A File :".$this->path;
 		}
 
-		$this->respond();
+		Common::sendJSON("success", array("content" => $output, "mtime" => $modifyTime));
+
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -219,7 +207,7 @@ class Filemanager extends Common
 	public function openinbrowser() {
 		$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] != 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
 		$domainName = $_SERVER['HTTP_HOST'];
-		$url = $protocol.WSURL.'/'.$this->rel_path;
+		$url = $protocol.WSURL.'/'.$this->relativePath;
 		$this->status = "success";
 		$this->data = '"url":' . json_encode(rtrim($url, "/"));
 		$this->respond();
