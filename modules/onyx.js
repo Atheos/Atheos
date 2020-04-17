@@ -210,20 +210,14 @@
 			}
 		};
 
-		let triggerEvent = function(event) {
-			if (element && event) {
-				var e;
-				if ('createEvent' in document) {
-					// modern browsers, IE9+
-					e = document.createEvent('HTMLEvents');
-					e.initEvent(event, false, true);
-					element.dispatchEvent(e);
-				} else {
-					// IE 8
-					e = document.createEventObject();
-					e.eventType = event;
-					event.fireEvent('on' + e.eventType, e);
-				}
+		let triggerEvent = function(type) {
+			if (element && type) {
+				
+				var event = new CustomEvent(type,{
+					bubbles: true,
+					cancelable: true
+				});
+				return element.dispatchEvent(event);
 			}
 		};
 
@@ -251,6 +245,9 @@
 			css: function(a, v) {
 				if (typeof a === 'string') {
 					if (typeof(v) !== 'undefined') {
+						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v)) {
+							v = v + 'px';
+						}
 						element.style[a] = v;
 					}
 					return element.style[a] || null;

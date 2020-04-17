@@ -71,48 +71,28 @@
 				element.append(document.createElement('pre'));
 				element.find('pre').text(i18n(options.data));
 			}
-			if (options.actions || (options.positive && options.negative)) {
+			if (options.actions) {
 				var actions = oX('<div>');
 				actions.addClass('actions');
 				element.append(actions);
 
-				if (options.actions) {
-					for (var key in options.actions) {
-						let button = document.createElement('button');
-						button.innerText = i18n(key);
-						button.addEventListener('click', function() {
-							options.actions[button.innerText]();
-							button.remove();
-							alert.unload();
-						});
-						actions.append(button);
-					}
-				} else {
-					var positive = document.createElement('button');
-					var negative = document.createElement('button');
-
-					positive.innerText = i18n(options.positive.message);
-					negative.innerText = i18n(options.negative.message);
-
-					positive.addEventListener('click', function() {
-						options.positive.fnc();
-						alert.unload();
-
-					});
-					negative.addEventListener('click', function() {
-						options.negative.fnc();
+				for (var key in options.actions) {
+					let button = document.createElement('button');
+					button.innerText = i18n(key);
+					button.addEventListener('click', function() {
+						options.actions[button.innerText]();
+						button.remove();
 						alert.unload();
 					});
-					actions.append(positive);
-					actions.append(negative);
+					actions.append(button);
 				}
 			}
-			
+
 			element.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (element.width() / 2) + 'px)',
 			});
-			
+
 		},
 		unload: function() {
 			var overlay = oX('#overlay');

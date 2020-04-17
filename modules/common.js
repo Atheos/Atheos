@@ -41,9 +41,13 @@
 
 	if (Function.prototype.bind) {
 		window.log = Function.prototype.bind.call(console.log, console);
+		window.trace = Function.prototype.bind.call(console.trace, console);
 	} else {
 		window.log = function() {
 			Function.prototype.apply.call(console.log, console, arguments);
+		};
+		window.trace = function() {
+			Function.prototype.apply.call(console.trace, console, arguments);
 		};
 	}
 })();
@@ -60,8 +64,16 @@
 	atheos.common = {
 
 
+		//////////////////////////////////////////////////////////////////////
+		// Path helper functions
+		//////////////////////////////////////////////////////////////////////
 		getNodeName: function(path) {
 			return path.split('/').pop();
+		},
+
+		getDirectory: function(path) {
+			var index = path.lastIndexOf('/');
+			return (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1);
 		},
 
 		getNodeExtension: function(path) {
@@ -80,34 +92,9 @@
 			};
 		},
 
-		_basename: function(path, suffix) {
-			//  discuss at: http://phpjs.org/functions/basename/
-			var b = path;
-			var lastChar = b.charAt(b.length - 1);
-
-			if (lastChar === '/' || lastChar === '\\') {
-				b = b.slice(0, -1);
-			}
-
-			b = b.replace(/^.*[\/\\]/g, '');
-
-			if (typeof suffix === 'string' && b.substr(b.length - suffix.length) === suffix) {
-				b = b.substr(0, b.length - suffix.length);
-			}
-
-			return b;
-		},
-
-		_dirname: function(path) {
-			// discuss at: http://phpjs.org/functions/dirname/
-			return path.replace(/\\/g, '/')
-				.replace(/\/[^\/]*\/?$/, '');
-		},
-
 		//////////////////////////////////////////////////////////////////////
-		// Extend
+		// Extend / Combine JS objects
 		//////////////////////////////////////////////////////////////////////
-
 		extend: function(obj, src) {
 			var temp = JSON.parse(JSON.stringify(obj));
 			for (var key in src) {
@@ -117,6 +104,61 @@
 			}
 			return temp;
 		},
+
+		//////////////////////////////////////////////////////////////////////
+		// Options Menu Event Handlers
+		//////////////////////////////////////////////////////////////////////
+		optionMenus: [],
+
+		initMenuHandler: function(button, menu, switchClasses) {
+			var menuOpen = false;
+
+			menu.close = function() {
+				if (menuOpen) {
+					if (types.isArray(switchClasses)) {
+						// I could have made a nice If statement to switch the appropriate classes
+						// on menu open vs close, however converting the boolean value to a number
+						// was an inspirational moment and seemed really cool.
+						button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+					}
+					atheos.flow.slide('close', menu.el);
+					window.removeEventListener('click', menu.close);
+					menuOpen = false;
+				}
+			};
+
+			this.optionMenus.push(menu);
+
+			button.on('click', (e) => {
+				e.stopPropagation();
+
+				// Close other menus
+				this.closeMenus(menu);
+
+				if (types.isArray(switchClasses)) {
+					// I could have made a nice If statement to switch the appropriate classes
+					// on menu open vs close, however converting the boolean value to a number
+					// was an inspirational moment and seemed really cool.
+					button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+				}
+				if (menuOpen) {
+					menu.close();
+				} else {
+					atheos.flow.slide('open', menu.el);
+					menuOpen = true;
+					window.addEventListener('click', menu.close);
+				}
+			});
+		},
+
+		closeMenus: function(exclude) {
+			this.optionMenus.forEach((menu) => {
+				if (menu !== exclude) {
+					menu.close();
+				}
+			});
+		},
+
 		//////////////////////////////////////////////////////////////////////
 		// SerializeForm
 		//////////////////////////////////////////////////////////////////////
@@ -154,34 +196,7 @@
 			}
 			return o;
 		},
-		//////////////////////////////////////////////////////////////////////
-		// Trigger
-		//////////////////////////////////////////////////////////////////////
-		trigger: function(selector, event) {
-			console.warn('Trigger Helper will be depreciated on next release');
-			if (event && selector) {
-				var element;
-				if (selector.self === window) {
-					element = selector;
-				} else {
-					element = selector.nodeType === Node.ELEMENT_NODE ? selector : document.querySelector(selector);
-				}
-				if (element) {
-					var e;
-					if ('createEvent' in document) {
-						// modern browsers, IE9+
-						e = document.createEvent('HTMLEvents');
-						e.initEvent(event, false, true);
-						element.dispatchEvent(e);
-					} else {
-						// IE 8
-						e = document.createEventObject();
-						e.eventType = event;
-						element.fireEvent('on' + e.eventType, e);
-					}
-				}
-			}
-		},
+
 		createOverlay: function(type) {
 			var overlay = oX('#overlay');
 			if (overlay) {
@@ -277,18 +292,3 @@
 	};
 
 })(this);
-
-// (function(global) {
-// 	'use strict';
-
-// 	var atheos = global.atheos,
-// 		ajax = global.ajax,
-// 		o = global.onyx;
-
-// 	atheos.common = {
-
-
-
-// 	};
-
-// })(this);
