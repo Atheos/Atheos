@@ -21,21 +21,20 @@
 		<div id="login_options">
 			<label><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
 			<select name="theme" id="theme">
-				<?php
-				foreach ($themes as $theme):
-				if (file_exists(THEMES."/" . $theme . "/theme.json")) {
-					$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
-					$data = json_decode($data, true); ?>
-					<option value="<?php echo $theme; ?>" <?php if ($theme == THEME) {
-						echo "selected";
-					} ?>><?php if ($data[0]['name'] != '') {
-						echo $data[0]['name'];
-					} else {
-						echo $theme;
-					} ?></option>
-					<?php
-				}
-				endforeach; ?>
+				<?php foreach ($themes as $theme) {
+					if (file_exists(THEMES."/" . $theme . "/theme.json")) {
+						$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
+						$data = json_decode($data, true);
+						
+						$option = "<option value=\"$theme\"";
+						$option .= ($theme === THEME) ? " selected>" : ">";
+						$option .= $data["name"] !== "" ? $data["name"] : ucfirst($theme);
+						
+						$option .= "</option>" . PHP_EOL;
+						
+						echo $option;
+					}
+				} ?>
 			</select>
 			<label><i class="fas fa-language"></i> <?php i18n("Language"); ?></label>
 			<select name="language" id="language">
