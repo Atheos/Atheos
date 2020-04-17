@@ -7,23 +7,20 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Description: 
-// The Update component is used to check for Atheos updates, pinging the home
-// server, as well as handling all client tracking/statistics.
-//
-//												- Liam Siira
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
+	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
 		ajax = global.ajax,
+		amplify = global.amplify,
 		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.update.init());
-
 	var self = null;
+
+	amplify.subscribe('system.loadExtra', () => atheos.update.init());
 
 	atheos.update = {
 
@@ -34,12 +31,12 @@
 		local: null,
 		remote: null,
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Initilization
-		//////////////////////////////////////////////////////////////////
-
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self = this;
+
 			ajax({
 				url: self.controller,
 				data: {
@@ -53,44 +50,11 @@
 					self.loadLatest();
 				}
 			});
-
-		},
-
-		loadLatest() {
-			ajax({
-				url: self.repo,
-				success: function(data) {
-					self.remote = data;
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Update Check
-		//////////////////////////////////////////////////////////////////
-
-		check: function() {
-			atheos.modal.load(500, self.dialog, {
-				action: 'check'
-			});
-
-			var listener = function() {
-				var form = oX('#modal_content form');
-				if (form) {
-					form.find('input[name="archive"').value(self.remote.zipball_url);
-					form.find('input[name="remoteversion"').value(self.remote.tag_name);
-					form.find('#remote_latest').text(self.remote.tag_name);
-					form.find('#remote_body').text(self.remote.body);
-				}
-			};
-
-			amplify.subscribe('modal.loaded', listener);
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Download Archive
 		//////////////////////////////////////////////////////////////////
-
 		download: function() {
 			var archive = oX('#modal_content form input[name="archive"]').value();
 			oX('#download').attr('src', archive);
@@ -101,8 +65,37 @@
 				}
 			});
 			atheos.modal.unload();
+		},
+		
+		//////////////////////////////////////////////////////////////////
+		// Update Check
+		//////////////////////////////////////////////////////////////////
+		check: function() {
+			var listener = function() {
+				var form = oX('#modal_content form');
+				if (form) {
+					form.find('input[name="archive"').value(self.remote.zipball_url);
+					form.find('input[name="remoteversion"').value(self.remote.tag_name);
+					form.find('#remote_latest').text(self.remote.tag_name);
+					form.find('#remote_body').text(self.remote.body);
+				}
+			};
+			atheos.modal.load(500, self.dialog, {
+				action: 'check'
+			}, listener);
+		},
+		
+		//////////////////////////////////////////////////////////////////////80
+		// Load Latest from the Repo
+		//////////////////////////////////////////////////////////////////////80
+		loadLatest() {
+			ajax({
+				url: self.repo,
+				success: function(reply) {
+					self.remote = reply;
+				}
+			});
 		}
-
 	};
 
 })(this);

@@ -6,7 +6,7 @@
 	// Load Context Menu
 	////////////////////////////////////////////////////////////
 
-	foreach ($context_menu as $menu_item => $data) {
+	foreach ($context_menu as $menuItem => $data) {
 		if ($data['enabled']) {
 			if ($data['title'] == 'Break') {
 				echo('<hr class="'.$data['applies-to'].'">');
