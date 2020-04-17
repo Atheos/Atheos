@@ -143,11 +143,17 @@
 		//
 		//////////////////////////////////////////////////////////////////
 		addInstance: function(session, where) {
-			// var editor = $('<div class="editor">');
+			// This can be a little confusing to follow, took me a while. First,
+			// keep in mind that Ace objects has their own .el property, which
+			// holds an onyx object, that holds it's own raw element.
+			
+			// SplitContainer takes raw html elements and has it's own mini-dom
+			// helper that has zero error checking in order to be as fast as
+			// possible.
+			
 			var editor = oX('<div class="editor"></div>');
 
-			var chType, chArr = [],
-				chIdx = null,
+			var childID = null,
 				splitContainer = null;
 
 			if (this.instances.length === 0) {
@@ -155,80 +161,74 @@
 				// editor.appendTo($('#root-editor-wrapper'));
 			} else {
 
-				var ch = this.activeInstance.el;
+				var firstChild = this.activeInstance.el;
 
+				childID = (where === 'top' || where === 'left') ? 0 : 1;
+				var type = (where === 'top' || where === 'bottom') ? 'horizontal' : 'vertical';
+				var children = [];
 
-				chIdx = (where === 'top' || where === 'left') ? 0 : 1;
-				chType = (where === 'top' || where === 'bottom') ? 'horizontal' : 'vertical';
+				children[childID] = editor.el;
+				children[1 - childID] = firstChild.el;
 
-				chArr[chIdx] = editor;
-				chArr[1 - chIdx] = ch;
+				var root = oX('<div class="editor-wrapper">');
+				root.css('height', firstChild.height());
+				root.css('width', firstChild.width());
 
-				var root = $('<div class="editor-wrapper">')
-					.height(ch.height())
-					.width(ch.width())
-					.addClass('editor-wrapper-' + chType)
-					.appendTo(ch.parent());
+				root.addClass('editor-wrapper-' + type);
+				firstChild.parent().append(root);
 
-
-				// var root = oX('<div class="editor-wrapper">');
-				// 	root.height(ch.height());
-				// 	root.width(ch.width());
-
-				// 	root.addClass('editor-wrapper-' + chType);
-				// 	root.appendTo(ch.parent());
-
-				splitContainer = new SplitContainer(root, chArr, chType);
+				splitContainer = new SplitContainer(root.el, children, type);
 
 				if (this.instances.length > 1) {
 					var pContainer = this.activeInstance.splitContainer;
-					var idx = this.activeInstance.splitIdx;
+					var idx = this.activeInstance.splitID;
+										log(this.activeInstance.splitID);
+
+					log(Object.values(this.activeInstance));
 					pContainer.setChild(idx, splitContainer);
 				}
 			}
 
 			// var i = ace.edit(editor[0]);
-			var i = ace.edit(editor.el);
+			var instance = ace.edit(editor.el);
 			var resizeEditor = function() {
-				i.resize();
+				instance.resize();
 			};
 
 			if (splitContainer) {
-				i.splitContainer = splitContainer;
-				i.splitIdx = chIdx;
+				instance.splitContainer = splitContainer;
+				instance.splitID = childID;
 
 				this.activeInstance.splitContainer = splitContainer;
-				this.activeInstance.splitIdx = 1 - chIdx;
+				this.activeInstance.splitID = 1 - childID;
 
-				splitContainer.root
-					.on('h-resize', resizeEditor)
-					.on('v-resize', resizeEditor);
+				oX(splitContainer.root).on('h-resize', resizeEditor);
+				oX(splitContainer.root).on('v-resize', resizeEditor);
 
 				if (this.instances.length === 1) {
 					var re = function() {
 						self.instances[0].resize();
 					};
-					splitContainer.root
-						.on('h-resize', re)
-						.on('v-resize', re);
+					oX(splitContainer.root).on('h-resize', re);
+					oX(splitContainer.root).on('v-resize', re);
 				}
 			}
 
-			i.el = editor;
-			this.setSession(session, i);
+			instance.el = editor;
+			this.setSession(session, instance);
 
-			this.changeListener(i);
-			// this.cursorTracking(i);
-			this.bindKeys(i);
+			this.changeListener(instance);
+			// this.cursorTracking(instance);
+			this.bindKeys(instance);
 
-			this.instances.push(i);
+			this.instances.push(instance);
 
-			i.on('focus', function() {
+			instance.on('focus', function() {
 
-				self.focus(i);
+				self.focus(instance);
 			});
 
-			return i;
+			return instance;
 		},
 
 		//////////////////////////////////////////////////////////////////
