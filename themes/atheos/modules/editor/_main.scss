@@ -22,10 +22,17 @@
 	margin: 0;
 }
 
+.ace_gutter {
+	z-index: 1;
+}
 .ace_gutter-layer {
 	padding: 0;
 	background: url(images/default/gutter-bg.jpg);
 	color: $font-color-secondary;
+}
+
+.ace_scrollbar {
+	z-index: 1;
 }
 
 .ace_error {

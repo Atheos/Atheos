@@ -338,21 +338,17 @@
 								message: 'Would you like to retreieve an updated copy of the file?\n' +
 									'Pressing no will cause your changes to override the\n' +
 									'server\'s copy upon next save.',
-								positive: {
-									message: 'Yes',
-									fnc: function() {
-										atheos.active.remove(path);
-										self.openFile(path);
-									}
+								'Yes': function() {
+									atheos.active.remove(path);
+									self.openFile(path);
 								},
-								negative: {
-									message: 'No',
-									fnc: function() {
-										var session = atheos.editor.getActive().getSession();
-										session.serverMTime = null;
-										session.untainted = null;
-									}
+
+								'No': function() {
+									var session = atheos.editor.getActive().getSession();
+									session.serverMTime = null;
+									session.untainted = null;
 								}
+
 							});
 						} else {
 							atheos.toast.show('error', 'File could not be saved');
