@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
 // TextMode
 //////////////////////////////////////////////////////////////////////////////80
@@ -10,10 +12,15 @@
 
 (function(global) {
 	'use strict';
-	var atheos = global.atheos,
+
+	var ace = global.ace,
+		atheos = global.atheos,
 		amplify = global.amplify,
 		ajax = global.ajax,
 		oX = global.onyx;
+
+	// Editor modes that have been loaded
+	var editorModes = {};
 
 	var self = null;
 
@@ -23,10 +30,14 @@
 
 		dialog: 'components/textmode/dialog.php',
 		controller: 'components/textmode/controller.php',
-		availableTextModes: [],
+		availableTextModes: [], //Should be extensions
+		defaultTextModes: [], //Should be availableTextModes
+		textModeMenuOpen: false,
+
 
 		init: function() {
 			self = this;
+
 			ajax({
 				url: self.controller,
 				data: {
@@ -36,15 +47,118 @@
 					self.setEditorTextModes(data);
 				}
 			});
+
+			ajax({
+				url: self.controller,
+				data: {
+					'action': 'loadAceTextModes'
+				},
+				success: function(reply) {
+					if (reply.status === 'success') {
+						delete reply.status;
+						for (var key in reply) {
+							self.defaultTextModes.push(reply[key]);
+						}
+						self.createModeMenu();
+
+					}
+				}
+			});
+
+			atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
+
+
+			// oX('#current_mode').on('click', function(e) {
+			// 	e.stopPropagation();
+			// 	if (self.textModeMenuOpen) {
+			// 		self.hideModeMenu();
+			// 	} else {
+			// 		self.showModeMenu();
+			// 	}
+			// });
+		},
+
+		showModeMenu: function() {
+			var menu = oX('#changemode-menu');
+			atheos.flow.slide('open', menu.el, 200);
+			window.addEventListener('click', self.hideModeMenu);
+			self.textModeMenuOpen = true;
+		},
+
+		hideModeMenu: function() {
+			var menu = oX('#changemode-menu');
+			atheos.flow.slide('close', menu.el, 200);
+			window.removeEventListener('click', self.hideModeMenu);
+			self.textModeMenuOpen = false;
+		},
+
+		createModeMenu: function() {
+			var menu = oX('#changemode-menu');
+
+			var modeOptions = [];
+			var maxOptionsColumn = 15;
+			var firstOption = 0;
+
+			var max;
+
+			self.defaultTextModes.sort();
+			self.defaultTextModes.forEach((mode) => {
+				modeOptions.push('<li><a>' + mode + '</a></li>');
+
+			});
+
+			var html = '<table><tr>';
+			while (true) {
+				html += '<td><ul>';
+				if ((modeOptions.length - firstOption) < maxOptionsColumn) {
+					max = modeOptions.length;
+				} else {
+					max = firstOption + maxOptionsColumn;
+				}
+				var currentcolumn = modeOptions.slice(firstOption, max);
+				for (var option in currentcolumn) {
+					html += currentcolumn[option];
+				}
+				html += '</ul></td>';
+				firstOption = firstOption + maxOptionsColumn;
+				if (firstOption >= modeOptions.length) {
+					break;
+				}
+			}
+
+			html += '</tr></table>';
+			menu.html(html);
+
+			oX('#changemode-menu').on('click', function(e) {
+				e.stopPropagation();
+				var node = oX(e.target);
+				var tagName = e.target.tagName;
+				if (tagName !== 'A') {
+					return false;
+				}
+
+				var newMode = 'ace/mode/' + node.text();
+				var actSession = atheos.editor.activeInstance.getSession();
+
+				// handle async mode change
+				var fn = function() {
+					self.setModeDisplay(actSession);
+					actSession.removeListener('changeMode', fn);
+				};
+				actSession.on('changeMode', fn);
+
+				actSession.setMode(newMode);
+				atheos.flow.slide('close', menu.el, 200);
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Send available text modes & file extensions to the Ace Editor.
 		//////////////////////////////////////////////////////////////////
 		setEditorTextModes: function(data) {
-			atheos.editor.clearFileExtensionTextMode();
+			self.clearFileExtensionTextMode();
 			for (var ext in data.extensions) {
-				atheos.editor.addFileExtensionTextMode(ext, data.extensions[ext]);
+				self.addFileExtensionTextMode(ext, data.extensions[ext]);
 			}
 
 			if (data.textModes !== undefined && data.textModes !== []) {
@@ -52,9 +166,104 @@
 			}
 			/* Notify listeners. */
 			amplify.publish('textmode.loaded');
-
 		},
 
+		/////////////////////////////////////////////////////////////////
+		//
+		// Select file mode by extension case insensitive
+		//
+		// Parameters:
+		// extension - {String} File extension
+		//
+		/////////////////////////////////////////////////////////////////
+		selectMode: function(extension) {
+			if (typeof(extension) !== 'string') {
+				return 'text';
+			}
+			extension = extension.toLowerCase();
+
+			if (extension in self.fileExtensionTextMode) {
+				return self.fileExtensionTextMode[extension];
+			} else {
+				return 'text';
+			}
+		},
+
+		/////////////////////////////////////////////////////////////////
+		//
+		// Add an text mode for an extension
+		//
+		// Parameters:
+		// extension - {String} File Extension
+		// mode - {String} TextMode for this extension
+		//
+		/////////////////////////////////////////////////////////////////
+
+		addFileExtensionTextMode: function(extension, mode) {
+			if (typeof(extension) !== 'string' || typeof(mode) !== 'string') {
+				if (console) {
+					console.warn('wrong usage of addFileExtensionTextMode, both parameters need to be string');
+				}
+				return;
+			}
+			mode = mode.toLowerCase();
+			self.fileExtensionTextMode[extension] = mode;
+		},
+
+		/////////////////////////////////////////////////////////////////
+		//
+		// clear all extension-text mode joins
+		//
+		/////////////////////////////////////////////////////////////////
+		clearFileExtensionTextMode: function() {
+			self.fileExtensionTextMode = {};
+		},
+
+		/////////////////////////////////////////////////////////////////
+		//
+		// Set the editor mode
+		//
+		// Parameters:
+		//   m - {TextMode} mode
+		//   i - {Editor} Editor (Defaults to active editor)
+		//
+		/////////////////////////////////////////////////////////////////
+
+		setMode: function(m, i) {
+			i = i || this.getActive();
+
+			// Check if mode is already loaded
+			if (!editorModes[m]) {
+
+				// Load the Mode
+				var modeFile = 'components/editor/ace-editor/mode-' + m + '.js';
+				atheos.common.loadScript(modeFile, function() {
+
+					// Mark the mode as loaded
+					editorModes[m] = true;
+					var EditorMode = ace.require('ace/mode/' + m).Mode;
+					i.getSession().setMode(new EditorMode());
+				}, true);
+			} else {
+
+				var EditorMode = ace.require('ace/mode/' + m).Mode;
+				i.getSession().setMode(new EditorMode());
+
+			}
+		},
+
+		setModeDisplay: function(session) {
+			if (!session) {
+				return;
+			}
+			var currMode = session.getMode().$id;
+			if (currMode) {
+				currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
+				oX('#current_mode>span').html(currMode);
+			} else {
+				oX('#current_mode>span').html('text');
+			}
+		},
 		//////////////////////////////////////////////////////////////////
 		// Save the extensions to the server.
 		//////////////////////////////////////////////////////////////////

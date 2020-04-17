@@ -14,7 +14,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-      ajax = global.ajax,
+		ajax = global.ajax,
 		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
@@ -26,6 +26,9 @@
 		controller: 'components/settings/controller.php',
 		dialog: 'components/settings/dialog.php',
 
+		//////////////////////////////////////////////////////////////////////80
+		// Initilization
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self = this;
 			/*
@@ -41,101 +44,16 @@
 			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
 
 
-			oX('#settings_open').on('click', function() {
-				atheos.settings.show();
-			});
+			// oX('#settings_open').on('click', function() {
+			// 	atheos.settings.show();
+			// });
 
 			self.load();
 		},
 
-
-		publish: function(setting, value) {
-
-			var boolean = (value === 'true');
-			var int = (!isNaN(parseFloat(value)) && isFinite(value)) ? parseInt(value, 10) : 0;
-
-			if (value === null) {
-				atheos.toast.alert("You Must Choose A Value");
-				return;
-			} else {
-				switch (setting) {
-					case 'active.loopBehavior':
-						atheos.active.loopBehavior = value;
-						break;					
-					case 'editor.theme':
-						atheos.editor.setTheme(value);
-						break;
-					case 'editor.fontSize':
-						atheos.editor.setFontSize(value);
-						break;
-					case 'editor.highlightLine':
-						atheos.editor.setHighlightLine(value);
-						break;
-					case 'editor.indentGuides':
-						atheos.editor.setIndentGuides(boolean);
-						break;
-					case 'editor.printMargin':
-						atheos.editor.setPrintMargin(boolean);
-						break;
-					case 'editor.printMarginColumn':
-						atheos.editor.setPrintMarginColumn(int);
-						break;
-					case 'editor.wrapMode':
-						atheos.editor.setWrapMode(boolean);
-						break;
-					case 'filemanager.openTrigger':
-						atheos.filemanager.openTrigger = value;
-						break;
-					case 'project.openTrigger':
-						atheos.project.openTrigger = value;
-						break;
-					case 'sidebars.leftOpenOnClick':
-						atheos.sidebars.leftOpenOnClick = boolean;
-						break;
-					case 'sidebars.rightOpenOnClick':
-						atheos.sidebars.rightOpenOnClick = boolean;
-						break;
-					case 'editor.persistentModal':
-						atheos.editor.setPersistentModal(boolean);
-						break;
-					case 'editor.softTabs':
-						atheos.editor.setSoftTabs(boolean);
-						break;
-					case 'editor.tabSize':
-						atheos.editor.setTabSize(value);
-						break;
-				}
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Save Settings
-		//////////////////////////////////////////////////////////////////
-		save: function(key, value) {
-			if (!key || (!value && value !== false)) {
-				return;
-			}
-			
-			ajax({
-				url: self.controller,
-				data: {
-					action: 'save',
-					key,
-					value
-				},
-				success: function(reply) {
-					if(reply.status === 'error') {
-						atheos.toast.show(reply);
-					}
-				}
-			});
-
-			amplify.publish('settings.save');
-		},
-
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Load Settings
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		load: function() {
 			ajax({
 				url: self.controller,
@@ -154,18 +72,106 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// Show Settings Dialog
-		//
-		//  Parameter
-		//
-		//  dataFile - {String} - Location of settings file based on BASE_URL
-		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Load Settings of Specific Tab
+		//////////////////////////////////////////////////////////////////////80
+		loadTabValues: function() {
+			var children = oX('#panel_view').findAll('[data-setting]');
+			children.forEach(function(child) {
+				var key = oX(child).attr('data-setting'),
+					value = storage(key);
+
+				if (value !== null) {
+					oX(child).value(value);
+				}
+			});
+		},
+
+		publish: function(setting, value) {
+			var boolean = (value === 'true');
+			var int = (!isNaN(parseFloat(value)) && isFinite(value)) ? parseInt(value, 10) : 0;
+
+			if (value === null) {
+				atheos.toast.alert('You Must Choose A Value');
+				return;
+			}
+
+			switch (setting) {
+				case 'active.loopBehavior':
+					atheos.active.loopBehavior = value;
+					break;
+				case 'editor.theme':
+					atheos.editor.setTheme(value);
+					break;
+				case 'editor.fontSize':
+					atheos.editor.setFontSize(value);
+					break;
+				case 'editor.highlightLine':
+					atheos.editor.setHighlightLine(value);
+					break;
+				case 'editor.indentGuides':
+					atheos.editor.setIndentGuides(boolean);
+					break;
+				case 'editor.printMargin':
+					atheos.editor.setPrintMargin(boolean);
+					break;
+				case 'editor.printMarginColumn':
+					atheos.editor.setPrintMarginColumn(int);
+					break;
+				case 'editor.wrapMode':
+					atheos.editor.setWrapMode(boolean);
+					break;
+				case 'filemanager.openTrigger':
+					atheos.filemanager.openTrigger = value;
+					break;
+				case 'project.openTrigger':
+					atheos.project.openTrigger = value;
+					break;
+				case 'sidebars.leftOpenOnClick':
+					atheos.sidebars.leftOpenOnClick = boolean;
+					break;
+				case 'sidebars.rightOpenOnClick':
+					atheos.sidebars.rightOpenOnClick = boolean;
+					break;
+				case 'editor.softTabs':
+					atheos.editor.setSoftTabs(boolean);
+					break;
+				case 'editor.tabSize':
+					atheos.editor.setTabSize(value);
+					break;
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Save Settings
+		//////////////////////////////////////////////////////////////////////80
+		save: function(key, value) {
+			if (!key || (typeof(value) === 'undefined')) {
+				return;
+			}
+
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'save',
+					key,
+					value
+				},
+				success: function(reply) {
+					if (reply.status === 'error') {
+						atheos.toast.show(reply);
+					}
+				}
+			});
+
+			amplify.publish('settings.save');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Show Setting Dialog
+		//////////////////////////////////////////////////////////////////////80
 		show: function(dataFile) {
 			var listener = function() {
-				
 				oX('#modal_wrapper').on('change', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
@@ -193,66 +199,34 @@
 					self.loadTabValues();
 				}
 			};
-			amplify.subscribe('modal.loaded', listener);
-			atheos.modal.load(800, self.dialog + '?action=settings');
 
+			atheos.modal.load(800, self.dialog, {
+				action: 'settings'
+			}, listener);
 		},
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// {Private} Show Specific Tab
-		//
-		//  Parameter
-		//
-		//  dataFile - {String} - Location of settings file based on BASE_URL
-		//
-		//////////////////////////////////////////////////////////////////
-
+		//////////////////////////////////////////////////////////////////////80
+		// Show Datafile Tab
+		//////////////////////////////////////////////////////////////////////80
 		showTab: function(dataFile) {
-			if (typeof(dataFile) === 'string') {
-
-				self.save(false);
-
-				ajax({
-					url: dataFile,
-					success: function(reply) {
-
-						oX('#panel_menu .active').removeClass('active');
-						oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
-						oX('#panel_view').html(reply);
-
-						self.loadTabValues(dataFile);
-					}
-				});
+			if (typeof(dataFile) !== 'string') {
+				return;
 			}
-		},
+			self.save(false);
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// {Private} Load Settings of Specific Tab
-		//
-		//  Parameter
-		//
-		//  dataFile - {String} - Location of settings file based on BASE_URL
-		//
-		//////////////////////////////////////////////////////////////////
-		loadTabValues: function() {
-			//Load settings
-			var key, value;
+			ajax({
+				url: dataFile,
+				success: function(reply) {
 
-			var children = oX('#panel_view').findAll('[data-setting]');
+					oX('#panel_menu .active').removeClass('active');
+					oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
+					oX('#panel_view').html(reply);
 
-			children.forEach(function(child) {
-				key = oX(child).attr('data-setting');
-
-				value = storage(key);
-
-				if (value !== null) {
-					oX(child).value(value);
+					self.loadTabValues(dataFile);
 				}
 			});
-
 		}
+
 	};
 
 })(this);

@@ -1,16 +1,19 @@
 #editor-bottom-bar {
-	//position  : fixed;
-	//bottom    : 0;
 	position: relative;
 	z-index: 1;
-	height: 23px;
+	height: $bottomBarHeight;
 	padding: 5px 15px;
 	background: $foreground;
-	font-size: 12px;
 	color: $font-color-subtle;
-	// border-top: 2px solid #202020;
-	width: 100%;
-	/*box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .9);*/
+
+	&>a,
+	&>span,
+	&>div {
+		// padding: 5px;
+		font-size: 12px;
+		user-select: none;
+		display: inline-block;
+	}
 }
 
 #cursor-position {
@@ -22,16 +25,15 @@
 	color: #999;
 }
 
-#current_mode,
-#settings,
-#split {
-	/* Disable text selection on buttons clicks */
-	-webkit-touch-callout: none;
-	-webkit-user-select: none;
-	-khtml-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	user-select: none;
+#split-options-menu {
+	bottom: $bottomBarHeight;
+	left: 5px;
+}
+
+#changemode-menu {
+	bottom: $bottomBarHeight;
+	left: 45px;
+	font-size: inherit;
 }
 
 #current_file,
@@ -46,11 +48,9 @@
 }
 
 .divider {
-	display: block;
-	float: left;
-	height: 14px;
+	height: $bottomBarHeight;
 	width: 1px;
 	background: #333;
 	margin: 0 15px;
-	/*box-shadow: 0px 0px 10px 1px rgba(0, 0, 0, .5);*/
+	float: left;
 }

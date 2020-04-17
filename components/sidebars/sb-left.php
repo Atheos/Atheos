@@ -13,7 +13,7 @@
 
 			<input id="filter_input" placeholder="<?php i18n("Filter Tree") ?>" type="text">
 
-			<ul id="filter_strategy" class="options-menu">
+			<ul id="filter_strategy" class="options-menu" style="display:none;">
 				<li class="active"><a data-option="left_prefix"><?php i18n("Prefix"); ?></a></li>
 				<li><a data-option="substring"><?php i18n("Substring"); ?></a></li>
 				<li><a data-option="regexp"><?php i18n("Regular expression"); ?></a></li>

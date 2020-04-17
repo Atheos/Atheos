@@ -307,3 +307,4 @@
 	?>
 
 </div>
+<script src="components/install/init.js"></script>
