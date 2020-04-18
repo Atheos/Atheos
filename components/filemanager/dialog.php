@@ -26,7 +26,7 @@ checkSession();
 		case 'create':
 			?>
 			<label><i class="fas fa-plus-circle"></i><?php echo i18n((ucfirst($_GET['type']))); ?></label>
-			<input type="text" name="nodeName" autofocus="autofocus" autocomplete="off" pattern="[^A-Za-z0-9 \-\._]" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only">
+			<input type="text" name="nodeName" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only">
 			<button class="btn-left"><?php i18n("Create"); ?></button>
 			<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 			<?php
@@ -40,7 +40,7 @@ checkSession();
 			<input type="hidden" name="path" value="<?php echo($_GET['path']); ?>">
 			<input type="hidden" name="type" value="<?php echo($_GET['type']); ?>">
 			<label><i class="fas fa-pencil-alt"></i> <?php i18n("Rename"); ?> <?php echo i18n((ucfirst($_GET['type']))); ?></label>
-			<input type="text" name="object_name" autofocus="autofocus" autocomplete="off" pattern="[^A-Za-z0-9 \-\._]" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($_GET['nodeName']); ?>">
+			<input type="text" name="object_name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($_GET['nodeName']); ?>">
 			<button class="btn-left"><?php i18n("Rename"); ?></button>
 			<button class="btn-right" onclick="codiad.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 			<?php

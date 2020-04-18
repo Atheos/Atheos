@@ -36,7 +36,7 @@
 
 		standardGoLineUpExec: null,
 
-		_suggestionCache: null,
+		suggestionCache: null,
 
 		standardGoToRightExec: null,
 
@@ -45,19 +45,19 @@
 		standardIndentExec: null,
 
 		init: function() {
-			var _this = this;
+			self = this;
 
-			this.$onDocumentChange = this.onDocumentChange.bind(this);
-			this.$selectNextSuggestion = this.selectNextSuggestion.bind(this);
-			this.$selectPreviousSuggestion = this.selectPreviousSuggestion.bind(this);
-			this.$complete = this.complete.bind(this);
-			this.$hide = this.hide.bind(this);
+			self.$onDocumentChange = this.onDocumentChange.bind(this);
+			self.$selectNextSuggestion = this.selectNextSuggestion.bind(this);
+			self.$selectPreviousSuggestion = this.selectPreviousSuggestion.bind(this);
+			self.$complete = this.complete.bind(this);
+			self.$hide = this.hide.bind(this);
 
 			/* Catch click on suggestion */
 			$('#autocomplete li').live('click', function() {
 				$('#autocomplete li.active-suggestion').removeClass('active-suggestion');
 				$(this).addClass('active-suggestion');
-				_this.complete();
+				self.complete();
 			});
 
 			/* In debug mode, run some tests here. */
@@ -66,8 +66,6 @@
 		},
 
 		suggest: function() {
-			var _this = this;
-
 			var cursorPosition = this._getEditor().getCursorPosition();
 			var foundSuggestions = this.updateSuggestions(cursorPosition);
 			if (foundSuggestions) {
@@ -78,7 +76,7 @@
 
 				// handle click-out autoclosing.
 				var fn = function() {
-					_this.hide();
+					self.hide();
 					$(window).off('click', fn);
 				};
 				$(window).on('click', fn);
@@ -90,7 +88,6 @@
 		/* Update the suggestions for the word at the given position. Return true if
 			* some suitable suggestions could be found, false if not. */
 		updateSuggestions: function(position) {
-			var _this = this;
 
 			var session = this._getEditSession();
 
@@ -147,12 +144,12 @@
 		},
 
 		show: function() {
-			this.isVisible = true;
+			self.isVisible = true;
 
 			var popup = $('#autocomplete');
 			popup.css({
-				'top': this._computeTopOffset(),
-				'left': this._computeLeftOffset(),
+				'top': self._computeTopOffset(),
+				'left': self._computeLeftOffset(),
 				'font-family': $('.ace_editor').css('font-family'),
 				'font-size': $('.ace_editor').css('font-size')
 			});
@@ -160,19 +157,19 @@
 				$(this).css('overflow', '');
 			});
 
-			this.addKeyboardCommands();
+			self.addKeyboardCommands();
 		},
 
 
 		hide: function() {
-			this.isVisible = false;
+			self.isVisible = false;
 
 			$('#autocomplete').hide();
-			this.removeSuggestions();
-			this.clearSuggestionCache();
+			self.removeSuggestions();
+			self.clearSuggestionCache();
 
-			this.removeListenerToOnDocumentChange();
-			this.removeKeyboardCommands();
+			self.removeListenerToOnDocumentChange();
+			self.removeKeyboardCommands();
 		},
 
 		/* Return a jQuery object containing the currently selected suggestion. */
@@ -191,13 +188,13 @@
 		selectFirstSuggestion: function() {
 			var firstChild = $('li.suggestion:first-child');
 			firstChild.addClass('active-suggestion');
-			this._ensureVisible(firstChild, $('#autocomplete'));
+			this.ensureVisible(firstChild, $('#autocomplete'));
 		},
 
 		selectLastSuggestion: function() {
 			var lastChild = $('li.suggestion:last-child');
 			lastChild.addClass('active-suggestion');
-			this._ensureVisible(lastChild, $('#autocomplete'));
+			this.ensureVisible(lastChild, $('#autocomplete'));
 		},
 
 		selectNextSuggestion: function() {
@@ -206,7 +203,7 @@
 			var nextSuggestion = selectedSuggestion.next();
 			if (nextSuggestion.length > 0) {
 				nextSuggestion.addClass('active-suggestion');
-				this._ensureVisible(nextSuggestion, $('#autocomplete'));
+				this.ensureVisible(nextSuggestion, $('#autocomplete'));
 			} else {
 				/* The currently selected suggestion is the last one.
 					* Go back to first one. */
@@ -220,7 +217,7 @@
 			var previousSuggestion = selectedSuggestion.prev();
 			if (previousSuggestion.length > 0) {
 				previousSuggestion.addClass('active-suggestion');
-				this._ensureVisible(previousSuggestion, $('#autocomplete'));
+				this.ensureVisible(previousSuggestion, $('#autocomplete'));
 			} else {
 				/* The currently selected suggestion is the first one.
 					* Go back to last one. */
@@ -366,8 +363,8 @@
 
 			/* If suggestions are cached,
 				* return them directely */
-			if (this._suggestionCache) {
-				return this._suggestionCache;
+			if (this.suggestionCache) {
+				return this.suggestionCache;
 			}
 
 			var doc = this._getDocument();
@@ -424,14 +421,14 @@
 			delete suggestionsAndDistance[markedWord + '-'];
 
 			/* Fill the cache */
-			this._suggestionCache = suggestionsAndDistance;
+			this.suggestionCache = suggestionsAndDistance;
 
 			return suggestionsAndDistance;
 		},
 
 		/* Clear the suggestion cache */
 		clearSuggestionCache: function() {
-			this._suggestionCache = null;
+			this.suggestionCache = null;
 		},
 
 		/* Given an object associating suggestions and their distances to the
@@ -575,7 +572,7 @@
 			return (str.toLowerCase() === str);
 		},
 
-		_ensureVisible: function(el, parent) {
+		ensureVisible: function(el, parent) {
 			var offset = 1;
 			var paneMin = parent.scrollTop();
 			var paneMax = paneMin + parent.innerHeight();
