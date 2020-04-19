@@ -38,7 +38,7 @@
 		"enabled": true,
 		"icon": "fas fa-upload",
 		"applies-to": "directory-only",
-		"onclick": "atheos.filemanager.upload(onyx('#contextmenu').attr('data-path'));"
+		"onclick": "atheos.transfer.upload(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
 		"title": "Preview",
@@ -122,7 +122,7 @@
 		"enabled": true,
 		"icon": "fas fa-download",
 		"applies-to": "both",
-		"onclick": "atheos.filemanager.download(onyx('#contextmenu').attr('data-path'));"
+		"onclick": "atheos.transfer.download(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
