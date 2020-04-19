@@ -504,6 +504,9 @@
 		},
 
 		remove: function(path) {
+			if(!(path in self.sessions)) {
+				return;
+			}
 			var session = self.sessions[path];
 
 			session.listItem.remove();
