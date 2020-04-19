@@ -95,7 +95,7 @@
 			if (self.modalVisible) {
 				self.setLoadingScreen();
 			}
-			if(content.find('form')) {
+			if (content.find('form')) {
 				content.find('form').off('submit');
 			}
 
@@ -151,17 +151,26 @@
 
 		unload: function() {
 			amplify.publish('modal.unload');
-
 			amplify.unsubscribeAll('modal.loaded');
 
+			var form = oX('#modal_content form'),
+				overlay = oX('#overlay'),
+				wrapper = oX('#modal_wrapper'),
+				content = oX('#modal_content');
 
-			oX('#modal_content').off('submit');
-			if(oX('#modal_content form')) {
-			oX('#modal_content form').off('submit');
+			if (content) {
+				content.off('*');
+				content.empty();
 			}
-			oX('#overlay').remove();
-			oX('#modal_wrapper').hide();
-			oX('#modal_content').empty();
+			if (form) {
+				form.off('*');
+			}
+			if (overlay) {
+				overlay.remove();
+			}
+			if (wrapper) {
+				wrapper.hide();
+			}
 
 			self.modalVisible = false;
 			atheos.editor.focus();
