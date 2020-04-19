@@ -45,10 +45,6 @@
 			self = this;
 			// Initialize node listener
 			this.nodeListener();
-			// Load uploader
-			common.loadScript('components/filemanager/upload_scripts/jquery.ui.widget.js', true);
-			common.loadScript('components/filemanager/upload_scripts/jquery.iframe-transport.js', true);
-			common.loadScript('components/filemanager/upload_scripts/jquery.fileupload.js', true);
 
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('filemanager.openTrigger');
@@ -78,21 +74,21 @@
 					if (tagName === 'LI') {
 						node = node.find('a');
 					} else {
-						node = node.parent();
+						node = node.parent('a');
 					}
 				}
 				return node;
 			};
 
-			var nodeFunctions = (function(node) {
+			var nodeFunctions = function(node) {
 				if (node) {
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-						this.openDir(node.attr('data-path'));
+						self.openDir(node.attr('data-path'));
 					} else if (node.attr('data-type') === 'file') {
-						this.openFile(node.attr('data-path'));
+						self.openFile(node.attr('data-path'));
 					}
 				}
-			}).bind(this);
+			};
 
 			oX('#file-manager').on('click', function(e) {
 				if (self.openTrigger === 'single') {
@@ -147,7 +143,11 @@
 					icon.addClass('loading');
 				}
 				ajax({
-					url: self.controller + '?action=index&path=' + path,
+					url: self.controller,
+					data: {
+						action: 'index',
+						path
+					},
 					success: function(reply) {
 						if (reply.status !== 'error') {
 							/* Notify listener */
@@ -261,7 +261,7 @@
 					url: self.controller + '?action=open&path=' + encodeURIComponent(path),
 					success: function(reply) {
 						if (reply.status !== 'error') {
-							atheos.active.open(path, reply.content, reply.mtime, focus);
+							atheos.active.open(path, reply.content, reply.modifyTime, focus);
 							if (line) {
 								setTimeout(atheos.editor.gotoLine(line), 500);
 							}
@@ -334,19 +334,21 @@
 					} else {
 						if (data.message === 'Client is out of sync') {
 							atheos.alert.show({
-								banner: 'File contents changed on server!',
-								message: 'Would you like to retreieve an updated copy of the file?\n' +
+								banner: 'File changed on server!',
+								message: 'Would you like to load the updated file?\n' +
 									'Pressing no will cause your changes to override the\n' +
 									'server\'s copy upon next save.',
-								'Yes': function() {
-									atheos.active.remove(path);
-									self.openFile(path);
-								},
-
-								'No': function() {
-									var session = atheos.editor.getActive().getSession();
-									session.serverMTime = null;
-									session.untainted = null;
+								actions: {
+									'Reload File': function() {
+										atheos.active.remove(path);
+										self.openFile(path);
+									},
+									'Save Anyway': function() {
+										var session = atheos.editor.getActive().getSession();
+										session.serverMTime = null;
+										session.untainted = null;
+										atheos.active.save();
+									}
 								}
 
 							});
@@ -372,7 +374,7 @@
 			if (patch.length > 0) {
 				self.saveModifications(path, {
 					patch: patch,
-					mtime: mtime
+					modifyTime: mtime
 				}, callbacks);
 			} else if (typeof callbacks.success === 'function') {
 				var context = callbacks.context || self;
@@ -453,47 +455,50 @@
 		//////////////////////////////////////////////////////////////////
 		// Duplicate Object
 		//////////////////////////////////////////////////////////////////		
-		duplicate: function(path, name) {
-			var nodeName = common.getNodeName(path);
+		duplicate: function(path) {
+			var name = common.getNodeName(path);
 			var type = common.getNodeType(path);
 
-			var listener = function() {
-				oX('#modal_content form').once('submit', function(e) {
-					e.preventDefault();
+			var listener = function(e) {
+				e.preventDefault();
 
-					var newName = oX('#modal_content form input[name="object_name"]').value();
+				var clone = oX('#modal_content form input[name="clone"]').value();
 
-					// Build new path
-					var parent = path.split('/').slice(0, -1).join('/');
-					var newPath = parent + '/' + newName;
+				// Build new path
+				var parent = path.split('/').slice(0, -1).join('/');
+				var clonePath = parent + '/' + clone;
 
-					ajax({
-						url: `${self.controller}?action=duplicate&path=${encodeURIComponent(path)}'&destination='${encodeURIComponent(newPath)}`,
-						success: function(data) {
-							atheos.toast[data.status](data.message);
+				ajax({
+					url: self.controller,
+					data: {
+						action: 'duplicate',
+						path: path,
+						clonePath: clonePath
+					},
+					success: function(reply) {
+						atheos.toast[reply.status](reply.message);
 
-							if (data.status !== 'error') {
-								self.addToFileManager(newPath, type, parent);
-								atheos.modal.unload();
-								/* Notify listeners. */
-								amplify.publish('filemanager.onPaste', {
-									path: path,
-									nodeName: nodeName
-								});
-							}
+						if (reply.status === 'success') {
+							self.addToFileManager(clonePath, type, parent);
+							atheos.modal.unload();
+							/* Notify listeners. */
+							amplify.publish('filemanager.duplicate', {
+								sourcePath: path,
+								clonePath: clonePath,
+								type: type
+							});
 						}
-					});
-					atheos.modal.unload();
+					}
 				});
+				atheos.modal.unload();
 			};
-
-			amplify.subscribe('modal.loaded', listener);
 
 			atheos.modal.load(250, self.dialog, {
 				action: 'duplicate',
-				path: path,
-				nodeName: nodeName,
+				name: name,
 				type: type
+			}, () => {
+				oX('#modal_content').on('submit', listener);
 			});
 
 		},
@@ -606,7 +611,7 @@
 			var listener = function() {
 				oX('#modal_content form').on('submit', function(e) {
 					e.preventDefault();
-					var newName = oX('#modal_content form input[name="object_name"]').value();
+					var newName = oX('#modal_content form input[name="name"]').value();
 					// Build new path
 					var arr = path.split('/');
 					var temp = [];
@@ -653,8 +658,7 @@
 
 			atheos.modal.load(250, self.dialog, {
 				action: 'rename',
-				path: path,
-				nodeName: nodeName,
+				name: nodeName,
 				type: type
 			});
 
@@ -679,57 +683,34 @@
 		// Delete
 		//////////////////////////////////////////////////////////////////
 		delete: function(path) {
-			var listener = function() {
-				oX('#modal_content form').once('submit', function(e) {
-					e.preventDefault();
+			var listener = function(e) {
+				e.preventDefault();
 
-					ajax({
-						url: self.controller + '?action=delete&path=' + encodeURIComponent(path),
-						success: function(data) {
-							if (data !== 'error') {
-								var node = oX('#file-manager a[data-path="' + path + '"]');
-								node.parent('li').remove();
-								// Close any active files
-								var active = document.querySelectorAll('#active-files a');
-								for (var i = 0; i < active.length; i++) {
-									var curPath = oX(active[i]).attr('data-path');
-									if (curPath.indexOf(path) === 0) {
-										atheos.active.remove(curPath);
-									}
-								}
-							}
-							atheos.modal.unload();
+				ajax({
+					url: self.controller,
+					data: {
+						action: 'delete',
+						path
+					},
+					success: function(reply) {
+						if (reply.status === 'success') {
+							var node = oX('#file-manager a[data-path="' + path + '"]');
+							node.parent('li').remove();
+							// Close any active files
+							atheos.active.remove(path);
 						}
-					});
+						atheos.modal.unload();
+					}
 				});
 			};
-
-			amplify.subscribe('modal.loaded', listener);
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'delete',
 				path: path
+			}, () => {
+				oX('#modal_content').on('submit', listener);
 			});
-
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Upload
-		//////////////////////////////////////////////////////////////////
-		upload: function(path) {
-			atheos.modal.load(500, self.dialogUpload, {
-				path: path
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Download
-		//////////////////////////////////////////////////////////////////
-		download: function(path) {
-			var type = atheos.common.getNodeType(path);
-			oX('#download').attr('src', 'components/filemanager/download.php?path=' + encodeURIComponent(path) + '&type=' + type);
 		}
-
 
 	};
 
