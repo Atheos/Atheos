@@ -509,7 +509,8 @@ class Common {
 		}
 		//Security check
 		if (!Common::checkPath($path)) {
-			die('{"status":"error","message":"Invalid path"}');
+			Common::sendJSON("E430c");
+			die;
 		}
 		if (strpos($path, "/") === 0) {
 			//Unix absolute path
