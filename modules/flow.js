@@ -46,7 +46,7 @@
 				target.style.marginBottom = 0;
 			};
 
-			if (window.getComputedStyle(target).display === 'none' || direction === 'open') {
+			if (direction === 'open') {
 				//SlideDown (Open)
 				target.style.removeProperty('display');
 
@@ -67,7 +67,7 @@
 				window.setTimeout(() => {
 					target.setAttribute('style', '');
 				}, duration);
-			} else {
+			} else if (direction === 'close' || direction === 'remove') {
 				// SlideUp (Close)
 				target.style.boxSizing = 'border-box';
 				target.style.height = target.offsetHeight + 'px';
@@ -76,6 +76,9 @@
 				window.setTimeout(() => {
 					target.setAttribute('style', '');
 					target.style.display = 'none';
+					if (direction === 'remove') {
+						target.remove();
+					}
 				}, duration);
 			}
 		},
