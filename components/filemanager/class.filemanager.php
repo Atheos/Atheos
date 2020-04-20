@@ -241,7 +241,6 @@ class Filemanager extends Common
 				return;
 			}
 			if (is_dir($target)) {
-				Common::debug($target);
 				$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 
 				foreach ($files as $file) {
