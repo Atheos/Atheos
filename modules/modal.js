@@ -25,7 +25,7 @@
 
 
 
-(function(global, $) {
+(function(global) {
 	'use strict';
 
 	var atheos = global.atheos,
@@ -83,7 +83,7 @@
 
 
 
-			$('#modal_content form').die('submit'); // Prevent form bubbling
+			// $('#modal_content form').die('submit'); // Prevent form bubbling
 
 			wrapper.css({
 				'top': '15%',
@@ -104,7 +104,7 @@
 				type: 'GET',
 				data: data,
 				success: function(data) {
-					$('#modal_content').html(data);
+					oX('#modal_content').html(data);
 
 					wrapper.css({
 						'height': ''
@@ -242,4 +242,4 @@
 		}
 	};
 
-})(this, jQuery);
+})(this);
