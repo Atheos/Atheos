@@ -5,7 +5,7 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Description: 
+// Description:
 // Keybinding module for adding keyboard shortcuts to functions. Exposes init()
 // and bind() to global for use by plugins.
 //												- Liam Siira
@@ -14,7 +14,7 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+	amplify = global.amplify;
 
 	var self = null;
 
