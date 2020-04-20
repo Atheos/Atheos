@@ -42,38 +42,6 @@
 	color: green;
 }
 
-
-
-
-
-/* Commit hash */
-.commit_hash {
-	color: yellow;
-	cursor: pointer;
-	margin-top: 5px;
-	-webkit-user-select: none;
-	-moz-user-select: none;
-	-ms-user-select: none;
-	-o-user-select: none;
-	user-select: none;
-}
-
-.commit_hash:hover {
-	text-decoration: underline;
-}
-
-.commit_hash:hover:after {
-	content: "\e74c";
-	font-family: entypo;
-	font-style: normal;
-	font-size: 75%;
-	display: inline-block;
-	margin-right: 8px;
-	text-align: center;
-	vertical-align: top;
-}
-
-
 /* Show commit */
 /* Git diff */
 
