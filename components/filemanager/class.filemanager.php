@@ -24,7 +24,7 @@ class Filemanager extends Common
 	private $type = "";
 	private $newName = "";
 	private $content = "";
-	private $clonePath = "";
+	private $dest = "";
 	private $upload = "";
 	private $controller = "";
 	private $upload_json = "";
@@ -52,7 +52,7 @@ class Filemanager extends Common
 			}
 		}
 
-		foreach (array('path', 'clonePath') as $key) {
+		foreach (array('path', 'dest') as $key) {
 			$temp = Common::data($key);
 			if ($temp) {
 				$this->$key = Common::cleanPath($temp);
@@ -73,8 +73,8 @@ class Filemanager extends Common
 			$this->path = $this->root . $this->path;
 
 			// Duplicate
-			if ($this->clonePath) {
-				$this->clonePath = $this->root . $this->clonePath;
+			if ($this->dest) {
+				$this->dest = $this->root . $this->dest;
 			}
 		}
 
@@ -368,7 +368,7 @@ class Filemanager extends Common
 			die;
 		}
 
-		if (file_exists($this->clonePath)) {
+		if (file_exists($this->dest)) {
 			Common::sendJSON("error", "Path already exists.");
 			die;
 		}
@@ -389,10 +389,10 @@ class Filemanager extends Common
 		}
 
 		if (is_file($this->path)) {
-			copy($this->path, $this->clonePath);
+			copy($this->path, $this->dest);
 			Common::sendJSON("success", "File Duplicated");
 		} else {
-			rCopyDirectory($this->path, $this->clonePath);
+			rCopyDirectory($this->path, $this->dest);
 			Common::sendJSON("success", "Folder Duplicated");
 		}
 	}
