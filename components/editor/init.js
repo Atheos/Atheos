@@ -4,7 +4,7 @@
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
 
-(function(global, $) {
+(function(global) {
 
 
 
@@ -52,7 +52,6 @@
 			indentGuides: true,
 			wrapMode: false,
 			softTabs: false,
-			persistentModal: true,
 			tabSize: 4
 		},
 
@@ -65,25 +64,33 @@
 
 			this.cursorTracking();
 
-			var editor = $('#editor-region');
+			var editor = oX('#editor-region');
 
 			// editor = oX('#editor-region');
 
-			editor.on('h-resize-init', function() {
+			editor.on('h-resize-root', function() {
 				var width = editor.css('width');
-				// $('#editor-region > .editor-wrapper').css('width', width);
-				$('#editor-region > .editor-wrapper').width($(this).width());
-				$('#editor-region > .editor-wrapper').trigger('h-resize');
+				wrapper = oX('#editor-region > .editor-wrapper');
+				if (wrapper) {
+					wrapper.css('width', width);
+					// $('#editor-region > .editor-wrapper').width($(this).width());
+					wrapper.trigger('h-resize');
+				}
+
 			});
 
-			editor.on('v-resize-init', function() {
-				$('#editor-region > .editor-wrapper').height($(this).height());
-				$('#editor-region > .editor-wrapper').trigger('v-resize');
+			editor.on('v-resize-root', function() {
+				var height = editor.css('height'),
+					wrapper = oX('#editor-region > .editor-wrapper');
+				if (wrapper) {
+					wrapper.css('height', height);
+					wrapper.trigger('v-resize');
+				}
 			});
 
 			window.addEventListener('resize', function() {
-				editor.trigger('h-resize-init');
-				editor.trigger('v-resize-init');
+				editor.trigger('h-resize-root');
+				editor.trigger('v-resize-root');
 			});
 		},
 
@@ -132,6 +139,25 @@
 			instance.getSession().setUseWrapMode(self.settings.wrapMode);
 			self.setTabSize(self.settings.tabSize, instance);
 			self.setSoftTabs(self.settings.softTabs, instance);
+
+			instance.commands.addCommand({
+				name: "Beautify",
+				bindKey: {
+					win: "Ctrl-Alt-B",
+					mac: "Command-Alt-B"
+				},
+				exec: function() {
+					self.beautify();
+				}
+			});
+		},
+
+
+		beautify: function() {
+			var beautify = ace.require('ace/ext/beautify');
+			var editor = self.activeInstance;
+			log(editor);
+			beautify.beautify(editor.session);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -146,11 +172,11 @@
 			// This can be a little confusing to follow, took me a while. First,
 			// keep in mind that Ace objects has their own .el property, which
 			// holds an onyx object, that holds it's own raw element.
-			
+
 			// SplitContainer takes raw html elements and has it's own mini-dom
 			// helper that has zero error checking in order to be as fast as
 			// possible.
-			
+
 			var editor = oX('<div class="editor"></div>');
 
 			var childID = null,
@@ -182,7 +208,7 @@
 				if (this.instances.length > 1) {
 					var pContainer = this.activeInstance.splitContainer;
 					var idx = this.activeInstance.splitID;
-										log(this.activeInstance.splitID);
+					log(this.activeInstance.splitID);
 
 					log(Object.values(this.activeInstance));
 					pContainer.setChild(idx, splitContainer);
@@ -769,7 +795,7 @@
 				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();
-					$('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 				}
 			});
 		},
@@ -868,8 +894,12 @@
 		search: function(action, i) {
 			i = i || this.getActive();
 			if (!i) return;
-			var find = $('#modal_wrapper input[name="find"]').val(),
-				replace = $('#modal_wrapper input[name="replace"]').val();
+			var find = oX('#modal_wrapper input[name="find"]'),
+				replace = oX('#modal_wrapper input[name="replace"]');
+
+			find = find ? find.value() : false;
+			replace = replace ? replace.value() : false;
+
 
 			switch (action) {
 				case 'find':
@@ -914,4 +944,4 @@
 
 	};
 
-})(this, jQuery);
+})(this);
