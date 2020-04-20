@@ -237,11 +237,12 @@ class Filemanager extends Common
 
 		function rDelete($target) {
 			// Unnecessary, but rather be safe that sorry.
-			if ($target === "." || $target === "...") {
+			if ($target === "." || $target === "..") {
 				return;
 			}
 			if (is_dir($target)) {
-				$files = glob($target . '*', GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+				Common::debug($target);
+				$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 
 				foreach ($files as $file) {
 					rDelete($file);
