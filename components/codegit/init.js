@@ -455,7 +455,7 @@
 
 				// Add eventListener to open CodeGit
 				oX("#codegit_repo_banner").on('click', function() {
-					atheos.self.showCodeGit();
+					self.showCodeGit();
 				});
 
 				if (self.repoBannerDisabled() !== true) {
