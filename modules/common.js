@@ -197,7 +197,7 @@
 			return o;
 		},
 
-		createOverlay: function(type) {
+		createOverlay: function(type, hidden) {
 			var overlay = oX('#overlay');
 			if (overlay) {
 				overlay.remove();
@@ -209,7 +209,9 @@
 			} else {
 				overlay.on('click', atheos.modal.unload);
 			}
-
+if(hidden) {
+	overlay.hide();
+}
 			document.body.appendChild(overlay.el);
 			return overlay;
 		},
