@@ -32,7 +32,7 @@ class SourceManager {
 		"modules/alert.js",
 		"modules/flow.js",
 		"modules/chrono.js",
-		"modules/codiad.js",
+		// "modules/codiad.js",
 		"modules/common.js",
 		"modules/keybind.js",
 		"modules/modal.js",
