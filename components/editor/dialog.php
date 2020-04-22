@@ -19,7 +19,7 @@ Common::checkSession();
 
 $action = Common::data("action");
 $type = Common::data("type");
-$hightlight = Common::data("hightlight");
+$highlight = Common::data("highlight");
 
 if (!$action) {
 	Common::sendJSON("E401m");
@@ -35,7 +35,7 @@ switch ($action) {
 		?>
 		<form>
 			<h4><i class="fas fa-search"></i><?php i18n("Find:"); ?></h4>
-			<input type="text" name="find" autofocus="autofocus" autocomplete="off">
+			<input type="text" name="find" value="<?php echo $highlight; ?>"autofocus="autofocus" autocomplete="off">
 			<button class="btn-left" onclick="atheos.editor.search('find');return false;"><?php i18n("Find"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
@@ -50,7 +50,7 @@ switch ($action) {
 		?>
 		<form>
 			<h4><i class="fas fa-search"></i><?php i18n("Find:"); ?></h4>
-			<input type="text" name="find" autofocus="autofocus" autocomplete="off">
+			<input type="text" name="find" value="<?php echo $highlight; ?>"autofocus="autofocus" autocomplete="off">
 			<h4><i class="fas fa-exchange-alt"></i><?php i18n("Replace:"); ?></h4>
 			<input type="text" name="replace">
 			<button class="btn-left" onclick="atheos.editor.search('find');return false;"><?php i18n("Find"); ?></button>
