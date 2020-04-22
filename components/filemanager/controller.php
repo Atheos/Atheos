@@ -11,14 +11,30 @@
 //////////////////////////////////////////////////////////////////////////////80
 require_once("../../common.php");
 require_once("class.filemanager.php");
- 
+
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
 Common::checkSession();
 
 $action = Common::data("action");
+
+$dest = Common::data('dest');
+$name = Common::data('name');
 $path = Common::data('path');
+$type = Common::data('type');
+
+$modifyTime = Common::data('modifyTime');
+$content = Common::data('content');
+$patch = Common::data('patch');
+$type = Common::data('type');
+
+//////////////////////////////////////////////////////////////////
+// Security Check
+//////////////////////////////////////////////////////////////////
+$path = Common::getWorkspacePath($path);
+$dest = Common::getWorkspacePath($dest);
+
 $project = Common::data("project", "session");
 $noReturn = Common::data("no_return");
 
@@ -34,15 +50,6 @@ if (!$project) {
 }
 
 //////////////////////////////////////////////////////////////////
-// Security Check
-//////////////////////////////////////////////////////////////////
-
-if (!checkPath($path)) {
-	Common::sendJSON("E430u");
-	die;
-}
-
-//////////////////////////////////////////////////////////////////
 // Handle Action
 //////////////////////////////////////////////////////////////////
 $Filemanager = new Filemanager($_GET, $_POST);
@@ -52,29 +59,33 @@ $Filemanager->root = WORKSPACE;
 
 switch ($action) {
 	case 'index':
-		$Filemanager->index();
+		$Filemanager->index($path);
 		break;
 	case 'open':
-		$Filemanager->open();
-		break;
-	case 'open_in_browser':
-		$Filemanager->openinbrowser();
+		$Filemanager->open($path);
 		break;
 	case 'create':
-		$Filemanager->create();
+		$Filemanager->create($path, $type);
 		break;
 	case 'delete':
-		$Filemanager->delete();
+		$Filemanager->delete($path);
+		break;
+	case 'rename':
+		$Filemanager->rename($path, $name);
+		break;
+	case 'save':
+		$Filemanager->save($path, $modifyTime, $patch, $content);
 		break;
 	case 'modify':
 		$Filemanager->modify();
 		break;
 	case 'duplicate':
-		$Filemanager->duplicate();
+		$Filemanager->duplicate($path, $dest);
 		break;
-	case 'upload':
-		$Filemanager->upload();
-		break;
+	//////////////////////////////////////////////////////////////////////////80
+	// Default: Invalid Action
+	//////////////////////////////////////////////////////////////////////////80
 	default:
-		exit('{"status":"fail","data":{"error":"Unknown Action"}}');
-	}
+		Common::sendJSON("E401i");
+		break;
+}
