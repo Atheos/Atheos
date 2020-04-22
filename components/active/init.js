@@ -611,7 +611,7 @@
 
 				// Change Editor Mode
 				var ext = atheos.common.getNodeExtension(newPath);
-				var mode = atheos.editor.selectMode(ext);
+				var mode = atheos.textmode.selectMode(ext);
 
 				// handle async mode change
 				var fn = function() {
