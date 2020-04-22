@@ -9,30 +9,7 @@
 require_once('../../lib/diff_match_patch.php');
 require_once('../../common.php');
 
-class Filemanager extends Common
-{
-
-	//////////////////////////////////////////////////////////////////
-	// PROPERTIES
-	//////////////////////////////////////////////////////////////////
-
-	public $root = WORKSPACE;
-	public $project = "";
-	private $relativePath = "";
-	private $path = "";
-	private $patch = "";
-	private $type = "";
-	private $newName = "";
-	private $content = "";
-	private $dest = "";
-	private $upload = "";
-	private $controller = "";
-	private $upload_json = "";
-
-	// JSEND Return Contents
-	private $status = "";
-	private $data = "";
-	private $message = "";
+class Filemanager {
 
 	//////////////////////////////////////////////////////////////////
 	// METHODS
@@ -41,97 +18,47 @@ class Filemanager extends Common
 	// -----------------------------||----------------------------- //
 
 	//////////////////////////////////////////////////////////////////
-	// Construct
-	//////////////////////////////////////////////////////////////////
-
-	public function __construct($get, $post) {
-		foreach (array('type', 'newName') as $key) {
-			$temp = Common::data($key);
-			if ($temp) {
-				$this->$key = $temp;
-			}
-		}
-
-		foreach (array('path', 'dest') as $key) {
-			$temp = Common::data($key);
-			if ($temp) {
-				$this->$key = Common::cleanPath($temp);
-			} else {
-				$this->$key = false;
-			}
-		}
-		$this->relativePath = Common::cleanPath($this->path);
-
-
-		if ($this->relativePath !== "/") {
-			$this->relativePath .= "/";
-		}
-
-		if (!Common::isAbsPath($this->path)) {
-
-			$this->root .= '/';
-			$this->path = $this->root . $this->path;
-
-			// Duplicate
-			if ($this->dest) {
-				$this->dest = $this->root . $this->dest;
-			}
-		}
-
-		foreach (array('content', 'modifyTime', 'patch') as $key) {
-			$temp = Common::data($key);
-			if ($temp) {
-				if (get_magic_quotes_gpc()) {
-					$this->$key = stripslashes($temp);
-				} else {
-					$this->$key = $temp;
-				}
-			} else {
-				$this->$key = false;
-			}
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////
 	// INDEX (Returns list of files and directories)
 	//////////////////////////////////////////////////////////////////
 
-	public function index() {
-		if (!file_exists($this->path)) {
+	public function index($path) {
+		if (!file_exists($path)) {
 			Common::sendJSON("E402m");
 			die;
 		}
 
+		$relativePath = Common::cleanPath($path);
+		if ($relativePath !== "/") {
+			$relativePath .= "/";
+		}
+
+
 		$index = array();
-		if (!is_dir($this->path) || !($handle = opendir($this->path))) {
+		if (!is_dir($path) || !($handle = opendir($path))) {
 			Common::sendJSON("error", "Not a valid directory.");
 			die;
 		}
 
 		while (false !== ($object = readdir($handle))) {
-			if ($object === "." || $object === ".." || $object === $this->controller) {
+			if ($object === "." || $object === "..") {
 				continue;
 			}
 
-			if (is_dir($this->path.'/'.$object)) {
+			if (is_dir($path.'/'.$object)) {
 				$type = "directory";
-				$size = count(glob($this->path.'/'.$object.'/*'));
+				$size = count(glob($path.'/'.$object.'/*'));
 			} else {
 				$type = "file";
-				$size = @filesize($this->path.'/'.$object);
+				$size = @filesize($path.'/'.$object);
 			}
 
 			$index[] = array(
-				"name" => $this->relativePath . $object,
-				"path" => $this->relativePath . $object,
+				"path" => $relativePath . $object,
 				"type" => $type,
 				"size" => $size
 			);
 		}
 
-		//////////////////////////////////////////////////////////////////
-		// The name return should be removed soon as it's only here currently for backwards compatability
-		//////////////////////////////////////////////////////////////////
 		$folders = array();
 		$files = array();
 		foreach ($index as $item => $data) {
@@ -172,12 +99,13 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 	// OPEN (Returns the contents of a file)
 	//////////////////////////////////////////////////////////////////
-	public function open() {
-		if (!is_file($this->path)) {
-			Common::sendJSON("error", "Not a valid file.");
+	public function open($path) {
+		if (!$path && !is_file($path)) {
+			Common::sendJSON("E402i");
 			die;
 		}
-		$output = file_get_contents($this->path);
+
+		$output = file_get_contents($path);
 
 		if (extension_loaded('mbstring')) {
 			if (!mb_check_encoding($output, 'UTF-8')) {
@@ -189,38 +117,25 @@ class Filemanager extends Common
 			}
 		}
 
-		$modifyTime = filemtime($this->path);
+		$modifyTime = filemtime($path);
 		Common::sendJSON("success", array("content" => $output, "modifyTime" => $modifyTime));
 
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// OPEN IN BROWSER (Return URL)
-	//////////////////////////////////////////////////////////////////
-	public function openinbrowser() {
-		$protocol = ((!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off') || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
-		$domainName = $_SERVER['HTTP_HOST'];
-		$url = $protocol.WSURL.'/'.$this->relativePath;
-		Common::sendJSON("success", array("url" => rtrim($url, "/")));
-	}
-
-	//////////////////////////////////////////////////////////////////
 	// CREATE (Creates a new file or directory)
 	//////////////////////////////////////////////////////////////////
-	public function create() {
+	public function create($path, $type) {
 
-		if (file_exists($this->path)) {
+		if (file_exists($path)) {
 			Common::sendJSON("error", "Path already exists.");
 			die;
 		}
 
-		if ($this->type === "directory" && mkdir($this->path)) {
+		if ($type === "directory" && mkdir($path)) {
 			Common::sendJSON("S2000");
-		} elseif ($this->type === "file" && $file = fopen($this->path, 'w')) {
-			if ($this->content) {
-				fwrite($file, $this->content);
-			}
-			$modifyTime = filemtime($this->path);
+		} elseif ($type === "file" && $file = fopen($path, 'w')) {
+			$modifyTime = filemtime($path);
 			fclose($file);
 			Common::sendJSON("success", array("modifyTime" => $modifyTime));
 
@@ -233,7 +148,12 @@ class Filemanager extends Common
 	//////////////////////////////////////////////////////////////////
 	// DELETE (Deletes a file or directory (+contents))
 	//////////////////////////////////////////////////////////////////
-	public function delete() {
+	public function delete($path) {
+
+		if (!file_exists($path)) {
+			Common::sendJSON("E402i");
+			die;
+		}
 
 		function rDelete($target) {
 			// Unnecessary, but rather be safe that sorry.
@@ -253,122 +173,108 @@ class Filemanager extends Common
 			}
 		}
 
-		if (!file_exists($this->path)) {
-			Common::sendJSON("E402i");
-			die;
-		}
-
-		rDelete($this->path);
+		rDelete($path);
 
 		Common::sendJSON("S2000");
 
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// MODIFY (Modifies a file name/contents or directory name)
-	//////////////////////////////////////////////////////////////////
-	public function modify() {
-
-		// Change name
-		if ($this->newName) {
-			$explode = explode('/', $this->path);
-			array_pop($explode);
-			$new_path = implode("/", $explode) . "/" . $this->newName;
-			if (!file_exists($new_path)) {
-				if (rename($this->path, $new_path)) {
-					//unlink($this->path);
-					$this->status = "success";
-				} else {
-					$this->status = "error";
-					$this->message = "Could Not Rename";
-				}
-			} else {
-				$this->status = "error";
-				$this->message = "Path Already Exists";
-			}
+	public function rename($path, $name) {
+		$parent = dirname($path);
+		$newPath = $parent . "/" . $name;
+		if (file_exists($newPath)) {
+			Common::sendJSON("error", "Path already exists.");
 		} else {
-			// Change content
-			if ($this->content || $this->patch) {
-				if ($this->content == ' ') {
-					$this->content = ''; // Blank out file
-				}
-				if ($this->patch && ! $this->modifyTime) {
-					$this->status = "error";
-					$this->message = "modifyTime parameter not found";
-					$this->respond();
-					return;
-				}
-				if (is_file($this->path)) {
-					$servermodifyTime = filemtime($this->path);
-					$fileContents = file_get_contents($this->path);
-
-					if ($this->patch && $this->modifyTime != $servermodifyTime) {
-						$this->status = "error";
-						$this->message = "Client is out of sync";
-						//DEBUG : file_put_contents($this->path.".conflict", "SERVER modifyTime :".$servermodifyTime.", CLIENT modifyTime :".$this->modifyTime);
-						$this->respond();
-						return;
-					} elseif (strlen(trim($this->patch)) == 0 && ! $this->content) {
-						// Do nothing if the patch is empty and there is no content
-						$this->status = "success";
-						$this->data = '"modifyTime":'.$servermodifyTime;
-						$this->respond();
-						return;
-					}
-
-					if ($file = fopen($this->path, 'w')) {
-						if ($this->patch) {
-							$dmp = new diff_match_patch();
-							$p = $dmp->patch_apply($dmp->patch_fromText($this->patch), $fileContents);
-							$this->content = $p[0];
-							//DEBUG : file_put_contents($this->path.".orig",$fileContents );
-							//DEBUG : file_put_contents($this->path.".patch", $this->patch);
-						}
-
-						if (fwrite($file, $this->content) === false) {
-							$this->status = "error";
-							$this->message = "could not write to file";
-						} else {
-							// Unless stat cache is cleared the pre-cached modifyTime will be
-							// returned instead of new modification time after editing
-							// the file.
-							clearstatcache();
-							$this->data = '"modifyTime":'.filemtime($this->path);
-							$this->status = "success";
-						}
-
-						fclose($file);
-					} else {
-						$this->status = "error";
-						$this->message = "Cannot Write to File";
-					}
-				} else {
-					$this->status = "error";
-					$this->message = "Not A File";
-				}
+			if (rename($this->path, $newPath)) {
+				Common::sendJSON("S2000");
 			} else {
-				$file = fopen($this->path, 'w');
-				fclose($file);
-				$this->data = '"modifyTime":'.filemtime($this->path);
-				$this->status = "success";
+				Common::sendJSON("error", "Unable to rename path.");
 			}
 		}
+	}
 
-		$this->respond();
+	//////////////////////////////////////////////////////////////////
+	// Save (Modifies a file name/contents or directory name)
+	//////////////////////////////////////////////////////////////////
+	public function save($path, $modifyTime, $patch, $content) {
+		// Change content
+		// if (!$content || !$patch) {
+		// 	Common::sendJSON("E403m", "Content");
+		// 	die;
+		// }
+
+		Common::debug($path);
+		Common::debug($modifyTime);
+		Common::debug($patch);
+		Common::debug($content);
+
+		if ($content || $patch) {
+			if ($content == ' ') {
+				$content = ''; // Blank out file
+			}
+			if ($patch && ! $modifyTime) {
+				Common::sendJSON("E403m", "ModifyTime");
+			}
+			if (!is_file($path)) {
+				Common::sendJSON("E402i"); die;
+			}
+
+			$serverModifyTime = filemtime($path);
+			$fileContents = file_get_contents($path);
+
+			Common::debug($serverModifyTime);
+
+
+			if ($patch && $serverModifyTime !== (int)$modifyTime) {
+				Common::sendJSON("warning", "Client is out of sync."); die;
+			} elseif (strlen(trim($patch)) == 0 && !$content) {
+				// Do nothing if the patch is empty and there is no content
+				Common::sendJSON("success", array("modifyTime" => $serverModifyTime)); die;
+			}
+
+			if ($file = fopen($path, 'w')) {
+				if ($patch) {
+					$dmp = new diff_match_patch();
+					$p = $dmp->patch_apply($dmp->patch_fromText($patch), $fileContents);
+					$content = $p[0];
+					//DEBUG : file_put_contents($this->path.".orig",$fileContents );
+					//DEBUG : file_put_contents($this->path.".patch", $this->patch);
+				}
+
+				if (fwrite($file, $content)) {
+					// Unless stat cache is cleared the pre-cached modifyTime will be
+					// returned instead of new modification time after editing
+					// the file.
+					clearstatcache();
+					Common::sendJSON("success", array("modifyTime" => filemtime($path)));
+				} else {
+					Common::sendJSON("E430c");
+				}
+
+				fclose($file);
+			} else {
+				Common::sendJSON("E430c");
+			}
+		} else {
+			$file = fopen($this->path, 'w');
+			fclose($file);
+			Common::debug("FileSave with no content or Patch");
+			Common::sendJSON("success", array("modifyTime" => filemtime($path)));
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// DUPLICATE (Creates a duplicate of the object - (cut/copy/paste)
 	//////////////////////////////////////////////////////////////////
 
-	public function duplicate() {
+	public function duplicate($path, $dest) {
 
-		if (!file_exists($this->path)) {
+		if (!file_exists($path)) {
 			Common::sendJSON("error", "Invalid source: " . $this->path);
 			die;
 		}
 
-		if (file_exists($this->dest)) {
+		if (file_exists($dest)) {
 			Common::sendJSON("error", "Path already exists.");
 			die;
 		}
@@ -388,48 +294,13 @@ class Filemanager extends Common
 			closedir($dir);
 		}
 
-		if (is_file($this->path)) {
-			copy($this->path, $this->dest);
+		if (is_file($path)) {
+			copy($path, $dest);
 			Common::sendJSON("success", "File Duplicated");
 		} else {
-			rCopyDirectory($this->path, $this->dest);
+			rCopyDirectory($path, $dest);
 			Common::sendJSON("success", "Folder Duplicated");
 		}
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// UPLOAD (Handles uploads to the specified directory)
-	//////////////////////////////////////////////////////////////////
-
-	public function upload() {
-		// Check that the path is a directory
-		if (!file_exists($this->path) || is_file($this->path)) {
-			Common::sendJSON("error", "Invalid Path");
-			die;
-		}
-		// Handle upload
-		$info = array();
-		while (list($key, $value) = each($_FILES['upload']['name'])) {
-			if (!empty($value)) {
-				$filename = $value;
-				$add = $this->path."/$filename";
-				if (@move_uploaded_file($_FILES['upload']['tmp_name'][$key], $add)) {
-					$info[] = array(
-						"name" => $value,
-						"size" => filesize($add),
-						"url" => $add,
-						"thumbnail_url" => $add,
-						"delete_url" => $add,
-						"delete_type" => "DELETE"
-					);
-				}
-			}
-		}
-		Common::sendJSON("success", "Invalid Path");
-
-		$this->upload_json = json_encode($info);
-
-		$this->respond();
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -462,28 +333,5 @@ class Filemanager extends Common
 
 		// Output ////////////////////////////////////////////////
 		echo($json);
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// Clean a path
-	//////////////////////////////////////////////////////////////////
-
-	public static function cleanPath($path) {
-		// replace backslash with slash
-		$path = str_replace('\\', '/', $path);
-
-		// allow only valid chars in paths$
-		$path = preg_replace('/[^A-Za-z0-9\-\._\/]/', '', $path);
-
-		// maybe this is not needed anymore
-		// prevent Poison Null Byte injections
-		$path = str_replace(chr(0), '', $path);
-
-		// prevent go out of the workspace
-		while (strpos($path, '../') !== false) {
-			$path = str_replace('../', '', $path);
-		}
-
-		return $path;
 	}
 }
