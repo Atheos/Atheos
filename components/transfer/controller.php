@@ -21,6 +21,8 @@ $action = Common::data("action");
 $type = Common::data("type");
 $path = Common::data("path");
 
+$path = Common::getWorkspacePath($path);
+
 if (!$action) {
 	Common::sendJSON("E401m");
 	die;
@@ -59,7 +61,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::debug('test');
 		Common::sendJSON("E401i");
 		break;
 }
