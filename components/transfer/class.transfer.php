@@ -24,7 +24,6 @@ class Transfer {
 	// Download
 	//////////////////////////////////////////////////////////////////////////80
 	public function download($path = false, $type = false) {
-		$path = Common::getWorkspacePath($path);
 		if (!$path || !file_exists($path)) {
 			Common::sendJSON("E402i");
 			die;
@@ -131,7 +130,6 @@ class Transfer {
 	// Upload
 	//////////////////////////////////////////////////////////////////////////80
 	public function upload($path = false) {
-		$path = Common::getWorkspacePath($path);
 
 		// Check that the path exists and is a directory
 		if (!file_exists($path) || is_file($path)) {
