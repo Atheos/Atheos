@@ -694,7 +694,7 @@
 		//////////////////////////////////////////////////////////////////
 		delete: function(path) {
 			atheos.alert.show({
-				banner: 'Are you sure you wish to delete the following:',
+				message: 'Are you sure you wish to delete the following:',
 				data: path,
 				actions: {
 					'Delete': function() {
