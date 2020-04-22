@@ -83,9 +83,6 @@
 				content = oX('#modal_content');
 
 
-
-			// $('#modal_content form').die('submit'); // Prevent form bubbling
-
 			wrapper.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
@@ -106,11 +103,8 @@
 				data: data,
 				success: function(data) {
 					clearTimeout(loadTimeout);
-					oX('#modal_content').html(data);
-
-					wrapper.css({
-						'height': ''
-					});
+					content.html(data);
+					content.css('height', '');
 
 					// oX(content).html(data);
 					// var script = oX(oX(content).find('script'));
@@ -201,10 +195,12 @@
 			<h2>${wrapText}</h2>
 			</div>
 			`;
+			
+			loading = `<div class="loader"><h2>${wrapText}</h2><span class="dual-ring"></span></div>`;
 
-			var screen = oX('#modal_wrapper');
+			var screen = oX('#modal_content');
 			screen.css('height', screen.height() + 'px');
-			oX('#modal_content').html(loading);
+			screen.html(loading);
 		},
 
 		drag: function(wrapper) {
