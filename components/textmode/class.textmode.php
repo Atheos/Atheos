@@ -13,9 +13,9 @@
 class TextMode {
 
 	//////////////////////////////////////////////////////////////////
-	//default associations
+	// Default Extension Map
 	//////////////////////////////////////////////////////////////////
-	private $defaultExtensions = array(
+	private $defaultExtensionMap = array(
 		'html' => 'html',
 		'htm' => 'html',
 		'tpl' => 'html',
@@ -46,9 +46,9 @@ class TextMode {
 		'vm' => 'velocity');
 
 	//////////////////////////////////////////////////////////////////
-	//availiable text modes
+	// Availiable Highlighters
 	//////////////////////////////////////////////////////////////////
-	private $availiableTextModes = array(
+	private $availableModes = array(
 		'abap',
 		'abc',
 		'actionscript',
@@ -183,14 +183,15 @@ class TextMode {
 		'yaml'
 	);
 
-	public function getAvailiableTextModes() {
-		return $this->availiableTextModes;
-	}
 
-	public function getDefaultExtensions() {
-		return $this->defaultExtensions;
+	public function getAvailableModes() {
+		return $this->availableModes;
 	}
-
+	
+	public function getDefaultExtensionMap() {
+		return $this->defaultExtensionMap;
+	}
+	
 	//////////////////////////////////////////////////////////////////
 	//checks if the sended extensions are valid to prevent any injections
 	//////////////////////////////////////////////////////////////////
@@ -201,109 +202,82 @@ class TextMode {
 	//////////////////////////////////////////////////////////////////
 	// Check to see if the text mode sent is a valid option.
 	//////////////////////////////////////////////////////////////////
-	public function validTextMode($mode) {
-		return in_array($mode, $this->availiableTextModes);
+	public function validMode($mode) {
+		return in_array($mode, $this->availableModes);
 	}
 
 	//////////////////////////////////////////////////////////////////
 	//process the form with the associations
 	//////////////////////////////////////////////////////////////////
-	public function setTextModes() {
-		//Store Fileextensions and Textmodes in File:
-		$modes = Common::data('textmode');
-		$extensions = Common::data('extension');
-
-		// $modes = explode(",", $modes);
-		// $extensions = explode(",", $extensions);
-
-		if (is_array($extensions) && is_array($modes)) {} else {
-			Common::sendJSON("error", "invalid data");
-			return false;
-		}
-
-		$textmodeMap = array();
-
-		$message = "Textmodes saved";
+	public function saveExtensionMap($map) {
+		$customMap = array();
 
 		//Iterate over the sended extensions
-		foreach ($extensions as $key => $extension) {
+		foreach ($map as $extension => $mode) {
 			// Ignore empty extensions
-			if (trim($extension) == '') {
+			$extension = strtolower(trim($extension));
+			$mode = strtolower(trim($mode));
+
+			if ($mode === '' || $extension === '') {
 				continue;
 			}
 
-			//get the sended data and check it
-			// if (!in_array($key, $modes, TRUE)) {
-			if (!isset($modes[$key])) {
-				Common::sendJSON("error", "invalid data");
-				return false;
+			if (!validMode($mode) || !validateExtension($extension)) {
+				Common::sendJSON("E403g"); die;
 			}
 
-			$extension = strtolower(trim($extension));
-			$mode = strtolower(trim($modes[$key]));
 
-			if (!$this->validateExtension($extension)) {
-				Common::sendJSON("error", 'Invalid Extension: '.htmlentities($extension));
-				return false;
-			}
-
-			if (!$this->validTextMode($mode)) {
-				Common::sendJSON("error", 'Invalid TextMode: '.htmlentities($textMode));
-				return false;
-			}
-
-			//Check for duplicate extensions
 			if (isset($textmodeMap[$extension])) {
-				$message = htmlentities($extension).' is already set.<br/>';
+				Common::sendJSON("error", "$extension is already set."); die;
 			} else {
-				$textmodeMap[$extension] = $mode;
+				$customMap[$extension] = $mode;
 			}
 		}
 
-		//store the associations
-		Common::saveJSON("extensions", $textmodeMap);
-		Common::sendJSON("success", array("extensions" => $textmodeMap, "message" => $message));
+		Common::saveJSON("extensions", $customMap);
+		Common::sendJSON("S2000");
 	}
 
 	//////////////////////////////////////////////////////////////////
-	//Send the default extensions
+	// Send the default extensions
 	//////////////////////////////////////////////////////////////////
-	public function getTextModes() {
-		$extensions = Common::readJSON("extensions");
+	public function loadExtensionMap() {
+		$map = Common::readJSON("extensions");
 
-		if (!is_array($extensions)) {
-			$extensions = $this->defaultExtensions;
+		if (!$map || !is_array($map)) {
+			$map = $this->defaultExtensionMap;
 		}
 
-		//the availiable extensions, which aren't removed
-		$availEx = array();
-		foreach ($extensions as $ex => $mode) {
-			if (in_array($mode, $this->availiableTextModes)) {
-				$availEx[$ex] = $mode;
+		// Remove any extensions not in the available highlighters
+		$validMap = array();
+
+		foreach ($map as $extension => $mode) {
+			if (in_array($mode, $this->availableModes)) {
+				$validMap[$extension] = $mode;
 			}
 		}
-		Common::sendJSON("success", array('extensions' => $availEx, 'textModes' => $this->availiableTextModes));
+		Common::sendJSON("success", array('extensionMap' => $validMap, 'modes' => $this->availableModes));
 	}
 
 	//////////////////////////////////////////////////////////////////
 	// Create a select field with options for all availble textmodes, current one selected.
 	//////////////////////////////////////////////////////////////////
-	public function getTextModeSelect($extension) {
+	public function createTextModeSelect($extension) {
 		$extension = trim(strtolower($extension));
 		$find = false;
 		$html = '<select name="textmode">'."\n";
-		foreach ($this->getAvailiableTextModes() as $textmode) {
+		foreach ($this->availableModes as $mode) {
 			$html .= '	<option';
-			if ($textmode == $extension) {
+			if ($mode == $extension) {
 				$html .= ' selected="selected"';
 				$find = true;
 			}
-			$html .= '>'.$textmode.'</option>'."\n";
+			$html .= '>'.$mode.'</option>'."\n";
 		}
 
 		//unknown extension, print it in the end
 		if (!$find && $extension != '') {
-			$html .= '	<option selected="selected">'.$textmode.'</option>'."\n";
+			$html .= '	<option selected="selected">'.$mode.'</option>'."\n";
 		}
 
 		$html .= '</select>'."\n";
