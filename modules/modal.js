@@ -5,7 +5,7 @@
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Notes: 
+// Notes:
 // In an effort of removing jquery and saving myself time, I removed persistant
 // modal functions, modal will always load center screen; I can re-add them
 // later if I decide that it was important.
@@ -40,6 +40,7 @@
 	atheos.modal = {
 
 		modalVisible: false,
+		fadeDuration: 500,
 
 		init: function() {
 			self = this;
@@ -77,7 +78,7 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var overlay = atheos.common.createOverlay('modal'),
+			var overlay = atheos.common.createOverlay('modal', true),
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
 
@@ -91,9 +92,9 @@
 				'min-width': width + 'px',
 				'height': ''
 			});
-
+			var loadTimeout;
 			if (self.modalVisible) {
-				self.setLoadingScreen();
+				loadTimeout = setTimeout(self.setLoadingScreen, 1000);
 			}
 			if (content.find('form')) {
 				content.find('form').off('submit');
@@ -104,6 +105,7 @@
 				type: 'GET',
 				data: data,
 				success: function(data) {
+					clearTimeout(loadTimeout);
 					oX('#modal_content').html(data);
 
 					wrapper.css({
@@ -128,9 +130,12 @@
 				}
 			});
 
-
-			wrapper.show();
-			overlay.show();
+			if (!self.modalVisible) {
+				atheos.flow.fade('in', wrapper.el, self.fadeDuration);
+				atheos.flow.fade('in', overlay.el, self.fadeDuration);
+			}
+			// wrapper.show();
+			// overlay.show();
 
 			self.modalVisible = true;
 		},
@@ -140,7 +145,6 @@
 
 			if (wrapper) {
 				var width = wrapper.clientWidth();
-				// width = width > 1000 ? 1000 : width;
 				wrapper.css({
 					'top': '15%',
 					'left': 'calc(50% - ' + (width / 2) + 'px)',
@@ -158,18 +162,22 @@
 				wrapper = oX('#modal_wrapper'),
 				content = oX('#modal_content');
 
-			if (content) {
-				content.off('*');
-				content.empty();
-			}
+
 			if (form) {
 				form.off('*');
 			}
 			if (overlay) {
-				overlay.remove();
+				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
+				// overlay.remove();
 			}
 			if (wrapper) {
-				wrapper.hide();
+				atheos.flow.fade('out', wrapper.el, self.fadeDuration);
+				// wrapper.hide();
+			}
+
+			if (content) {
+				content.off('*');
+				setTimeout(content.empty, (self.fadeDuration + 100));
 			}
 
 			self.modalVisible = false;
@@ -187,10 +195,10 @@
 
 			var loading = `
 			<div class="loader">
-				<div class="ring"></div>
-				<div class="ring"></div>
-				<div class="dot"></div>
-				<h2>${wrapText}</h2>
+			<div class="ring"></div>
+			<div class="ring"></div>
+			<div class="dot"></div>
+			<h2>${wrapText}</h2>
 			</div>
 			`;
 
@@ -206,7 +214,8 @@
 
 			var rect = wrapper.offset(),
 				mouseX = window.event.clientX,
-				mouseY = window.event.clientY, // Stores x & y coordinates of the mouse pointer
+				mouseY = window.event.clientY,
+				// Stores x & y coordinates of the mouse pointer
 				modalX = rect.left,
 				modalY = rect.top; // Stores top, left values (edge) of the element
 
