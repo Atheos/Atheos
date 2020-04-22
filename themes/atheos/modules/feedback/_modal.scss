@@ -1,5 +1,5 @@
 #modal_wrapper {
-	display: none;
+	// display: none;
 	position: absolute;
 	top: 15%;
 	left: 50%;
@@ -22,34 +22,4 @@
 		background-color: $foreground;
 	}
 
-	h1 {
-		font-size: 24px;
-		padding: 2px 8px;
-		font-weight: 700;
-		// background-color: $dark-blue;
-		background-color: $foreground;
-
-		i {
-			margin-right: 5px;
-			display: none;
-		}
-	}
-
-	h2 {
-		font-size: 20px;
-		padding: 0;
-
-		i {
-			margin-right: 5px;
-		}
-	}
-
-	h3 {
-		font-size: 18px;
-		padding: 1px;
-
-		i {
-			margin-right: 5px;
-		}
-	}
 }
