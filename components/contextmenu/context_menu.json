@@ -42,10 +42,10 @@
 	},
 	{
 		"title": "Preview",
-		"enabled": true,
+		"enabled": false,
 		"icon": "fas fa-eye",
 		"applies-to": "both no-external",
-		"onclick": "atheos.filemanager.openInBrowser(onyx('#contextmenu').attr('data-path'));"
+		"onclick": "atheos.preview.openInBrowser(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
 		"title": "Break",
