@@ -9,10 +9,10 @@
 
 
 	var ace = global.ace,
-		atheos = global.atheos,
-		amplify = global.amplify,
-		oX = global.onyx,
-		storage = atheos.storage;
+	atheos = global.atheos,
+	amplify = global.amplify,
+	oX = global.onyx,
+	storage = atheos.storage;
 
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -79,19 +79,21 @@
 
 			});
 
-			editor.on('v-resize-root', function() {
-				var height = editor.css('height'),
+			editor.on('v-resize-root',
+				function() {
+					var height = editor.css('height'),
 					wrapper = oX('#editor-region > .editor-wrapper');
-				if (wrapper) {
-					wrapper.css('height', height);
-					wrapper.trigger('v-resize');
-				}
-			});
+					if (wrapper) {
+						wrapper.css('height', height);
+						wrapper.trigger('v-resize');
+					}
+				});
 
-			window.addEventListener('resize', function() {
-				editor.trigger('h-resize-root');
-				editor.trigger('v-resize-root');
-			});
+			window.addEventListener('resize',
+				function() {
+					editor.trigger('h-resize-root');
+					editor.trigger('v-resize-root');
+				});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -137,26 +139,16 @@
 			instance.setHighlightActiveLine(self.settings.highlightLine);
 			instance.setDisplayIndentGuides(self.settings.indentGuides);
 			instance.getSession().setUseWrapMode(self.settings.wrapMode);
-			self.setTabSize(self.settings.tabSize, instance);
-			self.setSoftTabs(self.settings.softTabs, instance);
-
-			instance.commands.addCommand({
-				name: "Beautify",
-				bindKey: {
-					win: "Ctrl-Alt-B",
-					mac: "Command-Alt-B"
-				},
-				exec: function() {
-					self.beautify();
-				}
-			});
+			self.setTabSize(self.settings.tabSize,
+				instance);
+			self.setSoftTabs(self.settings.softTabs,
+				instance);
 		},
 
 
 		beautify: function() {
 			var beautify = ace.require('ace/ext/beautify');
 			var editor = self.activeInstance;
-			log(editor);
 			beautify.beautify(editor.session);
 		},
 
@@ -180,7 +172,7 @@
 			var editor = oX('<div class="editor"></div>');
 
 			var childID = null,
-				splitContainer = null;
+			splitContainer = null;
 
 			if (this.instances.length === 0) {
 				oX('#root-editor-wrapper').append(editor);
@@ -189,8 +181,8 @@
 
 				var firstChild = this.activeInstance.el;
 
-				childID = (where === 'top' || where === 'left') ? 0 : 1;
-				var type = (where === 'top' || where === 'bottom') ? 'horizontal' : 'vertical';
+				childID = (where === 'top' || where === 'left') ? 0: 1;
+				var type = (where === 'top' || where === 'bottom') ? 'horizontal': 'vertical';
 				var children = [];
 
 				children[childID] = editor.el;
@@ -339,7 +331,7 @@
 			if (instance) {
 				self.activeInstance = instance;
 				var path = instance.getSession().path;
-				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
+				path = (path.length < 30) ? path: path = '...' + path.substr(path.length - 30);
 
 				oX('#current_file').text(path);
 				atheos.textmode.setModeDisplay(instance.getSession());
@@ -749,9 +741,11 @@
 					});
 				};
 
-				amplify.subscribe('modal.loaded', listener);
+				amplify.subscribe('modal.loaded',
+					listener);
 
-				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
+				atheos.modal.load(250,
+					'components/editor/dialog.php?action=promptLine');
 
 			}
 		},
@@ -809,12 +803,23 @@
 		//
 		//////////////////////////////////////////////////////////////////
 
-		bindKeys: function(i) {
+		bindKeys: function(instance) {
 
 			var self = this;
 
+			// instance.commands.addCommand({
+			// 	name: "Beautify",
+			// 	bindKey: {
+			// 		win: "Ctrl-Alt-B",
+			// 		mac: "Command-Alt-B"
+			// 	},
+			// 	exec: function() {
+			// 		self.beautify();
+			// 	}
+			// });
+
 			// Find
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Find',
 				bindKey: {
 					win: 'Ctrl-F',
@@ -826,7 +831,7 @@
 			});
 
 			// Find + Replace
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Replace',
 				bindKey: {
 					win: 'Ctrl-R',
@@ -837,7 +842,7 @@
 				}
 			});
 
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Move Up',
 				bindKey: {
 					win: 'Ctrl-up',
@@ -848,7 +853,7 @@
 				}
 			});
 
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Move Down',
 				bindKey: {
 					win: 'Ctrl-down',
@@ -872,9 +877,11 @@
 
 		openSearch: function(type) {
 			if (this.getActive()) {
+				var highlight = codiad.editor.getSelectedText();
 				atheos.modal.load(400,
-					'components/editor/dialog.php?action=search&type=' +
-					type);
+					'components/editor/dialog.php', {
+						action: type, highlight
+					});
 				atheos.common.hideOverlay();
 			} else {
 				atheos.toast.show('error', 'No Open Files');
@@ -895,10 +902,10 @@
 			i = i || this.getActive();
 			if (!i) return;
 			var find = oX('#modal_wrapper input[name="find"]'),
-				replace = oX('#modal_wrapper input[name="replace"]');
+			replace = oX('#modal_wrapper input[name="replace"]');
 
-			find = find ? find.value() : false;
-			replace = replace ? replace.value() : false;
+			find = find ? find.value(): false;
+			replace = replace ? replace.value(): false;
 
 
 			switch (action) {
