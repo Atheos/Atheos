@@ -1,0 +1,70 @@
+/* UPLOADER */
+#upload_wrapper {
+	position: relative;
+	display: block;
+	text-align: center;
+	text-transform: uppercase;
+	padding: 50px;
+	border: 2px dashed #666;
+	font-size: 25px;
+	color: $fontColorMinor;
+	background-color: $inputBackground;
+	@include border-radius;
+	@include box-shadow;
+
+
+	&:hover {
+		color: $fontColorMajor;
+	}
+
+	input {
+		cursor: pointer;
+		height: 100%;
+		position: absolute;
+		border: none;
+		padding: 0;
+		margin: 0;
+		right: 0;
+		top: 0;
+		opacity: 0;
+	}
+}
+
+.upload-progress {
+	margin: 5px auto;
+	background-color: $inputBackground;
+	position: relative;
+	height: 20px;
+	@include border(1px);
+	@include border-radius;
+
+	span,
+	div {
+		display: block;
+		position: absolute;
+		top: 0;
+		left: 0;
+		height: 100%;
+		font-family: 'Ubuntu-Fira';
+	}
+
+	span {
+		padding: 1px;
+		bottom: 0;
+		right: 0;
+		text-align: center;
+		vertical-align: middle;
+	}
+
+	div {
+		background-color: $dark-green;
+		// background: linear-gradient(90deg, #{$red} 10%, #{$green} 100%);
+		// background: linear-gradient(-45deg, #{$green} 25%, #{$dark-green} 25%, #{$dark-green} 50%, #{$green} 50%, #{$green} 75%, #{$dark-green} 75%, #{$dark-green});
+		// background-size: 20px 20px;
+
+		&.error {
+			background-color: $dark-red;
+		}
+	}
+
+}

@@ -39,7 +39,7 @@ class Active {
 
 	public function listActive() {
 
-		if (!$this->activeFiles || !$this->activeFiles[$this->username]) {
+		if (!$this->activeFiles || !array_key_exists($this->username, $this->activeFiles)) {
 			Common::sendJSON("E404g");
 		} else {
 

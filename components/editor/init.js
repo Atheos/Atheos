@@ -4,7 +4,7 @@
 	*  [root]/license.txt for more. This information must remain intact.
 	*/
 
-(function(global, $) {
+(function(global) {
 
 
 
@@ -52,7 +52,6 @@
 			indentGuides: true,
 			wrapMode: false,
 			softTabs: false,
-			persistentModal: true,
 			tabSize: 4
 		},
 
@@ -65,25 +64,26 @@
 
 			this.cursorTracking();
 
-			var editor = $('#editor-region');
+			var editor = oX('#editor-region');
 
 			// editor = oX('#editor-region');
 
-			editor.on('h-resize-init', function() {
-				var width = editor.css('width');
-				// $('#editor-region > .editor-wrapper').css('width', width);
-				$('#editor-region > .editor-wrapper').width($(this).width());
-				$('#editor-region > .editor-wrapper').trigger('h-resize');
-			});
+			editor.on('h-resize-root, v-resize-root', function(e) {
+				wrapper = oX('#editor-region .editor-wrapper');
+				if (wrapper) {
+					if (e.type === 'h-resize-root') {
+						wrapper.css('width', editor.width());
+						wrapper.trigger('h-resize');
+					} else {
+						wrapper.css('height', editor.height());
+						wrapper.trigger('v-resize');
+					}
+				}
 
-			editor.on('v-resize-init', function() {
-				$('#editor-region > .editor-wrapper').height($(this).height());
-				$('#editor-region > .editor-wrapper').trigger('v-resize');
 			});
 
 			window.addEventListener('resize', function() {
-				editor.trigger('h-resize-init');
-				editor.trigger('v-resize-init');
+				editor.trigger('h-resize-root, v-resize-root');
 			});
 		},
 
@@ -130,8 +130,17 @@
 			instance.setHighlightActiveLine(self.settings.highlightLine);
 			instance.setDisplayIndentGuides(self.settings.indentGuides);
 			instance.getSession().setUseWrapMode(self.settings.wrapMode);
-			self.setTabSize(self.settings.tabSize, instance);
-			self.setSoftTabs(self.settings.softTabs, instance);
+			self.setTabSize(self.settings.tabSize,
+				instance);
+			self.setSoftTabs(self.settings.softTabs,
+				instance);
+		},
+
+
+		beautify: function() {
+			var beautify = ace.require('ace/ext/beautify');
+			var editor = self.activeInstance;
+			beautify.beautify(editor.session);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -146,11 +155,11 @@
 			// This can be a little confusing to follow, took me a while. First,
 			// keep in mind that Ace objects has their own .el property, which
 			// holds an onyx object, that holds it's own raw element.
-			
+
 			// SplitContainer takes raw html elements and has it's own mini-dom
 			// helper that has zero error checking in order to be as fast as
 			// possible.
-			
+
 			var editor = oX('<div class="editor"></div>');
 
 			var childID = null,
@@ -158,13 +167,12 @@
 
 			if (this.instances.length === 0) {
 				oX('#root-editor-wrapper').append(editor);
-				// editor.appendTo($('#root-editor-wrapper'));
 			} else {
 
 				var firstChild = this.activeInstance.el;
 
 				childID = (where === 'top' || where === 'left') ? 0 : 1;
-				var type = (where === 'top' || where === 'bottom') ? 'horizontal' : 'vertical';
+				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 				var children = [];
 
 				children[childID] = editor.el;
@@ -182,7 +190,7 @@
 				if (this.instances.length > 1) {
 					var pContainer = this.activeInstance.splitContainer;
 					var idx = this.activeInstance.splitID;
-										log(this.activeInstance.splitID);
+					log(this.activeInstance.splitID);
 
 					log(Object.values(this.activeInstance));
 					pContainer.setChild(idx, splitContainer);
@@ -723,9 +731,11 @@
 					});
 				};
 
-				amplify.subscribe('modal.loaded', listener);
+				amplify.subscribe('modal.loaded',
+					listener);
 
-				atheos.modal.load(250, 'components/editor/dialog.php?action=promptLine');
+				atheos.modal.load(250,
+					'components/editor/dialog.php?action=promptLine');
 
 			}
 		},
@@ -769,7 +779,7 @@
 				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();
-					$('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 				}
 			});
 		},
@@ -783,12 +793,23 @@
 		//
 		//////////////////////////////////////////////////////////////////
 
-		bindKeys: function(i) {
+		bindKeys: function(instance) {
 
 			var self = this;
 
+			// instance.commands.addCommand({
+			// 	name: "Beautify",
+			// 	bindKey: {
+			// 		win: "Ctrl-Alt-B",
+			// 		mac: "Command-Alt-B"
+			// 	},
+			// 	exec: function() {
+			// 		self.beautify();
+			// 	}
+			// });
+
 			// Find
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Find',
 				bindKey: {
 					win: 'Ctrl-F',
@@ -800,7 +821,7 @@
 			});
 
 			// Find + Replace
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Replace',
 				bindKey: {
 					win: 'Ctrl-R',
@@ -811,7 +832,7 @@
 				}
 			});
 
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Move Up',
 				bindKey: {
 					win: 'Ctrl-up',
@@ -822,7 +843,7 @@
 				}
 			});
 
-			i.commands.addCommand({
+			instance.commands.addCommand({
 				name: 'Move Down',
 				bindKey: {
 					win: 'Ctrl-down',
@@ -846,9 +867,12 @@
 
 		openSearch: function(type) {
 			if (this.getActive()) {
+				var highlight = codiad.editor.getSelectedText();
 				atheos.modal.load(400,
-					'components/editor/dialog.php?action=search&type=' +
-					type);
+					'components/editor/dialog.php', {
+						action: type,
+						highlight
+					});
 				atheos.common.hideOverlay();
 			} else {
 				atheos.toast.show('error', 'No Open Files');
@@ -868,8 +892,12 @@
 		search: function(action, i) {
 			i = i || this.getActive();
 			if (!i) return;
-			var find = $('#modal_wrapper input[name="find"]').val(),
-				replace = $('#modal_wrapper input[name="replace"]').val();
+			var find = oX('#modal_wrapper input[name="find"]'),
+				replace = oX('#modal_wrapper input[name="replace"]');
+
+			find = find ? find.value() : false;
+			replace = replace ? replace.value() : false;
+
 
 			switch (action) {
 				case 'find':
@@ -914,4 +942,4 @@
 
 	};
 
-})(this, jQuery);
+})(this);

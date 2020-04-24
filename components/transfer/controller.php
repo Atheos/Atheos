@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// Scout Dialog
+// Transfer Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -9,8 +9,8 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
-
 require_once("../../common.php");
+require_once("class.transfer.php");
 
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
@@ -18,62 +18,45 @@ require_once("../../common.php");
 Common::checkSession();
 
 $action = Common::data("action");
+$type = Common::data("type");
 $path = Common::data("path");
+
+$path = Common::getWorkspacePath($path);
 
 if (!$action) {
 	Common::sendJSON("E401m");
 	die;
 }
 
+//////////////////////////////////////////////////////////////////////////////80
+// Security Check
+//////////////////////////////////////////////////////////////////////////////80
+if (!checkPath($path)) {
+	Common::sendJSON("E430u");
+	die;
+}
+
+//////////////////////////////////////////////////////////////////////////////80
+// Handle Action
+//////////////////////////////////////////////////////////////////////////////80
+$Transfer = new Transfer($_GET, $_POST);
+// $Filemanager->project = @$_SESSION['project']['path'];
+
+$Transfer->root = WORKSPACE;
+
 switch ($action) {
-
 	//////////////////////////////////////////////////////////////////////////80
-	// Probe File Contents
+	// Download Files
 	//////////////////////////////////////////////////////////////////////////80
-	case 'probe':
-		$loadingText = '';
-		foreach (str_split(i18n("Searching...", "return")) as $character) {
-			$loadingText .= "<em>$character</em>";
-		}
-
-		?>
-		<form>
-			<table id="probe_table">
-				<tr>
-					<td width="65%">
-						<label><?php i18n("Search Files:"); ?></label>
-						<input type="text" name="probe_query" autofocus="autofocus">
-					</td>
-					<td width="5%">&nbsp;&nbsp;</td>
-					<td>
-						<label><?php i18n("In:"); ?></label>
-						<select name="probe_type">
-							<option value="0"><?php i18n("Current Project"); ?></option>
-							<?php if (checkAccess()) {
-								?>
-								<option value="1"><?php i18n("Workspace Projects"); ?></option>
-								<?php
-							} ?>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td coli="3">
-						<label><?php i18n("File Type:"); ?></label>
-						<input type="text" name="probe_filter" placeholder="<?php i18n("space seperated file types eg: js c php"); ?>">
-					</td>
-				</tr>
-			</table>
-			<pre id="probe_results"></pre>
-			<div id="probe_processing" class="loader">
-				<h2><?php echo($loadingText); ?></h2>
-			</div>
-			<button class="btn-left"><?php i18n("Search"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-		<?php
+	case 'download':
+		$Transfer->download($path, $type);
 		break;
-
+	//////////////////////////////////////////////////////////////////////////80
+	// Upload Files
+	//////////////////////////////////////////////////////////////////////////80
+	case 'upload':
+		$Transfer->upload($path);
+		break;
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
