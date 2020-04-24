@@ -47,9 +47,9 @@
 
 	atheos.codegit = {
 
-		path: '/components/codegit/',
-		controller: '/components/codegit/controller.php',
-		dialog: '/components/codegit/dialog.php',
+		path: 'components/codegit/',
+		controller: 'components/codegit/controller.php',
+		dialog: 'components/codegit/dialog.php',
 		location: '',
 		activeRepo: '',
 		line: 0,

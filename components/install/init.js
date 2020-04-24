@@ -98,7 +98,8 @@
 					if (reply === 'success') {
 						window.location.reload();
 					} else {
-						alert('An Error Occurred<br><br>' + data);
+						console.log(reply);
+						alert('An Error Occurred:' + reply);
 					}
 				}
 			});
