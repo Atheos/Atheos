@@ -222,15 +222,20 @@
 			}
 		};
 
-		let triggerEvent = function(type) {
-			if (element && type) {
+		let triggerEvent = function(types) {
+			types = types.split(',');
+			types.forEach(function(type) {
+				type = type.trim();
+				if (element && type) {
 
-				var event = new CustomEvent(type, {
-					bubbles: true,
-					cancelable: true
-				});
-				return element.dispatchEvent(event);
-			}
+					var event = new CustomEvent(type, {
+						bubbles: true,
+						cancelable: true
+					});
+					return element.dispatchEvent(event);
+				}
+
+			});
 		};
 
 
@@ -257,7 +262,7 @@
 			css: function(a, v) {
 				if (typeof a === 'string') {
 					if (typeof(v) !== 'undefined') {
-						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v)) {
+						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v) && v !== '') {
 							v = v + 'px';
 						}
 						element.style[a] = v;
