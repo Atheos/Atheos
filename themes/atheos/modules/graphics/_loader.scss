@@ -30,6 +30,7 @@
 		width: 40px;
 		height: 40px;
 
+		&:before,
 		&:after {
 			content: " ";
 			display: block;
@@ -37,11 +38,43 @@
 			height: 100%;
 			margin: -6px;
 			border-radius: 50%;
+			position: absolute;
+		}
+
+		&:before {
+			border: 6px solid $blue;
+			opacity: 0.2;
+			animation: glow 3s linear infinite;
+		}
+
+		&:after {
 			border: 6px solid $blue;
 			border-color: $blue transparent $blue transparent;
 			animation: spin 1.5s linear infinite;
 		}
 
+	}
+}
+
+@keyframes glow {
+	0% {
+		opacity: 0.2;
+	}
+
+	30% {
+		opacity: 0.4;
+	}
+
+	50% {
+		opacity: 0.8;
+	}
+
+	70% {
+		opacity: 0.4;
+	}
+
+	100% {
+		opacity: 0.2;
 	}
 
 }
