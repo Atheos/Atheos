@@ -128,17 +128,17 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	saveJSON($settings, $genericData);
 
 	$versionData = array(
-		atheos_uuid => uniqid(),
-		first_heard => date("Y-m-d H:i:s"),
-		last_heard => date("Y-m-d H:i:s"),
-		atheos_version => "v4.0.5",
-		php_version => phpversion(),
-		server_os => $_SERVER["SERVER_SOFTWARE"],
-		client_os => false,
-		location => $timezone,
-		language => false,
-		optOut => true,
-		plugins => array()
+		"atheos_uuid" => uniqid(),
+		"atheos_version" => "v4.0.5",
+		"first_heard" => date("Y-m-d H:i:s"),
+		"last_heard" => date("Y-m-d H:i:s"),
+		"php_version" => phpversion(),
+		"server_os" => $_SERVER["SERVER_SOFTWARE"],
+		"client_os" => false,
+		"location" => $timezone,
+		"language" => false,
+		"optOut" => true,
+		"plugins" => array()
 	);
 	
 	saveJSON($version, $versionData);
