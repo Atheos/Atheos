@@ -103,25 +103,37 @@
 		},
 
 		off: function(types, selector, callback) {
-			types.split(',').forEach(function(type) {
-				type = type.trim();
-				if (!activeEvents[type]) {
-					return;
+			if (types === '*' && selector && !callback) {
+				for (var type in activeEvents) {
+					var index = getIndex(activeEvents[type], selector);
+					if (index > -1) {
+						activeEvents[type].splice(index, 1);
+						if (activeEvents[type].length === 0) {
+							delete activeEvents[type];
+						}
+					}
 				}
+			} else {
+				types.split(',').forEach(function(type) {
+					type = type.trim();
+					if (!activeEvents[type]) {
+						return;
+					}
 
-				if (activeEvents[type].length < 2 || !selector) {
-					delete activeEvents[type];
-					window.removeEventListener(type, eventHandler, true);
-					return;
-				}
+					if (activeEvents[type].length < 2 || !selector) {
+						delete activeEvents[type];
+						window.removeEventListener(type, eventHandler, true);
+						return;
+					}
 
-				var index = getIndex(activeEvents[type], selector, callback);
-				if (index < 0) {
-					return;
-				}
-				activeEvents[type].splice(index, 1);
+					var index = getIndex(activeEvents[type], selector, callback);
+					if (index < 0) {
+						return;
+					}
+					activeEvents[type].splice(index, 1);
 
-			});
+				});
+			}
 		},
 
 		once: function(types, selector, callback) {
@@ -210,15 +222,20 @@
 			}
 		};
 
-		let triggerEvent = function(type) {
-			if (element && type) {
-				
-				var event = new CustomEvent(type,{
-					bubbles: true,
-					cancelable: true
-				});
-				return element.dispatchEvent(event);
-			}
+		let triggerEvent = function(types) {
+			types = types.split(',');
+			types.forEach(function(type) {
+				type = type.trim();
+				if (element && type) {
+
+					var event = new CustomEvent(type, {
+						bubbles: true,
+						cancelable: true
+					});
+					return element.dispatchEvent(event);
+				}
+
+			});
 		};
 
 
@@ -245,7 +262,7 @@
 			css: function(a, v) {
 				if (typeof a === 'string') {
 					if (typeof(v) !== 'undefined') {
-						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v)) {
+						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v) && v !== '') {
 							v = v + 'px';
 						}
 						element.style[a] = v;

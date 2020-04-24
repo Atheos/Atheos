@@ -8,6 +8,7 @@ $tab-color:$accent-color;
 $font-size: 14px;
 $font-size-lg: 16px;
 
+// DON'T USE NAMES WITH DASHES IN THEM, THEY NEED TO BE REMOVED
 $font-color-primary: $base07;
 $font-color-secondary: $base04;
 $font-color-subtle:$font-color-secondary;
@@ -40,6 +41,8 @@ $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
 $input-background: #1D1D1D;
+$inputBackground: #1D1D1D;
+
 
 
 

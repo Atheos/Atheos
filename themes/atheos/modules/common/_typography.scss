@@ -62,4 +62,29 @@ hr {
 
 h1, h2, h3, h4 {
 	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+	i {
+		margin-right: 5px;
+	}
+}
+
+h1 {
+	font-size: 24px;
+	padding: 2px 8px;
+	font-weight: 700;
+	// background-color: $dark-blue;
+	background-color: $foreground;
+
+}
+
+h2 {
+	font-size: 20px;
+
+}
+
+h3 {
+	font-size: 18px;
+}
+
+h4 {
+	font-size: 16px;
 }
