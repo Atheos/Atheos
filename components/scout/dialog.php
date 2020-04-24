@@ -31,6 +31,11 @@ switch ($action) {
 	// Probe File Contents
 	//////////////////////////////////////////////////////////////////////////80
 	case 'probe':
+		$loadingText = '';
+		foreach (str_split(i18n("Searching...", "return")) as $character) {
+			$loadingText .= "<em>$character</em>";
+		}
+
 		?>
 		<form>
 			<table id="probe_table">
@@ -61,15 +66,14 @@ switch ($action) {
 			</table>
 			<pre id="probe_results"></pre>
 			<div id="probe_processing" class="loader">
-				<div class="ring"></div>
-				<div class="dot"></div>
+				<h2><?php echo($loadingText); ?></h2>
 			</div>
 			<button class="btn-left"><?php i18n("Search"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 		<?php
 		break;
-		
+
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
