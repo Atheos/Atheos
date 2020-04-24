@@ -504,6 +504,9 @@
 		},
 
 		remove: function(path) {
+			if(!(path in self.sessions)) {
+				return;
+			}
 			var session = self.sessions[path];
 
 			session.listItem.remove();
@@ -608,7 +611,7 @@
 
 				// Change Editor Mode
 				var ext = atheos.common.getNodeExtension(newPath);
-				var mode = atheos.editor.selectMode(ext);
+				var mode = atheos.textmode.selectMode(ext);
 
 				// handle async mode change
 				var fn = function() {

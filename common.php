@@ -509,7 +509,8 @@ class Common {
 		}
 		//Security check
 		if (!Common::checkPath($path)) {
-			die('{"status":"error","message":"Invalid path"}');
+			Common::sendJSON("E430c");
+			die;
 		}
 		if (strpos($path, "/") === 0) {
 			//Unix absolute path
@@ -535,7 +536,7 @@ class Common {
 		$path = str_replace('\\', '/', $path);
 
 		// allow only valid chars in paths$
-		$path = preg_replace('/[^A-Za-z0-9\-\._\/]/', '', $path);
+		$path = preg_replace('/[^A-Za-z0-9 \-\._\/]/', '', $path);
 		// maybe this is not needed anymore
 		// prevent Poison Null Byte injections
 		$path = str_replace(chr(0), '', $path);
@@ -560,6 +561,7 @@ function checkSession() {
 	Common::checkSession();
 }
 function getJSON($file, $namespace = "") {
+	Common::debug("getJSON");
 	return Common::readJSON($file, $namespace);
 }
 function readJSON($file, $namespace = "") {
