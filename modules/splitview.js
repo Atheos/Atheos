@@ -81,12 +81,12 @@ function SplitContainer(root, children, splitType) {
 	self.setChild(1, self.cMinor);
 
 
-	if (splitType === 'vertical') {
+	if (splitType === 'horizontal') {
 		border.classList.add('splitter', 'h-splitter');
 		css(border).width(separatorWidth);
 		css(border).height(rHeight);
 
-	} else if (splitType === 'horizontal') {
+	} else if (splitType === 'vertical') {
 		border.classList.add('splitter', 'v-splitter');
 		css(border).height(separatorWidth);
 		css(border).width(rWidth);
@@ -99,8 +99,10 @@ function SplitContainer(root, children, splitType) {
 	css(border).on('mousedown', (e) => self.drag(e));
 
 	css(self.root).on('h-resize', function(e) {
+		// log('self.root');
+		log(self.splitType);
 
-		if (self.splitType === 'vertical') {
+		if (self.splitType === 'horizontal') {
 			var w1 = rWidth * self.splitProp - separatorWidth / 2;
 			var w2 = rWidth * (1 - self.splitProp) - separatorWidth / 2;
 
@@ -111,7 +113,7 @@ function SplitContainer(root, children, splitType) {
 			css(border).left(w1);
 
 
-		} else if (self.splitType === 'horizontal') {
+		} else if (self.splitType === 'vertical') {
 			css(cMajor).width(rWidth);
 			css(cMinor).width(rWidth);
 			css(border).width(rWidth);
@@ -125,12 +127,12 @@ function SplitContainer(root, children, splitType) {
 	css(self.root).on('v-resize', function(e) {
 		rHeight = css(self.root).height();
 
-		if (self.splitType === 'vertical') {
+		if (self.splitType === 'horizontal') {
 			css(cMajor).height(rHeight);
 			css(cMinor).height(rHeight);
 			css(border).height(rHeight);
 
-		} else if (self.splitType === 'horizontal') {
+		} else if (self.splitType === 'vertical') {
 			var h1 = rHeight * self.splitProp - separatorWidth / 2;
 			var h2 = rHeight * (1 - self.splitProp) - separatorWidth / 2;
 
@@ -157,7 +159,7 @@ SplitContainer.prototype = {
 			} else {
 				this.cMinor = element.root;
 			}
-		trace(splitID);
+			trace(splitID);
 			log(element);
 			log(splitID);
 
@@ -178,7 +180,7 @@ SplitContainer.prototype = {
 		var rHeight = css(self.root).height();
 		var rWidth = css(self.root).width();
 
-		if (self.splitType === 'vertical') {
+		if (self.splitType === 'horizontal') {
 
 			w1 = rWidth * self.splitProp - (separatorWidth / 2);
 			w2 = rWidth * (1 - self.splitProp) - (separatorWidth / 2);
@@ -195,7 +197,7 @@ SplitContainer.prototype = {
 				css(element).height(rHeight);
 			}
 
-		} else if (self.splitType === 'horizontal') {
+		} else if (self.splitType === 'vertical') {
 
 			h1 = rHeight * self.splitProp - (separatorWidth / 2);
 			h2 = rHeight * (1 - self.splitProp) - (separatorWidth / 2);
@@ -231,7 +233,7 @@ SplitContainer.prototype = {
 
 		function effectChange(top, left) {
 			timeout = false;
-			if (self.splitType === 'vertical') {
+			if (self.splitType === 'horizontal') {
 
 				// var w1 = left;
 				// var w2 = rWidth - left;
@@ -264,8 +266,8 @@ SplitContainer.prototype = {
 		function moveElement(event) {
 			var left = splitX + event.clientX - mouseX,
 				top = splitY + event.clientY - mouseY;
-			border.style.left = self.splitType === 'vertical' ? left + 'px' : '';
-			border.style.top = self.splitType === 'horizontal' ? top + 'px' : '';
+			border.style.left = self.splitType === 'horizontal' ? left + 'px' : '';
+			border.style.top = self.splitType === 'vertical' ? top + 'px' : '';
 			if (timeout === false) {
 				timeout = setTimeout(() => effectChange(top, left), 10);
 			}
