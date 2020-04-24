@@ -121,6 +121,12 @@
 				case 'editor.wrapMode':
 					atheos.editor.setWrapMode(boolean);
 					break;
+				case 'filemanager.showHidden':
+					if (atheos.filemanager.showHidden !== value) {
+						atheos.filemanager.showHidden = boolean;
+						atheos.filemanager.rescan();
+					}
+					break;
 				case 'filemanager.openTrigger':
 					atheos.filemanager.openTrigger = value;
 					break;

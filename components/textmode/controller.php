@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// TextMode
+// TextMode Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
@@ -21,7 +21,7 @@ Common::checkSession();
 $action = Common::data("action");
 
 if (!$action) {
-	die(Common::sendJSON("error", "missing action"));
+	Common::sendJSON("E401m"); die;
 }
 
 $TextMode = new TextMode();
@@ -30,31 +30,26 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	// Set custom text modes
 	//////////////////////////////////////////////////////////////////
-	case 'setTextModes':
-		if (Common::checkAccess()) {
-			$TextMode->setTextModes();
+	case 'saveExtensionMap':
+		if (Common::checkAccess("configure")) {
+			$map = Common::data('map');
+			if (!is_array($map)) {
+				Common::sendJSON("E403i", "Map"); die;
+			}
+
+			$TextMode->saveExtensionMap($map);
 		} else {
-			die(Common::sendJSON("error", "You are not allowed to edit the file extensions."));
+			Common::sendJSON("E430u"); die;
 		}
 		break;
-	//////////////////////////////////////////////////////////////////
-	// Load defauly text modes
-	//////////////////////////////////////////////////////////////////
-	case 'loadAceTextModes':
-		$textModes = Common::readJSON("textmodes");
-		Common::sendJSON("success", $textModes);
-
-		break;
-	
 
 	//////////////////////////////////////////////////////////////////
 	// Get text modes
 	//////////////////////////////////////////////////////////////////
-	case 'getTextModes':
-		$TextMode->getTextModes();
+	case 'loadExtensionMap':
+		$TextMode->loadExtensionMap();
 		break;
 	default:
-		Common::sendJSON("E401i");
-		die;
+		Common::sendJSON("E401i"); die;
 		break;
 }

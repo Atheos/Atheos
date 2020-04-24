@@ -170,6 +170,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
 		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
+		<script src="components/editor/ace-editor/ext-beautify.js"></script>
 
 		<?php
 		//////////////////////////////////////////////////////////////////
