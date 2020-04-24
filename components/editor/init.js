@@ -9,10 +9,10 @@
 
 
 	var ace = global.ace,
-	atheos = global.atheos,
-	amplify = global.amplify,
-	oX = global.onyx,
-	storage = atheos.storage;
+		atheos = global.atheos,
+		amplify = global.amplify,
+		oX = global.onyx,
+		storage = atheos.storage;
 
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -68,32 +68,23 @@
 
 			// editor = oX('#editor-region');
 
-			editor.on('h-resize-root', function() {
-				var width = editor.css('width');
-				wrapper = oX('#editor-region > .editor-wrapper');
+			editor.on('h-resize-root, v-resize-root', function(e) {
+				wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
-					wrapper.css('width', width);
-					// $('#editor-region > .editor-wrapper').width($(this).width());
-					wrapper.trigger('h-resize');
+					if (e.type === 'h-resize-root') {
+						wrapper.css('width', editor.width());
+						wrapper.trigger('h-resize');
+					} else {
+						wrapper.css('height', editor.height());
+						wrapper.trigger('v-resize');
+					}
 				}
 
 			});
 
-			editor.on('v-resize-root',
-				function() {
-					var height = editor.css('height'),
-					wrapper = oX('#editor-region > .editor-wrapper');
-					if (wrapper) {
-						wrapper.css('height', height);
-						wrapper.trigger('v-resize');
-					}
-				});
-
-			window.addEventListener('resize',
-				function() {
-					editor.trigger('h-resize-root');
-					editor.trigger('v-resize-root');
-				});
+			window.addEventListener('resize', function() {
+				editor.trigger('h-resize-root, v-resize-root');
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -172,17 +163,16 @@
 			var editor = oX('<div class="editor"></div>');
 
 			var childID = null,
-			splitContainer = null;
+				splitContainer = null;
 
 			if (this.instances.length === 0) {
 				oX('#root-editor-wrapper').append(editor);
-				// editor.appendTo($('#root-editor-wrapper'));
 			} else {
 
 				var firstChild = this.activeInstance.el;
 
-				childID = (where === 'top' || where === 'left') ? 0: 1;
-				var type = (where === 'top' || where === 'bottom') ? 'horizontal': 'vertical';
+				childID = (where === 'top' || where === 'left') ? 0 : 1;
+				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 				var children = [];
 
 				children[childID] = editor.el;
@@ -331,7 +321,7 @@
 			if (instance) {
 				self.activeInstance = instance;
 				var path = instance.getSession().path;
-				path = (path.length < 30) ? path: path = '...' + path.substr(path.length - 30);
+				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
 
 				oX('#current_file').text(path);
 				atheos.textmode.setModeDisplay(instance.getSession());
@@ -880,7 +870,8 @@
 				var highlight = codiad.editor.getSelectedText();
 				atheos.modal.load(400,
 					'components/editor/dialog.php', {
-						action: type, highlight
+						action: type,
+						highlight
 					});
 				atheos.common.hideOverlay();
 			} else {
@@ -902,10 +893,10 @@
 			i = i || this.getActive();
 			if (!i) return;
 			var find = oX('#modal_wrapper input[name="find"]'),
-			replace = oX('#modal_wrapper input[name="replace"]');
+				replace = oX('#modal_wrapper input[name="replace"]');
 
-			find = find ? find.value(): false;
-			replace = replace ? replace.value(): false;
+			find = find ? find.value() : false;
+			replace = replace ? replace.value() : false;
 
 
 			switch (action) {
