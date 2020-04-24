@@ -37,6 +37,7 @@
 		oX = global.onyx;
 
 	var self = null;
+	var editor = null;
 
 	amplify.subscribe('system.loadMinor', () => atheos.sidebars.init());
 
@@ -58,6 +59,7 @@
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
 			self = this;
+			editor = oX('#editor-region');
 
 			this.sbLeft.init();
 			this.sbRight.init();
@@ -108,7 +110,7 @@
 					marginR = oX('#sb_right').width();
 				}
 
-				oX('#editor-region').css({
+				editor.css({
 					'margin-left': marginL + 'px',
 					'margin-right': marginR + 'px',
 				});
@@ -177,12 +179,12 @@
 				this.timeoutOpen = setTimeout((function() {
 
 					this.sidebar.css('left', '0px');
-					oX('#editor-region').css('margin-left', sidebarWidth + 'px');
+					editor.css('margin-left', sidebarWidth + 'px');
 
 					setTimeout(function() {
 						atheos.sidebars.isLeftSidebarOpen = true;
-						atheos.sidebars.sbLeft.sidebar.trigger('h-resize-init');
 						atheos.active.updateTabDropdownVisibility();
+							editor.trigger('h-resize-root');
 					}, 300);
 				}).bind(this), this.hoverDuration);
 
@@ -202,11 +204,12 @@
 					if (!self.leftLockedVisible) {
 
 						this.sidebar.css('left', (-sidebarWidth + sidebarHandleWidth) + 'px');
-						oX('#editor-region').css('margin-left', '15px');
+						editor.css('margin-left', '15px');
 
 						setTimeout(function() {
 							atheos.sidebars.isLeftSidebarOpen = false;
 							atheos.active.updateTabDropdownVisibility();
+							editor.trigger('h-resize-root');
 						}, 300);
 					}
 				}).bind(this), this.hoverDuration);
@@ -292,11 +295,12 @@
 				this.timeoutOpen = setTimeout((function() {
 
 					this.sidebar.css('right', '0px');
-					oX('#editor-region').css('margin-right', sidebarWidth + 'px');
+					editor.css('margin-right', sidebarWidth + 'px');
 
 					setTimeout(function() {
 						self.isRightSidebarOpen = true;
 						atheos.active.updateTabDropdownVisibility();
+							editor.trigger('h-resize-root');
 					}, 300);
 
 				}).bind(this), this.hoverDuration);
@@ -313,11 +317,12 @@
 					if (!self.rightLockedVisible) {
 						this.sidebar.css('right', -(sidebarWidth - sidebarHandleWidth) + 'px');
 
-						oX('#editor-region').css('margin-right', '15px');
+						editor.css('margin-right', '15px');
 
 						setTimeout(function() {
 							self.isRightSidebarOpen = false;
 							atheos.active.updateTabDropdownVisibility();
+							editor.trigger('h-resize-root');
 						}, 300);
 					}
 				}).bind(this), this.hoverDuration);
@@ -343,8 +348,7 @@
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
 			var rect = sidebar.getBoundingClientRect(),
-				modalX = rect.left,
-				editor = oX('#editor-region');
+				modalX = rect.left;
 
 			function moveElement(event) {
 				if (sidebar !== null) {
