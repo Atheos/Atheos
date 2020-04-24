@@ -561,6 +561,7 @@ function checkSession() {
 	Common::checkSession();
 }
 function getJSON($file, $namespace = "") {
+	Common::debug("getJSON");
 	return Common::readJSON($file, $namespace);
 }
 function readJSON($file, $namespace = "") {
