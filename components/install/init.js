@@ -78,9 +78,7 @@
 						'Yes': function() {
 							self.install();
 						},
-						'No': function() {
-							//No
-						}
+						'No': function() {}
 					}
 				};
 				atheos.alert.show(dialog);
@@ -98,8 +96,13 @@
 					if (reply === 'success') {
 						window.location.reload();
 					} else {
-						console.log(reply);
-						alert('An Error Occurred:' + reply);
+						var dialog = {
+							banner: 'An error occurred:',
+							data: reply,
+							actions: {
+								'Okay': function() {}
+							}
+						};
 					}
 				}
 			});
