@@ -87,9 +87,9 @@ class Transfer {
 	*/
 	private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
 		$handle = opendir($folder);
-		while ($f = readdir($handle)) {
-			if ($f != '.' && $f != '..') {
-				$filePath = "$folder/$f";
+		while ($file = readdir($handle)) {
+			if ($file !== '.' && $file !== '..') {
+				$filePath = "$folder/$file";
 				// Remove prefix from file path before add to zip.
 				$localPath = substr($filePath, $exclusiveLength);
 				if (is_file($filePath)) {
@@ -119,11 +119,11 @@ class Transfer {
 		$parentPath = $pathInfo['dirname'];
 		$dirName = $pathInfo['basename'];
 
-		$z = new ZipArchive();
-		$z->open($outZipPath, ZIPARCHIVE::CREATE);
-		$z->addEmptyDir($dirName);
-		self::folderToZip($sourcePath, $z, strlen("$parentPath/"));
-		$z->close();
+		$archive = new ZipArchive();
+		$archive->open($outZipPath, ZIPARCHIVE::CREATE);
+		$archive->addEmptyDir($dirName);
+		self::folderToZip($sourcePath, $archive, strlen("$parentPath/"));
+		$archive->close();
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

@@ -88,7 +88,7 @@
 				var data = new FormData();
 
 				for (var x = 0; x < fileCount; x++) {
-					data.append("upload[]", input.files[x]);
+					data.append('upload[]', input.files[x]);
 				}
 
 				// data.append('upload[]', file);
@@ -96,9 +96,9 @@
 				data.append('path', path);
 
 				var send = new XMLHttpRequest();
-				send.upload.addEventListener("progress", self.showProgress(progressNode, uploadName), false);
-				send.addEventListener("error", self.showProgress(progressNode, uploadName), false);
-				send.open("POST", self.controller);
+				send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
+				send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
+				send.open('POST', self.controller);
 
 				send.onreadystatechange = function() {
 					if (send.readyState === 4) {
@@ -136,14 +136,14 @@
 				atheos.toast.show('error', reply.text);
 			}
 			reply.data.forEach(function(file) {
-				atheos.filemanager.addToFileManager(path + "/" + file.name, 'file', path);
+				atheos.filemanager.addToFileManager(path + '/' + file.name, 'file', path);
 				amplify.publish('filemanager.upload', {
 					name: file.name,
 					path: path
 				});
 			});
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Show Progress
 		//////////////////////////////////////////////////////////////////////80
@@ -154,7 +154,9 @@
 
 			function formatBytes(bytes, decimals = 1) {
 				// Source: https://stackoverflow.com/a/18650828
-				if (bytes === 0) return '0B';
+				if (bytes === 0) {
+					return '0B';
+				}
 
 				const k = 1024;
 				const dm = decimals < 0 ? 0 : decimals;
