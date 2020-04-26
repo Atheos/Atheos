@@ -19,10 +19,10 @@
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
-	amplify = global.amplify,
-	ajax = global.ajax,
-	fileIcons = global.FileIcons,
-	oX = global.onyx;
+		amplify = global.amplify,
+		ajax = global.ajax,
+		fileIcons = global.FileIcons,
+		oX = global.onyx;
 
 	var self = null;
 	var getNodeName = atheos.common.getNodeName;
@@ -55,7 +55,7 @@
 				if (local === 'single' || local === 'double') {
 					self.openTrigger = local;
 				}
-				self.showHidden = atheos.storage('filemanager.showHidden') === false ? false: self.showHidden;
+				self.showHidden = atheos.storage('filemanager.showHidden') === false ? false : self.showHidden;
 			});
 		},
 
@@ -219,7 +219,7 @@
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue': fileIcons.getClassWithColor(name);
+			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
@@ -322,8 +322,8 @@
 							atheos.alert.show({
 								banner: 'File changed on server!',
 								message: 'Would you like to load the updated file?\n' +
-								'Pressing no will cause your changes to override the\n' +
-								'server\'s copy upon next save.',
+									'Pressing no will cause your changes to override the\n' +
+									'server\'s copy upon next save.',
 								actions: {
 									'Reload File': function() {
 										atheos.active.remove(path);
@@ -351,16 +351,28 @@
 		},
 
 		saveFile: function(path, content, callbacks) {
-			trace({file: {path, content, callbacks}});
-			self.saveModifications(path,
-				{
+			trace({
+				file: {
+					path,
+					content,
+					callbacks
+				}
+			});
+			self.saveModifications(path, {
 					content: content
 				},
 				callbacks);
 		},
 
 		savePatch: function(path, patch, mtime, callbacks) {
-			trace({patch: {path, patch, mtime, callbacks}});
+			trace({
+				patch: {
+					path,
+					patch,
+					mtime,
+					callbacks
+				}
+			});
 			if (patch.length > 0) {
 				self.saveModifications(path, {
 					patch: patch,
@@ -485,8 +497,7 @@
 			};
 
 			atheos.modal.load(250,
-				self.dialog,
-				{
+				self.dialog, {
 					action: 'duplicate',
 					name: name,
 					type: type
@@ -633,8 +644,8 @@
 						if (data.status !== 'error') {
 							atheos.toast.show('success', 'File Renamed');
 							var node = oX('#file-manager a[data-path="' + path + '"]'),
-							icon = node.find('i:nth-child(2)'),
-							span = node.find('span');
+								icon = node.find('i:nth-child(2)'),
+								span = node.find('span');
 							// Change pathing and name for node
 							node.attr('data-path', newPath);
 							span.text(newName);
@@ -657,26 +668,22 @@
 				atheos.modal.unload();
 			};
 
-			amplify.subscribe('modal.loaded',
-				listener);
-
 			atheos.modal.load(250,
-				self.dialog,
-				{
+				self.dialog, {
 					action: 'rename',
 					name: nodeName,
 					type: type
 				},
 				() => {
 					oX('#modal_content form').on('submit', listener);
-
-				});
+				}
+			);
 
 		},
 
 		repathChildren: function(oldPath, newPath) {
 			var node = oX('#file-manager a[data-path="' + newPath + '"]'),
-			ul = node.el.nextElementSibling;
+				ul = node.el.nextElementSibling;
 
 			if (ul) {
 				var children = ul.querySelectorAll('a');
