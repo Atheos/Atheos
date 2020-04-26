@@ -198,69 +198,62 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////
 	public function save($path, $modifyTime, $patch, $content) {
 		// Change content
-		// if (!$content || !$patch) {
-		// 	Common::sendJSON("E403m", "Content");
-		// 	die;
-		// }
-
-		Common::debug($path);
-		Common::debug($modifyTime);
-		Common::debug($patch);
-		Common::debug($content);
-
-		if ($content || $patch) {
-			if ($content == ' ') {
-				$content = ''; // Blank out file
-			}
-			if ($patch && ! $modifyTime) {
-				Common::sendJSON("E403m", "ModifyTime");
-			}
-			if (!is_file($path)) {
-				Common::sendJSON("E402i"); die;
-			}
-
-			$serverModifyTime = filemtime($path);
-			$fileContents = file_get_contents($path);
-
-			Common::debug($serverModifyTime);
-
-
-			if ($patch && $serverModifyTime !== (int)$modifyTime) {
-				Common::sendJSON("warning", "Client is out of sync."); die;
-			} elseif (strlen(trim($patch)) == 0 && !$content) {
-				// Do nothing if the patch is empty and there is no content
-				Common::sendJSON("success", array("modifyTime" => $serverModifyTime)); die;
-			}
-
-			if ($file = fopen($path, 'w')) {
-				if ($patch) {
-					$dmp = new diff_match_patch();
-					$p = $dmp->patch_apply($dmp->patch_fromText($patch), $fileContents);
-					$content = $p[0];
-					//DEBUG : file_put_contents($this->path.".orig",$fileContents );
-					//DEBUG : file_put_contents($this->path.".patch", $this->patch);
-				}
-
-				if (fwrite($file, $content)) {
-					// Unless stat cache is cleared the pre-cached modifyTime will be
-					// returned instead of new modification time after editing
-					// the file.
-					clearstatcache();
-					Common::sendJSON("success", array("modifyTime" => filemtime($path)));
-				} else {
-					Common::sendJSON("E430c");
-				}
-
-				fclose($file);
-			} else {
-				Common::sendJSON("E430c");
-			}
-		} else {
-			$file = fopen($this->path, 'w');
+		if (!$content && !$patch) {
+			// Common::sendJSON("E403m", "Content");
+			$file = fopen($path, 'w');
 			fclose($file);
 			Common::debug("FileSave with no content or Patch");
 			Common::sendJSON("success", array("modifyTime" => filemtime($path)));
+			die;
 		}
+
+		if ($content === ' ') {
+			$content = ''; // Blank out file
+		}
+		if ($patch && ! $modifyTime) {
+			Common::sendJSON("E403m", "ModifyTime");
+		}
+		if (!is_file($path)) {
+			Common::sendJSON("E402i"); die;
+		}
+
+		$serverModifyTime = filemtime($path);
+		$fileContents = file_get_contents($path);
+
+		Common::debug($serverModifyTime);
+
+
+		if ($patch && $serverModifyTime !== (int)$modifyTime) {
+			Common::sendJSON("warning", "Client is out of sync."); die;
+		} elseif (strlen(trim($patch)) === 0 && !$content) {
+			// Do nothing if the patch is empty and there is no content
+			Common::sendJSON("success", array("modifyTime" => $serverModifyTime)); die;
+		}
+
+		if ($file = fopen($path, 'w')) {
+			if ($patch) {
+				$dmp = new diff_match_patch();
+				$patch = $dmp->patch_apply($dmp->patch_fromText($patch), $fileContents);
+				$content = $patch[0];
+				//DEBUG : file_put_contents($this->path.".orig",$fileContents );
+				//DEBUG : file_put_contents($this->path.".patch", $this->patch);
+			}
+
+			if (fwrite($file, $content)) {
+				// Unless stat cache is cleared the pre-cached modifyTime will be
+				// returned instead of new modification time after editing
+				// the file.
+				clearstatcache();
+				Common::sendJSON("success", array("modifyTime" => filemtime($path)));
+			} else {
+				Common::sendJSON("E430c");
+			}
+
+			fclose($file);
+		} else {
+			Common::sendJSON("E430c");
+		}
+
 	}
 
 	//////////////////////////////////////////////////////////////////
