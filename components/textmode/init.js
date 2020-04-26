@@ -176,7 +176,7 @@
 				data: data,
 				success: function(reply) {
 					atheos.toast[reply.status](reply.message);
-					if (reply.status !== 'error' && reply.extensions !== undefined) {
+					if (reply.status !== 'error' && reply.extensions) {
 						self.setEditorTextModes(reply);
 					}
 				}
@@ -192,7 +192,7 @@
 
 			var html = '<tr><td><input type="text" name="extension" value="" /></td>';
 			html += '<td><select name="textMode">';
-			self.availableModes.forEach(mode => {
+			self.availableModes.forEach((mode) => {
 				html += '<option>' + mode + '</option>';
 			});
 

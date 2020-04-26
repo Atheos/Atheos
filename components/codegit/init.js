@@ -145,6 +145,8 @@
 				counter = 0;
 
 			var target = obj.node;
+			log(obj);
+			
 
 			if (obj.type === 'directory') {
 				obj.menu.append('<hr class="directory-only codegit">');
