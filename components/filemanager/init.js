@@ -640,8 +640,8 @@
 						path: path,
 						name: newName
 					},
-					success: function(data) {
-						if (data.status !== 'error') {
+					success: function(reply) {
+						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'File Renamed');
 							var node = oX('#file-manager a[data-path="' + path + '"]'),
 								icon = node.find('i:nth-child(2)'),
