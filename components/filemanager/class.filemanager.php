@@ -184,12 +184,10 @@ class Filemanager {
 		$newPath = $parent . "/" . $name;
 		if (file_exists($newPath)) {
 			Common::sendJSON("error", "Path already exists.");
+		} elseif (rename($path, $newPath)) {
+			Common::sendJSON("S2000");
 		} else {
-			if (rename($this->path, $newPath)) {
-				Common::sendJSON("S2000");
-			} else {
-				Common::sendJSON("error", "Unable to rename path.");
-			}
+			Common::sendJSON("error", "Unable to rename path.");
 		}
 	}
 
