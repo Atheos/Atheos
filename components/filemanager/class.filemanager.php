@@ -198,9 +198,9 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////
 	public function save($path, $modifyTime, $patch, $content) {
 		// Change content
-		if (!$content || !$patch) {
+		if (!$content && !$patch) {
 			// Common::sendJSON("E403m", "Content");
-			$file = fopen($this->path, 'w');
+			$file = fopen($path, 'w');
 			fclose($file);
 			Common::debug("FileSave with no content or Patch");
 			Common::sendJSON("success", array("modifyTime" => filemtime($path)));
