@@ -867,7 +867,7 @@
 
 		openSearch: function(type) {
 			if (this.getActive()) {
-				var highlight = codiad.editor.getSelectedText();
+				var highlight = atheos.editor.getSelectedText();
 				atheos.modal.load(400,
 					'components/editor/dialog.php', {
 						action: type,
