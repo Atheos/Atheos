@@ -18,40 +18,6 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function() {
-	var method;
-	var noop = function() {};
-	var methods = [
-		'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-		'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-		'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-		'timeStamp', 'trace', 'warn'
-	];
-	var length = methods.length;
-	var console = (window.console = window.console || {});
-
-	while (length--) {
-		method = methods[length];
-
-		// Only stub undefined methods.
-		if (!console[method]) {
-			console[method] = noop;
-		}
-	}
-
-	if (Function.prototype.bind) {
-		window.log = Function.prototype.bind.call(console.log, console);
-		window.trace = Function.prototype.bind.call(console.trace, console);
-	} else {
-		window.log = function() {
-			Function.prototype.apply.call(console.log, console, arguments);
-		};
-		window.trace = function() {
-			Function.prototype.apply.call(console.trace, console, arguments);
-		};
-	}
-})();
-
 (function(global) {
 	'use strict';
 
@@ -91,7 +57,7 @@
 				directory: (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
 			};
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////
 		// Extend / Combine JS objects
 		//////////////////////////////////////////////////////////////////////
@@ -209,9 +175,9 @@
 			} else {
 				overlay.on('click', atheos.modal.unload);
 			}
-if(hidden) {
-	overlay.hide();
-}
+			if (hidden) {
+				overlay.hide();
+			}
 			document.body.appendChild(overlay.el);
 			return overlay;
 		},
@@ -294,3 +260,38 @@ if(hidden) {
 	};
 
 })(this);
+
+
+(function() {
+	var method;
+	var noop = function() {};
+	var methods = [
+		'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
+		'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
+		'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
+		'timeStamp', 'trace', 'warn'
+	];
+	var length = methods.length;
+	var console = (window.console = window.console || {});
+
+	while (length--) {
+		method = methods[length];
+
+		// Only stub undefined methods.
+		if (!console[method]) {
+			console[method] = noop;
+		}
+	}
+
+	if (Function.prototype.bind) {
+		window.log = Function.prototype.bind.call(console.log, console);
+		window.trace = Function.prototype.bind.call(console.trace, console);
+	} else {
+		window.log = function() {
+			Function.prototype.apply.call(console.log, console, arguments);
+		};
+		window.trace = function() {
+			Function.prototype.apply.call(console.trace, console, arguments);
+		};
+	}
+})();
