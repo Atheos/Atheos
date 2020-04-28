@@ -43,10 +43,6 @@
 		// Path to EditSession instance mapping
 		sessions: {},
 
-		// History of opened files
-		history: [],
-
-
 		loopBehavior: 'loopActive',
 		dropDownOpen: false,
 
@@ -302,7 +298,7 @@
 
 			if (path !== self.getPath()) {
 				atheos.editor.setSession(self.sessions[path]);
-				self.history.push(path);
+
 				ajax({
 					url: self.controller,
 					data: {
@@ -512,15 +508,6 @@
 			session.listItem.remove();
 			self.updateTabDropdownVisibility();
 
-			/* Remove closed path from history */
-			var temp = [];
-			self.history.forEach(function(item) {
-				if (path !== item) {
-					temp.push(item);
-				}
-			});
-			self.history = temp;
-
 			/* Select all the tab tumbs except the one which is to be removed. */
 			var tabs = self.tabList.findAll('li');
 
@@ -528,12 +515,7 @@
 				atheos.editor.exterminate();
 			} else {
 
-				var nextFocus = '';
-				if (self.history.length > 0) {
-					nextFocus = self.history[self.history.length - 1];
-				} else {
-					nextFocus = tabs[0].attr('data-path');
-				}
+				var nextFocus = tabs[0].attr('data-path');
 				var nextSession = self.sessions[nextFocus];
 				atheos.editor.removeSession(session, nextSession);
 
@@ -557,7 +539,7 @@
 
 				delete self.sessions[path];
 			}
-			self.history = [];
+
 			self.updateTabDropdownVisibility();
 			atheos.editor.exterminate();
 			ajax({
@@ -588,12 +570,6 @@
 				self.sessions[newPath].path = newPath;
 
 				delete self.sessions[oldPath];
-				//Rename history
-				for (var i = 0; i < self.history.length; i++) {
-					if (self.history[i] === oldPath) {
-						self.history[i] = newPath;
-					}
-				}
 			};
 
 			if (self.sessions[oldPath]) {
