@@ -27,6 +27,7 @@ class SourceManager {
 		"modules/onyx.js",
 		"modules/synthetic.js",
 		"modules/types.js",
+		"modules/zed.js",
 		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",
@@ -39,6 +40,7 @@ class SourceManager {
 		"modules/storage.js",
 		"modules/splitview.js",
 		"modules/toast.js"
+
 	);
 
 	private $components = array();
@@ -80,7 +82,7 @@ class SourceManager {
 	// This is a conditional that helps during developement of Atheos.
 	function echoScripts($dataset = [], $raw = false) {
 		echo "<!-- " . strtoupper($dataset) . " -->";
-		
+
 		$files = array();
 
 		switch ($dataset) {
