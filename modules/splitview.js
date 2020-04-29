@@ -79,24 +79,24 @@ var separatorWidth = 5;
 //////////////////////////////////////////////////////////////////////////////80
 
 function SplitContainer(parent, children, splitType) {
-	var self = this,
-		css = self.css;
+		var self = this,
+			Q = self.helper;
 
 	self.parent = parent;
 	self.splitType = splitType;
 	self.splitProp = 0.5;
 
-	self.border = css(document.createElement('div'));
+	self.border = Q(document.createElement('div'));
 
 	if (splitType === 'horizontal') {
 		self.border.dom.classList.add('splitter', 'h-splitter');
 		self.border.width(separatorWidth);
-		self.border.height(css(self.parent).height());
+		self.border.height(Q(self.parent).height());
 
 	} else if (splitType === 'vertical') {
 		self.border.dom.classList.add('splitter', 'v-splitter');
 		self.border.height(separatorWidth);
-		self.border.width(css(self.parent).width());
+		self.border.width(Q(self.parent).width());
 	}
 
 	self.parent.append(self.border.dom);
@@ -107,49 +107,43 @@ function SplitContainer(parent, children, splitType) {
 	// You might be tempted in removing the arrow function here, but it would 
 	// break scope on this/self down in the Drag function.
 	self.border.on('mousedown', (e) => self.drag(e));
-	css(self.parent).on('h-resize', (e) => self.resize(e, 'width'));
-	css(self.parent).on('v-resize', (e) => self.resize(e, 'height'));
+	Q(self.parent).on('h-resize', (e) => self.resize(e, 'width'));
+	Q(self.parent).on('v-resize', (e) => self.resize(e, 'height'));
 
-	css(self.parent).trigger('h-resize');
-	css(self.parent).trigger('v-resize');
+	Q(self.parent).trigger('h-resize');
+	Q(self.parent).trigger('v-resize');
 }
 
 SplitContainer.prototype = {
 	setChild: function(splitID, element) {
 		var self = this,
-			css = self.css;
+			Q = self.helper;
 
 		if (element instanceof SplitContainer) {
-			if (splitID === 0) {
-				self.cMajor = css(element.parent);
-			} else {
-				self.cMinor = css(element.parent);
-			}
 			element.splitID = splitID;
 			element = element.parent;
-		} else {
-			if (splitID === 0) {
-				self.cMajor = css(element);
-			} else {
-				self.cMinor = css(element);
-			}
 		}
+		if (splitID === 0) {
+			self.cMajor = Q(element);
+		} else {
+			self.cMinor = Q(element);
+		}
+
 
 		self.parent.append(element);
 
-		css(element).top(0);
-		css(element).left(0);
-		css(self.parent).trigger('h-resize');
-		css(self.parent).trigger('v-resize');
+		Q(element).top(0);
+		Q(element).left(0);
+		Q(self.parent).trigger('h-resize');
+		Q(self.parent).trigger('v-resize');
 	},
 
 	resize: function(event, type) {
-		var self = this,
-			css = self.css;
+		var self = this;
 
 		var s0, s1, s2;
 
-		s0 = css(self.parent)[type]();
+		s0 = self.helper(self.parent)[type]();
 		s1 = s0 * self.splitProp - separatorWidth / 2;
 		s2 = s0 * (1 - self.splitProp) - separatorWidth / 2;
 
@@ -178,7 +172,7 @@ SplitContainer.prototype = {
 	drag: function(event) {
 		//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 		var self = this,
-			css = self.css;
+			Q = self.helper;
 
 		var border = event.target,
 			mouseX = window.event.clientX,
@@ -186,8 +180,8 @@ SplitContainer.prototype = {
 			splitX = border.offsetLeft,
 			splitY = border.offsetTop;
 
-		var rHeight = css(self.parent).height();
-		var rWidth = css(self.parent).width();
+		var rHeight = Q(self.parent).height();
+		var rWidth = Q(self.parent).width();
 		var timeout = false;
 
 		// Set the throttle as a named variable in order to add AND remove
@@ -206,10 +200,10 @@ SplitContainer.prototype = {
 				percent = percent > 0.9 ? 0.9 : percent;
 
 				self.splitProp = percent;
-				css(self.parent).trigger('h-resize');
+				Q(self.parent).trigger('h-resize');
 			} else {
 				self.splitProp = top / rHeight;
-				css(self.parent).trigger('v-resize');
+				Q(self.parent).trigger('v-resize');
 			}
 		}, 10);
 
@@ -228,9 +222,9 @@ SplitContainer.prototype = {
 		document.addEventListener('mouseup', removeListeners, false);
 		window.addEventListener('selectstart', disableSelect);
 	},
-	css: function(element) {
+	helper: function(element) {
 
-		let cssInit = {
+		let raw = {
 			'display': element.style.display,
 			'visibility': element.style.visibility,
 			'opacity': element.style.opacity
@@ -255,7 +249,7 @@ SplitContainer.prototype = {
 
 			var computedStyle = window.getComputedStyle(element);
 			var size = parseFloat(computedStyle[t].replace('px', ''));
-			setCSS(cssInit);
+			setCSS(raw);
 
 			return size;
 		};
@@ -276,7 +270,7 @@ SplitContainer.prototype = {
 				} else {
 					element.removeEventListener(t, fnc);
 				}
-			})
+			});
 		};
 
 		return {
