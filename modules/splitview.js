@@ -187,7 +187,7 @@ SplitContainer.prototype = {
 		// Set the throttle as a named variable in order to add AND remove
 		// the event listener later on. Without it being a named item, it can't
 		// be removed.
-		var moveElement = zed.throttle(function(event) {
+		var moveElement = throttle(function(event) {
 			var left = splitX + event.clientX - mouseX,
 				top = splitY + event.clientY - mouseY;
 

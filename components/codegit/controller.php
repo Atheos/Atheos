@@ -19,13 +19,20 @@ $action = Common::data('action');
 $path = Common::data('path');
 $repo = Common::data('repo');
 
+$remote = Common::data('remote');
+$branch = Common::data('branch');
+
+$commit = Common::data('commit');
+$settings = Common::data('settings');
+
 if (!$action) {
 	die(Common::sendJSON("error", "missing action"));
 }
 
 if ($action !== 'scanForGit') {
 	$CodeGit = new CodeGit($path, $repo);
-	define('CONFIG', 'git.' . $_SESSION['user'] . '.php');
+	$activeUser = Common::data("user", "session");
+	define('CONFIG', 'git.' . $activeUser . '.php');
 }
 
 switch ($action) {
@@ -100,24 +107,24 @@ switch ($action) {
 		break;
 
 	case 'push':
-		if ($path && isset($_GET['remote']) && isset($_GET['branch'])) {
-			echo $CodeGit->push(getWorkspacePath($path), $_GET['remote'], $_GET['branch']);
+		if ($path && $remote && $branch) {
+			echo $CodeGit->push(getWorkspacePath($path), $remote, $branch);
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'pull':
-		if ($path && isset($_GET['remote']) && isset($_GET['branch'])) {
-			echo $CodeGit->pull(getWorkspacePath($path), $_GET['remote'], $_GET['branch']);
+		if ($path && $remote && $branch) {
+			echo $CodeGit->pull(getWorkspacePath($path), $remote, $branch);
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'fetch':
-		if ($path && isset($_GET['remote'])) {
-			echo $CodeGit->fetch(getWorkspacePath($path), $_GET['remote']);
+		if ($path && $remote) {
+			echo $CodeGit->fetch(getWorkspacePath($path), $remote);
 		} else {
 			Common::sendJSON("E403g");
 		}
@@ -137,8 +144,8 @@ switch ($action) {
 		break;
 
 	case 'showCommit':
-		if ($path && isset($_GET['commit'])) {
-			echo $CodeGit->showCommit(getWorkspacePath($path), $_GET['commit']);
+		if ($path && $commit) {
+			echo $CodeGit->showCommit(getWorkspacePath($path), $commit);
 		} else {
 			Common::sendJSON("E403g");
 		}
@@ -167,14 +174,14 @@ switch ($action) {
 		break;
 
 	case 'setSettings':
-		if (isset($_POST['settings']) && $path) {
-			$settings = json_decode($_POST['settings'], true);
+		if (isset($settings) && $path) {
+			$settings = json_decode($settings, true);
 
 			$pluginSettings = getJSON('git.settings.php', 'config');
 			if ($pluginSettings['lockuser'] == "true") {
-				$settings['username'] = $_SESSION['user'];
+				$settings['username'] = $activeUser;
 				if (strlen($settings['local_username']) != 0) {
-					$settings['local_username'] = $_SESSION['user'];
+					$settings['local_username'] = $activeUser;
 				}
 			}
 
