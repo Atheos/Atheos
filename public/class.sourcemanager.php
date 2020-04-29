@@ -23,6 +23,7 @@ class SourceManager {
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
+		"modules/global.js",
 		// "modules/i18n.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
@@ -39,6 +40,7 @@ class SourceManager {
 		"modules/storage.js",
 		"modules/splitview.js",
 		"modules/toast.js"
+
 	);
 
 	private $components = array();
@@ -80,7 +82,7 @@ class SourceManager {
 	// This is a conditional that helps during developement of Atheos.
 	function echoScripts($dataset = [], $raw = false) {
 		echo "<!-- " . strtoupper($dataset) . " -->";
-		
+
 		$files = array();
 
 		switch ($dataset) {

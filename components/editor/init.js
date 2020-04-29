@@ -69,7 +69,7 @@
 			// editor = oX('#editor-region');
 
 			editor.on('h-resize-root, v-resize-root', function(e) {
-				wrapper = oX('#editor-region .editor-wrapper');
+				var wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
 					if (e.type === 'h-resize-root') {
 						wrapper.css('width', editor.width());
@@ -178,21 +178,18 @@
 				children[childID] = editor.el;
 				children[1 - childID] = firstChild.el;
 
-				var root = oX('<div class="editor-wrapper">');
-				root.css('height', firstChild.height());
-				root.css('width', firstChild.width());
+				var parent = oX('<div class="editor-wrapper">');
+				parent.css('height', firstChild.height());
+				parent.css('width', firstChild.width());
 
-				root.addClass('editor-wrapper-' + type);
-				firstChild.parent().append(root);
+				parent.addClass('editor-wrapper-' + type);
+				firstChild.parent().append(parent);
 
-				splitContainer = new SplitContainer(root.el, children, type);
+				splitContainer = new SplitContainer(parent.el, children, type);
 
 				if (this.instances.length > 1) {
 					var pContainer = this.activeInstance.splitContainer;
 					var idx = this.activeInstance.splitID;
-					log(this.activeInstance.splitID);
-
-					log(Object.values(this.activeInstance));
 					pContainer.setChild(idx, splitContainer);
 				}
 			}
@@ -210,15 +207,15 @@
 				this.activeInstance.splitContainer = splitContainer;
 				this.activeInstance.splitID = 1 - childID;
 
-				oX(splitContainer.root).on('h-resize', resizeEditor);
-				oX(splitContainer.root).on('v-resize', resizeEditor);
+				oX(splitContainer.parent).on('h-resize', resizeEditor);
+				oX(splitContainer.parent).on('v-resize', resizeEditor);
 
 				if (this.instances.length === 1) {
 					var re = function() {
 						self.instances[0].resize();
 					};
-					oX(splitContainer.root).on('h-resize', re);
-					oX(splitContainer.root).on('v-resize', re);
+					oX(splitContainer.parent).on('h-resize', re);
+					oX(splitContainer.parent).on('v-resize', re);
 				}
 			}
 
@@ -245,7 +242,7 @@
 		//
 		//////////////////////////////////////////////////////////////////
 		exterminate: function() {
-			var editors = oX('#editor-region').findAll('.editor');
+			var editors = oX('#editor-region').findAll('.editor, .editor-wrapper');
 			editors.forEach((editor) => {
 				editor.remove();
 			});
@@ -321,7 +318,7 @@
 			if (instance) {
 				self.activeInstance = instance;
 				var path = instance.getSession().path;
-				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
+				path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
 				oX('#current_file').text(path);
 				atheos.textmode.setModeDisplay(instance.getSession());
@@ -591,7 +588,7 @@
 				i.getSession().setTabSize(parseInt(s));
 			} else {
 				this.forEach(function(i) {
-					i.getSession().setTabSize(parseInt(s));
+					i.getSession().setTabSize(parseInt(s), 10);
 				});
 			}
 			// LocalStorage
@@ -775,11 +772,12 @@
 		//////////////////////////////////////////////////////////////////
 
 		cursorTracking: function(i) {
+			var col = global.i18n('Col');
 			amplify.subscribe('chrono.kilo', function() {
 				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();
-					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${col}: ${pos.column}`);
 				}
 			});
 		},
