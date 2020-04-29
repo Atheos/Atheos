@@ -16,15 +16,11 @@ trait Transfer {
 		$program = $this->getShellProgram();
 		$command = $program . ' -s "' . $path . '" -c "git push ' . $remote . ' ' . $branch . '"';
 
-		if (isset($_POST['username'])) {
-			$command = $command . ' -u "' . $_POST['username'] . '"';
-		}
-		if (isset($_POST['password'])) {
-			$command = $command . ' -p "' . $_POST['password'] . '"';
-		}
-		if (isset($_POST['passphrase'])) {
-			$command = $command . ' -k "' . $_POST['passphrase'] . '"';
-		}
+		$username = Common::data("username");
+		$password = Common::data("password");
+		$passphrase = Common::data("passphrase");
+
+		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
 		return $this->parseShellResult($result, "Repository pushed!", "Failed to push repo!");
 	}
@@ -41,15 +37,7 @@ trait Transfer {
 		$program = $this->getShellProgram();
 		$command = $program . ' -s "' . $path . '" -c "git pull ' . $remote . ' ' . $branch . '"';
 
-		if (isset($_POST['username'])) {
-			$command = $command . ' -u "' . $_POST['username'] . '"';
-		}
-		if (isset($_POST['password'])) {
-			$command = $command . ' -p "' . $_POST['password'] . '"';
-		}
-		if (isset($_POST['passphrase'])) {
-			$command = $command . ' -k "' . $_POST['passphrase'] . '"';
-		}
+		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
 		return $this->parseShellResult($result, "Repository pulled!", "Failed to pull repo!");
 	}
@@ -69,17 +57,28 @@ trait Transfer {
 		} else {
 			$command = $program . ' -s "' . $path . '" -c "git fetch ' . $remote . '"';
 		}
-		if (isset($_POST['username'])) {
-			$command = $command . ' -u "' . $_POST['username'] . '"';
-		}
-		if (isset($_POST['password'])) {
-			$command = $command . ' -p "' . $_POST['password'] . '"';
-		}
-		if (isset($_POST['passphrase'])) {
-			$command = $command . ' -k "' . $_POST['passphrase'] . '"';
-		}
+		
+		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
 		return $this->parseShellResult($result, "Repository fetched!", "Failed to fetch repo!");
+	}
+
+	public function checkUserInfo($command) {
+		$username = Common::data("username");
+		$password = Common::data("password");
+		$passphrase = Common::data("passphrase");
+
+		if ($username) {
+			$command = $command . ' -u "' . $username . '"';
+		}
+		if ($password) {
+			$command = $command . ' -p "' . $password . '"';
+		}
+		if ($passphrase) {
+			$command = $command . ' -k "' . $passphrase . '"';
+		}
+
+		return $command;
 	}
 
 }

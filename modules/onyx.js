@@ -1,3 +1,5 @@
+/*jshint esversion: 6 */
+
 //////////////////////////////////////////////////////////////////////////////80
 // OnyxJS 
 //////////////////////////////////////////////////////////////////////////////80
@@ -46,9 +48,7 @@
 	var getIndex = function(arr, selector, callback) {
 		for (var i = 0; i < arr.length; i++) {
 			if (arr[i].selector === selector) {
-				if (!callback) {
-					return i;
-				} else if (arr[i].callback.toString() === callback.toString()) {
+				if (!callback || arr[i].callback.toString() === callback.toString()) {
 					return i;
 				}
 			}
@@ -179,24 +179,12 @@
 				} else {
 					return document.querySelector(selector);
 				}
-
-				// var element = document.querySelector(selector);
-				// if (element) {
-				// 	return element;
-				// } else {
-				// 	element = document.createElement(selector);
-				// 	if(element.toString() !== '[object HTMLUnknownElement') {
-				// 		return element;
-				// 	} else {
-				// 		throw new TypeError('Invalid String for Element Construction; got ' + selector);
-				// 	}
-				// }
 			} else if (selector instanceof HTMLElement) {
 				return selector;
 			} else if (selector.isOnyx) {
 				return selector.el;
 			}
-			throw new TypeError('Expected string | HTMLElement | OnyxJS; got ' + typeof selector);
+			throw new TypeError('Expected String | HTMLElement | OnyxJS; got ' + typeof selector);
 		}
 	};
 

@@ -69,7 +69,7 @@
 			// editor = oX('#editor-region');
 
 			editor.on('h-resize-root, v-resize-root', function(e) {
-				wrapper = oX('#editor-region .editor-wrapper');
+				var wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
 					if (e.type === 'h-resize-root') {
 						wrapper.css('width', editor.width());
@@ -318,7 +318,7 @@
 			if (instance) {
 				self.activeInstance = instance;
 				var path = instance.getSession().path;
-				path = (path.length < 30) ? path : path = '...' + path.substr(path.length - 30);
+				path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
 				oX('#current_file').text(path);
 				atheos.textmode.setModeDisplay(instance.getSession());
@@ -588,7 +588,7 @@
 				i.getSession().setTabSize(parseInt(s));
 			} else {
 				this.forEach(function(i) {
-					i.getSession().setTabSize(parseInt(s));
+					i.getSession().setTabSize(parseInt(s), 10);
 				});
 			}
 			// LocalStorage
@@ -772,11 +772,12 @@
 		//////////////////////////////////////////////////////////////////
 
 		cursorTracking: function(i) {
+			var col = global.i18n('Col');
 			amplify.subscribe('chrono.kilo', function() {
 				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();
-					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${col}: ${pos.column}`);
 				}
 			});
 		},

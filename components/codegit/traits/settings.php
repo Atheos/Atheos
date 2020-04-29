@@ -4,9 +4,9 @@
 trait Settings {
 
 	public function getSettings($path) {
-		$settings = getJSON(CONFIG, 'config');
+		$settings = Common::readJSON(CONFIG, 'config');
 		if (empty($settings)) {
-			$settings['username'] = $_SESSION['user'];
+			$settings['username'] = Common::data("user", "session");
 			$settings['email'] = "";
 		}
 		if (isset($settings[$path])) {
@@ -19,7 +19,7 @@ trait Settings {
 	}
 
 	public function setSettings($update, $path) {
-		$settings = getJSON(CONFIG, 'config');
+		$settings = Common::readJSON(CONFIG, 'config');
 
 		foreach ($update as $i => $item) {
 			if (strlen($item) == 0) {
@@ -47,6 +47,6 @@ trait Settings {
 			}
 		}
 
-		saveJSON(CONFIG, $settings, 'config');
+		Common::saveJSON(CONFIG, $settings, 'config');
 	}
 }
