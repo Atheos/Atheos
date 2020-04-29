@@ -360,13 +360,7 @@
 					}
 
 					sidebar.style.width = ((width > 14) ? width : 15) + 'px';
-
 					editor.css('margin-' + side, sidebar.clientWidth + 'px');
-
-					if (side === 'right') {
-						oX('#tab_close').style.marginRight = (sidebar.clientWidth - 10) + 'px';
-						oX('#tab_dropdown').style.marginRight = (sidebar.clientWidth - 10) + 'px';
-					}
 				}
 			}
 
