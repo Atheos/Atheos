@@ -23,11 +23,11 @@ class SourceManager {
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
+		"modules/global.js",
 		// "modules/i18n.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
 		"modules/types.js",
-		"modules/zed.js",
 		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",

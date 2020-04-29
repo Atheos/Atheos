@@ -45,8 +45,6 @@ trait History {
 			return false;
 		}
 
-		$array = '';
-
 		if (in_array($path, $status['untracked'])) {
 			$this->resultArray = $this->untrackedDiff($path);
 			
@@ -79,9 +77,9 @@ trait History {
 			return $this->returnMessage("notice", "No changes!");
 		}
 
-		foreach ($this->resultArray as $index => $line) {
+		foreach ($this->resultArray as $i => $line) {
 			$line = str_replace ("\t", "    ", $line);
-			$this->resultArray[$index] = htmlentities($line);
+			$this->resultArray[$i] = htmlentities($line);
 		}
 
 		return $this->resultArray;
@@ -105,7 +103,7 @@ trait History {
 		} else {
 			$this->executeCommand('cat ' . $path);
 			array_push($result, "diff --git a/". $path . " b/" . $path);
-			foreach ($this->resultArray as $index => $line) {
+			foreach ($this->resultArray as $i => $line) {
 				array_push($result, "+" . $line);
 			}
 			array_push($result, "\n");
