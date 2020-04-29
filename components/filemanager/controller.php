@@ -52,7 +52,7 @@ if (!$project) {
 //////////////////////////////////////////////////////////////////
 // Handle Action
 //////////////////////////////////////////////////////////////////
-$Filemanager = new Filemanager($_GET, $_POST);
+$Filemanager = new Filemanager();
 // $Filemanager->project = @$_SESSION['project']['path'];
 
 $Filemanager->root = WORKSPACE;
