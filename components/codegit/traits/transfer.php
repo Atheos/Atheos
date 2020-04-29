@@ -16,10 +16,6 @@ trait Transfer {
 		$program = $this->getShellProgram();
 		$command = $program . ' -s "' . $path . '" -c "git push ' . $remote . ' ' . $branch . '"';
 
-		$username = Common::data("username");
-		$password = Common::data("password");
-		$passphrase = Common::data("passphrase");
-
 		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
 		return $this->parseShellResult($result, "Repository pushed!", "Failed to push repo!");
