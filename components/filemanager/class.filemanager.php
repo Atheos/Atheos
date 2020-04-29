@@ -112,7 +112,7 @@ class Filemanager {
 				if (mb_check_encoding($output, 'ISO-8859-1')) {
 					$output = utf8_encode($output);
 				} else {
-					$output = mb_convert_encoding($content, 'UTF-8');
+					$output = mb_convert_encoding($output, 'UTF-8');
 				}
 			}
 		}

@@ -56,9 +56,7 @@ class Project
 	// Get First (Default, none selected)
 	//////////////////////////////////////////////////////////////////
 	public function getDefault() {
-		$path = false;
 
-		$projects_assigned = false;
 		if ($this->userACL !== "full") {
 			$this->path = reset($this->userACL);
 			$this->name = $this->projects[$this->path];
