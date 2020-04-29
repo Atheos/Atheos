@@ -33,6 +33,15 @@
 	'use strict';
 
 	var activeEvents = {};
+	let alwaysRun = [
+		'*',
+		'window',
+		'document',
+		'document.documentElement',
+		window,
+		document,
+		document.documentElement
+	];
 
 	var getIndex = function(arr, selector, callback) {
 		for (var i = 0; i < arr.length; i++) {
@@ -47,16 +56,8 @@
 		return -1;
 	};
 
-	var doRun = function(target, selector) {
-		if ([
-				'*',
-				'window',
-				'document',
-				'document.documentElement',
-				window,
-				document,
-				document.documentElement
-			].indexOf(selector) > -1) {
+	var activeMatch = function(target, selector) {
+		if (alwaysRun.includes(selector)) {
 			return true;
 		}
 		if (typeof selector !== 'string' && selector.contains) {
@@ -66,11 +67,8 @@
 	};
 
 	var eventHandler = function(event) {
-		if (!activeEvents[event.type]) {
-			return;
-		}
 		activeEvents[event.type].forEach(function(listener) {
-			if (!doRun(event.target, listener.selector)) {
+			if (!activeMatch(event.target, listener.selector)) {
 				return;
 			}
 			listener.callback(event);
@@ -158,11 +156,17 @@
 		}
 	};
 
-
-
+	let alwaysReturn = [
+		window,
+		document,
+		document.documentElement
+	];
+	
 	let argToElement = function(selector) {
 		if (selector) {
-			if (typeof selector === 'string') {
+			if (alwaysReturn.includes(selector)) {
+				return selector;
+			} else if (typeof selector === 'string') {
 				const tagName = /^<(.+)>$/.exec(selector);
 
 				if (tagName !== null) {
@@ -238,89 +242,86 @@
 			});
 		};
 
-
-		return {
-			focus: () => element.focus(),
-			show: function() {
-				element.style.display = 'block';
-			},
-			hide: function() {
-				element.style.display = 'none';
-			},
-			trigger: function(e) {
-				triggerEvent(e);
-			},
-			once: function(t, fn) {
-				events.once(t, element, fn);
-			},
-			on: function(t, fn) {
-				events.on(t, element, fn);
-			},
-			off: function(t, fn) {
-				events.off(t, element, fn);
-			},
-			css: function(a, v) {
-				if (typeof a === 'string') {
-					if (typeof(v) !== 'undefined') {
-						if ((['height', 'width', 'top', 'left', 'right', 'bottom'].indexOf(a) > -1) && isFinite(v) && v !== '') {
-							v = v + 'px';
-						}
-						element.style[a] = v;
+		let setStyle = function(k, v) {
+			if (typeof k === 'string') {
+				if (typeof(v) !== 'undefined') {
+					if (['height', 'width', 'top', 'left', 'right', 'bottom'].includes(k) && isFinite(v) && v !== '') {
+						v = v + 'px';
 					}
-					return element.style[a] || null;
-				} else if (typeof a === 'object') {
-					const entries = Object.entries(a);
-					for (const [key, value] of entries) {
-						element.style[key] = value;
+					element.style[k] = v;
+				}
+				return element.style[k] || null;
+			} else if (typeof k === 'object') {
+				const entries = Object.entries(k);
+				for (const [key, value] of entries) {
+					element.style[key] = value;
+				}
+			}
+		};
+
+		let search = (t, s) => {
+			var matches = [];
+			if (t === 'find') {
+				var nodes = element.querySelectorAll(s);
+				for (var i = 0; i < nodes.length; i++) {
+					matches.push(onyx(nodes[i]));
+				}
+			} else {
+				var match = t === 'children' ? element.firstElementChild : element.parentNode.firstElementChild;
+
+				while (match) {
+					if (!s || match.matches(s)) {
+						matches.push(onyx(match));
 					}
+					match = match.nextElementSibling;
 				}
-			},
-			data: (d) => {
-				if (d) element.data = d;
-				return element.data;
-			},
-			html: (h) => {
-				if (h) element.innerHTML = h;
-				return element.innerHTML;
-			},
-			text: (t) => {
-				if (t) element.innerText = t;
-				return element.innerText;
-			},
-			value: (v) => {
-				if (v) element.value = v;
-				return element.value;
-			},
-			addClass: function(c) {
-				element.classList.add(...c.split(' '));
-			},
-			removeClass: function(c) {
-				if (c) {
-					element.classList.remove(...c.split(' '));
-				} else {
-					element.className = '';
+			}
+			return matches;
+		};
+
+		let getSize = (t, v, o) => {
+			var init = {
+				'display': element.style.display,
+				'visibility': element.style.visibility,
+				'opacity': element.style.opacity
+			};
+
+
+			if (v) {
+				element.style[t] = v + 'px';
+			}
+
+			setStyle({
+				'display': 'block',
+				'visibility': 'hidden',
+				'opacity': 0
+			});
+
+			var computedStyle = window.getComputedStyle(element);
+			var size = parseFloat(computedStyle[t].replace('px', ''));
+			if (o) { //OuterHeight or OuterWidth
+				if (t === 'height') {
+					size += parseFloat(computedStyle.marginTop.replace('px', ''));
+					size += parseFloat(computedStyle.marginBottom.replace('px', ''));
+					size += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
+					size += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
+				} else if (t === 'width') {
+					size += parseFloat(computedStyle.marginLeft.replace('px', ''));
+					size += parseFloat(computedStyle.marginRight.replace('px', ''));
+					size += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
+					size += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
 				}
-			},
-			hasClass: function(c) {
-				return element.classList.contains(c);
-			},
-			replaceClass: function(c, n) {
-				this.removeClass(c);
-				this.addClass(n);
-			},
-			toggleClass: function(t) {
-				return element.classList.toggle(t);
-			},
+			}
+			setStyle(init);
 
-			empty: () => {
-				element.innerHTML = '';
-				element.value = '';
-			},
+			return size;
+		};
 
-			exists: function() {
-				return (element && element.nodeType);
-			},
-			attr: function(k, v) {
+		let IO = (t, v, k) => {
+			if (['data', 'innerHTML', 'innerText', 'value'].includes(t)) {
+				if (v) element[t] = v;
+				return element[t];
+			} else if (t === 'attr') {
 				if (typeof k === 'string') {
 					if (v) {
 						element.setAttribute(k, v);
@@ -332,65 +333,52 @@
 						element.setAttribute(key, value);
 					}
 				}
-			},
+			}
+		};
+
+		return {
+
+			focus: () => element.focus(),
+			show: () => element.style.display = 'block',
+			hide: () => element.style.display = 'none',
+			trigger: (e) => triggerEvent(e),
+
+			once: (t, fn) => events.once(t, element, fn),
+			on: (t, fn) => events.on(t, element, fn),
+			off: (t, fn) => events.off(t, element, fn),
+
+			css: (k, v) => setStyle(k, v),
+			data: (v) => IO('data', v),
+			html: (v) => IO('innerHTML', v),
+			text: (v) => IO('innerText', v),
+			value: (v) => IO('value', v),
+			empty: () => element.innerHTML = element.value = '',
+
+			attr: (k, v) => IO('attr', v, k),
 			removeAttr: (k) => element.removeAttribute(k),
-			parent: function(s) {
-				var parent = element;
-				if (s) {
-					while ((parent = parent.parentElement) && !((parent.matches || parent.matchesSelector).call(parent, s)));
-				} else {
-					parent = element.parentElement;
-				}
-				return onyx(parent);
+
+			addClass: (c) => element.classList.add(...c.split(' ')),
+			hasClass: (c) => element.classList.contains(c),
+			removeClass: (c) => element.classList.remove(...c.split(' ')),
+			toggleClass: (c) => element.classList.toggle(c),
+			replaceClass: function(c, n) {
+				this.removeClass(c);
+				this.addClass(n);
 			},
 
-			siblings: function(s) {
-				var siblings = [];
-				var sibling = element.parentNode.firstElementChild;
 
-				do {
-					if (!s || sibling.matches(s)) {
-						siblings.push(onyx(sibling));
-					}
-					sibling = sibling.nextElementSibling;
-				} while (sibling);
 
-				return siblings;
-			},
-			children: function(s) {
-				var children = [];
-				var child = element.firstElementChild;
-				do {
-					if (!s || child.matches(s)) {
-						children.push(onyx(child));
-					}
-					child = child.nextElementSibling;
-				} while (child);
-
-				return children;
-			},
-			find: function(s, q) {
-				var node = element.querySelector(s);
-				return onyx(node);
-
-			},
-			findAll: function(s, q) {
-				var nodes = element.querySelectorAll(s),
-					results = [];
-				for (var i = 0; i < nodes.length; i++) {
-					results.push(onyx(nodes[i]));
-				}
-				return results;
-
-			},
-			remove: function() {
-				element.remove();
-			},
+			find: (s) => onyx(element.querySelector(s)),
+			parent: (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement),
+			findAll: (s) => search('find', s),
+			siblings: (s) => search('siblings', s),
+			children: (s) => search('children', s),
 
 			before: insertAdjacent('beforebegin'),
 			after: insertAdjacent('afterend'),
 			first: insertAdjacent('afterbegin'),
 			last: insertAdjacent('beforeend'),
+
 			insertBefore: insertToAdjacent('beforebegin'),
 			insertAfter: insertToAdjacent('afterend'),
 			insertFirst: insertToAdjacent('afterbegin'),
@@ -398,66 +386,17 @@
 
 			prepend: insertAdjacent('afterbegin'),
 			append: insertAdjacent('beforeend'),
+			remove: () => element.remove(),
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,
-			height: function(outerHeight) {
-				var init = {
-					'display': element.style.display,
-					'visibility': element.style.visibility,
-					'opacity': element.style.opacity
-				};
-
-				this.css({
-					'display': 'block',
-					'visibility': 'hidden',
-					'opacity': 0
-				});
-
-				var computedStyle = window.getComputedStyle(element);
-
-				var height = parseFloat(computedStyle.height.replace('px', ''));
-				if (outerWidth) {
-					height += parseFloat(computedStyle.marginTop.replace('px', ''));
-					height += parseFloat(computedStyle.marginBottom.replace('px', ''));
-					height += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
-					height += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
-				}
-				this.css(init);
-
-				return height;
-			},
 			clientWidth: () => element.clientWidth,
-			width: function(outerWidth) {
-				var init = {
-					'display': element.style.display,
-					'visibility': element.style.visibility,
-					'opacity': element.style.opacity
-				};
+			height: (o) => getSize('height', false, o),
+			width: (o) => getSize('width', false, o),
 
-				this.css({
-					'display': 'block',
-					'visibility': 'hidden',
-					'opacity': 0
-				});
-
-				var computedStyle = window.getComputedStyle(element);
-
-				var width = parseFloat(computedStyle.width.replace('px', ''));
-				if (outerWidth) {
-					width += parseFloat(computedStyle.marginLeft.replace('px', ''));
-					width += parseFloat(computedStyle.marginRight.replace('px', ''));
-					width += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
-					width += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
-				}
-
-				this.css(init);
-
-				return width;
-			},
 			style: () => element.style,
 			el: element,
-
+			exists: () => (element && element.nodeType),
 			isOnyx: true
 		};
 	};
