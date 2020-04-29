@@ -93,7 +93,7 @@ class Active {
 		foreach ($this->activeFiles as $user) {
 			foreach ($this->activeFiles[$user] as $path => $status) {
 				if ($path === $this->path) {
-					$revisedActiveFiles[$user][$newPath] = $status;
+					$revisedActiveFiles[$user][$this->newPath] = $status;
 				} else {
 					$revisedActiveFiles[$user][$path] = $status;
 				}
