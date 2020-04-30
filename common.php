@@ -309,7 +309,7 @@ class Common {
 	// Format JSON Responses
 	//////////////////////////////////////////////////////////////////
 	public static function sendJSON($status, $text = false) {
-		if (preg_match('/^[SEWN][0-9]{4}$/', $status)) {
+		if (preg_match('/^[SEWN][0-9]{3}[0-9a-z]{1}$/', $status)) {
 			$reply = Common::parseStatusCodes($status, $text);
 		} elseif (is_array($text)) {
 			$reply = $text;
