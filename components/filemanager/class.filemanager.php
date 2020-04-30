@@ -100,7 +100,7 @@ class Filemanager {
 	// OPEN (Returns the contents of a file)
 	//////////////////////////////////////////////////////////////////
 	public function open($path) {
-		if (!$path && !is_file($path)) {
+		if (!$path || !is_file($path)) {
 			Common::sendJSON("E402i");
 			die;
 		}
