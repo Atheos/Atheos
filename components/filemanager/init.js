@@ -641,8 +641,13 @@
 						name: newName
 					},
 					success: function(reply) {
-						if (reply.status !== 'error') {
-							atheos.toast.show('success', 'File Renamed');
+						if (reply.status === 'success') {
+							if (type === 'file') {
+								atheos.toast.show('success', 'File Renamed.');
+							} else {
+								atheos.toast.show('success', 'Folder Renamed.');
+
+							}
 							var node = oX('#file-manager a[data-path="' + path + '"]'),
 								icon = node.find('i:nth-child(2)'),
 								span = node.find('span');
