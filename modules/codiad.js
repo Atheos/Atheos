@@ -8,7 +8,6 @@
 // Description: 
 // The System Module initializes the core Atheos object and puts the engine in
 // motion, calling the initilization of other modules, and publishing the
-// Amplify 'atheos.loaded' event.
 //
 // Notes:
 // This file also houses the wrapper functions for older APIs to get to newer

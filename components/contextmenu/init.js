@@ -26,7 +26,7 @@
 		amplify = global.amplify,
 		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.contextmenu.init());
+	amplify.subscribe('system.loadMinor', () => atheos.contextmenu.init());
 
 	atheos.contextmenu = {
 

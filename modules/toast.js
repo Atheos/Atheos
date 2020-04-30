@@ -21,9 +21,8 @@
 
 	var atheos = global.atheos,
 		i18n = global.i18n,
-		types = global.types,
-		extend = atheos.common.extend;
-
+		types = global.types;
+		
 	atheos.toast = {
 
 		global: {
@@ -109,34 +108,6 @@
 			return wrapper;
 		},
 
-		success: function(message, options) {
-			options = types.isObject(options) ? options : {};
-			options = extend(this.types.success, options);
-			options.text = message;
-
-			this.showToast(options);
-		},
-		error: function(message, options) {
-			options = types.isObject(options) ? options : {};
-			options = extend(this.types.error, options);
-			options.text = message;
-
-			this.showToast(options);
-		},
-		warning: function(message, options) {
-			options = types.isObject(options) ? options : {};
-			options = extend(this.types.warning, options);
-			options.text = message;
-
-			this.showToast(options);
-		},
-		notice: function(message, options) {
-			options = types.isObject(options) ? options : {};
-			options = extend(this.types.notice, options);
-			options.text = message;
-
-			this.showToast(options);
-		},
 		show: function(type, text, options) {
 			if (types.isObject(type)) {
 				options = type;

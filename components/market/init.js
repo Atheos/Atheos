@@ -20,7 +20,7 @@
 		ajax = global.ajax,
 		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.market.init());
+	amplify.subscribe('system.loadMinor', () => atheos.market.init());
 
 	var self = null;
 

@@ -41,7 +41,24 @@
 		};
 	};
 
+	//////////////////////////////////////////////////////////////////////
+	// Extend / Combine JS objects without modifying the source object
+	//////////////////////////////////////////////////////////////////////
+	global.extend = function(obj, src) {
+		var temp = JSON.parse(JSON.stringify(obj));
+		for (var key in src) {
+			if (src.hasOwnProperty(key)) {
+				temp[key] = src[key];
+			}
+		}
+		return temp;
+	};
 
+	//////////////////////////////////////////////////////////////////////
+	// Shorthand for sending to console
+	//////////////////////////////////////////////////////////////////////
+	window.log = Function.prototype.bind.call(console.log, console);
+	window.trace = Function.prototype.bind.call(console.trace, console);
 
 
 })(this);
