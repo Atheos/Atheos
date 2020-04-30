@@ -121,7 +121,7 @@
 				fontFamily: 'Ubuntu-Fira',
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
-				enableLiveAutocompletion: false
+				enableLiveAutocompletion: true
 			});
 
 			instance.setFontSize(self.settings.fontSize);

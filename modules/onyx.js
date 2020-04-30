@@ -161,7 +161,7 @@
 		document,
 		document.documentElement
 	];
-	
+
 	let argToElement = function(selector) {
 		if (selector) {
 			if (alwaysReturn.includes(selector)) {
@@ -230,10 +230,11 @@
 			});
 		};
 
+		let pxStyles = ['height', 'width', 'top', 'left', 'right', 'bottom'];
 		let setStyle = function(k, v) {
 			if (typeof k === 'string') {
 				if (typeof(v) !== 'undefined') {
-					if (['height', 'width', 'top', 'left', 'right', 'bottom'].includes(k) && isFinite(v) && v !== '') {
+					if (pxStyles.includes(k) && isFinite(v) && v !== '') {
 						v = v + 'px';
 					}
 					element.style[k] = v;
@@ -244,6 +245,31 @@
 				for (const [key, value] of entries) {
 					element.style[key] = value;
 				}
+			}
+		};
+
+		// let classTypes = ['add', 'contains', 'toggle', 'remove', 'replace'];
+		let setClass = function(t, c, n) {
+			if (t === 'replace') {
+				setClass('remove', c);
+				setClass('add', n);
+				return;
+			}
+
+			// if (c) {
+			// 	c = ...c.split(' ');
+			// }
+			// addClass: (c) => element.classList.add(...c.split(' ')),
+
+			if (t === 'remove') {
+				if (c) {
+					element.classList.remove(...c.split(' '));
+				} else {
+					element.className = '';
+				}
+			} else {
+				// add, contains, toggle
+				return element.classList[t](...c.split(' '));
 			}
 		};
 
@@ -345,14 +371,22 @@
 			attr: (k, v) => IO('attr', v, k),
 			removeAttr: (k) => element.removeAttribute(k),
 
-			addClass: (c) => element.classList.add(...c.split(' ')),
-			hasClass: (c) => element.classList.contains(c),
-			removeClass: (c) => element.classList.remove(...c.split(' ')),
-			toggleClass: (c) => element.classList.toggle(c),
-			replaceClass: function(c, n) {
-				this.removeClass(c);
-				this.addClass(n);
-			},
+			// addClass: (c) => element.classList.add(...c.split(' ')),
+			// hasClass: (c) => element.classList.contains(c),
+			// removeClass: (c) => element.classList.remove(...c.split(' ')),
+			// toggleClass: (c) => element.classList.toggle(c),
+			// replaceClass: function(c, n) {
+			// 	this.removeClass(c);
+			// 	this.addClass(n);
+			// },
+
+			addClass: (c) => setClass('add', c),
+			hasClass: (c) => setClass('contains', c),
+			removeClass: (c) => setClass('remove', c),
+			toggleClass: (c) => setClass('toggle', c),
+			replaceClass: (c, n) => setClass('replace', c, n),
+
+
 
 
 
