@@ -43,7 +43,7 @@
 	//////////////////////////////////////////////////////////////////////
 
 
-	amplify.subscribe('atheos.plugins', () => atheos.codegit.init());
+	amplify.subscribe('system.loadExtra', () => atheos.codegit.init());
 
 	atheos.codegit = {
 
