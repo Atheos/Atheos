@@ -40,7 +40,7 @@
 	//////////////////////////////////////////////////////////////////////
 
 
-	amplify.subscribe('atheos.plugins', () => atheos.codegit.init());
+	amplify.subscribe('system.loadExtra', () => atheos.codegit.init());
 
 	atheos.codegit = {
 
@@ -480,7 +480,7 @@
 				$.getJSON(this.path + 'controller.php?action=checkout&repo=' + repo + '&path=' + path, function(result) {
 					atheos.toast[result.status](result.message);
 					if (atheos.active.isOpen(repo + '/' + path)) {
-						atheos.toast.notice('Reloading file after undoing changes');
+						atheos.toast.show('notice', 'Reloading file after undoing changes');
 						atheos.active.close(repo + '/' + path);
 						atheos.filemanager.openFile(repo + '/' + path);
 					}

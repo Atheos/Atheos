@@ -58,18 +58,7 @@
 			};
 		},
 
-		//////////////////////////////////////////////////////////////////////
-		// Extend / Combine JS objects
-		//////////////////////////////////////////////////////////////////////
-		extend: function(obj, src) {
-			var temp = JSON.parse(JSON.stringify(obj));
-			for (var key in src) {
-				if (src.hasOwnProperty(key)) {
-					temp[key] = src[key];
-				}
-			}
-			return temp;
-		},
+
 
 		//////////////////////////////////////////////////////////////////////
 		// Options Menu Event Handlers
@@ -260,38 +249,3 @@
 	};
 
 })(this);
-
-
-(function() {
-	var method;
-	var noop = function() {};
-	var methods = [
-		'assert', 'clear', 'count', 'debug', 'dir', 'dirxml', 'error',
-		'exception', 'group', 'groupCollapsed', 'groupEnd', 'info', 'log',
-		'markTimeline', 'profile', 'profileEnd', 'table', 'time', 'timeEnd',
-		'timeStamp', 'trace', 'warn'
-	];
-	var length = methods.length;
-	var console = (window.console = window.console || {});
-
-	while (length--) {
-		method = methods[length];
-
-		// Only stub undefined methods.
-		if (!console[method]) {
-			console[method] = noop;
-		}
-	}
-
-	if (Function.prototype.bind) {
-		window.log = Function.prototype.bind.call(console.log, console);
-		window.trace = Function.prototype.bind.call(console.trace, console);
-	} else {
-		window.log = function() {
-			Function.prototype.apply.call(console.log, console, arguments);
-		};
-		window.trace = function() {
-			Function.prototype.apply.call(console.trace, console, arguments);
-		};
-	}
-})();
