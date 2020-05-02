@@ -1,6 +1,5 @@
 <br/>
 <div align="center">
-    <br />
     <h1><a href="https://atheos.io/">Atheos IDE</a>, built on <a href="http://codiad.com/">Codiad</a></h1>
 </div>
 
