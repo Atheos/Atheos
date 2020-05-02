@@ -24,8 +24,8 @@ if ($action === "loadPanel") {
 		case 'log':
 			include('major/log.php');
 			break;
-		case 'pull_push':
-			include('major/pull_push.php');
+		case 'transfer':
+			include('major/transfer.php');
 			break;
 		case 'remote':
 			include('major/remote.html');
@@ -47,10 +47,7 @@ if ($action === "loadPanel") {
 				<a data-panel="log"><i class="fas fa-history"></i><?php i18n("Log"); ?></a>
 			</li>
 			<li>
-				<a data-panel="remotes"><i class="fas fa-cloud"></i><?php i18n("Remotes"); ?></a>
-			</li>
-			<li>
-				<a data-panel="pull_push"><i class="fas fa-sync-alt"></i><?php i18n("Pull/Push"); ?></a>
+				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php i18n("Transfer"); ?></a>
 			</li>
 			<li>
 				<a data-panel="user_config"><i class="fas fa-user-cog"></i><?php i18n("User Config"); ?></a>
