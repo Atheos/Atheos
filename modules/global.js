@@ -9,6 +9,35 @@
 (function(global) {
 	'use strict';
 
+	global.pathinfo = function(path) {
+		var index = path.lastIndexOf('/');
+		//////////////////////////////////////////////////////////////////////
+		// Path helper functions
+		//////////////////////////////////////////////////////////////////////
+		let getBaseName = function(path) {
+			return path.split('/').pop();
+		};
+
+		let getDirectory = function(path) {
+			return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
+		};
+
+		let getType = function() {
+			var element = document.querySelector('#file-manager a[data-path="' + path + '"]');
+			return element ? element.getAttribute('data-type') : false;
+		};
+
+		return {
+			// discuss at: http://phpjs.org/functions/dirname/
+			directory: path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, ''),
+			extension: path.split('.').pop(),
+			fileName: path.substring(index + 1),
+			//  discuss at: http://phpjs.org/functions/basename/
+			basename: path.split('/').pop(),
+			type: getType()
+		};
+	};
+
 
 	global.debounce = function(fn, delay) {
 		// Source: https://remysharp.com/2010/07/21/throttling-function-calls
@@ -41,7 +70,24 @@
 		};
 	};
 
+	//////////////////////////////////////////////////////////////////////
+	// Extend / Combine JS objects without modifying the source object
+	//////////////////////////////////////////////////////////////////////
+	global.extend = function(obj, src) {
+		var temp = JSON.parse(JSON.stringify(obj));
+		for (var key in src) {
+			if (src.hasOwnProperty(key)) {
+				temp[key] = src[key];
+			}
+		}
+		return temp;
+	};
 
+	//////////////////////////////////////////////////////////////////////
+	// Shorthand for sending to console
+	//////////////////////////////////////////////////////////////////////
+	window.log = Function.prototype.bind.call(console.log, console);
+	window.trace = Function.prototype.bind.call(console.trace, console);
 
 
 })(this);

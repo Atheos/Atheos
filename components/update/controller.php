@@ -54,7 +54,7 @@ switch ($action) {
 	// OptIn to Athoes Analytics
 	//////////////////////////////////////////////////////////////////////////80
 	case 'optin':
-		if (checkAccess("configure")) {
+		if (Common::checkAccess("configure")) {
 			$update->optIn();
 		}
 		break;
@@ -63,7 +63,7 @@ switch ($action) {
 	// OptOut of Athoes Analytics
 	//////////////////////////////////////////////////////////////////////////80
 	case 'optout':
-		if (checkAccess("configure")) {
+		if (Common::checkAccess("configure")) {
 			$update->optOut();
 		}
 		break;

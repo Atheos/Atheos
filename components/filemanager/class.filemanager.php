@@ -100,7 +100,7 @@ class Filemanager {
 	// OPEN (Returns the contents of a file)
 	//////////////////////////////////////////////////////////////////
 	public function open($path) {
-		if (!$path && !is_file($path)) {
+		if (!$path || !is_file($path)) {
 			Common::sendJSON("E402i");
 			die;
 		}
@@ -217,9 +217,6 @@ class Filemanager {
 
 		$serverModifyTime = filemtime($path);
 		$fileContents = file_get_contents($path);
-
-		Common::debug($serverModifyTime);
-
 
 		if ($patch && $serverModifyTime !== (int)$modifyTime) {
 			Common::sendJSON("warning", "Client is out of sync."); die;

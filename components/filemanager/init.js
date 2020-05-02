@@ -25,10 +25,6 @@
 		oX = global.onyx;
 
 	var self = null;
-	var getNodeName = atheos.common.getNodeName;
-	var getNodeType = atheos.common.getNodeType;
-	var getNodeExtension = atheos.common.getNodeExtension;
-
 
 	amplify.subscribe('system.loadMajor', () => atheos.filemanager.init());
 
@@ -41,7 +37,6 @@
 
 		controller: 'components/filemanager/controller.php',
 		dialog: 'components/filemanager/dialog.php',
-		dialogUpload: 'components/filemanager/dialog_upload.php',
 		openTrigger: 'single',
 		showHidden: true,
 
@@ -213,13 +208,13 @@
 
 		createDirectoryItem: function(path, type, size) {
 
-			var name = getNodeName(path);
+			var basename = pathinfo(path).basename;
 
-			if (!self.showHidden && name.charAt(0) === '.') {
+			if (!self.showHidden && basename.charAt(0) === '.') {
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(name);
+			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
@@ -232,7 +227,7 @@
 			<a data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
-			<span>${name}</span>
+			<span>${basename}</span>
 			</a>
 			</li>`;
 		},
@@ -262,7 +257,7 @@
 		openFile: function(path, focus, line) {
 			focus = focus || true;
 
-			var ext = getNodeExtension(path).toLowerCase();
+			var ext = pathinfo(path).extension.toLowerCase();
 
 			if (self.noOpen.indexOf(ext) < 0) {
 				ajax({
@@ -307,8 +302,6 @@
 				url: self.controller,
 				data: data,
 				success: function(data) {
-					log('Save blank file');
-					log(data);
 					var context;
 
 					if (data.status === 'success') {
@@ -398,8 +391,9 @@
 		//////////////////////////////////////////////////////////////////
 
 		paste: function(path) {
-			var copy = getNodeName(self.clipboard);
-			var type = getNodeType(self.clipboard);
+			var pathinfo = pathinfo(path);
+			var copy = pathinfo.basename;
+			var type = pathinfo.type;
 
 			var processPaste = function(path, duplicate) {
 
@@ -459,8 +453,9 @@
 		// Duplicate Object
 		//////////////////////////////////////////////////////////////////
 		duplicate: function(path) {
-			var name = getNodeName(path);
-			var type = getNodeType(path);
+			var pathinfo = pathinfo(path);
+			var name = pathinfo.basename;
+			var type = pathinfo.type;
 
 			var listener = function(e) {
 				e.preventDefault();
@@ -619,9 +614,9 @@
 		// Rename
 		//////////////////////////////////////////////////////////////////
 		rename: function(path) {
-			var nodeName = getNodeName(path);
-			var type = getNodeType(path);
-
+			var pathinfo = pathinfo(path);
+			var nodeName = pathinfo.basename;
+			var type = pathinfo.type;			
 
 			var listener = function(e) {
 				e.preventDefault();
@@ -641,8 +636,13 @@
 						name: newName
 					},
 					success: function(reply) {
-						if (reply.status !== 'error') {
-							atheos.toast.show('success', 'File Renamed');
+						if (reply.status === 'success') {
+							if (type === 'file') {
+								atheos.toast.show('success', 'File Renamed.');
+							} else {
+								atheos.toast.show('success', 'Folder Renamed.');
+
+							}
 							var node = oX('#file-manager a[data-path="' + path + '"]'),
 								icon = node.find('i:nth-child(2)'),
 								span = node.find('span');

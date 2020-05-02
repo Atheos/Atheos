@@ -20,7 +20,7 @@
 
 	var self = null;
 
-	amplify.subscribe('atheos.loaded', () => atheos.workerManager.init());
+	amplify.subscribe('system.loadMajor', () => atheos.workerManager.init());
 
 
 	atheos.workerManager = {

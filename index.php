@@ -132,7 +132,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 							$pdata = json_decode($pdata, true);
 							if (isset($pdata['bottombar'])) {
 								foreach ($pdata['bottombar'] as $bottommenu) {
-									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && checkAccess()) || !$bottommenu['admin']) {
+									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && Common::checkAccess("configure")) || !$bottommenu['admin']) {
 										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
 											echo('<div class="divider"></div>');
 											echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
