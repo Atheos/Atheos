@@ -31,36 +31,6 @@
 
 
 		//////////////////////////////////////////////////////////////////////
-		// Path helper functions
-		//////////////////////////////////////////////////////////////////////
-		getNodeName: function(path) {
-			return path.split('/').pop();
-		},
-
-		getDirectory: function(path) {
-			var index = path.lastIndexOf('/');
-			return (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1);
-		},
-
-		getNodeExtension: function(path) {
-			return path.split('.').pop();
-		},
-
-		getNodeType: function(path) {
-			return oX('#file-manager a[data-path="' + path + '"]').attr('data-type');
-		},
-
-		splitDirectoryAndFileName: function(path) {
-			var index = path.lastIndexOf('/');
-			return {
-				fileName: path.substring(index + 1),
-				directory: (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1)
-			};
-		},
-
-
-
-		//////////////////////////////////////////////////////////////////////
 		// Options Menu Event Handlers
 		//////////////////////////////////////////////////////////////////////
 		optionMenus: [],
