@@ -193,8 +193,6 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function updateACL() {
 		// Access set to all projects
-		Common::debug($this->userACL);
-
 		if ($this->userACL !== "full") {
 			$this->userACL = explode(",", $this->userACL);
 		}

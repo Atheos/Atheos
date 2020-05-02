@@ -185,8 +185,7 @@
 				}
 				return;
 			}
-
-			var ext = atheos.common.getNodeExtension(path);
+			var ext = pathinfo(path).extension;
 			var mode = atheos.textmode.selectMode(ext);
 
 			var fn = function() {
@@ -426,7 +425,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Clsoe file
+		// Close file
 		//////////////////////////////////////////////////////////////////
 		close: function(path) {
 			if (!self.isOpen(path)) {
@@ -434,12 +433,12 @@
 			}
 			var session = self.sessions[path];
 
-			var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
+			var basename = pathinfo(path).basename;
 
 			if (session.status === 'changed') {
 				var dialog = {
 					banner: 'Close unsaved file?',
-					data: fileName,
+					data: basename,
 					actions: {
 						'Save & Close': function() {
 							amplify.publish('active.close', path);
@@ -469,8 +468,8 @@
 
 			for (var path in self.sessions) {
 				if (self.sessions[path].status === 'changed') {
-					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
-					changedTabs += fileName + '\n';
+					var basename = pathinfo(path).basename;
+					changedTabs += basename + '\n';
 				}
 			}
 
@@ -500,7 +499,7 @@
 		},
 
 		remove: function(path) {
-			if(!(path in self.sessions)) {
+			if (!(path in self.sessions)) {
 				return;
 			}
 			var session = self.sessions[path];
@@ -587,7 +586,7 @@
 				var newSession = self.sessions[newPath];
 
 				// Change Editor Mode
-				var ext = atheos.common.getNodeExtension(newPath);
+				var ext = pathinfo(newPath).extension;
 				var mode = atheos.textmode.selectMode(ext);
 
 				// handle async mode change
@@ -779,10 +778,10 @@
 
 
 		createListItem: function(path) {
-			var split = atheos.common.splitDirectoryAndFileName(path);
+			var split = pathinfo(path);
 
 			var item = '<li class="draggable" data-path="' + path + '"><a>' +
-				split.directory + '<span class="file-name">' + split.fileName + '</span>' +
+				split.directory + '<span class="file-name">' + split.basename + '</span>' +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);

@@ -38,7 +38,7 @@
 		<div class="title">
 			<h2><?php i18n("Projects"); ?></h2>
 			<i id="projects-collapse" class="fas fa-chevron-circle-down" alt="<?php i18n("Collapse"); ?>"></i>
-			<?php if (checkAccess()) {
+			<?php if (Common::checkAccess("configure")) {
 				?>
 				<i id="projects-manage" class="fas fa-archive"></i>
 				<i id="projects-create" class="fas fa-plus-circle" alt="<?php i18n("Create Project"); ?>"></i>
