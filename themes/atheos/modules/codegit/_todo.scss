@@ -68,21 +68,6 @@
 	white-space: nowrap;
 }
 
-
-
-/* Git remotes */
-/* Git branches */
-#git_remotes,
-#git_branches {
-	display: inline-block;
-	margin-left: 10px;
-	width: auto;
-}
-
-#git_branch {
-	display: inline-block;
-}
-
 /* Git clone */
 .git_clone_area table td,
 .git_clone_area table th {
