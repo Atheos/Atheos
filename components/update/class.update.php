@@ -16,7 +16,9 @@ class Update {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	private $version = '';
+	private $update = 'https://atheos.io/update';
+	private $github = 'https://api.github.com/repos/Atheos/Atheos/releases/latest';
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -51,8 +53,8 @@ class Update {
 
 			$reply = array(
 				"local" => $local,
-				"remote" => UPDATEURL,
-				"github" => GITHUBAPI
+				"remote" => defined('UPDATEURL') ? UPDATEURL : $this->update,
+				"github" => defined('GITHUBAPI') ? GITHUBAPI : $this->github
 			);
 
 			Common::sendJSON("success", $reply);
