@@ -12,10 +12,11 @@
 
 require_once('../../common.php');
 require_once('class.project.php');
-//////////////////////////////////////////////////////////////////
+
+//////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
-//////////////////////////////////////////////////////////////////
-checkSession();
+//////////////////////////////////////////////////////////////////////////////80
+Common::checkSession();
 
 $action = Common::data("action");
 
@@ -40,7 +41,7 @@ switch ($action) {
 	// Create Project
 	//////////////////////////////////////////////////////////////////
 	case 'create':
-		if (checkAccess("configure")) {
+		if (Common::checkAccess("configure")) {
 			$Project->name = $projectName;
 			$Project->path = $projectPath ?: $projectName;
 
@@ -70,7 +71,7 @@ switch ($action) {
 	// Delete Project
 	//////////////////////////////////////////////////////////////////
 	case 'delete':
-		if (checkAccess("configure")) {
+		if (Common::checkAccess("configure")) {
 			$Project->path = $projectPath;
 			$Project->delete();
 		}

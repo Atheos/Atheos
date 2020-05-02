@@ -99,7 +99,7 @@ class Market
 				if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
 					$type = 'themes';
 				} else {
-					die(formatJSEND("error", "Invalid Repository"));
+					Common::sendJSON("error", "Invalid Repository"); die;
 				}
 			}
 		} else {
@@ -152,7 +152,7 @@ class Market
 		}
 
 		rrmdir(BASE_PATH.'/'.$type.'/'.$name);
-		echo formatJSEND("success", null);
+		Common::sendJSON("S2000");
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -216,23 +216,23 @@ class Market
 							}
 							cpy(BASE_PATH.'/'.$type.'/_'.session_id().'/'.$srcname, BASE_PATH.'/'.$type.'/'.$name, $ign);
 						} else {
-							die(formatJSEND("error", "Unable to open ".$name.".zip"));
+							Common::sendJSON("error", "Unable to open ".$name.".zip"); die;
 						}
 					} else {
-						die(formatJSEND("error", "ZIP Extension not found"));
+						Common::sendJSON("error", "ZIP Extension not found"); die;
 					}
 
 					rrmdir(BASE_PATH.'/'.$type.'/_'.session_id());
 					// Response
-					echo formatJSEND("success", null);
+					Common::sendJSON("S2000");
 				} else {
-					die(formatJSEND("error", "Unable to download ".$repo));
+					Common::sendJSON("error", "Unable to download ".$repo); die;
 				}
 			} else {
-				die(formatJSEND("error", "Unable to create temp dir "));
+				Common::sendJSON("error", "Unable to create temp dir"); die;
 			}
 		} else {
-			echo formatJSEND("error", "Unable to find ".$name);
+			Common::sendJSON("error", "Unable to find ".$name); die;
 		}
 	}
 }
