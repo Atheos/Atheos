@@ -181,13 +181,6 @@ class Common {
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// URLs
-	//////////////////////////////////////////////////////////////////
-	public static function getConstant($key, $default = null) {
-		return defined($key) ? constant($key) : $default;
-	}
-
-	//////////////////////////////////////////////////////////////////
 	// Localization
 	//////////////////////////////////////////////////////////////////
 	public static function i18n($key, $type = "echo", $args = array()) {
@@ -272,37 +265,6 @@ class Common {
 		$write = fopen($path . $file, 'w') or die("can't open file: " . $path . $file);
 		fwrite($write, $data);
 		fclose($write);
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// Format JSEND Response
-	//////////////////////////////////////////////////////////////////
-
-	public static function formatJSEND($status, $data = false) {
-
-		/// Debug /////////////////////////////////////////////////
-		$debug = "";
-		if (count(Common::$debugMessageStack) > 0) {
-			$debug .= ',"debug":';
-			$debug .= json_encode(Common::$debugMessageStack);
-		}
-
-		// Success ///////////////////////////////////////////////
-		if ($status == "success") {
-			if ($data) {
-				$jsend = '{"status":"success","data":'.json_encode($data).$debug.'}';
-			} else {
-				$jsend = '{"status":"success","data":null'.$debug.'}';
-			}
-
-			// Error /////////////////////////////////////////////////
-		} else {
-			$jsend = '{"status":"error","message":"'.$data.'"'.$debug.'}';
-		}
-
-		// Return ////////////////////////////////////////////////
-		return $jsend;
-
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -556,28 +518,6 @@ class Common {
 
 function i18n($key, $type = "echo", $args = array()) {
 	return Common::i18n($key, $type, $args);
-}
-function checkSession() {
-	Common::checkSession();
-}
-function getJSON($file, $namespace = "") {
-	Common::debug("getJSON");
-	return Common::readJSON($file, $namespace);
-}
-function readJSON($file, $namespace = "") {
-	return Common::readJSON($file, $namespace);
-}
-function saveJSON($file, $data, $namespace = "") {
-	Common::saveJSON($file, $data, $namespace);
-}
-function formatJSEND($status, $data = false) {
-	return Common::formatJSEND($status, $data);
-}
-function checkAccess() {
-	return Common::checkAccess();
-}
-function checkPath($path) {
-	return Common::checkPath($path);
 }
 
 ?>
