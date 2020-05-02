@@ -14,7 +14,7 @@
 
 <div style='margin:0 auto;width:80%;'>
 
-![Screenshot: Atheos](/docs/atheos.png?raw=true "Atheos")
+![Screenshot: Atheos](/docs/atheos_v5.png?raw=true "Atheos")
 
 </div>
 
