@@ -12,10 +12,10 @@
 
 require_once('../../common.php');
 
-//////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
-//////////////////////////////////////////////////////////////////
-checkSession();
+//////////////////////////////////////////////////////////////////////////////80
+Common::checkSession();
 
 $action = Common::data("action");
 $user = Common::data("user", "session");
@@ -62,12 +62,6 @@ switch ($action) {
 
 	case 'list':
 
-		// Get access control data
-		$projects_assigned = false;
-		if (file_exists(BASE_PATH . "/data/" . $_SESSION['user'] . '_acl.php')) {
-			$projects_assigned = getJSON($_SESSION['user'] . '_acl.php');
-		}
-
 		$userACL = Common::readJSON("users")[$user]["userACL"];
 		// Get projects JSON data
 		$projects = Common::readJSON('projects');
@@ -89,7 +83,7 @@ switch ($action) {
 						<th class="action"><?php i18n("Open"); ?></th>
 						<th><?php i18n("Project Name"); ?></th>
 						<th><?php i18n("Path"); ?></th>
-						<?php if (checkAccess("configure")) {
+						<?php if (Common::checkAccess("configure")) {
 							?>
 							<th class="action"><?php i18n("Delete"); ?></th>
 							<th class="action"><?php i18n("Rename"); ?></th>
@@ -105,7 +99,7 @@ switch ($action) {
 							<td><?php echo($projectName); ?></td>
 							<td><?php echo($projectPath); ?></td>
 							<?php
-							if (checkAccess()) {
+							if (Common::checkAccess("configure")) {
 								if ($activeProject == $projectPath) {
 									?>
 									<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
@@ -127,7 +121,7 @@ switch ($action) {
 					?>
 				</table>
 			</div>
-			<?php if (checkAccess("configure")) {
+			<?php if (Common::checkAccess("configure")) {
 				?><button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button><?php
 			} ?>
 		</form>

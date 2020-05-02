@@ -47,8 +47,11 @@ class Active {
 
 			foreach ($userActiveFiles as $path => $status) {
 				$fullPath = Common::isAbsPath($path) ? $path : WORKSPACE. "/$path";
+				if (file_exists($fullPath)) {
+					$userActiveFiles[$path] = $status;
+				}
 
-				$userActiveFiles[$path] = file_exists($fullPath) ? $status : "invalid";
+				// $userActiveFiles[$path] = file_exists($fullPath) ? $status : "invalid";
 			}
 			Common::sendJSON("S2000", $userActiveFiles);
 		}
@@ -90,8 +93,9 @@ class Active {
 	//////////////////////////////////////////////////////////////////
 	public function rename() {
 		$revisedActiveFiles = array();
-		foreach ($this->activeFiles as $user) {
-			foreach ($this->activeFiles[$user] as $path => $status) {
+		foreach ($this->activeFiles as $user => $data) {
+
+			foreach ($data as $path => $status) {
 				if ($path === $this->path) {
 					$revisedActiveFiles[$user][$this->newPath] = $status;
 				} else {
