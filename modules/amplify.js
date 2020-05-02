@@ -4,6 +4,7 @@
 		subscriptions = {};
 
 	var amplify = global.amplify = {
+		list: subscriptions,
 		reset: function() {
 			subscriptions = {};
 		},
