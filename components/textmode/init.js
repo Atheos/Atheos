@@ -14,9 +14,9 @@
 	'use strict';
 
 	var atheos = global.atheos,
-	amplify = global.amplify,
-	ajax = global.ajax,
-	oX = global.onyx;
+		amplify = global.amplify,
+		ajax = global.ajax,
+		oX = global.onyx;
 
 	var self = null;
 
@@ -48,8 +48,7 @@
 				}
 			});
 
-			atheos.common.initMenuHandler(oX('#current_mode'),
-				oX('#changemode-menu'));
+			atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
 
 		},
 

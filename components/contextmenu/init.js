@@ -19,21 +19,23 @@
 
 (function(global) {
 	'use strict';
-	var contextmenu = null;
 
+	var self = null;
+	var menu = null;
 
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		oX = global.onyx;
 
-	amplify.subscribe('atheos.loaded', () => atheos.contextmenu.init());
+	amplify.subscribe('system.loadMinor', () => atheos.contextmenu.init());
 
 	atheos.contextmenu = {
 
 		contextMenu: {},
 
 		init: function() {
-			contextmenu = this;
+			self = this;
+			menu = oX('#contextmenu');
 
 			var checkAnchor = function(node) {
 				node = oX(node);
@@ -59,7 +61,7 @@
 			// Initialize node listener
 			oX('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
-				atheos.contextmenu.show(e, checkAnchor(e.target));
+				self.show(e, checkAnchor(e.target));
 			});
 		},
 
@@ -67,114 +69,123 @@
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		show: function(e, node) {
-			if (node) {
-				var path = node.attr('data-path'),
-					type = node.attr('data-type'),
-					name = node.find('span').html();
-
-				node.addClass('context-menu-active');
-
-				var menu = oX('#contextmenu');
-				var children = null;
-
-				switch (type) {
-					case 'directory':
-						children = menu.findAll('.directory-only, .non-root');
-						children.forEach((child) => child.show());
-
-						children = menu.findAll('.file-only, .root-only');
-						children.forEach((child) => child.hide());
-						break;
-					case 'file':
-						children = menu.findAll('.directory-only, .root-only');
-						children.forEach((child) => child.hide());
-
-						children = menu.findAll('.file-only, .non-root');
-						children.forEach((child) => child.show());
-						break;
-					case 'root':
-						children = menu.findAll('.directory-only, .root-only');
-						children.forEach((child) => child.show());
-
-						children = menu.findAll('.file-only, .non-root');
-						children.forEach((child) => child.hide());
-						break;
-				}
-
-				children = menu.findAll('.no-external');
-				if (atheos.common.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
-					children.forEach((child) => child.hide());
-				} else {
-					children.forEach((child) => child.show());
-				}
-
-				// Show menu
-				var top = e.pageY;
-				var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-				if (top > windowHeight - menu.height()) {
-					top -= menu.height();
-				}
-				if (top < 10) {
-					top = 10;
-				}
-
-				var max = windowHeight - top - 10;
-
-				menu.css({
-					'top': top + 'px',
-					'left': e.pageX + 'px',
-					'max-height': max + 'px',
-					'display': 'block'
-				});
-
-				menu.attr({
-					'data-path': path,
-					'data-type': type,
-					'data-name': name
-				});
-
-				// Show faded 'paste' if nothing in clipboard
-				if (atheos.filemanager.clipboard === '') {
-					oX('#contextmenu i.fa-paste').parent().hide();
-				} else {
-					oX('#contextmenu i.fa-paste').parent().show();
-				}
-
-				var hideContextMenu;
-				menu.on('mouseout', function() {
-					hideContextMenu = setTimeout(function() {
-						contextmenu.hide();
-					}, 500);
-				});
-
-				menu.on('mouseover', function() {
-					if (hideContextMenu) {
-						clearTimeout(hideContextMenu);
-					}
-				});
-
-				/* Notify listeners. */
-				amplify.publish('contextmenu.show', {
-					menu: menu,
-					name: name,
-					node: node,
-					path: path,
-					type: type
-				});
-
-				// Hide on click
-				menu.on('click', function() {
-					contextmenu.hide();
-				});
+			if (!node) {
+				return;
 			}
+			var path = node.attr('data-path'),
+				type = node.attr('data-type'),
+				name = node.find('span').html();
+
+			node.addClass('context-menu-active');
+
+			var menu = oX('#contextmenu');
+			var children = null;
+
+			switch (type) {
+				case 'directory':
+					children = menu.findAll('.directory-only, .non-root');
+					children.forEach((child) => child.show());
+
+					children = menu.findAll('.file-only, .root-only');
+					children.forEach((child) => child.hide());
+					break;
+				case 'file':
+					children = menu.findAll('.directory-only, .root-only');
+					children.forEach((child) => child.hide());
+
+					children = menu.findAll('.file-only, .non-root');
+					children.forEach((child) => child.show());
+					break;
+				case 'root':
+					children = menu.findAll('.directory-only, .root-only');
+					children.forEach((child) => child.show());
+
+					children = menu.findAll('.file-only, .non-root');
+					children.forEach((child) => child.hide());
+					break;
+			}
+
+			children = menu.findAll('.no-external');
+			if (atheos.common.isAbsPath(oX('#file-manager a[data-type="root"]').attr('data-path'))) {
+				children.forEach((child) => child.hide());
+			} else {
+				children.forEach((child) => child.show());
+			}
+
+			// Show menu
+			var top = e.pageY;
+			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			if (top > windowHeight - menu.height()) {
+				top -= menu.height();
+			}
+			if (top < 10) {
+				top = 10;
+			}
+
+			var max = windowHeight - top - 10;
+
+			menu.css({
+				'top': top + 'px',
+				'left': e.pageX + 'px',
+				'max-height': max + 'px',
+				'display': 'block'
+			});
+
+			menu.attr({
+				'data-path': path,
+				'data-type': type,
+				'data-name': name
+			});
+
+			// Show faded 'paste' if nothing in clipboard
+			if (atheos.filemanager.clipboard === '') {
+				oX('#contextmenu i.fa-paste').parent().hide();
+			} else {
+				oX('#contextmenu i.fa-paste').parent().show();
+			}
+
+
+
+			/* Notify listeners. */
+			amplify.publish('contextmenu.show', {
+				menu: menu,
+				name: name,
+				node: node,
+				path: path,
+				type: type
+			});
+
+			// Hide on click
+			menu.on('click', function() {
+				self.hide();
+			});
+
+			self.keepOpen();
+
 		},
-		
+
+		keepOpen: function() {
+			var hideContextMenu;
+			menu.on('mouseout', function() {
+				hideContextMenu = setTimeout(function() {
+					self.hide();
+				}, 500);
+			});
+
+			menu.on('mouseover', function() {
+				if (hideContextMenu) {
+					clearTimeout(hideContextMenu);
+				}
+			});
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Hide Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		hide: function() {
-			var menu = oX('#contextmenu');
 			menu.hide();
+			menu.off('*');
+			
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');

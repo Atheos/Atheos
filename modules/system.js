@@ -8,7 +8,7 @@
 // Description: 
 // The System Module initializes the core Atheos object and puts the engine in
 // motion, calling the initilization of other modules, and publishing the
-// Amplify 'atheos.loaded' event.
+// Amplify 'system.load[]' events.
 //
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
@@ -40,9 +40,6 @@
 			amplify.publish('system.loadMajor');
 			amplify.publish('system.loadMinor');
 			amplify.publish('system.loadExtra');
-
-			amplify.publish('atheos.loaded');
-			amplify.publish('atheos.plugins');
 
 			// Settings are initialized last in order to ensure all listeners are attached
 			atheos.settings.init();
