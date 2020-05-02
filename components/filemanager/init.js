@@ -614,9 +614,9 @@
 		// Rename
 		//////////////////////////////////////////////////////////////////
 		rename: function(path) {
-			var pathinfo = pathinfo(path);
-			var nodeName = pathinfo.basename;
-			var type = pathinfo.type;			
+			var split = pathinfo(path);
+			var nodeName = split.basename;
+			var type = split.type;			
 
 			var listener = function(e) {
 				e.preventDefault();
