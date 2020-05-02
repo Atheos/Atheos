@@ -43,7 +43,7 @@
 	//////////////////////////////////////////////////////////////////////
 
 
-	amplify.subscribe('atheos.plugins', () => atheos.codegit.init());
+	amplify.subscribe('system.loadExtra', () => atheos.codegit.init());
 
 	atheos.codegit = {
 
@@ -104,7 +104,7 @@
 
 		scanForGit: function(directory) {
 			directory.files.forEach(function(file, i) {
-				if (atheos.common.getNodeName(file.path) === '.git') {
+				if (pathinfo(file.path).basename === '.git') {
 					directory.node.addClass('repo');
 					if (!directory.node.find('i.repo-icon')) {
 						directory.node.append('<i class="repo-icon fas fa-code-branch"></i>');
@@ -141,53 +141,41 @@
 
 		showContextMenu: function(obj) {
 			var path = obj.path,
-				root = oX('#project-root').attr('data-path'),
-				counter = 0;
+				root = oX('#project-root').attr('data-path');
 
-			var target = obj.node;
-			log(obj);
-			
+			var anchor = '<a class="codegit" onclick="atheos.codegit.';
 
-			if (obj.type === 'directory') {
-				obj.menu.append('<hr class="directory-only codegit">');
-				if (target.hasClass('repo')) {
-					obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.showCodeGit(\'' + obj.path + '\');">' + self.icon + 'Open CodeGit</a>');
-					obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.submoduleDialog(\'' + obj.path + '\');">' + self.icon + 'Add Submodule</a>');
-				} else {
-					obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.gitInit(\'' + obj.path + '\');">' + self.icon + 'Git Init</a>');
-					obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.clone(\'' + obj.path + '\');">' + self.icon + 'Git Clone</a>');
-
-					//Git Submodule
-					while (path != root) {
-						path = atheos.common.getDirectory(path);
-						target = oX('[data-path="' + path + '"]');
-						if (target && target.hasClass('repo')) {
-							obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.submoduleDialog(\'' + path + '\', \'' + obj.path + '\');">' + self.icon + 'Add Submodule</a>');
-							break;
-						}
-						if (counter >= 10) break;
-						counter++;
-					}
-				}
-			} else {
-				var file = path;
-				while (path != root) {
-					path = atheos.common.getDirectory(path);
+			function findParentRepo(path) {
+				var counter = 0;
+				var target = obj.node;
+				
+				while (path !== root) {
+					path = pathinfo(path).directory;
 					target = oX('[data-path="' + path + '"]');
 					if (target && target.hasClass('repo')) {
-						obj.menu.append('<hr class="file-only codegit">');
-						obj.menu.append('<a class="file-only codegit" onclick="atheos.codegit.diff(\'' + obj.path + '\', \'' + path + '\');">' + self.icon + 'Git Diff</a>');
-						obj.menu.append('<a class="file-only codegit" onclick="atheos.codegit.blame(\'' + obj.path + '\', \'' + path + '\');">' + self.icon + 'Git Blame</a>');
-						obj.menu.append('<a class="file-only codegit" onclick="atheos.codegit.history(\'' + obj.path + '\', \'' + path + '\');">' + self.icon + 'Git History</a>');
-
-						//Init Submodules
-						if (self.basename(file) === '.gitmodules') {
-							obj.menu.append('<a class="directory-only codegit" onclick="atheos.codegit.initSubmodule(\'' + self.dirname(file) + '\', \'' + obj.path + '\');">' + self.icon + 'Init Submodule</a>');
-						}
-						break;
+						return path;
 					}
 					if (counter >= 10) break;
 					counter++;
+				}
+				return false;
+			}
+
+			obj.menu.append('<hr class="codegit">');
+
+			if (obj.type === 'directory') {
+				if (obj.node.hasClass('repo')) {
+					obj.menu.append(anchor + 'showCodeGit(\'' + path + '\');">' + self.icon + 'Open CodeGit</a>');
+				} else {
+					obj.menu.append(anchor + 'gitInit(\'' + path + '\');">' + self.icon + 'Git Init</a>');
+					obj.menu.append(anchor + 'clone(\'' + path + '\');">' + self.icon + 'Git Clone</a>');
+				}
+			} else {
+				var repo = findParentRepo(path);
+				if (repo) {
+					obj.menu.append(anchor + 'diff(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Diff</a>');
+					obj.menu.append(anchor + 'blame(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Blame</a>');
+					obj.menu.append(anchor + 'log(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Log</a>');
 				}
 			}
 		},
@@ -254,6 +242,7 @@
 		showDialog: function(type, repo, path) {
 			path = path || oX('#project-root').attr('data-path');
 			self.location = repo || self.location;
+			log(path, repo);
 			atheos.modal.load(600, self.dialog, {
 				action: 'loadPanel',
 				panel: type,
@@ -261,16 +250,6 @@
 				path
 			});
 		},
-
-		diff: function(path, repo) {
-			if (!path || !repo) return;
-
-			repo = this.getPath(repo);
-			path = path.replace(repo + "/", "");
-
-			self.showDialog('diff', repo, path);
-		},
-
 
 		gitInit: function(path) {
 			ajax({
@@ -375,21 +354,27 @@
 			});
 		},
 
-		blame: function(path, repo) {
+		diff: function(repo, path) {
 			if (!path || !repo) return;
-
-			repo = this.getPath(repo);
 			path = path.replace(repo + "/", "");
+			self.showDialog('diff', repo, path);
+		},
 
+		blame: function(repo, path) {
+			if (!path || !repo) return;
+			path = path.replace(repo + "/", "");
 			self.showDialog('blame', repo, path);
 		},
 
-		history: function(path, repo) {
-			this.location = repo;
+		log: function(repo, path) {
+			// this.location = repo;
+			// path = path.replace(repo + "/", "");
+			// this.files = [];
+			// this.files.push(path);
+
+			if (!path || !repo) return;
 			path = path.replace(repo + "/", "");
-			this.files = [];
-			this.files.push(path);
-			this.showDialog('log', repo);
+			this.showDialog('log', repo, path);
 		},
 
 		login: function() {},

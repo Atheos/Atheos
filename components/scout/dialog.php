@@ -49,7 +49,7 @@ switch ($action) {
 						<label><?php i18n("In:"); ?></label>
 						<select name="probe_type">
 							<option value="0"><?php i18n("Current Project"); ?></option>
-							<?php if (checkAccess()) {
+							<?php if (Common::checkAccess("configure")) {
 								?>
 								<option value="1"><?php i18n("Workspace Projects"); ?></option>
 								<?php
