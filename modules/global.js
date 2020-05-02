@@ -15,12 +15,10 @@
 		// Path helper functions
 		//////////////////////////////////////////////////////////////////////
 		let getBaseName = function(path) {
-			//  discuss at: http://phpjs.org/functions/basename/
 			return path.split('/').pop();
 		};
 
 		let getDirectory = function(path) {
-			// discuss at: http://phpjs.org/functions/dirname/
 			return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
 		};
 
@@ -30,9 +28,11 @@
 		};
 
 		return {
-			directory: (path.indexOf('/') === 0) ? path.substring(1, index + 1) : path.substring(0, index + 1),
+			// discuss at: http://phpjs.org/functions/dirname/
+			directory: path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, ''),
 			extension: path.split('.').pop(),
 			fileName: path.substring(index + 1),
+			//  discuss at: http://phpjs.org/functions/basename/
 			basename: path.split('/').pop(),
 			type: getType()
 		};
