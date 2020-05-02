@@ -31,7 +31,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'check':
 
-		if (!checkAccess("configure")) {
+		if (!Common::checkAccess("configure")) {
 			echo("<h1>" . i18n("Restricted") . "</h1>");
 			echo("<pre>" . i18n("You can not check for updates") . "</pre>");
 		} else {

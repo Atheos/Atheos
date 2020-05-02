@@ -260,8 +260,8 @@
 
 			for (var path in atheos.active.sessions) {
 				if (atheos.active.sessions[path].status === 'changed') {
-					var fileName = atheos.common.splitDirectoryAndFileName(path).fileName;
-					changedTabs += fileName + '\n';
+					var basename = pathinfo(path).basename;
+					changedTabs += basename + '\n';
 				}
 			}
 

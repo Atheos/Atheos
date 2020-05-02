@@ -43,7 +43,7 @@
 		// Download
 		//////////////////////////////////////////////////////////////////////80
 		download: function(path) {
-			var type = atheos.common.getNodeType(path);
+			var type = pathinfo(path).type;
 			ajax({
 				url: self.controller,
 				data: {
