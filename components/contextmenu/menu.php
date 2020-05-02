@@ -22,7 +22,7 @@
 			$pdata = json_decode($pdata, true);
 			if (isset($pdata['contextmenu'])) {
 				foreach ($pdata['contextmenu'] as $contextmenu) {
-					if ((!isset($contextmenu['admin']) || ($contextmenu['admin']) && checkAccess()) || !$contextmenu['admin']) {
+					if ((!isset($contextmenu['admin']) || ($contextmenu['admin']) && Common::checkAccess("configure")) || !$contextmenu['admin']) {
 						if (isset($contextmenu['applies-to']) && isset($contextmenu['action']) && isset($contextmenu['icon']) && isset($contextmenu['title'])) {
 							echo('<hr class="'.$contextmenu['applies-to'].'">');
 							echo('<a class="'.$contextmenu['applies-to'].'" onclick="'.$contextmenu['action'].'"><i class="'.$contextmenu['icon'].'"></i>'.$contextmenu['title'].'</a>');

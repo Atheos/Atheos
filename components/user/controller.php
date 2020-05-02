@@ -74,7 +74,7 @@ switch ($action) {
 			die(Common::sendJSON("error", "Missing username or password"));
 		}
 
-		if (checkAccess() || $username === Common::data("user", "session")) {
+		if (Common::checkAccess("configure") || $username === Common::data("user", "session")) {
 			$User->username = $username;
 			$User->password = $password;
 			$User->changePassword();
@@ -85,7 +85,7 @@ switch ($action) {
 	// Create User
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
-		if (checkAccess()) {
+		if (Common::checkAccess("configure")) {
 			if (!$username || !$password) {
 				die(Common::sendJSON("error", "Missing username or password"));
 			}
@@ -100,7 +100,7 @@ switch ($action) {
 	// Delete User
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
-		if (checkAccess()) {
+		if (Common::checkAccess("configure")) {
 			if (!$username) {
 				die(Common::sendJSON("error", "Missing username"));
 			}
@@ -144,7 +144,7 @@ switch ($action) {
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////////80
 	case 'updateACL':
-		if (checkAccess()) {
+		if (Common::checkAccess("configure")) {
 			if (!$username) {
 				die(Common::sendJSON("error", "Missing username"));
 			}

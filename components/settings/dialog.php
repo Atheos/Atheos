@@ -74,7 +74,7 @@ switch ($action) {
 					<a name="codegit-settings" data-file="components/settings/settings.codegit.php" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
 				</li>
 				<?php
-				if (COMMON::checkAccess()) {
+				if (Common::checkAccess()) {
 					?>
 					<li>
 						<a name="extension-settings" data-file="components/textmode/dialog.php?action=settings" data-name="fileext_textmode"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>

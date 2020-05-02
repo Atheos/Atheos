@@ -218,9 +218,6 @@ class Filemanager {
 		$serverModifyTime = filemtime($path);
 		$fileContents = file_get_contents($path);
 
-		Common::debug($serverModifyTime);
-
-
 		if ($patch && $serverModifyTime !== (int)$modifyTime) {
 			Common::sendJSON("warning", "Client is out of sync."); die;
 		} elseif (strlen(trim($patch)) === 0 && !$content) {

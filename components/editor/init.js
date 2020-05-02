@@ -741,7 +741,7 @@
 			i = i || this.getActive();
 			if (!i) return;
 			i.gotoLine(line, 0, true);
-			atheos.editor.focus();
+			self.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////
