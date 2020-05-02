@@ -148,7 +148,7 @@
 			function findParentRepo(path) {
 				var counter = 0;
 				var target = obj.node;
-				
+
 				while (path !== root) {
 					path = pathinfo(path).directory;
 					target = oX('[data-path="' + path + '"]');
@@ -202,6 +202,7 @@
 								files: [target.parent('tr').attr('data-file')]
 							});
 						} else if (target.text() === 'Undo') {
+							atheos.toast.show('notice', "Git Undo coming soon");
 							// self.showPanel(target.attr('data-panel'), repo);
 						}
 					}
@@ -212,8 +213,10 @@
 			};
 
 
-			amplify.subscribe('modal.loaded', listener);
-			atheos.modal.load(800, self.dialog + '?action=codegit&repo=' + repo);
+			atheos.modal.load(800, self.dialog, {
+				action: 'codegit',
+				repo
+			}, listener);
 		},
 
 		showPanel: function(panel, repo, data) {
@@ -466,13 +469,14 @@
 		monitorCheckBoxes: function() {
 			var checkboxAll = oX('#codegit_overview #check_all');
 			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
+			var tbody = oX('#codegit_overview tbody');
 
 			checkboxAll.on('click', function() {
 				var status = checkboxAll.el.checked;
 				checkboxes.forEach((checkbox) => checkbox.el.checked = status);
 			});
 
-			oX('#codegit_overview tbody').on('click', function(e) {
+			tbody.on('click', function(e) {
 				var node = e.target;
 				if (node.tagName === 'INPUT' && node.type === 'checkbox') {
 					if (!node.checked) {
@@ -490,6 +494,11 @@
 					}
 				}
 			});
+
+			amplify.subscribe('modal.unload', function() {
+				checkboxAll.off('click');
+				tbody.off('click');
+			})
 		},
 
 		repoBannerDisabled: function() {
