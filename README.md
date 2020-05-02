@@ -1,8 +1,9 @@
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2c36f9f63b294165b604193efb8cc058)](https://www.codacy.com/gh/Atheos/Atheos?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Atheos/Atheos&amp;utm_campaign=Badge_Grade)
-
 # [Atheos IDE](https://atheos.io/), updated from [Codiad](http://codiad.com/)
 
 ![Screenshot: Atheos](/docs/atheos.png?raw=true "Atheos")
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/2c36f9f63b294165b604193efb8cc058)](https://www.codacy.com/gh/Atheos/Atheos?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Atheos/Atheos&amp;utm_campaign=Badge_Grade)
+
 
 Atheos is an updated and currently maintained fork of Codiad, a web-based IDE framework with a small footprint and minimal requirements. 
 
