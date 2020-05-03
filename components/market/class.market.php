@@ -16,7 +16,7 @@ class Market
 	//////////////////////////////////////////////////////////////////
 
 	public $local = array();
-	public $market = 'https://atheos.io/market/json';
+	public $market = 'https://www.atheos.io/market/json';
 	public $remote = null;
 	public $tmp = array();
 	public $old = null;
