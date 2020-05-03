@@ -16,7 +16,7 @@ class Update {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	private $update = 'https://atheos.io/update';
+	private $update = 'https://www.atheos.io/update';
 	private $github = 'https://api.github.com/repos/Atheos/Atheos/releases/latest';
 
 
