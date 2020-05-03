@@ -79,19 +79,7 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-
-				var changedTabs = [];
-				var path;
-
-				for (path in atheos.active.sessions) {
-					if (atheos.active.sessions[path].status === 'changed') {
-						changedTabs.push(path);
-					}
-				}
-
-				if (changedTabs.length > 0) {
-					path = changedTabs[0].attr('data-path');
-					self.focus(path);
+				if (self.hasUnsavedChanges()) {
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
 
@@ -115,6 +103,24 @@
 				// minor issues on loading such that it doesn't quite meet spec
 				setTimeout(self.updateTabDropdownVisibility, 500);
 			});
+		},
+
+		hasUnsavedChanges() {
+			var changedTabs = [];
+			var path;
+
+			for (path in self.sessions) {
+				if (self.sessions[path].status === 'changed') {
+					changedTabs.push(path);
+				}
+			}
+
+			if (changedTabs.length > 0) {
+				self.focus(changedTabs[0]);
+				return changedTabs;
+			}
+
+			return false;
 		},
 
 		initTabListeners: function() {
