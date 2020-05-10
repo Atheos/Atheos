@@ -433,9 +433,6 @@
 					copy = 'copy_' + copy;
 				}
 
-				log(self.clipboard);
-				log(path + '/' + copy);
-
 				ajax({
 					url: self.controller,
 					data: {
@@ -444,7 +441,6 @@
 						dest: path + '/' + copy
 					},
 					success: function(reply) {
-						log(reply);
 						if (reply.status !== 'error') {
 							self.addToFileManager(path + '/' + copy, type, path);
 							/* Notify listeners. */
