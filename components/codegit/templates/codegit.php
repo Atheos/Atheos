@@ -35,9 +35,10 @@ if ($action === "loadPanel") {
 			break;
 	}
 } else {
+	$status = $CodeGit->branchStatus($repo)["status"];
 	?>
 	<h1><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></h1>
-	<label>Branch: <span id="codegit_branch"><?php echo $CodeGit->getCurrentBranch(); ?></span>/<span id="codegit_status"><?php echo $CodeGit->status($repo); ?></span></label>
+	<label>Branch: <span id="codegit_branch"><?php echo $CodeGit->getCurrentBranch(); ?></span><span id="codegit_status">(<?php echo $status; ?>)</span></label>
 	<div id="codegit">
 		<ul id="panel_menu">
 			<li>

@@ -455,13 +455,11 @@
 				}
 			}
 			if (!self.fileStatus) {
-				oX('#current_file').after('<div class="divider"></div><div id="codegit_file_status"></div>');
+				// oX('#current_file').after('<span id="codegit_file_status"></span>');
 				self.fileStatus = oX('#codegit_file_status');
 
-				if (self.fileStatusDisabled() !== true) {
-					self.fileStatus.show();
-				} else {
-					self.fileStatus.hide();
+				if (self.fileStatusDisabled() === true) {
+					self.fileStatus.empty();
 				}
 			}
 		},
