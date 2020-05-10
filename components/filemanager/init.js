@@ -103,14 +103,47 @@
 					}
 				});
 
-			oX('#file-manager').on('mousedown',
-				function(e) {
-					//var options = {
-					//	dragZone: oX('#file-manager').el,
-					//	direction: 'vertical'
-					//};
-					// atheos.flow.dragNdrop(e, options);
+			oX('#file-manager').on('mousedown', function(e) {
+				var options = {
+					dragZone: oX('#file-manager').el,
+					direction: 'vertical',
+					drop: self.handleDrop
+				};
+				atheos.flow.dragNdrop(e, options);
+			});
+		},
+
+		handleDrop: function(node) {
+			//Check for duplicates
+			// repathChildren and node
+			node = oX(node);
+			var parent = node.parent().siblings('a[data-path]')[0];
+
+			node = node.find('a[data-path]');
+			var oldPath = node.attr('data-path');
+			var parPath = parent.attr('data-path');
+
+			var basename = pathinfo(oldPath).basename;
+			var newPath = parPath + '/' + basename;
+			log(oldPath, newPath);
+
+			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
+				atheos.toast.show('warning', 'Path already exists.');
+				return false;
+			} else {
+				ajax({
+					url: self.controller,
+					data: {
+						action: 'move',
+						oldPath,
+						newPath
+					},
+					success: function(reply) {
+						log(reply);
+					}
 				});
+				return true;
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -380,7 +413,6 @@
 		//////////////////////////////////////////////////////////////////
 		// Copy to Clipboard
 		//////////////////////////////////////////////////////////////////
-
 		copy: function(path) {
 			self.clipboard = path;
 			atheos.toast.show('success', 'Copied to Clipboard');
@@ -391,24 +423,29 @@
 		//////////////////////////////////////////////////////////////////
 
 		paste: function(path) {
-			var pathinfo = pathinfo(path);
-			var copy = pathinfo.basename;
-			var type = pathinfo.type;
+			var split = pathinfo(self.clipboard);
+			var copy = split.basename;
+			var type = split.type;
 
 			var processPaste = function(path, duplicate) {
 
 				if (duplicate) {
 					copy = 'copy_' + copy;
 				}
+
+				log(self.clipboard);
+				log(path + '/' + copy);
+
 				ajax({
 					url: self.controller,
 					data: {
 						action: 'duplicate',
 						path: self.clipboard,
-						destination: path + '/' + copy
+						dest: path + '/' + copy
 					},
-					success: function(data) {
-						if (data.status !== 'error') {
+					success: function(reply) {
+						log(reply);
+						if (reply.status !== 'error') {
 							self.addToFileManager(path + '/' + copy, type, path);
 							/* Notify listeners. */
 							amplify.publish('filemanager.paste', {
@@ -417,7 +454,6 @@
 							});
 						}
 					}
-
 				});
 			};
 
@@ -427,35 +463,33 @@
 			} else if (path === self.clipboard) {
 				atheos.toast.show('error', 'Cannot Paste Directory Into Itself');
 
-			} else {
-
-				if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]')) {
-					atheos.alert.show({
-						banner: 'Path already exists!',
-						message: 'Would you like to overwrite or duplicate the file?',
-						data: `/${path}/${copy}`,
-						actions: {
-							'Overwrite': function() {
-								processPaste(path, false);
-							},
-							'Duplicate': function() {
-								processPaste(path, true);
-							}
+			} else if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]')) {
+				atheos.alert.show({
+					banner: 'Path already exists!',
+					message: 'Would you like to overwrite or duplicate the file?',
+					data: `/${path}/${copy}`,
+					actions: {
+						'Overwrite': function() {
+							processPaste(path, false);
+						},
+						'Duplicate': function() {
+							processPaste(path, true);
 						}
-					});
-				} else {
-					processPaste(path, false);
-				}
+					}
+				});
+			} else {
+				processPaste(path, false);
 			}
+
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Duplicate Object
 		//////////////////////////////////////////////////////////////////
 		duplicate: function(path) {
-			var pathinfo = pathinfo(path);
-			var name = pathinfo.basename;
-			var type = pathinfo.type;
+			var split = pathinfo(path);
+			var name = split.basename;
+			var type = split.type;
 
 			var listener = function(e) {
 				e.preventDefault();
@@ -474,7 +508,7 @@
 						dest: clonePath
 					},
 					success: function(reply) {
-						atheos.toast[reply.status](reply.message);
+						atheos.toast.show(reply);
 
 						if (reply.status === 'success') {
 							self.addToFileManager(clonePath, type, parent);
@@ -496,8 +530,7 @@
 					action: 'duplicate',
 					name: name,
 					type: type
-				},
-				() => {
+				}, () => {
 					oX('#modal_content').on('submit', listener);
 				});
 
@@ -507,50 +540,47 @@
 		// Create new node
 		//////////////////////////////////////////////////////////////////
 		create: function(path, type) {
-			var listener = function() {
-				oX('#modal_content form').once('submit',
-					function(e) {
-						e.preventDefault();
+			var listener = function(e) {
+				e.preventDefault();
 
-						var nodeName = oX('#modal_content form input[name="nodeName"]').value();
-						var newPath = path + '/' + nodeName;
+				var nodeName = oX('#modal_content form input[name="nodeName"]').value();
+				var newPath = path + '/' + nodeName;
 
-						ajax({
-							url: self.controller,
-							data: {
-								action: 'create',
-								path: newPath,
-								type: type
-							},
-							success: function(data) {
-								if (data.status !== 'error') {
-									atheos.toast.show('success', 'File Created');
-									atheos.modal.unload();
-									// Add new element to filemanager screen
-									self.addToFileManager(newPath, type, path);
-									if (type === 'file') {
-										self.openFile(newPath, true);
-									}
-									/* Notify listeners. */
-									amplify.publish('filemanager.onCreate', {
-										createPath: newPath,
-										path: path,
-										nodeName: nodeName,
-										type: type
-									});
-								}
+				ajax({
+					url: self.controller,
+					data: {
+						action: 'create',
+						path: newPath,
+						type: type
+					},
+					success: function(reply) {
+						log(reply);
+						if (reply.status !== 'error') {
+							atheos.toast.show('success', 'File Created');
+							atheos.modal.unload();
+							// Add new element to filemanager screen
+							self.addToFileManager(newPath, type, path);
+							if (type === 'file') {
+								self.openFile(newPath, true);
 							}
-						});
-					});
+							/* Notify listeners. */
+							amplify.publish('filemanager.onCreate', {
+								createPath: newPath,
+								path: path,
+								nodeName: nodeName,
+								type: type
+							});
+						}
+					}
+				});
 			};
-
-			amplify.subscribe('modal.loaded', listener);
 
 			atheos.modal.load(250, self.dialog, {
 				action: 'create',
 				type: type
+			}, () => {
+				oX('#modal_content').on('submit', listener);
 			});
-
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -616,7 +646,7 @@
 		rename: function(path) {
 			var split = pathinfo(path);
 			var nodeName = split.basename;
-			var type = split.type;			
+			var type = split.type;
 
 			var listener = function(e) {
 				e.preventDefault();
