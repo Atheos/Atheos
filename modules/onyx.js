@@ -19,6 +19,7 @@
 
 // https://github.com/finom/balalaika/blob/master/balalaika.umd.js
 // https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
+// https://vladocar.github.io/femtoJS/
 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -363,6 +364,10 @@
 			once: (t, fn) => events.once(t, element, fn),
 			on: (t, fn) => events.on(t, element, fn),
 			off: (t, fn) => events.off(t, element, fn),
+			
+			// once: (t, fn) => events.once(t, selector, fn),
+			// on: (t, fn) => events.on(t, selector, fn),
+			// off: (t, fn) => events.off(t, selector, fn),
 
 			css: (k, v) => setStyle(k, v),
 			data: (v) => IO('data', v),

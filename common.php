@@ -219,7 +219,8 @@ class Common {
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// Get JSON
+	// Read json
+	// Reads JSON data from the data folder using namespaces.
 	//////////////////////////////////////////////////////////////////
 	public static function readJSON($file, $namespace = "") {
 		$json = false;
@@ -245,6 +246,25 @@ class Common {
 		if ($json) {
 			$json = json_decode($json, true);
 		}
+		return $json;
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Load JSON
+	// Allows reading of JSON data outside of the DATA folder as well.
+	//////////////////////////////////////////////////////////////////
+	public static function loadJSON($file, $namespace = DATA) {
+		$json = false;
+		if (!$file) return false;
+
+		$path = $namespace . "/";
+		$path = preg_replace('#/+#', '/', $path);
+
+		if (is_readable($path . $file . '.json')) {
+			$json = file_get_contents($path . $file . '.json');
+			$json = json_decode($json, true);
+		}
+
 		return $json;
 	}
 
