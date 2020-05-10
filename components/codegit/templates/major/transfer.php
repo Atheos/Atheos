@@ -5,6 +5,8 @@
 
 	$remotes = $CodeGit->getRemotes($repo, $path);
 	$branches = $CodeGit->getBranches($repo, $path);
+	
+	$status = $CodeGit->branchStatus($repo);
 
 	$remoteOptions = array();
 	$brancheOptions = '';
@@ -27,20 +29,24 @@
 	}
 
 	?>
-	<button onclick="atheos.codegit.push(); return false;">Push</button>
-	<button onclick="atheos.codegit.pull(); return false;">Pull</button>
+	<button onclick="atheos.codegit.push(); return false;"><?php i18n("Push") ?></button>
+	<button onclick="atheos.codegit.pull(); return false;"><?php i18n("Pull") ?></button>
+	<button onclick="atheos.codegit.fetch(); return false;"><?php i18n("Fetch") ?></button>
 	<table>
 		<tr>
-			<td>Remote:</td>
+			<td width="50%">Remote:</td>
 			<td><select id="git_remotes">
 				<?php echo $remoteOptions; ?>
 			</select></td>
 		</tr>
 		<tr>
-			<td>Branch:</td>
+			<td width="50%">Branch:</td>
 			<td><select id="git_branches">
 				<?php echo $brancheOptions; ?>
 			</select></td>
 		</tr>
 	</table>
+	<pre>
+		<?php echo $status["data"]; ?>
+	</pre>
 </div>
