@@ -196,7 +196,7 @@ define("WSURL", BASE_URL . "/workspace");
 define("ARCHIVEURL", "https://github.com/Atheos/Atheos/archive/master.zip");
 define("COMMITURL", "https://api.github.com/repos/Atheos/Atheos/commits");
 
-define("UPDATEURL", "https://atheos.io/update");
+define("UPDATEURL", "https://www.atheos.io/update");
 define("MARKETURL", "https://www.atheos.io/market/json");
 define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest");
 	';
