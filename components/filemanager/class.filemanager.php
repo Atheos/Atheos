@@ -166,8 +166,9 @@ class Filemanager {
 				foreach ($files as $file) {
 					rDelete($file);
 				}
-
-				rmdir($target);
+				if (file_exists($target)) {
+					rmdir($target);
+				}
 			} elseif (is_file($target)) {
 				unlink($target);
 			}
@@ -257,8 +258,8 @@ class Filemanager {
 
 	public function duplicate($path, $dest) {
 
-		if (!file_exists($path)) {
-			Common::sendJSON("error", "Invalid source: " . $this->path);
+		if (!file_exists($path) || !$dest) {
+			Common::sendJSON("E403g");
 			die;
 		}
 

@@ -13,6 +13,29 @@ trait Status {
 		return $this->parseGitStatus();
 	}
 
+	public function branchStatus($repo) {
+		if (!is_dir($repo)) return false;
+		chdir($repo);
+		$result = $this->execute("git status --branch --porcelain");
+		if ($result["code"]) {
+			$data = $result["data"];
+			preg_match('/(?<=\[).+?(?=\])/', $data[0], $status);
+			
+			$int = (int)preg_replace("/(ahead|behind)/", "", $status);
+			
+			if(strpos($status, "ahead") !== false) {
+				$status = "Ahead " . $int . ($int > 1 ? " Commits" : " Commit");
+			} elseif(strpos($status, "behind")  !== false) {
+				$status = "Behind " . $int . ($int > 1 ? " Commits" : " Commit");
+			}
+		
+			$result = array("status" => $status, "changes" => $data);
+		} else {
+			$result = false;
+		}
+		return $result;
+	}
+
 	public function loadChanges($path) {
 		if (!is_dir($path)) return false;
 		chdir($path);

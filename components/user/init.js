@@ -256,19 +256,16 @@
 				});
 			};
 
-			var changedTabs = '';
+			var changedTabs = atheos.active.hasUnsavedChanges();
+			if (changedTabs) {
+				var changes = '';
+				changedTabs.forEach(function(path, i) {
+					changes += pathinfo(path).basename + '\n';
+				});
 
-			for (var path in atheos.active.sessions) {
-				if (atheos.active.sessions[path].status === 'changed') {
-					var basename = pathinfo(path).basename;
-					changedTabs += basename + '\n';
-				}
-			}
-
-			if (changedTabs !== '') {
 				var dialog = {
 					banner: 'You have unsaved changes.',
-					data: changedTabs,
+					data: changes,
 					actions: {
 						'Save All & Close': function() {
 							atheos.active.saveAll();

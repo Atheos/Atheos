@@ -16,7 +16,7 @@ class Market
 	//////////////////////////////////////////////////////////////////
 
 	public $local = array();
-	public $url = 'https://atheos.io/market/json';
+	public $market = 'https://www.atheos.io/market/json';
 	public $remote = null;
 	public $tmp = array();
 	public $old = null;
@@ -61,7 +61,7 @@ class Market
 
 		$reply = array(
 			"addons" => $temp,
-			"market" => MARKETURL,
+			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
 			"cache" => $cache
 		);
 
