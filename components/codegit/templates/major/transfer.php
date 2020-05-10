@@ -5,6 +5,8 @@
 
 	$remotes = $CodeGit->getRemotes($repo, $path);
 	$branches = $CodeGit->getBranches($repo, $path);
+	
+	$status = $CodeGit->branchStatus($repo);
 
 	$remoteOptions = array();
 	$brancheOptions = '';
@@ -44,4 +46,7 @@
 			</select></td>
 		</tr>
 	</table>
+	<pre>
+		<?php echo $status["data"]; ?>
+	</pre>
 </div>

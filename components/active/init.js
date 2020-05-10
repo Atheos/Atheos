@@ -32,7 +32,6 @@
 	// Track and manage EditSession instaces of files being edited.
 	//
 	//////////////////////////////////////////////////////////////////
-
 	atheos.active = {
 
 		controller: 'components/active/controller.php',
