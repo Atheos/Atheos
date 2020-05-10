@@ -16,7 +16,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-	amplify = global.amplify;
+		amplify = global.amplify;
 
 	var self = null;
 
@@ -51,7 +51,7 @@
 				target.style.removeProperty('display');
 
 				var display = window.getComputedStyle(target).display;
-				display = display === 'none' ? 'block': display;
+				display = display === 'none' ? 'block' : display;
 
 				target.style.display = display;
 				var height = target.offsetHeight;
@@ -74,12 +74,12 @@
 				target.offsetHeight;
 				zeroStyles();
 				window.setTimeout(() => {
-					target.setAttribute('style', '');
-					target.style.display = 'none';
-					if (direction === 'remove') {
-						target.remove();
-					}
-				},
+						target.setAttribute('style', '');
+						target.style.display = 'none';
+						if (direction === 'remove') {
+							target.remove();
+						}
+					},
 					duration);
 			}
 		},
@@ -95,7 +95,7 @@
 			var zeroStyles = function() {
 				target.style.opacity = 0;
 				target.style.removeProperty('display');
-									// target.style.display = '';
+				// target.style.display = '';
 
 			};
 
@@ -105,18 +105,18 @@
 				target.style.opacity = 1;
 
 				window.setTimeout(() => {
-				target.style.removeProperty('opacity');
+					target.style.removeProperty('opacity');
 				}, duration);
-				
+
 			} else if (direction === 'out' || direction === 'remove') {
 				// SlideUp (Close)
 				zeroStyles();
 				window.setTimeout(() => {
-					target.style.display = 'none';
-					if (direction === 'remove') {
-						target.remove();
-					}
-				},
+						target.style.display = 'none';
+						if (direction === 'remove') {
+							target.remove();
+						}
+					},
 					duration);
 			}
 		},
@@ -128,16 +128,20 @@
 
 			options = options || {};
 			var target = event.target;
+			var origin = target.parentNode;
+			var sibling = target.previousSibling;
+
+
 			var dragZone = options.dragZone;
 			var clone, startEX, startEY, startMX, startMY, timeout;
 
 			var xMax, yMax;
-			var xAxis = (options.direction !== 'vertical') ? true: false,
-			yAxis = (options.direction !== 'horizontal') ? true: false;
+			var xAxis = (options.direction !== 'vertical') ? true : false,
+				yAxis = (options.direction !== 'horizontal') ? true : false;
 
 			function setPos(x, y) {
-				x = (x > xMax) ? xMax: ((x < 0) ? 0: x);
-				y = (y > yMax) ? yMax: ((y < 0) ? 0: y);
+				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
+				y = (y > yMax) ? yMax : ((y < 0) ? 0 : y);
 
 				clone.style.left = (x - dragZone.scrollLeft) + 'px';
 				clone.style.top = (y - dragZone.scrollTop) + 'px';
@@ -169,17 +173,17 @@
 				}
 
 				if (dragZone.contains(swap)) {
-					swap = swap !== target.nextSibling ? swap: swap.nextSibling;
+					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
 					if (swap) swap.parentNode.insertBefore(target, swap);
 				}
 			}
 
 			function dragMove(event) {
 				var x,
-				y;
+					y;
 
-				x = xAxis ? startEX + event.screenX - startMX: startEX;
-				y = yAxis ? startEY + event.screenY - startMY: startEY;
+				x = xAxis ? startEX + event.screenX - startMX : startEX;
+				y = yAxis ? startEY + event.screenY - startMY : startEY;
 
 				setPos(x, y);
 				if (timeout === false) {
@@ -222,8 +226,15 @@
 				if (clone) {
 					clone.remove();
 				}
-				if (options.drop) {
-					options.drop(target);
+				if (target.parentNode !== origin && options.drop && !options.drop(target)) {
+					// This is a callback function that if returns false,
+					// it will undo the dragNDrop... hopefully.
+					// Undo Drag
+					if (sibling) {
+						sibling.after(target);
+					} else {
+						origin.append(target);
+					}
 				}
 				document.removeEventListener('mousemove', dragMove);
 				document.removeEventListener('mouseup', dragEnd);
@@ -231,12 +242,14 @@
 
 			if (!target.classList.contains('draggable')) {
 				target = target.closest('.draggable');
+				origin = target.parentNode;
+				sibling = target.previousSibling;
+
 			}
 
 			if (!target || !dragZone) {
 				return;
 			}
-
 			timeout = setTimeout(() => dragStart(), 200);
 			document.addEventListener('mouseup', dragEnd);
 
@@ -247,21 +260,21 @@
 			// Made with love by @fitri
 
 			const selectedItem = item,
-			list = selectedItem.parentNode,
-			x = event.clientX,
-			y = event.clientY;
+				list = selectedItem.parentNode,
+				x = event.clientX,
+				y = event.clientY;
 
 			selectedItem.style.opacity = 0;
 
 			selectedItem.classList.add('dragActive');
-			let swapItem = document.elementFromPoint(x, y) === null ? selectedItem: document.elementFromPoint(x, y);
+			let swapItem = document.elementFromPoint(x, y) === null ? selectedItem : document.elementFromPoint(x, y);
 
 			if (swapItem.tagName !== 'LI' && swapItem.parentNode.tagName === 'LI') {
 				swapItem = swapItem.parentNode;
 			}
 
 			if (list === swapItem.parentNode) {
-				swapItem = swapItem !== selectedItem.nextSibling ? swapItem: swapItem.nextSibling;
+				swapItem = swapItem !== selectedItem.nextSibling ? swapItem : swapItem.nextSibling;
 				list.insertBefore(selectedItem, swapItem);
 			}
 		},

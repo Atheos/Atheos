@@ -13,10 +13,7 @@
 				<th><input type="checkbox" class="large" id="check_all"></th>
 				<th>Status</th>
 				<th>File</th>
-				<th>
-					<button class="git_button git_diff" data-line="<?php echo $line ?>">Diff</button>
-					<button class="git_button git_undo" data-line="<?php echo $line ?>">Undo</button>
-				</th>
+				<th>Actions</th>
 			</tr>
 		</thead>
 		<tbody>

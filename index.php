@@ -115,43 +115,17 @@ $theme = Common::data("theme", "session") ?: THEME;
 
 				<div id="editor-bottom-bar">
 					<!--<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>-->
-					<!--<div class="divider"></div>-->
 					<a id="split"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
-					<div class="divider"></div>
 					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
-
-					<?php
-
-					////////////////////////////////////////////////////////////
-					// Load Plugins
-					////////////////////////////////////////////////////////////
-
-					foreach ($plugins as $plugin) {
-						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-							$pdata = json_decode($pdata, true);
-							if (isset($pdata['bottombar'])) {
-								foreach ($pdata['bottombar'] as $bottommenu) {
-									if ((!isset($bottommenu['admin']) || ($bottommenu['admin']) && Common::checkAccess("configure")) || !$bottommenu['admin']) {
-										if (isset($bottommenu['action']) && isset($bottommenu['icon']) && isset($bottommenu['title'])) {
-											echo('<div class="divider"></div>');
-											echo('<a onclick="'.$bottommenu['action'].'"><i class="'.$bottommenu['icon'].'"></i>'.$bottommenu['title'].'</a>');
-										}
-									}
-								}
-							}
-						}
-					} ?>
-
-					<div class="divider"></div>
 					<span id="current_file"></span>
-					<span id="cursor-position"><?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0</span>
+					<span id="codegit_file_status"></span>
 					<div id="changemode-menu" style="display:none;" class="options-menu"></div>
 					<ul id="split-options-menu" style="display:none;" class="options-menu">
 						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php i18n("Split Horizontally"); ?> </a></li>
 						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php i18n("Split Vertically"); ?> </a></li>
 						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php i18n("Merge all"); ?> </a></li>
 					</ul>
+					<span id="cursor-position"><?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0</span>
 				</div>
 
 			</div>
