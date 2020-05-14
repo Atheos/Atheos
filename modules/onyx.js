@@ -277,7 +277,7 @@
 			}
 		};
 
-		let search = (t, s) => {
+		let search = (t, s, a) => {
 			var matches = [];
 			if (t === 'find') {
 				var nodes = element.querySelectorAll(s);
@@ -288,13 +288,18 @@
 				var match = t === 'children' ? element.firstElementChild : element.parentNode.firstElementChild;
 
 				while (match) {
-					if (!s || match.matches(s)) {
+					if ((!s || match.matches(s)) && match !== element) {
 						matches.push(onyx(match));
 					}
 					match = match.nextElementSibling;
 				}
 			}
-			return matches;
+			if (a) {
+				return matches[0] || false;
+			} else {
+				return matches;
+
+			}
 		};
 
 		let getSize = (t, v, o) => {
@@ -339,6 +344,9 @@
 			if (domTypes.includes(t)) {
 				if (v) element[t] = v;
 				return element[t];
+			} else if (t === 'prop') {
+				if (v) element[k] = v;
+				return element[k];
 			} else if (t === 'attr') {
 				if (typeof k === 'string') {
 					if (v) {
@@ -354,6 +362,17 @@
 			}
 		};
 
+		let attach = (a, t, s, fn) => {
+			let sel = selector;
+			if (typeof(s) === 'function') {
+				fn = s;
+				s = null;
+			} else {
+				sel = selector + ' ' + s;
+			}
+			events[a](t, sel, fn);
+		};
+
 		return {
 
 			focus: () => element.focus(),
@@ -364,13 +383,14 @@
 			once: (t, fn) => events.once(t, element, fn),
 			on: (t, fn) => events.on(t, element, fn),
 			off: (t, fn) => events.off(t, element, fn),
-			
-			// once: (t, fn) => events.once(t, selector, fn),
-			// on: (t, fn) => events.on(t, selector, fn),
-			// off: (t, fn) => events.off(t, selector, fn),
+
+			// on: (t, s, fn) => attach('on', t, s, fn),
+			// off: (t, s, fn) => attach('off', s, fn),
+			// once: (t, s, fn) => attach('once', t, s, fn),
 
 			css: (k, v) => setStyle(k, v),
 			data: (v) => IO('data', v),
+			prop: (k, v) => IO('prop', v, k),
 			html: (v) => IO('innerHTML', v),
 			text: (v) => IO('innerText', v),
 			value: (v) => IO('value', v),
@@ -388,6 +408,7 @@
 			find: (s) => onyx(element.querySelector(s)),
 			parent: (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement),
 			findAll: (s) => search('find', s),
+			sibling: (s) => search('siblings', s, true),
 			siblings: (s) => search('siblings', s),
 			children: (s) => search('children', s),
 
