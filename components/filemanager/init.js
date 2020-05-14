@@ -96,12 +96,11 @@
 				}
 			});
 
-			oX('#file-manager').on('dblclick',
-				function(e) {
-					if (self.openTrigger === 'double') {
-						nodeFunctions(checkAnchor(e.target));
-					}
-				});
+			oX('#file-manager').on('dblclick', function(e) {
+				if (self.openTrigger === 'double') {
+					nodeFunctions(checkAnchor(e.target));
+				}
+			});
 
 			oX('#file-manager').on('mousedown', function(e) {
 				var options = {
