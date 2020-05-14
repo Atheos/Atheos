@@ -128,9 +128,7 @@
 
 			options = options || {};
 			var target = event.target;
-			var origin = target.parentNode;
-			var sibling = target.previousSibling;
-
+			var origin, sibling;
 
 			var dragZone = options.dragZone;
 			var clone, startEX, startEY, startMX, startMY, timeout;
@@ -242,14 +240,15 @@
 
 			if (!target.classList.contains('draggable')) {
 				target = target.closest('.draggable');
-				origin = target.parentNode;
-				sibling = target.previousSibling;
-
 			}
 
 			if (!target || !dragZone) {
 				return;
 			}
+
+			origin = target.parentNode;
+			sibling = target.previousSibling;
+
 			timeout = setTimeout(() => dragStart(), 200);
 			document.addEventListener('mouseup', dragEnd);
 

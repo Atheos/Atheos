@@ -596,7 +596,7 @@
 
 				// handle async mode change
 				var fn = function() {
-					atheos.editor.setModeDisplay(newSession);
+					atheos.textmode.setModeDisplay(newSession);
 					newSession.removeListener('changeMode', fn);
 				};
 
