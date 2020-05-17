@@ -60,9 +60,10 @@ switch ($action) {
 			// theme
 			$User->theme = $theme;
 			$User->authenticate();
+		} elseif (!$username) {
+			Common::sendJSON("error", "Missing username."); die;
 		} else {
-			Common::sendJSON("E403g");
-			die;
+			Common::sendJSON("error", "Missing password."); die;
 		}
 		break;
 
