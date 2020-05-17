@@ -69,8 +69,16 @@
 
 				// More Selector
 				oX('#show_login_options').on('click', function(e) {
+					e.preventDefault();
 					oX(e.target).hide();
+					oX('#hide_login_options').show();
 					oX('#login_options').show();
+				});
+				oX('#hide_login_options').on('click', function(e) {
+					e.preventDefault();
+					oX(e.target).hide();
+					oX('#show_login_options').show();
+					oX('#login_options').hide();
 				});
 			}
 
@@ -96,16 +104,20 @@
 		//////////////////////////////////////////////////////////////////////80
 		authenticate: function() {
 			var data = atheos.common.serializeForm(self.loginForm.el);
+			if (data.password === '' || data.username === '') {
+				atheos.toast.show('notice', 'Username/Password not provided.');
+				return;
+			}
 			data.action = 'authenticate';
 			ajax({
 				url: self.controller,
 				data: data,
 				success: function(reply) {
+					log(reply);
 					if (reply.status !== 'error') {
 						window.location.reload();
 					} else {
 						atheos.toast.show(reply);
-
 					}
 				}
 			});
