@@ -11,32 +11,32 @@
 <form id="login" method="post">
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
-		<label><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
-		<input type="text" name="username" autofocus="autofocus" autocomplete="username">
+		<label for="username"><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
+		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="username">
 
-		<label><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
-		<input type="password" name="password" autocomplete="current-password">
+		<label for="password"><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
+		<input id="password" type="password" name="password" autocomplete="current-password">
 		<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
 
 		<div id="login_options">
-			<label><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
+			<label for"theme"><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
 			<select name="theme" id="theme">
 				<?php foreach ($themes as $theme) {
 					if (file_exists(THEMES."/" . $theme . "/theme.json")) {
 						$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
 						$data = json_decode($data, true);
-						
+
 						$option = "<option value=\"$theme\"";
 						$option .= ($theme === THEME) ? " selected>" : ">";
 						$option .= $data["name"] !== "" ? $data["name"] : ucfirst($theme);
-						
+
 						$option .= "</option>" . PHP_EOL;
-						
+
 						echo $option;
 					}
 				} ?>
 			</select>
-			<label><i class="fas fa-language"></i> <?php i18n("Language"); ?></label>
+			<label for="lanauge"><i class="fas fa-language"></i> <?php i18n("Language"); ?></label>
 			<select name="language" id="language">
 				<?php
 				include 'languages/code.php';
@@ -54,8 +54,9 @@
 		</div>
 
 		<button><?php i18n("Login"); ?></button>
+		<button id="show_login_options"><?php i18n("More"); ?></button>
+		<button id="hide_login_options" style="display:none;"><?php i18n("Less"); ?></button>
 
-		<a id="show_login_options"><?php i18n("More"); ?></a>
 	</fieldset>
 </form>
 <script src="components/user/init.js"></script>
