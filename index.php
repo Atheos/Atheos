@@ -31,13 +31,12 @@ $theme = Common::data("theme", "session") ?: THEME;
 <!doctype html>
 <html lang="en">
 <head>
+	<title>Atheos IDE</title>
 	<meta charset="utf-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
-	<title>Atheos IDE</title>
-	<link defer rel="stylesheet" href="fonts/fontawesome/css/webfont.css">
-	<link defer rel="stylesheet" href="fonts/ubuntu/webfont.css">
-	<!--<link rel="stylesheet" href="fonts/victor-mono/webfont.css">-->
-	<link defer rel="stylesheet" href="fonts/file-icons/webfont.css">
+	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
+
+	<?php $SourceManager->echoStyles("fonts", true); ?>
 
 	<!--Link favicons-->
 	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png?v=2">
@@ -74,19 +73,21 @@ $theme = Common::data("theme", "session") ?: THEME;
 	//////////////////////////////////////////////////////////////////
 	$SourceManager->echoScripts("modules", true);
 
+	$SourceManager->echoStyles("pluginsCSS", false);
 
 	// Load Plugin CSS Files
-	foreach ($plugins as $plugin) {
-		if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
-			echo('<link rel="stylesheet" href="plugins/'.$plugin.'/screen.css">');
-		}
-	}
+	// foreach ($plugins as $plugin) {
+	// 	if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
+	// 		echo('<link rel="stylesheet" href="plugins/'.$plugin.'/screen.css">');
+	// 	}
+	// }
 
 	?>
 
 </head>
 
 <body>
+	<canvas id="synthetic"></canvas>
 
 	<?php
 	$activeUser = Common::data("user", "session");
@@ -155,7 +156,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 		//////////////////////////////////////////////////////////////////
 		// LOAD PLUGINS
 		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("plugins", true);
+		$SourceManager->echoScripts("pluginsJS", true);
 	} else {
 		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
 

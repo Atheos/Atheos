@@ -3,13 +3,12 @@
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
-
-	src: url('fonts/fontawesome.woff2');
+	src: url('/fonts/file-icons/fontawesome.woff2');
 }
 
 @font-face {
 	font-family: 'Mfizz';
-	src: url('fonts/mfixx.woff2');
+	src: url('/fonts/file-icons/mfixx.woff2');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
@@ -18,7 +17,7 @@
 
 @font-face {
 	font-family: 'Octicons Regular';
-	src: url('fonts/octicons.woff');
+	src: url('/fonts/file-icons/octicons.woff');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
@@ -27,7 +26,7 @@
 
 @font-face {
 	font-family: 'Devicons';
-	src: url('fonts/devopicons.woff2');
+	src: url('/fonts/file-icons/devopicons.woff2');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
@@ -36,7 +35,7 @@
 
 @font-face {
 	font-family: 'file-icons';
-	src: url('fonts/file-icons.woff2');
+	src: url('/fonts/file-icons/file-icons.woff2');
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
