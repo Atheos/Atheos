@@ -25,7 +25,6 @@
 
 @import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
 
-
 @import "modules/misc/contextmenu", "modules/misc/scout", "modules/misc/uploader";
 
 @import "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
@@ -39,7 +38,6 @@ body,
 html {
 	width: 100%;
 	height: 100%;
-	background-color: #1a1a1a;
 	color: #fff;
 	font: normal $font-size 'Ubuntu', sans-serif;
 	overflow: hidden;
@@ -47,6 +45,7 @@ html {
 
 /* MAIN */
 #workspace {
+	background-color: $background;
 	color: #fff;
 	margin: 0;
 	padding: 0;
