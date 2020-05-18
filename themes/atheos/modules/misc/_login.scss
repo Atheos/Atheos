@@ -32,14 +32,10 @@
 		display: none;
 	}
 
-	#show_login_options {
-		display: block;
+	button {
 		float: right;
-		color: #666;
-		margin: 10px 0 0;
-
-		&:hover {
-			color: #fff;
-		}
+	}
+	button+button {
+		margin-right: 6px;
 	}
 }
