@@ -22,6 +22,7 @@ class SourceManager {
 		// "modules/jquery-1.7.2.min.js",
 		"modules/amplify.js",
 		"modules/ajax.js",
+		"modules/echo.js",
 		"modules/file-icons.js",
 		"modules/global.js",
 		// "modules/i18n.js",
@@ -46,7 +47,7 @@ class SourceManager {
 
 	private $pluginsJS = array();
 	private $pluginsCSS = array();
-	
+
 	private $fonts = array(
 		"fonts/file-icons/webfont.min.css",
 		"fonts/fontawesome/webfont.css",
@@ -114,15 +115,17 @@ class SourceManager {
 				break;
 		}
 
+		$minifiedFileName = "public/$dataset.min.js";
+
 		if ($raw) {
 			$scripts = '';
 			foreach ($files as $file) {
 				$scripts .= ("<script type=\"text/javascript\" src=\"$file\"></script>");
 			}
 			echo $scripts;
+			if (file_exists($minifiedFileName)) unlink($minifiedFileName);
 
 		} else {
-			$minifiedFileName = "public/$dataset.min.js";
 
 			if (is_readable($minifiedFileName)) {
 				$mostRecent = filemtime($minifiedFileName);
@@ -141,6 +144,7 @@ class SourceManager {
 			echo("<script src=\"$minifiedFileName\"></script>");
 		}
 	}
+
 	function echoStyles($dataset = [], $raw = false) {
 		echo "<!-- " . strtoupper($dataset) . " -->";
 
@@ -152,11 +156,13 @@ class SourceManager {
 				break;
 			case "fonts":
 				$files = $this->fonts;
-				break;				
+				break;
 			default:
 				return false;
 				break;
 		}
+
+		$minifiedFileName = "public/$dataset.min.css";
 
 		if ($raw) {
 			$scripts = '';
@@ -164,10 +170,9 @@ class SourceManager {
 				$scripts .= ("<link rel=\"stylesheet\" href=\"$file\">");
 			}
 			echo $scripts;
+			if (file_exists($minifiedFileName)) unlink($minifiedFileName);
 
 		} else {
-			$minifiedFileName = "public/$dataset.min.css";
-
 			if (is_readable($minifiedFileName)) {
 				$mostRecent = filemtime($minifiedFileName);
 				foreach ($files as $file) {

@@ -32,10 +32,13 @@
 	atheos.contextmenu = {
 
 		contextMenu: {},
+		baseMenu: '',
 
 		init: function() {
 			self = this;
 			menu = oX('#contextmenu');
+
+			self.baseMenu = menu.html();
 
 			var checkAnchor = function(node) {
 				node = oX(node);
@@ -61,6 +64,12 @@
 			// Initialize node listener
 			oX('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
+				menu.html(self.baseMenu);
+				var active = oX('#file-manager a.context-menu-active');
+				if (active) {
+					active.removeClass('context-menu-active');
+				}
+
 				self.show(e, checkAnchor(e.target));
 			});
 		},
@@ -185,7 +194,7 @@
 		hide: function() {
 			menu.hide();
 			menu.off('*');
-			
+
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');
