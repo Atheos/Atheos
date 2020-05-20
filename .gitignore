@@ -9,7 +9,7 @@ data/*
 !data/.htaccess
 workspace/*
 plugins/*
-public/*.min.js
+public/*.min.*
 !themes/atheos/
 
 js/*.disabled.*
