@@ -2,14 +2,14 @@
 	left: -20px;
 	position: fixed;
 	top: -20px;
-	z-index: 0;
+	z-index: -1;
 	pointer-events: none;
-	height: 120vh;
-	width: 120vw;
+	min-height: 120vh;
+	min-width: 120vw;
 	background-color: #000;
 	background: linear-gradient(-45deg, #000 45%, #001467 50%, #000 55%);
 	background-size: 600% 600%;
-	animation: gradient 10s linear infinite;
+	animation: gradient 16s linear infinite;
 }
 
 @keyframes gradient {

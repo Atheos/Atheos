@@ -19,7 +19,7 @@ class SourceManager {
 
 
 	private $modules = array(
-		"modules/jquery-1.7.2.min.js",
+		// "modules/jquery-1.7.2.min.js",
 		"modules/amplify.js",
 		"modules/ajax.js",
 		"modules/file-icons.js",
@@ -44,7 +44,14 @@ class SourceManager {
 
 	private $components = array();
 
-	private $plugins = array();
+	private $pluginsJS = array();
+	private $pluginsCSS = array();
+	
+	private $fonts = array(
+		"fonts/file-icons/webfont.min.css",
+		"fonts/fontawesome/webfont.css",
+		"fonts/ubuntu/webfont.css"
+	);
 
 	function __construct() {
 		$temp = Common::readDirectory(COMPONENTS);
@@ -57,25 +64,30 @@ class SourceManager {
 		$temp = Common::readDirectory(PLUGINS);
 		foreach ($temp as $plugin) {
 			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
-				$this->plugins[] = "plugins/$plugin/init.js";
+				$this->pluginsJS[] = "plugins/$plugin/init.js";
+			}
+			if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
+				$this->pluginsCSS[] = "plugins/$plugin/screen.css";
 			}
 		}
 	}
 
-	function loadAndMinifyJS($minifiedFileName, $files) {
+	function loadAndMinify($type, $minifiedFileName, $files) {
 
-		$javascript = '';
-		$minifiedJS = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
+		$content = '';
+		$minified = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
 
 		foreach ($files as $file) {
 			if (is_readable($file)) {
-				$javascript = file_get_contents($file);
-				$minifiedJS .= "// $file" . PHP_EOL;
-				$minifier = new Minify\JS($javascript);
-				$minifiedJS .= $minifier->minify() . ';' . PHP_EOL;
+				$content = file_get_contents($file);
+				$minified .= "// $file" . PHP_EOL;
+				if ($type === "js")	$minifier = new Minify\JS($content);
+				else $minifier = new Minify\CSS($content);
+
+				$minified .= $minifier->minify() . PHP_EOL;
 			}
 		}
-		file_put_contents($minifiedFileName, $minifiedJS);
+		file_put_contents($minifiedFileName, $minified);
 	}
 
 	// This is a conditional that helps during developement of Atheos.
@@ -91,8 +103,11 @@ class SourceManager {
 			case "components":
 				$files = $this->components;
 				break;
-			case "plugins":
-				$files = $this->plugins;
+			case "pluginsJS":
+				$files = $this->pluginsJS;
+				break;
+			case "pluginsCSS":
+				$files = $this->pluginsCSS;
 				break;
 			default:
 				return false;
@@ -118,12 +133,56 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinifyJS($minifiedFileName, $files);
+					$this->loadAndMinify("js", $minifiedFileName, $files);
 				}
 			} else {
-				$this->loadAndMinifyJS($minifiedFileName, $files);
+				$this->loadAndMinify("js", $minifiedFileName, $files);
 			}
 			echo("<script src=\"$minifiedFileName\"></script>");
+		}
+	}
+	function echoStyles($dataset = [], $raw = false) {
+		echo "<!-- " . strtoupper($dataset) . " -->";
+
+		$files = array();
+
+		switch ($dataset) {
+			case "pluginsCSS":
+				$files = $this->pluginsCSS;
+				break;
+			case "fonts":
+				$files = $this->fonts;
+				break;				
+			default:
+				return false;
+				break;
+		}
+
+		if ($raw) {
+			$scripts = '';
+			foreach ($files as $file) {
+				$scripts .= ("<link rel=\"stylesheet\" href=\"$file\">");
+			}
+			echo $scripts;
+
+		} else {
+			$minifiedFileName = "public/$dataset.min.css";
+
+			if (is_readable($minifiedFileName)) {
+				$mostRecent = filemtime($minifiedFileName);
+				foreach ($files as $file) {
+					if (filemtime($file) > $mostRecent) {
+						$mostRecent = filemtime($file);
+						break;
+					}
+				}
+				if (filemtime($minifiedFileName) < $mostRecent) {
+					$this->loadAndMinify("css", $minifiedFileName, $files);
+				}
+			} else {
+				$this->loadAndMinify("css", $minifiedFileName, $files);
+			}
+			echo("<link rel=\"stylesheet\" href=\"$minifiedFileName\">");
 		}
 	}
 }
