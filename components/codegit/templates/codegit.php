@@ -12,23 +12,20 @@ $CodeGit = new CodeGit($path, $repo);
 if ($action === "loadPanel") {
 
 	switch ($panel) {
-		case 'blame':
+		case 'blame': //Checked
 			include('minor/blame.php');
 			break;
-		case 'commit':
-			include('major/commit.html');
-			break;
-		case 'diff':
+		case 'diff': //Checked
 			include('minor/diff.php');
 			break;
-		case 'log':
+		case 'log': //Checked
 			include('major/log.php');
 			break;
-		case 'transfer':
+		case 'transfer': //Checked
 			include('major/transfer.php');
 			break;
-		case 'remote':
-			include('major/remote.html');
+		case 'config':
+			include('major/config.php');
 			break;
 		default:
 			include('major/overview.php');
@@ -51,7 +48,7 @@ if ($action === "loadPanel") {
 				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php i18n("Transfer"); ?></a>
 			</li>
 			<li>
-				<a data-panel="user_config"><i class="fas fa-user-cog"></i><?php i18n("User Config"); ?></a>
+				<a data-panel="config"><i class="fas fa-user-cog"></i><?php i18n("Configure"); ?></a>
 			</li>
 		</ul>
 		<div id="panel_view" class="panel">

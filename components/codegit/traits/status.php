@@ -21,19 +21,19 @@ trait Status {
 			$data = $result["data"];
 			preg_match('/(?<=\[).+?(?=\])/', $data[0], $status);
 			
+			if(!is_string($status)) return false;
+
 			$int = (int)preg_replace("/(ahead|behind)/", "", $status);
-			
-			if(strpos($status, "ahead") !== false) {
+			if (strpos($status, "ahead") !== false) {
 				$status = "Ahead " . $int . ($int > 1 ? " Commits" : " Commit");
-			} elseif(strpos($status, "behind")  !== false) {
+			} elseif (strpos($status, "behind") !== false) {
 				$status = "Behind " . $int . ($int > 1 ? " Commits" : " Commit");
 			}
-		
+
 			$result = array("status" => $status, "changes" => $data);
-		} else {
-			$result = false;
+			return $result;
 		}
-		return $result;
+		return false;
 	}
 
 	public function loadChanges($path) {
