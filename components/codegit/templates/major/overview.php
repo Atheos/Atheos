@@ -5,7 +5,6 @@
 		<?php
 		$repo = $CodeGit->getWorkspacePath($repo);
 		$changes = $CodeGit->loadChanges($repo);
-		$line = 0;
 		?>
 
 		<thead>
@@ -20,7 +19,7 @@
 			<?php
 			foreach ($changes as $key => $array) {
 				if (is_array($array) && count($array) < 1) continue;
-				foreach ($array as $file) {
+				foreach ($array as $line => $file) {
 					?>
 					<tr data-file="<?php echo $file ?>">
 						<td>
@@ -30,11 +29,10 @@
 						<td data-line="<?php echo $line ?>" class="file"><?php echo $file ?></td>
 						<td>
 							<button class="git_button git_diff" data-line="<?php echo $line ?>">Diff</button>
-							<button class="git_button git_undo" data-line="<?php echo $line ?>">Undo</button>
+							<button disabled class="git_button git_undo" data-line="<?php echo $line ?>">Undo</button>
 						</td>
 					</tr>
 					<?php
-					$line++;
 				}
 			} ?>
 		</tbody>
