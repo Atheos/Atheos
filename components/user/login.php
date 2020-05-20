@@ -8,9 +8,10 @@
 	</svg>
 </div>
 
-<form id="login" method="post">
+<form id="login" method="post" autocomplete="off">
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
+		<input hidden autocomplete="false">
 		<label for="username"><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
 		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="username">
 
