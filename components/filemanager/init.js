@@ -376,13 +376,13 @@
 		},
 
 		saveFile: function(path, content, callbacks) {
-			trace({
-				file: {
-					path,
-					content,
-					callbacks
-				}
-			});
+			// trace({
+			// 	file: {
+			// 		path,
+			// 		content,
+			// 		callbacks
+			// 	}
+			// });
 			self.saveModifications(path, {
 					content: content
 				},
@@ -390,14 +390,14 @@
 		},
 
 		savePatch: function(path, patch, mtime, callbacks) {
-			trace({
-				patch: {
-					path,
-					patch,
-					mtime,
-					callbacks
-				}
-			});
+			// trace({
+			// 	patch: {
+			// 		path,
+			// 		patch,
+			// 		mtime,
+			// 		callbacks
+			// 	}
+			// });
 			if (patch.length > 0) {
 				self.saveModifications(path, {
 					patch: patch,
