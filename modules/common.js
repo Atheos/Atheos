@@ -137,7 +137,13 @@
 			if (hidden) {
 				overlay.hide();
 			}
-			document.body.appendChild(overlay.el);
+			var toast = oX('#toast-container');
+			if (toast) {
+				toast.before(overlay.el);
+			} else {
+				document.body.appendChild(overlay.el);
+
+			}
 			return overlay;
 		},
 
