@@ -35,6 +35,11 @@
 	}
 }
 
+#modal_content #codegit form {
+			background-color: $background;
+
+}
+
 [id^="codegit_"].content {
 	height: 60vh;
 }
