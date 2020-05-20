@@ -107,24 +107,24 @@ switch ($action) {
 		break;
 
 	case 'push':
-		if ($path && $remote && $branch) {
-			echo $CodeGit->push(getWorkspacePath($path), $remote, $branch);
+		if ($repo && $remote && $branch) {
+			$CodeGit->push(getWorkspacePath($repo), $remote, $branch);
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'pull':
-		if ($path && $remote && $branch) {
-			echo $CodeGit->pull(getWorkspacePath($path), $remote, $branch);
+		if ($repo && $remote && $branch) {
+			$CodeGit->pull(getWorkspacePath($repo), $remote, $branch);
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'fetch':
-		if ($path && $remote) {
-			echo $CodeGit->fetch(getWorkspacePath($path), $remote);
+		if ($repo && $remote) {
+			$CodeGit->fetch(getWorkspacePath($repo), $remote);
 		} else {
 			Common::sendJSON("E403g");
 		}

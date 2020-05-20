@@ -75,11 +75,6 @@
 			//Handle contextmenu
 			amplify.subscribe('contextmenu.show', this.showContextMenu);
 
-			amplify.subscribe('contextmenu.hide', function(obj) {
-				var children = obj.menu.findAll('.codegit');
-				children.forEach((child) => child.remove());
-			});
-
 			amplify.subscribe('active.onFocus', function(path) {
 				self.checkFileStatus(path);
 			});
@@ -141,7 +136,8 @@
 
 		showContextMenu: function(obj) {
 			var path = obj.path,
-				root = oX('#project-root').attr('data-path');
+				root = oX('#project-root').attr('data-path'),
+				html = '';
 
 			var anchor = '<a class="codegit" onclick="atheos.codegit.';
 
@@ -161,23 +157,28 @@
 				return false;
 			}
 
-			obj.menu.append('<hr class="codegit">');
 
 			if (obj.type === 'directory') {
+				html += ('<hr class="codegit">');
+
 				if (obj.node.hasClass('repo')) {
-					obj.menu.append(anchor + 'showCodeGit(\'' + path + '\');">' + self.icon + 'Open CodeGit</a>');
+					html += (anchor + 'showCodeGit(\'' + path + '\');">' + self.icon + 'Open CodeGit</a>');
 				} else {
-					obj.menu.append(anchor + 'gitInit(\'' + path + '\');">' + self.icon + 'Git Init</a>');
-					obj.menu.append(anchor + 'clone(\'' + path + '\');">' + self.icon + 'Git Clone</a>');
+					html += (anchor + 'gitInit(\'' + path + '\');">' + self.icon + 'Git Init</a>');
+					html += (anchor + 'clone(\'' + path + '\');">' + self.icon + 'Git Clone</a>');
 				}
 			} else {
 				var repo = findParentRepo(path);
 				if (repo) {
-					obj.menu.append(anchor + 'diff(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Diff</a>');
-					obj.menu.append(anchor + 'blame(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Blame</a>');
-					obj.menu.append(anchor + 'log(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Log</a>');
+					html += ('<hr class="codegit">');
+					html += (anchor + 'diff(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Diff</a>');
+					html += (anchor + 'blame(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Blame</a>');
+					html += (anchor + 'log(\'' + repo + '\', \'' + path + '\');">' + self.icon + 'Git Log</a>');
 				}
 			}
+
+			obj.menu.append(html);
+
 		},
 
 		showCodeGit: function(repo) {
@@ -283,11 +284,11 @@
 
 			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 			checkboxes.forEach((checkbox) => {
-				if (checkbox.el.checked) {
+				if (checkbox.prop('checked')) {
 					data.files.push(checkbox.parent('tr').attr('data-file'));
 				}
 			});
-
+			
 			ajax({
 				url: self.controller,
 				data: data,
@@ -296,7 +297,7 @@
 					if (data.status !== 'error') {
 						message.empty();
 						checkboxes.forEach((checkbox) => {
-							if (checkbox.el.checked) {
+							if (checkbox.prop('checked')) {
 								checkbox.parent('tr').remove();
 							}
 						});
@@ -379,6 +380,141 @@
 			path = path.replace(repo + "/", "");
 			this.showDialog('log', repo, path);
 		},
+
+
+		push: function() {
+			var remote = oX('#git_remotes').value();
+			var branch = oX('#git_branches').value();
+
+			// this.showDialog('overview', this.location);
+			// success: this.path + 'controller.php?action=push&path=' + this.location + '&remote=' + remote + '&branch=' + branch,
+
+			ajax({
+				url: self.controller,
+				data: {
+					action: 'push',
+					repo: self.activeRepo,
+					remote,
+					branch
+				},
+				success: function(reply) {
+					log(reply);
+					return;
+					if (reply.status == 'login_required') {
+						atheos.toast.show('error', reply.message);
+						codegit.showDialog('login', codegit.location);
+						codegit.login = function() {
+							var username = $('.git_login_area #username').val();
+							var password = $('.git_login_area #password').val();
+							codegit.showDialog('overview', codegit.location);
+							$.post(codegit.path + 'controller.php?action=push&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
+								username: username,
+								password: password
+							}, function(result) {
+								reply = JSON.parse(result);
+								atheos.toast[reply.status](reply.message);
+							});
+						};
+					} else if (reply.status == 'passphrase_required') {
+						atheos.toast.show('error', reply.message);
+						codegit.showDialog('passphrase', codegit.location);
+						codegit.login = function() {
+							var passphrase = $('.git_login_area #passphrase').val();
+							codegit.showDialog('overview', codegit.location);
+							$.post(codegit.path + 'controller.php?action=push&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
+								passphrase: passphrase
+							}, function(reply) {
+								reply = JSON.parse(reply);
+								atheos.toast[reply.status](reply.message);
+							});
+						};
+					} else {
+						atheos.toast[reply.status](reply.message);
+					}
+				}
+			});
+		},
+
+		pull: function() {
+			var codegit = this;
+			var remote = $('.git_push_area #git_remotes').val();
+			var branch = $('.git_push_area #git_branches').val();
+			this.showDialog('overview', this.location);
+			$.getJSON(this.path + 'controller.php?action=pull&path=' + this.location + '&remote=' + remote + '&branch=' + branch, function(result) {
+				if (result.status == 'login_required') {
+					atheos.toast.show('error', result.message);
+					codegit.showDialog('login', codegit.location);
+					codegit.login = function() {
+						var username = $('.git_login_area #username').val();
+						var password = $('.git_login_area #password').val();
+						codegit.showDialog('overview', codegit.location);
+						$.post(codegit.path + 'controller.php?action=pull&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
+							username: username,
+							password: password
+						}, function(result) {
+							result = JSON.parse(result);
+							atheos.toast[result.status](result.message);
+						});
+					};
+				} else if (result.status == 'passphrase_required') {
+					atheos.toast.show('error', result.message);
+					codegit.showDialog('passphrase', codegit.location);
+					codegit.login = function() {
+						var passphrase = $('.git_login_area #passphrase').val();
+						codegit.showDialog('overview', codegit.location);
+						$.post(codegit.path + 'controller.php?action=pull&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
+							passphrase: passphrase
+						}, function(result) {
+							result = JSON.parse(result);
+							atheos.toast[result.status](result.message);
+						});
+					};
+				} else {
+					atheos.toast[result.status](result.message);
+				}
+			});
+		},
+
+		fetch: function() {
+			var codegit = this;
+			var remote = $('.git_remote_area #git_remotes').val();
+			this.showDialog('overview', this.location);
+			$.getJSON(this.path + 'controller.php?action=fetch&path=' + this.location + '&remote=' + remote, function(result) {
+				if (result.status == 'login_required') {
+					atheos.toast.show('error', result.message);
+					codegit.showDialog('login', codegit.location);
+					codegit.login = function() {
+						var username = $('.git_login_area #username').val();
+						var password = $('.git_login_area #password').val();
+						codegit.showDialog('overview', codegit.location);
+						$.post(codegit.path + 'controller.php?action=fetch&path=' + codegit.location + '&remote=' + remote, {
+							username: username,
+							password: password
+						}, function(result) {
+							result = JSON.parse(result);
+							atheos.toast[result.status](result.message);
+						});
+					};
+				} else if (result.status == 'passphrase_required') {
+					atheos.toast.show('error', result.message);
+					codegit.showDialog('passphrase', codegit.location);
+					codegit.login = function() {
+						var passphrase = $('.git_login_area #passphrase').val();
+						codegit.showDialog('overview', codegit.location);
+						$.post(codegit.path + 'controller.php?action=fetch&path=' + codegit.location + '&remote=' + remote, {
+							passphrase: passphrase
+						}, function(result) {
+							result = JSON.parse(result);
+							atheos.toast[result.status](result.message);
+						});
+					};
+				} else {
+					atheos.toast[result.status](result.message);
+				}
+			});
+		},
+
+
 
 		login: function() {},
 
