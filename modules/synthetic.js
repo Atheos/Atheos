@@ -14,15 +14,13 @@
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
-	'use strict';
-	
-	// 	<canvas id="synthetic"></canvas>
-
-
 	let rndColor = [],
-		colors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
+		colors = ['#090909', '#0B0B0B', '#0D0D0D', '#0F0F0F'],
 		seed = 5309,
 		canvas;
+
+	colors = ['#0F0F0F', '#121212', '#151515', '#181818'];
+	
 
 	function sRnd(max) {
 		//Source: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
@@ -108,7 +106,7 @@
 			if (!rndColor || typeof(rndColor) !== 'string') {
 				rndColor = [];
 				for (var i = 0; i < 5000; ++i) {
-					rndColor.push(colors[sRnd(4)]);
+					rndColor.push(colors[sRnd(colors.length)]);
 				}
 				localStorage.setItem('synthetic', JSON.stringify(rndColor));
 			} else {
