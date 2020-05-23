@@ -12,7 +12,7 @@
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
 		<label for="username"><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
-		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="username">
+		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="current-username">
 
 		<label for="password"><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
 		<input id="password" type="password" name="password" autocomplete="current-password">
