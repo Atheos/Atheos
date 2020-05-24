@@ -18,10 +18,8 @@ require_once("../../common.php");
 Common::checkSession();
 
 $action = Common::data("action");
-
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m"); die;
 }
 
 switch ($action) {
