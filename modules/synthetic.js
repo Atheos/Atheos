@@ -2,7 +2,6 @@
 //	(c) 2020 Liam Siira (liam@siira.us)
 //	Created from Hexagons.js by ZackTheHuman (https://gist.github.com/zackthehuman/1867663)
 
-
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -15,110 +14,109 @@
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
-	'use strict';
+	let rndColor = [],
+		colors = ['#090909', '#0B0B0B', '#0D0D0D', '#0F0F0F'],
+		seed = 5309,
+		canvas;
+
+	colors = ['#0F0F0F', '#121212', '#151515', '#181818'];
+	
+
+	function sRnd(max) {
+		//Source: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
+		seed = (seed * 9301 + 49297) % 233280;
+		var rnd = seed / 233280;
+
+		//Uses a faster method of flooring the decimal to an integer
+		return (rnd * max) << 0;
+	}
+
+	function drawSynthetic() {
+		var hex = {
+			angle: 0.523, // 30 degrees in radians
+			sideLength: 20,
+			boardWidth: 400,
+			boardHeight: 600
+		};
+
+		hex.height = Math.sin(hex.angle) * hex.sideLength;
+		hex.radius = Math.cos(hex.angle) * hex.sideLength;
+		hex.rectangleHeight = (hex.sideLength + 2 * hex.height);
+		hex.rectangleWidth = (2 * hex.radius);
+
+		//document.width & document.height are obsolete
+		canvas.width = document.body.clientWidth > 2560 ? document.body.clientWidth : 2560;
+		canvas.height = document.body.clientHeight > 1440 ? document.body.clientHeight : 1440;
+
+		canvas.width += (hex.rectangleWidth * 2); //document.width is obsolete
+		canvas.height += (hex.rectangleHeight * 2); //document.height is obsolete
+
+		var boardWidth = canvas.width / hex.height,
+			boardHeight = canvas.height / hex.height;
+
+		if (canvas.getContext) {
+			var ctx = canvas.getContext('2d');
+			ctx.lineWidth = 1;
+			ctx.strokeStle = 'rgba(0,0,0)';
+			drawBoard(ctx, boardWidth, boardHeight, hex);
+		}
+	}
+
+	function drawBoard(ctx, width, height, hex) {
+		var x,
+			y,
+			i = 0,
+			gradientX = 255 / width,
+			gradientY = 255 / height;
+
+
+		for (x = 0; x < width; ++x) {
+			for (y = 0; y < height; ++y) {
+				ctx.fillStyle = rndColor[(++i) % rndColor.length];
+				draw(
+					ctx,
+					(x * 1.02) * hex.rectangleWidth + ((y % 2) * hex.radius),
+					(y * 1.02) * (hex.sideLength + hex.height),
+					hex
+				);
+			}
+		}
+	}
+
+	function draw(ctx, x, y, hex) {
+		ctx.beginPath();
+		ctx.moveTo(x + hex.radius, y);
+		ctx.lineTo(x + hex.rectangleWidth, y + hex.height);
+		ctx.lineTo(x + hex.rectangleWidth, y + hex.height + hex.sideLength);
+		ctx.lineTo(x + hex.radius, y + hex.rectangleHeight);
+		ctx.lineTo(x, y + hex.sideLength + hex.height);
+		ctx.lineTo(x, y + hex.height);
+		ctx.closePath();
+		ctx.globalAlpha = 1;
+		ctx.fill();
+		ctx.globalAlpha = 0.2;
+		ctx.stroke();
+	}
+
 
 	const synthetic = {
 
-		canvas: null,
-
 		init: function(options) {
-
-			this.canvas = document.getElementById('synthetic');
-			if (!this.canvas) {
-				this.canvas = this.createCanvas();
-			}
-			this.drawSynthetic();
-			// document.querySelector('main').style.opacity = '0';
-		},
-
-		createCanvas: function() {
-			var container = document.createElement('canvas');
-			container.id = 'synthetic';
-			document.body.appendChild(container);
-			return container;
-		},
-
-
-		drawSynthetic: function() {
-
-
-			var hex = {
-				angle: 0.523598776, // 30 degrees in radians
-				sideLength: 20,
-				boardWidth: 400,
-				boardHeight: 600
-			};
-
-			hex.height = Math.sin(hex.angle) * hex.sideLength;
-			hex.radius = Math.cos(hex.angle) * hex.sideLength;
-			hex.rectangleHeight = (hex.sideLength + 2 * hex.height);
-			hex.rectangleWidth = (2 * hex.radius);
-
-			this.canvas.width = document.body.clientWidth + (hex.rectangleWidth * 2); //document.width is obsolete
-			this.canvas.height = document.body.clientHeight + (hex.rectangleHeight * 2); //document.height is obsolete
-
-			var boardWidth = this.canvas.width / hex.height,
-				boardHeight = this.canvas.height / hex.height;
-
-			if (this.canvas.getContext) {
-				var ctx = this.canvas.getContext('2d');
-				ctx.lineWidth = 1;
-
-				this.drawBoard(ctx, boardWidth, boardHeight, hex);
-			}
-		},
-
-		drawBoard: function(ctx, width, height, hex) {
-			var i,
-				j,
-				gradientX = 255 / width,
-				gradientY = 255 / height,
-				clrFill = ['#070707', '#090909', '#0D0D0D', '#070707', '#090909', '#0B0B0B'];
-
-			clrFill = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"];
-
-
-			// clrFill = ['#070707', '#0D0D0D', '#111111', '#161616', '#191919'];
-
-
-			ctx.strokeStle = 'rgba(0,0,0)';
-
-			for (i = 0; i < width; ++i) {
-
-				for (j = 0; j < height; ++j) {
-					ctx.fillStyle = clrFill[Math.floor(Math.random() * 5)];
-					this.draw(
-						ctx,
-						(i * 1.02) * hex.rectangleWidth + ((j % 2) * hex.radius),
-						(j * 1.02) * (hex.sideLength + hex.height),
-						hex
-					);
+			rndColor = localStorage.getItem('synthetic');
+			if (!rndColor || typeof(rndColor) !== 'string') {
+				rndColor = [];
+				for (var i = 0; i < 5000; ++i) {
+					rndColor.push(colors[sRnd(colors.length)]);
 				}
-
+				localStorage.setItem('synthetic', JSON.stringify(rndColor));
+			} else {
+				rndColor = JSON.parse(rndColor);
 			}
-		},
-
-		draw: function(ctx, x, y, hex) {
-			ctx.beginPath();
-			ctx.moveTo(x + hex.radius, y);
-			ctx.lineTo(x + hex.rectangleWidth, y + hex.height);
-			ctx.lineTo(x + hex.rectangleWidth, y + hex.height + hex.sideLength);
-			ctx.lineTo(x + hex.radius, y + hex.rectangleHeight);
-			ctx.lineTo(x, y + hex.sideLength + hex.height);
-			ctx.lineTo(x, y + hex.height);
-			ctx.closePath();
-			ctx.globalAlpha = 1;
-			ctx.fill();
-			ctx.globalAlpha = 0.2;
-			ctx.stroke();
+			canvas = document.getElementById('synthetic');
+			drawSynthetic();
 		}
-
 	};
 
 	return synthetic;
 
 });
-
-// document.addEventListener("DOMContentLoaded", function() {
-// 	synthetic.init();
-// });

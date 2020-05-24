@@ -72,15 +72,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 	// LOAD MODULES
 	//////////////////////////////////////////////////////////////////
 	$SourceManager->echoScripts("modules", true);
-
-	$SourceManager->echoStyles("pluginsCSS", false);
-
-	// Load Plugin CSS Files
-	// foreach ($plugins as $plugin) {
-	// 	if (file_exists(PLUGINS . "/" . $plugin . "/screen.css")) {
-	// 		echo('<link rel="stylesheet" href="plugins/'.$plugin.'/screen.css">');
-	// 	}
-	// }
+	$SourceManager->echoStyles("pluginsCSS", true);
 
 	?>
 

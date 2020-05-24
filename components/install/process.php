@@ -129,7 +129,7 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 
 	$versionData = array(
 		"atheos_uuid" => uniqid(),
-		"atheos_version" => "v4.0.5",
+		"atheos_version" => "v4.1.0",
 		"first_heard" => date("Y-m-d H:i:s"),
 		"last_heard" => date("Y-m-d H:i:s"),
 		"php_version" => phpversion(),

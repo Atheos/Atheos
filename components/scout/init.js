@@ -85,8 +85,8 @@
 				oX('#probe_processing').show();
 
 				var query = oX('#modal_content form input[name="probe_query"]').value();
-				var fileExtensions = oX('#modal_content form input[name="probe_filter"]').value();
-				var filter = fileExtensions.trim();
+				var extensions = oX('#modal_content form input[name="probe_filter"]').value();
+				var filter = extensions.trim();
 				if (filter !== '') {
 					//season the string to use in find command
 					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
@@ -94,14 +94,14 @@
 
 				var type = oX('#modal_content form select[name="probe_type"]').value();
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'probe',
-						type: type,
-						path: path,
-						query: query,
-						filter: filter
+						type,
+						path,
+						query,
+						filter
 					},
 					success: function(reply) {
 						table.empty();
@@ -139,7 +139,7 @@
 						results = table.html();
 						atheos.flow.slide('open', table.el);
 
-						self.saveSearchResults(query, type, filter, results);
+						self.saveSearchResults(query, type, extensions, results);
 						atheos.modal.resize();
 
 					}
@@ -154,11 +154,11 @@
 				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
 				if (lastSearched) {
-					oX('#modal_content form input[name="probe_query"]').value(lastSearched.searchText);
-					oX('#modal_content form input[name="probe_filter"]').value(lastSearched.fileExtension);
-					oX('#modal_content form select[name="probe_type"]').value(lastSearched.searchType);
-					if (lastSearched.searchResults !== '') {
-						table.html(lastSearched.searchResults);
+					oX('#modal_content form input[name="probe_query"]').value(lastSearched.query);
+					oX('#modal_content form select[name="probe_type"]').value(lastSearched.type);
+					oX('#modal_content form input[name="probe_filter"]').value(lastSearched.extensions);
+					if (lastSearched.results !== '') {
+						table.html(lastSearched.results);
 						atheos.flow.slide('open', table.el);
 						atheos.modal.resize();
 					}
@@ -171,12 +171,12 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save Search Results
 		//////////////////////////////////////////////////////////////////////80
-		saveSearchResults: function(searchText, searchType, fileExtensions, searchResults) {
+		saveSearchResults: function(query, type, extensions, results) {
 			var lastSearched = {
-				searchText: searchText,
-				searchType: searchType,
-				fileExtension: fileExtensions,
-				searchResults: searchResults
+				query,
+				type,
+				extensions,
+				results
 			};
 			atheos.storage('lastSearched', JSON.stringify(lastSearched));
 		},
@@ -221,7 +221,7 @@
 			}
 
 			self.currentlyFiltering = input;
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'filter',
@@ -309,7 +309,7 @@
 		// Create Filtered Directory Item
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
-			
+
 			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : global.FileIcons.getClassWithColor(name);
 
 			var nodeClass = 'none';

@@ -4,20 +4,30 @@
 trait Transfer {
 
 
-	public function push($path, $remote, $branch) {
-		if (!is_dir($path)) return $this->returnMessage("error", "Wrong path!");
-		if (!$this->checkExecutableFile()) {
-			return $this->returnMessage("error", "Failed to change permissions of shell program");
+	public function push($repo, $remote, $branch) {
+		if (!is_dir($repo)) {
+			Common::sendJSON("error", "Invalid Repo Path."); die;
 		}
+
+		if (!$this->checkExecutableFile()) {
+			Common::sendJSON("error", "Failed to change permissions of shell program."); die;
+		}
+
+
 		if (!$this->checkShellProgramExists()) {
-			return $this->returnMessage("error", "Please install shell program!");
+			Common::sendJSON("error", "Please install shell program."); die;
 		}
 
 		$program = $this->getShellProgram();
-		$command = $program . ' -s "' . $path . '" -c "git push ' . $remote . ' ' . $branch . '"';
+		$command = $program . ' -s "' . $repo . '" -c "git push ' . $remote . ' ' . $branch . '"';
 
 		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
+		Common::debug($command);
+		Common::debug($result);
+		Common::debug($this->resultArray);
+
+		Common::sendJSON("error", "Pushed.");
 		return $this->parseShellResult($result, "Repository pushed!", "Failed to push repo!");
 	}
 
@@ -53,7 +63,7 @@ trait Transfer {
 		} else {
 			$command = $program . ' -s "' . $path . '" -c "git fetch ' . $remote . '"';
 		}
-		
+
 		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
 		return $this->parseShellResult($result, "Repository fetched!", "Failed to fetch repo!");
