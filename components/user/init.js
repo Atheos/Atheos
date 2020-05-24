@@ -84,7 +84,7 @@
 
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
-				ajax({
+				echo({
 					url: atheos.user.controller,
 					data: {
 						'action': 'keepAlive'
@@ -109,7 +109,7 @@
 				return;
 			}
 			data.action = 'authenticate';
-			ajax({
+			echo({
 				url: self.controller,
 				data: data,
 				success: function(reply) {
@@ -137,7 +137,7 @@
 				if (!password) {
 					atheos.toast.show('error', 'Passwords do not match.');
 				} else {
-					ajax({
+					echo({
 						url: self.controller,
 						data: {
 							'action': 'changePassword',
@@ -187,7 +187,7 @@
 					username = false;
 				}
 				if (password && username) {
-					ajax({
+					echo({
 						url: self.controller,
 						data: {
 							'action': 'create',
@@ -218,7 +218,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						'action': 'delete',
@@ -257,7 +257,7 @@
 			var postLogout = function() {
 				amplify.publish('user.logout');
 				atheos.settings.save();
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						'action': 'logout'
@@ -304,7 +304,7 @@
 		// Save active project to server
 		//////////////////////////////////////////////////////////////////////80
 		saveActiveProject: function(project) {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'saveActiveProject',
@@ -334,7 +334,7 @@
 				if (data.userACL !== 'full' && data.userACL.length < 0) {
 					atheos.toast.show('error', 'At least one project must be selected');
 				} else {
-					ajax({
+					echo({
 						url: self.controller,
 						data: data,
 						success: function() {

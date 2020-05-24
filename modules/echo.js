@@ -36,7 +36,7 @@
 		var data = [];
 		if (options.data && typeof options.data === 'object') {
 			for (var name in options.data) {
-				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(data[name]));
+				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(options.data[name]));
 			}
 			if (options.random) arr.push(("v=" + Math.random()).replace(".", ""));
 			data = data.join('&');
@@ -55,6 +55,10 @@
 			var data = xhr.responseText;
 			try {
 				data = JSON.parse(data);
+				if (typeof(data.debug) !== 'undefined') {
+					console.log(data.debug);
+					delete data.debug;
+				}
 			} catch (e) {}
 			if (xhr.status >= 200 && xhr.status < 300) {
 				if (options.success) {

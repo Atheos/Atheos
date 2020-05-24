@@ -130,7 +130,7 @@
 				atheos.toast.show('warning', 'Path already exists.');
 				return false;
 			} else {
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'move',
@@ -173,7 +173,7 @@
 				if (icon) {
 					icon.addClass('loading');
 				}
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'index',
@@ -292,7 +292,7 @@
 			var ext = pathinfo(path).extension.toLowerCase();
 
 			if (self.noOpen.indexOf(ext) < 0) {
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'open',
@@ -330,7 +330,7 @@
 			data.action = 'save';
 			data.path = path;
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: data,
 				success: function(data) {
@@ -432,7 +432,7 @@
 					copy = 'copy_' + copy;
 				}
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'duplicate',
@@ -495,7 +495,7 @@
 				var parent = path.split('/').slice(0, -1).join('/');
 				var clonePath = parent + '/' + clone;
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'duplicate',
@@ -541,7 +541,7 @@
 				var nodeName = oX('#modal_content form input[name="nodeName"]').value();
 				var newPath = path + '/' + nodeName;
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'create',
@@ -653,7 +653,7 @@
 					temp.push(arr[i]);
 				}
 				var newPath = temp.join('/') + '/' + newName;
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'rename',
@@ -730,7 +730,7 @@
 				data: path,
 				actions: {
 					'Delete': function() {
-						ajax({
+						echo({
 							url: self.controller,
 							data: {
 								action: 'delete',

@@ -58,7 +58,7 @@
 				self.closeAll();
 			});
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'list'
@@ -240,7 +240,7 @@
 		//////////////////////////////////////////////////////////////////
 
 		check: function(path) {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'check',
@@ -278,7 +278,7 @@
 
 			self.updateTabDropdownVisibility();
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'add',
@@ -303,7 +303,7 @@
 			if (path !== self.getPath()) {
 				atheos.editor.setSession(self.sessions[path]);
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						'action': 'setFocus',
@@ -527,7 +527,7 @@
 			}
 			delete self.sessions[path];
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'remove',
@@ -546,7 +546,7 @@
 
 			self.updateTabDropdownVisibility();
 			atheos.editor.exterminate();
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'removeAll'
@@ -613,7 +613,7 @@
 				}
 			}
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'rename',
