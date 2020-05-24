@@ -33,7 +33,7 @@
 		init: function() {
 			self = this;
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					'action': 'loadExtensionMap'
@@ -170,7 +170,7 @@
 				}
 			}
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: data,
 				success: function(reply) {

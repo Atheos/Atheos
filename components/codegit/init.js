@@ -232,7 +232,7 @@
 				data.panel = panel;
 				data.repo = repo;
 
-				ajax({
+				echo({
 					url: self.dialog,
 					data: data,
 					success: function(reply) {
@@ -256,7 +256,7 @@
 		},
 
 		gitInit: function(path) {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'init',
@@ -289,7 +289,7 @@
 				}
 			});
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: data,
 				success: function(data) {
@@ -310,7 +310,7 @@
 		checkFileStatus: function(path) {
 			path = path || atheos.active.getPath();
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'fileStatus',
@@ -331,7 +331,7 @@
 		checkRepoStatus: function(path) {
 			path = path || atheos.project.current.path;
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'status',
@@ -389,7 +389,7 @@
 			// this.showDialog('overview', this.location);
 			// success: this.path + 'controller.php?action=push&path=' + this.location + '&remote=' + remote + '&branch=' + branch,
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'push',
