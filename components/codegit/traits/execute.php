@@ -56,26 +56,24 @@ trait Execute {
 
 	private function checkExecutableFile() {
 		$program = $this->getShellProgram();
-		if (shellProgram == "expect" || shellProgram == "empty") {
-			if (!is_executable ($program)) {
-				if (!chmod($program, 0755)) {
-					return false;
-				}
+		if (shellProgram === "expect" || shellProgram === "empty") {
+			if (!is_executable ($program) && !chmod($program, 0755)) {
+				return false;
 			}
 		}
 		return true;
 	}
 
 	private function checkShellProgramExists() {
-		if (shellProgram == "expect") {
+		if (shellProgram === "expect") {
 			if (`which expect`) {
 				return true;
 			}
-		} else if (shellProgram == "empty") {
+		} else if (shellProgram === "empty") {
 			if (`which empty`) {
 				return true;
 			}
-		} else if (shellProgram == "python") {
+		} else if (shellProgram === "python") {
 			if (`which python`) {
 				exec('python ./scripts/python.py --test', $output, $return_var);
 				if ($return_var === 0) {

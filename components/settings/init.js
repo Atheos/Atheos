@@ -55,7 +55,7 @@
 		// Load Settings
 		//////////////////////////////////////////////////////////////////////80
 		load: function() {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'load',
@@ -156,7 +156,7 @@
 				return;
 			}
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'save',
@@ -220,7 +220,7 @@
 			}
 			self.save(false);
 
-			ajax({
+			echo({
 				url: dataFile,
 				success: function(reply) {
 

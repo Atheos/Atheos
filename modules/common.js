@@ -137,7 +137,13 @@
 			if (hidden) {
 				overlay.hide();
 			}
-			document.body.appendChild(overlay.el);
+			var toast = oX('#toast-container');
+			if (toast) {
+				toast.before(overlay.el);
+			} else {
+				document.body.appendChild(overlay.el);
+
+			}
 			return overlay;
 		},
 
@@ -183,15 +189,7 @@
 				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
 
 				//didn't find it in the page, so load it
-				// jQuery.ajax({
-				// 	type: 'GET',
-				// 	url: url,
-				// 	success: callback,
-				// 	dataType: 'script',
-				// 	cache: cache
-				// });
-
-				// ajax({
+				// echo({
 				// 	url: url,
 				// 	success: function(data) {
 				// 		eval(data);

@@ -116,7 +116,7 @@
 
 		loadCurrent: function() {
 			var project = this;
-			ajax({
+			echo({
 				url: this.controller,
 				data: {
 					'action': 'load'
@@ -147,7 +147,7 @@
 		//////////////////////////////////////////////////////////////////
 		open: function(projectPath) {
 			atheos.scout.hideFilter();
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'open',
@@ -182,7 +182,7 @@
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
 		loadDock: function() {
-			ajax({
+			echo({
 				url: this.dialog,
 				data: {
 					action: 'projectDock'
@@ -228,7 +228,7 @@
 					gitBranch
 				};
 
-				ajax({
+				echo({
 					url: self.controller,
 					data,
 					success: function(reply) {
@@ -301,7 +301,7 @@
 					projectName
 				};
 
-				ajax({
+				echo({
 					url: self.controller,
 					data,
 					success: function(reply) {
@@ -337,7 +337,7 @@
 				var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
 				var followLinks = oX('input:checkbox[name="follow"]:checked').value();
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'delete',
@@ -384,7 +384,7 @@
 		// Get Current (Path)
 		//////////////////////////////////////////////////////////////////
 		getCurrent: function() {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'current'

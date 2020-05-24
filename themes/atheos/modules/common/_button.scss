@@ -3,17 +3,28 @@ button {
 	width: auto;
 	margin: 3px 0;
 	min-width: 80px;
-	color: #242424;
+	color: $background;
 	font-size: 13px;
 	font-weight: bold;
-	background-color: #EEEEEE;
+	background-color: $base07;
 	border: none;
 	border-bottom: 2px solid #7d7d7d;
+	cursor: pointer;
 
 	&.bottom-left {
 		position: absolute;
 		bottom: 10px;
 		left: 10px;
+	}
+
+	&:disabled {
+		color: $grey;
+		cursor: unset;
+
+		&:hover {
+			color: $grey;
+			background-color: $base07;
+		}
 	}
 }
 
@@ -23,9 +34,7 @@ button+button {
 
 button:hover {
 	color: #333;
-	background-color: #f3f3f3;
-	cursor: pointer;
-	border-bottom: 2px solid #919191;
+	background-color: #BBB;
 }
 
 // button.btn-left {
