@@ -94,7 +94,7 @@
 
 				var type = oX('#modal_content form select[name="probe_type"]').value();
 
-				ajax({
+				echo({
 					url: self.controller,
 					data: {
 						action: 'probe',
@@ -221,7 +221,7 @@
 			}
 
 			self.currentlyFiltering = input;
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'filter',

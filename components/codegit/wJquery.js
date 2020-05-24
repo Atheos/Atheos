@@ -234,7 +234,7 @@
 				data.panel = panel;
 				data.repo = repo;
 
-				ajax({
+				echo({
 					url: codegit.dialog,
 					data: data,
 					success: function(reply) {
@@ -335,7 +335,7 @@
 				}
 			});
 
-			ajax({
+			echo({
 				url: this.controller + '?action=commit',
 				data: data,
 				success: function(data) {
@@ -807,7 +807,7 @@
 		checkFileStatus: function(path) {
 			path = path || atheos.active.getPath();
 
-			ajax({
+			echo({
 				url: codegit.controller,
 				data: {
 					action: 'fileStatus',
@@ -828,7 +828,7 @@
 		checkRepoStatus: function(path) {
 			var path = atheos.project.current.path;
 
-			ajax({
+			echo({
 				url: codegit.controller,
 				data: {
 					action: 'status',
