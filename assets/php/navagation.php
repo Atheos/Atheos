@@ -30,11 +30,5 @@
 				<span>Documentation</span>
 			</a>
 		</li>
-		<li>
-			<a href="/blog" id="blog">
-				<i class="icon-coffee"></i>
-				<span>Blog</span>
-			</a>
-		</li>
 	</ul>
 </nav>

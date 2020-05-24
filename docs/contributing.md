@@ -5,7 +5,6 @@ Your contributions are welcome and we're very open about how contributions are m
 * Check the issues to ensure that someone else isn't already working on the bug or feature
 * Submit an issue for bugs and feature additions before you start with it
 * Familiarize yourself with the [documentation](https://atheos.io/docs)
-* 
 
 
 

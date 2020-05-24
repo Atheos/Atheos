@@ -10,7 +10,7 @@ If you would like to submit a theme , please email the GitHub repository and inf
 
 ## How to create a new theme for Atheos
 
-Generally spoken, the easiest way is to copy the `default` folder and edit it to your needs. For public using of your theme, we would prefer to create a new repository on github containing all your changes. This repository should have at least one `readme.md` and `theme.json`. One example can be found at https://github.com/daeks/Atheos-Theme-Modern. 
+Generally spoken, the easiest way is to copy the `default` folder and edit it to your needs. For public using of your theme, we would prefer to create a new repository on github containing all your changes. This repository should have at least one `readme.md` and `theme.json`, such as the ones found in the default Atheos Theme.
 
 As custom themes are not maintained by Atheos itself, we prefer to copy only components you want to modify as Atheos has a built-in functionality to take the `default` components if your theme does not have them. Looking at the example above, that would mean that only the filemanager would be modified and the other components loaded from the `default` theme. 
 
@@ -19,12 +19,10 @@ As custom themes are not maintained by Atheos itself, we prefer to copy only com
     theme.json
 
 Theme file contains information about the theme, like name or author. It is formatted in JSON:
-
-    [{ "author" : "Your Name",
-        "version": "Your Version",
-        "url" : "Your Repository URL"
-        }]
-
-**How to assign a preview to the market**
-
-Just attach a screenshot, named ```screen.png```, to your repository.
+```json
+{
+	"author" : "Your Name",
+    "version": "Your Version",
+    "url" : "Your Repository URL"
+}
+```

@@ -1,20 +1,20 @@
 ### Tutorials
 
-- [Configuration example on Apache](installaction/apache2)
-- [Configuration example on Nginx](installaction/nginx)
-- [Quick Installation on CentOS](installaction/centos)
-- [Defunct: Quick Installation on Docker](installaction/docker)
-- [Quick Installation on Ubuntu](installaction/ubuntu)
+- [Configuration example on Apache](installation/apache2)
+- [Configuration example on Nginx](installation/nginx)
+- [Quick Installation on CentOS](installation/centos)
+- [Quick Installation on Docker](installation/docker)
+- [Quick Installation on Ubuntu](installation/ubuntu)
 
 ### General Installation Guide
 
 To install simply place the contents of the system in a web accessible
 folder.
 
-Note: _Currently the system is only tested on real servers based on Unix or WinNT filesystem._
+Note: _Currently the system is only tested on real servers based on a Unix filesystem._
 _Use on a local WAMP package will most likely cause pathing issues._
 
-**Ensure that the following have write capabilities:**
+**Ensure that the following folders have write capabilities:**
 
     /config.php
     /data

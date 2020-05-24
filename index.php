@@ -1,4 +1,7 @@
 <?php
+header("Access-Control-Allow-Origin: *");
+
+
 $request = parse_url($_SERVER['REQUEST_URI']);
 $request = $request["path"];
 $request = str_replace(' ', '', $request);
@@ -22,13 +25,11 @@ if ($request == 'raw') {
 	<html lang="en">
 	<head>
 		<?php include "assets/php/meta.php"; ?>
-		<title>Atheos IDE</title>
 		<?php echo "<!--" . $request . "-->"; ?>
 
 	</head>
 
 	<body>
-
 		<sidebar>
 			<div class="background">
 				<div class="trigger">
@@ -41,14 +42,12 @@ if ($request == 'raw') {
 					<h2>Web Based, Cloud IDE</h2>
 				</header>
 				<?php include "assets/php/navagation.php"; ?>
-				<!--<canvas id="synthetic" width="1024" height="762"></canvas>-->
 			</div>
 		</sidebar>
 		<?php include "assets/php/main.php"; ?>
 
 		<?php include "assets/php/footer.php"; ?>
 		<?php include "assets/php/scripts.php"; ?>
-		<!--<script src="https://cdn.jsdelivr.net/gh/hlsiira/synthetic/synthetic.min.js"></script>-->
 	</body>
 </html>
 <?php

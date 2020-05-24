@@ -3,9 +3,7 @@
 	<section id="content">
 		<?php
 
-		if (explode('/', $request)[0] == 'blog') {
-			include "blog.php";
-		} elseif (explode('/', $request)[0] == 'docs') {
+		if (explode('/', $request)[0] == 'docs') {
 			include "docs.php";
 		} elseif (file_exists("$request.php")) {
 			include "$request.php";

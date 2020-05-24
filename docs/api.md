@@ -26,15 +26,23 @@ Plugins should be built using the same struture as Components.
 
 As an example:
 ```Javascript
+//////////////////////////////////////////////////////////////////////////////80
 // Comment block exceeding no more than 80 Characters/Line
+//////////////////////////////////////////////////////////////////////////////80
+
 (function(global){
-	var atheos = global.atheos;
+	var atheos = global.atheos,
+		amplify = global.amplify;
+	var self = null;
 	
-	atheos.modules = {
+	amplify.subscribe('system.loadExtra', () => atheos.module.init());
+
+	atheos.module = {
 		setting: 'value',
 		
 		init: function() {
-			this.printToConsole(this.setting);
+			self = this;
+			self.printToConsole(this.setting);
 		},
 		
 		printToConsole: function(message) {
@@ -49,7 +57,7 @@ As an example:
 
 ### Data
 
-System data is stored in JSON formatted PHP files which are read and written to via the `common.php` file's JSON function (`getJSON` and `saveJSON`). This method protects the files from being publicly accessible through the browser.
+System data is stored in JSON formatted PHP files which are read and written to via the `common.php` file's JSON function (`readJSON` and `saveJSON`). This method protects the files from being publicly accessible through the browser.
 
 ### Workspace
 
@@ -61,4 +69,4 @@ Plugins are quite similar then components, but stored in another location of the
 
 ### Themes
 
-All layout related stuff is merged together as a theme. Atheos uses by default the `default` theme which is located in the `themes` directory. As already mentioned in the components section of this article, each component is using a `screen.css` which is automatically loaded on startup. If the desired file is missing in a custom theme, Atheos has an included fallback to the `default` theme. More information about themes can be found at https://github.com/Atheos/Atheos/wiki/Themes
+All layout related stuff is merged together as a theme. Atheos uses by default the `default` theme which is located in the `themes` directory. If the desired file is missing in a custom theme, Atheos has an included fallback to the `default` theme. More information about themes can be found at [Themes](/docs/themes)

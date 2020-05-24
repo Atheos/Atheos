@@ -1,5 +1,9 @@
-## Summary:
-Plugins are able to hook into the settings of Atheos since v2.5.0 to provide their own config on a common place.
+## Creating a Plugin
+The Atheos FrontEnd at it's core is a JavaScript Object, and as such, it is easy to add your own module as a key to the Atheos Object. Most of the components and modules that are built into Atheos by default publish Amplify events during actions, allowing a plugin to subscribe and modify them. In fact, a module can be completely rewritten as plugins are loaded last.
+
+In order to have your plugin added to the official list, please email the Atheos dev team (info@atheos.io). If you have any questions or are planning on creating a plugin and simply want to talk about your idea, we highly encourage you to send an email. Sadly many of the plugins on the market today try to reinvent existing functions within Atheos because they didn't know that Atheos already had built in, and if your plugin requires something that Atheos doesn't provide natively, it's possible we can add it as well.
+
+Snippets can be found at [here](/docs/plugins/snippets)
 
 ### How to add your plugin to the settings
 Expand your ``plugin.json``:

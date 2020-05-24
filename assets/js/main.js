@@ -23,6 +23,8 @@
 				"╰───────────────────────────────╯"
 			].join("\n"));
 		}
+		synthetic.init();
+
 	});
 	document.addEventListener("change", function(e) {
 		if (e.target.tagName === 'SELECT') {

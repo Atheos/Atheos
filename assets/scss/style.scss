@@ -24,18 +24,31 @@ $desktop-width: 959px;
 	position: relative;
 }
 
+/*Hex Overlay*/
 #synthetic {
 	left: -20px;
-	position: absolute;
+	position: fixed;
 	top: -20px;
-	z-index: -1;
+	z-index: 0;
 	pointer-events: none;
-	height: 120%;
-	width: 120%;
+	min-height: 120vh;
+	min-width: 120vw;
 	background-color: #000;
-	/*background: linear-gradient(-45deg, #000 40%, #0074D7 50%, #000 60%);*/
-	/*background-size: 600% 600%;*/
-	/*animation: gradient 10s linear infinite;*/
+	background: linear-gradient(-45deg, #000 45%, #001467 50%, #000 55%);
+	background-size: 600% 600%;
+	animation: gradient 16s linear infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position:0% 51%
+	}
+	50% {
+		background-position:100% 50%
+	}
+	100% {
+		background-position:0% 51%
+	}
 }
 
 /* WEBKIT SCROLLBARS */

@@ -25,6 +25,12 @@
 	pre {
 		overflow: auto
 	}
+	
+	p {
+		code {
+			color:$red;
+		}
+	}
 
 
 	code,
@@ -112,10 +118,6 @@
 		// margin-bottom: 15px;
 		// line-height: 1.1
 		display: inline-block;
-
-		strong {
-			color: $blue;
-		}
 	}
 
 	select {
@@ -131,16 +133,10 @@
 		outline: none;
 	}
 
-	p {
-		code {
-			color: $red;
-		}
-
 		strong {
-			color: $blue;
+			color: $red;
 			font-weight: normal;
 		}
-	}
 
 
 	// h1 {
@@ -198,14 +194,21 @@
 	}
 
 	code {
-		font-family: Consolas, "Liberation Mono", Menlo, Courier, monospace;
-		font-size: 12px
+		font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+		background-color: #f2f2f2;
+		border: solid 1px #ddd;
+		padding: 0 3px;		
 	}
 
 	pre {
 		margin-top: 0;
 		margin-bottom: 0;
-		font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace
+		font: 12px Consolas, "Liberation Mono", Menlo, Courier, monospace;
+		padding: 20px;
+		background: #303030;
+		color: #f2f2f2;
+		text-shadow: none;
+		overflow: auto;		
 	}
 
 	code,
@@ -217,21 +220,15 @@
 	}
 
 	code {
-		background-color: #f2f2f2;
-		border: solid 1px #ddd;
-		padding: 0 3px;
+
 	}
 
 	pre {
-		padding: 20px;
-		background: #303030;
-		color: #f2f2f2;
-		text-shadow: none;
-		overflow: auto;
+
 	}
 
 	pre code {
-		color: #f2f2f2;
+		color: $green;
 		background-color: #303030;
 		border: none;
 		padding: 0;
