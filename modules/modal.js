@@ -96,17 +96,19 @@
 			if (content.find('form')) {
 				content.find('form').off('submit');
 			}
-
-			ajax({
+			echo({
 				url: url,
 				type: 'GET',
 				data: data,
-				success: function(data) {
+				success: function(reply) {
+					if (reply.status && reply.status === 'error') {
+						return;
+					}
 					clearTimeout(loadTimeout);
-					content.html(data);
+					content.html(reply);
 					content.css('height', '');
 
-					// oX(content).html(data);
+					// oX(content).html(reply);
 					// var script = oX(oX(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
@@ -195,7 +197,7 @@
 			<h2>${wrapText}</h2>
 			</div>
 			`;
-			
+
 			loading = `<div class="loader"><h2>${wrapText}</h2><span class="dual-ring"></span></div>`;
 
 			var screen = oX('#modal_content');

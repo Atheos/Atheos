@@ -44,7 +44,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		download: function(path) {
 			var type = pathinfo(path).type;
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'download',

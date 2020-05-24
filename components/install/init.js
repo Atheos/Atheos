@@ -89,7 +89,7 @@
 
 		install: function() {
 			var data = atheos.common.serializeForm(self.form.el);
-			ajax({
+			echo({
 				url: 'components/install/process.php',
 				data,
 				success: function(reply) {
@@ -103,6 +103,7 @@
 								'Okay': function() {}
 							}
 						};
+						atheos.alert.show(dialog);
 					}
 				}
 			});
