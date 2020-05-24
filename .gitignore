@@ -5,7 +5,7 @@
 config.php
 !*/README.md
 data/*
-!data/version.json
+data/version.json
 !data/.htaccess
 workspace/*
 plugins/*
