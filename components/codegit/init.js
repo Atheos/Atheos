@@ -288,7 +288,7 @@
 					data.files.push(checkbox.parent('tr').attr('data-file'));
 				}
 			});
-			
+
 			ajax({
 				url: self.controller,
 				data: data,
@@ -574,6 +574,10 @@
 
 
 		addStatusElements: function() {
+			self.repoBanner = oX('#codegit_repo_banner');
+			self.repoStatus = oX('#codegit_repo_status');
+			self.fileStatus = oX('#codegit_file_status');
+
 			if (!self.repoBanner) {
 				oX('#file-manager').before('<div id="codegit_repo_banner">Commit Status: <span id="codegit_repo_status"></span></div>');
 				self.repoBanner = oX('#codegit_repo_banner');
@@ -583,20 +587,16 @@
 				oX("#codegit_repo_banner").on('click', function() {
 					self.showCodeGit();
 				});
-
-				if (self.repoBannerDisabled() !== true) {
-					self.repoBanner.show();
-				} else {
-					self.repoBanner.hide();
-				}
 			}
-			if (!self.fileStatus) {
-				// oX('#current_file').after('<span id="codegit_file_status"></span>');
-				self.fileStatus = oX('#codegit_file_status');
 
-				if (self.fileStatusDisabled() === true) {
-					self.fileStatus.empty();
-				}
+			if (self.repoBannerDisabled() !== true) {
+				self.repoBanner.show();
+			} else {
+				self.repoBanner.hide();
+			}
+
+			if (self.fileStatusDisabled() === true) {
+				self.fileStatus.empty();
 			}
 		},
 
