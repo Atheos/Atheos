@@ -35,7 +35,7 @@
 		init: function() {
 			self = this;
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'init'
@@ -55,7 +55,7 @@
 				oneWeekAgo = Date.now() - (604800000);
 
 			if (!cache || new Date(cache.date) < oneWeekAgo) {
-				ajax({
+				echo({
 					url: self.home,
 					success: function(data) {
 						self.cache = {
@@ -106,7 +106,7 @@
 		},
 
 		saveCache: function() {
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'saveCache',
@@ -311,7 +311,7 @@
 
 			atheos.modal.setLoadingScreen('Installing ' + name + '...');
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'install',
@@ -339,7 +339,7 @@
 			}
 
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'remote',
@@ -365,7 +365,7 @@
 
 			atheos.modal.setLoadingScreen('Updating ' + name + '...');
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'update',

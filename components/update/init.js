@@ -37,7 +37,7 @@
 		init: function() {
 			self = this;
 
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'init'
@@ -58,7 +58,7 @@
 		download: function() {
 			var archive = oX('#modal_content form input[name="archive"]').value();
 			oX('#download').attr('src', archive);
-			ajax({
+			echo({
 				url: self.controller,
 				data: {
 					action: 'clear'
@@ -89,7 +89,7 @@
 		// Load Latest from the Repo
 		//////////////////////////////////////////////////////////////////////80
 		loadLatest() {
-			ajax({
+			echo({
 				url: self.repo,
 				success: function(reply) {
 					self.remote = reply;
