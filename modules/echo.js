@@ -38,7 +38,7 @@
 			for (var name in options.data) {
 				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(options.data[name]));
 			}
-			if (options.random) arr.push(("v=" + Math.random()).replace(".", ""));
+			if (options.random) data.push(("v=" + Math.random()).replace(".", ""));
 			data = data.join('&');
 		} else {
 			data = null;
@@ -70,7 +70,7 @@
 				}
 			}
 		};
-
+		
 		if (options.type === 'GET') {
 			data = data ? '?' + data : '';
 			xhr.open('GET', options.url + data, true);
