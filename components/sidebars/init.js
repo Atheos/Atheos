@@ -223,8 +223,7 @@
 					this.handle.removeClass('unlocked');
 				}
 				self.leftLockedVisible = !(self.leftLockedVisible);
-				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible);
-
+				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible, true);
 				atheos.storage('sidebars.leftLockedVisible', self.leftLockedVisible);
 			}
 		},
@@ -337,7 +336,7 @@
 					this.handle.removeClass('unlocked');
 				}
 				self.rightLockedVisible = !(self.rightLockedVisible);
-				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible);
+				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible, true);
 				atheos.storage('sidebars.rightLockedVisible', self.rightLockedVisible);
 			}
 		},
