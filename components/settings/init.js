@@ -151,7 +151,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save Settings
 		//////////////////////////////////////////////////////////////////////80
-		save: function(key, value) {
+		save: function(key, value, hidden) {
 			if (!key || (typeof(value) === 'undefined')) {
 				return;
 			}
@@ -166,12 +166,19 @@
 				success: function(reply) {
 					if (reply.status === 'error') {
 						atheos.toast.show(reply);
+					} else if(!hidden) {
+						reply.text = 'Setting "'+ key + '" saved.';
+						self.displayStatus(reply);
 					}
 				}
 			});
 
 			amplify.publish('settings.save');
 		},
+
+		displayStatus: debounce(function(reply) {
+			atheos.toast.show(reply);
+		}, 1000),
 
 		//////////////////////////////////////////////////////////////////////80
 		// Show Setting Dialog
