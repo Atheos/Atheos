@@ -81,10 +81,13 @@ class SourceManager {
 			if (is_readable($file)) {
 				$content = file_get_contents($file);
 				$minified .= "// $file" . PHP_EOL;
-				if ($type === "js")	$minifier = new Minify\JS($content);
-				else $minifier = new Minify\CSS($content);
-
-				$minified .= $minifier->minify() . PHP_EOL;
+				if ($type === "js") {
+					$minifier = new Minify\JS($content);
+					$minified .= $minifier->minify() . ';' . PHP_EOL;
+				} else {
+					$minifier = new Minify\CSS($content);
+					$minified .= $minifier->minify() . PHP_EOL;
+				}
 			}
 		}
 		file_put_contents($minifiedFileName, $minified);
