@@ -118,13 +118,11 @@ class Market
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::sendJSON("error", "Unable to extract Archive.");
-					die;
+					Common::sendJSON("error", "Unable to extract Archive."); die;
 				}
 
 			} else {
-				Common::sendJSON("error", "ZIP Extension not found.");
-				die;
+				Common::sendJSON("error", "ZIP Extension not found."); die;
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -133,6 +131,7 @@ class Market
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 			// Response
+			Common::log($this->username, "Installed plugin: $name", "market");
 			Common::sendJSON("success", "Successfully installed $repo.");
 		} else {
 			Common::sendJSON("error", "Unable to download $repo.");
@@ -152,6 +151,7 @@ class Market
 		}
 
 		rrmdir(BASE_PATH.'/'.$type.'/'.$name);
+		Common::log($this->username, "Removed plugin: $name", "market");
 		Common::sendJSON("S2000");
 	}
 
@@ -224,6 +224,7 @@ class Market
 
 					rrmdir(BASE_PATH.'/'.$type.'/_'.session_id());
 					// Response
+					Common::log($this->username, "Updated plugin: $name", "market");
 					Common::sendJSON("S2000");
 				} else {
 					Common::sendJSON("error", "Unable to download ".$repo); die;

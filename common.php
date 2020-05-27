@@ -114,7 +114,7 @@ class Common {
 		}
 
 		//Check for external authentification
-		if (defined('AUTH_PATH')) {
+		if (defined('AUTH_PATH') && file_exists(AUTH_PATH)) {
 			require_once(AUTH_PATH);
 		}
 
@@ -271,7 +271,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Save JSON
 	//////////////////////////////////////////////////////////////////
-
 	public static function saveJSON($file, $data, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
@@ -285,6 +284,38 @@ class Common {
 		$write = fopen($path . $file, 'w') or die("can't open file: " . $path . $file);
 		fwrite($write, $data);
 		fclose($write);
+	}
+
+
+	//////////////////////////////////////////////////////////////////
+	// Log Action
+	//////////////////////////////////////////////////////////////////
+	public static function log($user, $action, $name = "global") {
+		$path = DATA . "/log/";
+		$path = preg_replace('#/+#', '/', $path);
+
+		if (!is_dir($path)) mkdir($path);
+
+		$file = "$name.log";
+		$time = date("Y-m-d H:i:s");
+
+		$text = "$user: $action @ $time";
+
+		if (file_exists($path . $file)) {
+			$lines = file($path . $file);
+			if (sizeof($lines) > 100) {
+				unset($lines[0]);
+			}
+			$lines[] = $text . PHP_EOL;
+			
+			$write = fopen($path . $file, 'w');
+			fwrite($write, implode('', $lines));
+			fclose($write);
+		} else {
+			$write = fopen($path . $file, 'w');
+			fwrite($write, $text);
+			fclose($write);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
