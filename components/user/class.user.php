@@ -67,7 +67,7 @@ class User {
 				if ($user['activeProject'] !== '') {
 					$_SESSION['project'] = $user['activeProject'];
 				}
-
+				Common::log($this->username, "Logged in", "access");
 				Common::sendJSON("success", array("username" => $this->username));
 			} else {
 				Common::sendJSON("error", "Invalid Password.");
