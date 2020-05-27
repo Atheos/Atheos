@@ -42,7 +42,7 @@
 				*  Workaround for Storage-Event:
 				*/
 			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
-
+    
 
 			// oX('#settings_open').on('click', function() {
 			// 	atheos.settings.show();
@@ -166,8 +166,8 @@
 				success: function(reply) {
 					if (reply.status === 'error') {
 						atheos.toast.show(reply);
-					} else if(!hidden) {
-						reply.text = 'Setting "'+ key + '" saved.';
+					} else if (!hidden) {
+						reply.text = 'Setting "' + key + '" saved.';
 						self.displayStatus(reply);
 					}
 				}
