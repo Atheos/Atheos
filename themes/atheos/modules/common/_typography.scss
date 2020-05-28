@@ -32,18 +32,9 @@ a:visited {
 /* FORMS */
 label {
 	display: block;
-	padding: 0 0 5px;
-	font-size: 14px;
-	font-weight: normal;
-	text-shadow: 0 1px 1px #000;
+	font-size: 18px;
 }
 
-label .icon {
-	font-weight: normal;
-	font-size: 180%;
-	padding-right: 4px;
-	display: none;
-}
 
 pre {
 	background: $input-background;
@@ -60,11 +51,11 @@ hr {
 	margin: 0;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
 	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-	i {
-		margin-right: 5px;
-	}
 }
 
 h1 {
