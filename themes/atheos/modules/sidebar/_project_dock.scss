@@ -17,7 +17,7 @@
 		width: 100%;
 
 		i {
-			color: $accent-color;
+			color: $colorMajor;
 		}
 
 		ul {
@@ -33,7 +33,7 @@
 			@include border-radius;
 
 			&:hover {
-				background-color: #333;
+				background-color: $hoverMinor;
 			}
 		}
 	}

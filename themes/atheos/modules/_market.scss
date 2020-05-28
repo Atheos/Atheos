@@ -50,7 +50,7 @@
 	th[colspan="4"],
 	td[colspan="4"] {
 		padding: 5px 10px;
-		background-color: $input-background;
+		background-color: $inputBackground;
 	}
 
 	th:nth-of-type(1),
@@ -92,7 +92,6 @@
 
 		.fa-sync-alt,
 		.fa-plus-circle {
-
 			color: $blue;
 		}
 	}

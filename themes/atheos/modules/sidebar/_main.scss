@@ -8,7 +8,7 @@
 	-webkit-user-select: none;
 	user-select: none;
 	background: #1a1a1a;
-	transition: right $animation-duration ease-in-out, left $animation-duration ease-in-out;
+	transition: right $transitionDuration ease-in-out, left $transitionDuration ease-in-out;
 	// letter-spacing: -0.4px;
 	white-space: nowrap;
 }
@@ -25,10 +25,9 @@
 	z-index: 99999;
 
 	.category {
-		font-size: $font-size-lg;
+		font-size: $fontSizeH3;
 		font-weight: 600;
-		// color:#7F7F7F;
-		color: $accent-color;
+		color: $colorMajor;
 		padding-bottom: 5px;
 		margin-left: 5px;
 	}
@@ -41,7 +40,7 @@
 		@include border-radius;
 
 		&:hover {
-			background-color: #333;
+			background-color: $hoverMinor;
 
 		}
 	}
@@ -49,7 +48,7 @@
 	hr {
 		height: 0;
 		border: none;
-		border-top: 1px solid #333;
+		border-top: 1px solid $borderHeavy;
 		padding: 0;
 		margin: 10px 0;
 	}

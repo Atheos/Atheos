@@ -1,6 +1,6 @@
 <?php require_once('../../common.php'); ?>
 <div class="codegit_settings">
-	<h2><i class="fas fa-code-branch"></i><?php i18n("CodeGit Settings"); ?></h2>
+	<label class="panel"><i class="fas fa-code-branch"></i><?php i18n("CodeGit Settings"); ?></label>
 	<table class="settings">
 		<tr>
 			<td style="width: 80%;">
