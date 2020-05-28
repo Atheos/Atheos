@@ -307,7 +307,7 @@ class Common {
 				unset($lines[0]);
 			}
 			$lines[] = $text . PHP_EOL;
-			
+
 			$write = fopen($path . $file, 'w');
 			fwrite($write, implode('', $lines));
 			fclose($write);
@@ -559,6 +559,22 @@ class Common {
 			$path = str_replace('../', '', $path);
 		}
 		return $path;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Execute Command
+	//////////////////////////////////////////////////////////////////////////80
+	public function executeCommand($cmd) {
+		if (function_exists('system')) {
+			ob_start();
+			system($cmd);
+			ob_end_clean();
+		} elseif (function_exists('exec')) {
+			exec($cmd, $this->output);
+		} elseif (function_exists('shell_exec')) {
+			shell_exec($cmd);
+		}
 	}
 
 }
