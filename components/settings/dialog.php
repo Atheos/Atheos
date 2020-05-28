@@ -57,7 +57,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "settings":
 		?>
-		<h1><i class="fas fa-cog"></i><?php i18n("Settings"); ?></h1>
+		<label class="title"><i class="fas fa-cog"></i><?php i18n("Settings"); ?></label>
 
 		<div id="settings">
 			<!--<div class="panels-components">-->

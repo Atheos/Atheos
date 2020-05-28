@@ -121,7 +121,7 @@
 					}
 					amplify.publish('modal.loaded');
 					if (callback) {
-						callback();
+						callback(wrapper);
 					}
 				}
 			});
