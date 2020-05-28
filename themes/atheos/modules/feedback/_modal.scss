@@ -10,7 +10,7 @@
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
-	border: $border-thick;
+	@include border(3px);
 	@include border-radius;
 }
 

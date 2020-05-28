@@ -1,58 +1,48 @@
 /* SCSS VARIABLES */
-$border-thin: 1px solid $grey;
-$border-thick: 3px solid $grey;
-
-$icon-color: $base07;
-$accent-color: $blue;
-$tab-color:$accent-color;
-$font-size: 14px;
-$font-size-lg: 16px;
-
-// DON'T USE NAMES WITH DASHES IN THEM, THEY NEED TO BE REMOVED
-$font-color-primary: $base07;
-$font-color-secondary: $base04;
-$font-color-subtle:$font-color-secondary;
-
 
 // THESE ARE THE ONES TO USE
 $fontColorMajor: $base07;
 $fontColorMinor: $base04;
+$fontColorSmall: $base04;
+
+$fontSizeH1: 24px;
+$fontSizeH2: 20px;
+$fontSizeH3: 18px;
+$fontSizeH4: 16px;
+$fontSizePr: 14px;
+$fontSizeSm: 12px;
 
 $foreground: $base01;
 $background: #191919;
 $midground: #474747;
 $highlight: #393939;
+
 $borderLight: #8c8c8c;
+$borderHeavy: #393939;
 
-$hover: $blue;
-$tabListBackground:$accent-color;
+$colorMajor: $blue;
+$colorMinor: $aqua;
 
-
-$animation-duration: 0.2s;
-$transition-duration: 0.2s;
+$hoverMajor: $blue;
+$hoverMinor: $highlight;
 
 $animationDuration: 0.2s;
 $transitionDuration: 0.2s;
 
 $scrollbarWidth: 10px;
+
 $topBarHeight: 33px;
 $bottomBarHeight: 23px;
 $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
-$input-background: #1D1D1D;
 $inputBackground: #1D1D1D;
-
-
-
+$tabListBackground:$colorMajor;
 
 // #303030 -> Base01
 // #333 -> Base02
 // #ccc -> $font-color-secondary
 // #999 -> $font-color-subtle
-
-$font-size-icon-medium: 20px;
-
 
 @mixin box-shadow {
 	// box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);

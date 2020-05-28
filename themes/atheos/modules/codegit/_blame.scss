@@ -23,7 +23,7 @@
 
 			&.line {
 				@include border(1px, right);
-				color: $font-color-subtle;
+				color: $fontColorMinor;
 				white-space: pre;
 			}
 
