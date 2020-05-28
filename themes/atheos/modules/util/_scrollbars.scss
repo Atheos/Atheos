@@ -44,3 +44,9 @@ div {
 ::-webkit-scrollbar-corner {
 	background-color: $background;
 }
+
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: #666 $background;
+}
