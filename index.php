@@ -36,7 +36,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
-	<?php $SourceManager->echoStyles("fonts", true); ?>
+	<?php $SourceManager->echoStyles("fonts", DEVELOPMENT); ?>
 
 	<!--Link favicons-->
 	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png?v=2">
@@ -83,6 +83,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 
 	<?php
 	$activeUser = Common::data("user", "session");
+	
 	//////////////////////////////////////////////////////////////////
 	// LOGGED IN
 	//////////////////////////////////////////////////////////////////

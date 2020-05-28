@@ -75,12 +75,12 @@ class SourceManager {
 	function loadAndMinify($type, $minifiedFileName, $files) {
 
 		$content = '';
-		$minified = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
+		$minified = "/* Creation Time: " . date('Y-m-d H:i:s', time()) . "*/" . PHP_EOL;
 
 		foreach ($files as $file) {
 			if (is_readable($file)) {
 				$content = file_get_contents($file);
-				$minified .= "// $file" . PHP_EOL;
+				$minified .= "/* $file */" . PHP_EOL;
 				if ($type === "js") {
 					$minifier = new Minify\JS($content);
 					$minified .= $minifier->minify() . ';' . PHP_EOL;
