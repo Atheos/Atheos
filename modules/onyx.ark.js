@@ -195,11 +195,10 @@
 
 	let argToElements = function(selector) {
 		if (!selector) {
-			trace();
 			console.warn('No selector provided to OnyxJS');
-			return [];
+			return false;
 		}
-
+		
 		if (alwaysReturn.includes(selector)) {
 			return [selector]; //This could cause a problem later
 		} else if (typeof selector === 'string') {
@@ -210,7 +209,7 @@
 				var template = document.createElement('template');
 				selector = selector.trim(); // Never return a text node of whitespace as the result
 				template.innerHTML = selector;
-				return [template.content.firstChild];
+				return template.content.firstChild;
 
 			} else {
 				return [...document.querySelectorAll(selector)];
@@ -224,7 +223,7 @@
 			return elems;
 
 		} else if (selector.isOnyx) {
-			return [selector.el];
+			return selector.el;
 		}
 
 		throw new TypeError('Expected String | HTMLElement | OnyxJS; got ' + typeof selector);
@@ -234,32 +233,15 @@
 	// let classTypes = ['add', 'contains', 'toggle', 'remove', 'replace'];
 	let domTypes = ['data', 'innerHTML', 'innerText', 'value'];
 
-	let setClass = function(element, type, cls, nCls) {
-		if (type === 'replace') {
-			setClass(element, 'remove', cls);
-			setClass(element, 'add', nCls);
-			return;
-		}
-
-		if (type === 'remove') {
-			if (cls) {
-				element.classList.remove(...cls.split(' '));
-			} else {
-				element.className = '';
-			}
-		} else {
-			// add, contains, toggle
-			return element.classList[type](...cls.split(' '));
-		}
-	};
 
 	const onyx = function(selector) {
-		let element = argToElement(selector);
-
-		if (!element) return;
-
-		let elements = argToElements(selector);
-		let iterator = elements.forEach.bind(elements);
+		let element = argToElements(selector);
+		if (!element) {
+			return;
+		}
+		
+		let first = element[0];
+		let iterate = element.forEach.bind(element);
 
 		let insertToAdjacent = (location) => function(target) {
 			if (target instanceof HTMLElement) {
@@ -311,6 +293,30 @@
 				for (const [key, value] of entries) {
 					element.style[key] = value;
 				}
+			}
+		};
+
+		let setClass = function(t, c, n) {
+			if (t === 'replace') {
+				setClass('remove', c);
+				setClass('add', n);
+				return;
+			}
+
+			// if (c) {
+			// 	c = ...c.split(' ');
+			// }
+			// addClass: (c) => element.classList.add(...c.split(' ')),
+
+			if (t === 'remove') {
+				if (c) {
+					element.classList.remove(...c.split(' '));
+				} else {
+					element.className = '';
+				}
+			} else {
+				// add, contains, toggle
+				return element.classList[t](...c.split(' '));
 			}
 		};
 
@@ -436,17 +442,11 @@
 			attr: (k, v) => IO('attr', v, k),
 			removeAttr: (k) => element.removeAttribute(k),
 
-			addClass: (c) => setClass(element, 'add', c),
-			hasClass: (c) => setClass(element, 'contains', c),
-			removeClass: (c) => setClass(element, 'remove', c),
-			toggleClass: (c) => setClass(element, 'toggle', c),
-			replaceClass: (c, n) => setClass(element, 'replace', c, n),
-
-			// addClass: (c) => iterator(i => setClass(i, 'add', c)),
-			// hasClass: (c) => iterator(i => setClass(i, 'contains', c)),
-			// removeClass: (c) => iterator(i => setClass(i, 'remove', c)),
-			// toggleClass: (c) => iterator(i => setClass(i, 'toggle', c)),
-			// replaceClass: (c, n) => iterator(i => setClass(i, 'replace', c, n)),
+			addClass: (c) => setClass('add', c),
+			hasClass: (c) => setClass('contains', c),
+			removeClass: (c) => setClass('remove', c),
+			toggleClass: (c) => setClass('toggle', c),
+			replaceClass: (c, n) => setClass('replace', c, n),
 
 			find: (s) => onyx(element.querySelector(s)),
 			parent: (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement),
@@ -467,8 +467,7 @@
 
 			prepend: insertAdjacent('afterbegin'),
 			append: insertAdjacent('beforeend'),
-
-			remove: () => iterator(i => i.remove()),
+			remove: () => element.remove(),
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,

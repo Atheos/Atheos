@@ -1,6 +1,6 @@
 #settings {
 	display: flex;
-	border-top: $border-thin;
+	@include border(1px, top);
 
 	.big-icon {
 		font-size: 100%;
@@ -33,7 +33,6 @@
 		overflow: auto;
 		overflow-y: scroll;
 		height: 500px;
-		// border-left: $border-thin;
 		@include border(1px, left);
 
 		form {
