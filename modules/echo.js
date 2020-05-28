@@ -60,17 +60,19 @@
 					delete data.debug;
 				}
 			} catch (e) {}
-			if (xhr.status >= 200 && xhr.status < 300) {
-				if (options.success) {
+			if (options.settled && typeof options.settled === 'function') {
+					options.settled(data, xhr.status);
+			} else if (xhr.status >= 200 && xhr.status < 300) {
+				if (options.success && typeof options.success === 'function') {
 					options.success(data, xhr.status);
 				}
 			} else {
-				if (options.failure) {
+				if (options.failure && typeof options.failure === 'function') {
 					options.failure(data, xhr.status);
 				}
 			}
 		};
-		
+
 		if (options.type === 'GET') {
 			data = data ? '?' + data : '';
 			xhr.open('GET', options.url + data, true);
