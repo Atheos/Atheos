@@ -41,7 +41,7 @@ switch ($action) {
 		}
 
 		?>
-		<h2><i class="icon-pencil big-icon"></i><?php i18n("Extensions"); ?></h2>
+		<h2><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></h2>
 		<form>
 
 			<table id="textmode">
