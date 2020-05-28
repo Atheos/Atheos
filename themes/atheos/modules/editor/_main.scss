@@ -4,13 +4,13 @@
 	height: 100%;
 	margin-right: 15px;
 	margin-left: 10px;
-	transition: margin $animation-duration ease-in-out;
+	transition: margin $transitionDuration ease-in-out;
 }
 
 .editor {
 	width: 100%;
 	height: 100%;
-	color: $font-color-primary;
+	color: $fontColorMajor;
 }
 
 .ace_editor {
@@ -28,7 +28,7 @@
 .ace_gutter-layer {
 	padding: 0;
 	background: url(images/default/gutter-bg.jpg);
-	color: $font-color-secondary;
+	color: $fontColorMinor;
 }
 
 .ace_scrollbar {

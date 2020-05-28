@@ -1,34 +1,36 @@
-.title {
-	position: absolute;
-	top: 0;
-	height: $topBarHeight;
+.sidebar {
+	.title {
+		position: absolute;
+		top: 0;
+		height: $topBarHeight;
 
 
-	@include box-shadow;
-	background-color: $foreground;
-	z-index: 9998;
+		@include box-shadow;
+		background-color: $foreground;
+		z-index: 9998;
 
-	h2 {
-		font-size: 15px;
-		margin: 8px;
-		display: inline-block;
-	}
-
-	i {
-		display: block;
-		font-size: 15px;
-		color: $icon-color;
-		z-index: 99999;
-		cursor: pointer;
-		margin: 9px 4px;
-		float: left;
-
-		&.active,
-		&:hover {
-			color: $hover;
+		h2 {
+			font-size: 15px;
+			margin: 8px;
+			display: inline-block;
 		}
-	}
 
+		i {
+			display: block;
+			font-size: 15px;
+			color: $fontColorMajor;
+			z-index: 99999;
+			cursor: pointer;
+			margin: 9px 4px;
+			float: left;
+
+			&.active,
+			&:hover {
+				color: $hoverMajor;
+			}
+		}
+
+	}
 }
 
 #sb_right .title {
