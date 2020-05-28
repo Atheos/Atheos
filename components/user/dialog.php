@@ -93,7 +93,7 @@ switch ($action) {
 
 		if (!Common::checkAccess("configure")) {
 			?>
-			<label><?php i18n("Restricted"); ?></label>
+			<h1><?php i18n("Restricted"); ?></h1>
 			<pre><?php i18n("You can not edit the user list"); ?></pre>
 			<button onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
 			<?php
