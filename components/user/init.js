@@ -227,7 +227,7 @@
 					success: function(reply) {
 						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'Account Deleted');
-							self.showUserList();
+							self.list();
 						}
 					}
 				});
