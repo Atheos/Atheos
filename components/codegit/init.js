@@ -238,6 +238,10 @@
 					success: function(reply) {
 						oX('#panel_view').empty();
 						oX('#panel_view').html(reply);
+						if(panel === 'overview') {
+							self.monitorCheckBoxes();
+						}
+						
 					}
 				});
 			}
