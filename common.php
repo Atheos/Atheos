@@ -433,23 +433,33 @@ class Common {
 	public static function checkPath($path) {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
+		$projects = Common::readJSON('projects');
 
 
 		$userHasAccess = false;
 
-		if (array_key_exists($username, $users)) {
-			$userACL = $users[$username]["userACL"];
-			$userHasAccess = $userACL === "full" ? true : false;
-			if ($userACL === "full") {
-				$userHasAccess = true;
-			} else {
-				foreach ($userACL as $project) {
-					$userHasAccess = strpos($path, $project) === 0 ? true : $userHasAccess;
+		if (!array_key_exists($username, $users)) {
+			return false;
+		}
+
+		$userACL = $users[$username]["userACL"];
+
+		$userHasAccess = $userACL === "full" ? true : false;
+
+		if ($userACL === "full") {
+			return true;
+		} else {
+			foreach ($projects as $projectPath => $projectName) {
+				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
+					return true;
+				} elseif (in_array($projectName, $userACL)) {
+					Common::debug("Path:$path, ProjectPath: $projectPath");
 				}
 			}
 		}
+		return false;
 
-		$projects = Common::readJSON('projects');
+
 		$pathWithinProject = false;
 
 		foreach ($projects as $projectPath => $projectName) {
@@ -522,8 +532,7 @@ class Common {
 		}
 		//Security check
 		if (!Common::checkPath($path)) {
-			Common::sendJSON("E430c");
-			die;
+			Common::sendJSON("E430c"); die;
 		}
 		if (strpos($path, "/") === 0) {
 			//Unix absolute path
