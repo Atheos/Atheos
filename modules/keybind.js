@@ -14,7 +14,7 @@
 (function(global) {
 
 	var atheos = global.atheos,
-	amplify = global.amplify;
+		amplify = global.amplify;
 
 	var self = null;
 
@@ -31,47 +31,52 @@
 			self = this;
 
 			// Close Modals [Esc] ////////////////////////////////////////
-			self.bind(27, function() {
+			self.bind(false, 27, function() {
 				atheos.modal.unload();
 			});
 
 			// Save [CTRL+S] /////////////////////////////////////////////
-			self.bind(83, function() {
+			self.bind(true, 83, function() {
 				atheos.active.save();
 			});
 
 			// Open in browser [CTRL+O] //////////////////////////////////
-			self.bind(79, function() {
+			self.bind(true, 79, function() {
 				atheos.filemanager.openInBrowser();
 			});
 
 			// Open Scout [CTRL+E] /////////////////////////////////////////////
-			self.bind(69, function() {
+			self.bind(true, 69, function() {
 				atheos.scout.probe();
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////
-			self.bind(70, function() {
+			self.bind(true, 70, function() {
 				atheos.editor.openSearch('find');
 			});
 
 			// GotoLine [CTRL+G] /////////////////////////////////////////////
-			self.bind(71, function() {
+			self.bind(true, 71, function() {
 				atheos.editor.promptLine();
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////
-			self.bind(82, function() {
+			self.bind(true, 82, function() {
 				atheos.editor.openSearch('replace');
 			});
 
+			// Close [CTRL+W] //////////////////////////////////////////
+			self.bind(true, 87, function() {
+				atheos.active.close();
+			});
+
 			// Active List Previous [CTRL+UP] ////////////////////////////
-			self.bind(38, function() {
+			self.bind(true, 38, function() {
 				atheos.active.move('up');
 			});
 
 			// Active List Next [CTRL+DOWN] //////////////////////////////
-			self.bind(40, function() {
+			self.bind(true, 40, function() {
 				atheos.active.move('down');
 			});
 
@@ -88,14 +93,15 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////
-		// CTRL Key Bind
+		// Key Bind
 		//////////////////////////////////////////////////////////////////////
-		bind: function(key, callback, args) {
+		bind: function(ctrl, key, callback, args) {
 			document.addEventListener('keydown', function(e) {
-				if (e.keyCode === key && (e.ctrlKey || e.metaKey)) {
-					args = args || [];
+				if (e.keyCode === key && (e.ctrlKey === ctrl)) {
 					if (!(e.ctrlKey && e.altKey)) {
 						e.preventDefault();
+
+						args = args || [];
 						callback.apply(this, args);
 						return false;
 					}
