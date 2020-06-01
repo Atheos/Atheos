@@ -366,15 +366,10 @@
 			amplify.publish('active.onSave', path);
 
 			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
-				atheos.toast.show('error', 'No Open Files to save');
+				atheos.toast.show('error', 'No open files.');
 				return;
 			}
-			var session;
-			if (path) {
-				session = self.sessions[path];
-			} else {
-				session = atheos.editor.getActive().getSession();
-			}
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
 			var content = session.getValue();
 			path = session.path;
 
@@ -433,11 +428,12 @@
 		// Close file
 		//////////////////////////////////////////////////////////////////
 		close: function(path) {
-			if (!self.isOpen(path)) {
+			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
+				atheos.toast.show('error', 'No open files');
 				return;
 			}
-			var session = self.sessions[path];
-
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			path = session.path;
 			var basename = pathinfo(path).basename;
 
 			if (session.status === 'changed') {
