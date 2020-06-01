@@ -3,7 +3,9 @@
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
-	src: local("Ubuntu"), url("/fonts/ubuntu/Ubuntu-Regular.woff2") format("woff2"), url("/fonts/ubuntu/Ubuntu-Regular.woff") format("woff");
+	src: local("Ubuntu"),
+		url("Ubuntu-Regular.woff2") format("woff2"), url("Ubuntu-Regular.woff") format("woff");
+
 }
 
 @font-face {
@@ -11,7 +13,8 @@
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
-	src: local("Ubuntu-Bold"), url("/fonts/ubuntu/Ubuntu-Bold.woff2") format("woff2"), url("/fonts/ubuntu/Ubuntu-Bold.woff") format("woff");
+	src: local("Ubuntu-Bold"),
+		url("Ubuntu-Bold.woff2") format("woff2"), url("Ubuntu-Bold.woff") format("woff");
 }
 
 @font-face {
@@ -19,5 +22,6 @@
 	font-weight: normal;
 	font-style: normal;
 	font-display: swap;
-	src: local("Ubuntu-Fira"), url("/fonts/ubuntu/Ubuntu-Fira.woff2") format("woff2"), url("/fonts/ubuntu/Ubuntu-Fira.woff") format("woff");
+	src: local("Ubuntu-Fira"),
+		url("Ubuntu-Fira.woff2") format("woff2"), url("Ubuntu-Fira.woff") format("woff");
 }
