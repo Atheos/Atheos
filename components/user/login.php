@@ -1,3 +1,4 @@
+<canvas id="synthetic"></canvas>
 <div id="logo">
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" width="320" height="400" version="1.1">
 		<path class="delay-0" style="fill:#111111" d="M80 480L960 0l880 480v960l-880 480-880-480z" />

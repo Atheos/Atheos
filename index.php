@@ -79,7 +79,6 @@ $theme = Common::data("theme", "session") ?: THEME;
 </head>
 
 <body>
-	<canvas id="synthetic"></canvas>
 
 	<?php
 	$activeUser = Common::data("user", "session");
