@@ -22,16 +22,23 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////
 
 	public function index($path) {
+		Common::debug($path);
+
+
+
+		Common::debug("Path:$path");
+
+		$path = Common::cleanPath($path);
+
+		$relativePath = $path !== "/" ? "$path/" : $path;
+		$path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
+
 		if (!file_exists($path)) {
-			Common::sendJSON("E402m");
-			die;
+			Common::sendJSON("E402m"); die;
 		}
 
-		$relativePath = Common::cleanPath($path);
-		if ($relativePath !== "/") {
-			$relativePath .= "/";
-		}
-
+		Common::debug("MPath:$path");
+		Common::debug("RPath:$relativePath");
 
 		$index = array();
 		if (!is_dir($path) || !($handle = opendir($path))) {
@@ -52,12 +59,17 @@ class Filemanager {
 				$size = @filesize($path.'/'.$object);
 			}
 
+
 			$index[] = array(
 				"path" => $relativePath . $object,
 				"type" => $type,
 				"size" => $size
 			);
 		}
+
+		$relativePath = str_replace(WORKSPACE, "", $index[0]["path"]);
+
+		Common::debug($relativePath);
 
 		$folders = array();
 		$files = array();
@@ -101,8 +113,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////
 	public function open($path) {
 		if (!$path || !is_file($path)) {
-			Common::sendJSON("E402i");
-			die;
+			Common::sendJSON("E402i"); die;
 		}
 
 		$output = file_get_contents($path);
@@ -128,8 +139,7 @@ class Filemanager {
 	public function create($path, $type) {
 
 		if (file_exists($path)) {
-			Common::sendJSON("error", "Path already exists.");
-			die;
+			Common::sendJSON("error", "Path already exists."); die;
 		}
 
 		if ($type === "directory" && mkdir($path)) {
@@ -201,9 +211,7 @@ class Filemanager {
 			// Common::sendJSON("E403m", "Content");
 			$file = fopen($path, 'w');
 			fclose($file);
-			Common::debug("FileSave with no content or Patch");
-			Common::sendJSON("success", array("modifyTime" => filemtime($path)));
-			die;
+			Common::sendJSON("success", array("modifyTime" => filemtime($path))); die;
 		}
 
 		if ($content === ' ') {
