@@ -38,8 +38,6 @@ $dest = Common::getWorkspacePath($dest);
 $project = Common::data("project", "session");
 $noReturn = Common::data("no_return");
 
-Common::debug("recieved");
-
 if (!$action) {
 	Common::sendJSON("E401m"); die;
 }
@@ -49,9 +47,6 @@ if (!$project) {
 	$noReturn = 'true';
 	require_once('../project/controller.php');
 }
-
-Common::debug("processed");
-
 
 //////////////////////////////////////////////////////////////////
 // Handle Action

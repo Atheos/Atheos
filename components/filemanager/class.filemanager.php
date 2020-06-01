@@ -22,12 +22,6 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////
 
 	public function index($path) {
-		Common::debug($path);
-
-
-
-		Common::debug("Path:$path");
-
 		$path = Common::cleanPath($path);
 
 		$relativePath = $path !== "/" ? "$path/" : $path;
@@ -37,14 +31,12 @@ class Filemanager {
 			Common::sendJSON("E402m"); die;
 		}
 
-		Common::debug("MPath:$path");
-		Common::debug("RPath:$relativePath");
+		if (!is_dir($path) || !($handle = opendir($path))) {
+			Common::sendJSON("error", "Not a valid directory."); die;
+		}
 
 		$index = array();
-		if (!is_dir($path) || !($handle = opendir($path))) {
-			Common::sendJSON("error", "Not a valid directory.");
-			die;
-		}
+
 
 		while (false !== ($object = readdir($handle))) {
 			if ($object === "." || $object === "..") {
@@ -68,8 +60,6 @@ class Filemanager {
 		}
 
 		$relativePath = str_replace(WORKSPACE, "", $index[0]["path"]);
-
-		Common::debug($relativePath);
 
 		$folders = array();
 		$files = array();
