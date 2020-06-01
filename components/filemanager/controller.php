@@ -38,9 +38,10 @@ $dest = Common::getWorkspacePath($dest);
 $project = Common::data("project", "session");
 $noReturn = Common::data("no_return");
 
+Common::debug("recieved");
+
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m"); die;
 }
 
 if (!$project) {
@@ -49,17 +50,17 @@ if (!$project) {
 	require_once('../project/controller.php');
 }
 
+Common::debug("processed");
+
+
 //////////////////////////////////////////////////////////////////
 // Handle Action
 //////////////////////////////////////////////////////////////////
 $Filemanager = new Filemanager();
-// $Filemanager->project = @$_SESSION['project']['path'];
-
-$Filemanager->root = WORKSPACE;
 
 switch ($action) {
 	case 'index':
-		$Filemanager->index($path);
+		$Filemanager->index(Common::data('path'));
 		break;
 	case 'open':
 		$Filemanager->open($path);
