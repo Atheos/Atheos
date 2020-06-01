@@ -68,7 +68,7 @@
 			}
 			var temp = {};
 
-			if (!cache.data || !types.isArray(cache.data)) {
+			if (!cache || !cache.data || !types.isArray(cache.data)) {
 				return;
 			}
 			
