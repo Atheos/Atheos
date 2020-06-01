@@ -5803,7 +5803,8 @@ readers do not read off random characters that represent icons */
 	font-style: normal;
 	font-weight: normal;
 	font-display: swap;
-	src: local('Font Awesome 5 Brands'), url("/fonts/fontawesome/fa-brands-400.woff2") format("woff2"), url("/fonts/fontawesome/fa-brands-400.woff") format("woff");
+	src: local('Font Awesome 5 Brands'),
+		url("fa-brands-400.woff2") format("woff2"), url("fa-brands-400.woff") format("woff");
 }
 
 .fab {
@@ -5816,7 +5817,8 @@ readers do not read off random characters that represent icons */
 	font-style: normal;
 	font-weight: 400;
 	font-display: swap;
-	src: local('Font Awesome 5 Free'), url("/fonts/fontawesome/fa-regular-400.woff2") format("woff2"), url("/fonts/fontawesome/fa-regular-400.woff") format("woff");
+	src: local('Font Awesome 5 Free'),
+		url("fa-regular-400.woff2") format("woff2"), url("fa-regular-400.woff") format("woff");
 }
 
 .far {
@@ -5830,7 +5832,8 @@ readers do not read off random characters that represent icons */
 	font-style: normal;
 	font-weight: 900;
 	font-display: swap;
-	src: local('Font Awesome 5 Free'), url("/fonts/fontawesome/fa-solid-900.woff2") format("woff2"), url("/fonts/fontawesome/fa-solid-900.woff") format("woff");
+	src: local('Font Awesome 5 Free'),
+		url("fa-solid-900.woff2") format("woff2"), url("fa-solid-900.woff") format("woff");
 }
 
 .fa,
