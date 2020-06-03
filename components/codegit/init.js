@@ -593,13 +593,13 @@
 				});
 			}
 
-			if (self.repoBannerDisabled() !== true) {
-				self.repoBanner.show();
-			} else {
+			if (self.showRepoBanner() === false) {
 				self.repoBanner.hide();
+			} else {
+				self.repoBanner.show();
 			}
 
-			if (self.fileStatusDisabled() === true) {
+			if (self.showFileStatus() === false) {
 				self.fileStatus.empty();
 			}
 		},
@@ -639,19 +639,16 @@
 			})
 		},
 
-		repoBannerDisabled: function() {
-			var setting = atheos.storage('self.disableRepoBanner');
-			return setting || false;
+		showRepoBanner: function() {
+			var setting = atheos.storage('codegit.repoBanner');
+			setting = setting === 'disabled' ? false : true;
+			return setting;
 		},
 
-		fileStatusDisabled: function() {
-			var setting = atheos.storage('self.disableFileStatus');
-			return setting || false;
-		},
-
-		suppressCommitDiff: function() {
-			var setting = atheos.storage('self.suppressCommitDiff');
-			return setting || false;
+		showFileStatus: function() {
+			var setting = atheos.storage('codegit.fileStatus');
+			setting = setting === 'disabled' ? false : true;
+			return setting;
 		}
 	};
 })(this);
