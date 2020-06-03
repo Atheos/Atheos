@@ -216,8 +216,6 @@
 						return;
 					}
 
-					log(e.target, key, value);
-
 					storage(key, value);
 					self.save(key, value);
 					self.publish(key, value);
