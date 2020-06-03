@@ -49,10 +49,10 @@
 	display: flex;
 	@include border(1px, top);
 
-	.big-icon {
-		font-size: 100%;
-		margin-right: 12px;
-	}
+	// .big-icon {
+	// 	font-size: 100%;
+	// 	margin-right: 12px;
+	// }
 
 	#panel_menu {
 		max-height: 55vh;
