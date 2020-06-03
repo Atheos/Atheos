@@ -25,6 +25,7 @@ $colorMinor: $aqua;
 
 $hoverMajor: $blue;
 $hoverMinor: $highlight;
+$hoverPercent: 30%;
 
 $animationDuration: 0.2s;
 $transitionDuration: 0.2s;
@@ -55,7 +56,16 @@ $tabListBackground:$colorMajor;
 @mixin border($size: 1px, $direction: 0) {
 	@if $direction !=0 {
 		border-#{$direction}: $size solid $grey;
-	} @else {
+	}
+
+	@else {
 		border: $size solid $grey;
 	}
+}
+
+@mixin input() {
+	background-color: $inputBackground;
+	border: none;
+	border-bottom: 1px solid $borderLight;
+	color: $fontColorMajor;
 }

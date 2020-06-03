@@ -7,8 +7,11 @@
 
 
 @import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/input", "modules/common/button";
+@import "modules/common/dropdown";
 @import "modules/common/label";
-@import "modules/common/tables";
+@import "modules/common/table";
+@import "modules/common/toggle";
+@import "modules/common/toolbar";
 @import "modules/common/typography";
 
 @import "modules/active/main";
