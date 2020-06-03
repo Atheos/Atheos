@@ -46,12 +46,13 @@
 
 		leftLockedVisible: true,
 		rightLockedVisible: false,
-		leftOpenOnClick: false,
-		rightOpenOnClick: false,
+
 		isLeftSidebarOpen: true,
 		isRightSidebarOpen: false,
-		leftSidebarClickOpen: false,
-		rightSidebarClickOpen: false,
+
+		leftTrigger: 'hover',
+		rightTrigger: 'hover',
+
 		hoverDuration: 300,
 
 		//////////////////////////////////////////////////////////////////////	
@@ -84,8 +85,8 @@
 				}
 
 
-				self.leftOpenOnClick = atheos.storage('sidebars.leftOpenOnClick');
-				self.rightOpenOnClick = atheos.storage('sidebars.rightOpenOnClick');
+				self.leftTrigger = atheos.storage('sidebars.leftTrigger') || 'hover';
+				self.rightTrigger = atheos.storage('sidebars.rightTrigger') || 'hover';
 
 				if (atheos.storage('sidebars.leftLockedVisible') === false) {
 					oX('#sb_left .lock').trigger('click');
@@ -142,13 +143,13 @@
 				});
 
 				this.handle.on('click', function() {
-					if (self.leftOpenOnClick) { // if trigger set to Click
+					if (self.leftTrigger === 'click') {
 						self.sbLeft.open();
 					}
 				});
 
 				this.sidebar.on('mouseover', function() {
-					if (!self.leftOpenOnClick) { // if trigger set to Hover
+					if (self.leftTrigger === 'hover') {
 						self.sbLeft.open();
 					}
 				});
@@ -184,7 +185,7 @@
 					setTimeout(function() {
 						atheos.sidebars.isLeftSidebarOpen = true;
 						atheos.active.updateTabDropdownVisibility();
-							editor.trigger('h-resize-root');
+						editor.trigger('h-resize-root');
 					}, 300);
 				}).bind(this), this.hoverDuration);
 
@@ -252,13 +253,14 @@
 					self.resize(this.sidebar.el, 'right');
 				});
 
-				this.handle.on('click', function(e) {
-					if (self.rightOpenOnClick) { // if trigger set to Click
+				this.handle.on('click', function() {
+					if (self.rightTrigger === 'click') {
 						self.sbRight.open();
 					}
 				});
-				this.sidebar.on('mouseover', function(e) {
-					if (!self.rightOpenOnClick) { // if trigger set to Hover
+
+				this.sidebar.on('mouseover', function() {
+					if (self.rightTrigger === 'hover') {
 						self.sbRight.open();
 					}
 				});
@@ -299,7 +301,7 @@
 					setTimeout(function() {
 						self.isRightSidebarOpen = true;
 						atheos.active.updateTabDropdownVisibility();
-							editor.trigger('h-resize-root');
+						editor.trigger('h-resize-root');
 					}, 300);
 
 				}).bind(this), this.hoverDuration);
