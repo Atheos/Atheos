@@ -59,23 +59,23 @@ switch ($action) {
 		?>
 		<label class="title"><i class="fas fa-cog"></i><?php i18n("Settings"); ?></label>
 
-		<div id="settings">
+		<div class="settings">
 			<!--<div class="panels-components">-->
-			<ul id="panel_menu">
+			<menu>
 				<li>
-					<a name="editor-settings" data-file="components/settings/settings.editor.php" data-name="editor" class="active"><i class="fas fa-home"></i><?php i18n("Editor"); ?></a>
+					<a name="editor-settings" data-file="components/settings/settings.editor.php" class="active"><i class="fas fa-home"></i><?php i18n("Editor"); ?></a>
 				</li>
 				<li>
-					<a name="system-settings" data-file="components/settings/settings.system.php" data-name="system"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
+					<a name="system-settings" data-file="components/settings/settings.system.php"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
 				</li>
 				<li>
-					<a name="codegit-settings" data-file="components/settings/settings.codegit.php" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
+					<a name="codegit-settings" data-file="components/settings/settings.codegit.php"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
 				</li>
 				<?php
-				if (Common::checkAccess()) {
+				if (Common::checkAccess("configure")) {
 					?>
 					<li>
-						<a name="extension-settings" data-file="components/textmode/dialog.php?action=settings" data-name="fileext_textmode"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
+						<a name="textmode-settings" data-file="components/textmode/dialog.php?action=settings"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
 					</li>
 					<?php
 				}
@@ -98,11 +98,16 @@ switch ($action) {
 					}
 				}
 				?>
-			</ul>
-			<div id="panel_view">
+			</menu>
+			<panel>
 				<?php include('settings.editor.php'); ?>
-			</div>
+			</panel>
+
 		</div>
+		<toolbar>
+			<button class="btn-right" onclick="save(); return false;"><?php i18n("Save"); ?></button>
+			<button class="btn-left" onclick="codiad.modal.unload(); return false;"><?php i18n("Close"); ?></button>
+		</toolbar>
 		<?php
 		break;
 
