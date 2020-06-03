@@ -42,7 +42,7 @@
 				*  Workaround for Storage-Event:
 				*/
 			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
-    
+
 
 			// oX('#settings_open').on('click', function() {
 			// 	atheos.settings.show();
@@ -76,13 +76,25 @@
 		// Load Settings of Specific Tab
 		//////////////////////////////////////////////////////////////////////80
 		loadTabValues: function() {
-			var children = oX('#panel_view').findAll('[data-setting]');
+			var children = oX('.settings panel').findAll('[data-setting]');
 			children.forEach(function(child) {
 				var key = oX(child).attr('data-setting'),
 					value = storage(key);
 
-				if (value !== null) {
-					oX(child).value(value);
+				if (value === null) {
+					return;
+				}
+
+				if (child.el.type === 'radio' || child.el.type === 'checkbox') {
+					if (child.value() === value.toString()) {
+						child.prop('checked', true);
+					}
+					// var id = key.replace(/\./g, "_");
+					// oX('#' + id + '_' + value).prop('checked', true);
+
+				} else {
+					child.value(value);
+
 				}
 			});
 		},
@@ -133,11 +145,11 @@
 				case 'project.openTrigger':
 					atheos.project.openTrigger = value;
 					break;
-				case 'sidebars.leftOpenOnClick':
-					atheos.sidebars.leftOpenOnClick = boolean;
+				case 'sidebars.leftTrigger':
+					atheos.sidebars.leftTrigger = value;
 					break;
-				case 'sidebars.rightOpenOnClick':
-					atheos.sidebars.rightOpenOnClick = boolean;
+				case 'sidebars.rightTrigger':
+					atheos.sidebars.rightTrigger = value;
 					break;
 				case 'editor.softTabs':
 					atheos.editor.setSoftTabs(boolean);
@@ -189,16 +201,29 @@
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					var type = target.el.type;
+
+					var key, value;
+
 					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
-						var key = target.attr('data-setting');
-						var value = target.value();
-						storage(key, value);
-						self.save(key, value);
-						self.publish(key, value);
+						key = target.attr('data-setting');
+						value = target.value();
+
+					} else if (tagName === 'INPUT' && type === 'radio') {
+						key = target.attr('data-setting');
+						value = target.value();
+
+					} else {
+						return;
 					}
+
+					log(e.target, key, value);
+
+					storage(key, value);
+					self.save(key, value);
+					self.publish(key, value);
 				});
 
-				oX('#panel_menu').on('click', function(e) {
+				oX('.settings menu').on('click', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					if (tagName === 'A') {
@@ -231,9 +256,9 @@
 				url: dataFile,
 				success: function(reply) {
 
-					oX('#panel_menu .active').removeClass('active');
-					oX('#panel_menu a[data-file="' + dataFile + '"]').addClass('active');
-					oX('#panel_view').html(reply);
+					oX('.settings menu .active').removeClass('active');
+					oX('.settings menu a[data-file="' + dataFile + '"]').addClass('active');
+					oX('.settings panel').html(reply);
 
 					self.loadTabValues(dataFile);
 				}
