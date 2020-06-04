@@ -12,6 +12,7 @@
 
 (function(global) {
 
+
 	var self = null;
 
 	var atheos = global.atheos,
@@ -75,11 +76,11 @@
 			//Handle contextmenu
 			amplify.subscribe('contextmenu.show', this.showContextMenu);
 
-			amplify.subscribe('active.onFocus', function(path) {
+			amplify.subscribe('active.focus', function(path) {
 				self.checkFileStatus(path);
 			});
 
-			amplify.subscribe('active.onSave', function(path) {
+			amplify.subscribe('active.save', function(path) {
 				setTimeout(function() {
 					self.checkFileStatus(path);
 					self.checkRepoStatus();
@@ -238,10 +239,10 @@
 					success: function(reply) {
 						oX('#panel_view').empty();
 						oX('#panel_view').html(reply);
-						if(panel === 'overview') {
+						if (panel === 'overview') {
 							self.monitorCheckBoxes();
 						}
-						
+
 					}
 				});
 			}
