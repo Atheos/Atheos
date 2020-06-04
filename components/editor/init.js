@@ -807,28 +807,28 @@
 			// });
 
 			// Find
-			instance.commands.addCommand({
-				name: 'Find',
-				bindKey: {
-					win: 'Ctrl-F',
-					mac: 'Command-F'
-				},
-				exec: function(e) {
-					self.openSearch('find');
-				}
-			});
+			// instance.commands.addCommand({
+			// 	name: 'Find',
+			// 	bindKey: {
+			// 		win: 'Ctrl-F',
+			// 		mac: 'Command-F'
+			// 	},
+			// 	exec: function(e) {
+			// 		self.openSearch('find');
+			// 	}
+			// });
 
 			// Find + Replace
-			instance.commands.addCommand({
-				name: 'Replace',
-				bindKey: {
-					win: 'Ctrl-R',
-					mac: 'Command-R'
-				},
-				exec: function(e) {
-					self.openSearch('replace');
-				}
-			});
+			// instance.commands.addCommand({
+			// 	name: 'Replace',
+			// 	bindKey: {
+			// 		win: 'Ctrl-R',
+			// 		mac: 'Command-R'
+			// 	},
+			// 	exec: function(e) {
+			// 		self.openSearch('replace');
+			// 	}
+			// });
 
 			instance.commands.addCommand({
 				name: 'Move Up',
