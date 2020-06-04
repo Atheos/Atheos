@@ -11,10 +11,26 @@
 		</td>
 
 		<td>
-			<?php i18n("Open CodeGit"); ?>
+			<?php i18n("Merge All Editor Views"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">C</i>
+			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">M</i>
+		</td>
+	</tr>
+
+	<tr>
+		<td>
+			<?php i18n("Split Horizontally"); ?>
+		</td>
+		<td>
+			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">;</i>
+		</td>
+
+		<td>
+			<?php i18n("Split Vertically"); ?>
+		</td>
+		<td>
+			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="key">;</i>
 		</td>
 	</tr>
 
@@ -55,7 +71,7 @@
 			<?php i18n("Replace"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">R</i>
+			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">H</i>
 		</td>
 
 		<td>
@@ -66,6 +82,22 @@
 		</td>
 	</tr>
 
+	<tr>
+		<td>
+			<?php i18n("Move Line Up"); ?>
+		</td>
+		<td>
+			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-up"></i>
+		</td>
+
+		<td>
+			<?php i18n("Move Line Down"); ?>
+		</td>
+		<td>
+			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
+		</td>
+	</tr>
+	
 	<tr>
 		<td>
 			<?php i18n("Cycle to Previous File"); ?>
@@ -80,5 +112,5 @@
 		<td>
 			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
 		</td>
-	</tr>
+	</tr>	
 </table>
