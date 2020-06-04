@@ -71,6 +71,9 @@ switch ($action) {
 				<li>
 					<a name="codegit-settings" data-file="components/settings/settings.codegit.php"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
 				</li>
+				<li>
+					<a name="keybindings" data-file="components/settings/settings.keybindings.php"><i class="fas fa-keyboard"></i><?php i18n("Keybindings"); ?></a>
+				</li>				
 				<?php
 				if (Common::checkAccess("configure")) {
 					?>
