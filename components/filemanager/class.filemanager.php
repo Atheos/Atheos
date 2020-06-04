@@ -53,7 +53,7 @@ class Filemanager {
 
 
 			$index[] = array(
-				"path" => $relativePath . $object,
+				"path" => strip_tags($relativePath . $object),
 				"type" => $type,
 				"size" => $size
 			);
