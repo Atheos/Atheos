@@ -79,22 +79,23 @@
 			var children = oX('.settings panel').findAll('[data-setting]');
 			children.forEach(function(child) {
 				var key = oX(child).attr('data-setting'),
+					type = child.type,
 					value = storage(key);
 
 				if (value === null) {
 					return;
 				}
 
-				if (child.el.type === 'radio' || child.el.type === 'checkbox') {
+				log(type);
+
+				if (type === 'radio') {
 					if (child.value() === value.toString()) {
 						child.prop('checked', true);
 					}
-					// var id = key.replace(/\./g, "_");
-					// oX('#' + id + '_' + value).prop('checked', true);
-
+				} else if (type === 'checkbox') {
+					child.prop('checked', value);
 				} else {
 					child.value(value);
-
 				}
 			});
 		},
@@ -180,6 +181,50 @@
 						atheos.toast.show(reply);
 					} else if (!hidden) {
 						reply.text = 'Setting "' + key + '" saved.';
+						// self.displayStatus(reply);
+						atheos.toast.show(reply);
+					}
+				}
+			});
+
+			amplify.publish('settings.save');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Save Settings
+		//////////////////////////////////////////////////////////////////////80
+		saveAll: function(key, value, hidden) {
+			var children = oX('.settings panel').findAll('[data-setting]');
+			children.forEach(function(child) {
+				var key = oX(child).attr('data-setting'),
+					value = storage(key);
+
+				if (value === null) {
+					return;
+				}
+
+				if (child.el.type === 'radio' || child.el.type === 'checkbox') {
+					if (child.value() === value.toString()) {
+						child.prop('checked', true);
+					}
+				} else {
+					child.value(value);
+
+				}
+			});
+
+			echo({
+				url: self.controller,
+				data: {
+					action: 'save',
+					key,
+					value
+				},
+				success: function(reply) {
+					if (reply.status === 'error') {
+						atheos.toast.show(reply);
+					} else if (!hidden) {
+						reply.text = 'Setting "' + key + '" saved.';
 						self.displayStatus(reply);
 					}
 				}
@@ -188,6 +233,9 @@
 			amplify.publish('settings.save');
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Display Save Status
+		//////////////////////////////////////////////////////////////////////80
 		displayStatus: debounce(function(reply) {
 			atheos.toast.show(reply);
 		}, 1000),
@@ -202,14 +250,16 @@
 					var tagName = target.el.tagName;
 					var type = target.el.type;
 
-					var key, value;
+					var key = target.attr('data-setting'),
+						value;
 
-					if (tagName === 'SELECT' || (tagName === 'INPUT' && type === 'checkbox')) {
-						key = target.attr('data-setting');
+					if (tagName === 'SELECT') {
 						value = target.value();
 
+					} else if (tagName === 'INPUT' && type === 'checkbox') {
+						value = target.prop('checked');
+
 					} else if (tagName === 'INPUT' && type === 'radio') {
-						key = target.attr('data-setting');
 						value = target.value();
 
 					} else {
