@@ -35,8 +35,11 @@
 			padding: 0;
 		}
 
-		&>label {
+		&>label:first-of-type {
 			font-size: $fontSizeH2;
+			padding: 3px 0;
+			margin-bottom: 3px;
+			@include border(3px, bottom);
 		}
 	}
 
