@@ -316,7 +316,7 @@
 			self.check(path);
 
 			/* Notify listeners. */
-			amplify.publish('active.onFocus', path);
+			amplify.publish('active.focus', path);
 		},
 
 		highlightEntry: function(path, direction) {
@@ -363,7 +363,7 @@
 
 		save: function(path) {
 			/* Notify listeners. */
-			amplify.publish('active.onSave', path);
+			amplify.publish('active.save', path);
 
 			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
 				atheos.toast.show('error', 'No open files.');
