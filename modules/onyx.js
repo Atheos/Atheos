@@ -495,6 +495,8 @@
 			width: (o) => getSize(element, 'width', false, o),
 
 			style: () => element.style,
+			tagName: element.tagName,
+			type: element.type,
 			el: element,
 			exists: () => (element && element.nodeType),
 			isOnyx: true
