@@ -59,8 +59,6 @@ class Filemanager {
 			);
 		}
 
-		$relativePath = str_replace(WORKSPACE, "", $index[0]["path"]);
-
 		$folders = array();
 		$files = array();
 		foreach ($index as $item => $data) {
