@@ -11,18 +11,14 @@ $base01: #404040; //# ---
 $base04: #8C8C8C; //# +
 $base07: #FAFAFA; //# ++++
 
-
 // Grey
 $medium-grey: $grey;
 $light-grey: lighten($grey, $adjust-tone);
 $dark-grey:   darken($grey, $adjust-tone);
 
-
-
 /*============================================================================*
 	CSS CLASSES
 /*============================================================================*/
-
 
 .light-grey:before    { color: $light-grey; }
 .medium-grey:before   { color: $medium-grey; }
