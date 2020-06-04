@@ -25,14 +25,22 @@
 		ajax = global.ajax,
 		oX = global.onyx;
 
+	var self = null;
 
+	amplify.subscribe('system.loadMinor', () => atheos.common.init());
 
 	atheos.common = {
 
+		init: function() {
+			self = this;
 
-		//////////////////////////////////////////////////////////////////////
+			// self.initDropdown();
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
 		// Options Menu Event Handlers
-		//////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		optionMenus: [],
 
 		initMenuHandler: function(button, menu, switchClasses) {
@@ -84,9 +92,42 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Dropdown Menu Handler
+		//////////////////////////////////////////////////////////////////////80
+		initDropdown: function() {
+			var close = function() {
+				oX('.dropdown.expanded').removeClass('expanded');
+				window.removeEventListener('click', close);
+			};
+
+			window.addEventListener('click', function(e) {
+				if (!e.target.matches('.dropdown') && !e.target.closest('.dropdown')) {
+					log('test');
+					return;
+				}
+				e.preventDefault();
+				e.stopPropagation();
+
+				var target = oX(e.target),
+					parent = target.parent('.dropdown');
+
+
+				parent.addClass('expanded');
+
+				oX('#' + target.attr('for')).prop('checked', true);
+
+				window.addEventListener('click', close);
+			});
+
+
+
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
 		// SerializeForm
-		//////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		serializeForm: function(form) {
 			var field, l, s = [];
 			var o = {};
