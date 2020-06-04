@@ -405,7 +405,7 @@
 				success: function(reply) {
 					log(reply);
 					return;
-					if (reply.status == 'login_required') {
+					if (reply.status === 'login_required') {
 						atheos.toast.show('error', reply.message);
 						codegit.showDialog('login', codegit.location);
 						codegit.login = function() {
@@ -420,7 +420,7 @@
 								atheos.toast[reply.status](reply.message);
 							});
 						};
-					} else if (reply.status == 'passphrase_required') {
+					} else if (reply.status === 'passphrase_required') {
 						atheos.toast.show('error', reply.message);
 						codegit.showDialog('passphrase', codegit.location);
 						codegit.login = function() {
@@ -570,7 +570,7 @@
 			* @result {string} path
 			*/
 		getPath: function(path) {
-			if (typeof(path) == 'undefined') {
+			if (typeof(path) === 'undefined') {
 				return this.location;
 			} else {
 				return path;
