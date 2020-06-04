@@ -73,7 +73,7 @@ switch ($action) {
 				</li>
 				<li>
 					<a name="keybindings" data-file="components/settings/settings.keybindings.php"><i class="fas fa-keyboard"></i><?php i18n("Keybindings"); ?></a>
-				</li>				
+				</li>
 				<?php
 				if (Common::checkAccess("configure")) {
 					?>
@@ -108,8 +108,9 @@ switch ($action) {
 
 		</div>
 		<toolbar>
-			<button class="btn-right" onclick="save(); return false;"><?php i18n("Save"); ?></button>
-			<button class="btn-left" onclick="codiad.modal.unload(); return false;"><?php i18n("Close"); ?></button>
+			Settings are automatically saved.
+			<!--	<button class="btn-right" onclick="atheos.settings.saveAll(); return false;"><?php i18n("Save"); ?></button>-->
+			<!--	<button class="btn-left" onclick="atheos.modal.unload(); return false;"><?php i18n("Close"); ?></button>-->
 		</toolbar>
 		<?php
 		break;
