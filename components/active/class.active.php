@@ -63,7 +63,7 @@ class Active {
 
 	public function check() {
 		$activeUsers = array();
-		foreach ($this->activeFiles as $user => $data) {
+		foreach ($this->activeFiles as $user) {
 			if ($user === $this->username) {
 				continue;
 			} elseif (isset($this->activeFiles[$user][$this->path])) {
@@ -133,7 +133,7 @@ class Active {
 	public function markFileAsFocused() {
 		$userActiveFiles = $this->activeFiles[$this->username];
 
-		foreach ($userActiveFiles as $path => $status) {
+		foreach ($userActiveFiles as $path) {
 			$userActiveFiles[$path] = $path === $this->path ? "focus": "active";
 		}
 

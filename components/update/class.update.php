@@ -38,7 +38,6 @@ class Update {
 	// Set Initial Version
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		$version = array();
 		if (file_exists(DATA ."/version.json")) {
 			$local = $this->getLocalData();
 
