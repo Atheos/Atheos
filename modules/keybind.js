@@ -35,27 +35,27 @@
 			document.addEventListener('keydown', self.handler);
 
 			// Close Modals [Esc] ////////////////////////////////////////////80
-			self.bind(false, 27, function() {
+			self.bind(27, false, function() {
 				atheos.modal.unload();
 			});
-			
-			// Open CodeGit [Ctrl + C] ////////////////////////////////////////////80
-			self.bind(true, 67, function() {
+
+			// Open CodeGit [Ctrl + C] ///////////////////////////////////////80
+			self.bind(0, 'ctrl', function() {
 				atheos.codegit.showCodeGit();
 			});
 
 			// Save [CTRL+S] /////////////////////////////////////////////////80
-			self.bind(true, 83, function() {
+			self.bind(83, 'ctrl', function() {
 				atheos.active.save();
 			});
 
 			// Open in browser [CTRL+O] //////////////////////////////////////80
-			self.bind(true, 79, function() {
+			self.bind(79, 'ctrl', function() {
 				atheos.filemanager.openInBrowser();
 			});
 
 			// Open Scout [CTRL+E] ///////////////////////////////////////////80
-			self.bind(true, 69, function() {
+			self.bind(69, 'ctrl', function() {
 				atheos.scout.probe();
 			});
 
@@ -64,30 +64,49 @@
 			// 	atheos.editor.openSearch('find');
 			// });
 
-			// GotoLine [CTRL+L] /////////////////////////////////////////////80
-			self.bind(true, 76, function() {
+			// GotoLine [CTRL+G] /////////////////////////////////////////////80
+			self.bind(71, 'ctrl', function() {
 				atheos.editor.promptLine();
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////////80
-			self.bind(true, 82, function() {
-				atheos.editor.openSearch('replace');
-			});
+			// self.bind(true, 82, function() {
+			// 	atheos.editor.openSearch('replace');
+			// });
 
 			// Close [CTRL+Q] ////////////////////////////////////////////////80
-			self.bind(true, 81, function() {
+			self.bind(81, 'ctrl', function() {
 				atheos.active.close();
 			});
 
 			// Active List Previous [CTRL+UP] ////////////////////////////////80
-			self.bind(true, 38, function() {
+			self.bind(38, 'ctrl', function() {
 				atheos.active.move('up');
 			});
 
 			// Active List Next [CTRL+DOWN] //////////////////////////////////80
-			self.bind(true, 40, function() {
+			self.bind(40, 'ctrl', function() {
 				atheos.active.move('down');
 			});
+
+			// Merge Editor Vertically [CTRL+M] ////////////////////////80
+			self.bind(77, 'ctrl', function() {
+				var activeSession = atheos.editor.activeInstance.getSession();
+				atheos.editor.exterminate();
+				atheos.editor.addInstance(activeSession);
+			});
+
+			// Split Editor Horizonally [CTRL+;] /////////////////////////////80
+			self.bind(186, 'ctrl', function() {
+				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'right');
+			});
+
+			// Split Editor Vertically [CTRL+Shift+;] ////////////////////////80
+			self.bind(186, 'alt', function() {
+				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'bottom');
+			});
+
+
 
 			// Autocomplete [CTRL+SPACE] /////////////////////////////////////80
 			// $.ctrl(32, function() {
@@ -104,12 +123,14 @@
 		//////////////////////////////////////////////////////////////////////
 		// Key Bind
 		//////////////////////////////////////////////////////////////////////
-		bind: function(ctrl, key, callback, args) {
-			self.bindings[key] = {
+		bind: function(key, cmd, callback, args) {
+			if (!(key in self.bindings)) self.bindings[key] = [];
+
+			self.bindings[key].push({
 				args: args || [],
-				ctrl,
+				cmd: cmd ? cmd.split(' ') : [],
 				callback
-			};
+			});
 		},
 
 		rebind: function(oldKey, newKey) {
@@ -121,16 +142,19 @@
 
 		handler: function(e) {
 			if (e.keyCode in self.bindings) {
-				let bind = self.bindings[e.keyCode];
-				if (e.ctrlKey === bind.ctrl) {
-					if (!(e.ctrlKey && e.altKey)) {
-						e.preventDefault();
-						e.stopPropagation();
+				self.bindings[e.keyCode].forEach(function(bind) {
+					if (bind.cmd.includes('alt') !== e.altKey) return;
+					if (bind.cmd.includes('ctrl') !== e.ctrlKey) return;
+					if (bind.cmd.includes('shift') !== e.shiftKey) return;
 
-						bind.callback.apply(this, bind.args);
-						return false;
-					}
-				}
+					e.preventDefault();
+					e.stopPropagation();
+
+					bind.callback.apply(this, bind.args);
+					return false;
+				});
+
+
 			}
 		}
 	};
