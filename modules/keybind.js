@@ -38,6 +38,11 @@
 			self.bind(false, 27, function() {
 				atheos.modal.unload();
 			});
+			
+			// Open CodeGit [Ctrl + C] ////////////////////////////////////////////80
+			self.bind(true, 67, function() {
+				atheos.codegit.showCodeGit();
+			});
 
 			// Save [CTRL+S] /////////////////////////////////////////////////80
 			self.bind(true, 83, function() {
@@ -55,12 +60,12 @@
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////////80
-			self.bind(true, 70, function() {
-				atheos.editor.openSearch('find');
-			});
+			// self.bind(true, 70, function() {
+			// 	atheos.editor.openSearch('find');
+			// });
 
-			// GotoLine [CTRL+G] /////////////////////////////////////////////80
-			self.bind(true, 71, function() {
+			// GotoLine [CTRL+L] /////////////////////////////////////////////80
+			self.bind(true, 76, function() {
 				atheos.editor.promptLine();
 			});
 
@@ -69,8 +74,8 @@
 				atheos.editor.openSearch('replace');
 			});
 
-			// Close [CTRL+W] ////////////////////////////////////////////////80
-			self.bind(true, 87, function() {
+			// Close [CTRL+Q] ////////////////////////////////////////////////80
+			self.bind(true, 81, function() {
 				atheos.active.close();
 			});
 
