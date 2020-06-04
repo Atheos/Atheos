@@ -4,11 +4,9 @@ button {
 	margin: 3px 0;
 	min-width: 80px;
 	color: $background;
-	font-size: 13px;
 	font-weight: bold;
-	background-color: $base07;
+	background-color: $fontColorMajor;
 	border: none;
-	border-bottom: 2px solid #7d7d7d;
 	cursor: pointer;
 
 	&.bottom-left {
@@ -23,19 +21,23 @@ button {
 
 		&:hover {
 			color: $grey;
-			background-color: $base07;
+			background-color: $fontColorMajor;
 		}
+	}
+
+	&:hover {
+		background-color: darken($fontColorMajor, $hoverPercent);
+	}
+	
+	&:focus {
+		outline: none;
+	}
+
+	&+button {
+		margin-left: 6px;
 	}
 }
 
-button+button {
-	margin-left: 6px;
-}
-
-button:hover {
-	color: #333;
-	background-color: #BBB;
-}
 
 // button.btn-left {
 //     // border-radius: 3px 0px 0px 3px;
@@ -51,7 +53,3 @@ button:hover {
 //     // border-radius: 0px 3px 3px 0px;
 //     border-radius: $border-radius;
 // }
-
-button .icon {
-	padding: 0 5px 0 0;
-}

@@ -12,6 +12,7 @@
 
 (function(global) {
 
+
 	var self = null;
 
 	var atheos = global.atheos,
@@ -75,11 +76,11 @@
 			//Handle contextmenu
 			amplify.subscribe('contextmenu.show', this.showContextMenu);
 
-			amplify.subscribe('active.onFocus', function(path) {
+			amplify.subscribe('active.focus', function(path) {
 				self.checkFileStatus(path);
 			});
 
-			amplify.subscribe('active.onSave', function(path) {
+			amplify.subscribe('active.save', function(path) {
 				setTimeout(function() {
 					self.checkFileStatus(path);
 					self.checkRepoStatus();
@@ -238,6 +239,10 @@
 					success: function(reply) {
 						oX('#panel_view').empty();
 						oX('#panel_view').html(reply);
+						if (panel === 'overview') {
+							self.monitorCheckBoxes();
+						}
+
 					}
 				});
 			}
@@ -400,7 +405,7 @@
 				success: function(reply) {
 					log(reply);
 					return;
-					if (reply.status == 'login_required') {
+					if (reply.status === 'login_required') {
 						atheos.toast.show('error', reply.message);
 						codegit.showDialog('login', codegit.location);
 						codegit.login = function() {
@@ -415,7 +420,7 @@
 								atheos.toast[reply.status](reply.message);
 							});
 						};
-					} else if (reply.status == 'passphrase_required') {
+					} else if (reply.status === 'passphrase_required') {
 						atheos.toast.show('error', reply.message);
 						codegit.showDialog('passphrase', codegit.location);
 						codegit.login = function() {
@@ -565,7 +570,7 @@
 			* @result {string} path
 			*/
 		getPath: function(path) {
-			if (typeof(path) == 'undefined') {
+			if (typeof(path) === 'undefined') {
 				return this.location;
 			} else {
 				return path;
@@ -589,13 +594,13 @@
 				});
 			}
 
-			if (self.repoBannerDisabled() !== true) {
-				self.repoBanner.show();
-			} else {
+			if (self.showRepoBanner() === false) {
 				self.repoBanner.hide();
+			} else {
+				self.repoBanner.show();
 			}
 
-			if (self.fileStatusDisabled() === true) {
+			if (self.showFileStatus() === false) {
 				self.fileStatus.empty();
 			}
 		},
@@ -635,19 +640,16 @@
 			})
 		},
 
-		repoBannerDisabled: function() {
-			var setting = atheos.storage('self.disableRepoBanner');
-			return setting || false;
+		showRepoBanner: function() {
+			var setting = atheos.storage('codegit.repoBanner');
+			setting = setting === 'disabled' ? false : true;
+			return setting;
 		},
 
-		fileStatusDisabled: function() {
-			var setting = atheos.storage('self.disableFileStatus');
-			return setting || false;
-		},
-
-		suppressCommitDiff: function() {
-			var setting = atheos.storage('self.suppressCommitDiff');
-			return setting || false;
+		showFileStatus: function() {
+			var setting = atheos.storage('codegit.fileStatus');
+			setting = setting === 'disabled' ? false : true;
+			return setting;
 		}
 	};
 })(this);

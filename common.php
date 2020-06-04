@@ -114,7 +114,7 @@ class Common {
 		}
 
 		//Check for external authentification
-		if (defined('AUTH_PATH')) {
+		if (defined('AUTH_PATH') && file_exists(AUTH_PATH)) {
 			require_once(AUTH_PATH);
 		}
 
@@ -271,7 +271,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////
 	// Save JSON
 	//////////////////////////////////////////////////////////////////
-
 	public static function saveJSON($file, $data, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
@@ -285,6 +284,38 @@ class Common {
 		$write = fopen($path . $file, 'w') or die("can't open file: " . $path . $file);
 		fwrite($write, $data);
 		fclose($write);
+	}
+
+
+	//////////////////////////////////////////////////////////////////
+	// Log Action
+	//////////////////////////////////////////////////////////////////
+	public static function log($user, $action, $name = "global") {
+		$path = DATA . "/log/";
+		$path = preg_replace('#/+#', '/', $path);
+
+		if (!is_dir($path)) mkdir($path);
+
+		$file = "$name.log";
+		$time = date("Y-m-d H:i:s");
+
+		$text = "$user: $action @ $time";
+
+		if (file_exists($path . $file)) {
+			$lines = file($path . $file);
+			if (sizeof($lines) > 100) {
+				unset($lines[0]);
+			}
+			$lines[] = $text . PHP_EOL;
+
+			$write = fopen($path . $file, 'w');
+			fwrite($write, implode('', $lines));
+			fclose($write);
+		} else {
+			$write = fopen($path . $file, 'w');
+			fwrite($write, $text);
+			fclose($write);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -402,23 +433,33 @@ class Common {
 	public static function checkPath($path) {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
+		$projects = Common::readJSON('projects');
 
 
 		$userHasAccess = false;
 
-		if (array_key_exists($username, $users)) {
-			$userACL = $users[$username]["userACL"];
-			$userHasAccess = $userACL === "full" ? true : false;
-			if ($userACL === "full") {
-				$userHasAccess = true;
-			} else {
-				foreach ($userACL as $project) {
-					$userHasAccess = strpos($path, $project) === 0 ? true : $userHasAccess;
+		if (!array_key_exists($username, $users)) {
+			return false;
+		}
+
+		$userACL = $users[$username]["userACL"];
+
+		$userHasAccess = $userACL === "full" ? true : false;
+
+		if ($userACL === "full") {
+			return true;
+		} else {
+			foreach ($projects as $projectPath => $projectName) {
+				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
+					return true;
+				} elseif (in_array($projectName, $userACL)) {
+					Common::debug("Path:$path, ProjectPath: $projectPath");
 				}
 			}
 		}
+		return false;
 
-		$projects = Common::readJSON('projects');
+
 		$pathWithinProject = false;
 
 		foreach ($projects as $projectPath => $projectName) {
@@ -491,8 +532,7 @@ class Common {
 		}
 		//Security check
 		if (!Common::checkPath($path)) {
-			Common::sendJSON("E430c");
-			die;
+			Common::sendJSON("E430c"); die;
 		}
 		if (strpos($path, "/") === 0) {
 			//Unix absolute path
@@ -528,6 +568,22 @@ class Common {
 			$path = str_replace('../', '', $path);
 		}
 		return $path;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Execute Command
+	//////////////////////////////////////////////////////////////////////////80
+	public function executeCommand($cmd) {
+		if (function_exists('system')) {
+			ob_start();
+			system($cmd);
+			ob_end_clean();
+		} elseif (function_exists('exec')) {
+			exec($cmd, $this->output);
+		} elseif (function_exists('shell_exec')) {
+			shell_exec($cmd);
+		}
 	}
 
 }

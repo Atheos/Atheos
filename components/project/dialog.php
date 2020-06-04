@@ -24,8 +24,7 @@ $path = Common::data("path");
 $name = Common::data("name");
 
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m"); die;
 }
 
 switch ($action) {
@@ -52,9 +51,7 @@ switch ($action) {
 			<?php echo($projectList); ?>
 		</ul>
 
-		<?php
-
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////
 	// List Projects
@@ -74,9 +71,9 @@ switch ($action) {
 		}
 
 		?>
-		<h1><i class="fas fa-archive"></i><?php i18n("Project List"); ?></h1>
 
 		<form>
+			<label><i class="fas fa-archive"></i><?php i18n("Project List"); ?></label>
 			<div id="project-list">
 				<table>
 					<tr>
@@ -125,17 +122,12 @@ switch ($action) {
 				?><button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button><?php
 			} ?>
 		</form>
-		<?php
-
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Create New Project
 	//////////////////////////////////////////////////////////////////////
-
-	case 'create':
-
-		?>
+	case 'create': ?>
 		<form style="width: 500px;">
 			<label><?php i18n("Project Name"); ?></label>
 			<input name="projectName" autofocus="autofocus" autocomplete="off">
@@ -144,63 +136,50 @@ switch ($action) {
 
 			<!-- Clone From GitHub -->
 			<!--<div style="width: 500px;">-->
-				<table style="display: none;" id="git_options">
-					<tr>
-						<td>
-							<label><?php i18n("Git Repository"); ?></label>
-							<input name="gitRepo">
-						</td>
-						<td width="5%">&nbsp;</td>
-						<td width="25%">
-							<label><?php i18n("Branch"); ?></label>
-							<input name="gitBranch" value="master">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" class="note"><?php i18n("Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."); ?></td>
-					</tr>
-				</table>
+			<table style="display: none;" id="git_options">
+				<tr>
+					<td>
+						<label><?php i18n("Git Repository"); ?></label>
+						<input name="gitRepo">
+					</td>
+					<td width="5%">&nbsp;</td>
+					<td width="25%">
+						<label><?php i18n("Branch"); ?></label>
+						<input name="gitBranch" value="master">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" class="note"><?php i18n("Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."); ?></td>
+				</tr>
+			</table>
 			<!--// </div>-->
 			<button class="btn-left"><?php i18n("Create Project"); ?></button>
 			<button id="show_git_options" class="btn-mid"><?php i18n("...From Git Repo"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
-		<?php
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////
 	// Rename
 	//////////////////////////////////////////////////////////////////
-	case 'rename':
-		?>
+	case 'rename': ?>
 		<form>
 			<label><i class="fas fa-pencil-alt"></i><?php i18n("Rename Project"); ?></label>
-			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($projectName); ?>">
+			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
-		<?php
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////
-
-	case 'delete':
-
-		?>
+	case 'delete': ?>
 		<form>
-			<label><?php i18n("Confirm Project Deletion"); ?></label>
-			<pre><?php i18n("Name:"); ?> <?php echo($projectName); ?>, <?php i18n("Path:") ?> <?php echo($projectPath); ?></pre>
-			<table>
-				<tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
-				<tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>
-			</table>
+			<label><i class="fas fa-trash-alt"></i><?php i18n("Confirm Project Deletion"); ?></label>
+			<pre><?php i18n("Name:"); ?> <?php echo($name); ?>, <?php i18n("Path:") ?> <?php echo($path); ?></pre>
 			<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
-
-		<?php
-		break;
+		<?php break;
 
 }
-
 ?>

@@ -18,13 +18,11 @@ Common::checkSession();
 //////////////////////////////////////////////////////////////////
 $action = Common::data("action");
 if (!$action) {
-	Common::sendJSON("error", "Missing Action");
-	die;
+	Common::sendJSON("error", "Missing Action"); die;
 }
 
 if (!Common::checkAccess("configure")) {
-	Common::sendJSON("E430u");
-	die;
+	Common::sendJSON("E430u"); die;
 }
 
 $type = Common::data("type");

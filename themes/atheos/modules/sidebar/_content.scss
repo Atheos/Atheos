@@ -1,8 +1,9 @@
 .sidebar .content {
 	position: absolute;
 	top: $topBarHeight;
-	min-width: 185px;
+	// min-width: 185px;
 	width: calc(100% - #{$sidebarHandleWidth});
+	overflow: hidden;
 }
 
 #sb_left {

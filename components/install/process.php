@@ -114,6 +114,8 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	$userData[$username] = array(
 		"password" => $password,
 		"activeProject" => $projectPath,
+		"creationDate" => date("Y-m-d H:i:s"),
+		"lastLogin" => false,
 		"permissions" => ["configure", "read", "write"],
 		"userACL" => "full"
 	);
@@ -140,9 +142,9 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 		"optOut" => true,
 		"plugins" => array()
 	);
-	
+
 	saveJSON($version, $versionData);
-	
+
 
 
 	//////////////////////////////////////////////////////////////////
@@ -175,8 +177,11 @@ $cookie_lifetime = "0";
 // TIMEZONE
 date_default_timezone_set("' . $timezone . '");
 
-// External Authentification
-//define("AUTH_PATH", "/path/to/customauth.php");
+// DEVELOPMENT MODE
+define("DEVELOPMENT", false);
+
+// EXTERNAL AUTHENTICATION
+// define("AUTH_PATH", "/path/to/customauth.php");
 
 //////////////////////////////////////////////////////////////////////////////80
 // ** DO NOT EDIT CONFIG BELOW **

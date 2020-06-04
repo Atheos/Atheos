@@ -1,13 +1,17 @@
 /* SCSS IMPORT FILES */
 @import "modules/util/reset";
-@import "modules/util/mixins", "modules/util/colours", "modules/util/shades", "modules/util/variables";
+@import "modules/util/mixins", "modules/util/colors", "modules/util/shades", "modules/util/variables";
 @import "modules/util/animations";
 
 @import "modules/util/scrollbars";
 
 
-@import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/text", "modules/common/button";
-@import "modules/common/tables";
+@import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/input", "modules/common/button";
+@import "modules/common/dropdown";
+@import "modules/common/label";
+@import "modules/common/table";
+@import "modules/common/toggle";
+@import "modules/common/toolbar";
 @import "modules/common/typography";
 
 @import "modules/active/main";
@@ -24,10 +28,9 @@
 @import "modules/textmode", "modules/market";
 
 @import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
-
 @import "modules/misc/contextmenu", "modules/misc/scout", "modules/misc/uploader";
-
 @import "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
+@import "modules/misc/update", "modules/misc/keybindings", "modules/misc/search";
 
 @import "modules/settings", "modules/user";
  
@@ -39,7 +42,7 @@ html {
 	width: 100%;
 	height: 100%;
 	color: #fff;
-	font: normal $font-size 'Ubuntu', sans-serif;
+	font: normal $fontSizePr 'Ubuntu', sans-serif;
 	overflow: hidden;
 }
 

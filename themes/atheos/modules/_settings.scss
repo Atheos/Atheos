@@ -1,24 +1,19 @@
-#settings {
+.settings {
 	display: flex;
-	border-top: $border-thin;
+	@include border(1px, top);
 
-	.big-icon {
-		font-size: 100%;
-		margin-right: 12px;
-	}
-
-	#panel_menu {
+	menu {
 		max-height: 55vh;
 		overflow: auto;
 		width: 200px;
 
-		li a {
-			display: block;
-			padding: 10px;
-			user-select: none;
+		li {
+			list-style: none;
 
-			i {
-				margin-right: 5px;
+			a {
+				display: block;
+				padding: 10px;
+				user-select: none;
 			}
 		}
 
@@ -27,41 +22,62 @@
 		}
 	}
 
-	#panel_view {
+	panel {
 		padding: 5px;
-		width: 100%;
+		width: calc(100% - 200px);
 		overflow: auto;
 		overflow-y: scroll;
 		height: 500px;
-		// border-left: $border-thin;
+		position: relative;
 		@include border(1px, left);
 
 		form {
 			padding: 0;
 		}
+
+		&>label:first-of-type {
+			font-size: $fontSizeH2;
+			padding: 3px 0;
+			margin-bottom: 3px;
+			@include border(3px, bottom);
+		}
 	}
 
-	.settings td {
-		border: none;
-		border-bottom: 1px solid #666;
-		padding: 10px 0;
+	table {
+		margin: 0 5px;
+		width: calc(100% - 10px);
+
+		td {
+			border: none;
+			border-bottom: 1px solid #666;
+			padding: 8px 0;
+
+			&:first-child {
+				padding-left: 20px;
+				font-weight: bold;
+			}
+			
+			&:not(:first-child) {
+				text-align: center;
+			}
+		}
+
+		select {
+			margin: 0;
+		}
+
+		tr:last-child td {
+			border: none;
+		}
+	}
+	
+	hint {
+		position: absolute;
+		bottom: 5px;
 	}
 
-	.settings td:first-child {
-		padding-right: 20px;
-		font-weight: bold;
+	&+toolbar {
+		text-align: right;
+		@include border(1px, top);
 	}
-
-	.settings select {
-		margin: 0;
-	}
-
-	.settings tr:last-child td {
-		border: none;
-	}
-}
-
-#settings_open {
-	float: left;
-	display: none;
 }

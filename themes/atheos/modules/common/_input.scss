@@ -5,13 +5,10 @@ select,
 textarea {
 	// display: block;
 	width: 100%;
-	padding: 7px 10px;
 	margin: 5px 0;
-	background-color: $input-background;
-	border: none;
-	border-bottom: 2px solid #595959;
-	color: #fff;
+	padding: 7px 10px;
 	line-height: normal;
+	@include input;
 	@include border-radius;
 }
 
@@ -24,7 +21,7 @@ textarea {
 }
 
 select option {
-	background-color: $input-background;
+	background-color: $inputBackground;
 }
 
 textarea {
@@ -35,6 +32,6 @@ input:focus,
 select:focus,
 textarea:focus {
 	outline: none;
-	background-color: $input-background;
+	background-color: $inputBackground;
 	border-bottom: 2px solid #ccc;
 }

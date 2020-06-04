@@ -36,7 +36,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
-	<?php $SourceManager->echoStyles("fonts", true); ?>
+	<?php $SourceManager->echoStyles("fonts", DEVELOPMENT); ?>
 
 	<!--Link favicons-->
 	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png?v=2">
@@ -71,18 +71,18 @@ $theme = Common::data("theme", "session") ?: THEME;
 	//////////////////////////////////////////////////////////////////
 	// LOAD MODULES
 	//////////////////////////////////////////////////////////////////
-	$SourceManager->echoScripts("modules", true);
-	$SourceManager->echoStyles("pluginsCSS", true);
+	$SourceManager->echoScripts("modules", DEVELOPMENT);
+	$SourceManager->echoStyles("pluginsCSS", DEVELOPMENT);
 
 	?>
 
 </head>
 
 <body>
-	<canvas id="synthetic"></canvas>
 
 	<?php
 	$activeUser = Common::data("user", "session");
+	
 	//////////////////////////////////////////////////////////////////
 	// LOGGED IN
 	//////////////////////////////////////////////////////////////////
@@ -143,12 +143,12 @@ $theme = Common::data("theme", "session") ?: THEME;
 		//////////////////////////////////////////////////////////////////
 		// LOAD COMPONENTS
 		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("components", true);
+		$SourceManager->echoScripts("components", DEVELOPMENT);
 
 		//////////////////////////////////////////////////////////////////
 		// LOAD PLUGINS
 		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("pluginsJS", true);
+		$SourceManager->echoScripts("pluginsJS", DEVELOPMENT);
 	} else {
 		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
 

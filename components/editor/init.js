@@ -123,6 +123,7 @@
 				enableSnippets: true,
 				enableLiveAutocompletion: true
 			});
+			instance.setAnimatedScroll(true);
 
 			instance.setFontSize(self.settings.fontSize);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
@@ -740,7 +741,8 @@
 		gotoLine: function(line, i) {
 			i = i || this.getActive();
 			if (!i) return;
-			i.gotoLine(line, 0, true);
+			i.scrollToLine(line, true, true);
+			// i.gotoLine(line, 0, true);
 			self.focus();
 		},
 
@@ -807,28 +809,28 @@
 			// });
 
 			// Find
-			instance.commands.addCommand({
-				name: 'Find',
-				bindKey: {
-					win: 'Ctrl-F',
-					mac: 'Command-F'
-				},
-				exec: function(e) {
-					self.openSearch('find');
-				}
-			});
+			// instance.commands.addCommand({
+			// 	name: 'Find',
+			// 	bindKey: {
+			// 		win: 'Ctrl-F',
+			// 		mac: 'Command-F'
+			// 	},
+			// 	exec: function(e) {
+			// 		self.openSearch('find');
+			// 	}
+			// });
 
 			// Find + Replace
-			instance.commands.addCommand({
-				name: 'Replace',
-				bindKey: {
-					win: 'Ctrl-R',
-					mac: 'Command-R'
-				},
-				exec: function(e) {
-					self.openSearch('replace');
-				}
-			});
+			// instance.commands.addCommand({
+			// 	name: 'Replace',
+			// 	bindKey: {
+			// 		win: 'Ctrl-R',
+			// 		mac: 'Command-R'
+			// 	},
+			// 	exec: function(e) {
+			// 		self.openSearch('replace');
+			// 	}
+			// });
 
 			instance.commands.addCommand({
 				name: 'Move Up',
@@ -870,6 +872,11 @@
 					'components/editor/dialog.php', {
 						action: type,
 						highlight
+					}, (modal) => {
+						modal.on('submit', function(e) {
+							e.preventDefault();
+							self.search(type);
+						});
 					});
 				atheos.common.hideOverlay();
 			} else {

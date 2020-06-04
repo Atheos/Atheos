@@ -39,8 +39,7 @@ $project = Common::data("project", "session");
 $noReturn = Common::data("no_return");
 
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m"); die;
 }
 
 if (!$project) {
@@ -53,13 +52,10 @@ if (!$project) {
 // Handle Action
 //////////////////////////////////////////////////////////////////
 $Filemanager = new Filemanager();
-// $Filemanager->project = @$_SESSION['project']['path'];
-
-$Filemanager->root = WORKSPACE;
 
 switch ($action) {
 	case 'index':
-		$Filemanager->index($path);
+		$Filemanager->index(Common::data('path'));
 		break;
 	case 'open':
 		$Filemanager->open($path);
