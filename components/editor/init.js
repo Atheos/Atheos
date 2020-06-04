@@ -123,6 +123,7 @@
 				enableSnippets: true,
 				enableLiveAutocompletion: true
 			});
+			instance.setAnimatedScroll(true);
 
 			instance.setFontSize(self.settings.fontSize);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
@@ -740,7 +741,8 @@
 		gotoLine: function(line, i) {
 			i = i || this.getActive();
 			if (!i) return;
-			i.gotoLine(line, 0, true);
+			i.scrollToLine(line, true, true);
+			// i.gotoLine(line, 0, true);
 			self.focus();
 		},
 
