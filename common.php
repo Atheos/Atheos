@@ -137,17 +137,17 @@ class Common {
 		Common::$data["post"] = array();
 		Common::$data["get"] = array();
 
-		if ($_SESSION && count($_SESSION) > 0) {
+		if ($_SESSION && !empty($_SESSION)) {
 			foreach ($_SESSION as $key => $value) {
 				Common::$data["session"][$key] = $value;
 			}
 		}
-		if ($_POST && count($_POST) > 0) {
+		if ($_POST && !empty($_POST)) {
 			foreach ($_POST as $key => $value) {
 				Common::$data["post"][$key] = $value;
 			}
 		}
-		if ($_GET && count($_GET) > 0) {
+		if ($_GET && !empty($_GET)) {
 			foreach ($_GET as $key => $value) {
 				Common::$data["get"][$key] = $value;
 			}
@@ -436,8 +436,6 @@ class Common {
 		$projects = Common::readJSON('projects');
 
 
-		$userHasAccess = false;
-
 		if (!array_key_exists($username, $users)) {
 			return false;
 		}
@@ -460,13 +458,13 @@ class Common {
 		return false;
 
 
-		$pathWithinProject = false;
+		// $pathWithinProject = false;
 
-		foreach ($projects as $projectPath => $projectName) {
-			$pathWithinProject = strpos($path, $projectPath) === 0 ? true : $pathWithinProject;
-		}
+		// foreach ($projects as $projectPath => $projectName) {
+		// 	$pathWithinProject = strpos($path, $projectPath) === 0 ? true : $pathWithinProject;
+		// }
 
-		return $userHasAccess && $pathWithinProject;
+		// return $userHasAccess && $pathWithinProject;
 
 	}
 

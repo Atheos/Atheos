@@ -794,9 +794,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		bindKeys: function(instance) {
-
-			var self = this;
-
 			// instance.commands.addCommand({
 			// 	name: "Beautify",
 			// 	bindKey: {
