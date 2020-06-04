@@ -28,6 +28,10 @@ button {
 	&:hover {
 		background-color: darken($fontColorMajor, $hoverPercent);
 	}
+	
+	&:focus {
+		outline: none;
+	}
 
 	&+button {
 		margin-left: 6px;
