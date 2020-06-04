@@ -36,7 +36,7 @@
 }
 
 #modal_content #codegit form {
-			background-color: $background;
+	background-color: $background;
 
 }
 
@@ -47,12 +47,12 @@
 
 #codegit {
 	display: flex;
-	border-top: $border-thin;
+	@include border(1px, top);
 
-	.big-icon {
-		font-size: 100%;
-		margin-right: 12px;
-	}
+	// .big-icon {
+	// 	font-size: 100%;
+	// 	margin-right: 12px;
+	// }
 
 	#panel_menu {
 		max-height: 55vh;

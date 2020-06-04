@@ -21,6 +21,8 @@ $action = Common::data("action");
 $type = Common::data("type");
 $highlight = Common::data("highlight");
 
+$highlight = strip_tags($highlight);
+
 if (!$action) {
 	Common::sendJSON("E401m");
 	die;
@@ -33,11 +35,10 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'find':
 		?>
-		<form>
+		<form onsubmit="atheos.editor.search('find');return false;">
 			<h4><i class="fas fa-search"></i><?php i18n("Find:"); ?></h4>
 			<input type="text" name="find" value="<?php echo $highlight; ?>"autofocus="autofocus" autocomplete="off">
 			<button class="btn-left" onclick="atheos.editor.search('find');return false;"><?php i18n("Find"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
 		</form>
 
 		<?php

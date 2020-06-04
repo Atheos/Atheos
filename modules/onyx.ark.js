@@ -193,22 +193,12 @@
 
 	};
 
-	const isSelectorValid = function(selector) {
-		try {
-			document.createDocumentFragment().querySelector(selector);
-		} catch (e) {
-			return false;
-		}
-		return true;
-	};
-
 	let argToElements = function(selector) {
 		if (!selector) {
-			trace();
 			console.warn('No selector provided to OnyxJS');
-			return [];
+			return false;
 		}
-
+		
 		if (alwaysReturn.includes(selector)) {
 			return [selector]; //This could cause a problem later
 		} else if (typeof selector === 'string') {
@@ -219,7 +209,7 @@
 				var template = document.createElement('template');
 				selector = selector.trim(); // Never return a text node of whitespace as the result
 				template.innerHTML = selector;
-				return [template.content.firstChild];
+				return template.content.firstChild;
 
 			} else {
 				return [...document.querySelectorAll(selector)];
@@ -233,7 +223,7 @@
 			return elems;
 
 		} else if (selector.isOnyx) {
-			return [selector.el];
+			return selector.el;
 		}
 
 		throw new TypeError('Expected String | HTMLElement | OnyxJS; got ' + typeof selector);
@@ -243,260 +233,249 @@
 	// let classTypes = ['add', 'contains', 'toggle', 'remove', 'replace'];
 	let domTypes = ['data', 'innerHTML', 'innerText', 'value'];
 
-	// This attach function will probably be removed as it's honestly
-	// more of an overcomplication than a helper, but it also just need
-	// optimization. The goal is to allow you to add child selectors to
-	// the event handler.
-	let attach = (element, action, type, children, fn) => {
-		//https://stackoverflow.com/questions/2068272/getting-a-jquery-selector-for-an-element
-		let sel = children;
-		if (typeof(selector) === 'function') {
-			fn = selector;
-			children = null;
-		} else {
-			sel = element + ' ' + children;
-		}
-		events[action](type, sel, fn);
-	};
-
-	let setClass = function(element, type, cls, nCls) {
-		if (type === 'replace') {
-			setClass(element, 'remove', cls);
-			setClass(element, 'add', nCls);
-			return;
-		}
-
-		if (type === 'remove') {
-			if (cls) {
-				element.classList.remove(...cls.split(' '));
-			} else {
-				element.className = '';
-			}
-		} else {
-			// add, contains, toggle
-			return element.classList[type](...cls.split(' '));
-		}
-	};
-
-	let setStyle = function(element, key, value) {
-		if (typeof key === 'string') {
-			if (typeof(value) !== 'undefined') {
-				if (pxStyles.includes(key) && isFinite(value) && value !== '') {
-					value = value + 'px';
-				}
-				element.style[key] = value;
-			}
-			return element.style[key] || null;
-		} else if (typeof key === 'object') {
-			const entries = Object.entries(key);
-			for (const [key, value] of entries) {
-				element.style[key] = value;
-			}
-		}
-	};
-
-	let getSize = (element, type, value, outer) => {
-		var init = {
-			'display': element.style.display,
-			'visibility': element.style.visibility,
-			'opacity': element.style.opacity
-		};
-
-
-		if (value) {
-			element.style[type] = value + 'px';
-		}
-
-		setStyle(element, {
-			'display': 'block',
-			'visibility': 'hidden',
-			'opacity': 0
-		});
-
-		var computedStyle = window.getComputedStyle(element);
-		var size = parseFloat(computedStyle[type].replace('px', ''));
-		if (outer) { //OuterHeight or OuterWidth
-			if (type === 'height') {
-				size += parseFloat(computedStyle.marginTop.replace('px', ''));
-				size += parseFloat(computedStyle.marginBottom.replace('px', ''));
-				size += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
-				size += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
-			} else if (type === 'width') {
-				size += parseFloat(computedStyle.marginLeft.replace('px', ''));
-				size += parseFloat(computedStyle.marginRight.replace('px', ''));
-				size += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
-				size += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
-			}
-		}
-		setStyle(element, init);
-
-		return size;
-	};
-
-	let insertToAdjacent = (location, element) => function(target) {
-		if (target instanceof HTMLElement) {
-			target.insertAdjacentElement(location, element);
-		} else if ('isOnyx' in target) {
-			target = target.el;
-			target.insertAdjacentElement(location, element);
-		}
-	};
-
-	let insertAdjacent = (location, element) => function(addition) {
-		if (typeof addition === 'string') {
-			element.insertAdjacentHTML(location, addition);
-		} else if (addition instanceof HTMLElement) {
-			element.insertAdjacentElement(location, addition);
-		} else if ('isOnyx' in addition) {
-			addition = addition.el;
-			element.insertAdjacentElement(location, addition);
-		}
-	};
-
-	let IO = (element, type, value, key) => {
-		if (domTypes.includes(type)) {
-			if (value) element[type] = value;
-			return element[type];
-		} else if (type === 'prop') {
-			if (value) element[key] = value;
-			return element[key];
-		} else if (type === 'attr') {
-			if (typeof key === 'string') {
-				if (value) {
-					element.setAttribute(key, value);
-				}
-				return element.getAttribute(key);
-			} else if (typeof key === 'object') {
-				const entries = Object.entries(key);
-				for (const [key, value] of entries) {
-					element.setAttribute(key, value);
-				}
-			}
-		}
-	};
-
-	let search = (element, type, selector, all) => {
-		var matches = [];
-		if (type === 'find') {
-			var nodes = element.querySelectorAll(selector);
-			for (var i = 0; i < nodes.length; i++) {
-				matches.push(onyx(nodes[i]));
-			}
-		} else {
-			var match = type === 'children' ? element.firstElementChild : element.parentNode.firstElementChild;
-
-			while (match) {
-				if ((!selector || match.matches(selector)) && match !== element) {
-					matches.push(onyx(match));
-				}
-				match = match.nextElementSibling;
-			}
-		}
-		if (all) {
-			return matches[0] || false;
-		} else {
-			return matches;
-		}
-	};
-
-	let triggerEvent = function(element, types) {
-		types = types.split(',');
-		types.forEach(function(type) {
-			type = type.trim();
-			if (element && type) {
-
-				var event = new CustomEvent(type, {
-					bubbles: true,
-					cancelable: true
-				});
-				return element.dispatchEvent(event);
-			}
-
-		});
-	};
 
 	const onyx = function(selector) {
-		let element = argToElement(selector);
+		let element = argToElements(selector);
+		if (!element) {
+			return;
+		}
+		
+		let first = element[0];
+		let iterate = element.forEach.bind(element);
 
-		selector = isSelectorValid(selector) ? selector : element;
+		let insertToAdjacent = (location) => function(target) {
+			if (target instanceof HTMLElement) {
+				target.insertAdjacentElement(location, element);
+			} else if ('isOnyx' in target) {
+				target = target.el;
+				target.insertAdjacentElement(location, element);
+			}
+		};
 
-		if (!element) return;
+		let insertAdjacent = (location) => function(addition) {
+			if (typeof addition === 'string') {
+				element.insertAdjacentHTML(location, addition);
+			} else if (addition instanceof HTMLElement) {
+				element.insertAdjacentElement(location, addition);
+			} else if ('isOnyx' in addition) {
+				addition = addition.el;
+				element.insertAdjacentElement(location, addition);
+			}
+		};
 
-		// let elements = argToElements(selector);
-		// let iterator = elements.forEach.bind(elements);
+		let triggerEvent = function(types) {
+			types = types.split(',');
+			types.forEach(function(type) {
+				type = type.trim();
+				if (element && type) {
+
+					var event = new CustomEvent(type, {
+						bubbles: true,
+						cancelable: true
+					});
+					return element.dispatchEvent(event);
+				}
+
+			});
+		};
+
+		let setStyle = function(k, v) {
+			if (typeof k === 'string') {
+				if (typeof(v) !== 'undefined') {
+					if (pxStyles.includes(k) && isFinite(v) && v !== '') {
+						v = v + 'px';
+					}
+					element.style[k] = v;
+				}
+				return element.style[k] || null;
+			} else if (typeof k === 'object') {
+				const entries = Object.entries(k);
+				for (const [key, value] of entries) {
+					element.style[key] = value;
+				}
+			}
+		};
+
+		let setClass = function(t, c, n) {
+			if (t === 'replace') {
+				setClass('remove', c);
+				setClass('add', n);
+				return;
+			}
+
+			// if (c) {
+			// 	c = ...c.split(' ');
+			// }
+			// addClass: (c) => element.classList.add(...c.split(' ')),
+
+			if (t === 'remove') {
+				if (c) {
+					element.classList.remove(...c.split(' '));
+				} else {
+					element.className = '';
+				}
+			} else {
+				// add, contains, toggle
+				return element.classList[t](...c.split(' '));
+			}
+		};
+
+		let search = (t, s, a) => {
+			var matches = [];
+			if (t === 'find') {
+				var nodes = element.querySelectorAll(s);
+				for (var i = 0; i < nodes.length; i++) {
+					matches.push(onyx(nodes[i]));
+				}
+			} else {
+				var match = t === 'children' ? element.firstElementChild : element.parentNode.firstElementChild;
+
+				while (match) {
+					if ((!s || match.matches(s)) && match !== element) {
+						matches.push(onyx(match));
+					}
+					match = match.nextElementSibling;
+				}
+			}
+			if (a) {
+				return matches[0] || false;
+			} else {
+				return matches;
+
+			}
+		};
+
+		let getSize = (t, v, o) => {
+			var init = {
+				'display': element.style.display,
+				'visibility': element.style.visibility,
+				'opacity': element.style.opacity
+			};
+
+
+			if (v) {
+				element.style[t] = v + 'px';
+			}
+
+			setStyle({
+				'display': 'block',
+				'visibility': 'hidden',
+				'opacity': 0
+			});
+
+			var computedStyle = window.getComputedStyle(element);
+			var size = parseFloat(computedStyle[t].replace('px', ''));
+			if (o) { //OuterHeight or OuterWidth
+				if (t === 'height') {
+					size += parseFloat(computedStyle.marginTop.replace('px', ''));
+					size += parseFloat(computedStyle.marginBottom.replace('px', ''));
+					size += parseFloat(computedStyle.borderTopWidth.replace('px', ''));
+					size += parseFloat(computedStyle.borderBottomWidth.replace('px', ''));
+				} else if (t === 'width') {
+					size += parseFloat(computedStyle.marginLeft.replace('px', ''));
+					size += parseFloat(computedStyle.marginRight.replace('px', ''));
+					size += parseFloat(computedStyle.borderLeftWidth.replace('px', ''));
+					size += parseFloat(computedStyle.borderRightWidth.replace('px', ''));
+				}
+			}
+			setStyle(init);
+
+			return size;
+		};
+
+		let IO = (t, v, k) => {
+			if (domTypes.includes(t)) {
+				if (v) element[t] = v;
+				return element[t];
+			} else if (t === 'prop') {
+				if (v) element[k] = v;
+				return element[k];
+			} else if (t === 'attr') {
+				if (typeof k === 'string') {
+					if (v) {
+						element.setAttribute(k, v);
+					}
+					return element.getAttribute(k);
+				} else if (typeof k === 'object') {
+					const entries = Object.entries(k);
+					for (const [key, value] of entries) {
+						element.setAttribute(key, value);
+					}
+				}
+			}
+		};
+
+		let attach = (a, t, s, fn) => {
+			let sel = selector;
+			if (typeof(s) === 'function') {
+				fn = s;
+				s = null;
+			} else {
+				sel = selector + ' ' + s;
+			}
+			events[a](t, sel, fn);
+		};
 
 		return {
 
 			focus: () => element.focus(),
 			show: () => element.style.display = 'block',
 			hide: () => element.style.display = 'none',
-			trigger: (event) => triggerEvent(element, event),
+			trigger: (e) => triggerEvent(e),
 
-			once: (t, fn) => events.once(t, selector, fn),
-			on: (t, fn) => events.on(t, selector, fn),
-			off: (t, fn) => events.off(t, selector, fn),
+			once: (t, fn) => events.once(t, element, fn),
+			on: (t, fn) => events.on(t, element, fn),
+			off: (t, fn) => events.off(t, element, fn),
 
 			// on: (t, s, fn) => attach('on', t, s, fn),
 			// off: (t, s, fn) => attach('off', s, fn),
 			// once: (t, s, fn) => attach('once', t, s, fn),
 
-			css: (k, v) => setStyle(element, k, v),
-
-			data: (v) => IO(element, 'data', v),
-			prop: (k, v) => IO(element, 'prop', v, k),
-			html: (v) => IO(element, 'innerHTML', v),
-			text: (v) => IO(element, 'innerText', v),
-			value: (v) => IO(element, 'value', v),
-
+			css: (k, v) => setStyle(k, v),
+			data: (v) => IO('data', v),
+			prop: (k, v) => IO('prop', v, k),
+			html: (v) => IO('innerHTML', v),
+			text: (v) => IO('innerText', v),
+			value: (v) => IO('value', v),
 			empty: () => element.innerHTML = element.value = '',
 
-			attr: (k, v) => IO(element, 'attr', v, k),
+			attr: (k, v) => IO('attr', v, k),
 			removeAttr: (k) => element.removeAttribute(k),
 
-			addClass: (c) => setClass(element, 'add', c),
-			hasClass: (c) => setClass(element, 'contains', c),
-			removeClass: (c) => setClass(element, 'remove', c),
-			toggleClass: (c) => setClass(element, 'toggle', c),
-			replaceClass: (c, n) => setClass(element, 'replace', c, n),
-
-			// addClass: (c) => iterator(i => setClass(i, 'add', c)),
-			// hasClass: (c) => iterator(i => setClass(i, 'contains', c)),
-			// removeClass: (c) => iterator(i => setClass(i, 'remove', c)),
-			// toggleClass: (c) => iterator(i => setClass(i, 'toggle', c)),
-			// replaceClass: (c, n) => iterator(i => setClass(i, 'replace', c, n)),
+			addClass: (c) => setClass('add', c),
+			hasClass: (c) => setClass('contains', c),
+			removeClass: (c) => setClass('remove', c),
+			toggleClass: (c) => setClass('toggle', c),
+			replaceClass: (c, n) => setClass('replace', c, n),
 
 			find: (s) => onyx(element.querySelector(s)),
 			parent: (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement),
-			findAll: (s) => search(element, 'find', s),
-			sibling: (s) => search(element, 'siblings', s, true),
-			siblings: (s) => search(element, 'siblings', s),
-			children: (s) => search(element, 'children', s),
+			findAll: (s) => search('find', s),
+			sibling: (s) => search('siblings', s, true),
+			siblings: (s) => search('siblings', s),
+			children: (s) => search('children', s),
 
-			before: insertAdjacent('beforebegin', element),
-			after: insertAdjacent('afterend', element),
-			first: insertAdjacent('afterbegin', element),
-			last: insertAdjacent('beforeend', element),
+			before: insertAdjacent('beforebegin'),
+			after: insertAdjacent('afterend'),
+			first: insertAdjacent('afterbegin'),
+			last: insertAdjacent('beforeend'),
 
-			insertBefore: insertToAdjacent('beforebegin', element),
-			insertAfter: insertToAdjacent('afterend', element),
-			insertFirst: insertToAdjacent('afterbegin', element),
-			insertLast: insertToAdjacent('beforeend', element),
+			insertBefore: insertToAdjacent('beforebegin'),
+			insertAfter: insertToAdjacent('afterend'),
+			insertFirst: insertToAdjacent('afterbegin'),
+			insertLast: insertToAdjacent('beforeend'),
 
-			prepend: insertAdjacent('afterbegin', element),
-			append: insertAdjacent('beforeend', element),
-
+			prepend: insertAdjacent('afterbegin'),
+			append: insertAdjacent('beforeend'),
 			remove: () => element.remove(),
-			// remove: () => iterator(i => i.remove()),
 
 			offset: () => element.getBoundingClientRect(),
 			clientHeight: () => element.clientHeight,
 			clientWidth: () => element.clientWidth,
-			height: (o) => getSize(element, 'height', false, o),
-			width: (o) => getSize(element, 'width', false, o),
+			height: (o) => getSize('height', false, o),
+			width: (o) => getSize('width', false, o),
 
 			style: () => element.style,
-			tagName: element.tagName,
-			type: element.type,
 			el: element,
 			exists: () => (element && element.nodeType),
 			isOnyx: true

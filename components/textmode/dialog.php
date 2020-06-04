@@ -41,14 +41,12 @@ switch ($action) {
 		}
 
 		?>
-		<h2><i class="icon-pencil big-icon"></i><?php i18n("Extensions"); ?></h2>
-		<form>
-
+		<label><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></label>
 			<table id="textmode">
 				<thead>
 					<tr>
-						<th><?php i18n("Extension"); ?></th>
-						<th><?php i18n("Mode"); ?></th>
+						<th><?php i18n("File Extension"); ?></th>
+						<th><?php i18n("Default Textmode"); ?></th>
 					</tr>
 				</thead>
 				<tbody id="textmodes">
@@ -72,7 +70,6 @@ switch ($action) {
 			<br>
 			<button class="btn-left" onClick="atheos.textmode.addFieldToForm(); return false;"><?php i18n("New Extension"); ?></button>
 			<button class="btn-right" onClick="atheos.textmode.saveExtensions(); return false;"><?php i18n("Save Extensions"); ?></button>
-		</form>
 		<?php
 		break;
 	//////////////////////////////////////////////////////////////////////////80

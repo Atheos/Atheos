@@ -29,24 +29,8 @@ a:visited {
 	font-weight: bold;
 }
 
-/* FORMS */
-label {
-	display: block;
-	padding: 0 0 5px;
-	font-size: 14px;
-	font-weight: normal;
-	text-shadow: 0 1px 1px #000;
-}
-
-label .icon {
-	font-weight: normal;
-	font-size: 180%;
-	padding-right: 4px;
-	display: none;
-}
-
 pre {
-	background: $input-background;
+	background: $inputBackground;
 	padding: 10px;
 	margin: 5px 0;
 	font-family: monospace;
@@ -60,31 +44,25 @@ hr {
 	margin: 0;
 }
 
-h1, h2, h3, h4 {
+h1,
+h2,
+h3,
+h4 {
 	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
-	i {
-		margin-right: 5px;
-	}
 }
 
 h1 {
-	font-size: 24px;
-	padding: 2px 8px;
-	font-weight: 700;
-	// background-color: $dark-blue;
-	background-color: $foreground;
-
+	font-size: $fontSizeH1;
 }
 
 h2 {
-	font-size: 20px;
-
+	font-size: $fontSizeH2;
 }
 
 h3 {
-	font-size: 18px;
+	font-size: $fontSizeH3;
 }
 
 h4 {
-	font-size: 16px;
+	font-size: $fontSizeH4;
 }

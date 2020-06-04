@@ -49,7 +49,7 @@ switch ($action) {
 					<tr><td width="40%"><?php i18n("Latest Version"); ?></td><td id="remote_latest"></td></tr>
 				</table>
 				<br><label><?php i18n("Changes on Atheos"); ?></label>
-				<pre id="remote_body" style="overflow: auto; max-height: 200px; max-width: 510px;"></pre>
+				<pre id="update_changes"></pre>
 				<?php if (false) {
 					?>
 					<br><em class="note"><?php i18n("Note: Your installation is a nightly build. Atheos might be unstable."); ?></em><br>

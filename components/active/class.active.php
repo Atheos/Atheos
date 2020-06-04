@@ -60,13 +60,12 @@ class Active {
 	//////////////////////////////////////////////////////////////////
 	// Check File
 	//////////////////////////////////////////////////////////////////
-
 	public function check() {
 		$activeUsers = array();
-		foreach ($this->activeFiles as $user => $data) {
+		foreach ($this->activeFiles as $user => $files) {
 			if ($user === $this->username) {
 				continue;
-			} elseif (isset($this->activeFiles[$user][$this->path])) {
+			} elseif (isset($files[$this->path])) {
 				$activeUsers[] = ucfirst($user);
 			}
 		}
@@ -133,7 +132,7 @@ class Active {
 	public function markFileAsFocused() {
 		$userActiveFiles = $this->activeFiles[$this->username];
 
-		foreach ($userActiveFiles as $path => $status) {
+		foreach ($userActiveFiles as $path) {
 			$userActiveFiles[$path] = $path === $this->path ? "focus": "active";
 		}
 

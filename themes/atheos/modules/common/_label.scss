@@ -1,0 +1,15 @@
+label {
+	display: block;
+	font-size: 18px;
+
+	&.title {
+		font-size: $fontSizeH1;
+		padding: 2px 8px;
+		font-weight: 700;
+		background-color: $foreground;
+	}
+
+	&.dialog {
+		font-size: $fontSizeH3;
+	}
+}
