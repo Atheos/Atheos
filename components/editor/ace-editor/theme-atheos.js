@@ -1,12 +1,12 @@
-ace.define("ace/theme/atheos",["require","exports","module","ace/lib/dom"], function(require, exports, module) {
+ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], function(require, exports, module) {
 
-exports.isDark = true;
-exports.cssClass = "ace-atheos";
-exports.cssText = `
+	exports.isDark = true;
+	exports.cssClass = "ace-atheos";
+	exports.cssText = `
 .ace-atheos .ace_gutter {
  background: #121212;
- color: #929292; border-right: 1px solid #282828;
-
+ color: #929292;
+ border-right: 1px solid #282828;
 }
 
 .ace-atheos .ace_gutter-cell.ace_warning {
@@ -35,7 +35,7 @@ background: #232323;
 
  .ace-atheos {
  background-color: #191919;
- color: #929292;
+ color: #FAFAFA;
 }
 
  .ace-atheos .ace_cursor {
@@ -139,12 +139,13 @@ background: #232323;
 }
 `;
 
-var dom = require("../lib/dom");
-dom.importCssString(exports.cssText, exports.cssClass);
-});                (function() {
-                    ace.require(["ace/theme/atheos"], function(m) {
-                        if (typeof module == "object" && typeof exports == "object" && module) {
-                            module.exports = m;
-                        }
-                    });
-                })();
+	var dom = require("../lib/dom");
+	dom.importCssString(exports.cssText, exports.cssClass);
+});
+(function() {
+	ace.require(["ace/theme/atheos"], function(m) {
+		if (typeof module == "object" && typeof exports == "object" && module) {
+			module.exports = m;
+		}
+	});
+})();
