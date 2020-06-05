@@ -98,7 +98,6 @@
 			}
 			echo({
 				url: url,
-				type: 'GET',
 				data: data,
 				success: function(reply) {
 					if (reply.status && reply.status === 'error') {
