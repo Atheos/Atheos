@@ -66,8 +66,6 @@
 
 			var editor = oX('#editor-region');
 
-			// editor = oX('#editor-region');
-
 			editor.on('h-resize-root, v-resize-root', function(e) {
 				var wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
@@ -131,10 +129,8 @@
 			instance.setHighlightActiveLine(self.settings.highlightLine);
 			instance.setDisplayIndentGuides(self.settings.indentGuides);
 			instance.getSession().setUseWrapMode(self.settings.wrapMode);
-			self.setTabSize(self.settings.tabSize,
-				instance);
-			self.setSoftTabs(self.settings.softTabs,
-				instance);
+			self.setTabSize(self.settings.tabSize, instance);
+			self.setSoftTabs(self.settings.softTabs, instance);
 		},
 
 
@@ -805,30 +801,6 @@
 			// 	}
 			// });
 
-			// Find
-			// instance.commands.addCommand({
-			// 	name: 'Find',
-			// 	bindKey: {
-			// 		win: 'Ctrl-F',
-			// 		mac: 'Command-F'
-			// 	},
-			// 	exec: function(e) {
-			// 		self.openSearch('find');
-			// 	}
-			// });
-
-			// Find + Replace
-			// instance.commands.addCommand({
-			// 	name: 'Replace',
-			// 	bindKey: {
-			// 		win: 'Ctrl-R',
-			// 		mac: 'Command-R'
-			// 	},
-			// 	exec: function(e) {
-			// 		self.openSearch('replace');
-			// 	}
-			// });
-
 			instance.commands.addCommand({
 				name: 'Move Up',
 				bindKey: {
@@ -851,97 +823,7 @@
 				}
 			});
 
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Present the Search (Find + Replace) dialog box
-		//
-		// Parameters:
-		//   type - {String} Optional, defaults to find. Provide 'replace' for replace dialog.
-		//
-		//////////////////////////////////////////////////////////////////
-
-		openSearch: function(type) {
-			if (this.getActive()) {
-				var highlight = atheos.editor.getSelectedText();
-				atheos.modal.load(400,
-					'components/editor/dialog.php', {
-						action: type,
-						highlight
-					}, (modal) => {
-						modal.on('submit', function(e) {
-							e.preventDefault();
-							self.search(type);
-						});
-					});
-				atheos.common.hideOverlay();
-			} else {
-				atheos.toast.show('error', 'No Open Files');
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Perform Search (Find + Replace) operation
-		//
-		// Parameters:
-		//   action - {String} find | replace | replaceAll
-		//   i - {Editor} Defaults to active Editor instance
-		//
-		//////////////////////////////////////////////////////////////////
-
-		search: function(action, i) {
-			i = i || this.getActive();
-			if (!i) return;
-			var find = oX('#modal_wrapper input[name="find"]'),
-				replace = oX('#modal_wrapper input[name="replace"]');
-
-			find = find ? find.value() : false;
-			replace = replace ? replace.value() : false;
-
-
-			switch (action) {
-				case 'find':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-
-					break;
-
-				case 'replace':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-					i.replace(replace);
-
-					break;
-
-				case 'replaceAll':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-					i.replaceAll(replace);
-
-					break;
-			}
 		}
-
 	};
 
 })(this);
