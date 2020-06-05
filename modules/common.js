@@ -22,7 +22,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
