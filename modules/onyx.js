@@ -229,7 +229,7 @@
 
 		} else if (Array.isArray(selector)) {
 			const elems = [];
-			src.forEach(i => elems.push(...argToElement(i)));
+			src.forEach((i) => elems.push(...argToElement(i)));
 			return elems;
 
 		} else if (selector.isOnyx) {
@@ -355,10 +355,14 @@
 
 	let IO = (element, type, value, key) => {
 		if (domTypes.includes(type)) {
-			if (value) element[type] = value;
+			if (value) {
+				element[type] = value;
+			}
 			return element[type];
 		} else if (type === 'prop') {
-			if (value) element[key] = value;
+			if (value) {
+				element[key] = value;
+			}
 			return element[key];
 		} else if (type === 'attr') {
 			if (typeof key === 'string') {
@@ -420,7 +424,9 @@
 
 		selector = isSelectorValid(selector) ? selector : element;
 
-		if (!element) return;
+		if (!element) {
+			return;
+		}
 
 		// let elements = argToElements(selector);
 		// let iterator = elements.forEach.bind(elements);
