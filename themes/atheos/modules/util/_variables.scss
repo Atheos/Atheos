@@ -1,9 +1,6 @@
-/* SCSS VARIABLES */
-
-// THESE ARE THE ONES TO USE
-$fontColorMajor: $base07;
-$fontColorMinor: $base04;
-$fontColorSmall: $base04;
+$fontColorMajor: $white;
+$fontColorMinor: $metal;
+$fontColorSmall: $smoke;
 
 $fontSizeH1: 24px;
 $fontSizeH2: 20px;
@@ -12,13 +9,13 @@ $fontSizeH4: 16px;
 $fontSizePr: 14px;
 $fontSizeSm: 12px;
 
-$foreground: $base01;
-$background: #191919;
-$midground: #474747;
-$highlight: #393939;
+$foreground: $coal;
+$background: $black;
+$midground: $smoke;
+$highlight: $smoke;
 
-$borderLight: #8c8c8c;
-$borderHeavy: #393939;
+$borderLight: $metal;
+$borderHeavy: $smoke;
 
 $colorMajor: $blue;
 $colorMinor: $aqua;
@@ -37,13 +34,32 @@ $bottomBarHeight: 23px;
 $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
-$inputBackground: #1D1D1D;
-$tabListBackground:$colorMajor;
+$inputBackground: $ebony;
+$tabListBackground: $colorMajor;
 
-// #303030 -> Base01
-// #333 -> Base02
-// #ccc -> $font-color-secondary
-// #999 -> $font-color-subtle
+
+:root {
+	--red: $red;
+	--orange: $orange;
+	--green: $green;
+	--cyan: $cyan;
+	--blue: $blue;
+	--purple: $purple;
+	--olive: $olive;
+
+	--raven: $raven;
+	--metal: $metal;
+	--teal: $teal;
+	
+	--black: $black;
+
+	--background: $background;
+	--foreground: $foreground;
+
+	--fcMajor: $fontColorMajor;
+	--fcMinor: $fontColorMinor;
+	--fcSmall: $fontColorSmall;
+}
 
 @mixin box-shadow {
 	// box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);
