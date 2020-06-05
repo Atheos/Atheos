@@ -18,8 +18,13 @@
 	background-color: $background;
 
 	form {
-		padding: 10px;
-		background-color: $foreground;
+		padding: 0 10px;
+		background-color: $midground;
+		
+		toolbar {
+			margin: 0 -10px;
+			text-align: right;
+		}
 	}
 
 }
