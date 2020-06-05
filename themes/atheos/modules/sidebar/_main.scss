@@ -7,7 +7,7 @@
 	-khtml-user-select: none;
 	-webkit-user-select: none;
 	user-select: none;
-	background: #1a1a1a;
+	background-color: $background;
 	transition: right $transitionDuration ease-in-out, left $transitionDuration ease-in-out;
 	// letter-spacing: -0.4px;
 	white-space: nowrap;
