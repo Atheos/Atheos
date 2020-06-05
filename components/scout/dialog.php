@@ -37,39 +37,31 @@ switch ($action) {
 		}
 
 		?>
+		<label class="title"><i class="fas fa-search"></i><?php i18n("Search Files"); ?></label>
 		<form>
 			<table id="probe_table">
 				<tr>
 					<td width="65%">
-						<label><?php i18n("Search Files:"); ?></label>
-						<input type="text" name="probe_query" autofocus="autofocus">
+						<input type="text" name="probe_query" placeholder="<?php i18n("query"); ?>" autofocus="autofocus">
 					</td>
 					<td width="5%">&nbsp;&nbsp;</td>
 					<td>
-						<label><?php i18n("In:"); ?></label>
-						<select name="probe_type">
-							<option value="0"><?php i18n("Current Project"); ?></option>
-							<?php if (Common::checkAccess("configure")) {
-								?>
-								<option value="1"><?php i18n("Workspace Projects"); ?></option>
-								<?php
-							} ?>
-						</select>
+						<input type="text" name="probe_filter" placeholder="<?php i18n("space seperated file types"); ?>">
 					</td>
-				</tr>
-				<tr>
-					<td coli="3">
-						<label><?php i18n("File Type:"); ?></label>
-						<input type="text" name="probe_filter" placeholder="<?php i18n("space seperated file types eg: js c php"); ?>">
-					</td>
+					<!--<td>-->
+					<!--	<label for="probe_type"><?php i18n("Within WorkSpace:"); ?></label>-->
+					<!--	<input type="checkbox" name="probe_type" id="probe_type">-->
+					<!--</td>					-->
 				</tr>
 			</table>
 			<pre id="probe_results"></pre>
 			<div id="probe_processing" class="loader">
 				<h2><?php echo($loadingText); ?></h2>
 			</div>
-			<button class="btn-left"><?php i18n("Search"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
+			<toolbar>
+				<button class="btn-left"><?php i18n("Search"); ?></button>
+			</toolbar>
+
 		</form>
 		<?php
 		break;
