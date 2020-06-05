@@ -69,7 +69,7 @@ class Active {
 				$activeUsers[] = ucfirst($user);
 			}
 		}
-		if (count($activeUsers) !== 0) {
+		if (!empty($activeUsers)) {
 			$file = substr($this->path, strrpos($this->path, "/") + 1);
 			Common::sendJSON("warning", "File '$file' currently opened by: " . implode(", ", $activeUsers));
 		} else {
