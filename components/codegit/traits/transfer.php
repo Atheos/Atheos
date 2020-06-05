@@ -23,9 +23,6 @@ trait Transfer {
 
 		$command = $this->checkUserInfo($command);
 		$result = $this->executeCommand($command);
-		Common::debug($command);
-		Common::debug($result);
-		Common::debug($this->resultArray);
 
 		Common::sendJSON("error", "Pushed.");
 		return $this->parseShellResult($result, "Repository pushed!", "Failed to push repo!");
