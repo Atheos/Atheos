@@ -246,14 +246,14 @@
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(basename);
+			var fileClass = type === 'directory' ? 'fa fa-folder blue' : fileIcons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
 				nodeClass = 'fa fa-plus';
 			}
 
-			fileClass = fileClass || 'fa fa-file medium-green';
+			fileClass = fileClass || 'fa fa-file green';
 
 			return `<li class="draggable">
 			<a data-type="${type}" data-path="${path}">
