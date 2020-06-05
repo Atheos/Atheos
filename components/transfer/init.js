@@ -20,7 +20,7 @@
 	'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		ajax = global.ajax,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
