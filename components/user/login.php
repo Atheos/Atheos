@@ -1,11 +1,11 @@
 <canvas id="synthetic"></canvas>
 <div id="logo">
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" width="320" height="400" version="1.1">
-		<path class="delay-0" style="fill:#111111" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
-		<path class="delay-1" style="fill:#0074d9" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
-		<path class="delay-2" style="fill:#0074d9" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
-		<path class="delay-3" style="fill:#0074d9" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
-		<path class="delay-3" style="fill:#0074d9" d="M960 980L520 740v80l440 240 440-220v-80z" />
+		<path class="delay-0" style="fill:var(--black)" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
+		<path class="delay-1" style="fill:var(--blue)" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
+		<path class="delay-2" style="fill:var(--blue)" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
+		<path class="delay-3" style="fill:var(--blue)" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
+		<path class="delay-3" style="fill:var(--blue)" d="M960 980L520 740v80l440 240 440-220v-80z" />
 	</svg>
 </div>
 
