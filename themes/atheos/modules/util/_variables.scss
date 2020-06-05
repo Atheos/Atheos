@@ -12,7 +12,7 @@ $fontSizeSm: 12px;
 $foreground: $coal;
 $background: $black;
 $midground: $smoke;
-$highlight: $smoke;
+$highlight: $grey;
 
 $borderLight: $metal;
 $borderHeavy: $smoke;
@@ -82,6 +82,6 @@ $tabListBackground: $colorMajor;
 @mixin input() {
 	background-color: $inputBackground;
 	border: none;
-	border-bottom: 1px solid $borderLight;
+	border-bottom: 2px solid $borderLight;
 	color: $fontColorMajor;
 }
