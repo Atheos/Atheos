@@ -84,21 +84,20 @@
 
 				oX('#probe_processing').show();
 
-				var query = oX('#modal_content form input[name="probe_query"]').value();
-				var extensions = oX('#modal_content form input[name="probe_filter"]').value();
+				var query = oX('#modal_content input[name="probe_query"]').value();
+				var extensions = oX('#modal_content input[name="probe_filter"]').value();
 				var filter = extensions.trim();
+				// var type = oX('#modal_content select[name="probe_type"]').prop('checked');
 				if (filter !== '') {
 					//season the string to use in find command
 					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
 				}
 
-				var type = oX('#modal_content form select[name="probe_type"]').value();
-
 				echo({
 					url: self.controller,
 					data: {
 						action: 'probe',
-						type,
+						// type,
 						path,
 						query,
 						filter
@@ -139,7 +138,7 @@
 						results = table.html();
 						atheos.flow.slide('open', table.el);
 
-						self.saveSearchResults(query, type, extensions, results);
+						self.saveSearchResults(query, extensions, results);
 						atheos.modal.resize();
 
 					}
@@ -154,9 +153,9 @@
 				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
 				if (lastSearched) {
-					oX('#modal_content form input[name="probe_query"]').value(lastSearched.query);
-					oX('#modal_content form select[name="probe_type"]').value(lastSearched.type);
-					oX('#modal_content form input[name="probe_filter"]').value(lastSearched.extensions);
+					oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
+					oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
+					// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
 					if (lastSearched.results !== '') {
 						table.html(lastSearched.results);
 						atheos.flow.slide('open', table.el);
@@ -171,12 +170,12 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save Search Results
 		//////////////////////////////////////////////////////////////////////80
-		saveSearchResults: function(query, type, extensions, results) {
+		saveSearchResults: function(query, extensions, results) {
 			var lastSearched = {
 				query,
-				type,
 				extensions,
-				results
+				results,
+				// type
 			};
 			atheos.storage('lastSearched', JSON.stringify(lastSearched));
 		},
