@@ -4,22 +4,36 @@
 	Based on File-Icons
 /*============================================================================*/
 
-$grey:    #666666;
+$grey: #666666;
 
-$base00: #121212; //# ----
-$base01: #404040; //# ---
-$base04: #8C8C8C; //# +
-$base07: #FAFAFA; //# ++++
+$white: #F5F9FF;
+$silver: #D5D9DD;
+$gray: #A5A9AA;
+$metal: #757577;
+$charcoal: #414141;
+$smoke: #353533;
+$raven: #252525;
+$ebony: #1C1C1E;
+$black: #1A1A1B; //#17171C;
+
 
 // Grey
 $medium-grey: $grey;
 $light-grey: lighten($grey, $adjust-tone);
-$dark-grey:   darken($grey, $adjust-tone);
+$dark-grey: darken($grey, $adjust-tone);
 
 /*============================================================================*
 	CSS CLASSES
 /*============================================================================*/
 
-.light-grey:before    { color: $light-grey; }
-.medium-grey:before   { color: $medium-grey; }
-.dark-grey:before     { @include brighten-grey-if-needed($dark-grey, 15%); }
+.light-grey:before {
+	color: $light-grey;
+}
+
+.medium-grey:before {
+	color: $medium-grey;
+}
+
+.dark-grey:before {
+	@include brighten-grey-if-needed($dark-grey, 15%);
+}
