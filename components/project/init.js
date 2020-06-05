@@ -177,7 +177,7 @@
 			oX('#file-manager').empty();
 			oX('#file-manager').html(`<ul><li>
 									<a id="project-root" data-type="root" data-path="${path}">
-									<i class="root fa fa-folder medium-blue"></i>
+									<i class="root fa fa-folder blue"></i>
 									<span>${name}</span>
 									</a>
 								</li></ul>`);

@@ -57,13 +57,13 @@
 	}
 
 	div {
-		background-color: $dark-green;
+		background-color: $green;
 		// background: linear-gradient(90deg, #{$red} 10%, #{$green} 100%);
 		// background: linear-gradient(-45deg, #{$green} 25%, #{$dark-green} 25%, #{$dark-green} 50%, #{$green} 50%, #{$green} 75%, #{$dark-green} 75%, #{$dark-green});
 		// background-size: 20px 20px;
 
 		&.error {
-			background-color: $dark-red;
+			background-color: $red;
 		}
 	}
 
