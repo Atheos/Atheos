@@ -292,7 +292,7 @@
 					atheos.toast.show(data);
 					if (data.status !== 'error') {
 						message.empty();
-						oX('input[type="checkbox"][group=cg_overview"][parent="true"').prop('checked', false);
+						oX('input[type="checkbox"][group="cg_overview"][parent="true"').prop('checked', false);
 						checkboxes.forEach((checkbox) => {
 							if (checkbox.prop('checked')) {
 								checkbox.parent('tr').remove();
