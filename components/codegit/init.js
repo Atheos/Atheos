@@ -402,7 +402,6 @@
 					branch
 				},
 				success: function(reply) {
-					log(reply);
 					return;
 					if (reply.status === 'login_required') {
 						atheos.toast.show('error', reply.message);
