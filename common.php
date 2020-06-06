@@ -128,6 +128,7 @@ class Common {
 			require_once(AUTH_PATH);
 		}
 
+		// Check for langauge settings
 		global $lang;
 		if (isset($_SESSION['lang'])) {
 			include BASE_PATH."/languages/{$_SESSION['lang']}.php";
@@ -135,6 +136,7 @@ class Common {
 			include BASE_PATH."/languages/".LANGUAGE.".php";
 		}
 
+		// Add data to global variables
 		if ($_POST && !empty($_POST)) {
 			foreach ($_POST as $key => $value) {
 				Common::$data["post"][$key] = $value;
@@ -399,8 +401,6 @@ class Common {
 
 		$userACL = $users[$username]["userACL"];
 
-		$userHasAccess = $userACL === "full" ? true : false;
-
 		if ($userACL === "full") {
 			return true;
 		} else {
@@ -408,7 +408,7 @@ class Common {
 				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
 					return true;
 				} elseif (in_array($projectName, $userACL)) {
-					Common::debug("Path:$path, ProjectPath: $projectPath");
+					Common::$debug[] = "Path:$path, ProjectPath: $projectPath";
 				}
 			}
 		}
@@ -420,7 +420,7 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function data($key, $type = false) {
 		$value = false;
-		
+
 		if (array_key_exists($key, Common::$data["post"])) {
 			$value = Common::$data["post"][$key];
 		} elseif (array_key_exists($key, Common::$data["get"])) {
