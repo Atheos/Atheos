@@ -80,6 +80,19 @@
 					oX('#show_login_options').show();
 					oX('#login_options').hide();
 				});
+
+				oX('#show_password').on('click', function(e) {
+					var field = oX("input[name='password']");
+					var icon = oX("#show_password");
+					
+					if (field.prop('type') === "password") {
+						field.prop('type', 'text');
+					} else {
+						field.prop('type', 'password');
+					}
+					icon.switchClass('fa-eye', 'fa-eye-slash');
+
+				});
 			}
 
 			amplify.subscribe('chrono.mega', function() {

@@ -17,7 +17,7 @@
 
 		<label for="password"><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
 		<input id="password" type="password" name="password" autocomplete="current-password">
-		<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
+		<i class="fas fa-eye-slash merged-icon" id="show_password"></i>
 
 		<div id="login_options">
 			<label for"theme"><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
