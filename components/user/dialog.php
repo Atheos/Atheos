@@ -75,13 +75,14 @@ switch ($action) {
 	// Delete User
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
-
 		?>
+			<label class="title"><?php i18n("Confirm User Deletion"); ?></label>
 		<form>
-			<label><?php i18n("Confirm User Deletion"); ?></label>
 			<pre><?php i18n("Account:"); echo(ucfirst($username)); ?></pre>
-			<button class="btn-left"><?php i18n("Confirm"); ?></button>
-			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Cancel"); ?></button>
+			<toolbar>
+				<button class="btn-left"><?php i18n("Confirm"); ?></button>
+			</toolbar>
+
 		</form>
 		<?php
 		break;
@@ -99,7 +100,7 @@ switch ($action) {
 			<?php
 		} else {
 			?>
-			<h1><i class="fas fa-user-alt"></i><?php i18n("User List"); ?></h1>
+			<label class="title"><i class="fas fa-user-alt"></i><?php i18n("User List"); ?></label>
 
 			<table width="100%" style="word-wrap: break-word;word-break: break-all;">
 				<th width="150"><?php i18n("Username"); ?></th>
@@ -113,16 +114,16 @@ switch ($action) {
 					?>
 					<tr>
 						<td><?php echo(ucfirst($user)); ?></td>
-						<td class="action"><a onclick="atheos.user.changePassword('<?php echo($user); ?>');" class="fas fa-key"></a></td>
-						<td class="action"><a onclick="atheos.user.showUserACL('<?php echo($user); ?>');" class="fas fa-archive"></a></td>
+						<td class="center"><a onclick="atheos.user.changePassword('<?php echo($user); ?>');" class="fas fa-key orange"></a></td>
+						<td class="center"><a onclick="atheos.user.showUserACL('<?php echo($user); ?>');" class="fas fa-archive blue"></a></td>
 						<?php
 						if ($activeUser == $user) {
 							?>
-							<td class="action"><a onclick="atheos.toast.show('error', 'You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
+							<td class="center"><a onclick="atheos.toast.show('error', 'You Cannot Delete Your Own Account');" class="fas fa-ban"></a></td>
 							<?php
 						} else {
 							?>
-							<td class="action"><a onclick="atheos.user.delete('<?php echo($user); ?>');" class="fas fa-trash-alt"></a></td>
+							<td class="center"><a onclick="atheos.user.delete('<?php echo($user); ?>');" class="fas fa-trash-alt metal"></a></td>
 							<?php
 						}
 						?>
@@ -131,8 +132,9 @@ switch ($action) {
 				}
 				?>
 			</table>
-			<button class="btn-left" onclick="atheos.user.create();"><?php i18n("New Account"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
+			<toolbar>
+				<button class="btn-left" onclick="atheos.user.create();"><?php i18n("New Account"); ?></button>
+			</toolbar>
 			<?php
 		}
 		break;
@@ -149,6 +151,7 @@ switch ($action) {
 		// Get control list (if exists)
 
 		?>
+		<label class="title"><i class="fas fa-user-alt"></i><?php i18n("User Project Access"); ?></label>
 		<form>
 			<label><?php i18n("Project Access for "); ?><?php echo(ucfirst($username)); ?></label>
 			<select id="aclSelect" name="userACL" onchange="atheos.user.toggleACL()">
@@ -164,17 +167,18 @@ switch ($action) {
 						if ($userACL !== "full" && in_array($projectPath, $userACL)) {
 							$sel = 'checked="checked"';
 						}
-						echo("<tr><td width=\"5\"><input type=\"checkbox\" name=\"project\" $sel value=\"$projectPath\"></td><td>$projectName</td></tr>");
+						echo("<tr><td width=\"5\"><input type=\"checkbox\" class=\"large\" name=\"project\" $sel value=\"$projectPath\"></td><td>$projectName</td></tr>");
 					}
 					?>
 				</table>
 			</div>
-			<button class="btn-left"><?php i18n("Update"); ?></button>
-			<button class="btn-right" onclick="atheos.user.list();return false;"><?php i18n("Close"); ?></button>
+			<toolbar>
+				<button class="btn-left"><?php i18n("Update"); ?></button>
+			</toolbar>
 		</form>
 		<?php
 		break;
-		
+
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
