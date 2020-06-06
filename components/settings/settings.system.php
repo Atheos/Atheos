@@ -71,10 +71,10 @@
 		<td><?php i18n("Project Dock Trigger"); ?></td>
 		<td>
 			<toggle>
-				<input id="project_openTrigger_single" data-setting="project.openTrigger" value="single" name="project.openTrigger" type="radio" checked />
-				<label for="project_openTrigger_single"><?php i18n("Single Click"); ?></label>
-				<input id="project_openTrigger_double" data-setting="project.openTrigger" value="double" name="project.openTrigger" type="radio" />
-				<label for="project_openTrigger_double"><?php i18n("Double Click"); ?></label>
+				<input id="project_openTrigger_click" data-setting="project.openTrigger" value="click" name="project.openTrigger" type="radio" checked />
+				<label for="project_openTrigger_click"><?php i18n("Single Click"); ?></label>
+				<input id="project_openTrigger_dblclick" data-setting="project.openTrigger" value="dblclick" name="project.openTrigger" type="radio" />
+				<label for="project_openTrigger_dblclick"><?php i18n("Double Click"); ?></label>
 			</toggle>			
 		</td>
 	</tr>
