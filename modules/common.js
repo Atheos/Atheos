@@ -36,6 +36,7 @@
 
 			// self.initDropdown();
 			self.initTogglePassword();
+			self.initCheckMonitors();
 		},
 
 
@@ -132,7 +133,7 @@
 				if (!field) {
 					return;
 				}
-				if (field.prop('type') === "password") {
+				if (field.prop('type') === 'password') {
 					field.prop('type', 'text');
 				} else {
 					field.prop('type', 'password');
@@ -141,6 +142,31 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Checkbox Group Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initCheckMonitors: function() {
+			oX('input[type="checkbox"][group]', true).on('click', function(e) {
+				var input = oX(e.target);
+				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
+				var checked = input.prop('checked');
+
+				if (input.attr('parent')) {
+					members.forEach((c) => c.prop('checked', checked));
+				}
+
+				var parent = members.filter((c) => c.attr('parent'))[0];
+				if (!checked) {
+					parent.prop('checked', checked);
+				} else {
+					var allChecked = true;
+					members.forEach((c) => {
+						allChecked = allChecked && (c.prop('checked') === true);
+					});
+					parent.prop('checked', allChecked);
+				}
+			});
+		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// SerializeForm
