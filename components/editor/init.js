@@ -738,7 +738,7 @@
 			i = i || this.getActive();
 			if (!i) return;
 			i.scrollToLine(line, true, true);
-			// i.gotoLine(line, 0, true);
+			i.gotoLine(line, 0, true);
 			self.focus();
 		},
 
