@@ -86,8 +86,6 @@
 					return;
 				}
 
-				log(type);
-
 				if (type === 'radio') {
 					if (child.value() === value.toString()) {
 						child.prop('checked', true);
