@@ -9,7 +9,7 @@
 
 		<thead>
 			<tr>
-				<th><input type="checkbox" class="large" id="check_all"></th>
+				<th><input group="cg_overview" parent="true" type="checkbox" class="large"></th>
 				<th>Status</th>
 				<th>File</th>
 				<th>Actions</th>
@@ -23,13 +23,13 @@
 					?>
 					<tr data-file="<?php echo $file ?>">
 						<td>
-							<input type="checkbox" class="large" data-line="<?php echo $line ?>">
+							<input group="cg_overview" type="checkbox" class="large">
 						</td>
 						<td class="<?php echo $key ?>"><?php echo $key ?></td>
-						<td data-line="<?php echo $line ?>" class="file"><?php echo $file ?></td>
+						<td class="file"><?php echo $file ?></td>
 						<td>
-							<button class="git_button git_diff" data-line="<?php echo $line ?>">Diff</button>
-							<button disabled class="git_button git_undo" data-line="<?php echo $line ?>">Undo</button>
+							<button class="git_diff">Diff</button>
+							<button disabled class="git_undo">Undo</button>
 						</td>
 					</tr>
 					<?php
