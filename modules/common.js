@@ -161,7 +161,9 @@
 				} else {
 					var allChecked = true;
 					members.forEach((c) => {
-						allChecked = allChecked && (c.prop('checked') === true);
+						if (c !== parent) {
+							allChecked = allChecked && (c.prop('checked') === true);
+						}
 					});
 					parent.prop('checked', allChecked);
 				}
