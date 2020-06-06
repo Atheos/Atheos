@@ -196,7 +196,7 @@
 			var fn = function() {
 				//var session = new EditSession(content, new Mode());
 				var session = new EditSession(content);
-				session.setMode("ace/mode/" + mode);
+				session.setMode('ace/mode/' + mode);
 				session.setUndoManager(new UndoManager());
 				session.path = path;
 				session.serverMTime = modifyTime;
@@ -593,8 +593,8 @@
 					newSession.removeListener('changeMode', fn);
 				};
 
-				newSession.on("changeMode", fn);
-				newSession.setMode("ace/mode/" + mode);
+				newSession.on('changeMode', fn);
+				newSession.setMode('ace/mode/' + mode);
 			} else {
 				// A folder was renamed
 				var newKey;
@@ -615,8 +615,8 @@
 				},
 				success: function() {
 					amplify.publish('active.onRename', {
-						"oldPath": oldPath,
-						"newPath": newPath
+						'oldPath': oldPath,
+						'newPath': newPath
 					});
 				}
 			});
