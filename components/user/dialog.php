@@ -42,11 +42,14 @@ switch ($action) {
 		}
 
 		?>
+		<label class="title"><i class="fas fa-key"></i><?php i18n("Change Password"); ?></label>
 		<form>
 			<label><?php i18n("New Password"); ?></label>
 			<input type="password" name="password1" autofocus="autofocus">
+			<i for="password1"  class="fas fa-eye-slash merged-icon togglePassword"></i>
 			<label><?php i18n("Confirm Password"); ?></label>
 			<input type="password" name="password2">
+			<i for="password2" class="fas fa-eye-slash merged-icon togglePassword"></i>
 			<button class="btn-left"><?php i18n("Change %{username}%&apos;s Password", array("username" => ucfirst($username))) ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
 		</form>
@@ -58,6 +61,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		?>
+		<label class="title"><i class="fas fa-plus-circle"></i><?php i18n("Create New User"); ?></label>
 		<form>
 			<label><?php i18n("Username"); ?></label>
 			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
@@ -76,7 +80,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
 		?>
-			<label class="title"><?php i18n("Confirm User Deletion"); ?></label>
+		<label class="title"><i class="fas fa-trash-alt"></i><?php i18n("Confirm User Deletion"); ?></label>
 		<form>
 			<pre><?php i18n("Account:"); echo(ucfirst($username)); ?></pre>
 			<toolbar>
