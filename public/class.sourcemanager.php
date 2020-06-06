@@ -70,7 +70,7 @@ class SourceManager {
 		}
 	}
 
-	function loadAndMinifyJS($type, $minifiedFileName, $files) {
+	function loadAndMinifyJS($minifiedFileName, $files) {
 
 		$content = '';
 		$minified = "/* Creation Time: " . date('Y-m-d H:i:s', time()) . "*/" . PHP_EOL;
@@ -79,19 +79,8 @@ class SourceManager {
 			if (is_readable($file)) {
 				$content = file_get_contents($file);
 				$minified .= "/* $file */" . PHP_EOL;
-				if ($type === "js") {
-					$minifier = new Minify\JS($content);
-					$minified .= $minifier->minify() . ';' . PHP_EOL;
-				} else {
-					$minifier = new Minify\CSS($content);
-					if ($minifiedFileName === "fonts.min.css") {
-						$minifier->setMaxImportSize(100);
-						$minifier->setImportExtensions(array(
-							'woff2' => 'application/font-woff2'
-						));
-					}
-					$minified .= $minifier->minify() . PHP_EOL;
-				}
+				$minifier = new Minify\JS($content);
+				$minified .= $minifier->minify() . ';' . PHP_EOL;
 			}
 		}
 		file_put_contents($minifiedFileName, $minified);
@@ -142,16 +131,16 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinifyJS("js", $minifiedFileName, $files);
+					$this->loadAndMinifyJS($minifiedFileName, $files);
 				}
 			} else {
-				$this->loadAndMinifyJS("js", $minifiedFileName, $files);
+				$this->loadAndMinifyJS($minifiedFileName, $files);
 			}
 			echo("<script src=\"$minifiedFileName\"></script>");
 		}
 	}
 
-	function loadAndMinifyCSS($type, $minifiedFileName, $files) {
+	function loadAndMinifyCSS($minifiedFileName, $files) {
 		$minifier = new Minify\CSS();
 
 		foreach ($files as $file) {
@@ -199,10 +188,10 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinifyCSS("css", $minifiedFileName, $files);
+					$this->loadAndMinifyCSS($minifiedFileName, $files);
 				}
 			} else {
-				$this->loadAndMinifyCSS("css", $minifiedFileName, $files);
+				$this->loadAndMinifyCSS($minifiedFileName, $files);
 			}
 			echo("<link rel=\"stylesheet\" href=\"$minifiedFileName\">");
 		}
