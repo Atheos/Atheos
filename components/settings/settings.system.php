@@ -38,10 +38,10 @@
 		<td><?php i18n("Filemanager Trigger"); ?></td>
 		<td>
 			<toggle>
-				<input id="filemanager_openTrigger_single" data-setting="filemanager.openTrigger" value="single" name="filemanager.openTrigger" type="radio" checked />
-				<label for="filemanager_openTrigger_single"><?php i18n("Single Click"); ?></label>
-				<input id="filemanager_openTrigger_double" data-setting="filemanager.openTrigger" value="double" name="filemanager.openTrigger" type="radio" />
-				<label for="filemanager_openTrigger_double"><?php i18n("Double Click"); ?></label>
+				<input id="filemanager_openTrigger_click" data-setting="filemanager.openTrigger" value="click" name="filemanager.openTrigger" type="radio" checked />
+				<label for="filemanager_openTrigger_click"><?php i18n("Single Click"); ?></label>
+				<input id="filemanager_openTrigger_dblclick" data-setting="filemanager.openTrigger" value="dblclick" name="filemanager.openTrigger" type="radio" />
+				<label for="filemanager_openTrigger_dblclick"><?php i18n("Double Click"); ?></label>
 			</toggle>
 		</td>
 	</tr>
