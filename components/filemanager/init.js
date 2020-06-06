@@ -549,7 +549,6 @@
 						type: type
 					},
 					success: function(reply) {
-						log(reply);
 						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'File Created');
 							atheos.modal.unload();
