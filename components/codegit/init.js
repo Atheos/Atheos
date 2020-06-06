@@ -53,10 +53,7 @@
 		dialog: 'components/codegit/dialog.php',
 		location: '',
 		activeRepo: '',
-		line: 0,
 		files: [],
-		network_graph: {},
-
 
 		repoBanner: null,
 		repoStatus: null,
@@ -210,7 +207,6 @@
 					}
 				});
 
-				self.monitorCheckBoxes();
 				atheos.modal.resize();
 			};
 
@@ -239,10 +235,6 @@
 					success: function(reply) {
 						oX('panel').empty();
 						oX('panel').html(reply);
-						if (panel === 'overview') {
-							self.monitorCheckBoxes();
-						}
-
 					}
 				});
 			}
@@ -267,7 +259,7 @@
 					path
 				},
 				success: function(reply) {
-					if (reply.status == 'success') {
+					if (reply.status === 'success') {
 						// $('.directory[data-path="' + path + '"]').addClass('hasRepo');
 						// atheos.filemanager.rescan(path);
 					}
@@ -343,7 +335,7 @@
 				},
 				success: function(data) {
 					var status = "Unknown";
-					if (data.status != "error") {
+					if (data.status !== "error") {
 						if (data.added.length !== 0 ||
 							data.deleted.length !== 0 ||
 							data.modified.length !== 0 ||
@@ -385,182 +377,6 @@
 			this.showDialog('log', repo, path);
 		},
 
-
-		push: function() {
-			var remote = oX('#git_remotes').value();
-			var branch = oX('#git_branches').value();
-
-			// this.showDialog('overview', this.location);
-			// success: this.path + 'controller.php?action=push&path=' + this.location + '&remote=' + remote + '&branch=' + branch,
-
-			echo({
-				url: self.controller,
-				data: {
-					action: 'push',
-					repo: self.activeRepo,
-					remote,
-					branch
-				},
-				success: function(reply) {
-					return;
-					if (reply.status === 'login_required') {
-						atheos.toast.show('error', reply.message);
-						codegit.showDialog('login', codegit.location);
-						codegit.login = function() {
-							var username = $('.git_login_area #username').val();
-							var password = $('.git_login_area #password').val();
-							codegit.showDialog('overview', codegit.location);
-							$.post(codegit.path + 'controller.php?action=push&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
-								username: username,
-								password: password
-							}, function(result) {
-								reply = JSON.parse(result);
-								atheos.toast[reply.status](reply.message);
-							});
-						};
-					} else if (reply.status === 'passphrase_required') {
-						atheos.toast.show('error', reply.message);
-						codegit.showDialog('passphrase', codegit.location);
-						codegit.login = function() {
-							var passphrase = $('.git_login_area #passphrase').val();
-							codegit.showDialog('overview', codegit.location);
-							$.post(codegit.path + 'controller.php?action=push&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
-								passphrase: passphrase
-							}, function(reply) {
-								reply = JSON.parse(reply);
-								atheos.toast[reply.status](reply.message);
-							});
-						};
-					} else {
-						atheos.toast[reply.status](reply.message);
-					}
-				}
-			});
-		},
-
-		pull: function() {
-			var codegit = this;
-			var remote = $('.git_push_area #git_remotes').val();
-			var branch = $('.git_push_area #git_branches').val();
-			this.showDialog('overview', this.location);
-			$.getJSON(this.path + 'controller.php?action=pull&path=' + this.location + '&remote=' + remote + '&branch=' + branch, function(result) {
-				if (result.status == 'login_required') {
-					atheos.toast.show('error', result.message);
-					codegit.showDialog('login', codegit.location);
-					codegit.login = function() {
-						var username = $('.git_login_area #username').val();
-						var password = $('.git_login_area #password').val();
-						codegit.showDialog('overview', codegit.location);
-						$.post(codegit.path + 'controller.php?action=pull&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
-							username: username,
-							password: password
-						}, function(result) {
-							result = JSON.parse(result);
-							atheos.toast[result.status](result.message);
-						});
-					};
-				} else if (result.status == 'passphrase_required') {
-					atheos.toast.show('error', result.message);
-					codegit.showDialog('passphrase', codegit.location);
-					codegit.login = function() {
-						var passphrase = $('.git_login_area #passphrase').val();
-						codegit.showDialog('overview', codegit.location);
-						$.post(codegit.path + 'controller.php?action=pull&path=' + codegit.location + '&remote=' + remote + '&branch=' + branch, {
-							passphrase: passphrase
-						}, function(result) {
-							result = JSON.parse(result);
-							atheos.toast[result.status](result.message);
-						});
-					};
-				} else {
-					atheos.toast[result.status](result.message);
-				}
-			});
-		},
-
-		fetch: function() {
-			var codegit = this;
-			var remote = $('.git_remote_area #git_remotes').val();
-			this.showDialog('overview', this.location);
-			$.getJSON(this.path + 'controller.php?action=fetch&path=' + this.location + '&remote=' + remote, function(result) {
-				if (result.status == 'login_required') {
-					atheos.toast.show('error', result.message);
-					codegit.showDialog('login', codegit.location);
-					codegit.login = function() {
-						var username = $('.git_login_area #username').val();
-						var password = $('.git_login_area #password').val();
-						codegit.showDialog('overview', codegit.location);
-						$.post(codegit.path + 'controller.php?action=fetch&path=' + codegit.location + '&remote=' + remote, {
-							username: username,
-							password: password
-						}, function(result) {
-							result = JSON.parse(result);
-							atheos.toast[result.status](result.message);
-						});
-					};
-				} else if (result.status == 'passphrase_required') {
-					atheos.toast.show('error', result.message);
-					codegit.showDialog('passphrase', codegit.location);
-					codegit.login = function() {
-						var passphrase = $('.git_login_area #passphrase').val();
-						codegit.showDialog('overview', codegit.location);
-						$.post(codegit.path + 'controller.php?action=fetch&path=' + codegit.location + '&remote=' + remote, {
-							passphrase: passphrase
-						}, function(result) {
-							result = JSON.parse(result);
-							atheos.toast[result.status](result.message);
-						});
-					};
-				} else {
-					atheos.toast[result.status](result.message);
-				}
-			});
-		},
-
-
-
-		login: function() {},
-
-		// setSettings: function(path) {
-		// 	var codegit = this;
-		// 	var settings = {};
-		// 	path = this.getPath(path);
-		// 	$('.git_settings_area input:not(.no_setting)').each(function(i, el) {
-		// 		settings[$(el).attr("id")] = $(el).val();
-		// 	});
-
-		// 	$.post(this.path + 'controller.php?action=setSettings&path=' + path, {
-		// 		settings: JSON.stringify(settings)
-		// 	}, function(result) {
-		// 		result = JSON.parse(result);
-		// 		atheos.toast[result.status](result.message);
-		// 		self.showDialog('overview', self.location);
-		// 	});
-		// },
-
-		// getSettings: function(path) {
-		// 	path = this.getPath(path);
-		// 	$.getJSON(this.path + 'controller.php?action=getSettings&path=' + path, function(result) {
-		// 		if (result.status == 'error') {
-		// 			atheos.toast.show('error', result.message);
-		// 			return;
-		// 		}
-		// 		var local = false;
-		// 		$.each(result.data, function(i, item) {
-		// 			if (/\//.test(i)) {
-		// 				return;
-		// 			}
-		// 			$('.git_settings_area #' + i).val(item);
-		// 			if (/^local_/.test(i)) {
-		// 				local = true;
-		// 			}
-		// 		});
-		// 		if (!local) {
-		// 			$('#box_local').click();
-		// 		}
-		// 	});
-		// },
-
 		/**
 			* Get path
 			* 
@@ -601,41 +417,6 @@
 			if (self.showFileStatus() === false) {
 				self.fileStatus.empty();
 			}
-		},
-
-		monitorCheckBoxes: function() {
-			var checkboxAll = oX('#codegit_overview #check_all');
-			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
-			var tbody = oX('#codegit_overview tbody');
-
-			checkboxAll.on('click', function() {
-				var status = checkboxAll.el.checked;
-				checkboxes.forEach((checkbox) => checkbox.el.checked = status);
-			});
-
-			tbody.on('click', function(e) {
-				var node = e.target;
-				if (node.tagName === 'INPUT' && node.type === 'checkbox') {
-					if (!node.checked) {
-						if (checkboxAll.el.checked) {
-							checkboxAll.el.checked = false;
-						}
-					} else {
-						var allChecked = true;
-						checkboxes.forEach((checkbox) => {
-							allChecked = allChecked && (checkbox.el.checked === true);
-						});
-						if (allChecked) {
-							checkboxAll.el.checked = true;
-						}
-					}
-				}
-			});
-
-			amplify.subscribe('modal.unload', function() {
-				checkboxAll.off('click');
-				tbody.off('click');
-			})
 		},
 
 		showRepoBanner: function() {
