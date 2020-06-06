@@ -3,6 +3,7 @@ toolbar {
 	padding: 2px 8px;
 	background-color: $foreground;
 	text-align: right;
+	@include border(1px, top);
 
 	button {}
 }
