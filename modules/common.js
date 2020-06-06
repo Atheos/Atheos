@@ -35,6 +35,7 @@
 			self = this;
 
 			// self.initDropdown();
+			self.initTogglePassword();
 		},
 
 
@@ -119,9 +120,25 @@
 
 				window.addEventListener('click', close);
 			});
+		},
 
-
-
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide Password Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initTogglePassword: function() {
+			oX('i.togglePassword', true).on('click', function(e) {
+				var icon = oX(e.target);
+				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
+				if (!field) {
+					return;
+				}
+				if (field.prop('type') === "password") {
+					field.prop('type', 'text');
+				} else {
+					field.prop('type', 'password');
+				}
+				icon.switchClass('fa-eye', 'fa-eye-slash');
+			});
 		},
 
 
