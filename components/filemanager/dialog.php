@@ -11,7 +11,7 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 require_once('../../common.php');
- 
+
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
@@ -35,8 +35,8 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		?>
+		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("New " . (ucfirst($type))); ?></label>
 		<form>
-			<h3><i class="fas fa-plus-circle"></i><?php echo i18n("New " . (ucfirst($type))); ?></h3>
 			<input type="text" name="nodeName" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only">
 			<button class="btn-left"><?php i18n("Create"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
@@ -49,8 +49,8 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'rename':
 		?>
+		<label class="title"><i class="fas fa-pencil-alt"></i> <?php i18n("Rename"); ?> <?php echo i18n((ucfirst($type))); ?></label>
 		<form>
-			<h3><i class="fas fa-pencil-alt"></i> <?php i18n("Rename"); ?> <?php echo i18n((ucfirst($type))); ?></h3>
 			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php i18n("Rename"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
@@ -65,8 +65,8 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'duplicate':
 		?>
+		<label class="title"><i class="fa fa-clone"></i> <?php i18n("Duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></label>
 		<form>
-			<h3><i class="fa fa-clone"></i> <?php i18n("Duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></h3>
 			<p>
 				<?php i18n("Enter new name:"); ?>
 			</p>
