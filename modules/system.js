@@ -28,10 +28,11 @@
 		if (document.querySelector('#login')) {
 			global.synthetic.init();
 			atheos.user.init();
+			atheos.common.init();
 		} else if (document.querySelector('#installer')) {
 			global.synthetic.init();
 			atheos.install.init();
-
+			atheos.common.init();
 		} else {
 			// Atheos has three levels of priority loading:
 			//	Critical components should load on major
