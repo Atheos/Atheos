@@ -263,14 +263,19 @@
 		if (type === 'replace') {
 			setClass(element, 'remove', cls);
 			setClass(element, 'add', nCls);
-			return;
-		}
-
-		if (type === 'remove') {
+		} else if (type === 'remove') {
 			if (cls) {
 				element.classList.remove(...cls.split(' '));
 			} else {
 				element.className = '';
+			}
+		} else if (type === 'switch') {
+			if (element.classList.contains(cls)) {
+				setClass(element, 'remove', cls);
+				setClass(element, 'add', nCls);
+			} else {
+				setClass(element, 'add', cls);
+				setClass(element, 'remove', nCls);
 			}
 		} else {
 			// add, contains, toggle
@@ -462,6 +467,7 @@
 			addClass: (c) => setClass(element, 'add', c),
 			hasClass: (c) => setClass(element, 'contains', c),
 			removeClass: (c) => setClass(element, 'remove', c),
+			switchClass: (c, n) => setClass(element, 'switch', c, n),
 			toggleClass: (c) => setClass(element, 'toggle', c),
 			replaceClass: (c, n) => setClass(element, 'replace', c, n),
 
