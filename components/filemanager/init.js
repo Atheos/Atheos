@@ -124,7 +124,6 @@
 
 			var basename = pathinfo(oldPath).basename;
 			var newPath = parPath + '/' + basename;
-			log(oldPath, newPath);
 
 			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
 				atheos.toast.show('warning', 'Path already exists.');
