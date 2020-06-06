@@ -553,10 +553,7 @@
 		//////////////////////////////////////////////////////////////////
 		// Process rename
 		//////////////////////////////////////////////////////////////////
-
 		rename: function(oldPath, newPath) {
-			log(oldPath + ':' + newPath);
-
 			var switchSessions = function(oldPath, newPath) {
 				var listItem = self.sessions[oldPath].listItem;
 				listItem.attr('data-path', newPath);
