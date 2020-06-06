@@ -66,6 +66,12 @@
 
 			var editor = oX('#editor-region');
 
+			//////////////////////////////////////////////////////////////////80
+			// h-resize & v-resize events are custom events triggered solely for
+			// use in allowing you to resize split containers. The -root events
+			// are triggered throughout Atheos as needed, and cascade down into 
+			// any split containers. - Liam Siira
+			//////////////////////////////////////////////////////////////////80
 			editor.on('h-resize-root, v-resize-root', function(e) {
 				var wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
