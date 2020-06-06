@@ -353,7 +353,9 @@
 		resize: function(sidebar, side) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
-			if (sidebar === null) return;
+			if (sidebar === null) {
+				return;
+			}
 
 			var rect = sidebar.getBoundingClientRect(),
 				modalX = rect.left,
