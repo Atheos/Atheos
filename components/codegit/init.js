@@ -149,7 +149,9 @@
 					if (target && target.hasClass('repo')) {
 						return path;
 					}
-					if (counter >= 10) break;
+					if (counter >= 10) {
+						break;
+					}
 					counter++;
 				}
 				return false;
@@ -201,7 +203,7 @@
 								files: [target.parent('tr').attr('data-file')]
 							});
 						} else if (target.text() === 'Undo') {
-							atheos.toast.show('notice', "Git Undo coming soon");
+							atheos.toast.show('notice', 'Git Undo coming soon');
 							// self.showPanel(target.attr('data-panel'), repo);
 						}
 					}
@@ -335,35 +337,39 @@
 					path: path
 				},
 				success: function(data) {
-					var status = "Unknown";
-					if (data.status !== "error") {
+					var status = 'Unknown';
+					if (data.status !== 'error') {
 						if (data.added.length !== 0 ||
 							data.deleted.length !== 0 ||
 							data.modified.length !== 0 ||
 							data.renamed.length !== 0) {
-							status = "Uncommitted";
+							status = 'Uncommitted';
 						} else if (data.untracked.length !== 0) {
-							status = "Untracked";
+							status = 'Untracked';
 						} else {
-							status = "Committed";
+							status = 'Committed';
 						}
 					}
 
-					if (self.repoStatus) self.repoStatus.text(status);
-					if (self.repoBanner) self.repoBanner.replaceClass("repoCommitted repoUncommitted repoUntracked", "repo" + status);
+					if (self.repoStatus) {
+						self.repoStatus.text(status);
+					}
+					if (self.repoBanner) {
+						self.repoBanner.replaceClass('repoCommitted repoUncommitted repoUntracked', 'repo' + status);
+					}
 				}
 			});
 		},
 
 		diff: function(repo, path) {
 			if (!path || !repo) return;
-			path = path.replace(repo + "/", "");
+			path = path.replace(repo + '/', '');
 			self.showDialog('diff', repo, path);
 		},
 
 		blame: function(repo, path) {
 			if (!path || !repo) return;
-			path = path.replace(repo + "/", "");
+			path = path.replace(repo + '/', '');
 			self.showDialog('blame', repo, path);
 		},
 
@@ -374,7 +380,7 @@
 			// this.files.push(path);
 
 			if (!path || !repo) return;
-			path = path.replace(repo + "/", "");
+			path = path.replace(repo + '/', '');
 			this.showDialog('log', repo, path);
 		},
 

@@ -20,7 +20,7 @@
 		canvas;
 
 	colors = ['#0F0F0F', '#121212', '#151515', '#181818'];
-	
+
 
 	function sRnd(max) {
 		//Source: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
@@ -29,6 +29,44 @@
 
 		//Uses a faster method of flooring the decimal to an integer
 		return (rnd * max) << 0;
+	}
+
+
+
+	function draw(ctx, x, y, hex) {
+		ctx.beginPath();
+		ctx.moveTo(x + hex.radius, y);
+		ctx.lineTo(x + hex.rectangleWidth, y + hex.height);
+		ctx.lineTo(x + hex.rectangleWidth, y + hex.height + hex.sideLength);
+		ctx.lineTo(x + hex.radius, y + hex.rectangleHeight);
+		ctx.lineTo(x, y + hex.sideLength + hex.height);
+		ctx.lineTo(x, y + hex.height);
+		ctx.closePath();
+		ctx.globalAlpha = 1;
+		ctx.fill();
+		ctx.globalAlpha = 0.2;
+		ctx.stroke();
+	}
+
+	function drawBoard(ctx, width, height, hex) {
+		var x,
+			y,
+			i = 0,
+			gradientX = 255 / width,
+			gradientY = 255 / height;
+
+
+		for (x = 0; x < width; ++x) {
+			for (y = 0; y < height; ++y) {
+				ctx.fillStyle = rndColor[(++i) % rndColor.length];
+				draw(
+					ctx,
+					(x * 1.02) * hex.rectangleWidth + ((y % 2) * hex.radius),
+					(y * 1.02) * (hex.sideLength + hex.height),
+					hex
+				);
+			}
+		}
 	}
 
 	function drawSynthetic() {
@@ -61,43 +99,6 @@
 			drawBoard(ctx, boardWidth, boardHeight, hex);
 		}
 	}
-
-	function drawBoard(ctx, width, height, hex) {
-		var x,
-			y,
-			i = 0,
-			gradientX = 255 / width,
-			gradientY = 255 / height;
-
-
-		for (x = 0; x < width; ++x) {
-			for (y = 0; y < height; ++y) {
-				ctx.fillStyle = rndColor[(++i) % rndColor.length];
-				draw(
-					ctx,
-					(x * 1.02) * hex.rectangleWidth + ((y % 2) * hex.radius),
-					(y * 1.02) * (hex.sideLength + hex.height),
-					hex
-				);
-			}
-		}
-	}
-
-	function draw(ctx, x, y, hex) {
-		ctx.beginPath();
-		ctx.moveTo(x + hex.radius, y);
-		ctx.lineTo(x + hex.rectangleWidth, y + hex.height);
-		ctx.lineTo(x + hex.rectangleWidth, y + hex.height + hex.sideLength);
-		ctx.lineTo(x + hex.radius, y + hex.rectangleHeight);
-		ctx.lineTo(x, y + hex.sideLength + hex.height);
-		ctx.lineTo(x, y + hex.height);
-		ctx.closePath();
-		ctx.globalAlpha = 1;
-		ctx.fill();
-		ctx.globalAlpha = 0.2;
-		ctx.stroke();
-	}
-
 
 	const synthetic = {
 
