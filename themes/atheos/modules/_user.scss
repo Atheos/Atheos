@@ -1,20 +1,7 @@
 #projectSelect {
 	max-height: 250px;
-	background: #404040;
 	margin: 10px 0 5px 0;
 	overflow: auto;
 	@include border-radius;
 	@include box-shadow;
-
-	table {
-		td {
-			border: none;
-			border-bottom: 1px solid #666;
-			@include border(1px);
-		}
-
-		tr:last-child td {
-			border: none;
-		}
-	}
 }
