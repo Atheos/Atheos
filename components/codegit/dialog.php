@@ -37,7 +37,8 @@ if ($action === "loadPanel") {
 			break;
 	}
 } else {
-	$status = $CodeGit->branchStatus($repo)["status"];
+	$status = $CodeGit->branchStatus($repo);
+	$status = is_array($status) ? $status["status"] : $status;
 	?>
 	<label class="title"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></label>
 	<div id="codegit">
