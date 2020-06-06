@@ -113,7 +113,6 @@
 				url: self.controller,
 				data: data,
 				success: function(reply) {
-					log(reply);
 					if (reply.status !== 'error') {
 						window.location.reload();
 					} else {

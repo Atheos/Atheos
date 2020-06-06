@@ -170,9 +170,6 @@
 			element = '<tr><td colspan="4"><h2>Installed<h2></td></tr>';
 			table += element;
 
-
-			// log(self.addons);
-			// log(self.cache);
 			for (key in self.addons) {
 				addon = self.addons[key];
 
