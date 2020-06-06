@@ -187,7 +187,7 @@
 			self.activeRepo = repo;
 
 			var listener = function() {
-				oX('#panel_menu').on('click', function(e) {
+				oX('menu').on('click', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					if (tagName === 'A') {
@@ -195,7 +195,7 @@
 					}
 				});
 
-				oX('#panel_view').on('click', function(e) {
+				oX('panel').on('click', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
 					if (tagName === 'BUTTON') {
@@ -223,9 +223,9 @@
 
 		showPanel: function(panel, repo, data) {
 			if (typeof(panel) === 'string') {
-				var menu = oX('#panel_menu a[data-panel="' + panel + '"]');
+				var menu = oX('menu a[data-panel="' + panel + '"]');
 				if (menu) {
-					oX('#panel_menu .active').removeClass('active');
+					oX('menu .active').removeClass('active');
 					menu.addClass('active');
 				}
 				data = data || {};
@@ -237,8 +237,8 @@
 					url: self.dialog,
 					data: data,
 					success: function(reply) {
-						oX('#panel_view').empty();
-						oX('#panel_view').html(reply);
+						oX('panel').empty();
+						oX('panel').html(reply);
 						if (panel === 'overview') {
 							self.monitorCheckBoxes();
 						}
@@ -251,7 +251,6 @@
 		showDialog: function(type, repo, path) {
 			path = path || oX('#project-root').attr('data-path');
 			self.location = repo || self.location;
-			log(path, repo);
 			atheos.modal.load(600, self.dialog, {
 				action: 'loadPanel',
 				panel: type,
