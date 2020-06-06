@@ -62,7 +62,7 @@
 			// Find [CTRL+F] /////////////////////////////////////////////////80
 			self.bind(70, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
-				editor.execCommand("find");
+				editor.execCommand('find');
 				// atheos.editor.openSearch('find');
 			});
 
@@ -70,13 +70,13 @@
 			self.bind(71, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				// atheos.editor.promptLine();
-				editor.execCommand("gotoline");
+				editor.execCommand('gotoline');
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////////80
 			self.bind(82, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
-				editor.execCommand("replace");
+				editor.execCommand('replace');
 			});
 
 
