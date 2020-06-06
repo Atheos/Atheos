@@ -323,18 +323,18 @@
 
 	let IO = (element, type, value, key) => {
 		if (domTypes.includes(type)) {
-			if (value) {
+			if (typeof(value) !== 'undefined') {
 				element[type] = value;
 			}
 			return element[type];
 		} else if (type === 'prop') {
-			if (value) {
+			if (typeof(value) !== 'undefined') {
 				element[key] = value;
 			}
 			return element[key];
 		} else if (type === 'attr') {
 			if (typeof key === 'string') {
-				if (value) {
+				if (typeof(value) !== 'undefined') {
 					element.setAttribute(key, value);
 				}
 				return element.getAttribute(key);
