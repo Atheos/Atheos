@@ -6,7 +6,7 @@ button {
 	color: $background;
 	font-weight: bold;
 	background-color: $fontColorMajor;
-	border: none;
+	// border: none;
 	cursor: pointer;
 
 	&.bottom-left {
@@ -22,11 +22,13 @@ button {
 		&:hover {
 			color: $grey;
 			background-color: $fontColorMajor;
+		border-color: $metal;
 		}
 	}
 
 	&:hover {
-		background-color: darken($fontColorMajor, $hoverPercent);
+		background-color: $fontColorMinor;
+		border-color: $coal;
 	}
 	
 	&:focus {

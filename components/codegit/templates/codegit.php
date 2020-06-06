@@ -34,10 +34,9 @@ if ($action === "loadPanel") {
 } else {
 	$status = $CodeGit->branchStatus($repo)["status"];
 	?>
-	<h1><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></h1>
-	<label>Branch: <span id="codegit_branch"><?php echo $CodeGit->getCurrentBranch(); ?></span><span id="codegit_status">(<?php echo $status; ?>)</span></label>
+	<label class="title"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></label>
 	<div id="codegit">
-		<ul id="panel_menu">
+		<menu>
 			<li>
 				<a data-panel="overview" class="active"><i class="fas fa-home"></i><?php i18n("Overview"); ?></a>
 			</li>
@@ -50,10 +49,13 @@ if ($action === "loadPanel") {
 			<li>
 				<a data-panel="config"><i class="fas fa-user-cog"></i><?php i18n("Configure"); ?></a>
 			</li>
-		</ul>
-		<div id="panel_view" class="panel">
+		</menu>
+		<panel>
 			<?php	include('major/overview.php'); ?>
-		</div>
+		</panel>
 	</div>
+	<toolbar>
+		<label>Branch: <span id="codegit_branch"><?php echo $CodeGit->getCurrentBranch(); ?></span><span id="codegit_status">(<?php echo $status; ?>)</span></label>
+	</toolbar>
 	<?php
 }

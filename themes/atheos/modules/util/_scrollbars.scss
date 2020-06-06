@@ -4,6 +4,13 @@
 	height: $scrollbarWidth;
 }
 
+table {
+	::-webkit-scrollbar {
+		display: none;
+	}
+		scrollbar-width: none;
+}
+
 ::-webkit-scrollbar-track-piece {
 	background-color: transparent;
 

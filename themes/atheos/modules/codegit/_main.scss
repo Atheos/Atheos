@@ -26,13 +26,16 @@
 [id^="codegit_"],
 #codegit {
 	&.content {
-		padding: 5px;
 		width: 800px;
-		height: 100%;
-		// min-width: 600px;
-		background-color: $background;
-		overflow-y: scroll;
 	}
+}
+
+#modal_content>.content {
+	min-width: 600px;
+	overflow: hidden;
+	overflow-y: scroll;
+	height: 400px;
+	padding: 5px;
 }
 
 #modal_content #codegit form {
@@ -40,49 +43,9 @@
 
 }
 
-[id^="codegit_"].content {
-	height: 60vh;
-}
-
-
 #codegit {
 	display: flex;
 	@include border(1px, top);
-
-	// .big-icon {
-	// 	font-size: 100%;
-	// 	margin-right: 12px;
-	// }
-
-	#panel_menu {
-		max-height: 55vh;
-		overflow: auto;
-		width: 200px;
-
-		li a {
-			display: block;
-			padding: 10px;
-			user-select: none;
-
-			i {
-				margin-right: 5px;
-			}
-		}
-
-		.active {
-			background-color: $blue;
-		}
-	}
-
-	#panel_view {
-		height: 60vh;
-		// background-color: $background;
-		@include border(1px, left);
-
-		form {
-			padding: 0;
-		}
-	}
 }
 
 
