@@ -10,7 +10,7 @@
 
 	tbody {
 		display: block;
-		max-height: 49vh;
+		max-height: 410px;
 		overflow-y: scroll;
 	}
 
@@ -22,12 +22,12 @@
 		/* even columns width , fix width of table too*/
 	}
 
-	thead {
-		// Account for Scrollbar width
-		overflow-y: scroll;
-		box-shadow: #333 $scrollbarWidth 0px;
-		width: calc(100% - 10px);
-	}
+	// thead {
+	// 	// Account for Scrollbar width
+	// 	overflow-y: scroll;
+	// 	box-shadow: #333 $scrollbarWidth 0px;
+	// 	width: calc(100% - 10px);
+	// }
 
 	table th:nth-of-type(1),
 	table td:nth-of-type(1) {
