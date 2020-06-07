@@ -40,10 +40,13 @@
 				data: {
 					action: 'init'
 				},
-				success: function(data) {
-					self.home = data.market;
-					self.cache = data.cache;
-					self.addons = data.addons;
+				success: function(reply) {
+					if (reply.status === 'error') {
+						return;
+					}
+					self.home = reply.market;
+					self.cache = reply.cache;
+					self.addons = reply.addons;
 
 					self.loadMarket();
 				}
@@ -71,7 +74,7 @@
 			if (!cache || !cache.data || !types.isArray(cache.data)) {
 				return;
 			}
-			
+
 			cache.data.forEach(function(plugin) {
 				temp[plugin.name] = {
 					author: plugin.author,
