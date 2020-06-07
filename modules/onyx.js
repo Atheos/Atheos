@@ -404,8 +404,8 @@
 		}
 
 		api.focus = () => element.focus();
-		api.show = () => element.style.display = 'block';
-		api.hide = () => element.style.display = 'none';
+		api.show = (d) => element.style.display = d || 'block';
+		api.hide = (d) => element.style.display = d || 'none';
 		api.trigger = (event) => triggerEvent(element, event);
 
 		// api.once = (t, fn) => events.once(t, selector, fn);
