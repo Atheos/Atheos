@@ -45,6 +45,15 @@
 			// Settings are initialized last in order to ensure all listeners are attached
 			atheos.settings.init();
 		}
+
+		log([
+			'   _____   __   __                        ',
+			'  /  _  \\_/  |_|  |__   ____  ____  ______',
+			' /  /_\\  \\   __\\  |  \\_/ __ \\/  _ \\/  ___/',
+			'/    |    \\  | |   Y  \\  ___(  <_> )___ \\ ',
+			'\\____|__  /__| |___|  /\\___  >____/____  >',
+			'        \\/          \\/     \\/          \\/ '
+		].join('\n'));
 	});
 
 })(this);
