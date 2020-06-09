@@ -130,6 +130,8 @@ class Filemanager {
 			Common::sendJSON("error", "Path already exists."); die;
 		}
 
+		$path = strip_tags($path);
+
 		if ($type === "directory" && mkdir($path)) {
 			Common::sendJSON("S2000");
 		} elseif ($type === "file" && $file = fopen($path, 'w')) {
