@@ -42,9 +42,9 @@
 
 	thead {
 		// Account for Scrollbar width
-		overflow-y: scroll;
-		box-shadow: #333 $scrollbarWidth 0px;
-		width: calc(100% - 10px);
+		// overflow-y: scroll;
+		// box-shadow: #333 $scrollbarWidth 0px;
+		// width: calc(100% - 10px);
 	}
 
 	th[colspan="4"],
