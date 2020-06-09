@@ -156,9 +156,15 @@ class Common {
 		$tmp = array();
 		$allFiles = scandir($foldername);
 		foreach ($allFiles as $fname) {
-			if ($fname == '.' || $fname == '..') {
+			if ($fname === '.' || $fname === '..') {
 				continue;
 			}
+			
+			$length = strlen(".disabled");
+			if(substr($fname, -$length) === ".disabled") {
+				continue;
+			}
+
 			if (is_dir($foldername.'/'.$fname)) {
 				$tmp[] = $fname;
 			}
