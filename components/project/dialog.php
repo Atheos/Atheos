@@ -71,57 +71,56 @@ switch ($action) {
 		}
 
 		?>
-
-		<form>
-			<label><i class="fas fa-archive"></i><?php i18n("Project List"); ?></label>
-			<div id="project-list">
-				<table>
-					<tr>
-						<th class="action"><?php i18n("Open"); ?></th>
-						<th><?php i18n("Project Name"); ?></th>
-						<th><?php i18n("Path"); ?></th>
-						<?php if (Common::checkAccess("configure")) {
-							?>
-							<th class="action"><?php i18n("Delete"); ?></th>
-							<th class="action"><?php i18n("Rename"); ?></th>
-							<?php
-						} ?>
-					</tr>
-					<?php
-					$activeProject = Common::data("project", "session");
-					foreach ($projectList as $projectPath => $projectName) {
+		<label class="title"><i class="fas fa-archive"></i><?php i18n("Project List"); ?></label>
+			<table id="project-list">
+				<tr>
+					<th class="action"><?php i18n("Open"); ?></th>
+					<th><?php i18n("Project Name"); ?></th>
+					<th><?php i18n("Path"); ?></th>
+					<?php if (Common::checkAccess("configure")) {
 						?>
-						<tr>
-							<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive"></a></td>
-							<td><?php echo($projectName); ?></td>
-							<td><?php echo($projectPath); ?></td>
-							<?php
-							if (Common::checkAccess("configure")) {
-								if ($activeProject == $projectPath) {
-									?>
-									<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
-									<?php
-								} else {
-									?>
-									<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt"></a></td>
-									<?php
-								}
+						<th class="action"><?php i18n("Delete"); ?></th>
+						<th class="action"><?php i18n("Rename"); ?></th>
+						<?php
+					} ?>
+				</tr>
+				<?php
+				$activeProject = Common::data("project", "session");
+				foreach ($projectList as $projectPath => $projectName) {
+					?>
+					<tr>
+						<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive blue"></a></td>
+						<td><?php echo($projectName); ?></td>
+						<td><?php echo($projectPath); ?></td>
+						<?php
+						if (Common::checkAccess("configure")) {
+							if ($activeProject == $projectPath) {
 								?>
-								<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt"></a></td>
+								<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+								<?php
+							} else {
+								?>
+								<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt metal"></a></td>
 								<?php
 							}
 							?>
-						</tr>
-						<?php
+							<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt orange"></a></td>
+							<?php
+						}
+						?>
+					</tr>
+					<?php
 
-					}
-					?>
-				</table>
-			</div>
+				}
+				?>
+			</table>
 			<?php if (Common::checkAccess("configure")) {
-				?><button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button><?php
+				?>
+				<toolbar>
+					<button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button>
+				</toolbar>
+				<?php
 			} ?>
-		</form>
 		<?php break;
 
 	//////////////////////////////////////////////////////////////////////

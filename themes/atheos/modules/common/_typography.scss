@@ -14,11 +14,15 @@ a:visited {
 }
 
 .right {
-	float: right;
+	text-align: right;
 }
 
 .left {
-	float: left;
+	text-align: left;
+}
+
+.center {
+	text-align: center;
 }
 
 .italic {

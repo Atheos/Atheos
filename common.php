@@ -13,23 +13,27 @@ Common::startSession();
 
 class Common {
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
-	public static $debugMessageStack = array();
-	private static $data = array();
+	public static $debug = array();
 
-	//////////////////////////////////////////////////////////////////
+	private static $data = array(
+		"session" => array(),
+		"post" => array(),
+		"get" => array(),
+	);
+
+	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
 	// -----------------------------||----------------------------- //
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Construct
-	//////////////////////////////////////////////////////////////////
-
+	//////////////////////////////////////////////////////////////////////////80
 	public static function construct() {
 		global $cookie_lifetime;
 		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
@@ -73,28 +77,34 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// SESSIONS
-	//////////////////////////////////////////////////////////////////
-
+	//////////////////////////////////////////////////////////////////////////80
 	public static function startSession() {
 		Common::construct();
 
 
 		global $cookie_lifetime;
-		if (isset($cookie_lifetime) && $cookie_lifetime != "") {
+		if (isset($cookie_lifetime) && $cookie_lifetime !== "") {
 			ini_set("session.cookie_lifetime", $cookie_lifetime);
 		}
 
 		//Set a Session Name
 		session_name(md5(BASE_PATH));
-
 		session_start();
 
 		if (true) {
 			//Some security checks, helps with securing the service
 			if (isset($_SESSION['user']) && isset($_SESSION['_USER_LOOSE_IP'])) {
-				if ($_SESSION['_USER_LOOSE_IP'] != long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0")) || $_SESSION['_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['_USER_ACCEPT_ENCODING'] != $_SERVER['HTTP_ACCEPT_ENCODING'] || $_SESSION['_USER_ACCEPT_LANG'] != $_SERVER['HTTP_ACCEPT_LANGUAGE']) {
+				$badSession = false;
+				$badSession = $badSession ?: $_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
+				$badSession = $badSession ?: $_SESSION['_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT'];
+				$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_ENCODING'] !== $_SERVER['HTTP_ACCEPT_ENCODING'];
+				$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_LANG'] !== $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+
+				if ($badSession) {
+					// if ($_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0")) || $_SESSION['_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['_USER_ACCEPT_ENCODING'] != $_SERVER['HTTP_ACCEPT_ENCODING'] || $_SESSION['_USER_ACCEPT_LANG'] != $_SERVER['HTTP_ACCEPT_LANGUAGE']) {
+
 					//Bad session detected, let's not allow any further data to be transfered and redirect to logout.
 					session_unset(); // Same as $_SESSION = array();
 					session_destroy(); // Destroy session on disk
@@ -118,6 +128,7 @@ class Common {
 			require_once(AUTH_PATH);
 		}
 
+		// Check for langauge settings
 		global $lang;
 		if (isset($_SESSION['lang'])) {
 			include BASE_PATH."/languages/{$_SESSION['lang']}.php";
@@ -125,23 +136,7 @@ class Common {
 			include BASE_PATH."/languages/".LANGUAGE.".php";
 		}
 
-		Common::loadData();
-
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// Load and clean input data
-	//////////////////////////////////////////////////////////////////
-	public static function loadData() {
-		Common::$data["session"] = array();
-		Common::$data["post"] = array();
-		Common::$data["get"] = array();
-
-		if ($_SESSION && !empty($_SESSION)) {
-			foreach ($_SESSION as $key => $value) {
-				Common::$data["session"][$key] = $value;
-			}
-		}
+		// Add data to global variables
 		if ($_POST && !empty($_POST)) {
 			foreach ($_POST as $key => $value) {
 				Common::$data["post"][$key] = $value;
@@ -154,16 +149,22 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Read Content of directory
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function readDirectory($foldername) {
 		$tmp = array();
 		$allFiles = scandir($foldername);
 		foreach ($allFiles as $fname) {
-			if ($fname == '.' || $fname == '..') {
+			if ($fname === '.' || $fname === '..') {
 				continue;
 			}
+			
+			$length = strlen(".disabled");
+			if(substr($fname, -$length) === ".disabled") {
+				continue;
+			}
+
 			if (is_dir($foldername.'/'.$fname)) {
 				$tmp[] = $fname;
 			}
@@ -171,18 +172,9 @@ class Common {
 		return $tmp;
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// Log debug message
-	// Messages will be displayed in the console when the response is
-	// made with the formatJSEND function.
-	//////////////////////////////////////////////////////////////////
-	public static function debug($message) {
-		Common::$debugMessageStack[] = $message;
-	}
-
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Localization
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function i18n($key, $type = "echo", $args = array()) {
 		if (is_array($type)) {
 			$args = $type;
@@ -202,9 +194,9 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check Session / Key
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function checkSession() {
 		// Set any API keys
 		$api_keys = array();
@@ -218,10 +210,10 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Read json
 	// Reads JSON data from the data folder using namespaces.
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function readJSON($file, $namespace = "") {
 		$json = false;
 
@@ -249,28 +241,9 @@ class Common {
 		return $json;
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// Load JSON
-	// Allows reading of JSON data outside of the DATA folder as well.
-	//////////////////////////////////////////////////////////////////
-	public static function loadJSON($file, $namespace = DATA) {
-		$json = false;
-		if (!$file) return false;
-
-		$path = $namespace . "/";
-		$path = preg_replace('#/+#', '/', $path);
-
-		if (is_readable($path . $file . '.json')) {
-			$json = file_get_contents($path . $file . '.json');
-			$json = json_decode($json, true);
-		}
-
-		return $json;
-	}
-
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Save JSON
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function saveJSON($file, $data, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
@@ -287,9 +260,9 @@ class Common {
 	}
 
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Log Action
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function log($user, $action, $name = "global") {
 		$path = DATA . "/log/";
 		$path = preg_replace('#/+#', '/', $path);
@@ -299,7 +272,7 @@ class Common {
 		$file = "$name.log";
 		$time = date("Y-m-d H:i:s");
 
-		$text = "$user: $action @ $time";
+		$text = "$user:\t$action @ $time";
 
 		if (file_exists($path . $file)) {
 			$lines = file($path . $file);
@@ -318,9 +291,9 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Format JSON Responses
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function sendJSON($status, $text = false) {
 		if (preg_match('/^[SEWN][0-9]{3}[0-9a-z]{1}$/', $status)) {
 			$reply = Common::parseStatusCodes($status, $text);
@@ -334,22 +307,18 @@ class Common {
 			);
 		}
 
-
-
 		/// Debug /////////////////////////////////////////////////
-		if (count(Common::$debugMessageStack) == 1) {
-			$reply["debug"] = Common::$debugMessageStack[0];
-		} elseif (count(Common::$debugMessageStack) > 0) {
-			$reply["debug"] = Common::$debugMessageStack;
+		if (count(Common::$debug) > 0) {
+			$reply["debug"] = Common::$debug;
 		}
 
 		// Return ////////////////////////////////////////////////
 		echo json_encode($reply);
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Parse Status Codes
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function parseStatusCodes($code, $text = false) {
 		$codes = array(
 			"S2000" => "Success.",
@@ -379,13 +348,7 @@ class Common {
 
 		);
 
-		if (is_array($text)) {
-			$reply = $text;
-		} else {
-			$reply = array();
-		}
-
-		// $reply["code"] = $code;
+		$reply = is_array($text) ? $text : array();
 
 		if (in_array($code, $codes)) {
 			$reply["text"] = $codes[$code];
@@ -408,13 +371,16 @@ class Common {
 			case "N":
 				$reply["status"] = "notice";
 				break;
+			default:
+				$reply["status"] = "error";
+				break;
 		}
 		return $reply;
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check if user can configure Atheos
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function checkAccess($permission = "configure") {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
@@ -427,22 +393,19 @@ class Common {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check Path
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function checkPath($path) {
 		$users = Common::readJSON("users");
 		$username = Common::data("user", "session");
 		$projects = Common::readJSON('projects');
-
 
 		if (!array_key_exists($username, $users)) {
 			return false;
 		}
 
 		$userACL = $users[$username]["userACL"];
-
-		$userHasAccess = $userACL === "full" ? true : false;
 
 		if ($userACL === "full") {
 			return true;
@@ -451,51 +414,40 @@ class Common {
 				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
 					return true;
 				} elseif (in_array($projectName, $userACL)) {
-					Common::debug("Path:$path, ProjectPath: $projectPath");
+					Common::$debug[] = "Path:$path, ProjectPath: $projectPath";
 				}
 			}
 		}
 		return false;
-
-
-		// $pathWithinProject = false;
-
-		// foreach ($projects as $projectPath => $projectName) {
-		// 	$pathWithinProject = strpos($path, $projectPath) === 0 ? true : $pathWithinProject;
-		// }
-
-		// return $userHasAccess && $pathWithinProject;
-
 	}
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Read Post/Get/Server/Session Data
+	//////////////////////////////////////////////////////////////////////////80
 	public static function data($key, $type = false) {
-		$data = Common::$data;
 		$value = false;
-		if (array_key_exists($key, $data["session"])) {
-			$value = $data["session"][$key];
-		} elseif (array_key_exists($key, $data["post"])) {
-			$value = $data["post"][$key];
-		} elseif (array_key_exists($key, $data["get"])) {
-			$value = $data["get"][$key];
+
+		if (array_key_exists($key, Common::$data["post"])) {
+			$value = Common::$data["post"][$key];
+		} elseif (array_key_exists($key, Common::$data["get"])) {
+			$value = Common::$data["get"][$key];
 		}
 
 		if ($type) {
 			if ($type === "server") {
 				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
+			} elseif ($type === "session") {
+				$value = array_key_exists($key, $_SESSION) ? $_SESSION[$key] : false;
 			} else {
-				$value = array_key_exists($key, $data[$type]) ? $data[$type][$key] : false;
+				$value = array_key_exists($key, Common::$data[$type]) ? Common::$data[$type][$key] : false;
 			}
 		}
-
-
-		//$value = htmlspecialchars(strip_tags($value));
-
 		return $value;
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check Function Availability
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function isAvailable($func) {
 		if (ini_get('safe_mode')) return false;
 		$disabled = ini_get('disable_functions');
@@ -507,23 +459,23 @@ class Common {
 		return true;
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check If Path is absolute
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function isAbsPath($path) {
 		return ($path[0] === '/' || $path[1] === ':')?true:false;
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Check If WIN based system
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function isWINOS() {
 		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Return full workspace path
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function getWorkspacePath($path) {
 		if (!$path) {
 			return false;
@@ -547,9 +499,9 @@ class Common {
 		return WORKSPACE . "/" . $path;
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Clean a path
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public static function cleanPath($path) {
 
 		// replace backslash with slash
@@ -569,9 +521,9 @@ class Common {
 	}
 
 
-	//////////////////////////////////////////////////////////////////////////80
+	//////////////////////////////////////////////////////////////////////////80////////80
 	// Execute Command
-	//////////////////////////////////////////////////////////////////////////80
+	//////////////////////////////////////////////////////////////////////////80////////80
 	public function executeCommand($cmd) {
 		if (function_exists('system')) {
 			ob_start();

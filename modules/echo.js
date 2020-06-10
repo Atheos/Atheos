@@ -38,7 +38,9 @@
 			for (var name in options.data) {
 				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(options.data[name]));
 			}
-			if (options.random) data.push(("v=" + Math.random()).replace(".", ""));
+			if (options.random) {
+				data.push(('v=' + Math.random()).replace('.', ''));
+			}
 			data = data.join('&');
 		} else {
 			data = null;
@@ -61,7 +63,7 @@
 				}
 			} catch (e) {}
 			if (options.settled && typeof options.settled === 'function') {
-					options.settled(data, xhr.status);
+				options.settled(data, xhr.status);
 			} else if (xhr.status >= 200 && xhr.status < 300) {
 				if (options.success && typeof options.success === 'function') {
 					options.success(data, xhr.status);

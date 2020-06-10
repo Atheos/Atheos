@@ -14,8 +14,8 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx,
 		storage = atheos.storage;
 
@@ -31,23 +31,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self = this;
-			/*
-				*  Storage Event:
-				*  Note: Event fires only if change was made in different window and not in this one
-				*  Details: http://dev.w3.org/html5/webstorage/#dom-localstorage
-				*  Reason: If a user has multiple Atheos windows open, all using the same local storage,
-				*  	and makes settings changes, using an iFrame will allow Atheos to detect those
-				*		changes. I think. It doesn't exactly make sense honestly, but that's my only guess.
-				*  
-				*  Workaround for Storage-Event:
-				*/
-			oX('body').append('<iframe src="components/settings/dialog.php?action=iframe"></iframe>');
-
-
-			// oX('#settings_open').on('click', function() {
-			// 	atheos.settings.show();
-			// });
-
 			self.load();
 		},
 
@@ -85,8 +68,6 @@
 				if (value === null) {
 					return;
 				}
-
-				log(type);
 
 				if (type === 'radio') {
 					if (child.value() === value.toString()) {

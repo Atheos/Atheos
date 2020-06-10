@@ -2,7 +2,7 @@
 	position: fixed;
 	top: 0;
 	height: 100%;
-	z-index: 99999;
+	z-index: 99997;
 	-moz-user-select: none;
 	-khtml-user-select: none;
 	-webkit-user-select: none;
@@ -22,7 +22,7 @@
 #sb_right {
 	width: 200px;
 	right: -185px;
-	z-index: 99999;
+	// z-index: 99999;
 
 	.category {
 		font-size: $fontSizeH3;

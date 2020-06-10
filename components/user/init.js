@@ -14,8 +14,8 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -37,19 +37,41 @@
 			if (self.loginForm) {
 				self.loginForm.on('submit', function(e) {
 					e.preventDefault();
+
+					if (oX('#remember').prop('checked')) {
+						// Save Username
+						atheos.storage('username', oX('#username').value());
+						atheos.storage('remember', true);
+					} else {
+						atheos.storage('username', false);
+						atheos.storage('remember', false);
+					}
+
 					// Save Language
 					atheos.storage('language', oX('#language').value());
 					// Save Theme
 					atheos.storage('editor.theme', oX('#theme').value());
+
 					self.authenticate();
 				});
+
+				var element;
+
+
+				var username = atheos.storage('username');
+				var remember = atheos.storage('remember');
+				if (username && remember) {
+					element = oX('#username');
+					oX('#username').value(username);
+					oX('#remember').prop('checked', true);
+				}
 
 
 				// Get Theme
 				var theme = atheos.storage('theme');
-				var select = oX('#theme');
-				if (select && select.findAll('option').length > 1) {
-					select.findAll('option').forEach(function(option) {
+				element = oX('#theme');
+				if (element && element.findAll('option').length > 1) {
+					element.findAll('option').forEach(function(option) {
 						if (option.value() === theme) {
 							option.attr('selected', 'selected');
 						}
@@ -58,9 +80,9 @@
 
 				// Get Language
 				var language = atheos.storage('language');
-				select = oX('#language');
-				if (select && select.findAll('option').length > 1) {
-					select.findAll('option').forEach(function(option) {
+				element = oX('#language');
+				if (element && element.findAll('option').length > 1) {
+					element.findAll('option').forEach(function(option) {
 						if (option.value() === language) {
 							option.attr('selected', 'selected');
 						}
@@ -71,13 +93,13 @@
 				oX('#show_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
-					oX('#hide_login_options').show();
+					oX('#hide_login_options').show('inline-block');
 					oX('#login_options').show();
 				});
 				oX('#hide_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
-					oX('#show_login_options').show();
+					oX('#show_login_options').show('inline-block');
 					oX('#login_options').hide();
 				});
 			}
@@ -113,7 +135,6 @@
 				url: self.controller,
 				data: data,
 				success: function(reply) {
-					log(reply);
 					if (reply.status !== 'error') {
 						window.location.reload();
 					} else {

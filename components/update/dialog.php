@@ -40,10 +40,10 @@ switch ($action) {
 			$vars = json_decode($update->check(), true);
 			$local = $vars['local'];
 			?>
+			<label class="title"><i class="fas fa-sync"></i><?php i18n("Update Check"); ?></label>
 			<form>
 				<input type="hidden" name="archive" value="">
 				<input type="hidden" name="remoteversion" value="">
-				<h1><?php i18n("Update Check"); ?></h1>
 				<br><table>
 					<tr><td width="40%"><?php i18n("Your Version"); ?></td><td><?php echo $local['atheos_version']; ?></td></tr>
 					<tr><td width="40%"><?php i18n("Latest Version"); ?></td><td id="remote_latest"></td></tr>
@@ -56,8 +56,9 @@ switch ($action) {
 					<?php
 				} ?>
 				<br>
-				<button class="btn-left" onclick="atheos.update.download();return false;"><?php i18n("Download Atheos") ?></button>
-				<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
+				<toolbar>
+					<button class="btn-left" onclick="atheos.update.download();return false;"><?php i18n("Download Atheos") ?></button>
+				</toolbar>
 			</form>
 			<?php
 		}

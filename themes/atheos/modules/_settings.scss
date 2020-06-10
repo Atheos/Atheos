@@ -2,46 +2,7 @@
 	display: flex;
 	@include border(1px, top);
 
-	menu {
-		max-height: 55vh;
-		overflow: auto;
-		width: 200px;
 
-		li {
-			list-style: none;
-
-			a {
-				display: block;
-				padding: 10px;
-				user-select: none;
-			}
-		}
-
-		.active {
-			background-color: $blue;
-		}
-	}
-
-	panel {
-		padding: 5px;
-		width: calc(100% - 200px);
-		overflow: auto;
-		overflow-y: scroll;
-		height: 500px;
-		position: relative;
-		@include border(1px, left);
-
-		form {
-			padding: 0;
-		}
-
-		&>label:first-of-type {
-			font-size: $fontSizeH2;
-			padding: 3px 0;
-			margin-bottom: 3px;
-			@include border(3px, bottom);
-		}
-	}
 
 	table {
 		margin: 0 5px;
@@ -69,15 +30,5 @@
 		tr:last-child td {
 			border: none;
 		}
-	}
-	
-	hint {
-		position: absolute;
-		bottom: 5px;
-	}
-
-	&+toolbar {
-		text-align: right;
-		@include border(1px, top);
 	}
 }

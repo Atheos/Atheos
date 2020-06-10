@@ -8,11 +8,19 @@
 
 @import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/input", "modules/common/button";
 @import "modules/common/dropdown";
+@import "modules/common/hint";
 @import "modules/common/label";
+@import "modules/common/menu";
+@import "modules/common/panel";
+
 @import "modules/common/table";
 @import "modules/common/toggle";
 @import "modules/common/toolbar";
 @import "modules/common/typography";
+
+@import "modules/ace/prompt";
+@import "modules/ace/search";
+@import "modules/ace/settings";
 
 @import "modules/active/main";
 @import "modules/codegit/main";
@@ -28,7 +36,7 @@
 @import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
 @import "modules/misc/contextmenu", "modules/misc/scout", "modules/misc/uploader";
 @import "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
-@import "modules/misc/update", "modules/misc/keybindings", "modules/misc/search";
+@import "modules/misc/update", "modules/misc/keybindings";
 
 @import "modules/settings", "modules/user";
  

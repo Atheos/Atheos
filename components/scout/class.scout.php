@@ -95,14 +95,7 @@ class Scout {
 		$query = Common::data("query");
 		$filter = Common::data("filter");
 
-
-		if ($type === 1) {
-			$path = WORKSPACE;
-		} else {
-			$path = Common::getWorkspacePath($path);
-		}
-
-
+		$path = $type ? WORKSPACE : Common::getWorkspacePath($path);
 		$root = WORKSPACE;
 
 		$results = array();
