@@ -27,6 +27,7 @@ if (!Common::checkAccess("configure")) {
 
 $type = Common::data("type");
 $name = Common::data("name");
+$category = Common::data("category");
 $repo = Common::data("repo");
 
 $Market = new Market();
@@ -44,21 +45,22 @@ switch ($action) {
 	// Install
 	//////////////////////////////////////////////////////////////////
 	case 'install':
-		$Market->install($type, $name, $repo);
+		$Market->install($name, $type, $category);
 		break;
 
 	//////////////////////////////////////////////////////////////////
 	// Remove
 	//////////////////////////////////////////////////////////////////
 	case 'remove':
-		$Market->remove($type, $name);
+		$Market->remove($name, $type);
 		break;
 
 	//////////////////////////////////////////////////////////////////
 	// Update
 	//////////////////////////////////////////////////////////////////
 	case 'update':
-		$Market->update($type, $name);
+		$Market->remove($name, $type);
+		$Market->install($name, $type, $category);
 		break;
 
 	//////////////////////////////////////////////////////////////////
