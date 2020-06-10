@@ -217,21 +217,24 @@ class Market {
 				foreach ($listC as $addon => $data) {
 					$name = $data["name"];
 
-					if (array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
-						$iVersion = $data["version"];
-						$uVersion = $market[$type][$category][$name]["version"];
 
-						if (compareVersions($iVersion, $uVersion) < 0) {
-							$data = $market[$type][$category][$name];
-							$data["status"] = "updatable";
+					if (!empty($market)) {
+						if (array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
+							$iVersion = $data["version"];
+							$uVersion = $market[$type][$category][$name]["version"];
+
+							if (compareVersions($iVersion, $uVersion) < 0) {
+								$data = $market[$type][$category][$name];
+								$data["status"] = "updatable";
+							}
+							unset($market[$type][$category][$name]);
 						}
-						unset($market[$type][$category][$name]);
 					}
 
 					$url = $data["url"];
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
 
-					if ($data["status"] === 'updatable') {
+					if ($data["status"] === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
 						$action .= "<a class=\"fas fa-times-circle\" onclick=\"atheos.market.remove('$name', '$type', '$category');return false;\"></a>";
 					} else {
@@ -261,6 +264,10 @@ class Market {
 						$url = $data["url"];
 						$keywords = implode(", ", $data["keywords"]);
 
+						if ($data["status"] !== "available") {
+							continue;
+						}
+						
 						$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
 						$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
 
