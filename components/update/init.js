@@ -74,6 +74,10 @@
 			var listener = function() {
 				var form = oX('#modal_content form');
 				if (form) {
+					
+					self.remote.body = self.remote.body.replace(/\*\*/gi, '');
+					
+					
 					form.find('input[name="archive"').value(self.remote.zipball_url);
 					form.find('input[name="remoteversion"').value(self.remote.tag_name);
 					form.find('#remote_latest').text(self.remote.tag_name);
