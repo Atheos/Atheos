@@ -74,35 +74,36 @@
   FontAwesome
   http://fortawesome.github.io/Font-Awesome/cheatsheet
 /*============================================================================*/
-@mixin fa-icon { font-family: FontAwesome; font-size: 13px; }
+@mixin fas-icon { font-family: 'Font Awesome 5 Free'; font-weight: 900; font-size: 13px; }
+@mixin fab-icon { font-family: 'Font Awesome 5 Brands'; font-weight: 400; font-size: 13px; }
 
-.anchor-icon:before       { @include fa-icon; content: "\f13d"; font-size: 16px; top: 1px; }
-.android-icon:before      { @include fa-icon; content: "\f17b"; font-size: 16px; top: 1px; }
-.at-icon:before           { @include fa-icon; content: "\f1fa"; font-size: 15px; top: 1px; }
-.audio-icon:before        { @include fa-icon; content: "\f028"; font-size: 15px; top: 1px; }
-.backup-icon:before       { @include fa-icon; content: "\f1da"; font-size: 13px; top: 1px; }
-.book-alt-icon:before     { @include fa-icon; content: "\f02d"; font-size: 16px; top: 2px; }
-.bullhorn-icon:before     { @include fa-icon; content: "\f0a1"; font-size: 16px; top: 2px; }
-.calc-icon:before         { @include fa-icon; content: "\f1ec"; font-size: 14px; }
-.coffee-icon:before       { @include fa-icon; content: "\f0f4"; font-size: 14px; top: 1px; }
-.css3-icon:before         { @include fa-icon; content: "\f13c"; top: 0; }
-.circle-icon:before       { @include fa-icon; content: "\f111"; font-size: 16px; top: 1px; }
-.download-icon:before     { @include fa-icon; content: "\f019"; font-size: 16px; top: 2px; }
-.earth-icon:before        { @include fa-icon; content: "\f0ac"; font-size: 15px; }
-.gears-icon:before        { @include fa-icon; content: "\f085"; font-size: 15px; }
-.html5-icon:before        { @include fa-icon; content: "\f13b"; font-size: 15px; top: 1px; }
-.lock-icon:before         { @include fa-icon; content: "\f023"; font-size: 17px; top: 2px; }
-.mobile-icon:before       { @include fa-icon; content: "\f10b"; font-size: 20px; top: 2px; }
-.moon-icon:before         { @include fa-icon; content: "\f186"; font-size: 16px; top: 1px; }
-.music-icon:before        { @include fa-icon; content: "\f001"; font-size: 15px; }
-.print-icon:before        { @include fa-icon; content: "\f02f"; font-size: 15px; top: 2px; }
-.recycle-icon:before      { @include fa-icon; content: "\f1b8"; font-size: 15px; top: 2px; }
-.rss-icon:before          { @include fa-icon; content: "\f143"; font-size: 16px; top: 2px; }
-.smarty-icon:before       { @include fa-icon; content: "\f0eb"; font-size: 15px; }
-.sourcemap-icon:before    { @include fa-icon; content: "\f279"; font-size: 14px; }
-.sun-icon:before          { @include fa-icon; content: "\f185"; font-size: 14px; @include thicken; }
-.toc-icon:before          { @include fa-icon; content: "\f03a"; font-size: 15px; top: 2px; }
-.wechat-icon:before       { @include fa-icon; content: "\f1d7"; font-size: 16px; top: 2px; }
+.anchor-icon:before       { @include fas-icon; content: "\f13d"; font-size: 16px; top: 1px; }
+.android-icon:before      { @include fab-icon; content: "\f17b"; font-size: 16px; top: 1px; }
+.at-icon:before           { @include fas-icon; content: "\f1fa"; font-size: 15px; top: 1px; }
+.audio-icon:before        { @include fas-icon; content: "\f028"; font-size: 15px; top: 1px; }
+.backup-icon:before       { @include fas-icon; content: "\f1da"; font-size: 13px; top: 1px; }
+.book-alt-icon:before     { @include fas-icon; content: "\f02d"; font-size: 16px; top: 2px; }
+.bullhorn-icon:before     { @include fas-icon; content: "\f0a1"; font-size: 16px; top: 2px; }
+.calc-icon:before         { @include fas-icon; content: "\f1ec"; font-size: 14px; }
+.coffee-icon:before       { @include fas-icon; content: "\f0f4"; font-size: 14px; top: 1px; }
+.css3-icon:before         { @include fab-icon; content: "\f13c"; top: 0; }
+.circle-icon:before       { @include fas-icon; content: "\f111"; font-size: 16px; top: 1px; }
+.download-icon:before     { @include fas-icon; content: "\f019"; font-size: 16px; top: 2px; }
+.earth-icon:before        { @include fas-icon; content: "\f57d"; font-size: 15px; }
+.gears-icon:before        { @include fas-icon; content: "\f085"; font-size: 15px; }
+.html5-icon:before        { @include fab-icon; content: "\f13b"; font-size: 15px; top: 1px; }
+.lock-icon:before         { @include fas-icon; content: "\f023"; font-size: 17px; top: 2px; }
+.mobile-icon:before       { @include fas-icon; content: "\f10b"; font-size: 20px; top: 2px; }
+.moon-icon:before         { @include fas-icon; content: "\f186"; font-size: 16px; top: 1px; } //Maybe
+.music-icon:before        { @include fas-icon; content: "\f001"; font-size: 15px; }
+.print-icon:before        { @include fas-icon; content: "\f02f"; font-size: 15px; top: 2px; }
+.recycle-icon:before      { @include fas-icon; content: "\f1b8"; font-size: 15px; top: 2px; }
+.rss-icon:before          { @include fas-icon; content: "\f143"; font-size: 16px; top: 2px; }
+.smarty-icon:before       { @include fas-icon; content: "\f0eb"; font-size: 15px; } //Who knows?
+.sourcemap-icon:before    { @include fas-icon; content: "\f279"; font-size: 14px; }
+.sun-icon:before          { @include fas-icon; content: "\f185"; font-size: 14px; @include thicken; }
+.toc-icon:before          { @include fas-icon; content: "\f03a"; font-size: 15px; top: 2px; } // Maybe
+.wechat-icon:before       { @include fab-icon; content: "\f1d7"; font-size: 16px; top: 2px; }
 
 
 
@@ -858,15 +859,6 @@
 .zig-icon:before           { @include file-icon; content: "z";     top: 3px; font-size: 16px; }
 .zimpl-icon:before         { @include file-icon; content: "\e9c8"; top: 2px; font-size: 16px; left: 1px; }
 .zork-icon:before          { @include file-icon; content: "\1b6";  top: 2px; }
-
-@font-face {
-	font-family: 'FontAwesome';
-	font-weight: normal;
-	font-style: normal;
-	font-display: swap;
-	src: local("FontAwesome"),
-		url('fontawesome.woff2');
-}
 
 @font-face {
 	font-family: 'Mfizz';
