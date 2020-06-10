@@ -31,66 +31,94 @@ class Market
 	// Init
 	//////////////////////////////////////////////////////////////////
 	public function init() {
-		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
+		$marketMTime = filemtime(DATA . "/cache/market.json");
+		$addonsMTime = filemtime(DATA . "/cache/addons.json");
+		
+		$oneWeekAgo = time() - (168 * 3600);
 
-		// Scan plugins directory for missing plugins
-		$temp = array();
-		foreach ($plugins as $plugin) {
-			if (is_readable(PLUGINS . "/$plugin/plugin.json")) {
-				$data = file_get_contents(PLUGINS . "/$plugin/plugin.json");
-				$data = json_decode($data);
-				$data->type = "plugin";
-				unset($data->config);
-				$temp[$data->name] = $data;
-			}
+		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
+		
+		if(!$addonsMTime || $addonsMTime < $oneWeekAgo ) {
+			$this->buildCache();
 		}
-
-		foreach ($themes as $theme) {
-			if (is_readable(THEMES . "/$theme/theme.json")) {
-				$data = file_get_contents(THEMES . "/$theme/theme.json");
-				$data = json_decode($data);
-				$data->type = "theme";
-
-
-				$temp[$data->name] = $data;
-			}
-		}
-
-		$cache = Common::readJSON("market", "cache");
 
 		$reply = array(
-			"addons" => $temp,
 			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
-			"cache" => $cache
+			"request" => $request
 		);
 
 		Common::sendJSON("success", $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////
-	// Save Cache
+	// Save  Market Cache
 	//////////////////////////////////////////////////////////////////
 	public function saveCache($cache) {
-		$string = Common::data('string');
-		$cache = json_decode($string);
-
+		$cache = json_decode($cache);
 		Common::saveJSON("market", $cache, "cache");
-		Common::sendJSON("success", $cache);
-
-		// Common::sendJSON("S2000");
+		Common::sendJSON("S2000");
 	}
+
+	//////////////////////////////////////////////////////////////////
+	// Build Installed Addon Cache
+	//////////////////////////////////////////////////////////////////
+	public function buildCache() {
+		$plugins = Common::readDirectory(PLUGINS);
+		$themes = Common::readDirectory(THEMES);
+
+		// Scan plugins directory for missing plugins
+		$installed = array(
+			"plugins" => array(),
+			"themes" => array()
+		);
+
+		foreach ($plugins as $plugin) {
+			if (is_readable(PLUGINS . "/$plugin/plugin.json")) {
+				$data = file_get_contents(PLUGINS . "/$plugin/plugin.json");
+				$data = json_decode($data, true);
+				unset($data["config"]);
+				$installed["plugins"][$data["category"]][$data["name"]] = $data;
+			}
+		}
+
+		foreach ($themes as $theme) {
+			if (is_readable(THEMES . "/$theme/theme.json")) {
+				$data = file_get_contents(THEMES . "/$theme/theme.json");
+				$data = json_decode($data, true);
+				$data["type"] = "theme";
+				$installed["themes"][$data["category"]][$data["name"]] = $data;
+			}
+		}
+
+		Common::saveJSON("addons", $installed, "cache");
+	}
+
+	//////////////////////////////////////////////////////////////////
+	// Find Repo URL
+	//////////////////////////////////////////////////////////////////	
+	public function findRepo($name, $type, $category) {
+		$market = Common::readJSON("market", "cache");
+		if(!$market) {
+			return false;
+		}
+		if(array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
+			return $market[$type][$category][$name]["url"];
+		}
+	}
+
 
 	//////////////////////////////////////////////////////////////////
 	// Install Plugin
 	//////////////////////////////////////////////////////////////////
-	public function install($type, $name, $repo) {
+	public function install($name, $type, $category) {
+		$repo = $this->findRepo($name, $type, $category);
+		
 		if (substr($repo, -4) == '.git') {
 			$repo = substr($repo, 0, -4);
 		}
 
 		// For manual install, there will be no type, so it checks the github repo to detect the type.
-		if ($type == '') {
+		if ($type === '') {
 			$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/plugin.json'));
 			if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
 				$type = 'plugins';
@@ -132,9 +160,9 @@ class Market
 			}
 			// Response
 			Common::log($this->username, "Installed plugin: $name", "market");
-			Common::sendJSON("success", "Successfully installed $repo.");
+			Common::sendJSON("success", "Successfully installed $name.");
 		} else {
-			Common::sendJSON("error", "Unable to download $repo.");
+			Common::sendJSON("error", "Unable to download $name.");
 			die;
 		}
 	}
@@ -142,8 +170,7 @@ class Market
 	//////////////////////////////////////////////////////////////////
 	// Remove Plugin
 	//////////////////////////////////////////////////////////////////
-
-	public function remove($type, $name) {
+	public function remove($name, $type) {
 		function rrmdir($path) {
 			return is_file($path)?
 			@unlink($path):
@@ -158,8 +185,9 @@ class Market
 	//////////////////////////////////////////////////////////////////
 	// Update Plugin
 	//////////////////////////////////////////////////////////////////
-
-	public function update($type, $name) {
+	public function update($name, $type, $category) {
+		$repo = $this->findRepo($name, $type, $category);
+		
 		function rrmdir($path) {
 			return is_file($path)?
 			@unlink($path):
