@@ -9,7 +9,6 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
-
 require_once('../../common.php');
 
 require_once("../../helpers/version-compare.php");
@@ -43,12 +42,6 @@ class Market {
 	public function __construct() {
 		$this->cAddons = Common::readJSON("addons", "cache");
 		$this->cMarket = Common::readJSON("market", "cache");
-
-		$addonsMTime = filemtime(DATA . "/cache/addons.json");
-
-		if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
-			$this->buildCache();
-		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -56,6 +49,7 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$marketMTime = filemtime(DATA . "/cache/market.json");
+		$addonsMTime = filemtime(DATA . "/cache/addons.json");
 
 		$oneWeekAgo = time() - (168 * 3600);
 
@@ -64,7 +58,9 @@ class Market {
 		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
 		$request = $this->cMarket ? $request : true;
 
-
+		if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
+			$this->buildCache();
+		}
 
 		$reply = array(
 			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
