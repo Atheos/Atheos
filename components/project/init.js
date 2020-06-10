@@ -13,8 +13,8 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -28,7 +28,7 @@
 
 		//projectmanager
 		sideExpanded: true,
-		openTrigger: 'single',
+		openTrigger: 'click',
 		current: {
 			name: '',
 			path: ''
@@ -72,42 +72,28 @@
 
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('project.openTrigger');
-				if (local === 'single' || local === 'double') {
+				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
 			});
 
-			self.nodeListener();
-		},
+			oX('#project_list .content li', true).on('click, dblclick', function(e) {
+				if (self.openTrigger === e.type) {
+					var node = oX(e.target);
 
-		nodeListener: function() {
-
-			var nodeFunctions = function(node) {
-				node = oX(node);
-
-				var tagName = node.el.tagName;
-
-				if (tagName === 'UL') {
-					return false;
-				} else if (tagName !== 'LI') {
-					node = node.parent();
-				}
-				self.open(node.attr('data-project'));
-
-			};
-
-			oX('#project_list .content').on('click', function(e) {
-				if (self.openTrigger === 'single') {
-					nodeFunctions(e.target);
+					if (node.tagName === 'UL') {
+						return false;
+					} else if (node.tagName !== 'LI') {
+						node = node.parent();
+					}
+					self.open(node.attr('data-project'));
+					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
+						self.openDir(node.attr('data-path'));
+					} else if (node.attr('data-type') === 'file') {
+						self.openFile(node.attr('data-path'));
+					}
 				}
 			});
-
-			oX('#project_list .content').on('dblclick', function(e) {
-				if (self.openTrigger === 'double') {
-					nodeFunctions(e.target);
-				}
-			});
-
 		},
 
 		//////////////////////////////////////////////////////////////////

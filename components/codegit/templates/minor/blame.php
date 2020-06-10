@@ -5,7 +5,7 @@ if ($files) {
 	$files = explode(',', $files);
 } else {
 	$files = array($path);
-	echo "<h1><i class=\"fas fa-code-branch\"></i>Blame Viewer</h1>";
+	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("Blame Viewer", false) . "</label>";
 }
 
 $blames = array();

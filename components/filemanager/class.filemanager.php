@@ -6,8 +6,11 @@
 *  [root]/license.txt for more. This information must remain intact.
 */
 
-require_once('../../lib/diff_match_patch.php');
 require_once('../../common.php');
+require_once('../../lib/diff_match_patch.php');
+require_once("../../helpers/recurse-delete.php");
+
+
 
 class Filemanager {
 
@@ -130,6 +133,8 @@ class Filemanager {
 			Common::sendJSON("error", "Path already exists."); die;
 		}
 
+		$path = strip_tags($path);
+
 		if ($type === "directory" && mkdir($path)) {
 			Common::sendJSON("S2000");
 		} elseif ($type === "file" && $file = fopen($path, 'w')) {
@@ -151,25 +156,6 @@ class Filemanager {
 		if (!file_exists($path)) {
 			Common::sendJSON("E402i");
 			die;
-		}
-
-		function rDelete($target) {
-			// Unnecessary, but rather be safe that sorry.
-			if ($target === "." || $target === "..") {
-				return;
-			}
-			if (is_dir($target)) {
-				$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
-
-				foreach ($files as $file) {
-					rDelete($file);
-				}
-				if (file_exists($target)) {
-					rmdir($target);
-				}
-			} elseif (is_file($target)) {
-				unlink($target);
-			}
 		}
 
 		rDelete($path);

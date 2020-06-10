@@ -29,8 +29,8 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -98,7 +98,6 @@
 			}
 			echo({
 				url: url,
-				type: 'GET',
 				data: data,
 				success: function(reply) {
 					if (reply.status && reply.status === 'error') {
@@ -207,7 +206,9 @@
 
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-
+			if (!wrapper) {
+				return;
+			}
 			var element = wrapper.el;
 
 			var rect = wrapper.offset(),
@@ -218,15 +219,8 @@
 				modalY = rect.top; // Stores top, left values (edge) of the element
 
 			function moveElement(event) {
-				if (element) {
-					// console.log(wrapper);
-					// wrapper.css({
-					// 	'top': modalY + event.clientY - mouseY + 'px',
-					// 	'left': modalX + event.clientX - mouseX + 'px'
-					// });
-					element.style.left = modalX + event.clientX - mouseX + 'px';
-					element.style.top = modalY + event.clientY - mouseY + 'px';
-				}
+				element.style.left = modalX + event.clientX - mouseX + 'px';
+				element.style.top = modalY + event.clientY - mouseY + 'px';
 			}
 
 			function disableSelect(e) {

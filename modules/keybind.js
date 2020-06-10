@@ -60,19 +60,25 @@
 			});
 
 			// Find [CTRL+F] /////////////////////////////////////////////////80
-			// self.bind(true, 70, function() {
-			// 	atheos.editor.openSearch('find');
-			// });
+			self.bind(70, 'ctrl', function() {
+				let editor = atheos.editor.activeInstance;
+				editor.execCommand('find');
+				// atheos.editor.openSearch('find');
+			});
 
 			// GotoLine [CTRL+G] /////////////////////////////////////////////80
 			self.bind(71, 'ctrl', function() {
-				atheos.editor.promptLine();
+				let editor = atheos.editor.activeInstance;
+				// atheos.editor.promptLine();
+				editor.execCommand('gotoline');
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////////80
-			// self.bind(true, 82, function() {
-			// 	atheos.editor.openSearch('replace');
-			// });
+			self.bind(82, 'ctrl', function() {
+				let editor = atheos.editor.activeInstance;
+				editor.execCommand('replace');
+			});
+
 
 			// Close [CTRL+Q] ////////////////////////////////////////////////80
 			self.bind(81, 'ctrl', function() {
@@ -124,7 +130,9 @@
 		// Key Bind
 		//////////////////////////////////////////////////////////////////////
 		bind: function(key, cmd, callback, args) {
-			if (!(key in self.bindings)) self.bindings[key] = [];
+			if (!(key in self.bindings)) {
+				self.bindings[key] = [];
+			}
 
 			self.bindings[key].push({
 				args: args || [],
@@ -143,15 +151,18 @@
 		handler: function(e) {
 			if (e.keyCode in self.bindings) {
 				self.bindings[e.keyCode].forEach(function(bind) {
-					if (bind.cmd.includes('alt') !== e.altKey) return;
-					if (bind.cmd.includes('ctrl') !== e.ctrlKey) return;
-					if (bind.cmd.includes('shift') !== e.shiftKey) return;
+					if (bind.cmd.includes('alt') !== e.altKey) {
+						return;
+					} else if (bind.cmd.includes('ctrl') !== e.ctrlKey) {
+						return;
+					} else if (bind.cmd.includes('shift') !== e.shiftKey) {
+						return;
+					}
 
 					e.preventDefault();
 					e.stopPropagation();
 
 					bind.callback.apply(this, bind.args);
-					return false;
 				});
 
 

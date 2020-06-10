@@ -12,12 +12,12 @@
 <form id="login" method="post" autocomplete="off">
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
-		<label for="username"><i class="fas fa-user"></i> <?php i18n("Username"); ?></label>
+		<label for="username"><i class="fas fa-user"></i><?php i18n("Username"); ?></label>
 		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="current-username">
 
-		<label for="password"><i class="fas fa-key"></i> <?php i18n("Password"); ?></label>
+		<label for="password"><i class="fas fa-key"></i><?php i18n("Password"); ?></label>
 		<input id="password" type="password" name="password" autocomplete="current-password">
-		<!--<span class="icon-eye in-field-icon-right" id="display_password">-->
+		<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
 
 		<div id="login_options">
 			<label for"theme"><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
@@ -53,7 +53,10 @@
 				<?php endforeach; ?>
 			</select>
 		</div>
-
+		
+		<input id="remember" type="checkbox" name="remember" class="large">
+		<label for="remember"><?php i18n("Remember Me"); ?></label>
+		
 		<button><?php i18n("Login"); ?></button>
 		<button id="show_login_options"><?php i18n("More"); ?></button>
 		<button id="hide_login_options" style="display:none;"><?php i18n("Less"); ?></button>

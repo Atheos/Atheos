@@ -22,7 +22,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -35,6 +35,8 @@
 			self = this;
 
 			// self.initDropdown();
+			self.initTogglePassword();
+			self.initCheckMonitors();
 		},
 
 
@@ -119,11 +121,54 @@
 
 				window.addEventListener('click', close);
 			});
-
-
-
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide Password Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initTogglePassword: function() {
+			oX('i.togglePassword', true).on('click', function(e) {
+				var icon = oX(e.target);
+				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
+				if (!field) {
+					return;
+				}
+				if (field.prop('type') === 'password') {
+					field.prop('type', 'text');
+				} else {
+					field.prop('type', 'password');
+				}
+				icon.switchClass('fa-eye', 'fa-eye-slash');
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Checkbox Group Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initCheckMonitors: function() {
+			oX('input[type="checkbox"][group]', true).on('click', function(e) {
+				var input = oX(e.target);
+				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
+				var checked = input.prop('checked');
+
+				if (input.attr('parent')) {
+					members.forEach((c) => c.prop('checked', checked));
+				}
+
+				var parent = members.filter((c) => c.attr('parent'))[0];
+				if (!checked) {
+					parent.prop('checked', checked);
+				} else {
+					var allChecked = true;
+					members.forEach((c) => {
+						if (c !== parent) {
+							allChecked = allChecked && (c.prop('checked') === true);
+						}
+					});
+					parent.prop('checked', allChecked);
+				}
+			});
+		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// SerializeForm
@@ -196,7 +241,7 @@
 		// Check Absolute Path
 		//////////////////////////////////////////////////////////////////////
 		isAbsPath: function(path) {
-			if (path.indexOf("/") === 0) {
+			if (path.indexOf('/') === 0) {
 				return true;
 			} else {
 				return false;

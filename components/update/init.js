@@ -14,8 +14,8 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -77,7 +77,7 @@
 					form.find('input[name="archive"').value(self.remote.zipball_url);
 					form.find('input[name="remoteversion"').value(self.remote.tag_name);
 					form.find('#remote_latest').text(self.remote.tag_name);
-					form.find('#remote_body').text(self.remote.body);
+					form.find('#update_changes').text(self.remote.body);
 				}
 			};
 			atheos.modal.load(500, self.dialog, {

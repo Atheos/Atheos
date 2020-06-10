@@ -1,4 +1,4 @@
-(function(global, undefined) {
+(function(global) {
 
 	var slice = [].slice,
 		subscriptions = {};
@@ -116,7 +116,7 @@
 		},
 		
 		unsubscribeAll: function(topic) {
-			if (typeof topic === "string") {
+			if (typeof topic === 'string') {
 				delete subscriptions[topic];
 			} else {
 				for (var key in subscriptions) {
