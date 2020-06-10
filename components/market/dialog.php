@@ -1,15 +1,17 @@
 <?php
 
-/*
-    *  Copyright (c) atheos & daeks (atheos.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+//////////////////////////////////////////////////////////////////////////////80
+// Market Dialog
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 require_once("../../common.php");
-
-require_once("../../helpers/version-compare.php");
-
+require_once('class.market.php');
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
@@ -28,79 +30,17 @@ if (!Common::checkAccess("configure")) {
 }
 
 
+$Market = new Market();
+
+
 switch ($action) {
 
-	//////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Marketplace
-	//////////////////////////////////////////////////////////////
-
+	//////////////////////////////////////////////////////////////////////////80
 	case 'list':
-		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
-
-		$addons = Common::readJSON("addons", "cache") ?: array();
-		$market = Common::readJSON("market", "cache") ?: array();
-
-		$iTable = "";
-		foreach ($addons as $type => $listT) {
-			foreach ($listT as $category => $listC) {
-				foreach ($listC as $addon => $data) {
-					$name = $data["name"];
-
-					if (array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
-						$iVersion = $data["version"];
-						$uVersion = $market[$type][$category][$name]["version"];
-
-						if (compareVersions($iVersion, $uVersion) < 0) {
-							$data = $market[$type][$category][$name];
-							$data["status"] = "updatable";
-						}
-						unset($market[$type][$category][$name]);
-					}
-
-					$url = $data["url"];
-					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
-
-					if ($data["status"] === 'updatable') {
-						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
-						$action .= "<a class=\"fas fa-times-circle\" onclick=\"atheos.market.uninstall('$name', '$type', '$category');return false;\"></a>";
-					} else {
-						$action = "<a class =\"fas fa-times-circle\" onclick=\"atheos.market.uninstall('$name', '$type', '$category');return false;\"></a>";
-					}
-
-					$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
-
-					$iTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
-				<td>" . $addon . "</td>
-				<td>" . $data["description"] . "</td>
-				<td>" . implode(", ", $data["author"]) . "</td>
-				<td>" . $action . "</td>
-				</tr>
-				";
-				}
-			}
-		}
-
-		$aTable = "";
-		foreach ($market as $type => $listT) {
-			foreach ($listT as $category => $listC) {
-				foreach ($listC as $addon => $data) {
-					$url = $data["url"];
-					$keywords = implode(", ", $data["keywords"]);
-
-					$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
-					$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
-
-					$aTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
-				<td>" . $addon . "</td>
-				<td>" . $data["description"] . "</td>
-				<td>" . implode(", ", $data["author"]) . "</td>
-				<td>" . $action . "</td>
-				</tr>
-				";
-				}
-			}
-		}
+		
+		$table = $Market->renderMarket();
 		?>
 		<label class="title"><i class="fas fa-store"></i><?php i18n("Atheos Marketplace"); ?></label>
 		<div id="market">
@@ -130,13 +70,13 @@ switch ($action) {
 							<h2>Installed</h2>
 						</td>
 					</tr>
-					<?php echo $iTable; ?>
+					<?php echo $table["i"]; ?>
 					<tr>
 						<td colspan="4">
 							<h2>Available</h2>
 						</td>
 					</tr>
-					<?php echo $aTable; ?>
+					<?php echo $table["a"]; ?>
 				</tbody>
 
 			</table>
