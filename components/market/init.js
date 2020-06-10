@@ -30,12 +30,9 @@
 		dialog: 'components/market/dialog.php',
 		home: null,
 		cache: null,
-		addons: null,
 
 		init: function() {
 			self = this;
-
-			var oneWeekAgo = Date.now() - (604800000);
 
 			echo({
 				url: self.controller,
@@ -48,8 +45,6 @@
 					}
 					self.home = reply.market;
 
-					log(reply);
-
 					if (reply.request) {
 						self.loadMarket();
 					}
@@ -59,8 +54,6 @@
 		},
 
 		loadMarket: function() {
-			var cache;
-
 			echo({
 				url: self.home,
 				success: function(reply) {
@@ -112,18 +105,6 @@
 			// amplify.subscribe('modal.loaded', listener);
 		},
 
-		findAddon: function(name) {
-			var addon = false;
-			if (self.cache.hasOwnProperty(name)) {
-				addon = self.cache[name];
-
-			} else if (self.addons.hasOwnProperty(name)) {
-				addon = self.addons[name];
-
-			}
-			return addon;
-		},
-
 		//////////////////////////////////////////////////////////////////
 		// Search marketplace
 		//////////////////////////////////////////////////////////////////
@@ -165,12 +146,6 @@
 		// Remove
 		//////////////////////////////////////////////////////////////////
 		remove: function(name, type, category) {
-			var addon = self.findAddon(name);
-			if (!addon) {
-				atheos.toast.show('error', 'No Repository URL');
-				return;
-			}
-
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
 			echo({
 				url: self.controller,
@@ -190,12 +165,6 @@
 		// Update
 		//////////////////////////////////////////////////////////////////
 		update: function(name, type, category) {
-			var addon = self.findAddon(name);
-			if (!addon) {
-				atheos.toast.show('error', 'No Repository URL');
-				return;
-			}
-
 			atheos.modal.setLoadingScreen('Updating ' + name + '...');
 
 			echo({
