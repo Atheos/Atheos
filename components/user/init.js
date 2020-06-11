@@ -45,6 +45,8 @@
 					} else {
 						atheos.storage('username', false);
 						atheos.storage('remember', false);
+						
+						oX('#password').focus();
 					}
 
 					// Save Language
@@ -125,7 +127,7 @@
 		// Authenticate User
 		//////////////////////////////////////////////////////////////////////80
 		authenticate: function() {
-			var data = atheos.common.serializeForm(self.loginForm.el);
+			var data = serializeForm(self.loginForm.el);
 			if (data.password === '' || data.username === '') {
 				atheos.toast.show('notice', 'Username/Password not provided.');
 				return;
@@ -341,7 +343,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var data = atheos.common.serializeForm(e.target);
+				var data = serializeForm(e.target);
 				data.action = 'updateACL';
 				data.username = username;
 
