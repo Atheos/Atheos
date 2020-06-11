@@ -75,6 +75,10 @@ class Common {
 		if (!defined('LANGUAGE')) {
 			define("LANGUAGE", "en");
 		}
+		
+		if (!defined('DEVELOPMENT')) {
+			define("DEVELOPMENT", false);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
