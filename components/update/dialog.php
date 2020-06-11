@@ -50,7 +50,7 @@ switch ($action) {
 				</table>
 				<br><label><?php i18n("Changes on Atheos"); ?></label>
 				<pre id="update_changes"></pre>
-				<?php if (false) {
+				<?php if ($local['atheos_version'] === "nightly") {
 					?>
 					<br><em class="note"><?php i18n("Note: Your installation is a nightly build. Atheos might be unstable."); ?></em><br>
 					<?php
