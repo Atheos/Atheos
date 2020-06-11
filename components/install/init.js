@@ -88,7 +88,7 @@
 		},
 
 		install: function() {
-			var data = atheos.common.serializeForm(self.form.el);
+			var data = serializeForm(self.form.el);
 			echo({
 				url: 'components/install/process.php',
 				data,
