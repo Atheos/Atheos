@@ -231,10 +231,15 @@ class Market {
 						}
 					}
 
-					$url = $data["url"];
+					$url = isset($data["url"]) ? $data["url"] : "false";
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
+					$status = isset($data["status"]) ? $data["status"] : "unavailable";
+					$description = isset($data["description"]) ? $data["description"] : "Missing Description.";
+					$author = isset($data["author"]) ? implode(", ", $data["author"]) : "Unknown";
 
-					if ($data["status"] === "updatable") {
+
+
+					if ($status === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
 						$action .= "<a class=\"fas fa-times-circle\" onclick=\"atheos.market.remove('$name', '$type', '$category');return false;\"></a>";
 					} else {
@@ -245,8 +250,8 @@ class Market {
 
 					$iTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
 				<td>" . $addon . "</td>
-				<td>" . $data["description"] . "</td>
-				<td>" . implode(", ", $data["author"]) . "</td>
+				<td>" . $description . "</td>
+				<td>" . $author . "</td>
 				<td>" . $action . "</td>
 				</tr>
 				";
