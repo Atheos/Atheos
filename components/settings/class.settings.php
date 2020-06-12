@@ -44,7 +44,11 @@ class Settings {
 	// Load User Settings
 	//////////////////////////////////////////////////////////////////////////80
 	public function load() {
-		Common::sendJSON("success", $this->settings[$this->username]);
+		if (array_key_exists($this->username, $this->settings)) {
+			Common::sendJSON("success", $this->settings[$this->username]);
+		} else {
+			Common::sendJSON("error", "Settings for user not found.");
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
