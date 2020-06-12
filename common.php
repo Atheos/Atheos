@@ -75,7 +75,7 @@ class Common {
 		if (!defined('LANGUAGE')) {
 			define("LANGUAGE", "en");
 		}
-		
+
 		if (!defined('DEVELOPMENT')) {
 			define("DEVELOPMENT", false);
 		}
@@ -163,9 +163,9 @@ class Common {
 			if ($fname === '.' || $fname === '..') {
 				continue;
 			}
-			
+
 			$length = strlen(".disabled");
-			if(substr($fname, -$length) === ".disabled") {
+			if (substr($fname, -$length) === ".disabled") {
 				continue;
 			}
 
@@ -180,13 +180,18 @@ class Common {
 	// Localization
 	//////////////////////////////////////////////////////////////////////////80
 	public static function i18n($key, $type = "echo", $args = array()) {
-		if (is_array($type)) {
+		
+	if (is_array($type)) {
 			$args = $type;
 			$type = "echo";
 		}
+
 		global $lang;
-		$key = ucwords(strtolower($key)); //Test, test TeSt and tESt are exacly the same
+
+		$key = strtolower($key); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
+
+		$return = ucfirst($return);
 
 		foreach ($args as $k => $v) {
 			$return = str_replace("%{".$k."}%", $v, $return);
