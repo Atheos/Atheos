@@ -42,12 +42,17 @@
 				data: {
 					action: 'init'
 				},
-				success: function(data) {
-					self.local = data.local;
-					self.home = data.remote;
-					self.repo = data.github;
+				success: function(reply) {
+					if (reply.status === 'error') {
+						return;
+					}
+					self.local = reply.local;
+					self.home = reply.remote;
+					self.repo = reply.github;
 
-					self.loadLatest();
+					if (reply.request) {
+						self.loadLatest();
+					}
 				}
 			});
 		},
@@ -66,29 +71,16 @@
 			});
 			atheos.modal.unload();
 		},
-		
+
 		//////////////////////////////////////////////////////////////////
 		// Update Check
 		//////////////////////////////////////////////////////////////////
 		check: function() {
-			var listener = function() {
-				var form = oX('#modal_content form');
-				if (form) {
-					
-					self.remote.body = self.remote.body.replace(/\*\*/gi, '');
-					
-					
-					form.find('input[name="archive"').value(self.remote.zipball_url);
-					form.find('input[name="remoteversion"').value(self.remote.tag_name);
-					form.find('#remote_latest').text(self.remote.tag_name);
-					form.find('#update_changes').text(self.remote.body);
-				}
-			};
 			atheos.modal.load(500, self.dialog, {
 				action: 'check'
-			}, listener);
+			});
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Load Latest from the Repo
 		//////////////////////////////////////////////////////////////////////80
@@ -96,7 +88,21 @@
 			echo({
 				url: self.repo,
 				success: function(reply) {
-					self.remote = reply;
+					log(reply);
+					self.saveCache(reply);
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Load Latest from the Repo
+		//////////////////////////////////////////////////////////////////////80	
+		saveCache: function(cache) {
+			echo({
+				url: self.controller,
+				data: {
+					action: 'saveCache',
+					cache: JSON.stringify(cache)
 				}
 			});
 		}
