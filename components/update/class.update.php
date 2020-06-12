@@ -19,6 +19,9 @@ class Update {
 	private $update = 'https://www.atheos.io/update';
 	private $github = 'https://api.github.com/repos/Atheos/Atheos/releases/latest';
 
+	public $local = array();
+	public $remote = array();
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -31,34 +34,32 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		ini_set("user_agent", "Atheos");
-		$this->version = Common::readJSON('version');
+		
+		$this->local = Common::readJSON("version");
+		$this->remote = Common::readJSON("update", "cache");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Set Initial Version
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		if (file_exists(DATA ."/version.json")) {
-			$local = $this->getLocalData();
+		$updateMTime = filemtime(DATA . "/cache/update.json");
 
-			$local["last_heard"] = date("Y/m/d");
-			$local["php_version"] = phpversion();
-			$local["server_os"] = Common::data("SERVER_SOFTWARE", "server");
-			$local["client_os"] = $this->getBrowserName();
-			$local["language"] = LANGUAGE;
-			$local["location"] = LANGUAGE;
-			$local["plugins"] = PLUGINS;
+		$oneWeekAgo = time() - (168 * 3600);
 
+		// In summary, if there is a cache file, and it's less than a week old,
+		// don't send a request for new UpdateCache, otherwise, do so.
+		$request = $updateMTime ? $updateMTime < $oneWeekAgo : true;
+		$request = $this->remote ? $request : true;
 
-			$reply = array(
-				"local" => $local,
-				"remote" => defined('UPDATEURL') ? UPDATEURL : $this->update,
-				"github" => defined('GITHUBAPI') ? GITHUBAPI : $this->github
-			);
+		$reply = array(
+			"local" => $this->local,
+			"remote" => defined('UPDATEURL') ? UPDATEURL : $this->update,
+			"github" => defined('GITHUBAPI') ? GITHUBAPI : $this->github,
+			"request" => $request
+		);
 
-			Common::sendJSON("success", $reply);
-
-		}
+		Common::sendJSON("success", $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -81,27 +82,13 @@ class Update {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Save Local Data
+	// Save  Market Cache
 	//////////////////////////////////////////////////////////////////////////80
-	public function setLocalData() {
-		$current = Common::readJSON('version');
-		Common::saveJSON('version', $current);
-	}
-	//////////////////////////////////////////////////////////////////////////80
-	// OptOut
-	//////////////////////////////////////////////////////////////////////////80
-	public function optOut() {
-		$current = Common::readJSON('version');
-		$current['optOut'] = false;
-		Common::saveJSON('version', $current);
-	}
-	//////////////////////////////////////////////////////////////////////////80
-	// OptIn
-	//////////////////////////////////////////////////////////////////////////80
-	public function optIn() {
-		$current = Common::readJSON('version');
-		$current['optOut'] = true;
-		Common::saveJSON('version', $current);
+	public function saveCache($cache) {
+		$cache = json_decode($cache);
+		$this->local = $cache;
+		Common::saveJSON("update", $cache, "cache");
+		Common::sendJSON("S2000");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
