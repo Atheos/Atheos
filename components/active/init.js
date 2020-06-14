@@ -68,9 +68,16 @@
 						return;
 					}
 					delete reply.status;
+					var focused;
 					for (var path in reply) {
-						var focused = reply[path] === 'focus' ? true : false;
+						focused = reply[path] === 'focus' ? true : false;
 						atheos.filemanager.openFile(path, focused);
+					}
+					if (focused !== true) {
+						var paths = Object.keys(reply);
+						if (paths.length > 0) {
+							atheos.filemanager.openFile(path, true);
+						}
 					}
 
 				}
@@ -550,6 +557,13 @@
 			});
 		},
 
+		reload: function(path, focus) {
+			log(focus);
+
+			self.close(path);
+			atheos.filemanager.openFile(path, focus);
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Rename tab to new name
 		//////////////////////////////////////////////////////////////////////80
@@ -704,7 +718,7 @@
 
 			return (room < 0);
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Update tab visibility
 		//////////////////////////////////////////////////////////////////////80
