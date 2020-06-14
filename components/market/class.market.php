@@ -85,7 +85,7 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function buildCache() {
 		global $components; global $themes;
-		
+
 		// Scan plugins directory for missing plugins
 		$addons = array(
 			"plugins" => array(),
@@ -183,8 +183,9 @@ class Market {
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 			// Response
-			Common::log($this->username, "Installed plugin: $name", "market");
 			Common::sendJSON("success", "Successfully installed $name.");
+			// Log Action
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
 			$this->buildCache();
 		} else {
 			Common::sendJSON("error", "Unable to download $name.");
@@ -197,9 +198,12 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($name, $type) {
 		rDelete(BASE_PATH.'/'.$type.'/'.$name);
-		Common::log($this->username, "Removed plugin: $name", "market");
 		Common::sendJSON("S2000");
+		// Log Action
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
+
 		$this->buildCache();
+
 	}
 
 
@@ -271,7 +275,7 @@ class Market {
 						if ($data["status"] !== "available") {
 							continue;
 						}
-						
+
 						$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
 						$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
 

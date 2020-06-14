@@ -9,6 +9,7 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: @hlsiira, @Philipp15b (https://github.com/Philipp15b/php-i18n)
 //////////////////////////////////////////////////////////////////////////////80
+
 class i18n {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -108,12 +109,8 @@ class i18n {
 			}
 		}
 
-		if ($this->appliedLang == NULL) {
-			throw new RuntimeException('No language file was found.');
-		}
-
 		// search for cache file
-		$cacheFilePath = __DIR__ . '/cache/i18n_' . $this->appliedLang . '.cache.php';
+		$cacheFilePath = DATA . '/cache/i18n_' . $this->appliedLang . '.cache.php';
 
 		// whether we need to create a new cache file
 		$outdated = false;
@@ -145,8 +142,8 @@ class i18n {
 			. ");\n"
 			. "?>";
 
-			if (!is_dir(__DIR__ . '/cache/')) {
-				mkdir(__DIR__ . '/cache/', 0755, true);
+			if (!is_dir(DATA . '/cache/')) {
+				mkdir(DATA . '/cache/', 0755, true);
 			}
 			if (file_put_contents($cacheFilePath, $compiled) === FALSE) {
 				throw new Exception("Could not create langauge cache");
@@ -163,47 +160,26 @@ class i18n {
 	//////////////////////////////////////////////////////////////////////////80
 	public function translate($string, $args = NULL) {
 		$result = array_key_exists($string, $this->cache) ? $this->cache[$string] : $string;
-		if(array_key_exists($string, $this->cache)) {
+		if (array_key_exists($string, $this->cache)) {
 			$result = $this->cache[$string];
 		} else {
 			$result = $string;
-			$this->debug($string);
+
+			$time = date("Y-m-d H:i:s");
+			$trace = debug_backtrace(null, 5);
+
+			$line = $trace[1]['line'];
+			$file = $trace[1]['file'];
+
+			$string = "Missing {\"$string\"} for {$this->appliedLang}";
+			$string = str_pad($string, 40, ".", STR_PAD_RIGHT);
+
+			$text = "@$time: $string < Ln:$line in $file";
+			
+			Common::log($text, "lang");
+
 		}
 		return $args ? vsprintf($result, $args) : $result;
-	}
-
-	function debug($val) {
-		$path = __DIR__ . "/missing.log";
-		$path = preg_replace('#/+#', '/', $path);
-
-		$time = date("Y-m-d H:i:s");
-
-		$trace = debug_backtrace(null, 5);
-
-		$function = $trace[1]['function'];
-		$file = $trace[2]['file'];
-
-		$val = "\"$val\"";
-		$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-		$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
-
-		$text = "@$time:\t$val < $function in $file" . PHP_EOL;
-
-		if (file_exists($path)) {
-			$lines = file($path);
-			if (sizeof($lines) > 100) {
-				unset($lines[0]);
-			}
-			$lines[] = $text;
-
-			$write = fopen($path, 'w');
-			fwrite($write, implode('', $lines));
-			fclose($write);
-		} else {
-			$write = fopen($path, 'w');
-			fwrite($write, $text);
-			fclose($write);
-		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -265,6 +241,15 @@ class i18n {
 	protected function getLangFileName($code) {
 		return str_replace('{LANGUAGE}', $code, __DIR__ . "/lang/{LANGUAGE}.json");
 	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Return filename for language data file
+	//////////////////////////////////////////////////////////////////////////80
+	protected function checkPlugins($code) {
+		return str_replace('{LANGUAGE}', $code, __DIR__ . "/lang/{LANGUAGE}.json");
+	}
+
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Load language file code

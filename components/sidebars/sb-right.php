@@ -20,20 +20,20 @@ $right_bar = json_decode($right_bar, true);
 		////////////////////////////////////////////////////////////
 		// Load Right Bar
 		////////////////////////////////////////////////////////////
-		$access = Common::checkAccess();
+		$access = Common::checkAccess("configure");
 		foreach ($right_bar as $item_rb => $data) {
-			$data["admin"] = $data["admin"] ?: false;
+			$data["admin"] = isset($data["admin"]) ? $data["admin"] : false;
 
-			if ($data['type'] === 'break') {
-				if (!$data['admin'] || $data['admin'] && $access) {
+			if ($data['title'] === 'break') {
+				if (!$data['admin'] && $access) {
 					echo("<hr>");
 				}
 			} elseif ($data['title'] != 'pluginbar' && $data['onclick'] == '') {
-				if (!$data['admin'] || $data['admin'] && $access) {
+				if (!$data['admin'] || $access) {
 					echo("<label class=\"category\">" . i18n($data["title"], "return") . "</label>");
 				}
 			} elseif ($data['title'] === 'pluginbar') {
-				if (!$data['admin'] || $data['admin'] && $access) {
+				if (!$data['admin'] || $access) {
 					foreach ($plugins as $plugin) {
 						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
@@ -52,7 +52,7 @@ $right_bar = json_decode($right_bar, true);
 					}
 				}
 			} else {
-				if (!$data['admin'] || $data['admin'] && $access) {
+				if (!$data['admin'] || $access) {
 					echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], "return").'</a>');
 				}
 			}

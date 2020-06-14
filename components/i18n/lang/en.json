@@ -3,43 +3,109 @@
 	"deny": "No",
 	"affirm": "Yes",
 
+	"enabled": "Enabled",
+	"disabled": "Disabled",
+
 	"on": "On",
 	"off": "Off",
 
+	"true": "True",
+	"false": "False",
 
+	"passed": "PASSED",
+	"failed": "FAILED",
 
 	"show": "Show",
 	"hide": "Hide",
 
 	"login": "Login",
 	"logout": "Logout",
+	"rememberMe": "Remember Me",
+
+
 
 
 	"find": "Find",
 	"find:": "Find:",
 
-	"replace": "Replace",
+	"replace": {
+		"": "Replace",
+		"all": "Replace All"
+	},
 	"replace:": "Replace:",
 
+	"gotoLine": "Goto Line",
+
+	"moveLine": {
+		"up": "Move Line Up",
+		"down": "Move Line Down"
+	},
+
+	"cycleActive": {
+		"next": "Cycle to new file",
+		"prev": "Cycle to previous file"
+	},
+
+	"key": {
+		"alt": "Atl",
+		"esc": "Esc",
+		"ctrl": "Ctrl",
+		"shift": "Shift"
+
+	},
+
 	"path": "Path",
-	"path:": "Path:",
 	"copy": "Copy",
 	"paste": "Paste",
 	"duplicate": "Duplicate",
 	"preview": "Preview",
 	"cancel": "Cancel",
-	"create": "Create",
-	"rename": "Rename",
-	"delete": "Delete",
+	"create": {
+		"": "Create",
+		"type": "Create %s"
+	},
+
+	"rename": {
+		"": "Rename",
+		"type": "Rename %s"
+	},
+
+	"delete": {
+		"": "Delete",
+		"type": "Delete %s"
+	},
+
 	"rescan": "Rescan",
 
 	"download": "download",
 
-	"save": "Save",
-	"saveAll": "Save All",
+	"cannotPasteDirectoryIntoItself": "Cannot Paste Directory Into Itself",
+	"overwriteOriginal": "Overwrite Original",
+	"copiedToClipboard": "Copied to Clipboard",
+	"createDuplicate": "Create Duplicate",
+	"areYouSureYouWishToDeleteTheFollowing:": "Are You Sure You Wish To Delete The Following:",
+	"wouldYouLikeToOverwriteOrDuplicateTheFollowing:": "Would you like to overwrite or duplicate the following:",
+
+	"youHaveUnsavedFiles": "You have unsaved files.",
+	"fileCouldNotBeSaved": "File could not be saved",
+	"closeUnsavedFiles": "Close Unsaved Files?",
+	"noOpenFilesToSave": "No Open Files to save",
+
+	"save": {
+		"": "Save",
+		"all": "Save All",
+		"active": "Save Active File"
+	},
 	"open": "Open",
-	"close": "Close",
-	"closeAll": "Close All",
+	"close": {
+		"": "Close",
+		"all": "Close All",
+		"active": "Close Active File"
+	},
+
+	"closeUnsavedFile": "Close Unsaved File?",
+	"save&close": "Save & Close",
+	"discardChanges": "Discard Changes",
 
 
 	"ln": "Ln",
@@ -52,16 +118,12 @@
 
 
 	"more": "More",
+	"less": "Less",
 	"users": "Users",
-	"theme": "Theme",
-	"hover": "Hover",
-	"click": "Click",
-	"name:": "Name:",
 	"name": "Name",
 
 	"search": "Search",
-	"searchFiles": "Search Files:",
-	"searching": "Searching...",
+
 
 	"filterTree": "Filter Tree",
 	"prefix": "Prefix",
@@ -69,7 +131,10 @@
 	"regex": "Substring",
 
 	"scout": {
+		"open": "Open Scout",
 		"query": "Query:",
+		"searching": "Searching...",
+		"searchFiles": "Search Files:",
 		"fileTypes": "space seperated file types",
 		"withinWorkSpace": "Within Workspace"
 	},
@@ -77,23 +142,60 @@
 	"themes": "Themes",
 	"branch": "Branch",
 	"editor": "Editor",
-
+	"extension": "Extension",
+	"extensions": "Extensions",
+	"textmode": "Textmode",
+	"textmodes": "Textmodes",
+	"keybindings": "Keybindings",
 	"plugins": "Plugins",
 	"system": "System",
 	"administration": "Administration",
 
 
-	"install": "Install",
-	"noWrap": "No Wrap",
+	"wrap": {
+		"": "Line Wrap",
+		"on": "Wrap Lines",
+		"off": "No Wrap"
+	},
+
 	"confirm": "Confirm",
 	"explore": "Explore",
 	"continue": "Continue",
 
 	"timezone": "Timezone",
-	"settings": "Settings",
-	"tabSize": "Tab Size",
+	"settings": {
+		"": "Settings",
+		"autosave": "Settings are automatically saved.",
+		"editor": "Editor Settings",
+		"system": "System Settings",
+		"codegit": "CodeGit Settings"
+	},
 
-	"username": "Username",
+	"account": {
+		"": "Account",
+		"new": "New Account",
+		"create": "Create Account",
+		"delete": "Delete Account",
+		"confirm": "Confirm Account Deletion"
+	},
+	"account:": "Account:",
+
+	"username": {
+		"": "Username",
+		"new": "New Username",
+		"create": "Create Username"
+	},
+	"username:": "Username:",
+
+
+	"password": {
+		"": "Password",
+		"new": "New Password",
+		"change": "Change Password",
+		"changeUser": "Change %s&#39;s Password",
+		"confirm": "Confirm Password"
+	},
+	"password:": "Password:",
 
 	"project": {
 		"": "Project",
@@ -104,41 +206,51 @@
 
 		"name": "Project Name",
 		"rename": "Rename Project",
-		"loaded": "Project %s Loaded"
+		"delete": "Delete Project",
+		"confirm": "Confirm Project Deletion",
+		"loaded": "%s Loaded"
 	},
-	"projects": "Projects",
 
+	"project:": "Project:",
+	"projects": "Projects",
+	"projects:": "Projects:",
+
+	"editUserACL": "Edit %s's ACL",
 
 	"workspaceProjects": "Workspace Projects",
 
-	"projectAccessFar": "Project Access for ",
 	"accessAllProjects": "Access ALL Projects",
-	"projectLoaded": "",
-
-
 	"onlySelectedProjects": "Only Selected Projects",
-	"confirmProjectDeletion": "Confirm Project Deletion",
 
-	"createAccount": "Create Account",
-	"account": "Account",
-	"account:": "Account:",
+	"update": {
+		"": "Update",
+		"check": "Update Check",
+		"current": "Your System Is Up To Date."
+	},
+	"install": "Install",
+	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
+	"yourVersion": "Your Version",
+
+
 	"language": "Language",
 	"collapse": "Collapse",
-	"terminal": "Terminal",
 	"complete": "Complete!",
-	"extension": "Extension",
 	"installed": "Installed",
 	"available": "Available",
 	"fontSize": "Font Size",
-	"softTabs": "Soft Tabs",
-	"gotoLine": "Goto Line",
+	"pixel": {
+		"": "%spx",
+		"default": "%spx (default)"
+	},
+
+	"tabs": {
+		"soft": "Soft Tabs",
+		"size": "Tab Size"
+	},
 	"userList": "User List",
 
 
 	"directory": "Directory",
-
-
-
 
 	"file": "File",
 	"fileNew": "New File",
@@ -150,51 +262,72 @@
 
 	"folderNew": "New Folder",
 
-	"extensions": "Extensions",
-	"restricted": "Restricted",
+	"restricted": {
+		"": "Restricted",
+		"userList": "Not authorized to edit UserList",
+		"updates": "You can not check for updates",
+		"marketplace": "You can not access the marketplace"
+	},
+
+	"unauthorized": "You are not Authorized to %s",
 	"wrapLines": "Wrap Lines",
+
 	"colorTool": "Color Tool",
 	"insertHex": "Insert HEX",
 	"insertRGB": "Insert RGB",
-	"replaceAll": "Replace All",
 
 
-	"newAccount": "New Account",
+	"printMarginShow": "Print Margin",
+	"printMarginColumn": "Print Margin Column",
 
+	"theme": "Theme",
+	"hover": {
+		"": "Hover",
+		"duration": "Sidebar Hover Duration"
+	},
+	"click": {
+		"": "Click",
+		"single": "Single Click",
+		"double": "Double Click"
+	},
 
-	"saveScheme": "Save Scheme",
-	"save&close": "Save & Close",
-	"dependencies": "Dependencies",
-	"newUsername": "New Username",
+	"loop": {
+		"behavior": "Active File Loop Behavior",
+		"onlyActive": "Loop only active tabs",
+		"incDropdown": "Include dropdown menu"
+	},
 
-	"printMargin": "Print Margin",
-	"singleClick": "Single Click",
-	"doubleClick": "Double Click",
+	"showHidden": "Show Hidden Files",
 
-	"updateCheck": "Update Check",
-	"yourVersion": "Your Version",
+	"trigger": {
+		"fileManager": "Filemanager Trigger",
+		"projectDock": "ProjectDock Trigger",
+		"rightSidebar": "Right Sidebar Trigger",
+		"leftSidebar": "Left Sidebar Trigger"
+	},
 
-	"password": "Password",
-	"newPassword": "New Password",
-	"changePassword": "Change Password",
-	"changeUsernamePassword": "Change %s&#39;s Password",
-	"confirmPassword": "Confirm Password",
+	"contextMenu": {
+		"delay": "Context Menu Close Delay"
+	},
+
 
 	"newExtension": "New Extension",
-	"initialSetup": "Initial Setup",
+	"fileExtension": "File Extension",
+	"defaultTextmode": "Default Textmode",
 	"indentGuides": "Indent Guides",
 	"inlinePreview": "Inline Preview",
-	"closeUploader": "Close Uploader",
-	"latestVersion": "Latest Version",
-	"gitRpository": "Git Repository",
+
+	"close_uploader": "Close Uploader",
+	"close_modal": "Close Modal",
 
 
+	"installationError": "Installation Error",
+	"existsAndWriteable:": "Please make sure the following exist and are writeable:",
+	"envVariablesSet:": "Please make sure these environmental variables are set:",
+	"retest": "Re-Test",
 
-	"discardChanges": "Discard Changes",
-	"editorSettings": "Editor Settings",
-	"systemSettings": "System Settings",
-	"accountDeleted": "Account Deleted",
-
+	"initialSetup": "Initial Setup",
+	"dependencies": "Dependencies",
 
 	"connectionError": "Connection Error",
 
@@ -207,32 +340,33 @@
 		}
 	},
 
-	"changesOnAtheos": "Changes On Atheos",
-	"reloadCodiad": "Reload Codiad",
-	"downloadCodiad": "Download Atheos",
+	"latestVersion": "Latest Version",
 
-	"youCanNotAccessTheMarketplace": "You can not access the marketplace",
-	"congratulationsYourSystemIsUpToDate": "Congratulation, Your System Is Up To Date.",
+	"changesOnAtheos": "Changes On Atheos",
+	"reloadAtheos": "Reload Atheos",
+	"downloadAtheos": "Download Atheos",
 
 	"split": {
 		"": "Split",
 		"h": "Split Horizontally",
-		"v": "Split Vertically"
+		"v": "Split Vertically",
+		"editor": {
+			"h": "Split Editor Horizontally",
+			"v": "Split Editor Vertically"
+		}
 	},
 	"merge": {
 		"": "Merge",
-		"all": "Merge all"
+		"all": "Merge all",
+		"editor": "Merged Editor Panes"
 	},
 
-	"overwriteOriginal": "Overwrite Original",
-	"installationError": "Installation Error",
-	"regularExpression": "Regular expression",
-	"closeUnsavedFile": "Close Unsaved File?",
-	"printMarginColumn": "Print Margin Column",
-	"filemanagerTrigger": "Filemanager Trigger",
 
-	"copiedToClipboard": "Copied to Clipboard",
 	"time": {
+		"ms": {
+			"": "%sms",
+			"default": "%sms (default)"
+		},
 		"second": {
 			"single": "%s Second",
 			"plural": "%s Seconds"
@@ -246,49 +380,46 @@
 			"plural": "%s Hours"
 		}
 	},
-	"closeUnsavedFiles": "Close Unsaved Files?",
+
 	"contactingGitHub": "Contacting GitHub...",
 	"editFileExtensions": "Edit File Extensions",
 
 	"highlightActiveLine": "Highlight Active Line",
-	"rightSidebarTrigger": "Right Sidebar Trigger",
-	"confirmUserDeletion": "Confirm User Deletion",
-	"noOpenFilesToSave": "No Open Files to save",
+
 	"followSymbolicLinks": "Follow Symbolic Links ",
 
 	"youMustChooseAValue": "You Must Choose A Value",
-	"youHaveUnsavedFiles": "You have unsaved files.",
-	"fileCouldNotBeSaved": "File could not be saved",
-	"lastUpdateWasDoneBy": "Last Update Was Done By ",
+
+
+
+
+
 	"NothingInYourClipboard": "Nothing in Your Clipboard",
 	"folderNameOrAbsolutePath": "Folder Name Or Absolute Path",
-	"youCanNotCheckForUpdates": "You can not check for updates",
 
 	"enterGitHUbRepositoryURL": "Enter Github Repository Url...",
-	"youCanNotEditTheUserList": "You can not edit the user list",
-	"recoveredUnsavedContentFor:": "Recovered unsaved content for:",
 	"noOpenFilesOrSelect": "No Open Files or Selected Text",
 
 	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
 
 	"warningFileCurrentlyOpenedBy:": "Warning: File Currently Opened By:",
-	"cannotPasteDirectoryIntoItself": "Cannot Paste Directory Into Itself",
 
-	"createDuplicate": "Create Duplicate",
-	"areYouSureYouWishToDeleteTheFollowing:": "Are You Sure You Wish To Delete The Following:",
-	"wouldYouLikeToOverwriteOrDuplicateTheFollowing:": "Would you like to overwrite or duplicate the following:",
 
-	"pleaseMakeSureTheFollowingExistAndAreWriteable:": "Please make sure the following exist and are writeable:",
-	"pleaseMakeSureTheseEnvironmentalVariablesAreSet:": "Please make sure these environmental variables are set:",
 
 	"fileManager": "File Manager",
-	"codegit": "CodeGit",
+	"gitRepository": "Git Repository",
 
-	"codeGitSettings": "CodeGit Settings",
-	"leftSidebarTrigger": "Left Sidebar Trigger",
-	"disableRepowideStatus": "Disable repo-wide status",
-	"disableRepowideStatusHeader": "Disable repo-wide status header",
+	"codegit": {
+		"": "CodeGit",
+		"banner": "Banner above FileManager",
+		"status": "File Status in BottomBar"
+	},
+
+	"overview": "Overview",
+	"log": "Log",
+	"transfer": "Transfer",
+
 	"suppressDiffOnCommit": "Suppress diff on commit",
-	"saveExtensions": "Save Extensions",
-	"noteYourInstallationIsANightlyBuildCodiadMightBeUnstable": "Note: Your installation is a nightly build. Codiad might be unstable."
+	"saveExtensions": "Save Extensions"
+
 }

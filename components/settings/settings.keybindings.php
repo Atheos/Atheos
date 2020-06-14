@@ -1,116 +1,116 @@
 <?php require_once('../../common.php'); ?>
 
-<label><i class="fas fa-keyboard"></i><?php i18n("Keybindings"); ?></label>
+<label><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></label>
 <table class="keybindings">
 	<tr>
 		<td>
-			<?php i18n("Close Modal"); ?>
+			<?php echo i18n("close_modal"); ?>
 		</td>
 		<td>
-			<i class="cmd">Esc</i>
+			<i class="cmd"><?php echo i18n("key_esc"); ?></i>
 		</td>
 
 		<td>
-			<?php i18n("Merge All Editor Views"); ?>
+			<?php echo i18n("merge_editor"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">M</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">M</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<?php i18n("Split Horizontally"); ?>
+			<?php echo i18n("split_editor_h"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">;</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">;</i>
 		</td>
 
 		<td>
-			<?php i18n("Split Vertically"); ?>
+			<?php echo i18n("split_editor_v"); ?>
 		</td>
 		<td>
-			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="key">;</i>
+			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="key">;</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<?php i18n("Save Active File"); ?>
+			<?php echo i18n("save_active"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">S</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">S</i>
 		</td>
 
 		<td>
-			<?php i18n("Close Active File"); ?>
+			<?php echo i18n("close_active"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">W</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">W</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<?php i18n("Find"); ?>
+			<?php echo i18n("find"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">F</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">F</i>
 		</td>
 
 		<td>
-			<?php i18n("Open Scout"); ?>
+			<?php echo i18n("scout_open"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">E</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">E</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<?php i18n("Replace"); ?>
+			<?php echo i18n("replace"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">H</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">H</i>
 		</td>
 
 		<td>
-			<?php i18n("GoTo Line"); ?>
+			<?php echo i18n("gotoLine"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="key">L</i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="key">L</i>
 		</td>
 	</tr>
 
 	<tr>
 		<td>
-			<?php i18n("Move Line Up"); ?>
+			<?php echo i18n("moveLine_up"); ?>
 		</td>
 		<td>
-			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-up"></i>
+			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-up"></i>
 		</td>
 
 		<td>
-			<?php i18n("Move Line Down"); ?>
+			<?php echo i18n("moveLine_down"); ?>
 		</td>
 		<td>
-			<i class="cmd">Alt</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
+			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-down"></i>
 		</td>
 	</tr>
 	
 	<tr>
 		<td>
-			<?php i18n("Cycle to Previous File"); ?>
+			<?php echo i18n("cycleActive_prev"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-up"></i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-up"></i>
 		</td>
 
 		<td>
-			<?php i18n("Cycle to Next File"); ?>
+			<?php echo i18n("cycleActive_next"); ?>
 		</td>
 		<td>
-			<i class="cmd">Ctrl</i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-down"></i>
 		</td>
 	</tr>	
 </table>

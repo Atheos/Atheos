@@ -94,7 +94,8 @@ class Project {
 
 		Common::sendJSON("success", array("name" => $projectName, "path" => $projectPath));
 		// Log Action
-		Common::log($this->activeUser, "Created project {" . $projectName . "}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "access");
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -110,7 +111,7 @@ class Project {
 		// Response
 		Common::sendJSON("S2000");
 		// Log Action
-		Common::log($this->activeUser, "Deleted project {" . $projectName . "}", "access");		
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -194,7 +195,7 @@ class Project {
 		// Response
 		Common::sendJSON("S2000");
 		// Log Action
-		Common::log($this->activeUser, "Renamed project {" . $projectName . "}", "access");		
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$projectName}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

@@ -29,9 +29,9 @@
 	}
 
 	?>
-	<button onclick="atheos.codegit.push(); return false;"><?php i18n("Push") ?></button>
-	<button onclick="atheos.codegit.pull(); return false;"><?php i18n("Pull") ?></button>
-	<button onclick="atheos.codegit.fetch(); return false;"><?php i18n("Fetch") ?></button>
+	<button onclick="atheos.codegit.push(); return false;"><?php echo i18n("push") ?></button>
+	<button onclick="atheos.codegit.pull(); return false;"><?php echo i18n("pull") ?></button>
+	<button onclick="atheos.codegit.fetch(); return false;"><?php echo i18n("fetch") ?></button>
 	<table>
 		<tr>
 			<td width="50%">Remote:</td>
