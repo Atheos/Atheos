@@ -49,19 +49,6 @@ $theme = Common::data("theme", "session") ?: THEME;
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
 
-	<script>
-		var i18n = (function(lang) {
-			return function(word, args) {
-				var x;
-				var returnw = (word in lang) ? lang[word]: word;
-				for (x in args) {
-					returnw = returnw.replace("%{"+x+"}%", args[x]);
-				}
-				return returnw;
-			}
-		})(<?php echo json_encode($lang); ?>)
-	</script>
-
 	<?php
 	// Load System CSS Files
 	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
@@ -107,18 +94,17 @@ $theme = Common::data("theme", "session") ?: THEME;
 				<div id="root-editor-wrapper"></div>
 
 				<div id="editor-bottom-bar">
-					<!--<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>-->
-					<a id="split"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
+					<a id="split"><i class="fas fa-columns"></i><?php echo i18n("split"); ?></a>
 					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<span id="current_file"></span>
 					<span id="codegit_file_status"></span>
 					<div id="changemode-menu" style="display:none;" class="options-menu"></div>
 					<ul id="split-options-menu" style="display:none;" class="options-menu">
-						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php i18n("Split Horizontally"); ?> </a></li>
-						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php i18n("Split Vertically"); ?> </a></li>
-						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php i18n("Merge all"); ?> </a></li>
+						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php echo i18n("split_h"); ?> </a></li>
+						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php echo i18n("split_v"); ?> </a></li>
+						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php echo i18n("merge_all"); ?> </a></li>
 					</ul>
-					<span id="cursor-position"><?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0</span>
+					<span id="cursor-position"><?php echo i18n("ln"); ?>: 0 &middot; <?php echo i18n("col"); ?>: 0</span>
 				</div>
 
 			</div>
