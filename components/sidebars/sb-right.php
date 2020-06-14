@@ -22,18 +22,17 @@ $right_bar = json_decode($right_bar, true);
 		////////////////////////////////////////////////////////////
 		$access = Common::checkAccess();
 		foreach ($right_bar as $item_rb => $data) {
-			if (!isset($data['admin'])) {
-				$data['admin'] = false;
-			}
-			if ($data['title'] == 'break') {
+			$data["admin"] = $data["admin"] ?: false;
+
+			if ($data['type'] === 'break') {
 				if (!$data['admin'] || $data['admin'] && $access) {
 					echo("<hr>");
 				}
-			} elseif ($data['title'] != 'break' && $data['title'] != 'pluginbar' && $data['onclick'] == '') {
+			} elseif ($data['title'] != 'pluginbar' && $data['onclick'] == '') {
 				if (!$data['admin'] || $data['admin'] && $access) {
 					echo("<label class=\"category\">" . i18n($data["title"], "return") . "</label>");
 				}
-			} elseif ($data['title'] == 'pluginbar') {
+			} elseif ($data['title'] === 'pluginbar') {
 				if (!$data['admin'] || $data['admin'] && $access) {
 					foreach ($plugins as $plugin) {
 						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {

@@ -12,15 +12,15 @@
 <form id="login" method="post" autocomplete="off">
 	<fieldset>
 		<legend>Atheos <span>IDE</span></legend>
-		<label for="username"><i class="fas fa-user"></i><?php i18n("Username"); ?></label>
+		<label for="username"><i class="fas fa-user"></i><?php echo i18n("username"); ?></label>
 		<input id="username" type="text" name="username" autofocus="autofocus" autocomplete="current-username">
 
-		<label for="password"><i class="fas fa-key"></i><?php i18n("Password"); ?></label>
+		<label for="password"><i class="fas fa-key"></i><?php echo i18n("password"); ?></label>
 		<input id="password" type="password" name="password" autocomplete="current-password">
 		<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
 
 		<div id="login_options">
-			<label for"theme"><i class="fas fa-images"></i> <?php i18n("Theme"); ?></label>
+			<label for"theme"><i class="fas fa-images"></i> <?php echo i18n("theme"); ?></label>
 			<select name="theme" id="theme">
 				<?php foreach ($themes as $theme) {
 					if (file_exists(THEMES."/" . $theme . "/theme.json")) {
@@ -37,10 +37,10 @@
 					}
 				} ?>
 			</select>
-			<label for="lanauge"><i class="fas fa-language"></i> <?php i18n("Language"); ?></label>
+			<label for="lanauge"><i class="fas fa-language"></i> <?php echo i18n("language"); ?></label>
 			<select name="language" id="language">
 				<?php
-				include 'languages/code.php';
+				$languages = $i18n->codes();
 				foreach (glob("languages/*.php") as $filename):
 				$lang_code = str_replace(array("languages/", ".php"), "", $filename);
 				if (!isset($languages[$lang_code])) {
@@ -55,11 +55,11 @@
 		</div>
 		
 		<input id="remember" type="checkbox" name="remember" class="large">
-		<label for="remember"><?php i18n("Remember Me"); ?></label>
+		<label for="remember"><?php echo i18n("rememberMe"); ?></label>
 		
-		<button><?php i18n("Login"); ?></button>
-		<button id="show_login_options"><?php i18n("More"); ?></button>
-		<button id="hide_login_options" style="display:none;"><?php i18n("Less"); ?></button>
+		<button><?php echo i18n("login"); ?></button>
+		<button id="show_login_options"><?php echo i18n("more"); ?></button>
+		<button id="hide_login_options" style="display:none;"><?php echo i18n("less"); ?></button>
 
 	</fieldset>
 </form>
