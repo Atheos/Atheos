@@ -274,7 +274,7 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		openFile: function(path, focus, line) {
-			focus = focus || true;
+			focus = typeof(focus) !== 'undefined' ? focus : true;
 
 			var ext = pathinfo(path).extension.toLowerCase();
 
