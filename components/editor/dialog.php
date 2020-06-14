@@ -29,52 +29,6 @@ if (!$action) {
 }
 
 switch ($action) {
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Find
-	//////////////////////////////////////////////////////////////////////////80
-	case 'find':
-		?>
-		<form onsubmit="atheos.editor.search('find');return false;">
-			<h4><i class="fas fa-search"></i><?php i18n("Find:"); ?></h4>
-			<input type="text" name="find" value="<?php echo $highlight; ?>"autofocus="autofocus" autocomplete="off">
-			<button class="btn-left" onclick="atheos.editor.search('find');return false;"><?php i18n("Find"); ?></button>
-		</form>
-
-		<?php
-		break;
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Replace
-	//////////////////////////////////////////////////////////////////////////80
-	case 'replace':
-		?>
-		<form>
-			<h4><i class="fas fa-search"></i><?php i18n("Find:"); ?></h4>
-			<input type="text" name="find" value="<?php echo $highlight; ?>"autofocus="autofocus" autocomplete="off">
-			<h4><i class="fas fa-exchange-alt"></i><?php i18n("Replace:"); ?></h4>
-			<input type="text" name="replace">
-			<button class="btn-left" onclick="atheos.editor.search('find');return false;"><?php i18n("Find"); ?></button>
-			<button class="btn-mid" onclick="atheos.editor.search('replace');return false;"><?php i18n("Replace"); ?></button>
-			<button class="btn-mid" onclick="atheos.editor.search('replaceAll');return false;"><?php i18n("Replace ALL"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-
-		<?php
-		break;
-	//////////////////////////////////////////////////////////////////////////80
-	// Prompt for GotoLine
-	//////////////////////////////////////////////////////////////////////////80
-	case 'promptLine':
-		?>
-		<form>
-			<h4><i class="fas fa-external-link-alt"></i> <?php i18n("Enter a line number:"); ?></h4>
-			<input type="text" name="line" autofocus="autofocus" autocomplete="off" value="">
-			<button class="btn-left"><?php i18n("Goto"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-		<?php
-		break;
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80

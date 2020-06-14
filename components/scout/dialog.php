@@ -37,7 +37,7 @@ switch ($action) {
 		}
 
 		?>
-		<label class="title"><i class="fas fa-search"></i><?php echo i18n("searchFiles"); ?></label>
+		<label class="title"><i class="fas fa-search"></i><?php echo i18n("scout_searchFiles"); ?></label>
 		<form>
 			<table id="probe_table">
 				<tr>

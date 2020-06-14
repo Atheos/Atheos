@@ -46,27 +46,27 @@ switch ($action) {
 			$body = str_replace("Changes:", "", $body);
 
 			?>
-			<label class="title"><i class="fas fa-sync"></i><?php i18n("Update Check"); ?></label>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("updateCheck"); ?></label>
 
 			<form>
 				<input type="hidden" name="archive" value="">
 				<input type="hidden" name="remoteversion" value="">
 				<br>
 				<table>
-					<tr><td width="40%"><?php i18n("Your Version"); ?></td><td><?php echo ucfirst($local['atheos_version']); ?></td></tr>
-					<tr><td width="40%"><?php i18n("Latest Version"); ?></td><td><?php echo $remote['tag_name']; ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo ucfirst($local['atheos_version']); ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $remote['tag_name']; ?></td></tr>
 				</table>
 				<br>
-				<label><?php i18n("Changes on Atheos:"); ?></label>
+				<label><?php echo i18n("changesOnAtheos:"); ?></label>
 				<pre id="update_changes"><?php echo $body; ?></pre>
 				<?php if ($local['atheos_version'] === "nightly") {
 					?>
-					<hint><?php i18n("Note: Your installation is a nightly build. Atheos might be unstable."); ?></hint>
+					<hint><?php echo i18n("nightly"); ?></hint>
 					<?php
 				} ?>
 				<br>
 				<toolbar>
-					<button class="btn-left" onclick="atheos.update.download();return false;"><?php i18n("Download Atheos") ?></button>
+					<button class="btn-left" onclick="atheos.update.download();return false;"><?php echo i18n("downloadAtheos") ?></button>
 				</toolbar>
 			</form>
 			<?php
