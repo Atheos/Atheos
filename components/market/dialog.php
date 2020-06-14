@@ -42,16 +42,16 @@ switch ($action) {
 		
 		$table = $Market->renderMarket();
 		?>
-		<label class="title"><i class="fas fa-store"></i><?php i18n("Atheos Marketplace"); ?></label>
+		<label class="title"><i class="fas fa-store"></i><?php echo i18n("atheosMarketplace"); ?></label>
 		<div id="market">
 			<!--<table width="100%">-->
 			<!--	<tr>-->
 			<!--<th valign="middle" align="center" width="40px">-->
-			<!--	<button onclick="window.location.reload();return false;"><?php i18n("Reload Atheos"); ?></button>-->
+			<!--	<button onclick="window.location.reload();return false;"><?php echo i18n("reloadAtheos"); ?></button>-->
 			<!--</th>-->
 			<!--		<th valign="middle">-->
-			<!--			<input type="text" id="manual_repo" placeholder="<?php i18n("Enter GitHub Repository Url..."); ?>">-->
-			<!--			<button class="btn-left" id="manual_install"><?php i18n("Install Manually"); ?></button>-->
+			<!--			<input type="text" id="manual_repo" placeholder="<?php echo i18n("enterGitHubRepositoryURL"); ?>">-->
+			<!--			<button class="btn-left" id="manual_install"><?php echo i18n("market_install_manually"); ?></button>-->
 			<!--		</th>-->
 			<!--	</tr>-->
 			<!--</table>-->
