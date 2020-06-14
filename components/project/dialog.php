@@ -71,11 +71,11 @@ switch ($action) {
 		}
 
 		?>
-		<label class="title"><i class="fas fa-archive"></i><?php echo i18n("projectList"); ?></label>
+		<label class="title"><i class="fas fa-archive"></i><?php echo i18n("project_list"); ?></label>
 			<table id="project-list">
 				<tr>
 					<th class="action"><?php echo i18n("open"); ?></th>
-					<th><?php echo i18n("projectName"); ?></th>
+					<th><?php echo i18n("project_name"); ?></th>
 					<th><?php echo i18n("path"); ?></th>
 					<?php if (Common::checkAccess("configure")) {
 						?>
@@ -117,7 +117,7 @@ switch ($action) {
 			<?php if (Common::checkAccess("configure")) {
 				?>
 				<toolbar>
-					<button class="btn-left" onclick="atheos.project.create();"><?php echo i18n("newProject"); ?></button>
+					<button class="btn-left" onclick="atheos.project.create();"><?php echo i18n("project_new"); ?></button>
 				</toolbar>
 				<?php
 			} ?>
@@ -128,7 +128,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////
 	case 'create': ?>
 		<form style="width: 500px;">
-			<label><?php echo i18n("projectName"); ?></label>
+			<label><?php echo i18n("project_name"); ?></label>
 			<input name="projectName" autofocus="autofocus" autocomplete="off">
 			<label><?php echo i18n("folderNameOrAbsolutePath"); ?></label>
 			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/]+" autocomplete="off" title="Please input a valid file path.">
@@ -152,7 +152,7 @@ switch ($action) {
 				</tr>
 			</table>
 			<!--// </div>-->
-			<button class="btn-left"><?php echo i18n("createProject"); ?></button>
+			<button class="btn-left"><?php echo i18n("project_create"); ?></button>
 			<button id="show_git_options" class="btn-mid"><?php echo i18n("market_install_gitRepo"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
@@ -163,7 +163,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	case 'rename': ?>
 		<form>
-			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("renameProject"); ?></label>
+			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("project_rename"); ?></label>
 			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php echo i18n("rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
@@ -174,8 +174,8 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////
 	case 'delete': ?>
 		<form>
-			<label><i class="fas fa-trash-alt"></i><?php echo i18n("confirmProjectDeletion"); ?></label>
-			<pre><?php echo i18n("name:"); ?> <?php echo($name); ?>, <?php echo i18n("path:") ?> <?php echo($path); ?></pre>
+			<label><i class="fas fa-trash-alt"></i><?php echo i18n("project_confirm"); ?></label>
+			<pre><?php echo i18n("name"); ?> <?php echo($name); ?>, <?php echo i18n("path") ?> <?php echo($path); ?></pre>
 			<button class="btn-left"><?php echo i18n("confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
 		<?php break;

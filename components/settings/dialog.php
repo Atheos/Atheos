@@ -108,8 +108,8 @@ switch ($action) {
 		</div>
 		<toolbar>
 			<?php echo i18n("settings_autosave"); ?>
-			<!--	<button class="btn-right" onclick="atheos.settings.saveAll(); return false;"><?php i18n("Save"); ?></button>-->
-			<!--	<button class="btn-left" onclick="atheos.modal.unload(); return false;"><?php i18n("Close"); ?></button>-->
+			<!--	<button class="btn-right" onclick="atheos.settings.saveAll(); return false;"><?php echo i18n("save"); ?></button>-->
+			<!--	<button class="btn-left" onclick="atheos.modal.unload(); return false;"><?php echo i18n("close"); ?></button>-->
 		</toolbar>
 		<?php
 		break;
