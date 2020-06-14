@@ -1,0 +1,294 @@
+{
+
+	"deny": "No",
+	"affirm": "Yes",
+
+	"on": "On",
+	"off": "Off",
+
+
+
+	"show": "Show",
+	"hide": "Hide",
+
+	"login": "Login",
+	"logout": "Logout",
+
+
+	"find": "Find",
+	"find:": "Find:",
+
+	"replace": "Replace",
+	"replace:": "Replace:",
+
+	"path": "Path",
+	"path:": "Path:",
+	"copy": "Copy",
+	"paste": "Paste",
+	"duplicate": "Duplicate",
+	"preview": "Preview",
+	"cancel": "Cancel",
+	"create": "Create",
+	"rename": "Rename",
+	"delete": "Delete",
+	"rescan": "Rescan",
+
+	"download": "download",
+
+	"save": "Save",
+	"saveAll": "Save All",
+	"open": "Open",
+	"close": "Close",
+	"closeAll": "Close All",
+
+
+	"ln": "Ln",
+	"in": "In:",
+	"all": "All",
+	"col": "Col",
+	"help": "Help",
+	"mode": "Mode",
+
+
+
+	"more": "More",
+	"users": "Users",
+	"theme": "Theme",
+	"hover": "Hover",
+	"click": "Click",
+	"name:": "Name:",
+	"name": "Name",
+
+	"search": "Search",
+	"searchFiles": "Search Files:",
+	"searching": "Searching...",
+
+	"filterTree": "Filter Tree",
+	"prefix": "Prefix",
+	"substring": "Substring",
+	"regex": "Substring",
+
+	"scout": {
+		"query": "Query:",
+		"fileTypes": "space seperated file types",
+		"withinWorkSpace": "Within Workspace"
+	},
+
+	"themes": "Themes",
+	"branch": "Branch",
+	"editor": "Editor",
+
+	"plugins": "Plugins",
+	"system": "System",
+	"administration": "Administration",
+
+
+	"install": "Install",
+	"noWrap": "No Wrap",
+	"confirm": "Confirm",
+	"explore": "Explore",
+	"continue": "Continue",
+
+	"timezone": "Timezone",
+	"settings": "Settings",
+	"tabSize": "Tab Size",
+
+	"username": "Username",
+
+	"project": {
+		"": "Project",
+		"current": "Current Project",
+		"create": "Create Project",
+		"new": "New Project",
+		"list": "Project List",
+
+		"name": "Project Name",
+		"rename": "Rename Project",
+		"loaded": "Project %s Loaded"
+	},
+	"projects": "Projects",
+
+
+	"workspaceProjects": "Workspace Projects",
+
+	"projectAccessFar": "Project Access for ",
+	"accessAllProjects": "Access ALL Projects",
+	"projectLoaded": "",
+
+
+	"onlySelectedProjects": "Only Selected Projects",
+	"confirmProjectDeletion": "Confirm Project Deletion",
+
+	"createAccount": "Create Account",
+	"account": "Account",
+	"account:": "Account:",
+	"language": "Language",
+	"collapse": "Collapse",
+	"terminal": "Terminal",
+	"complete": "Complete!",
+	"extension": "Extension",
+	"installed": "Installed",
+	"available": "Available",
+	"fontSize": "Font Size",
+	"softTabs": "Soft Tabs",
+	"gotoLine": "Goto Line",
+	"userList": "User List",
+
+
+	"directory": "Directory",
+
+
+
+
+	"file": "File",
+	"fileNew": "New File",
+	"fileType": "File Type:",
+	"fileSaved": "File saved",
+
+	"fileUpload": "Upload File",
+	"filesUpload": "Upload Files",
+
+	"folderNew": "New Folder",
+
+	"extensions": "Extensions",
+	"restricted": "Restricted",
+	"wrapLines": "Wrap Lines",
+	"colorTool": "Color Tool",
+	"insertHex": "Insert HEX",
+	"insertRGB": "Insert RGB",
+	"replaceAll": "Replace All",
+
+
+	"newAccount": "New Account",
+
+
+	"saveScheme": "Save Scheme",
+	"save&close": "Save & Close",
+	"dependencies": "Dependencies",
+	"newUsername": "New Username",
+
+	"printMargin": "Print Margin",
+	"singleClick": "Single Click",
+	"doubleClick": "Double Click",
+
+	"updateCheck": "Update Check",
+	"yourVersion": "Your Version",
+
+	"password": "Password",
+	"newPassword": "New Password",
+	"changePassword": "Change Password",
+	"changeUsernamePassword": "Change %s&#39;s Password",
+	"confirmPassword": "Confirm Password",
+
+	"newExtension": "New Extension",
+	"initialSetup": "Initial Setup",
+	"indentGuides": "Indent Guides",
+	"inlinePreview": "Inline Preview",
+	"closeUploader": "Close Uploader",
+	"latestVersion": "Latest Version",
+	"gitRpository": "Git Repository",
+
+
+
+	"discardChanges": "Discard Changes",
+	"editorSettings": "Editor Settings",
+	"systemSettings": "System Settings",
+	"accountDeleted": "Account Deleted",
+
+
+	"connectionError": "Connection Error",
+
+	"market": {
+		"": "Marketplace",
+		"atheos": "Atheos Marketplace",
+		"install": {
+			"gitRepo": "... from Git Repo",
+			"manually": "Install Manually"
+		}
+	},
+
+	"changesOnAtheos": "Changes On Atheos",
+	"reloadCodiad": "Reload Codiad",
+	"downloadCodiad": "Download Atheos",
+
+	"youCanNotAccessTheMarketplace": "You can not access the marketplace",
+	"congratulationsYourSystemIsUpToDate": "Congratulation, Your System Is Up To Date.",
+
+	"split": {
+		"": "Split",
+		"h": "Split Horizontally",
+		"v": "Split Vertically"
+	},
+	"merge": {
+		"": "Merge",
+		"all": "Merge all"
+	},
+
+	"overwriteOriginal": "Overwrite Original",
+	"installationError": "Installation Error",
+	"regularExpression": "Regular expression",
+	"closeUnsavedFile": "Close Unsaved File?",
+	"printMarginColumn": "Print Margin Column",
+	"filemanagerTrigger": "Filemanager Trigger",
+
+	"copiedToClipboard": "Copied to Clipboard",
+	"time": {
+		"second": {
+			"single": "%s Second",
+			"plural": "%s Seconds"
+		},
+		"minute": {
+			"single": "%s Minute",
+			"plural": "%s Minutes"
+		},
+		"hour": {
+			"single": "%s Hour",
+			"plural": "%s Hours"
+		}
+	},
+	"closeUnsavedFiles": "Close Unsaved Files?",
+	"contactingGitHub": "Contacting GitHub...",
+	"editFileExtensions": "Edit File Extensions",
+
+	"highlightActiveLine": "Highlight Active Line",
+	"rightSidebarTrigger": "Right Sidebar Trigger",
+	"confirmUserDeletion": "Confirm User Deletion",
+	"noOpenFilesToSave": "No Open Files to save",
+	"followSymbolicLinks": "Follow Symbolic Links ",
+
+	"youMustChooseAValue": "You Must Choose A Value",
+	"youHaveUnsavedFiles": "You have unsaved files.",
+	"fileCouldNotBeSaved": "File could not be saved",
+	"lastUpdateWasDoneBy": "Last Update Was Done By ",
+	"NothingInYourClipboard": "Nothing in Your Clipboard",
+	"folderNameOrAbsolutePath": "Folder Name Or Absolute Path",
+	"youCanNotCheckForUpdates": "You can not check for updates",
+
+	"enterGitHUbRepositoryURL": "Enter Github Repository Url...",
+	"youCanNotEditTheUserList": "You can not edit the user list",
+	"recoveredUnsavedContentFor:": "Recovered unsaved content for:",
+	"noOpenFilesOrSelect": "No Open Files or Selected Text",
+
+	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
+
+	"warningFileCurrentlyOpenedBy:": "Warning: File Currently Opened By:",
+	"cannotPasteDirectoryIntoItself": "Cannot Paste Directory Into Itself",
+
+	"createDuplicate": "Create Duplicate",
+	"areYouSureYouWishToDeleteTheFollowing:": "Are You Sure You Wish To Delete The Following:",
+	"wouldYouLikeToOverwriteOrDuplicateTheFollowing:": "Would you like to overwrite or duplicate the following:",
+
+	"pleaseMakeSureTheFollowingExistAndAreWriteable:": "Please make sure the following exist and are writeable:",
+	"pleaseMakeSureTheseEnvironmentalVariablesAreSet:": "Please make sure these environmental variables are set:",
+
+	"fileManager": "File Manager",
+	"codegit": "CodeGit",
+
+	"codeGitSettings": "CodeGit Settings",
+	"leftSidebarTrigger": "Left Sidebar Trigger",
+	"disableRepowideStatus": "Disable repo-wide status",
+	"disableRepowideStatusHeader": "Disable repo-wide status header",
+	"suppressDiffOnCommit": "Suppress diff on commit",
+	"saveExtensions": "Save Extensions",
+	"noteYourInstallationIsANightlyBuildCodiadMightBeUnstable": "Note: Your installation is a nightly build. Codiad might be unstable."
+}
