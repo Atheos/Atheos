@@ -84,9 +84,8 @@ class Market {
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
 	public function buildCache() {
-		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
-
+		global $components; global $themes;
+		
 		// Scan plugins directory for missing plugins
 		$addons = array(
 			"plugins" => array(),

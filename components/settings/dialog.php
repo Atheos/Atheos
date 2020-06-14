@@ -63,37 +63,36 @@ switch ($action) {
 			<!--<div class="panels-components">-->
 			<menu>
 				<li>
-					<a name="editor-settings" data-file="components/settings/settings.editor.php" class="active"><i class="fas fa-home"></i><?php i18n("Editor"); ?></a>
+					<a name="editor-settings" data-file="components/settings/settings.editor.php" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
 				</li>
 				<li>
-					<a name="system-settings" data-file="components/settings/settings.system.php"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
+					<a name="system-settings" data-file="components/settings/settings.system.php"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
 				</li>
 				<li>
-					<a name="codegit-settings" data-file="components/settings/settings.codegit.php"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
+					<a name="codegit-settings" data-file="components/settings/settings.codegit.php"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
 				</li>
 				<li>
-					<a name="keybindings" data-file="components/settings/settings.keybindings.php"><i class="fas fa-keyboard"></i><?php i18n("Keybindings"); ?></a>
+					<a name="keybindings" data-file="components/settings/settings.keybindings.php"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
 				</li>
 				<?php
 				if (Common::checkAccess("configure")) {
 					?>
 					<li>
-						<a name="textmode-settings" data-file="components/textmode/dialog.php?action=settings"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
+						<a name="textmode-settings" data-file="components/textmode/dialog.php?action=settings"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
 					<?php
 				}
 				?>
 				<hr>
 				<?php
-				$plugins = Common::readDirectory(PLUGINS);
-
+				global $plugins;
 				foreach ($plugins as $plugin) {
 					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 						$data = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
 						if (isset($data['config'])) {
 							foreach ($data['config'] as $config) {
 								if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
+									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . i18n($config['title']) . '</a></li>');
 								}
 							}
 						}
@@ -108,7 +107,7 @@ switch ($action) {
 
 		</div>
 		<toolbar>
-			Settings are automatically saved.
+			<?php echo i18n("settings_autosave"); ?>
 			<!--	<button class="btn-right" onclick="atheos.settings.saveAll(); return false;"><?php i18n("Save"); ?></button>-->
 			<!--	<button class="btn-left" onclick="atheos.modal.unload(); return false;"><?php i18n("Close"); ?></button>-->
 		</toolbar>
