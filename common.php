@@ -47,7 +47,7 @@ class Common {
 		if (file_exists($path.'config.php')) {
 			require_once($path.'config.php');
 		}
-		
+
 		if (file_exists($path.'/components/i18n/class.i18n.php')) {
 			require_once($path.'/components/i18n/class.i18n.php');
 		}
@@ -143,10 +143,16 @@ class Common {
 		// } else {
 		// 	include BASE_PATH."/languages/".LANGUAGE.".php";
 		// }
-		
+
 		global $i18n;
 		$i18n = new i18n('en', LANGUAGE);
 		$i18n->init();
+
+		global $components; global $plugins; global $themes;
+		// Read Components, Plugins, Themes
+		$components = Common::readDirectory(COMPONENTS);
+		$plugins = Common::readDirectory(PLUGINS);
+		$themes = Common::readDirectory(THEMES);
 
 		// Add data to global variables
 		if ($_POST && !empty($_POST)) {
