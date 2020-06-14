@@ -87,10 +87,7 @@ switch ($action) {
 	// Mark file as focused
 	//////////////////////////////////////////////////////////////////
 	case "setFocus":
-
-		$Active->username = $user;
-		$Active->path = $path;
-		$Active->markFileAsFocused();
+		$Active->markFileAsFocused($user, $path);
 		break;
 
 	default:

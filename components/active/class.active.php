@@ -129,14 +129,13 @@ class Active {
 	// Mark File As Focused
 	//  All other files will be marked as non-focused.
 	//////////////////////////////////////////////////////////////////
-	public function markFileAsFocused() {
-		$userActiveFiles = $this->activeFiles[$this->username];
-
-		foreach ($userActiveFiles as $path) {
-			$userActiveFiles[$path] = $path === $this->path ? "focus": "active";
+	public function markFileAsFocused($user, $focus) {
+		$userActiveFiles = $this->activeFiles[$user];
+		foreach ($userActiveFiles as $path => $type) {
+			$userActiveFiles[$path] = $path === $focus ? "focus": "active";
 		}
 
-		$this->activeFiles[$this->username] = $userActiveFiles;
+		$this->activeFiles[$user] = $userActiveFiles;
 
 		Common::saveJSON('active', $this->activeFiles);
 		Common::sendJSON("S2000");
