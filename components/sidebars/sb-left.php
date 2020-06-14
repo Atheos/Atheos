@@ -5,19 +5,18 @@
 	</div>
 
 	<div class="title">
-		<h2> <?php i18n("File Manager"); ?> </h2>
+		<h2> <?php echo i18n("fileManager"); ?> </h2>
 
 		<div id="filter_wrapper">
 			<i id="filter_options" class="fas fa-cog"></i>
 			<i id="filter_close" class="fas fa-times-circle"></i>
 
-			<input id="filter_input" placeholder="<?php i18n("Filter Tree") ?>" type="text">
+			<input id="filter_input" placeholder="<?php echo i18n("filterTree") ?>" type="text">
 
 			<ul id="filter_strategy" class="options-menu" style="display:none;">
-				<li class="active"><a data-option="left_prefix"><?php i18n("Prefix"); ?></a></li>
-				<li><a data-option="substring"><?php i18n("Substring"); ?></a></li>
-				<li><a data-option="regexp"><?php i18n("Regular expression"); ?></a></li>
-				<!--<li><a data-action="search"><?php i18n("Search File Contents"); ?></a></li>-->
+				<li class="active"><a data-option="left_prefix"><?php echo i18n("prefix"); ?></a></li>
+				<li><a data-option="substring"><?php echo i18n("substring"); ?></a></li>
+				<li><a data-option="regexp"><?php echo i18n("regex"); ?></a></li>
 			</ul>
 		</div>
 
@@ -36,12 +35,12 @@
 	<div id="project_list">
 
 		<div class="title">
-			<h2><?php i18n("Projects"); ?></h2>
-			<i id="projects-collapse" class="fas fa-chevron-circle-down" alt="<?php i18n("Collapse"); ?>"></i>
+			<h2><?php echo i18n("projects"); ?></h2>
+			<i id="projects-collapse" class="fas fa-chevron-circle-down"></i>
 			<?php if (Common::checkAccess("configure")) {
 				?>
 				<i id="projects-manage" class="fas fa-archive"></i>
-				<i id="projects-create" class="fas fa-plus-circle" alt="<?php i18n("Create Project"); ?>"></i>
+				<i id="projects-create" class="fas fa-plus-circle" alt="<?php echo i18n("project_create"); ?>"></i>
 				<?php
 			} ?>
 		</div>
