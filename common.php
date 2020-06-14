@@ -47,6 +47,10 @@ class Common {
 		if (file_exists($path.'config.php')) {
 			require_once($path.'config.php');
 		}
+		
+		if (file_exists($path.'/components/i18n/class.i18n.php')) {
+			require_once($path.'/components/i18n/class.i18n.php');
+		}
 
 		if (!defined('BASE_PATH')) {
 			define('BASE_PATH', rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/"));
@@ -133,12 +137,16 @@ class Common {
 		}
 
 		// Check for langauge settings
-		global $lang;
-		if (isset($_SESSION['lang'])) {
-			include BASE_PATH."/languages/{$_SESSION['lang']}.php";
-		} else {
-			include BASE_PATH."/languages/".LANGUAGE.".php";
-		}
+		// global $lang;
+		// if (isset($_SESSION['lang'])) {
+		// 	include BASE_PATH."/languages/{$_SESSION['lang']}.php";
+		// } else {
+		// 	include BASE_PATH."/languages/".LANGUAGE.".php";
+		// }
+		
+		global $i18n;
+		$i18n = new i18n('en', LANGUAGE);
+		$i18n->init();
 
 		// Add data to global variables
 		if ($_POST && !empty($_POST)) {
@@ -180,8 +188,8 @@ class Common {
 	// Localization
 	//////////////////////////////////////////////////////////////////////////80
 	public static function i18n($key, $type = "echo", $args = array()) {
-		
-	if (is_array($type)) {
+
+		if (is_array($type)) {
 			$args = $type;
 			$type = "echo";
 		}
@@ -190,6 +198,10 @@ class Common {
 
 		$key = strtolower($key); //Test, test TeSt and tESt are exacly the same
 		$return = isset($lang[$key]) ? $lang[$key] : $key;
+
+		if (!isset($lang[$key])) {
+			debug($key, "i18n");
+		}
 
 		$return = ucfirst($return);
 
@@ -281,14 +293,14 @@ class Common {
 		$file = "$name.log";
 		$time = date("Y-m-d H:i:s");
 
-		$text = "$user:\t$action @ $time";
+		$text = "$user:\t$action @ $time" . PHP_EOL;
 
 		if (file_exists($path . $file)) {
 			$lines = file($path . $file);
 			if (sizeof($lines) > 100) {
 				unset($lines[0]);
 			}
-			$lines[] = $text . PHP_EOL;
+			$lines[] = $text;
 
 			$write = fopen($path . $file, 'w');
 			fwrite($write, implode('', $lines));
@@ -550,9 +562,51 @@ class Common {
 //////////////////////////////////////////////////////////////////
 // Wrapper for old method names
 //////////////////////////////////////////////////////////////////
+// function i18n($key, $type = "echo", $args = array()) {
+// 	return Common::i18n($key, $type, $args);
+// }
 
-function i18n($key, $type = "echo", $args = array()) {
-	return Common::i18n($key, $type, $args);
+function i18n($string, $args = false) {
+	global $i18n;
+	return $i18n->translate($string, $args);
+}
+
+
+// This debug function will be simplified once the langaue work is completed.
+function debug($val, $name = "debug") {
+	Common::$debug[] = $val;
+
+	$path = DATA . "/log/$name.log";
+	$path = preg_replace('#/+#', '/', $path);
+
+	$time = date("Y-m-d H:i:s");
+
+	$trace = debug_backtrace(null, 5);
+
+	$function = $trace[1]['function'];
+	$file = $trace[2]['file'];
+
+	$val = "\"$val\"";
+	$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
+	$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
+
+	$text = "@$time:\t$val < $function in $file" . PHP_EOL;
+
+	if (file_exists($path)) {
+		$lines = file($path);
+		if (sizeof($lines) > 100) {
+			unset($lines[0]);
+		}
+		$lines[] = $text;
+
+		$write = fopen($path, 'w');
+		fwrite($write, implode('', $lines));
+		fclose($write);
+	} else {
+		$write = fopen($path, 'w');
+		fwrite($write, $text);
+		fclose($write);
+	}
 }
 
 ?>
