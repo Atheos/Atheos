@@ -63,4 +63,5 @@
 
 	</fieldset>
 </form>
+<script src="components/i18n/init.js"></script>
 <script src="components/user/init.js"></script>
