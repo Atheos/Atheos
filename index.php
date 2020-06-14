@@ -11,13 +11,9 @@ header("Feature-Policy: sync-xhr 'self'");
 header("Access-Control-Allow-Origin: *");
 
 require_once('common.php');
-
 require_once('public/class.sourcemanager.php');
-$SourceManager = new SourceManager;
 
-// Context Menu
-$context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
-$context_menu = json_decode($context_menu, true);
+$SourceManager = new SourceManager;
 
 // Read Components, Plugins, Themes
 $components = Common::readDirectory(COMPONENTS);
