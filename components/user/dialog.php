@@ -42,15 +42,15 @@ switch ($action) {
 		}
 
 		?>
-		<label class="title"><i class="fas fa-key"></i><?php echo i18n("changePassword"); ?></label>
+		<label class="title"><i class="fas fa-key"></i><?php echo i18n("password_change"); ?></label>
 		<form>
-			<label><?php echo i18n("newPassword"); ?></label>
+			<label><?php echo i18n("password_new"); ?></label>
 			<input type="password" name="password1" autofocus="autofocus">
 			<i for="password1"  class="fas fa-eye-slash merged-icon togglePassword"></i>
-			<label><?php echo i18n("confirmPassword"); ?></label>
+			<label><?php echo i18n("password_confirm"); ?></label>
 			<input type="password" name="password2">
 			<i for="password2" class="fas fa-eye-slash merged-icon togglePassword"></i>
-			<button class="btn-left"><?php echo i18n("changeUsernamePassword", ucfirst($username)) ?></button>
+			<button class="btn-left"><?php echo i18n("password_changeUser", ucfirst($username)) ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
 		<?php
@@ -61,15 +61,15 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		?>
-		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("createNewUser"); ?></label>
+		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("account_new"); ?></label>
 		<form>
 			<label><?php echo i18n("username"); ?></label>
 			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
 			<label><?php echo i18n("password"); ?></label>
 			<input type="password" name="password1">
-			<label><?php echo i18n("confirmPassword"); ?></label>
+			<label><?php echo i18n("password_confirm"); ?></label>
 			<input type="password" name="password2">
-			<button class="btn-left"><?php echo i18n("createAccount"); ?></button>
+			<button class="btn-left"><?php echo i18n("account_create"); ?></button>
 			<button class="btn-right" onclick="atheos.user.list();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
 		<?php
@@ -80,7 +80,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
 		?>
-		<label class="title"><i class="fas fa-trash-alt"></i><?php echo i18n("confirmUserDeletion"); ?></label>
+		<label class="title"><i class="fas fa-trash-alt"></i><?php echo i18n("account_delete"); ?></label>
 		<form>
 			<pre><?php echo i18n("account:"); echo(ucfirst($username)); ?></pre>
 			<toolbar>
@@ -99,7 +99,7 @@ switch ($action) {
 		if (!Common::checkAccess("configure")) {
 			?>
 			<h1><?php echo i18n("restricted"); ?></h1>
-			<pre><?php echo i18n("youCanNotEditTheUserList"); ?></pre>
+			<pre><?php echo i18n("restricted_userList"); ?></pre>
 			<button onclick="atheos.modal.unload();return false;"><?php echo i18n("close"); ?></button>
 			<?php
 		} else {
@@ -137,7 +137,7 @@ switch ($action) {
 				?>
 			</table>
 			<toolbar>
-				<button class="btn-left" onclick="atheos.user.create();"><?php echo i18n("newAccount"); ?></button>
+				<button class="btn-left" onclick="atheos.user.create();"><?php echo i18n("account_new"); ?></button>
 			</toolbar>
 			<?php
 		}
@@ -155,9 +155,8 @@ switch ($action) {
 		// Get control list (if exists)
 
 		?>
-		<label class="title"><i class="fas fa-user-alt"></i><?php echo i18n("userProjectAccess"); ?></label>
+		<label class="title"><i class="fas fa-user-alt"></i><?php echo i18n("editUserACL", ucfirst($username)); ?></label>
 		<form>
-			<label><?php echo i18n("projectAccessFor "); ?><?php echo(ucfirst($username)); ?></label>
 			<select id="aclSelect" name="userACL" onchange="atheos.user.toggleACL()">
 				<option value="full" <?php if ($userACL === "full") { echo('selected="selected"'); } ?>><?php echo i18n("accessAllProjects"); ?></option>
 				<option value="limited" <?php if ($userACL !== "full") { echo('selected="selected"'); } ?>><?php echo i18n("onlySelectedProjects"); ?></option>

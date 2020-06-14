@@ -40,20 +40,20 @@ if ($action === "loadPanel") {
 	$status = $CodeGit->branchStatus($repo);
 	$status = is_array($status) ? $status["status"] : $status;
 	?>
-	<label class="title"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></label>
+	<label class="title"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></label>
 	<div id="codegit">
 		<menu>
 			<li>
-				<a data-panel="overview" class="active"><i class="fas fa-home"></i><?php i18n("Overview"); ?></a>
+				<a data-panel="overview" class="active"><i class="fas fa-home"></i><?php echo i18n("overview"); ?></a>
 			</li>
 			<li>
-				<a data-panel="log"><i class="fas fa-history"></i><?php i18n("Log"); ?></a>
+				<a data-panel="log"><i class="fas fa-history"></i><?php echo i18n("log"); ?></a>
 			</li>
 			<li>
-				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php i18n("Transfer"); ?></a>
+				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php echo i18n("transfer"); ?></a>
 			</li>
 			<li>
-				<a data-panel="config"><i class="fas fa-user-cog"></i><?php i18n("Configure"); ?></a>
+				<a data-panel="config"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></a>
 			</li>
 		</menu>
 		<panel>
