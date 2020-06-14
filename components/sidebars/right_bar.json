@@ -1,5 +1,5 @@
 [{
-    "title": "Plugins",
+    "title": "plugins",
     "admin": false,
     "icon": null,
     "onclick": null
@@ -11,109 +11,91 @@
     "onclick": null
   },
   {
-    "title": "break",
-    "admin": false,
-    "icon": null,
-    "onclick": null
+    "type": "break"
   },
   {
-    "title": "Administration",
+    "title": "administration",
     "admin": true,
     "icon": null,
     "onclick": null
   },
   {
-    "title": "Projects",
+    "title": "projects",
     "admin": true,
     "icon": "fas fa-archive",
     "onclick": "atheos.project.list();"
   },
   {
-    "title": "Users",
+    "title": "users",
     "admin": true,
     "icon": "fas fa-users",
     "onclick": "atheos.user.list();"
   },
   {
-    "title": "break",
-    "admin": false,
-    "icon": null,
-    "onclick": null
+    "type": "break"
   },
   {
-    "title": "System",
+    "title": "system",
     "admin": true,
     "icon": null,
     "onclick": null
   },
   {
-    "title": "CodeGit",
+    "title": "codegit",
     "admin": false,
     "icon": "fas fa-code-branch",
     "onclick": "atheos.codegit.showCodeGit();"
   },  
   {
-    "title": "Marketplace",
+    "title": "market",
     "admin": true,
     "icon": "fas fa-store",
     "onclick": "atheos.market.list();"
   },
   {
-    "title": "Update Check",
+    "title": "updateCheck",
     "admin": true,
     "icon": "fas fa-sync-alt",
     "onclick": "atheos.update.check();"
   },
   {
-    "title": "break",
+    "type": "break"
+  },
+  {
+    "title": "account",
     "admin": false,
     "icon": null,
     "onclick": null
   },
   {
-    "title": "Account",
-    "admin": false,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "Settings",
+    "title": "settings",
     "admin": false,
     "icon": "fas fa-cogs",
     "onclick": "atheos.settings.show();"
   },
   {
-    "title": "Password",
+    "title": "password",
     "admin": false,
     "icon": "fas fa-key",
     "onclick": "atheos.user.changePassword();"
   },
   {
-    "title": "break",
-    "admin": false,
-    "icon": null,
-    "onclick": null
+    "type": "break"
   },
   {
-    "title": "Goto Line",
-    "admin": false,
-    "icon": "fas fa-external-link-alt",
-    "onclick": "atheos.editor.promptLine();"
-  },  
-  {
-    "title": "Save All",
+    "title": "saveAll",
     "admin": false,
     "icon": "fa fa-save",
     "onclick": "atheos.active.saveAll();"
   },
   {
-    "title": "Help",
+    "title": "help",
     "admin": false,
     "icon": "fas fa-question-circle",
     "onclick": "window.open('https://www.atheos.io/');"
   },
   {
-    "title": "Logout",
+    "title": "logout",
     "admin": false,
     "icon": "fas fa-sign-out-alt",
     "onclick": "atheos.user.logout();"

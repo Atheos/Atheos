@@ -8,10 +8,10 @@
 
 	foreach ($context_menu as $menuItem => $data) {
 		if ($data['enabled']) {
-			if ($data['title'] == 'Break') {
-				echo('<hr class="'.$data['applies-to'].'">');
-			} else {
+			if (isset($data['title'])) {
 				echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], 'return').'</a>');
+			} else {
+				echo('<hr class="'.$data['applies-to'].'">');
 			}
 		}
 	}

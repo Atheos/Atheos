@@ -49,7 +49,7 @@ switch ($action) {
 			$User->username = $username;
 			$User->password = $password;
 
-			require_once '../../languages/code.php';
+			$languages = $i18n->codes();
 			if ($language && isset($languages[$language])) {
 				// if (isset($lang) && isset($languages[$lang])) {
 				$User->lang = $language;
