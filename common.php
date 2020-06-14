@@ -17,7 +17,7 @@ class Common {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	public static $debug = array();
+	public static $debugStack = array();
 
 	private static $data = array(
 		"session" => array(),
@@ -101,34 +101,30 @@ class Common {
 		session_name(md5(BASE_PATH));
 		session_start();
 
-		if (true) {
-			//Some security checks, helps with securing the service
-			if (isset($_SESSION['user']) && isset($_SESSION['_USER_LOOSE_IP'])) {
-				$badSession = false;
-				$badSession = $badSession ?: $_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
-				$badSession = $badSession ?: $_SESSION['_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT'];
-				$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_ENCODING'] !== $_SERVER['HTTP_ACCEPT_ENCODING'];
-				$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_LANG'] !== $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+		//Some security checks, helps with securing the service
+		if (isset($_SESSION['user']) && isset($_SESSION['_USER_LOOSE_IP'])) {
+			$badSession = false;
+			$badSession = $badSession ?: $_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
+			$badSession = $badSession ?: $_SESSION['_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT'];
+			$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_ENCODING'] !== $_SERVER['HTTP_ACCEPT_ENCODING'];
+			$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_LANG'] !== $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
-				if ($badSession) {
-					// if ($_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0")) || $_SESSION['_USER_AGENT'] != $_SERVER['HTTP_USER_AGENT'] || $_SESSION['_USER_ACCEPT_ENCODING'] != $_SERVER['HTTP_ACCEPT_ENCODING'] || $_SESSION['_USER_ACCEPT_LANG'] != $_SERVER['HTTP_ACCEPT_LANGUAGE']) {
-
-					//Bad session detected, let's not allow any further data to be transfered and redirect to logout.
-					session_unset(); // Same as $_SESSION = array();
-					session_destroy(); // Destroy session on disk
-					setcookie("sid", "", 1);
-					header("Location: index.php");
-					die();
-				}
-				$_SESSION['_USER_LAST_ACTIVITY'] = time(); //Reset user activity timer
-			} else {
-				//Store identification data so we can detect malicous logins potentially. (Like XSS)
-				$_SESSION['_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT']; //Save user agent (Spoofable, so we have the other stuff below to check for as well which may or may not be a little more difficult to guess for an attacker.)
-				$_SESSION['_USER_ACCEPT_ENCODING'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
-				$_SESSION['_USER_ACCEPT_LANG'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
-				$_SESSION['_USER_LOOSE_IP'] = long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
-				$_SESSION['_USER_LAST_ACTIVITY'] = time();
+			if ($badSession) {
+				//Bad session detected, let's not allow any further data to be transfered and redirect to logout.
+				session_unset(); // Same as $_SESSION = array();
+				session_destroy(); // Destroy session on disk
+				setcookie("sid", "", 1);
+				header("Location: index.php");
+				die();
 			}
+			$_SESSION['_USER_LAST_ACTIVITY'] = time(); //Reset user activity timer
+		} else {
+			//Store identification data so we can detect malicous logins potentially. (Like XSS)
+			$_SESSION['_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT']; //Save user agent (Spoofable, so we have the other stuff below to check for as well which may or may not be a little more difficult to guess for an attacker.)
+			$_SESSION['_USER_ACCEPT_ENCODING'] = $_SERVER['HTTP_ACCEPT_ENCODING'];
+			$_SESSION['_USER_ACCEPT_LANG'] = $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+			$_SESSION['_USER_LOOSE_IP'] = long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
+			$_SESSION['_USER_LAST_ACTIVITY'] = time();
 		}
 
 		//Check for external authentification
@@ -290,16 +286,14 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80
 	// Log Action
 	//////////////////////////////////////////////////////////////////////////80
-	public static function log($user, $action, $name = "global") {
+	public static function log($text, $name = "global") {
 		$path = DATA . "/log/";
 		$path = preg_replace('#/+#', '/', $path);
 
 		if (!is_dir($path)) mkdir($path);
 
 		$file = "$name.log";
-		$time = date("Y-m-d H:i:s");
-
-		$text = "$user:\t$action @ $time" . PHP_EOL;
+		$text = $text . PHP_EOL;
 
 		if (file_exists($path . $file)) {
 			$lines = file($path . $file);
@@ -316,6 +310,24 @@ class Common {
 			fwrite($write, $text);
 			fclose($write);
 		}
+	}
+
+	// This debug function will be simplified once the langaue work is completed.
+	public static function debug($val, $name = "debug") {
+		Common::$debugStack[] = $val;
+
+		$time = date("Y-m-d H:i:s");
+		$trace = debug_backtrace(null, 5);
+		$function = $trace[1]['function'];
+		$file = $trace[2]['file'];
+
+		$val = "\"$val\"";
+		$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
+		$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
+
+		$text = "@$time:\t$val < $function in $file";
+		
+		Common::log($text, $name);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -335,8 +347,8 @@ class Common {
 		}
 
 		/// Debug /////////////////////////////////////////////////
-		if (count(Common::$debug) > 0) {
-			$reply["debug"] = Common::$debug;
+		if (count(Common::$debugStack) > 0) {
+			$reply["debug"] = Common::$debugStack;
 		}
 
 		// Return ////////////////////////////////////////////////
@@ -441,7 +453,7 @@ class Common {
 				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
 					return true;
 				} elseif (in_array($projectName, $userACL)) {
-					Common::$debug[] = "Path:$path, ProjectPath: $projectPath";
+					Common::debug("Path:$path, ProjectPath: $projectPath");
 				}
 			}
 		}
@@ -580,39 +592,7 @@ function i18n($string, $args = false) {
 
 // This debug function will be simplified once the langaue work is completed.
 function debug($val, $name = "debug") {
-	Common::$debug[] = $val;
-
-	$path = DATA . "/log/$name.log";
-	$path = preg_replace('#/+#', '/', $path);
-
-	$time = date("Y-m-d H:i:s");
-
-	$trace = debug_backtrace(null, 5);
-
-	$function = $trace[1]['function'];
-	$file = $trace[2]['file'];
-
-	$val = "\"$val\"";
-	$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-	$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
-
-	$text = "@$time:\t$val < $function in $file" . PHP_EOL;
-
-	if (file_exists($path)) {
-		$lines = file($path);
-		if (sizeof($lines) > 100) {
-			unset($lines[0]);
-		}
-		$lines[] = $text;
-
-		$write = fopen($path, 'w');
-		fwrite($write, implode('', $lines));
-		fclose($write);
-	} else {
-		$write = fopen($path, 'w');
-		fwrite($write, $text);
-		fclose($write);
-	}
+	Common::debug($val, $name);
 }
 
 ?>
