@@ -48,10 +48,6 @@ switch ($action) {
 					<td>
 						<input type="text" name="probe_filter" placeholder="<?php echo i18n("scout_fileTypes"); ?>">
 					</td>
-					<!--<td>-->
-					<!--	<label for="probe_type"><?php echo i18n("scout_withinWorkSpace"); ?></label>-->
-					<!--	<input type="checkbox" name="probe_type" id="probe_type">-->
-					<!--</td>					-->
 				</tr>
 			</table>
 			<pre id="probe_results"></pre>
