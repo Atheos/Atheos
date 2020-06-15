@@ -54,10 +54,13 @@
 
 	},
 
-	"path": "Path",
 	"copy": "Copy",
 	"paste": "Paste",
-	"duplicate": "Duplicate",
+	"duplicate": {
+		"": "Duplicate",
+		"file": "File Duplicated",
+		"folder": "Folder Duplicated"
+	},
 	"preview": "Preview",
 	"cancel": "Cancel",
 	"create": {
@@ -128,7 +131,7 @@
 	"filterTree": "Filter Tree",
 	"prefix": "Prefix",
 	"substring": "Substring",
-	"regex": "Substring",
+	"regex": "Regex",
 
 	"scout": {
 		"open": "Open Scout",
@@ -139,6 +142,8 @@
 		"withinWorkSpace": "Within Workspace"
 	},
 
+	"noShell": "Shell_exec() command not enabled",
+
 	"themes": "Themes",
 	"branch": "Branch",
 	"editor": "Editor",
@@ -146,6 +151,8 @@
 	"extensions": "Extensions",
 	"textmode": "Textmode",
 	"textmodes": "Textmodes",
+	"extensionSet": "%s is already set", 
+	
 	"keybindings": "Keybindings",
 	"plugins": "Plugins",
 	"system": "System",
@@ -200,15 +207,26 @@
 	"project": {
 		"": "Project",
 		"current": "Current Project",
+		"noActive": "No Active Projects",
 		"create": "Create Project",
+		"exists": {
+			"path": "Project path already exists.",
+			"name": "Project name already exists."
+		},
+		"unableCreate": "Cannot create path.",
+		"unableAbsolute": "Unable to create absolute path.",
+		"unablePermissions": "No Read/Write Permission.",
+
 		"new": "New Project",
 		"list": "Project List",
 
 		"name": "Project Name",
 		"rename": "Rename Project",
+		"unableRename": "Cannot rename path.",
 		"delete": "Delete Project",
 		"confirm": "Confirm Project Deletion",
-		"loaded": "%s Loaded"
+		"loaded": "%s Loaded",
+		"missing": "Project not found"
 	},
 
 	"project:": "Project:",
@@ -249,10 +267,18 @@
 	},
 	"userList": "User List",
 
+	"directory": {
+		"": "Directory",
+		"invalid": "Invalid Directory"
+	},
 
-	"directory": "Directory",
+	"file": {
+		"": "File",
+		"new": "New File",
+		"type": "File Type:",
+		"saved": "File saved"
+	},
 
-	"file": "File",
 	"fileNew": "New File",
 	"fileType": "File Type:",
 	"fileSaved": "File saved",
@@ -262,11 +288,19 @@
 
 	"folderNew": "New Folder",
 
+	"path": {
+		"": "Path",
+		"exists": "Path already exists.",
+		"unableCreate": "Cannot create path.",
+		"unableRename": "Cannot rename path."
+	},
+
 	"restricted": {
 		"": "Restricted",
 		"userList": "Not authorized to edit UserList",
 		"updates": "You can not check for updates",
-		"marketplace": "You can not access the marketplace"
+		"marketplace": "You can not access the Marketplace",
+		"textmodes": "You can not access the Textmodes"
 	},
 
 	"unauthorized": "You are not Authorized to %s",
@@ -336,8 +370,14 @@
 		"atheos": "Atheos Marketplace",
 		"install": {
 			"gitRepo": "... from Git Repo",
-			"manually": "Install Manually"
-		}
+			"manually": "Install Manually",
+			"success": "Successfully installed %s"
+		},
+		"unableExtract": "Unable to extract Archive.",
+		"unableDownload": "Unable to download Archive.",
+		"noZip": "Zip Extension not found.",
+		"missingDesc": "Missing Description.",
+		"missingAuth": "Unknown"
 	},
 
 	"latestVersion": "Latest Version",
@@ -392,6 +432,9 @@
 
 
 
+	"warning": {
+		"fileOpen": "Warning: File Currently Opened By: %s"
+	},
 
 
 	"NothingInYourClipboard": "Nothing in Your Clipboard",
@@ -401,10 +444,6 @@
 	"noOpenFilesOrSelect": "No Open Files or Selected Text",
 
 	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
-
-	"warningFileCurrentlyOpenedBy:": "Warning: File Currently Opened By:",
-
-
 
 	"fileManager": "File Manager",
 	"gitRepository": "Git Repository",
@@ -418,6 +457,7 @@
 	"overview": "Overview",
 	"log": "Log",
 	"transfer": "Transfer",
+	"configure": "Configure",
 
 	"suppressDiffOnCommit": "Suppress diff on commit",
 	"saveExtensions": "Save Extensions"
