@@ -170,11 +170,11 @@ class Market {
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::sendJSON("error", "Unable to extract Archive."); die;
+					Common::sendJSON("error", i18n("market_unableExtract")); die;
 				}
 
 			} else {
-				Common::sendJSON("error", "ZIP Extension not found."); die;
+				Common::sendJSON("error", i18n("market_noZip")); die;
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -183,13 +183,13 @@ class Market {
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 			// Response
-			Common::sendJSON("success", "Successfully installed $name.");
+			Common::sendJSON("success", i18n("market_install_success", $name));
+
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
 			$this->buildCache();
 		} else {
-			Common::sendJSON("error", "Unable to download $name.");
-			die;
+			Common::sendJSON("error", i18n("market_unableDownload"));
 		}
 	}
 
@@ -237,8 +237,8 @@ class Market {
 					$url = isset($data["url"]) ? $data["url"] : "false";
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
 					$status = isset($data["status"]) ? $data["status"] : "unavailable";
-					$description = isset($data["description"]) ? $data["description"] : "Missing Description.";
-					$author = isset($data["author"]) ? implode(", ", $data["author"]) : "Unknown";
+					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
+					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
 
 
 
@@ -264,7 +264,7 @@ class Market {
 
 		$aTable = "";
 		if (empty($market)) {
-			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>MarketPlace Unreachable</h3></td></tr>";
+			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>" . i18n("connectionError") . "</h3></td></tr>";
 		} else {
 			foreach ($market as $type => $listT) {
 				foreach ($listT as $category => $listC) {
@@ -297,7 +297,4 @@ class Market {
 		);
 
 	}
-
-
-
 }
