@@ -27,21 +27,24 @@ $TextMode = new TextMode();
 switch ($action) {
 	case 'settings':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u"); die;
-		}
+			?>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted"); ?></label>
+			<form>
+				<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted_textmodes"); ?></label>
+			</form>
+			<?php
+		} else {
 
-		$map = Common::readJSON("extensions");
+			$map = Common::readJSON("extensions");
 
-		if (!$map || !is_array($map)) {
-			$map = $TextMode->getDefaultExtensionMap();
-		}
+			if (!$map || !is_array($map)) {
+				$map = $TextMode->getDefaultExtensionMap();
+			}
 
-		if (!@ksort($map)) {
-			die(Common::sendJSON("error", "PHP: Missing ksort"));
-		}
+			@ksort($map);
 
-		?>
-		<label><i class="fas fa-pencil-alt"></i><?php echo i18n("extensions"); ?></label>
+			?>
+			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("extensions"); ?></label>
 			<table id="textmode">
 				<thead>
 					<tr>
@@ -70,7 +73,8 @@ switch ($action) {
 			<br>
 			<button class="btn-left" onClick="atheos.textmode.addFieldToForm(); return false;"><?php echo i18n("newExtension"); ?></button>
 			<button class="btn-right" onClick="atheos.textmode.saveExtensions(); return false;"><?php echo i18n("saveExtensions"); ?></button>
-		<?php
+			<?php
+		}
 		break;
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
