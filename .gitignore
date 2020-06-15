@@ -12,6 +12,7 @@ public/*.min.*
 themes/*
 !themes/atheos/
 
+*.disabled*
 js/*.disabled.*
 components/*/*.disabled.*
 
