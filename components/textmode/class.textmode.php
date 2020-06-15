@@ -228,7 +228,7 @@ class TextMode {
 
 
 			if (isset($customMap[$extension])) {
-				Common::sendJSON("error", "$extension is already set."); die;
+				Common::sendJSON("error", i18n("extensionSet")); die;
 			} else {
 				$customMap[$extension] = $mode;
 			}
