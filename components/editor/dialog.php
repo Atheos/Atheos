@@ -18,14 +18,9 @@ require_once("../../common.php");
 Common::checkSession();
 
 $action = Common::data("action");
-$type = Common::data("type");
-$highlight = Common::data("highlight");
-
-$highlight = strip_tags($highlight);
 
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m");	die;
 }
 
 switch ($action) {
