@@ -58,7 +58,7 @@ switch ($action) {
 		if ($activeProject) {
 			Common::sendJSON("success", array("path" => $activeProject));
 		} else {
-			Common::sendJSON("error", "No active project");
+			Common::sendJSON("error", i18n("project_noActive"));
 		}
 		break;
 
@@ -80,7 +80,6 @@ switch ($action) {
 	// Load Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'load':
-		// Load default/first project
 		$Project->load($activeProject);
 		break;
 
