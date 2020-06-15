@@ -35,8 +35,12 @@ switch ($action) {
 	case 'check':
 
 		if (!Common::checkAccess("configure")) {
-			echo("<h1>" . i18n("Restricted") . "</h1>");
-			echo("<pre>" . i18n("You can not check for updates") . "</pre>");
+			?>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted"); ?></label>
+			<form>
+				<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted_updates"); ?></label>
+			</form>
+			<?php
 		} else {
 			require_once('class.update.php');
 			$local = $Update->local;
