@@ -61,9 +61,9 @@ class Project {
 		}
 
 		if (array_key_exists($projectPath, $this->projects)) {
-			Common::sendJSON("error", "A project with that path exists."); die;
+			Common::sendJSON("error", i18n("project_exists_path")); die;
 		} elseif (in_array($projectName, $this->projects)) {
-			Common::sendJSON("error", "A Project with that name exists."); die;
+			Common::sendJSON("error", i18n("project_exists_name")); die;
 		}
 
 
@@ -72,11 +72,11 @@ class Project {
 		} else {
 			if (!file_exists($projectPath)) {
 				if (!mkdir($projectPath . '/', 0755, true)) {
-					Common::sendJSON("E5001", "Unable to create Absolute Path."); die;
+					Common::sendJSON("error", i18n("project_unableAbsolute")); die;
 				}
 			} else {
 				if (!is_writable($projectPath) || !is_readable($projectPath)) {
-					Common::sendJSON("E5001", "No Read/Write Permission."); die;
+					Common::sendJSON("error", i18n("project_unablePermissions")); die;
 				}
 			}
 		}
@@ -141,7 +141,7 @@ class Project {
 			"path" => $projectPath,
 			"text" => $projectName . " Loaded.",
 			// While I don't approve of user information being passed thoguh the
-			// project class, it seems significantly mroe effective to do so as
+			// project class, it seems significantly more effective to do so as
 			// opposed to creating an entire process to pass lastLogin data to
 			// the client when I can accomplish it by adding this line here.
 			//			- Liam Siira
@@ -162,7 +162,7 @@ class Project {
 				"text" => $projectName . " Loaded."
 			));
 		} else {
-			Common::sendJSON("error", "Project Not Found");
+			Common::sendJSON("error", i18n("project_missing"));
 		}
 	}
 
