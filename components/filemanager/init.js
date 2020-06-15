@@ -330,7 +330,7 @@
 							callbacks.success.call(context, data.modifyTime);
 						}
 					} else {
-						if (data.text === 'Client is out of sync.') {
+						if (data.text === 'out of sync') {
 							atheos.alert.show({
 								banner: 'File changed on server!',
 								message: 'Would you like to load the updated file?\n' +

@@ -20,13 +20,10 @@ Common::checkSession();
 $action = Common::data("action");
 $path = Common::data("path");
 $name = Common::data("name");
-
 $type = Common::data("type");
 
-
 if (!$action) {
-	Common::sendJSON("E401m");
-	die;
+	Common::sendJSON("E401m"); die;
 }
 switch ($action) {
 
@@ -45,22 +42,6 @@ switch ($action) {
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Rename
-	//////////////////////////////////////////////////////////////////////////80
-	case 'rename':
-		?>
-		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
-		<form>
-			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
-			<button class="btn-left"><?php echo i18n("rename_type"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
-		</form>
-
-	</form>
-	<?php
-	break;
-
-	//////////////////////////////////////////////////////////////////////////80
 	// Duplicate
 	//////////////////////////////////////////////////////////////////////////80
 	case 'duplicate':
@@ -77,6 +58,22 @@ switch ($action) {
 
 		<?php
 		break;
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Rename
+	//////////////////////////////////////////////////////////////////////////80
+	case 'rename':
+		?>
+		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
+		<form>
+			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
+			<button class="btn-left"><?php echo i18n("rename_type"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
+		</form>
+
+	</form>
+	<?php
+	break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
