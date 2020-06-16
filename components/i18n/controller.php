@@ -34,14 +34,11 @@ switch ($action) {
 		Common::sendJSON("success", $cache);
 		break;
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Save Local Data
-	//////////////////////////////////////////////////////////////////////////80
-	// case 'saveCache':
-	// 	$cache = Common::data("cache");
-	// 	$Update->saveCache($cache);		
-	// 	break;
-
+	case 'show':
+		$lang = Common::data("lang");
+		$data = array("data" => $i18n->getRaw($lang));
+		Common::sendJSON("success", $data);
+		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
