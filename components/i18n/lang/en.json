@@ -22,9 +22,6 @@
 	"logout": "Logout",
 	"rememberMe": "Remember Me",
 
-
-
-
 	"find": "Find",
 	"find:": "Find:",
 
@@ -82,18 +79,6 @@
 
 	"download": "download",
 
-	"cannotPasteDirectoryIntoItself": "Cannot Paste Directory Into Itself",
-	"overwriteOriginal": "Overwrite Original",
-	"copiedToClipboard": "Copied to Clipboard",
-	"createDuplicate": "Create Duplicate",
-	"areYouSureYouWishToDeleteTheFollowing:": "Are You Sure You Wish To Delete The Following:",
-	"wouldYouLikeToOverwriteOrDuplicateTheFollowing:": "Would you like to overwrite or duplicate the following:",
-
-	"youHaveUnsavedFiles": "You have unsaved files.",
-	"fileCouldNotBeSaved": "File could not be saved",
-	"closeUnsavedFiles": "Close Unsaved Files?",
-	"noOpenFilesToSave": "No Open Files to save",
-
 	"save": {
 		"": "Save",
 		"all": "Save All",
@@ -107,9 +92,9 @@
 	},
 
 	"closeUnsavedFile": "Close Unsaved File?",
+
 	"save&close": "Save & Close",
 	"discardChanges": "Discard Changes",
-
 
 	"ln": "Ln",
 	"in": "In:",
@@ -126,7 +111,6 @@
 	"name": "Name",
 
 	"search": "Search",
-
 
 	"filterTree": "Filter Tree",
 	"prefix": "Prefix",
@@ -151,8 +135,9 @@
 	"extensions": "Extensions",
 	"textmode": "Textmode",
 	"textmodes": "Textmodes",
-	"extensionSet": "%s is already set", 
-	
+	"saveExtensions": "Save Extensions",
+	"extensionSet": "%s is already set",
+
 	"keybindings": "Keybindings",
 	"plugins": "Plugins",
 	"system": "System",
@@ -199,7 +184,7 @@
 		"": "Password",
 		"new": "New Password",
 		"change": "Change Password",
-		"changeUser": "Change %s&#39;s Password",
+		"changeUser": "Change %s's Password",
 		"confirm": "Confirm Password"
 	},
 	"password:": "Password:",
@@ -248,13 +233,14 @@
 	"install": "Install",
 	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
 	"yourVersion": "Your Version",
-
+	"latestVersion": "Latest Version",
+	"changesOnAtheos": "Changes On Atheos",
+	"downloadAtheos": "Download Atheos",
 
 	"language": "Language",
 	"collapse": "Collapse",
-	"complete": "Complete!",
-	"installed": "Installed",
-	"available": "Available",
+
+	"highlightActiveLine": "Highlight Active Line",
 	"fontSize": "Font Size",
 	"pixel": {
 		"": "%spx",
@@ -306,11 +292,6 @@
 	"unauthorized": "You are not Authorized to %s",
 	"wrapLines": "Wrap Lines",
 
-	"colorTool": "Color Tool",
-	"insertHex": "Insert HEX",
-	"insertRGB": "Insert RGB",
-
-
 	"printMarginShow": "Print Margin",
 	"printMarginColumn": "Print Margin Column",
 
@@ -354,7 +335,6 @@
 	"close_uploader": "Close Uploader",
 	"close_modal": "Close Modal",
 
-
 	"installationError": "Installation Error",
 	"existsAndWriteable:": "Please make sure the following exist and are writeable:",
 	"envVariablesSet:": "Please make sure these environmental variables are set:",
@@ -379,12 +359,10 @@
 		"missingDesc": "Missing Description.",
 		"missingAuth": "Unknown"
 	},
-
-	"latestVersion": "Latest Version",
-
-	"changesOnAtheos": "Changes On Atheos",
+	"complete": "Complete!",
+	"installed": "Installed",
+	"available": "Available",
 	"reloadAtheos": "Reload Atheos",
-	"downloadAtheos": "Download Atheos",
 
 	"split": {
 		"": "Split",
@@ -421,16 +399,6 @@
 		}
 	},
 
-	"contactingGitHub": "Contacting GitHub...",
-	"editFileExtensions": "Edit File Extensions",
-
-	"highlightActiveLine": "Highlight Active Line",
-
-	"followSymbolicLinks": "Follow Symbolic Links ",
-
-	"youMustChooseAValue": "You Must Choose A Value",
-
-
 
 	"warning": {
 		"fileOpen": "Warning: File Currently Opened By: %s"
@@ -457,9 +425,7 @@
 	"overview": "Overview",
 	"log": "Log",
 	"transfer": "Transfer",
-	"configure": "Configure",
+	"configure": "Configure"
 
-	"suppressDiffOnCommit": "Suppress diff on commit",
-	"saveExtensions": "Save Extensions"
 
 }
