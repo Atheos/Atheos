@@ -133,12 +133,14 @@ class i18n {
 
 		if ($outdated || true) {
 			$appliedData = $this->load($this->appliedLang);
-			$fallbackData = $this->load($this->fallbackLang);
-			$mergedData = array_replace_recursive($fallbackData, $appliedData);
+			if ($this->appliedLang !== $this->fallbackLang) {
+				$fallbackData = $this->load($this->fallbackLang);
+				$appliedData = $this->merge($fallbackData, $appliedData);
+			}
 
 			$compiled = "<?php\n"
 			. "return array(\n"
-			. $this->compile($mergedData)
+			. $this->compile($appliedData)
 			. ");\n"
 			. "?>";
 
@@ -159,7 +161,8 @@ class i18n {
 	// Translate
 	//////////////////////////////////////////////////////////////////////////80
 	public function translate($string, $args = NULL) {
-		$result = array_key_exists($string, $this->cache) ? $this->cache[$string] : $string;
+		// $result = array_key_exists($string, $this->cache) ? $this->cache[$string] : $string;
+
 		if (array_key_exists($string, $this->cache)) {
 			$result = $this->cache[$string];
 		} else {
@@ -175,7 +178,7 @@ class i18n {
 			$string = str_pad($string, 40, ".", STR_PAD_RIGHT);
 
 			$text = "@$time: $string < Ln:$line in $file";
-			
+
 			Common::log($text, "lang");
 
 		}
@@ -259,8 +262,107 @@ class i18n {
 		return json_decode(file_get_contents($filename), true);
 	}
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Load language file code
+	//////////////////////////////////////////////////////////////////////////80
+	public function getRaw($code) {
+		// $lang = $this->getLangFileName($code);
+		$en = $this->getLangFileName("en");
+
+		// $lang = json_decode(file_get_contents($lang), true);
+		$en = json_decode(file_get_contents($en), true);
+
+		$en = $this->cleanLang($en);
+		Common::saveJSON($code . "_clean", $en, "lang");
+		return $en;
+
+	}
+
 	public function codes() {
 		return $this->langCodes;
+	}
+
+	protected function cleanLang($array) {
+		function recurse($alpha) {
+			foreach ($alpha as $key => $value) {
+
+				// create new key in $alpha, if it is empty or not an array
+				if (!isset($alpha[$key]) || (isset($alpha[$key]) && !is_array($alpha[$key]))) {
+					$alpha[$key] = array();
+				}
+
+				// overwrite the value in the base array
+				if (is_array($value)) {
+					$value = recurse($alpha[$key], $value);
+				} else {
+					$value = false;
+				}
+				$alpha[$key] = $value;
+			}
+			return $alpha;
+		}
+
+		$array = recurse($array);
+		return $array;
+	}
+
+	protected function merge($array, $array1) {
+		// https://stackoverflow.com/questions/2874035/php-array-replace-recursive-alternative
+		function recurse($alpha, $bravo) {
+			foreach ($bravo as $key => $value) {
+				if ($value === false) {
+					continue;
+				}
+
+				// create new key in $alpha, if it is empty or not an array
+				if (!isset($alpha[$key]) || (isset($alpha[$key]) && !is_array($alpha[$key]))) {
+					$alpha[$key] = array();
+				}
+
+				// overwrite the value in the base array
+				if (is_array($value)) {
+					$value = recurse($alpha[$key], $value);
+				}
+				$alpha[$key] = $value;
+			}
+			return $alpha;
+		}
+
+		if (!is_array($array) || !is_array($array1)) {
+			return $array;
+		}
+		$array = recurse($array, $array1);
+		return $array;
+	}
+
+	protected function reverseMerge($array, $array1) {
+		function recurse($alpha, $bravo) {
+			foreach ($alpha as $key => $value) {
+				// create new key in $alpha, if it is empty or not an array
+				if (!isset($alpha[$key]) || (isset($alpha[$key]) && !is_array($alpha[$key]))) {
+					$alpha[$key] = array();
+				}
+
+				// overwrite the value in the base array
+				if (is_array($value)) {
+					$value = recurse($alpha[$key], $value);
+				}
+
+				if (array_key_exists($key, $bravo)) {
+					$alpha[$key] = $bravo[$key];
+				} else {
+					$alpha[$key] = false;
+				}
+
+			}
+			return $alpha;
+		}
+
+		if (!is_array($array) || !is_array($array1)) {
+			return $array;
+		}
+		$array = recurse($array, $array1);
+		return $array;
 	}
 
 	/**
