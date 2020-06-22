@@ -9,11 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
-require_once('../../common.php');
 
-require_once("../../helpers/version-compare.php");
-require_once("../../helpers/recurse-delete.php");
-
+require_once(__DIR__ . "/../../helpers/version-compare.php");
+require_once(__DIR__ . "/../../helpers/recurse-delete.php");
 
 class Market {
 
