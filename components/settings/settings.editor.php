@@ -6,23 +6,28 @@
 	<tr>
 		<td width="50%"><?php echo i18n("theme"); ?></td>
 		<td>
-			<select class="setting" data-setting="editor.theme">
+			<!--<dropdown data-setting="editor.theme">-->
+			<select data-setting="editor.theme">
+
 				<?php
 				$files = glob(COMPONENTS . "/editor/ace-editor/theme-*.js");
 				foreach ($files as $file) {
 					$name = pathinfo($file, PATHINFO_FILENAME);
-					// if( strpos( strtolower( $name ), strtolower( "theme-" ) ) !== false ) {
 					$value = str_replace("theme-", "", str_replace(".js", "", $name));
 					$name = ucwords(str_replace("_", " ", $value));
-					if ($name === "Atheos") {
-						echo('<option selected value="' . $value . '">' . $name .'</option>');
-					} else {
 
-						echo('<option value="' . $value . '">' . $name .'</option>');
+					if ($name === "Atheos") {
+						echo('<option selected value="' . $value . '">' . $name .'</option>' . PHP_EOL);
+						// echo("<input type=\"radio\" name=\"theme\" value=\"$value\" checked=\"checked\" id=\"theme_$value\"><label for=\"theme_$value\">$name</label>");
+
+					} else {
+						echo('<option value="' . $value . '">' . $name .'</option>' . PHP_EOL);
+						// echo("<input type=\"radio\" name=\"theme\" value=\"$value\" id=\"theme_$value\"><label for=\"theme_$value\">$name</label>");
 					}
 				}
 				?>
 			</select>
+			<!--</dropdown>-->
 		</td>
 	</tr>
 	<tr>
@@ -95,7 +100,7 @@
 		<td>
 			<toggle>
 				<input id="editor_wrapMode_true" data-setting="editor.wrapMode" value="true" name="editor.wrapMode" type="radio" />
-				<label for="editor_wrapMode_true"><?php echo i18n("enabled"); ?></label>				
+				<label for="editor_wrapMode_true"><?php echo i18n("enabled"); ?></label>
 				<input id="editor_wrapMode_false" data-setting="editor.wrapMode" value="false" name="editor.wrapMode" type="radio" checked />
 				<label for="editor_wrapMode_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
@@ -120,7 +125,7 @@
 		<td>
 			<toggle>
 				<input id="editor_softTabs_true" data-setting="editor.softTabs" value="true" name="editor.softTabs" type="radio" />
-				<label for="editor_softTabs_true"><?php echo i18n("enabled"); ?></label>				
+				<label for="editor_softTabs_true"><?php echo i18n("enabled"); ?></label>
 				<input id="editor_softTabs_false" data-setting="editor.softTabs" value="false" name="editor.softTabs" type="radio" checked />
 				<label for="editor_softTabs_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
