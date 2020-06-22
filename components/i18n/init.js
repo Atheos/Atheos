@@ -44,7 +44,6 @@
 					action: 'init'
 				},
 				success: function(reply) {
-					log(reply);
 					if (reply.status === 'error') {
 						return;
 					}

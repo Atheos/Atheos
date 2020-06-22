@@ -225,6 +225,13 @@ class i18n {
 			$userLangs[] = $_SESSION['lang'];
 		}
 
+		// 3rd highest priority: HTTP_ACCEPT_LANGUAGE
+		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+			foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $part) {
+				$userLangs[] = strtolower(substr($part, 0, 2));
+			}
+		}
+
 		// Lowest priority: fallback
 		$userLangs[] = $this->fallbackLang;
 
@@ -266,16 +273,14 @@ class i18n {
 	// Load language file code
 	//////////////////////////////////////////////////////////////////////////80
 	public function getRaw($code) {
-		// $lang = $this->getLangFileName($code);
-		$en = $this->getLangFileName("en");
+		$lang = $this->getLangFileName("en");
 
 		// $lang = json_decode(file_get_contents($lang), true);
-		$en = json_decode(file_get_contents($en), true);
+		$lang = json_decode(file_get_contents($lang), true);
 
-		$en = $this->cleanLang($en);
-		Common::saveJSON($code . "_clean", $en, "lang");
-		return $en;
-
+		$lang = $this->cleanLang($lang);
+		Common::saveJSON($code . "_clean", $lang, "lang");
+		return $lang;
 	}
 
 	public function codes() {
@@ -324,36 +329,6 @@ class i18n {
 					$value = recurse($alpha[$key], $value);
 				}
 				$alpha[$key] = $value;
-			}
-			return $alpha;
-		}
-
-		if (!is_array($array) || !is_array($array1)) {
-			return $array;
-		}
-		$array = recurse($array, $array1);
-		return $array;
-	}
-
-	protected function reverseMerge($array, $array1) {
-		function recurse($alpha, $bravo) {
-			foreach ($alpha as $key => $value) {
-				// create new key in $alpha, if it is empty or not an array
-				if (!isset($alpha[$key]) || (isset($alpha[$key]) && !is_array($alpha[$key]))) {
-					$alpha[$key] = array();
-				}
-
-				// overwrite the value in the base array
-				if (is_array($value)) {
-					$value = recurse($alpha[$key], $value);
-				}
-
-				if (array_key_exists($key, $bravo)) {
-					$alpha[$key] = $bravo[$key];
-				} else {
-					$alpha[$key] = false;
-				}
-
 			}
 			return $alpha;
 		}
