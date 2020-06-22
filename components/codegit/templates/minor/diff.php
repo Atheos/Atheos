@@ -45,13 +45,13 @@ foreach ($diffs as $i => $diff) {
 
 			} else if (strpos($item, '+') === 0 && strpos($item, '+++') !== 0) {
 				$element = "<li class=\"addition\">$lineString<span> $item</span></li>";
-				if ($diff[$i-1] && substr($item, 1, -1) !== substr($diff[$i-1], 1, -1)) {
+				if (array_key_exists($i - 1, $diff) && substr($item, 1, -1) !== substr($diff[$i-1], 1, -1)) {
 					$lineNumber++;
 				}
 
 			} else if (strpos($item, '-') === 0 && strpos($item, '---') !== 0) {
 				$element = "<li class=\"deletion\">$lineString<span> $item</span></li>";
-				if ($diff[$i-1] && substr($item, 1, -1) !== substr($diff[$i-1], 1, -1)) {
+				if (array_key_exists($i - 1, $diff) && substr($item, 1, -1) !== substr($diff[$i-1], 1, -1)) {
 					$lineNumber++;
 				}
 
