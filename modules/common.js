@@ -34,7 +34,7 @@
 		init: function() {
 			self = this;
 
-			// self.initDropdown();
+			self.initDropdown();
 			self.initTogglePassword();
 			self.initCheckMonitors();
 		},
@@ -99,20 +99,16 @@
 		//////////////////////////////////////////////////////////////////////80
 		initDropdown: function() {
 			var close = function() {
-				oX('.dropdown.expanded').removeClass('expanded');
-				window.removeEventListener('click', close);
+				oX('dropdown.expanded').removeClass('expanded');
+				oX('dropdown', true).off('click');
 			};
 
-			window.addEventListener('click', function(e) {
-				if (!e.target.matches('.dropdown') && !e.target.closest('.dropdown')) {
-					log('test');
-					return;
-				}
+			oX('dropdown', true).on('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 
 				var target = oX(e.target),
-					parent = target.parent('.dropdown');
+					parent = target.parent('dropdown');
 
 
 				parent.addClass('expanded');
