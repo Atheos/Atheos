@@ -41,9 +41,9 @@
 			//	Critical components should load on major
 			//	Features should load on minor
 			//	Plugins should load on extra
-				amplify.publish('system.loadMajor');
-				amplify.publish('system.loadMinor');
-				amplify.publish('system.loadExtra');
+			amplify.publish('system.loadMajor');
+			amplify.publish('system.loadMinor');
+			amplify.publish('system.loadExtra');
 
 			// Settings are initialized last in order to ensure all listeners are attached
 			atheos.settings.init();
