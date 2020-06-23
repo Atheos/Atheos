@@ -67,7 +67,7 @@ switch ($action) {
 		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
 		<form>
 			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
-			<button class="btn-left"><?php echo i18n("rename_type"); ?></button>
+			<button class="btn-left"><?php echo i18n("rename"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
 
