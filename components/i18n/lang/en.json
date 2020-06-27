@@ -276,6 +276,7 @@
 
 	"path": {
 		"": "Path",
+		"missing": "Path doesn't exist.",
 		"exists": "Path already exists.",
 		"unableCreate": "Cannot create path.",
 		"unableRename": "Cannot rename path."
@@ -419,7 +420,20 @@
 	"codegit": {
 		"": "CodeGit",
 		"banner": "Banner above FileManager",
-		"status": "File Status in BottomBar"
+		"status": "File Status in BottomBar",
+		"unknown": "Unknown",
+		"untracked": "Untracked",
+		"uncommitted": "Uncommitted",
+		"committed": "Committed",
+		"error": {
+			"statusFail": "Unable to load Repository status"
+		}
+	},
+	
+	"git": {
+		"pull": "Pull",
+		"push": "Push",
+		"fetch": "Fetch"
 	},
 
 	"overview": "Overview",
