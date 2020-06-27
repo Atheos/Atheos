@@ -164,6 +164,7 @@
 					url: self.controller,
 					data: {
 						action: 'index',
+						target: 'filemanager',
 						path
 					},
 					success: function(reply) {
@@ -182,7 +183,15 @@
 								var appendage = '<ul' + display + '>';
 
 								files.forEach(function(file) {
-									appendage += self.createDirectoryItem(file.path, file.type, file.size);
+									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
+
+									if (pathinfo(file.path).basename === '.git') {
+										node.addClass('repo');
+										if (!node.find('i.repo-icon')) {
+											node.append('<i class="repo-icon fas fa-code-branch"></i>');
+										}
+									}
+
 								});
 
 								appendage += '</ul>';
@@ -225,7 +234,7 @@
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
 
-		createDirectoryItem: function(path, type, size) {
+		createDirectoryItem: function(path, type, size, repo) {
 
 			var basename = pathinfo(path).basename;
 
@@ -242,10 +251,14 @@
 
 			fileClass = fileClass || 'fa fa-file green';
 
+			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
+			var repoClass = repo ? ' class="repo"' : '';
+
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}">
+			<a data-type="${type}" data-path="${path}"${repoClass}>
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
+			${repoIcon}
 			<span>${basename}</span>
 			</a>
 			</li>`;
