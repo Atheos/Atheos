@@ -77,7 +77,6 @@
 		// Download Archive
 		//////////////////////////////////////////////////////////////////
 		translate: function(string, args) {
-			// self = self || await atheos.i18n.init();
 			if (!self.cache) {
 				return string;
 			}
