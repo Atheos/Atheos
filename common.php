@@ -36,7 +36,11 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function construct() {
 		global $cookie_lifetime;
+
+
 		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
+		$path = str_replace("controller.php", "", $path);
+
 		foreach (array("components", "plugins") as $folder) {
 			if (strpos($_SERVER['SCRIPT_FILENAME'], $folder)) {
 				$path = substr($_SERVER['SCRIPT_FILENAME'], 0, strpos($_SERVER['SCRIPT_FILENAME'], $folder));
@@ -318,16 +322,18 @@ class Common {
 
 		$time = date("Y-m-d H:i:s");
 		$trace = debug_backtrace(null, 5);
-		$function = $trace[1]['function'];
-		$file = $trace[2]['file'];
+		if (is_array($trace) && count($trace) > 2) {
+			$function = $trace[1]['function'];
+			$file = $trace[2]['file'];
 
-		$val = "\"$val\"";
-		$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-		$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
+			$val = is_array($val) ? json_encode($val) : "\"$val\"";
+			$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
+			$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
 
-		$text = "@$time:\t$val < $function in $file";
-		
-		Common::log($text, $name);
+			$text = "@$time:\t$val < $function in $file";
+
+			Common::log($text, $name);
+		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
