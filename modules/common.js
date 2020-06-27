@@ -27,8 +27,6 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.common.init());
-
 	atheos.common = {
 
 		init: function() {
