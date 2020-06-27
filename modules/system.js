@@ -14,49 +14,58 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
+	var running = false;
 
+	var atheos = global.atheos = {
+		controller: 'controller.php',
+		dialog: 'dialog.php',
 
-	var atheos = global.atheos = {},
-		amplify = global.amplify;
+		init: function() {
+			if (running) {
+				return;
+			}
 
+			// global.i18n = atheos.i18n.translate;
+			atheos.i18n.init();
+			atheos.common.init();
+
+			//Synthetic Login Overlay
+			if (document.querySelector('#login')) {
+				global.synthetic.init();
+				atheos.user.init();
+			} else if (document.querySelector('#installer')) {
+				global.synthetic.init();
+				atheos.install.init();
+			} else {
+				// Atheos has three levels of priority loading:
+				//	Critical components should load on major
+				//	Features should load on minor
+				//	Plugins should load on extra
+				amplify.publish('system.loadMajor');
+				amplify.publish('system.loadMinor');
+				amplify.publish('system.loadExtra');
+
+				// Settings are initialized last in order to ensure all listeners are attached
+				atheos.settings.init();
+			}
+
+			log([
+				'   _____   __   __                        ',
+				'  /  _  \\_/  |_|  |__   ____  ____  ______',
+				' /  /_\\  \\   __\\  |  \\_/ __ \\/  _ \\/  ___/',
+				'/    |    \\  | |   Y  \\  ___(  <_> )___ \\ ',
+				'\\____|__  /__| |___|  /\\___  >____/____  >',
+				'        \\/          \\/     \\/          \\/ '
+			].join('\n'));
+
+		}
+	};
 	//////////////////////////////////////////////////////////////////////
 	// Init
 	//////////////////////////////////////////////////////////////////////
 	document.addEventListener('DOMContentLoaded', function() {
-
-		// global.i18n = atheos.i18n.translate;
-		atheos.i18n.init();
-
-		//Synthetic Login Overlay
-		if (document.querySelector('#login')) {
-			global.synthetic.init();
-			atheos.user.init();
-			atheos.common.init();
-		} else if (document.querySelector('#installer')) {
-			global.synthetic.init();
-			atheos.install.init();
-			atheos.common.init();
-		} else {
-			// Atheos has three levels of priority loading:
-			//	Critical components should load on major
-			//	Features should load on minor
-			//	Plugins should load on extra
-			amplify.publish('system.loadMajor');
-			amplify.publish('system.loadMinor');
-			amplify.publish('system.loadExtra');
-
-			// Settings are initialized last in order to ensure all listeners are attached
-			atheos.settings.init();
-		}
-
-		log([
-			'   _____   __   __                        ',
-			'  /  _  \\_/  |_|  |__   ____  ____  ______',
-			' /  /_\\  \\   __\\  |  \\_/ __ \\/  _ \\/  ___/',
-			'/    |    \\  | |   Y  \\  ___(  <_> )___ \\ ',
-			'\\____|__  /__| |___|  /\\___  >____/____  >',
-			'        \\/          \\/     \\/          \\/ '
-		].join('\n'));
+		atheos.init();
+		running = true;
 	});
 
 })(this);
