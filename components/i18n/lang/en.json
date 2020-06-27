@@ -433,7 +433,12 @@
 	"git": {
 		"pull": "Pull",
 		"push": "Push",
-		"fetch": "Fetch"
+		"fetch": "Fetch",
+		"addFailed": "Failed to add %s",
+		"commit": {
+			"success": "Changes commited.",
+			"failed": "Changes could not be committed."
+		}
 	},
 
 	"overview": "Overview",
