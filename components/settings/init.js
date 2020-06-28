@@ -225,51 +225,53 @@
 		// Show Setting Dialog
 		//////////////////////////////////////////////////////////////////////80
 		show: function(dataFile) {
-			var listener = function() {
-				oX('#modal_wrapper').on('change', function(e) {
-					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					var type = target.el.type;
+			var listener = function(e) {
+				var target = oX(e.target);
+				var tagName = target.el.tagName;
+				var type = target.el.type;
 
-					var key = target.attr('data-setting'),
-						value;
+				var key = target.attr('data-setting'),
+					value;
 
-					if (tagName === 'SELECT') {
-						value = target.value();
+				if (tagName === 'SELECT') {
+					value = target.value();
 
-					} else if (tagName === 'INPUT' && type === 'checkbox') {
-						value = target.prop('checked');
+				} else if (tagName === 'INPUT' && type === 'checkbox') {
+					value = target.prop('checked');
 
-					} else if (tagName === 'INPUT' && type === 'radio') {
-						value = target.value();
+				} else if (tagName === 'INPUT' && type === 'radio') {
+					value = target.value();
 
-					} else {
-						return;
-					}
-
-					storage(key, value);
-					self.save(key, value);
-					self.publish(key, value);
-				});
-
-				oX('.settings menu').on('click', function(e) {
-					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					if (tagName === 'A') {
-						self.showTab(target.attr('data-file'));
-					}
-				});
-
-				if (typeof(dataFile) === 'string') {
-					self.showTab(dataFile);
 				} else {
-					self.loadTabValues();
+					return;
 				}
+
+				storage(key, value);
+				self.save(key, value);
+				self.publish(key, value);
 			};
 
 			atheos.modal.load(800, self.dialog, {
-				action: 'settings'
-			}, listener);
+				action: 'settings',
+				callback: function() {
+					oX('#modal_wrapper').on('change', listener);
+
+					oX('.settings menu').on('click', function(e) {
+						var target = oX(e.target);
+						var tagName = target.el.tagName;
+						if (tagName === 'A') {
+							self.showTab(target.attr('data-file'));
+						}
+					});
+
+					if (typeof(dataFile) === 'string') {
+						self.showTab(dataFile);
+					} else {
+						self.loadTabValues();
+					}
+
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80

@@ -186,10 +186,7 @@
 									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
 
 									if (pathinfo(file.path).basename === '.git') {
-										node.addClass('repo');
-										if (!node.find('i.repo-icon')) {
-											node.append('<i class="repo-icon fas fa-code-branch"></i>');
-										}
+										atheos.codegit.addRepoIcon(path);
 									}
 
 								});
@@ -508,8 +505,9 @@
 				self.dialog, {
 					action: 'duplicate',
 					name: name,
-					type: type
-				}, listener);
+					type: type,
+					listener
+				});
 
 		},
 
@@ -553,8 +551,9 @@
 
 			atheos.modal.load(250, self.dialog, {
 				action: 'create',
-				type: type
-			}, listener);
+				type: type,
+				listener
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -676,8 +675,9 @@
 				self.dialog, {
 					action: 'rename',
 					name: nodeName,
-					type: type
-				}, listener);
+					type: type,
+					listener
+				});
 
 		},
 

@@ -77,12 +77,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function(type, note) {
-			atheos.modal.load(1000, self.dialog, {
-				action: 'list',
-				type: type,
-				note: note
-			});
-
 			var listener = function() {
 				var manualRepo = oX('#manual_repo');
 
@@ -102,7 +96,12 @@
 				});
 			};
 
-			// amplify.subscribe('modal.loaded', listener);
+			atheos.modal.load(1000, self.dialog, {
+				action: 'list',
+				type: type,
+				note: note,
+				listener
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////

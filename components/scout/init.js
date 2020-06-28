@@ -146,24 +146,24 @@
 			};
 
 			atheos.modal.load(500, self.dialog, {
-				action: 'probe'
-			}, () => {
-				var table = oX('#probe_results');
+				action: 'probe',
+				listener,
+				callback: function() {
+					var table = oX('#probe_results');
 
-				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
+					var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
-				if (lastSearched) {
-					oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
-					oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
-					// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
-					if (lastSearched.results !== '') {
-						table.html(lastSearched.results);
-						atheos.flow.slide('open', table.el);
-						atheos.modal.resize();
+					if (lastSearched) {
+						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
+						oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
+						// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
+						if (lastSearched.results !== '') {
+							table.html(lastSearched.results);
+							atheos.flow.slide('open', table.el);
+							atheos.modal.resize();
+						}
 					}
 				}
-
-				oX('#modal_content').on('submit', listener);
 			});
 		},
 
