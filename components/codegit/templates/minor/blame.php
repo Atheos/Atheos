@@ -1,5 +1,5 @@
 <?php
-$repo = $CodeGit->getWorkspacePath($repo);
+$repo = Common::getWorkspacePath($repo);
 $files = Common::data('files');
 if ($files) {
 	$files = explode(',', $files);
@@ -31,22 +31,22 @@ foreach ($blames as $i => $blame) {
 			$item = htmlentities($item);
 
 			$info = explode("\t", $item);
-			
+
 
 			$hash = $info[0];
 			$author = substr($info[1], 1);
 			$date = $info[2];
 
-			$lineString = str_replace("$hash\t($author\t$date\t","",$item);
-			preg_match('/^\d+(?=(\)))/',$lineString, $lineNumber);
+			$lineString = str_replace("$hash\t($author\t$date\t", "", $item);
+			preg_match('/^\d+(?=(\)))/', $lineString, $lineNumber);
 			$lineNumber = $lineNumber[0];
 			$reg = '/^' . $lineNumber . '\)/';
 			$lineString = preg_replace('/^\d+\)/', "", $lineString);
-			
+
 			$lineNumber = str_pad($lineNumber, strlen(count($blame)), " ", STR_PAD_LEFT);
 			// $lineString = strip_tags($lineString);
-			
-			
+
+
 			$element = "
 <li>
 	<span class=\"line\">$lineNumber </span>

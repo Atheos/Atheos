@@ -1,5 +1,5 @@
 <?php
-$repo = $CodeGit->getWorkspacePath($repo);
+$repo = Common::getWorkspacePath($repo);
 $files = Common::data('files');
 
 if ($files) {
