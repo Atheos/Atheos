@@ -160,8 +160,10 @@
 		showCodeGit: function(repo) {
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
+			
+			log(repo);
 
-			var listener = function() {
+			var callback = function() {
 				oX('menu').on('click', function(e) {
 					var target = oX(e.target);
 					var tagName = target.el.tagName;
@@ -192,7 +194,7 @@
 			atheos.modal.load(800, self.dialog, {
 				action: 'codegit',
 				repo,
-				listener
+				callback
 			});
 		},
 
