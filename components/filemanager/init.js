@@ -509,9 +509,7 @@
 					action: 'duplicate',
 					name: name,
 					type: type
-				}, () => {
-					oX('#modal_content').on('submit', listener);
-				});
+				}, listener);
 
 		},
 
@@ -556,9 +554,7 @@
 			atheos.modal.load(250, self.dialog, {
 				action: 'create',
 				type: type
-			}, () => {
-				oX('#modal_content').on('submit', listener);
-			});
+			}, listener);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -681,11 +677,7 @@
 					action: 'rename',
 					name: nodeName,
 					type: type
-				},
-				() => {
-					oX('#modal_content form').on('submit', listener);
-				}
-			);
+				}, listener);
 
 		},
 
