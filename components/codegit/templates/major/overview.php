@@ -3,7 +3,7 @@
 	<button onclick="atheos.codegit.commit();">Commit</button>
 	<table>
 		<?php
-		$repo = $CodeGit->getWorkspacePath($repo);
+		$repo = Common::getWorkspacePath($repo);
 		$changes = $CodeGit->loadChanges($repo);
 		?>
 
