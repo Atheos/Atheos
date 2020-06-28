@@ -272,16 +272,16 @@
 			};
 
 			atheos.modal.load(400, self.dialog, {
-				action: 'create'
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
-
-				// More Selector
-				oX('#show_git_options').on('click', function(e) {
-					e.preventDefault();
-					oX(e.target).hide();
-					atheos.flow.slide('open', oX('#git_options').el);
-				});
+				action: 'create',
+				listener,
+				callback: function() {
+					// More Selector
+					oX('#show_git_options').on('click', function(e) {
+						e.preventDefault();
+						oX(e.target).hide();
+						atheos.flow.slide('open', oX('#git_options').el);
+					});
+				}
 			});
 		},
 
@@ -320,9 +320,8 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'rename',
-				name: projectName
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
+				name: projectName,
+				listener
 			});
 		},
 
@@ -369,9 +368,8 @@
 			atheos.modal.load(400, self.dialog, {
 				action: 'delete',
 				name: projectName,
-				path: projectPath
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
+				path: projectPath,
+				listener
 			});
 		},
 
