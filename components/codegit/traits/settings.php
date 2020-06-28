@@ -3,8 +3,38 @@
 
 trait Settings {
 
+	private function setGitSettings($path) {
+		$settings = $this->getSettings($path);
+
+		$username = $settings['username'];
+		if (isset($settings['local_username'])) {
+			$username = $settings['local_username'];
+		}
+
+		$email = $settings['email'];
+		if (isset($settings['local_email'])) {
+			$email = $settings['local_email'];
+		}
+
+		if (!empty($username)) {
+			$result = $this->executeCommand('git config user.name "' . $username . '"');
+			if ($result !== 0) {
+				return false;
+			}
+		}
+		if (!empty($email)) {
+			$result = $this->executeCommand('git config user.email ' . $email);
+			if ($result !== 0) {
+				return false;
+			}
+		}
+		return true;
+	}
+
 	public function getSettings($path) {
-		$settings = Common::readJSON(CONFIG, 'config');
+		$activeUser = Common::data("user", "session");
+		$settings = Common::readJSON("git.$activeUser", "config");
+
 		if (empty($settings)) {
 			$settings['username'] = Common::data("user", "session");
 			$settings['email'] = "";
@@ -19,7 +49,8 @@ trait Settings {
 	}
 
 	public function setSettings($update, $path) {
-		$settings = Common::readJSON(CONFIG, 'config');
+		$activeUser = Common::data("user", "session");
+		$settings = Common::readJSON("git.$activeUser", "config");
 
 		foreach ($update as $i => $item) {
 			if (strlen($item) == 0) {
@@ -47,6 +78,6 @@ trait Settings {
 			}
 		}
 
-		Common::saveJSON(CONFIG, $settings, 'config');
+		Common::saveJSON("git.$activeUser", $settings, "config");
 	}
 }
