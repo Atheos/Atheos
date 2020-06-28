@@ -12,13 +12,13 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result["code"]) {
+		if (!$result) {
 			return "Error loading log";
 		}
 
 		// $result = $this->resultArray;
 		$pivot = array();
-		foreach ($result["data"] as $i => $item) {
+		foreach ($result as $i => $item) {
 			$item = explode('\\|', $item);
 			$pivot[] = array(
 				"hash" => $item[0],
@@ -39,8 +39,8 @@ trait History {
 
 		$result = $this->execute("git status --branch --porcelain");
 
-		if ($result["code"]) {
-			$status = $this->parseChanges($result["data"]);
+		if ($result) {
+			$status = $this->parseChanges($result);
 		} else {
 			return false;
 		}

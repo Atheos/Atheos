@@ -47,7 +47,7 @@ trait Status {
 			} else {
 				$result = $this->execute("git status --branch --porcelain");
 
-				if ($result["code"] && count($result) > 0) {
+				if ($result && !empty($result)) {
 					$status = $this->parseChanges($result["data"]);
 					if (in_array($filename, $status['untracked'])) {
 						$file = file_get_contents($filename);
