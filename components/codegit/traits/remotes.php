@@ -5,22 +5,12 @@ trait Remotes {
 
 	public function getRemotes() {
 		$result = $this->execute("git remote -v");
-
-		if (!$result["code"]) {
-			return "Error loading remotes";
-		} else {
-			return $result["data"];
-		}
+		return $result ?: "Error loading remotes";
 	}
 
 	public function addRemote($name, $url) {
-		$result = $this->execute("git remote add $name $url");
-
-		if (!$result["code"]) {
-			return "Error loading remotes";
-		} else {
-			return $result["data"];
-		}
+		$result = $this->execute("git remote add$name $url");
+		return $result ?: "Error loading remotes";
 	}
 
 
