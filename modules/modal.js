@@ -119,8 +119,9 @@
 						input.focus();
 					}
 					amplify.publish('modal.loaded');
-					if (callback) {
-						callback(wrapper);
+					if (callback && wrapper.find('form')) {
+						wrapper.find('form').on('submit', callback);
+						// callback(wrapper);
 					}
 				}
 			});
