@@ -9,12 +9,12 @@ require_once('class.git.php');
 
 $action = Common::data('action');
 $path = Common::data('path');
-$panel = Common::data('panel');
 $repo = Common::data('repo');
 
 $CodeGit = new CodeGit($path, $repo);
 
 if ($action === "loadPanel") {
+	$panel = Common::data('panel');
 
 	switch ($panel) {
 		case 'blame': //Checked
@@ -36,7 +36,7 @@ if ($action === "loadPanel") {
 			include('templates/major/overview.php');
 			break;
 	}
-} else {
+} elseif ($action === "codegit") {
 	$status = $CodeGit->branchStatus($repo);
 	$status = is_array($status) ? $status["status"] : $status;
 	?>
@@ -64,4 +64,10 @@ if ($action === "loadPanel") {
 		<label>Branch: <span id="codegit_branch"><?php echo $CodeGit->getCurrentBranch(); ?></span><span id="codegit_status">(<?php echo $status; ?>)</span></label>
 	</toolbar>
 	<?php
+} else {
+	switch ($action) {
+		case 'clone': //Checked
+			include('templates/minor/clone.php');
+			break;
+	}
 }
