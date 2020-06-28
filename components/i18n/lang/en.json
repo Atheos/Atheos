@@ -409,7 +409,6 @@
 	"NothingInYourClipboard": "Nothing in Your Clipboard",
 	"folderNameOrAbsolutePath": "Folder Name Or Absolute Path",
 
-	"enterGitHUbRepositoryURL": "Enter Github Repository Url...",
 	"noOpenFilesOrSelect": "No Open Files or Selected Text",
 
 	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
@@ -419,6 +418,7 @@
 
 	"codegit": {
 		"": "CodeGit",
+		"open": "Open CodeGit",
 		"banner": "Banner above FileManager",
 		"status": "File Status in BottomBar",
 		"unknown": "Unknown",
@@ -429,8 +429,25 @@
 			"statusFail": "Unable to load Repository status"
 		}
 	},
-	
+
 	"git": {
+		"init": {
+			"": "Git Init",
+			"success": "Initialized empty Git repository.",
+			"failed": "Failed to initialize repository."
+		},
+		"clone": {
+			"": "Git Clone",
+			"success": "Successfully cloned repository.",
+			"failed": "Failed to clone repository."
+		},
+		"repoURL": {
+			"": "Github Repository URL:",
+			"invalid": "Invalid Repository URL"
+		},
+		"diff": "Git Diff",
+		"blame": "Git Blame",
+		"log": "Git Log",
 		"pull": "Pull",
 		"push": "Push",
 		"fetch": "Fetch",
