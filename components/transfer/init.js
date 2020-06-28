@@ -122,9 +122,10 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'upload',
-				path: path
-			}, () => {
-				oX('#modal_content').on('change', listener);
+				path: path,
+				callback: function() {
+					oX('#modal_content').on('change', listener);
+				}
 			});
 		},
 

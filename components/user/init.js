@@ -45,7 +45,7 @@
 					} else {
 						atheos.storage('username', false);
 						atheos.storage('remember', false);
-						
+
 						oX('#password').focus();
 					}
 
@@ -179,9 +179,8 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'changePassword',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 
 		},
@@ -229,8 +228,7 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'create',
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				listener
 			});
 		},
 
@@ -258,9 +256,8 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'delete',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 
@@ -369,9 +366,8 @@
 
 			atheos.modal.load(400, self.dialog, {
 				action: 'showUserACL',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 
