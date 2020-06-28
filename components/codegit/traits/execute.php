@@ -10,13 +10,19 @@ trait Execute {
 		$cmd = str_replace("\(", "(", $cmd);
 		$cmd = str_replace("\)", ")", $cmd);
 
-		$array = array();
+		$result = array();
 
-		exec($cmd . ' 2>&1', $array, $result);
+		exec($cmd . ' 2>&1', $result, $code);
+		
+		if($code === 0) {
+			return array_filter($result);
+		} else {
+			return false;
+		}
 
 		return array(
-			"code" => $this->parseCommandCodes($result),
-			"data" => array_filter($array)
+			"code" => $this->parseCommandCodes($code),
+			"data" => array_filter($result)
 		);
 	}
 

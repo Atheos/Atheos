@@ -3,34 +3,25 @@
 
 trait Commit {
 
-	public function add($path, $file) {
-		$path = Common::getWorkspacePath($path);
-		if (!is_dir($path)) return false;
-		$cwd = getcwd();
-		chdir($path);
-		$result = $this->executeCommand("git add --all " . $file);
-		chdir($cwd);
-		if ($result === 0) {
-			return true;
-		} else {
-			return false;
-		}
+	public function add($file) {
+		return $this->execute("git add --all " . $file);
 	}
 
-	public function commit($path, $msg) {
-		$path = Common::getWorkspacePath($path);
-		if (!is_dir($path)) return false;
-		chdir($path);
-		if ($this->setGitSettings($path)) {
-			$result = $this->executeCommand("git commit -m\"" . $msg . "\"");
-			if ($result === 0) {
-				return true;
-			} else {
-				return false;
+	public function commit($message, $files) {
+		$files = explode(',', $files);
+
+		foreach ($files as $file) {
+			if ($this->add($file) === 0) {
+				Common::sendJSON("error", i18n("git_addFailed", $file)); die;
 			}
-			// return $this->parseShellResult($result, "Changes commited", "Failed to commit changes!");
 		}
-		return $this->parseShellResult(-1, null, "Failed to set settings!");
+
+		$result = $this->execute("git commit -m\"" . $message . "\"");
+		if ($result) {
+			Common::sendJSON("success", i18n("git_commit_success"));
+		} else {
+			Common::sendJSON("success", i18n("git_commit_failed"));
+		}
 	}
 
 	public function showCommit($path, $commit) {
