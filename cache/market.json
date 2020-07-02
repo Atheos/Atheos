@@ -1,0 +1,188 @@
+{
+    "plugins": {
+        "CleanCode": {
+            "AutoAlign": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [
+                    "beautify"
+                ],
+                "description": "Adds better formatting through variable alignment and spacing",
+                "status": "development",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-AutoAlign"
+            },
+            "Beautify": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [
+                    "beautify"
+                ],
+                "description": "Beautify js, json, html or css files",
+                "status": "available",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Beautify"
+            }
+        },
+        "Collaboration": {
+            "Collaborative": {
+                "author": [
+                    "HLSiira",
+                    "Codiad"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Ajax based Collaborative Plugin for Codiad. Requires version 2.x or newer",
+                "status": "development",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Collaborative"
+            },
+            "Messaging": {
+                "author": [
+                    "HLSiira",
+                    "RustyGumbo"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Allows to send other users notification messages",
+                "status": "merging",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Messaging"
+            }
+        },
+        "Common": {
+            "PluginTemplate": {
+                "author": [
+                    "HLSiira",
+                    "Codiad"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Boilerplate for developing Codiad Plugins",
+                "status": "available",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/Atheos\/Plugin-Template"
+            }
+        },
+        "Compiler": {
+            "SassCompiler": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Sass\/Scss Compiler for Atheos",
+                "status": "available",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-SassCompiler"
+            }
+        },
+        "Development": {
+            "DevDocs": {
+                "author": [
+                    "HLSiira",
+                    "Fluidbyte"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Access DevDocs resources directly from within Codiad",
+                "status": "development",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-DevDocs"
+            },
+            "Terminal": {
+                "author": [
+                    "HLSiira",
+                    "Fluidbyte"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Allows execution of terminal command through Codiad",
+                "status": "development",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Terminal"
+            }
+        },
+        "Utility": {
+            "Ignore": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Hide\/Ignore files and directories in the filemanager",
+                "status": "merging",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Ignore"
+            },
+            "MarkdownPreview": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Displays a preview of markdown files",
+                "status": "merging",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-MarkdownPreview"
+            },
+            "Minimap": {
+                "author": [
+                    "HLSiira",
+                    "Andr3as"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "Small minimap to get an overview",
+                "status": "merging",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Minimap"
+            },
+            "Winddown": {
+                "author": [
+                    "HLSiira"
+                ],
+                "rating": 0,
+                "installs": 0,
+                "endorsed": false,
+                "keywords": [],
+                "description": "A Sublte reminder to stand up and exercise",
+                "status": "available",
+                "version": "1.0.0",
+                "url": "https:\/\/github.com\/HLSiira\/Atheos-Windown"
+            }
+        }
+    },
+    "themes": []
+}

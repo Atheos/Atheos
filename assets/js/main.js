@@ -23,7 +23,7 @@
 				"╰───────────────────────────────╯"
 			].join("\n"));
 		}
-		synthetic.init();
+		if (typeof Synthetic !== 'undefined') Synthetic.init();
 
 	});
 	document.addEventListener("change", function(e) {

@@ -3,11 +3,12 @@ header("Access-Control-Allow-Origin: *");
 
 
 $request = parse_url($_SERVER['REQUEST_URI']);
-$request = $request["path"];
-$request = str_replace(' ', '', $request);
-$request = strtolower(trim($request, '/'));
-$request = !empty($request) ? $request : 'home';
-
+$request = array_key_exists("path", $request) ? $request["path"] : false;
+if ($request) {
+	$request = str_replace(' ', '', $request);
+	$request = strtolower(trim($request, '/'));
+	$request = !empty($request) ? $request : 'home';
+}
 include "libs/parsedown/Parsedown.php";
 $Parsedown = new Parsedown();
 
@@ -20,7 +21,6 @@ if ($request == 'raw') {
 	include "update/index.php";
 } else {
 	?>
-
 	<!DOCTYPE html>
 	<html lang="en">
 	<head>
@@ -28,8 +28,8 @@ if ($request == 'raw') {
 		<?php echo "<!--" . $request . "-->"; ?>
 
 	</head>
-
 	<body>
+		<canvas id="synthetic"></canvas>
 		<sidebar>
 			<div class="background">
 				<div class="trigger">

@@ -1,7 +1,7 @@
 <h3>About Atheos</h3>
 
 <p>
-	Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte
+	Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte and the Codiad Team.
 </p>
 
 <p>
@@ -76,7 +76,7 @@
 <h3>Support the Atheos Project</h3>
 
 <p>
-	Hey, this is the person who this Coffee Button supports.
+	Hey, this is @HLSiira.
 </p>
 <p>
 	If you want to support Codiad, and all the hard work that they did, please donate to them on <a href="https://www.codiad.com">Codiad</a>.

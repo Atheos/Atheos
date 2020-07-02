@@ -1,8 +1,6 @@
 //	Synthetic | Simple pulsing hexagonal background for websites
 //	(c) 2020 Liam Siira (liam@siira.us)
 //	Created from Hexagons.js by ZackTheHuman (https://gist.github.com/zackthehuman/1867663)
-
-
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -11,15 +9,13 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(root);
 	} else {
-		root.synthetic = factory(root);
+		root.Synthetic = factory(root);
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
-	'use strict';
-
 	let rndColor = [],
 		colors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
-		seed = 234234234,
+		seed = 5309,
 		canvas;
 
 	function sRnd(max) {
@@ -28,7 +24,7 @@
 		var rnd = seed / 233280;
 
 		//Uses a faster method of flooring the decimal to an integer
-		return ((rnd * max) * 5) << 0;
+		return (rnd * max) << 0;
 	}
 
 	function drawSynthetic() {
@@ -99,26 +95,24 @@
 	}
 
 
-	const synthetic = {
+	const Synthetic = {
 
-		init: function(options) {
+		init: function() {
+			canvas = document.getElementById('synthetic');
+			if (!canvas) return;
+
 			rndColor = localStorage.getItem('synthetic');
-
-			if (!rndColor && false) {
+			if (!rndColor || typeof(rndColor) !== 'string') {
 				rndColor = [];
-				for (var i = 0; i < 1000; ++i) {
+				for (var i = 0; i < 5000; ++i) {
 					rndColor.push(colors[sRnd(4)]);
 				}
 				localStorage.setItem('synthetic', JSON.stringify(rndColor));
 			} else {
 				rndColor = JSON.parse(rndColor);
 			}
-
-			canvas = document.getElementById('synthetic');
 			drawSynthetic();
-		},
+		}
 	};
-
-	return synthetic;
-
+	return Synthetic;
 });
