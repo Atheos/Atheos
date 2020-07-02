@@ -12,13 +12,22 @@
 		right: $sidebarHandleWidth;
 		bottom: $fileManagerHeight;
 	}
+
 	&>.content {
 		transition: bottom ease-in-out $transitionDuration;
 	}
 }
 
-#sb_right .content {
-	left: $sidebarHandleWidth;
-	right: 0;
-	height: calc(100% - #{$topBarHeight});
+#sb_right {
+	.content {
+		left: $sidebarHandleWidth;
+		right: 0;
+		height: calc(100% - #{$topBarHeight});
+	}
+
+	#last_login {
+		display: block;
+		padding: 5px;
+		margin-left: 5px;
+	}
 }
