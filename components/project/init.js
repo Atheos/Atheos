@@ -110,8 +110,10 @@
 					if (reply.status === 'error') {
 						return;
 					}
-					if (reply.lastLogin) {
-						atheos.toast.show('notice', `Last Login: ${reply.lastLogin}`);
+					var logSpan = oX('#last_login');
+					if (reply.lastLogin && logSpan) {
+						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
+						logSpan.find('span').text(reply.lastLogin);
 					}
 
 					self.setRoot(reply.name, reply.path);
