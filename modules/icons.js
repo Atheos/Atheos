@@ -18,7 +18,7 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(root);
 	} else {
-		root.FileIcons = factory(root);
+		root.icons = factory(root);
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
