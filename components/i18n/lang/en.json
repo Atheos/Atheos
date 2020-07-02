@@ -18,7 +18,10 @@
 	"show": "Show",
 	"hide": "Hide",
 
-	"login": "Login",
+	"login": {
+		"": "Login",
+		"last": "Last Login: %s"
+	},
 	"logout": "Logout",
 	"rememberMe": "Remember Me",
 
