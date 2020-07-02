@@ -10,7 +10,6 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
 

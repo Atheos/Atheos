@@ -10,22 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once '../../common.php';
 require_once 'class.user.php';
-
-$action = Common::data('action');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-if ($action !== 'authenticate') {
-	Common::checkSession();
-}
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 $User = new User();
 
