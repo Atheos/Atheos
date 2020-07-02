@@ -12,13 +12,15 @@
 
 require_once('common.php');
 
+$action = Common::data("action");
+$target = Common::data("target");
+
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
-$target = Common::data("target");
+if ($action !== 'authenticate') {
+	Common::checkSession();
+}
 
 if (!$action || !$target) {
 	Common::sendJSON("E401m"); die;

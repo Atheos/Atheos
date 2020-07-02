@@ -18,9 +18,8 @@
 
 (function(global) {
 	'use strict';
+	
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -28,9 +27,6 @@
 	amplify.subscribe('system.loadMinor', () => atheos.transfer.init());
 
 	atheos.transfer = {
-
-		controller: 'components/transfer/controller.php',
-		dialog: 'components/transfer/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Init
@@ -45,8 +41,9 @@
 		download: function(path) {
 			var type = pathinfo(path).type;
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'transfer',
 					action: 'download',
 					path,
 					type
@@ -120,7 +117,8 @@
 				send.send(data);
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'transfer',
 				action: 'upload',
 				path: path,
 				callback: function() {

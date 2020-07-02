@@ -10,17 +10,7 @@
 // Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
 require_once 'class.textmode.php';
-
-Common::checkSession();
-
-$action = Common::data("action");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 $TextMode = new TextMode();
 
