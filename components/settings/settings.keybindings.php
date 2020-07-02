@@ -1,4 +1,4 @@
-<?php require_once('../../common.php'); ?>
+<?php require_once(__DIR__ . '/../../common.php'); ?>
 
 <label><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></label>
 <table class="keybindings">

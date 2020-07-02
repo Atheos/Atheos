@@ -14,18 +14,12 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
 
-	// amplify.subscribe('system.loadMajor', () => atheos.i18n.init());
-
 	atheos.i18n = {
 
-		controller: 'components/i18n/controller.php',
-		dialog: 'components/i18n/dialog.php',
 		cache: {},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -39,8 +33,9 @@
 			// return new Promise(resolve => {
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'i18n',
 					action: 'init'
 				},
 				success: function(reply) {
@@ -59,8 +54,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		loadRaw: function(lang) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'i18n',
 					action: 'show',
 					lang
 				},

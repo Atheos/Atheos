@@ -10,22 +10,9 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../common.php");
 require_once('class.market.php');
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 $Market = new Market();
-
 
 switch ($action) {
 
