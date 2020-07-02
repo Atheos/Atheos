@@ -118,8 +118,9 @@
 				return false;
 			} else {
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'move',
 						oldPath,
 						newPath
@@ -161,10 +162,10 @@
 					icon.addClass('loading');
 				}
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
-						action: 'index',
 						target: 'filemanager',
+						action: 'index',
 						path
 					},
 					success: function(reply) {
@@ -290,8 +291,9 @@
 
 			if (self.noOpen.indexOf(ext) < 0) {
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'open',
 						path: path
 					},
@@ -324,11 +326,12 @@
 		//////////////////////////////////////////////////////////////////////80
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
+			data.target = 'filemanager';
 			data.action = 'save';
 			data.path = path;
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: data,
 				success: function(data) {
 					var context;
@@ -414,8 +417,9 @@
 				}
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'duplicate',
 						path: self.clipboard,
 						dest: path + '/' + copy
@@ -477,8 +481,9 @@
 				var clonePath = parent + '/' + clone;
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'duplicate',
 						path: path,
 						dest: clonePath
@@ -502,7 +507,8 @@
 			};
 
 			atheos.modal.load(250,
-				self.dialog, {
+				atheos.dialog, {
+					target: 'filemanager',
 					action: 'duplicate',
 					name: name,
 					type: type,
@@ -522,8 +528,9 @@
 				var newPath = path + '/' + nodeName;
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'create',
 						path: newPath,
 						type: type
@@ -549,7 +556,8 @@
 				});
 			};
 
-			atheos.modal.load(250, self.dialog, {
+			atheos.modal.load(250, atheos.dialog, {
+				target: 'filemanager',
 				action: 'create',
 				type: type,
 				listener
@@ -632,8 +640,9 @@
 				}
 				var newPath = temp.join('/') + '/' + newName;
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'rename',
 						path: path,
 						name: newName
@@ -672,7 +681,8 @@
 			};
 
 			atheos.modal.load(250,
-				self.dialog, {
+				atheos.dialog, {
+					target: 'filemanager',
 					action: 'rename',
 					name: nodeName,
 					type: type,
@@ -706,8 +716,9 @@
 				actions: {
 					'Delete': function() {
 						echo({
-							url: self.controller,
+							url: atheos.controller,
 							data: {
+								target: 'filemanager',
 								action: 'delete',
 								path
 							},
