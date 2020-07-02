@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -23,8 +21,7 @@
 	amplify.subscribe('system.loadExtra', () => atheos.scout.init());
 
 	atheos.scout = {
-		controller: 'components/scout/controller.php',
-		dialog: 'components/scout/dialog.php',
+
 		cachedFileTree: null,
 		rootPath: null,
 		rootName: null,
@@ -94,8 +91,9 @@
 				}
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'scout',
 						action: 'probe',
 						// type,
 						path,
@@ -145,7 +143,8 @@
 				});
 			};
 
-			atheos.modal.load(500, self.dialog, {
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'scout',
 				action: 'probe',
 				listener,
 				callback: function() {
@@ -221,8 +220,9 @@
 
 			self.currentlyFiltering = input;
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'scout',
 					action: 'filter',
 					filter: input,
 					path: self.rootPath,
