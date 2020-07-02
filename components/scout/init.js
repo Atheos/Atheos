@@ -309,7 +309,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
 
-			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : global.FileIcons.getClassWithColor(name);
+			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			var isOpen = '';
