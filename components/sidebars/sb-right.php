@@ -57,6 +57,6 @@ $right_bar = json_decode($right_bar, true);
 				}
 			}
 		} ?>
-
+		<hint id="last_login"><i class="fas fa-clock"></i><span>Last Login: DateTime</span></hint>
 	</div>
 </div>
