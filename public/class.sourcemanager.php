@@ -21,7 +21,7 @@ class SourceManager {
 		// "modules/jquery-1.7.2.min.js",
 		"modules/amplify.js",
 		"modules/echo.js",
-		"modules/file-icons.js",
+		"modules/icons.js",
 		"modules/global.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
