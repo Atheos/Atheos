@@ -21,7 +21,6 @@
 	var atheos = global.atheos,
 		amplify = global.amplify,
 		echo = global.echo,
-		fileIcons = global.FileIcons,
 		oX = global.onyx;
 
 	var self = null;
@@ -35,8 +34,6 @@
 		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
 		noBrowser: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 
-		controller: 'components/filemanager/controller.php',
-		dialog: 'components/filemanager/dialog.php',
 		openTrigger: 'click',
 		showHidden: true,
 
@@ -240,7 +237,7 @@
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder blue' : fileIcons.getClassWithColor(basename);
+			var fileClass = type === 'directory' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
@@ -664,9 +661,9 @@
 							if (type === 'file') {
 								// Change icons for file
 								icon.removeClass();
-								var ico = fileIcons.getClassWithColor(newName);
+								var ico = icons.getClassWithColor(newName);
 								if (ico) {
-									icon.addClass(fileIcons.getClassWithColor(newName));
+									icon.addClass(icons.getClassWithColor(newName));
 								}
 							} else {
 								// Change pathing on any sub-files/directories
