@@ -64,9 +64,6 @@ trait Status {
 			}
 			$result = array("branch" => $this->getCurrentBranch(), "insertions" => $additions, "deletions" => $deletions);
 			Common::sendJSON("success", $result);
-
-
-
 		} else {
 			Common::sendJSON("error", i18n("path_missing"));
 		}
