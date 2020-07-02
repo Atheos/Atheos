@@ -33,7 +33,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;

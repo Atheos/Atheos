@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -24,8 +22,6 @@
 
 	atheos.update = {
 
-		controller: 'components/update/controller.php',
-		dialog: 'components/update/dialog.php',
 		home: null,
 		repo: null,
 		local: null,
@@ -38,8 +34,9 @@
 			self = this;
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'update',
 					action: 'init'
 				},
 				success: function(reply) {
@@ -64,8 +61,9 @@
 			var archive = oX('#modal_content form input[name="archive"]').value();
 			oX('#download').attr('src', archive);
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'update',
 					action: 'clear'
 				}
 			});
@@ -99,8 +97,9 @@
 		//////////////////////////////////////////////////////////////////////80	
 		saveCache: function(cache) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'update',
 					action: 'saveCache',
 					cache: JSON.stringify(cache)
 				}
