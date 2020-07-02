@@ -14,17 +14,12 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx,
 		storage = atheos.storage;
 
 	var self = null;
 
 	atheos.settings = {
-
-		controller: 'components/settings/controller.php',
-		dialog: 'components/settings/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -39,8 +34,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		load: function() {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'load',
 				},
 				success: function(reply) {
@@ -151,8 +147,9 @@
 			}
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'save',
 					key,
 					value
@@ -195,8 +192,9 @@
 			});
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'save',
 					key,
 					value
@@ -251,7 +249,8 @@
 				self.publish(key, value);
 			};
 
-			atheos.modal.load(800, self.dialog, {
+			atheos.modal.load(800, atheos.dialog, {
+				target: 'settings',
 				action: 'settings',
 				callback: function() {
 					oX('#modal_wrapper').on('change', listener);

@@ -10,21 +10,8 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 $activeUser = Common::data("user", "session");
 $username = Common::data("username");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 switch ($action) {
 

@@ -10,47 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../common.php");
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
-if (!$action) {
-	Common::sendJSON("E401m"); die;
-}
-
 switch ($action) {
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Settings iFrame
-	//////////////////////////////////////////////////////////////////////////80
-	case "iframe":
-		?>
-		<script>
-			/*
-                 *  Storage Event:
-                 *  Note: Event fires only if change was made in different window and not in this one
-                 *  Details: http://dev.w3.org/html5/webstorage/#dom-localstorage
-                 */
-			window.addEventListener('storage',
-				function(e) {
-					if (/^atheos/.test(e.key)) {
-						var obj = {
-							key: e.key,
-							oldValue: e.oldValue,
-							newValue: e.newValue
-						};
-						/* Notify listeners */
-						window.parent.amplify.publish('settings.changed', obj);
-					}
-				},
-				false);
-		</script>
-		<?php
-		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Main Settings Window

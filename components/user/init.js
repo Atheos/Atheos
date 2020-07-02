@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -26,7 +24,6 @@
 
 		loginForm: oX('#login'),
 		controller: 'components/user/controller.php',
-		dialog: 'components/user/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -109,8 +106,9 @@
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				echo({
-					url: atheos.user.controller,
+					url: atheos.controller,
 					data: {
+						'target': 'user',
 						'action': 'keepAlive'
 					},
 					success: function(reply) {
@@ -132,9 +130,10 @@
 				atheos.toast.show('notice', 'Username/Password not provided.');
 				return;
 			}
+			data.target = 'user';
 			data.action = 'authenticate';
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: data,
 				success: function(reply) {
 					if (reply.status !== 'error') {
@@ -161,11 +160,12 @@
 					atheos.toast.show('error', 'Passwords do not match.');
 				} else {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: {
-							'action': 'changePassword',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'changePassword',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -177,7 +177,8 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'changePassword',
 				username,
 				listener
@@ -210,11 +211,12 @@
 				}
 				if (password && username) {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: {
-							'action': 'create',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'create',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -226,7 +228,8 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'create',
 				listener
 			});
@@ -240,10 +243,11 @@
 				e.preventDefault();
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
-						'action': 'delete',
-						'username': username
+						target: 'user',
+						action: 'delete',
+						username: username
 					},
 					success: function(reply) {
 						if (reply.status !== 'error') {
@@ -254,7 +258,8 @@
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'delete',
 				username,
 				listener
@@ -265,7 +270,8 @@
 		// Open the user manager dialog
 		//////////////////////////////////////////////////////////////////////80
 		list: function() {
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'list'
 			});
 		},
@@ -278,9 +284,10 @@
 				amplify.publish('user.logout');
 				atheos.settings.save();
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
-						'action': 'logout'
+						target: 'user',
+						action: 'logout'
 					},
 					success: function() {
 						window.location.reload();
@@ -325,8 +332,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		saveActiveProject: function(project) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'user',
 					action: 'saveActiveProject',
 					activeProject: project
 				}
@@ -341,6 +349,7 @@
 				e.preventDefault();
 
 				var data = serializeForm(e.target);
+				data.target = 'user';
 				data.action = 'updateACL';
 				data.username = username;
 
@@ -355,7 +364,7 @@
 					atheos.toast.show('error', 'At least one project must be selected');
 				} else {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: data,
 						success: function() {
 							atheos.modal.unload();
@@ -364,7 +373,8 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'showUserACL',
 				username,
 				listener

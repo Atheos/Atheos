@@ -16,8 +16,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	amplify.subscribe('system.loadMinor', () => atheos.market.init());
@@ -26,8 +24,6 @@
 
 	atheos.market = {
 
-		controller: 'components/market/controller.php',
-		dialog: 'components/market/dialog.php',
 		home: null,
 		cache: null,
 
@@ -35,8 +31,9 @@
 			self = this;
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'market',
 					action: 'init'
 				},
 				success: function(reply) {
@@ -64,8 +61,9 @@
 
 		saveCache: function(cache) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'market',
 					action: 'saveCache',
 					cache: JSON.stringify(cache)
 				}
@@ -96,7 +94,8 @@
 				});
 			};
 
-			atheos.modal.load(1000, self.dialog, {
+			atheos.modal.load(1000, atheos.dialog, {
+				target:'market',
 				action: 'list',
 				type: type,
 				note: note,
@@ -110,8 +109,8 @@
 		search: function(e, query, note) {
 			var key = e.charCode || e.keyCode || e.which;
 			if (query !== '' && key === 13) {
-				atheos.modal.load(800, self.dialog, {
-					action: 'list',
+				atheos.modal.load(800, atheos.dialog, {
+				target:'market',action: 'list',
 					query: query,
 					note: note
 				});
@@ -126,8 +125,9 @@
 			atheos.modal.setLoadingScreen('Installing ' + name + '...');
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'market',
 					action: 'install',
 					name,
 					type,
@@ -147,8 +147,9 @@
 		remove: function(name, type, category) {
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'market',
 					action: 'remove',
 					name,
 					type
@@ -167,8 +168,9 @@
 			atheos.modal.setLoadingScreen('Updating ' + name + '...');
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'market',
 					action: 'update',
 					name,
 					type,
