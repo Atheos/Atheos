@@ -164,7 +164,7 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 //////////////////////////////////////////////////////////////////////////////80
 
 // PATH TO ATHEOS
-define("BASE_PATH", "' . $path . '");
+define("BASE_PATH", __DIR__);
 
 // BASE URL TO ATHEOS (without trailing slash)
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
