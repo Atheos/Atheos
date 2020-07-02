@@ -10,8 +10,8 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../lib/diff_match_patch.php");
-require_once("../../helpers/recurse-delete.php");
+require_once("lib/diff_match_patch.php");
+require_once("helpers/recurse-delete.php");
 
 class Filemanager {
 

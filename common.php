@@ -40,6 +40,7 @@ class Common {
 
 		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
 		$path = str_replace("controller.php", "", $path);
+		$path = str_replace("dialog.php", "", $path);
 
 		foreach (array("components", "plugins") as $folder) {
 			if (strpos($_SERVER['SCRIPT_FILENAME'], $folder)) {
@@ -57,7 +58,7 @@ class Common {
 		}
 
 		if (!defined('BASE_PATH')) {
-			define('BASE_PATH', rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/"));
+			define("BASE_PATH", __DIR__);
 		}
 
 		if (!defined('COMPONENTS')) {
@@ -86,6 +87,10 @@ class Common {
 
 		if (!defined('DEVELOPMENT')) {
 			define("DEVELOPMENT", false);
+		}
+
+		if (file_exists(BASE_PATH .'/components/i18n/class.i18n.php')) {
+			require_once(BASE_PATH .'/components/i18n/class.i18n.php');
 		}
 	}
 
