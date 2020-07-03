@@ -461,10 +461,12 @@ class Common {
 			return true;
 		} else {
 			foreach ($projects as $projectPath => $projectName) {
-				if (in_array($projectName, $userACL) && strpos($path, $projectPath) === 0) {
+				if (!in_array($projectPath, $userACL)) {
+					continue;
+				}
+
+				if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
 					return true;
-				} elseif (in_array($projectName, $userACL)) {
-					Common::debug("Path:$path, ProjectPath: $projectPath");
 				}
 			}
 		}
