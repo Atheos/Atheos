@@ -231,13 +231,13 @@
 	"update": {
 		"": "Update",
 		"check": "Update Check",
+		"changes": "Changes on Atheos:",
 		"current": "Your System Is Up To Date."
 	},
 	"install": "Install",
 	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
 	"yourVersion": "Your Version",
 	"latestVersion": "Latest Version",
-	"changesOnAtheos": "Changes On Atheos",
 	"downloadAtheos": "Download Atheos",
 
 	"language": "Language",
