@@ -371,7 +371,8 @@
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
 				action: 'delete',
 				name: projectName,
 				path: projectPath,

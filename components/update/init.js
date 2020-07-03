@@ -74,7 +74,8 @@
 		// Update Check
 		//////////////////////////////////////////////////////////////////
 		check: function() {
-			atheos.modal.load(500, self.dialog, {
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'update',
 				action: 'check'
 			});
 		},
