@@ -89,13 +89,14 @@
 				}
 
 				// data.append('upload[]', file);
+				data.append('target', 'transfer');
 				data.append('action', 'upload');
 				data.append('path', path);
 
 				var send = new XMLHttpRequest();
 				send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
 				send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
-				send.open('POST', self.controller);
+				send.open('POST', atheos.controller);
 
 				send.onreadystatechange = function() {
 					if (send.readyState === 4) {

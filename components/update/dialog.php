@@ -37,7 +37,7 @@ switch ($action) {
 			$body = str_replace("Changes:", "", $body);
 
 			?>
-			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("updateCheck"); ?></label>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("update_check"); ?></label>
 
 			<form>
 				<input type="hidden" name="archive" value="">
@@ -48,7 +48,7 @@ switch ($action) {
 					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $remote['tag_name']; ?></td></tr>
 				</table>
 				<br>
-				<label><?php echo i18n("changesOnAtheos:"); ?></label>
+				<label><?php echo i18n("update_changes"); ?></label>
 				<pre id="update_changes"><?php echo $body; ?></pre>
 				<?php if ($local['atheos_version'] === "nightly") {
 					?>
