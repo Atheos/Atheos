@@ -155,7 +155,7 @@
 		showCodeGit: function(repo) {
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
-			
+
 			var callback = function() {
 				oX('menu').on('click', function(e) {
 					var target = oX(e.target);
@@ -167,14 +167,14 @@
 
 				oX('panel').on('click', function(e) {
 					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					if (tagName === 'BUTTON') {
+					if (target.tagName === 'BUTTON' && target.text() !== 'Commit') {
+						var file = target.parent('tr').attr('data-file');
 						if (target.text() === 'Diff') {
 							self.showPanel('diff', repo, {
-								files: [target.parent('tr').attr('data-file')]
+								files: [file]
 							});
 						} else if (target.text() === 'Undo') {
-							atheos.toast.show('notice', 'Git Undo coming soon');
+							self.undo(repo, file);
 						}
 					}
 				});
@@ -269,9 +269,9 @@
 				});
 			};
 
-			
+
 			atheos.modal.load(250, atheos.dialog, {
-					target: 'codegit',
+				target: 'codegit',
 				action: 'clone',
 				path,
 				listener
@@ -390,22 +390,6 @@
 			});
 		},
 
-		ping: function() {
-			var repo = atheos.project.current.path;
-
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'codegit',
-					action: 'ping',
-					repo
-				},
-				success: function(reply) {
-					log(reply);
-				}
-			});
-		},
-
 		diff: function(repo, path) {
 			if (!path || !repo) return;
 			path = path.replace(repo + '/', '');
@@ -424,6 +408,32 @@
 			this.showDialog('log', repo, path);
 		},
 
+		undo: function(repo, file) {
+			var undo = function() {
+				echo({
+					url: atheos.controller,
+					data: {
+						target: 'codegit',
+						action: 'checkout',
+						repo,
+						file
+					},
+					success: function(reply) {
+						atheos.toast.show(reply);
+					}
+				});
+			}
+
+			atheos.alert.show({
+				banner: i18n('git_undo'),
+				message: i18n('git_undo_file', pathinfo(file).basename),
+				actions: {
+					'Undo Changes': undo,
+					'Cancel': function() {}
+				}
+			});
+		},
+
 		transfer: function(type) {
 			var repo = self.activeRepo;
 			var remote = oX('#git_remotes').value();
@@ -440,14 +450,12 @@
 					branch
 				},
 				success: function(reply) {
-					log(reply);
-					
-					if(reply.status === 'success') {
+					if (reply.status === 'success') {
 						atheos.toast.show('success', i18n('git_' + type + '_success'));
 					}
-					
+
 					var text = oX('#git_transfer_text');
-					if(text && reply.text) {
+					if (text && reply.text) {
 						text.text(reply.text);
 					}
 

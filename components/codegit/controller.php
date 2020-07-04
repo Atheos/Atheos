@@ -12,7 +12,6 @@
 require_once(__DIR__ . "/../../common.php");
 
 require_once("class.git.php");
-require_once("GitRepository.php");
 
 $action = Common::data('action');
 
@@ -23,7 +22,6 @@ $repo = Common::getWorkspacePath($repo);
 $path = Common::getWorkspacePath($path);
 
 $CodeGit = new CodeGit($path, $repo);
-$GitRepository = new GitRepository($repo);
 
 switch ($action) {
 
@@ -50,7 +48,7 @@ switch ($action) {
 			Common::sendJSON("E403g");
 		}
 		break;
-		
+
 	case 'clone':
 		$repoURL = Common::data('repoURL');
 		if ($path && $repoURL) {
@@ -59,7 +57,7 @@ switch ($action) {
 			Common::sendJSON("E403g");
 		}
 		break;
-		
+
 	case 'transfer':
 		$type = Common::data('type');
 		$remote = Common::data('remote');
@@ -82,19 +80,6 @@ switch ($action) {
 		}
 		break;
 
-	case 'blame':
-		if ($repo && $path) {
-			$result = $CodeGit->loadBlame($repo, $path);
-			if ($result === false) {
-				echo '{"status":"error","message":"Failed to get diff!"}';
-			} else {
-				echo $result;
-			}
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
 	case 'initRepo':
 		if ($repo) {
 			// $repo = GitRepository::init($repo);
@@ -105,6 +90,15 @@ switch ($action) {
 			// } else {
 			// 	echo '{"status":"success","message":"Initialized empty Git repository!"}';
 			// }
+		} else {
+			Common::sendJSON("E403g");
+		}
+		break;
+
+	case 'checkout':
+		$file= Common::data("file");
+		if ($repo && $file) {
+			$CodeGit->checkout($repo, $file);
 		} else {
 			Common::sendJSON("E403g");
 		}
@@ -141,13 +135,6 @@ switch ($action) {
 		} else {
 			Common::sendJSON("E403g");
 		}
-		break;
-
-	case 'ping':
-		debug($GitRepository->getBranches());
-
-		Common::sendJSON("success");
-
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
