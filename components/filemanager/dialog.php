@@ -38,7 +38,7 @@ switch ($action) {
 		<label class="title"><i class="fa fa-clone"></i> <?php echo i18n("duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></label>
 		<form>
 			<p>
-				<?php echo i18n("enterNewName:"); ?>
+				<?php echo i18n("duplicate_name"); ?>
 			</p>
 			<input type="text" name="clone" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php echo i18n("duplicate"); ?></button>
