@@ -1,4 +1,4 @@
-<div id="codegit_push_pull" class="content">
+<div id="codegit_transfer" class="content">
 
 	<?php
 	$repo = Common::getWorkspacePath($repo);
@@ -45,8 +45,7 @@
 			</select></td>
 		</tr>
 	</table>
-	<pre>
-		<?php echo $status["data"]; ?>
+	<pre id="git_transfer_text">
 	</pre>
 	<toolbar>
 		<button onclick="atheos.codegit.transfer('push'); return false;"><?php echo i18n("git_push") ?></button>
