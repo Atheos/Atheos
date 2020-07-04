@@ -23,37 +23,38 @@ switch ($action) {
 			<!--<div class="panels-components">-->
 			<menu>
 				<li>
-					<a name="editor-settings" data-file="components/settings/settings.editor.php" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
+					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
 				</li>
 				<li>
-					<a name="system-settings" data-file="components/settings/settings.system.php"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
+					<a data-panel="system"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
 				</li>
 				<li>
-					<a name="codegit-settings" data-file="components/settings/settings.codegit.php"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
+					<a data-panel="codegit"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
 				</li>
 				<li>
-					<a name="keybindings" data-file="components/settings/settings.keybindings.php"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
+					<a data-panel="keybindings"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
 				</li>
+
 				<?php
 				if (Common::checkAccess("configure")) {
 					?>
 					<li>
-						<a name="textmode-settings" data-file="components/textmode/dialog.php?action=settings"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
+						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php i18n("textmodes"); ?></a>
 					</li>
 					<?php
 				}
 				?>
+
 				<hr>
 				<?php
 				global $plugins;
 				foreach ($plugins as $plugin) {
 					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 						$data = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
-						if (isset($data['config'])) {
-							foreach ($data['config'] as $config) {
-								if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . i18n($config['title']) . '</a></li>');
-								}
+						if (isset($data["config"])) {
+							$config = $data["config"][0];
+							if (isset($config['icon']) && isset($config['title'])) {
+								echo('<li><a data-panel="' . $plugin . '"><i class="' . $config['icon'] . '"></i>' . i18n($config['title']) . '</a></li>');
 							}
 						}
 
@@ -62,16 +63,27 @@ switch ($action) {
 				?>
 			</menu>
 			<panel>
-				<?php include('settings.editor.php'); ?>
+				<?php include("panels/editor.php"); ?>
 			</panel>
 
 		</div>
 		<toolbar>
 			<?php echo i18n("settings_autosave"); ?>
-			<!--	<button class="btn-right" onclick="atheos.settings.saveAll(); return false;"><?php echo i18n("save"); ?></button>-->
-			<!--	<button class="btn-left" onclick="atheos.modal.unload(); return false;"><?php echo i18n("close"); ?></button>-->
 		</toolbar>
 		<?php
+		break;
+
+
+	case "loadPanel":
+		$panel = Common::data("panel");
+		if (file_exists(__DIR__ . "/panels/$panel.php")) {
+			include(__DIR__ . "/panels/$panel.php");
+		} elseif (file_exists("plugins/$panel/settings.php")) {
+			include("plugins/$panel/settings.php");
+		} else {
+			echo $panel;
+		}
+
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
