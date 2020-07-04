@@ -448,12 +448,35 @@
 			"": "Github Repository URL:",
 			"invalid": "Invalid Repository URL"
 		},
+		"status": {
+			"current": "Branch is up to date",
+			"ahead": {
+				"single": "Ahead %s Commit",
+				"plural": "Ahead %s Commits"
+			},
+			"behind": {
+				"single": "Behind %s Commit",
+				"plural": "Behind %s Commits"
+			}
+		},
 		"diff": "Git Diff",
 		"blame": "Git Blame",
 		"log": "Git Log",
-		"pull": "Pull",
-		"push": "Push",
-		"fetch": "Fetch",
+		"pull": {
+			"": "Pull",
+			"success": "Repo pull successful.",
+			"failed": "Repo pull failed."
+		},
+		"push": {
+			"": "Push",
+			"success": "Repo push successful.",
+			"failed": "Repo push failed."
+		},
+		"fetch": {
+			"": "Fetch",
+			"success": "Repo fetch successful.",
+			"failed": "Repo fetch failed."
+		},
 		"addFailed": "Failed to add %s",
 		"commit": {
 			"success": "Changes commited.",
