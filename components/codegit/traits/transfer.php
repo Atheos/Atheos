@@ -17,7 +17,7 @@ trait Transfer {
 	}
 
 	public function pull($repo, $remote, $branch) {
-		$command = "git push $remote $branch";
+		$command = "git pull $remote $branch";
 		$result = $this->execute($command);
 		$result["text"] = implode("\n", $result["data"]);
 
@@ -38,7 +38,6 @@ trait Transfer {
 		} else {
 			Common::sendJSON("error", $result);
 		}
-		// return $this->parseShellResult($result, "Repository fetched!", "Failed to fetch repo!");
 	}
 
 	public function checkUserInfo($command) {
