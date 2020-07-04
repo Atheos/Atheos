@@ -21,7 +21,12 @@ trait Transfer {
 	public function fetch($repo, $remote) {
 		$command = "git fetch $remote $branch";
 		$result = $this->execute($command);
-		Common::sendJSON("success", $result);
+
+		if ($result["status"]) {
+			Common::sendJSON("success", $result);
+		} else {
+			Common::sendJSON("error", $result);
+		}
 		// return $this->parseShellResult($result, "Repository fetched!", "Failed to fetch repo!");
 	}
 

@@ -1,4 +1,4 @@
-<label class="title"><i class="fas fa-history"></i><?php echo i18n("logViewer"); ?></label>
+<label class="title"><i class="fas fa-history"></i><?php echo i18n("codegit_log"); ?></label>
 <ul id="codegit_log" class="content">
 	<?php
 	$repo = Common::getWorkspacePath($repo);
