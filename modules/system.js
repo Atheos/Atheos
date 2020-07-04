@@ -58,7 +58,19 @@
 				'        \\/          \\/     \\/          \\/ '
 			].join('\n'));
 
-		}
+		},
+
+		debug: function() {
+			echo({
+				url: atheos.controller,
+				data: {
+					action: 'ping'
+				},
+				success: function(reply) {
+					log(reply);
+				}
+			});
+		},
 	};
 	//////////////////////////////////////////////////////////////////////
 	// Init
