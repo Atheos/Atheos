@@ -442,7 +442,7 @@
 				success: function(reply) {
 					log(reply);
 					
-					if(reply.status === 'status') {
+					if(reply.status === 'success') {
 						atheos.toast.show('success', i18n('git_' + type + '_success'));
 					}
 					
