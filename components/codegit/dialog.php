@@ -4,10 +4,8 @@
 // See http://opensource.org/licenses/MIT for more information.
 // This information must remain intact.
 
-require_once('../../common.php');
 require_once('class.git.php');
 
-$action = Common::data('action');
 $path = Common::data('path');
 $repo = Common::data('repo');
 
@@ -18,10 +16,10 @@ if ($action === "loadPanel") {
 
 	switch ($panel) {
 		case 'blame': //Checked
-			include('templates/minor/blame.php');
+			include('templates/major/blame.php');
 			break;
 		case 'diff': //Checked
-			include('templates/minor/diff.php');
+			include('templates/major/diff.php');
 			break;
 		case 'log': //Checked
 			include('templates/major/log.php');
@@ -38,7 +36,6 @@ if ($action === "loadPanel") {
 	}
 } elseif ($action === "codegit") {
 	$status = $CodeGit->branchStatus($repo);
-	$status = is_array($status) ? $status["status"] : $status;
 	?>
 	<label class="title"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></label>
 	<div id="codegit">
@@ -52,9 +49,9 @@ if ($action === "loadPanel") {
 			<li>
 				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php echo i18n("transfer"); ?></a>
 			</li>
-			<li>
-				<a data-panel="config"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></a>
-			</li>
+			<!--<li>-->
+			<!--	<a data-panel="config"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></a>-->
+			<!--</li>-->
 		</menu>
 		<panel>
 			<?php include('templates/major/overview.php'); ?>

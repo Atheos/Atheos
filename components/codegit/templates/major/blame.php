@@ -5,7 +5,7 @@ if ($files) {
 	$files = explode(',', $files);
 } else {
 	$files = array($path);
-	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("Blame Viewer", false) . "</label>";
+	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("codegit_blame") . "</label>";
 }
 
 $blames = array();
