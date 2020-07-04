@@ -167,14 +167,13 @@
 
 				oX('panel').on('click', function(e) {
 					var target = oX(e.target);
-					if (target.tagName === 'BUTTON' && target.text() !== 'Commit') {
-						var file = target.parent('tr').attr('data-file');
+					if (target.tagName === 'BUTTON') {
 						if (target.text() === 'Diff') {
 							self.showPanel('diff', repo, {
-								files: [file]
+								files: [target.parent('tr').attr('data-file')]
 							});
 						} else if (target.text() === 'Undo') {
-							self.undo(repo, file);
+							self.undo(repo, target.parent('tr').attr('data-file'));
 						}
 					}
 				});
