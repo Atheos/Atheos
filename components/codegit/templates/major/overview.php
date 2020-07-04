@@ -29,7 +29,7 @@
 						<td class="file"><?php echo $file ?></td>
 						<td>
 							<button class="git_diff">Diff</button>
-							<button disabled class="git_undo">Undo</button>
+							<button class="git_undo">Undo</button>
 						</td>
 					</tr>
 					<?php
