@@ -465,6 +465,12 @@
 		"diff": "Git Diff",
 		"blame": "Git Blame",
 		"log": "Git Log",
+		"undo": {
+			"": "Git Undo",
+			"file": "Undo changes on %s?",
+			"success": "Changes reverted.",
+			"failed": "Unable to revert changes."
+		},
 		"pull": {
 			"": "Pull",
 			"success": "Repo pull successful.",
