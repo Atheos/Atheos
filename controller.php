@@ -20,6 +20,9 @@ $target = Common::data("target");
 //////////////////////////////////////////////////////////////////////////////80
 if ($action !== 'authenticate') {
 	Common::checkSession();
+} elseif ($action === 'debug') {
+	Common::sendJSON("success");
+	die;
 }
 
 if (!$action || !$target) {
