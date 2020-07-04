@@ -358,7 +358,6 @@
 										atheos.active.save();
 									}
 								}
-
 							});
 						} else {
 							atheos.toast.show('error', 'File could not be saved');
