@@ -6,7 +6,7 @@ if ($files) {
 	$files = explode(',', $files);
 } else {
 	$files = array($path);
-	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("Diff Viewer", false) . "</label>";
+	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("codegit_diff") . "</label>";
 }
 
 $diffs = array();
