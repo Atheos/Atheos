@@ -16,8 +16,6 @@
 	var self = null;
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	//////////////////////////////////////////////////////////////////////
@@ -48,9 +46,6 @@
 
 	atheos.codegit = {
 
-		path: 'components/codegit/',
-		controller: 'components/codegit/controller.php',
-		dialog: 'components/codegit/dialog.php',
 		location: '',
 		activeRepo: '',
 		files: [],
@@ -161,8 +156,6 @@
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 			
-			log(repo);
-
 			var callback = function() {
 				oX('menu').on('click', function(e) {
 					var target = oX(e.target);
@@ -182,7 +175,6 @@
 							});
 						} else if (target.text() === 'Undo') {
 							atheos.toast.show('notice', 'Git Undo coming soon');
-							// self.showPanel(target.attr('data-panel'), repo);
 						}
 					}
 				});
@@ -191,7 +183,8 @@
 			};
 
 
-			atheos.modal.load(800, self.dialog, {
+			atheos.modal.load(800, atheos.dialog, {
+				target: 'codegit',
 				action: 'codegit',
 				repo,
 				callback
@@ -206,12 +199,13 @@
 					menu.addClass('active');
 				}
 				data = data || {};
+				data.target = 'codegit';
 				data.action = 'loadPanel';
 				data.panel = panel;
 				data.repo = repo;
 
 				echo({
-					url: self.dialog,
+					url: atheos.dialog,
 					data: data,
 					success: function(reply) {
 						oX('panel').empty();
@@ -224,7 +218,8 @@
 		showDialog: function(type, repo, path) {
 			path = path || oX('#project-root').attr('data-path');
 			self.location = repo || self.location;
-			atheos.modal.load(600, self.dialog, {
+			atheos.modal.load(600, atheos.dialog, {
+				target: 'codegit',
 				action: 'loadPanel',
 				panel: type,
 				repo,
@@ -238,8 +233,8 @@
 			echo({
 				url: atheos.controller,
 				data: {
-					action,
 					target: 'codegit',
+					action,
 					repo
 				},
 				success: function(reply) {
@@ -274,7 +269,9 @@
 				});
 			};
 
-			atheos.modal.load(250, self.dialog, {
+			
+			atheos.modal.load(250, atheos.dialog, {
+					target: 'codegit',
 				action: 'clone',
 				path,
 				listener
@@ -444,40 +441,16 @@
 				},
 				success: function(reply) {
 					log(reply);
-
-					return;
-
-					if (result.status == 'login_required') {
-						atheos.toast.show('error', result.message);
-						self.showDialog('login', self.location);
-						self.login = function() {
-							var username = $('.git_login_area #username').val();
-							var password = $('.git_login_area #password').val();
-							self.showDialog('overview', self.location);
-							$.post(self.path + 'controller.php?action=pull&path=' + self.location + '&remote=' + remote + '&branch=' + branch, {
-								username: username,
-								password: password
-							}, function(result) {
-								result = JSON.parse(result);
-								atheos.toast[result.status](result.message);
-							});
-						};
-					} else if (result.status == 'passphrase_required') {
-						atheos.toast.show('error', result.message);
-						codegit.showDialog('passphrase', self.location);
-						self.login = function() {
-							var passphrase = $('.git_login_area #passphrase').val();
-							self.showDialog('overview', self.location);
-							$.post(self.path + 'controller.php?action=pull&path=' + self.location + '&remote=' + remote + '&branch=' + branch, {
-								passphrase: passphrase
-							}, function(result) {
-								result = JSON.parse(result);
-								atheos.toast[result.status](result.message);
-							});
-						};
-					} else {
-						atheos.toast[result.status](result.message);
+					
+					if(reply.status === 'status') {
+						atheos.toast.show('success', i18n('git_' + type + '_success'));
 					}
+					
+					var text = oX('#git_transfer_text');
+					if(text && reply.text) {
+						text.text(reply.text);
+					}
+
 				}
 			});
 		},

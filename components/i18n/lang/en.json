@@ -430,7 +430,10 @@
 		"committed": "Committed",
 		"error": {
 			"statusFail": "Unable to load Repository status"
-		}
+		},
+		"diff": "CodeGit Diff Viewer",
+		"blame": "CodeGit Blame Viewer",
+		"log": "CodeGit Log Viewer"
 	},
 
 	"git": {

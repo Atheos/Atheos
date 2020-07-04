@@ -13,14 +13,9 @@ trait Execute {
 		$result = array();
 
 		exec($cmd . ' 2>&1', $result, $code);
-		
-		if($code === 0) {
-			return array_filter($result);
-		} else {
-			return false;
-		}
 
 		return array(
+			"status" => $code === 0,
 			"code" => $this->parseCommandCodes($code),
 			"data" => array_filter($result)
 		);
@@ -50,15 +45,30 @@ trait Execute {
 		exec($cmd. ' 2>&1', $array, $result);
 
 		$this->resultArray = array_filter($array);
-		$this->getResultString();
 		return $result;
 	}
 
-
-	private function getResultString() {
-		$this->result = implode("<br>", $this->resultArray);
+	private function parseShellResult($result, $success, $error) {
+		if ($result === null) {
+			return $error;
+		}
+		if ($result === 0) {
+			return $this->returnMessage("success", $success);
+		} else {
+			if ($result === 64) {
+				return $this->returnMessage("error", $this->result);
+			} else if ($result == 3 || $result == 4) {
+				return $this->returnMessage("login_required", "Login required!");
+			} else if ($result == 7) {
+				return $this->returnMessage("passphrase_required", "passphrase_required");
+			} else {
+				if (strpos($this->result, "fatal: ") !== false) {
+					$error = substr($this->result, strpos($this->result, "fatal: ") + strlen("fatal: "));
+				}
+				return $this->returnMessage("error", $error);
+			}
+		}
 	}
-
 
 	private function checkExecutableFile() {
 		$program = $this->getShellProgram();

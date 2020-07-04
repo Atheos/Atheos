@@ -83,28 +83,6 @@ class CodeGit {
 		return '{"status":"' . $status . '","message":"' . $msg . '"}';
 	}
 
-	private function parseShellResult($result, $success, $error) {
-		if ($result === null) {
-			return $error;
-		}
-		if ($result === 0) {
-			return $this->returnMessage("success", $success);
-		} else {
-			if ($result === 64) {
-				return $this->returnMessage("error", $this->result);
-			} else if ($result == 3 || $result == 4) {
-				return $this->returnMessage("login_required", "Login required!");
-			} else if ($result == 7) {
-				return $this->returnMessage("passphrase_required", "passphrase_required");
-			} else {
-				if (strpos($this->result, "fatal: ") !== false) {
-					$error = substr($this->result, strpos($this->result, "fatal: ") + strlen("fatal: "));
-				}
-				return $this->returnMessage("error", $error);
-			}
-		}
-	}
-
 	// The new parsing status function
 	private function parseChanges($array) {
 		$added = array();
