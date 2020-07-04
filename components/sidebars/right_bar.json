@@ -53,12 +53,6 @@
     "onclick": "atheos.market.list();"
   },
   {
-    "title": "textmodes",
-    "admin": true,
-    "icon": "fas fa-pencil-alt",
-    "onclick": "atheos.textmode.show();"
-  },  
-  {
     "title": "update_check",
     "admin": true,
     "icon": "fas fa-sync-alt",
