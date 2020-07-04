@@ -259,7 +259,7 @@
 						var target = oX(e.target);
 						var tagName = target.el.tagName;
 						if (tagName === 'A') {
-							self.showTab(target.attr('data-file'));
+							self.showTab(target);
 						}
 					});
 
@@ -276,23 +276,36 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Show Datafile Tab
 		//////////////////////////////////////////////////////////////////////80
-		showTab: function(dataFile) {
-			if (typeof(dataFile) !== 'string') {
-				return;
-			}
+		showTab: function(target) {
 			self.save(false);
 
-			echo({
-				url: dataFile,
-				success: function(reply) {
+			var dest = target.attr('data-panel') || target.attr('data-file');
 
-					oX('.settings menu .active').removeClass('active');
-					oX('.settings menu a[data-file="' + dataFile + '"]').addClass('active');
-					oX('.settings panel').html(reply);
+			if (target.attr('data-panel')) {
+log(dest);
+				echo({
+					url: atheos.dialog,
+					data: {
+						target: 'settings',
+						action: 'loadPanel',
+						panel: dest
+					},
+					success: function(reply) {
+						oX('.settings menu .active').removeClass('active');
+						oX('.settings menu a[data-panel="' + dest + '"]').addClass('active');
+						oX('.settings panel').html(reply);
+					}
+				});
 
-					self.loadTabValues(dataFile);
-				}
-			});
+			} else if (target.attr('data-file')) {
+				echo({
+					url: dest,
+					success: function(reply) {
+						oX('.settings panel').html(reply);
+						self.loadTabValues(dataFile);
+					}
+				});
+			}
 		}
 
 	};

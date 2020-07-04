@@ -1,5 +1,3 @@
-<?php require_once(__DIR__ . '/../../common.php'); ?>
-
 <label><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></label>
 <table class="keybindings">
 	<tr>
@@ -87,14 +85,14 @@
 			<?php echo i18n("moveLine_up"); ?>
 		</td>
 		<td>
-			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-up"></i>
+			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-up"></i>
 		</td>
 
 		<td>
 			<?php echo i18n("moveLine_down"); ?>
 		</td>
 		<td>
-			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-down"></i>
+			<i class="cmd"><?php echo i18n("key_alt"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
 		</td>
 	</tr>
 	
@@ -103,14 +101,14 @@
 			<?php echo i18n("cycleActive_prev"); ?>
 		</td>
 		<td>
-			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-up"></i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-up"></i>
 		</td>
 
 		<td>
 			<?php echo i18n("cycleActive_next"); ?>
 		</td>
 		<td>
-			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-<?php echo i18n("key_alt"); ?>-circle-down"></i>
+			<i class="cmd"><?php echo i18n("key_ctrl"); ?></i><i class="fas fa-plus"></i><i class="fas fa-arrow-alt-circle-down"></i>
 		</td>
 	</tr>	
 </table>
