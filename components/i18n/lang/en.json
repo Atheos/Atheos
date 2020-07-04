@@ -58,6 +58,7 @@
 	"paste": "Paste",
 	"duplicate": {
 		"": "Duplicate",
+		"name": "Enter new name:",
 		"file": "File Duplicated",
 		"folder": "Folder Duplicated"
 	},
