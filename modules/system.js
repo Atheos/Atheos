@@ -21,6 +21,7 @@
 		dialog: 'dialog.php',
 
 		init: function() {
+			window.addEventListener('error', atheos.error);
 			if (running) {
 				return;
 			}
@@ -58,6 +59,24 @@
 				'        \\/          \\/     \\/          \\/ '
 			].join('\n'));
 
+		},
+
+		error: function(e) {
+			// scripts/errorAjaxHandlerDom.js
+			var stack = e.error.stack;
+			var message = e.error.toString();
+
+			if (stack) {
+				message += '\n' + stack;
+			}
+
+			echo({
+				url: atheos.controller,
+				data: {
+					action: 'error',
+					message
+				}
+			});
 		},
 
 		debug: function() {
