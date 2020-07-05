@@ -157,8 +157,8 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 // Configuration
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -194,13 +194,6 @@ define("PLUGINS", BASE_PATH . "/plugins");
 define("THEMES", BASE_PATH . "/themes");
 define("DATA", BASE_PATH . "/data");
 define("WORKSPACE", BASE_PATH . "/workspace");
-
-// URLS
-define("WSURL", BASE_URL . "/workspace");
-
-// Update Check
-define("ARCHIVEURL", "https://github.com/Atheos/Atheos/archive/master.zip");
-define("COMMITURL", "https://api.github.com/repos/Atheos/Atheos/commits");
 
 define("UPDATEURL", "https://www.atheos.io/update");
 define("MARKETURL", "https://www.atheos.io/market/json");
