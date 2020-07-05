@@ -144,6 +144,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		echo '{"status":"error","message":"Invalid action"}';
+		Common::sendJSON("E401i");
 		break;
 }
