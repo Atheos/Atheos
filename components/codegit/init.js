@@ -59,6 +59,27 @@
 		init: function() {
 			self = this;
 
+			oX('#codegit menu', true).on('click', function(e) {
+				var target = oX(e.target);
+				var tagName = target.el.tagName;
+				if (tagName === 'A') {
+					self.showPanel(target.attr('data-panel'), self.activeRepo);
+				}
+			});
+
+			oX('#codegit panel', true).on('click', function(e) {
+				var target = oX(e.target);
+				if (target.tagName === 'BUTTON') {
+					if (target.text() === 'Diff') {
+						self.showPanel('diff', self.activeRepo, {
+							files: [target.parent('tr').attr('data-file')]
+						});
+					} else if (target.text() === 'Undo') {
+						self.undo(self.activeRepo, target.parent('tr').attr('data-file'));
+					}
+				}
+			});
+
 			//Check if directories has git repo
 			amplify.subscribe('filemanager.openDir', self.showRepoStatus);
 
@@ -156,37 +177,10 @@
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 
-			var callback = function() {
-				oX('menu').on('click', function(e) {
-					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					if (tagName === 'A') {
-						self.showPanel(target.attr('data-panel'), repo);
-					}
-				});
-
-				oX('panel').on('click', function(e) {
-					var target = oX(e.target);
-					if (target.tagName === 'BUTTON') {
-						if (target.text() === 'Diff') {
-							self.showPanel('diff', repo, {
-								files: [target.parent('tr').attr('data-file')]
-							});
-						} else if (target.text() === 'Undo') {
-							self.undo(repo, target.parent('tr').attr('data-file'));
-						}
-					}
-				});
-
-				atheos.modal.resize();
-			};
-
-
 			atheos.modal.load(800, atheos.dialog, {
 				target: 'codegit',
 				action: 'codegit',
-				repo,
-				callback
+				repo
 			});
 		},
 
@@ -207,7 +201,6 @@
 					url: atheos.dialog,
 					data: data,
 					success: function(reply) {
-						oX('panel').empty();
 						oX('panel').html(reply);
 					}
 				});

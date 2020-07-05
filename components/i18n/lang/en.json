@@ -432,9 +432,9 @@
 		"error": {
 			"statusFail": "Unable to load Repository status"
 		},
-		"diff": "CodeGit Diff Viewer",
-		"blame": "CodeGit Blame Viewer",
-		"log": "CodeGit Log Viewer"
+		"diff": "Diff Viewer",
+		"blame": "Blame Viewer",
+		"log": "Log Viewer"
 	},
 
 	"git": {
@@ -486,6 +486,12 @@
 			"": "Fetch",
 			"success": "Repo fetch successful.",
 			"failed": "Repo fetch failed."
+		},
+		"remote": {
+			"new": "New Remote"
+		},
+		"branch": {
+			"new": "New Branch"
 		},
 		"addFailed": "Failed to add %s",
 		"commit": {
