@@ -708,7 +708,7 @@
 		delete: function(path) {
 			atheos.alert.show({
 				message: 'Are you sure you wish to delete the following:',
-				data: path,
+				data: pathinfo(path).basename,
 				actions: {
 					'Delete': function() {
 						echo({
