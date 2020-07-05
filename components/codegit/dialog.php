@@ -28,7 +28,7 @@ if ($action === "loadPanel") {
 			include('templates/major/transfer.php');
 			break;
 		case 'config':
-			include('templates/major/config.php');
+			include('templates/major/configure.php');
 			break;
 		default:
 			include('templates/major/overview.php');
@@ -49,9 +49,9 @@ if ($action === "loadPanel") {
 			<li>
 				<a data-panel="transfer"><i class="fas fa-cloud"></i><?php echo i18n("transfer"); ?></a>
 			</li>
-			<!--<li>-->
-			<!--	<a data-panel="config"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></a>-->
-			<!--</li>-->
+			<li>
+				<a data-panel="config"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></a>
+			</li>
 		</menu>
 		<panel>
 			<?php include('templates/major/overview.php'); ?>

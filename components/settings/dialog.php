@@ -39,7 +39,7 @@ switch ($action) {
 				if (Common::checkAccess("configure")) {
 					?>
 					<li>
-						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php i18n("textmodes"); ?></a>
+						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
 					<?php
 				}
