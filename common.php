@@ -1,9 +1,14 @@
 <?php
-/*
-    *  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+
+//////////////////////////////////////////////////////////////////////////////80
+// Common
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 Common::startSession();
 
@@ -41,13 +46,8 @@ class Common {
 		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
 		$path = str_replace("controller.php", "", $path);
 		$path = str_replace("dialog.php", "", $path);
-
-		foreach (array("components", "plugins") as $folder) {
-			if (strpos($_SERVER['SCRIPT_FILENAME'], $folder)) {
-				$path = substr($_SERVER['SCRIPT_FILENAME'], 0, strpos($_SERVER['SCRIPT_FILENAME'], $folder));
-				break;
-			}
-		}
+		
+		$path = __DIR__;
 
 		if (file_exists($path.'config.php')) {
 			require_once($path.'config.php');
@@ -100,7 +100,6 @@ class Common {
 	public static function startSession() {
 		Common::construct();
 
-
 		global $cookie_lifetime;
 		if (isset($cookie_lifetime) && $cookie_lifetime !== "") {
 			ini_set("session.cookie_lifetime", $cookie_lifetime);
@@ -141,16 +140,9 @@ class Common {
 			require_once(AUTH_PATH);
 		}
 
-		// Check for langauge settings
-		// global $lang;
-		// if (isset($_SESSION['lang'])) {
-		// 	include BASE_PATH."/languages/{$_SESSION['lang']}.php";
-		// } else {
-		// 	include BASE_PATH."/languages/".LANGUAGE.".php";
-		// }
-
+		// Set up language translation
 		global $i18n;
-		$i18n = new i18n('en', LANGUAGE);
+		$i18n = new i18n(LANGUAGE);
 		$i18n->init();
 
 		global $components; global $plugins; global $themes;
@@ -193,37 +185,6 @@ class Common {
 			}
 		}
 		return $tmp;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Localization
-	//////////////////////////////////////////////////////////////////////////80
-	public static function i18n($key, $type = "echo", $args = array()) {
-
-		if (is_array($type)) {
-			$args = $type;
-			$type = "echo";
-		}
-
-		global $lang;
-
-		$key = strtolower($key); //Test, test TeSt and tESt are exacly the same
-		$return = isset($lang[$key]) ? $lang[$key] : $key;
-
-		if (!isset($lang[$key])) {
-			debug($key, "i18n");
-		}
-
-		$return = ucfirst($return);
-
-		foreach ($args as $k => $v) {
-			$return = str_replace("%{".$k."}%", $v, $return);
-		}
-		if ($type == "echo") {
-			echo $return;
-		} else {
-			return $return;
-		}
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -381,7 +342,7 @@ class Common {
 
 			"E403g" => "Invalid Parameter.",
 			"E403i" => "Invalid Parameter:",
-			"E403m" => "Missing Parameter:",
+			"E403m" => "Missing Parameter.",
 
 			"E404g" => "No Content.",
 
@@ -590,20 +551,12 @@ class Common {
 
 }
 
-//////////////////////////////////////////////////////////////////
-// Wrapper for old method names
-//////////////////////////////////////////////////////////////////
-// function i18n($key, $type = "echo", $args = array()) {
-// 	return Common::i18n($key, $type, $args);
-// }
-
 function i18n($string, $args = false) {
 	global $i18n;
 	return $i18n->translate($string, $args);
 }
 
 
-// This debug function will be simplified once the langaue work is completed.
 function debug($val, $name = "debug") {
 	Common::debug($val, $name);
 }
