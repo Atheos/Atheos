@@ -82,11 +82,6 @@
 						node = node.parent();
 					}
 					self.open(node.attr('data-project'));
-					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-						self.openDir(node.attr('data-path'));
-					} else if (node.attr('data-type') === 'file') {
-						self.openFile(node.attr('data-path'));
-					}
 				}
 			});
 		},
