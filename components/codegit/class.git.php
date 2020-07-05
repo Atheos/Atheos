@@ -52,7 +52,7 @@ class CodeGit {
 			Common::sendJSON("error", i18n("path_missing")); die;
 		}
 		chdir($this->repo);
-		$this->setGitSettings($this->repo);
+		// $this->setGitSettings($this->repo);
 
 		foreach (getConfig() as $name => $value) {
 			$result = $this->executeCommand("git config " . $name . " " . $value);
