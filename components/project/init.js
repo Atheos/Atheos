@@ -13,8 +13,6 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -22,9 +20,6 @@
 	amplify.subscribe('system.loadMinor', () => atheos.project.init());
 
 	atheos.project = {
-
-		controller: 'components/project/controller.php',
-		dialog: 'components/project/dialog.php',
 
 		//projectmanager
 		sideExpanded: true,
@@ -87,11 +82,6 @@
 						node = node.parent();
 					}
 					self.open(node.attr('data-project'));
-					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-						self.openDir(node.attr('data-path'));
-					} else if (node.attr('data-type') === 'file') {
-						self.openFile(node.attr('data-path'));
-					}
 				}
 			});
 		},
@@ -101,17 +91,20 @@
 		//////////////////////////////////////////////////////////////////
 		load: function() {
 			echo({
-				url: this.controller,
+				url: atheos.controller,
 				data: {
-					'action': 'load'
+					target: 'project',
+					action: 'load'
 				},
 				success: function(reply) {
 					atheos.toast.show(reply);
 					if (reply.status === 'error') {
 						return;
 					}
-					if (reply.lastLogin) {
-						atheos.toast.show('notice', `Last Login: ${reply.lastLogin}`);
+					var logSpan = oX('#last_login');
+					if (reply.lastLogin && logSpan) {
+						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
+						logSpan.find('span').text(reply.lastLogin);
 					}
 
 					self.setRoot(reply.name, reply.path);
@@ -126,8 +119,9 @@
 		open: function(projectPath) {
 			atheos.scout.hideFilter();
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'project',
 					action: 'open',
 					projectPath
 				},
@@ -174,7 +168,8 @@
 		// Open the project manager dialog
 		//////////////////////////////////////////////////////////////////
 		list: function() {
-			atheos.modal.load(500, self.dialog, {
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'project',
 				action: 'list'
 			});
 		},
@@ -185,8 +180,9 @@
 		dock: {
 			load: function() {
 				echo({
-					url: self.dialog,
+					url: atheos.dialog,
 					data: {
+						target: 'project',
 						action: 'projectDock'
 					},
 					success: function(reply) {
@@ -224,6 +220,7 @@
 
 			var createProject = function() {
 				var data = {
+					target: 'project',
 					action: 'create',
 					projectName,
 					projectPath,
@@ -232,7 +229,7 @@
 				};
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data,
 					success: function(reply) {
 						if (reply.status !== 'error') {
@@ -271,17 +268,18 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
-				action: 'create'
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
-
-				// More Selector
-				oX('#show_git_options').on('click', function(e) {
-					e.preventDefault();
-					oX(e.target).hide();
-					atheos.flow.slide('open', oX('#git_options').el);
-				});
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
+				action: 'create',
+				listener,
+				callback: function() {
+					// More Selector
+					oX('#show_git_options').on('click', function(e) {
+						e.preventDefault();
+						oX(e.target).hide();
+						atheos.flow.slide('open', oX('#git_options').el);
+					});
+				}
 			});
 		},
 
@@ -297,13 +295,14 @@
 				projectName = oX('#modal_content form input[name="projectName"]').value();
 
 				var data = {
+					target: 'project',
 					action: 'rename',
 					projectPath,
 					projectName
 				};
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data,
 					success: function(reply) {
 						if (reply.status !== 'error') {
@@ -318,11 +317,11 @@
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
 				action: 'rename',
-				name: projectName
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
+				name: projectName,
+				listener
 			});
 		},
 
@@ -337,8 +336,9 @@
 				// var followLinks = oX('input:checkbox[name="follow"]:checked').value();
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'project',
 						action: 'delete',
 						projectPath,
 						projectName
@@ -366,12 +366,12 @@
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
 				action: 'delete',
 				name: projectName,
-				path: projectPath
-			}, () => {
-				oX('#modal_content form').on('submit', listener);
+				path: projectPath,
+				listener
 			});
 		},
 
@@ -381,8 +381,9 @@
 		//////////////////////////////////////////////////////////////////
 		getCurrent: function() {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'project',
 					action: 'current'
 				},
 				success: function(data) {

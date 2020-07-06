@@ -10,15 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
 require_once('class.project.php');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 
 $activeProject = Common::data("project", "session");
 $projectName = Common::data("projectName");
@@ -26,10 +18,6 @@ $projectPath = Common::data("projectPath");
 
 $gitRepo = Common::data("gitRepo");
 $gitBranch = Common::data("gitBranch");
-
-if (!$action) {
-	Common::sendJSON("E401m"); die;
-}
 
 $Project = new Project();
 
@@ -58,7 +46,7 @@ switch ($action) {
 		if ($activeProject) {
 			Common::sendJSON("success", array("path" => $activeProject));
 		} else {
-			Common::sendJSON("error", "No active project");
+			Common::sendJSON("error", i18n("project_noActive"));
 		}
 		break;
 
@@ -80,7 +68,6 @@ switch ($action) {
 	// Load Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'load':
-		// Load default/first project
 		$Project->load($activeProject);
 		break;
 

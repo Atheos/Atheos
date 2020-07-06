@@ -1,5 +1,15 @@
 <?php
 
+//////////////////////////////////////////////////////////////////////////////80
+// Index
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
+
 header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
 header("X-Frame-Options: SAMEORIGIN");
 header("X-XSS-Protection: 1; mode=block");
@@ -11,13 +21,9 @@ header("Feature-Policy: sync-xhr 'self'");
 header("Access-Control-Allow-Origin: *");
 
 require_once('common.php');
-
 require_once('public/class.sourcemanager.php');
-$SourceManager = new SourceManager;
 
-// Context Menu
-$context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
-$context_menu = json_decode($context_menu, true);
+$SourceManager = new SourceManager;
 
 // Read Components, Plugins, Themes
 $components = Common::readDirectory(COMPONENTS);
@@ -48,19 +54,6 @@ $theme = Common::data("theme", "session") ?: THEME;
 	<meta name="msapplication-TileColor" content="#111111">
 	<meta name="msapplication-config" content="favicons/browserconfig.xml">
 	<meta name="theme-color" content="#ffffff">
-
-	<script>
-		var i18n = (function(lang) {
-			return function(word, args) {
-				var x;
-				var returnw = (word in lang) ? lang[word]: word;
-				for (x in args) {
-					returnw = returnw.replace("%{"+x+"}%", args[x]);
-				}
-				return returnw;
-			}
-		})(<?php echo json_encode($lang); ?>)
-	</script>
 
 	<?php
 	// Load System CSS Files
@@ -107,18 +100,17 @@ $theme = Common::data("theme", "session") ?: THEME;
 				<div id="root-editor-wrapper"></div>
 
 				<div id="editor-bottom-bar">
-					<!--<a id="settings_open" class="ico-wrapper"><i class="fas fa-cogs"></i><?php i18n("Settings"); ?></a>-->
-					<a id="split"><i class="fas fa-columns"></i><?php i18n("Split"); ?></a>
+					<a id="split"><i class="fas fa-columns"></i><?php echo i18n("split"); ?></a>
 					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<span id="current_file"></span>
 					<span id="codegit_file_status"></span>
 					<div id="changemode-menu" style="display:none;" class="options-menu"></div>
 					<ul id="split-options-menu" style="display:none;" class="options-menu">
-						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php i18n("Split Horizontally"); ?> </a></li>
-						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php i18n("Split Vertically"); ?> </a></li>
-						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php i18n("Merge all"); ?> </a></li>
+						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php echo i18n("split_h"); ?> </a></li>
+						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php echo i18n("split_v"); ?> </a></li>
+						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php echo i18n("merge_all"); ?> </a></li>
 					</ul>
-					<span id="cursor-position"><?php i18n("Ln"); ?>: 0 &middot; <?php i18n("Col"); ?>: 0</span>
+					<span id="cursor-position"><?php echo i18n("ln"); ?>: 0 &middot; <?php echo i18n("col"); ?>: 0</span>
 				</div>
 
 			</div>

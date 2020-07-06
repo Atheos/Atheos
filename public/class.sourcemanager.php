@@ -21,7 +21,7 @@ class SourceManager {
 		// "modules/jquery-1.7.2.min.js",
 		"modules/amplify.js",
 		"modules/echo.js",
-		"modules/file-icons.js",
+		"modules/icons.js",
 		"modules/global.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
@@ -52,15 +52,15 @@ class SourceManager {
 	);
 
 	function __construct() {
-		$temp = Common::readDirectory(COMPONENTS);
-		foreach ($temp as $component) {
+		global $components; global $plugins;
+		
+		foreach ($components as $component) {
 			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
 				$this->components[] = "components/$component/init.js";
 			}
 		}
 
-		$temp = Common::readDirectory(PLUGINS);
-		foreach ($temp as $plugin) {
+		foreach ($plugins as $plugin) {
 			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
 				$this->pluginsJS[] = "plugins/$plugin/init.js";
 			}

@@ -10,8 +10,6 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-
 class Scout {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -25,7 +23,7 @@ class Scout {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		if (!function_exists('shell_exec')) {
-			Common::sendJSON("error", "Shell_exec() Command Not Enabled.");
+			Common::sendJSON("error", i18n("noShell"));
 			die;
 		}
 	}

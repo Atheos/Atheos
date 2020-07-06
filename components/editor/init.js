@@ -10,7 +10,6 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
 
@@ -714,31 +713,6 @@
 		//   i - {Editor} Editor instance
 		//
 		//////////////////////////////////////////////////////////////////
-
-		promptLine: function() {
-			if (atheos.editor.getActive() !== null) {
-
-				var listener = function() {
-					oX('#modal_content form').on('submit', function(e) {
-						e.preventDefault();
-						var line = oX('#modal_content form input[name="line"]').value();
-
-						if (!isNaN(line)) {
-							atheos.editor.gotoLine(line);
-						}
-
-						atheos.modal.unload();
-					});
-				};
-
-				amplify.subscribe('modal.loaded',
-					listener);
-
-				atheos.modal.load(250,
-					'components/editor/dialog.php?action=promptLine');
-
-			}
-		},
 
 		gotoLine: function(line, i) {
 			i = i || this.getActive();

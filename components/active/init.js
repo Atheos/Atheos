@@ -14,8 +14,6 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -33,8 +31,6 @@
 	//
 	//////////////////////////////////////////////////////////////////////80
 	atheos.active = {
-
-		controller: 'components/active/controller.php',
 
 		tabList: oX('#tab-list-active-files'),
 		dropDownMenu: oX('#dropdown-list-active-files'),
@@ -59,8 +55,9 @@
 			});
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'list'
 				},
 				success: function(reply) {
@@ -68,9 +65,16 @@
 						return;
 					}
 					delete reply.status;
+					var focused;
 					for (var path in reply) {
-						var focused = reply[path] === 'focus' ? true : false;
+						focused = reply[path] === 'focus' ? true : false;
 						atheos.filemanager.openFile(path, focused);
+					}
+					if (focused !== true) {
+						var paths = Object.keys(reply);
+						if (paths.length > 0) {
+							atheos.filemanager.openFile(path, true);
+						}
 					}
 
 				}
@@ -241,8 +245,9 @@
 
 		check: function(path) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'check',
 					path: path
 				},
@@ -279,8 +284,9 @@
 			self.updateTabDropdownVisibility();
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'add',
 					path: path
 				}
@@ -304,8 +310,9 @@
 				atheos.editor.setSession(self.sessions[path]);
 
 				echo({
-					url: self.controller,
-					data: {
+					url: atheos.controller,
+				data: {
+					target: 'active',
 						'action': 'setFocus',
 						'path': path
 					}
@@ -524,8 +531,9 @@
 			delete self.sessions[path];
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'remove',
 					path: path
 				}
@@ -543,11 +551,19 @@
 			self.updateTabDropdownVisibility();
 			atheos.editor.exterminate();
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'removeAll'
 				}
 			});
+		},
+
+		reload: function(path, focus) {
+			log(focus);
+
+			self.close(path);
+			atheos.filemanager.openFile(path, focus);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -607,8 +623,9 @@
 			}
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'rename',
 					path: oldPath,
 					newPath: newPath
@@ -704,7 +721,7 @@
 
 			return (room < 0);
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Update tab visibility
 		//////////////////////////////////////////////////////////////////////80

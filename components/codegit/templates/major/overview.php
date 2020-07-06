@@ -3,7 +3,7 @@
 	<button onclick="atheos.codegit.commit();">Commit</button>
 	<table>
 		<?php
-		$repo = $CodeGit->getWorkspacePath($repo);
+		$repo = Common::getWorkspacePath($repo);
 		$changes = $CodeGit->loadChanges($repo);
 		?>
 
@@ -29,7 +29,7 @@
 						<td class="file"><?php echo $file ?></td>
 						<td>
 							<button class="git_diff">Diff</button>
-							<button disabled class="git_undo">Undo</button>
+							<button class="git_undo">Undo</button>
 						</td>
 					</tr>
 					<?php

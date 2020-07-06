@@ -27,14 +27,12 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.common.init());
-
 	atheos.common = {
 
 		init: function() {
 			self = this;
 
-			// self.initDropdown();
+			self.initDropdown();
 			self.initTogglePassword();
 			self.initCheckMonitors();
 		},
@@ -99,20 +97,16 @@
 		//////////////////////////////////////////////////////////////////////80
 		initDropdown: function() {
 			var close = function() {
-				oX('.dropdown.expanded').removeClass('expanded');
-				window.removeEventListener('click', close);
+				oX('dropdown.expanded').removeClass('expanded');
+				oX('dropdown', true).off('click');
 			};
 
-			window.addEventListener('click', function(e) {
-				if (!e.target.matches('.dropdown') && !e.target.closest('.dropdown')) {
-					log('test');
-					return;
-				}
+			oX('dropdown', true).on('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 
 				var target = oX(e.target),
-					parent = target.parent('.dropdown');
+					parent = target.parent('dropdown');
 
 
 				parent.addClass('expanded');
@@ -168,44 +162,6 @@
 					parent.prop('checked', allChecked);
 				}
 			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// SerializeForm
-		//////////////////////////////////////////////////////////////////////80
-		serializeForm: function(form) {
-			var field, l, s = [];
-			var o = {};
-			if (typeof form === 'object' && form.nodeName === 'FORM') {
-
-				var len = form.elements.length;
-
-				for (var i = 0; i < len; i++) {
-					field = form.elements[i];
-					// field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button' &&
-					if (!field.name || field.disabled || field.nodeName === 'BUTTON' || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) {
-						continue;
-					}
-
-					if (field.type === 'select-multiple') {
-						l = form.elements[i].options.length;
-						for (var j = 0; j < l; j++) {
-							if (field.options[j].selected) {
-								o[field.name] = field.options[j].value;
-							}
-						}
-					} else if (field.type !== 'checkbox' && field.type !== 'radio') {
-						o[field.name] = field.value;
-					} else if (field.checked) {
-						if (o[field.name]) {
-							o[field.name].push(field.value);
-						} else {
-							o[field.name] = [field.value];
-						}
-					}
-				}
-			}
-			return o;
 		},
 
 		createOverlay: function(type, hidden) {

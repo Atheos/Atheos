@@ -14,17 +14,12 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx,
 		storage = atheos.storage;
 
 	var self = null;
 
 	atheos.settings = {
-
-		controller: 'components/settings/controller.php',
-		dialog: 'components/settings/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -39,8 +34,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		load: function() {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'load',
 				},
 				success: function(reply) {
@@ -151,8 +147,9 @@
 			}
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'save',
 					key,
 					value
@@ -195,8 +192,9 @@
 			});
 
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'settings',
 					action: 'save',
 					key,
 					value
@@ -225,73 +223,89 @@
 		// Show Setting Dialog
 		//////////////////////////////////////////////////////////////////////80
 		show: function(dataFile) {
-			var listener = function() {
-				oX('#modal_wrapper').on('change', function(e) {
-					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					var type = target.el.type;
+			var listener = function(e) {
+				var target = oX(e.target);
+				var tagName = target.el.tagName;
+				var type = target.el.type;
 
-					var key = target.attr('data-setting'),
-						value;
+				var key = target.attr('data-setting'),
+					value;
 
-					if (tagName === 'SELECT') {
-						value = target.value();
+				if (tagName === 'SELECT') {
+					value = target.value();
 
-					} else if (tagName === 'INPUT' && type === 'checkbox') {
-						value = target.prop('checked');
+				} else if (tagName === 'INPUT' && type === 'checkbox') {
+					value = target.prop('checked');
 
-					} else if (tagName === 'INPUT' && type === 'radio') {
-						value = target.value();
+				} else if (tagName === 'INPUT' && type === 'radio') {
+					value = target.value();
 
-					} else {
-						return;
-					}
-
-					storage(key, value);
-					self.save(key, value);
-					self.publish(key, value);
-				});
-
-				oX('.settings menu').on('click', function(e) {
-					var target = oX(e.target);
-					var tagName = target.el.tagName;
-					if (tagName === 'A') {
-						self.showTab(target.attr('data-file'));
-					}
-				});
-
-				if (typeof(dataFile) === 'string') {
-					self.showTab(dataFile);
 				} else {
-					self.loadTabValues();
+					return;
 				}
+
+				storage(key, value);
+				self.save(key, value);
+				self.publish(key, value);
 			};
 
-			atheos.modal.load(800, self.dialog, {
-				action: 'settings'
-			}, listener);
+			atheos.modal.load(800, atheos.dialog, {
+				target: 'settings',
+				action: 'settings',
+				callback: function() {
+					oX('#modal_wrapper').on('change', listener);
+
+					oX('.settings menu').on('click', function(e) {
+						var target = oX(e.target);
+						var tagName = target.el.tagName;
+						if (tagName === 'A') {
+							self.showTab(target);
+						}
+					});
+
+					if (typeof(dataFile) === 'string') {
+						self.showTab(dataFile);
+					} else {
+						self.loadTabValues();
+					}
+
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Show Datafile Tab
 		//////////////////////////////////////////////////////////////////////80
-		showTab: function(dataFile) {
-			if (typeof(dataFile) !== 'string') {
-				return;
-			}
+		showTab: function(target) {
 			self.save(false);
 
-			echo({
-				url: dataFile,
-				success: function(reply) {
+			var dest = target.attr('data-panel') || target.attr('data-file');
 
-					oX('.settings menu .active').removeClass('active');
-					oX('.settings menu a[data-file="' + dataFile + '"]').addClass('active');
-					oX('.settings panel').html(reply);
+			if (target.attr('data-panel')) {
+log(dest);
+				echo({
+					url: atheos.dialog,
+					data: {
+						target: 'settings',
+						action: 'loadPanel',
+						panel: dest
+					},
+					success: function(reply) {
+						oX('.settings menu .active').removeClass('active');
+						oX('.settings menu a[data-panel="' + dest + '"]').addClass('active');
+						oX('.settings panel').html(reply);
+					}
+				});
 
-					self.loadTabValues(dataFile);
-				}
-			});
+			} else if (target.attr('data-file')) {
+				echo({
+					url: dest,
+					success: function(reply) {
+						oX('.settings panel').html(reply);
+						self.loadTabValues(dataFile);
+					}
+				});
+			}
 		}
 
 	};

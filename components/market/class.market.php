@@ -9,11 +9,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
-require_once('../../common.php');
 
-require_once("../../helpers/version-compare.php");
-require_once("../../helpers/recurse-delete.php");
-
+require_once(__DIR__ . "/../../helpers/version-compare.php");
+require_once(__DIR__ . "/../../helpers/recurse-delete.php");
 
 class Market {
 
@@ -48,8 +46,8 @@ class Market {
 	// Init
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		$marketMTime = filemtime(DATA . "/cache/market.json");
-		$addonsMTime = filemtime(DATA . "/cache/addons.json");
+		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
+		$addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 
@@ -84,8 +82,7 @@ class Market {
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
 	public function buildCache() {
-		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
+		global $components; global $themes;
 
 		// Scan plugins directory for missing plugins
 		$addons = array(
@@ -171,11 +168,11 @@ class Market {
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::sendJSON("error", "Unable to extract Archive."); die;
+					Common::sendJSON("error", i18n("market_unableExtract")); die;
 				}
 
 			} else {
-				Common::sendJSON("error", "ZIP Extension not found."); die;
+				Common::sendJSON("error", i18n("market_noZip")); die;
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -184,12 +181,13 @@ class Market {
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 			// Response
-			Common::log($this->username, "Installed plugin: $name", "market");
-			Common::sendJSON("success", "Successfully installed $name.");
+			Common::sendJSON("success", i18n("market_install_success", $name));
+
+			// Log Action
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
 			$this->buildCache();
 		} else {
-			Common::sendJSON("error", "Unable to download $name.");
-			die;
+			Common::sendJSON("error", i18n("market_unableDownload"));
 		}
 	}
 
@@ -198,9 +196,12 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($name, $type) {
 		rDelete(BASE_PATH.'/'.$type.'/'.$name);
-		Common::log($this->username, "Removed plugin: $name", "market");
 		Common::sendJSON("S2000");
+		// Log Action
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
+
 		$this->buildCache();
+
 	}
 
 
@@ -231,10 +232,15 @@ class Market {
 						}
 					}
 
-					$url = $data["url"];
+					$url = isset($data["url"]) ? $data["url"] : "false";
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
+					$status = isset($data["status"]) ? $data["status"] : "unavailable";
+					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
+					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
 
-					if ($data["status"] === "updatable") {
+
+
+					if ($status === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
 						$action .= "<a class=\"fas fa-times-circle\" onclick=\"atheos.market.remove('$name', '$type', '$category');return false;\"></a>";
 					} else {
@@ -245,8 +251,8 @@ class Market {
 
 					$iTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
 				<td>" . $addon . "</td>
-				<td>" . $data["description"] . "</td>
-				<td>" . implode(", ", $data["author"]) . "</td>
+				<td>" . $description . "</td>
+				<td>" . $author . "</td>
 				<td>" . $action . "</td>
 				</tr>
 				";
@@ -256,7 +262,7 @@ class Market {
 
 		$aTable = "";
 		if (empty($market)) {
-			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>MarketPlace Unreachable</h3></td></tr>";
+			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>" . i18n("connectionError") . "</h3></td></tr>";
 		} else {
 			foreach ($market as $type => $listT) {
 				foreach ($listT as $category => $listC) {
@@ -267,7 +273,7 @@ class Market {
 						if ($data["status"] !== "available") {
 							continue;
 						}
-						
+
 						$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
 						$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
 
@@ -289,7 +295,4 @@ class Market {
 		);
 
 	}
-
-
-
 }

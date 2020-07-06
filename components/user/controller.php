@@ -10,22 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once '../../common.php';
 require_once 'class.user.php';
-
-$action = Common::data('action');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-if ($action !== 'authenticate') {
-	Common::checkSession();
-}
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 $User = new User();
 
@@ -49,7 +34,7 @@ switch ($action) {
 			$User->username = $username;
 			$User->password = $password;
 
-			require_once '../../languages/code.php';
+			$languages = $i18n->codes();
 			if ($language && isset($languages[$language])) {
 				// if (isset($lang) && isset($languages[$lang])) {
 				$User->lang = $language;
@@ -159,6 +144,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		echo '{"status":"error","message":"Invalid action"}';
+		Common::sendJSON("E401i");
 		break;
 }

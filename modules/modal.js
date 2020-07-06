@@ -73,10 +73,21 @@
 			return wrapper;
 		},
 
-		load: function(width, url, data, callback) {
-			callback = types.isFunction(data) ? data : callback;
+		load: function(width, url, data) {
 			data = data || {};
 			width = width > 400 ? width : 400;
+
+			var listener, callback;
+
+			if (data.listener && types.isFunction(data.listener)) {
+				listener = data.listener;
+				delete data.listener;
+			}
+
+			if (data.callback && types.isFunction(data.callback)) {
+				callback = data.callback;
+				delete data.callback;
+			}
 
 			var overlay = atheos.common.createOverlay('modal', true),
 				wrapper = oX('#modal_wrapper') || self.create(),
@@ -119,9 +130,12 @@
 						input.focus();
 					}
 					amplify.publish('modal.loaded');
+					if (listener && wrapper.find('form')) {
+						wrapper.find('form').on('submit', listener);
+					}
 					if (callback) {
 						callback(wrapper);
-					}
+					}					
 				}
 			});
 

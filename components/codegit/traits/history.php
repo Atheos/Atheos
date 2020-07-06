@@ -4,15 +4,14 @@
 trait History {
 
 	public function loadLog($repo, $path) {
-		if (!is_dir($repo)) return false;
-		chdir($repo);
+
 		$cmd = "git log --relative-date --pretty=format:\"%H|%an|%ae|%ar|%s\" -500";
 		if ($path) {
 			$cmd .= " -- " . $path;
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result["code"]) {
+		if (!$result["status"]) {
 			return "Error loading log";
 		}
 
@@ -34,55 +33,42 @@ trait History {
 
 	public function loadDiff($repo, $path) {
 
-		if (!is_dir($repo)) return false;
-		chdir($repo);
-
 		$result = $this->execute("git status --branch --porcelain");
 
-		if ($result["code"]) {
+		if ($result["status"]) {
 			$status = $this->parseChanges($result["data"]);
 		} else {
 			return false;
 		}
 
+		$result = array();
+
 		if (in_array($path, $status['untracked'])) {
-			$this->resultArray = $this->untrackedDiff($path);
-			
+			$result = $this->untrackedDiff($path);
+
 		} else if (in_array($path, $status['modified'])) {
-			$this->executeCommand('git diff ' . $path);
-			array_push($this->resultArray, "\n");
-			
+			$result = $this->execute('git diff ' . $path)["data"];
+			$result[] = "\n";
+
 		} else if (in_array($path, $status['added'])) {
-			$this->executeCommand('git diff --cached ' . $path);
-			array_push($this->resultArray, "\n");
-			
-		} else if (in_array($path, $status['renamed'])) {
-			$this->executeCommand('git diff ' . $path);
-			if ($this->result == "") {
-				$this->executeCommand('git status --branch --porcelain');
-				foreach ($this->resultArray as $i => $line) {
-					if (strpos($line, $path) !== false) {
-						$name = substr($line, 2);
-						$this->resultArray = array("Renamed: " . $name . "\n");
-						break;
-					}
-				}
-			} else {
-				array_push($this->resultArray, "\n");
-			}
+			$result = $this->execute('git diff --cached ' . $path)["data"];
+			$result[] = "\n";
+
 		} else if (in_array($path, $status['deleted'])) {
-			$this->executeCommand('git diff -- ' . $path);
-			array_push($this->resultArray, "\n");
+			$result = $this->execute('git diff -- ' . $path)["data"];
+			$result[] = "\n";
+
 		} else {
-			return $this->returnMessage("notice", "No changes!");
+			// Come back to
+			return false;
 		}
 
-		foreach ($this->resultArray as $i => $line) {
+		foreach ($result as $i => $line) {
 			$line = str_replace ("\t", "    ", $line);
-			$this->resultArray[$i] = htmlentities($line);
+			$result[$i] = htmlentities($line);
 		}
 
-		return $this->resultArray;
+		return $result;
 	}
 
 	private function untrackedDiff($path) {
@@ -101,9 +87,9 @@ trait History {
 				}
 			}
 		} else {
-			$this->executeCommand('cat ' . $path);
+			$temp = $this->execute('cat ' . $path)["data"];
 			array_push($result, "diff --git a/". $path . " b/" . $path);
-			foreach ($this->resultArray as $i => $line) {
+			foreach ($temp as $i => $line) {
 				array_push($result, "+" . $line);
 			}
 			array_push($result, "\n");
@@ -114,16 +100,23 @@ trait History {
 
 	public function loadBlame($repo, $path) {
 
-		if (!is_dir($repo)) return false;
-		chdir($repo);
+		$result = $this->execute("git blame -c --date=format:'%b %d, %Y %H:%M' " . $path);
 
-		$result = $this->executeCommand("git blame -c " . $path);
-		$result = $this->executeCommand("git blame -c --date=format:'%b %d, %Y %H:%M' " . $path);
-
-		if ($result !== 0) {
-			return $this->returnMessage("error", "Failed to get git blame");
+		if ($result["status"]) {
+			return $result["data"];
 		} else {
-			return $this->resultArray;
+			return false;
+		}
+	}
+
+	public function checkout($repo, $file) {
+		debug($repo);
+		debug($file);
+		$result = $this->execute("git checkout -- " . $file);
+		if ($result["status"]) {
+			Common::sendJSON("success", i18n("git_undo_success")); die;
+		} else {
+			Common::sendJSON("error", i18n("git_undo_failed")); die;
 		}
 	}
 }

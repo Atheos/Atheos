@@ -18,9 +18,8 @@
 
 (function(global) {
 	'use strict';
+	
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -28,9 +27,6 @@
 	amplify.subscribe('system.loadMinor', () => atheos.transfer.init());
 
 	atheos.transfer = {
-
-		controller: 'components/transfer/controller.php',
-		dialog: 'components/transfer/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Init
@@ -45,8 +41,9 @@
 		download: function(path) {
 			var type = pathinfo(path).type;
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'transfer',
 					action: 'download',
 					path,
 					type
@@ -92,13 +89,14 @@
 				}
 
 				// data.append('upload[]', file);
+				data.append('target', 'transfer');
 				data.append('action', 'upload');
 				data.append('path', path);
 
 				var send = new XMLHttpRequest();
 				send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
 				send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
-				send.open('POST', self.controller);
+				send.open('POST', atheos.controller);
 
 				send.onreadystatechange = function() {
 					if (send.readyState === 4) {
@@ -120,11 +118,13 @@
 				send.send(data);
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'transfer',
 				action: 'upload',
-				path: path
-			}, () => {
-				oX('#modal_content').on('change', listener);
+				path: path,
+				callback: function() {
+					oX('#modal_content').on('change', listener);
+				}
 			});
 		},
 

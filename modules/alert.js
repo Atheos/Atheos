@@ -21,7 +21,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		i18n = global.i18n,
 		oX = global.onyx;
 
 	atheos.alert = {

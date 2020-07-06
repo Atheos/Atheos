@@ -10,19 +10,9 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../common.php");
+require_once('class.update.php');
 
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
+$Update = new Update();
 
 switch ($action) {
 
@@ -32,32 +22,42 @@ switch ($action) {
 	case 'check':
 
 		if (!Common::checkAccess("configure")) {
-			echo("<h1>" . i18n("Restricted") . "</h1>");
-			echo("<pre>" . i18n("You can not check for updates") . "</pre>");
+			?>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted"); ?></label>
+			<form>
+				<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted_updates"); ?></label>
+			</form>
+			<?php
 		} else {
 			require_once('class.update.php');
-			$update = new Update();
-			$vars = json_decode($update->check(), true);
-			$local = $vars['local'];
+			$local = $Update->local;
+			$remote = $Update->remote;
+
+			$body = preg_replace('/\*\*/i', "", $remote["body"]);
+			$body = str_replace("Changes:", "", $body);
+
 			?>
-			<label class="title"><i class="fas fa-sync"></i><?php i18n("Update Check"); ?></label>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("update_check"); ?></label>
+
 			<form>
 				<input type="hidden" name="archive" value="">
 				<input type="hidden" name="remoteversion" value="">
-				<br><table>
-					<tr><td width="40%"><?php i18n("Your Version"); ?></td><td><?php echo $local['atheos_version']; ?></td></tr>
-					<tr><td width="40%"><?php i18n("Latest Version"); ?></td><td id="remote_latest"></td></tr>
+				<br>
+				<table>
+					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo ucfirst($local['atheos_version']); ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $remote['tag_name']; ?></td></tr>
 				</table>
-				<br><label><?php i18n("Changes on Atheos"); ?></label>
-				<pre id="update_changes"></pre>
+				<br>
+				<label><?php echo i18n("update_changes"); ?></label>
+				<pre id="update_changes"><?php echo $body; ?></pre>
 				<?php if ($local['atheos_version'] === "nightly") {
 					?>
-					<br><em class="note"><?php i18n("Note: Your installation is a nightly build. Atheos might be unstable."); ?></em><br>
+					<hint><?php echo i18n("nightly"); ?></hint>
 					<?php
 				} ?>
 				<br>
 				<toolbar>
-					<button class="btn-left" onclick="atheos.update.download();return false;"><?php i18n("Download Atheos") ?></button>
+					<button class="btn-left" onclick="atheos.update.download();return false;"><?php echo i18n("downloadAtheos") ?></button>
 				</toolbar>
 			</form>
 			<?php

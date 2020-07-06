@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -23,8 +21,7 @@
 	amplify.subscribe('system.loadExtra', () => atheos.scout.init());
 
 	atheos.scout = {
-		controller: 'components/scout/controller.php',
-		dialog: 'components/scout/dialog.php',
+
 		cachedFileTree: null,
 		rootPath: null,
 		rootName: null,
@@ -94,8 +91,9 @@
 				}
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
+						target: 'scout',
 						action: 'probe',
 						// type,
 						path,
@@ -145,25 +143,26 @@
 				});
 			};
 
-			atheos.modal.load(500, self.dialog, {
-				action: 'probe'
-			}, () => {
-				var table = oX('#probe_results');
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'scout',
+				action: 'probe',
+				listener,
+				callback: function() {
+					var table = oX('#probe_results');
 
-				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
+					var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
-				if (lastSearched) {
-					oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
-					oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
-					// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
-					if (lastSearched.results !== '') {
-						table.html(lastSearched.results);
-						atheos.flow.slide('open', table.el);
-						atheos.modal.resize();
+					if (lastSearched) {
+						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
+						oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
+						// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
+						if (lastSearched.results !== '') {
+							table.html(lastSearched.results);
+							atheos.flow.slide('open', table.el);
+							atheos.modal.resize();
+						}
 					}
 				}
-
-				oX('#modal_content').on('submit', listener);
 			});
 		},
 
@@ -221,8 +220,9 @@
 
 			self.currentlyFiltering = input;
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'scout',
 					action: 'filter',
 					filter: input,
 					path: self.rootPath,
@@ -309,7 +309,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
 
-			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : global.FileIcons.getClassWithColor(name);
+			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			var isOpen = '';

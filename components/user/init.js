@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -26,7 +24,6 @@
 
 		loginForm: oX('#login'),
 		controller: 'components/user/controller.php',
-		dialog: 'components/user/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -45,6 +42,8 @@
 					} else {
 						atheos.storage('username', false);
 						atheos.storage('remember', false);
+
+						oX('#password').focus();
 					}
 
 					// Save Language
@@ -107,8 +106,9 @@
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				echo({
-					url: atheos.user.controller,
+					url: atheos.controller,
 					data: {
+						'target': 'user',
 						'action': 'keepAlive'
 					},
 					success: function(reply) {
@@ -125,14 +125,15 @@
 		// Authenticate User
 		//////////////////////////////////////////////////////////////////////80
 		authenticate: function() {
-			var data = atheos.common.serializeForm(self.loginForm.el);
+			var data = serializeForm(self.loginForm.el);
 			if (data.password === '' || data.username === '') {
 				atheos.toast.show('notice', 'Username/Password not provided.');
 				return;
 			}
+			data.target = 'user';
 			data.action = 'authenticate';
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: data,
 				success: function(reply) {
 					if (reply.status !== 'error') {
@@ -159,11 +160,12 @@
 					atheos.toast.show('error', 'Passwords do not match.');
 				} else {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: {
-							'action': 'changePassword',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'changePassword',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -175,11 +177,11 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'changePassword',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 
 		},
@@ -209,11 +211,12 @@
 				}
 				if (password && username) {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: {
-							'action': 'create',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'create',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -225,10 +228,10 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'create',
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				listener
 			});
 		},
 
@@ -240,10 +243,11 @@
 				e.preventDefault();
 
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
-						'action': 'delete',
-						'username': username
+						target: 'user',
+						action: 'delete',
+						username: username
 					},
 					success: function(reply) {
 						if (reply.status !== 'error') {
@@ -254,11 +258,11 @@
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'delete',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 
@@ -266,7 +270,8 @@
 		// Open the user manager dialog
 		//////////////////////////////////////////////////////////////////////80
 		list: function() {
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'list'
 			});
 		},
@@ -279,9 +284,10 @@
 				amplify.publish('user.logout');
 				atheos.settings.save();
 				echo({
-					url: self.controller,
+					url: atheos.controller,
 					data: {
-						'action': 'logout'
+						target: 'user',
+						action: 'logout'
 					},
 					success: function() {
 						window.location.reload();
@@ -326,8 +332,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		saveActiveProject: function(project) {
 			echo({
-				url: self.controller,
+				url: atheos.controller,
 				data: {
+					target: 'user',
 					action: 'saveActiveProject',
 					activeProject: project
 				}
@@ -341,7 +348,8 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var data = atheos.common.serializeForm(e.target);
+				var data = serializeForm(e.target);
+				data.target = 'user';
 				data.action = 'updateACL';
 				data.username = username;
 
@@ -356,7 +364,7 @@
 					atheos.toast.show('error', 'At least one project must be selected');
 				} else {
 					echo({
-						url: self.controller,
+						url: atheos.controller,
 						data: data,
 						success: function() {
 							atheos.modal.unload();
@@ -365,11 +373,11 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'showUserACL',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 

@@ -80,11 +80,13 @@ class User {
 
 				Common::sendJSON("success", $reply);
 				// Log Action
-				Common::log($this->username, "Logged in", "access");
+				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->username . "} logged in", "access");
+
 			} else {
 				Common::sendJSON("error", "Invalid Password.");
 				// Log Action
-				Common::log($this->username, "Log in attempt", "access");
+				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->username . "} attempted log in", "access");
+
 			}
 
 		} else {
@@ -104,7 +106,7 @@ class User {
 		// Response
 		Common::sendJSON("S2000");
 		// Log
-		Common::log($this->activeUser, "Changed password of {" . $this->username . "}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -117,7 +119,7 @@ class User {
 		// Response
 		Common::sendJSON("S2000");
 		// Log
-		Common::log($this->activeUser, "Changed permissions of {" . $this->username . "}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -146,7 +148,8 @@ class User {
 			Common::saveJSON('users', $this->users);
 			Common::sendJSON("success", array("username" => $this->username));
 			// Log
-		Common::log($this->activeUser, "Created account {" . $this->username . "}", "access");
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $this->username . "}", "access");
+
 		} else {
 			Common::sendJSON("error", "That username is already taken.");
 		}
@@ -170,9 +173,9 @@ class User {
 
 		// Response
 		Common::sendJSON("S2000");
-		
+
 		// Log
-		Common::log($this->activeUser, "Deleted account {" . $this->username . "}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -234,7 +237,7 @@ class User {
 		// Response
 		Common::sendJSON("S2000");
 		// Log
-		Common::log($this->activeUser, "Changed ACL of {" . $this->username . "}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

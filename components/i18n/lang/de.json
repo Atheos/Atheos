@@ -1,0 +1,345 @@
+{
+    "deny": false,
+    "affirm": false,
+    "enabled": false,
+    "disabled": false,
+    "on": false,
+    "off": false,
+    "true": false,
+    "false": false,
+    "passed": false,
+    "failed": false,
+    "show": false,
+    "hide": false,
+    "login": false,
+    "logout": false,
+    "rememberMe": false,
+    "find": false,
+    "find:": false,
+    "replace": {
+        "": false,
+        "all": false
+    },
+    "replace:": false,
+    "gotoLine": false,
+    "moveLine": {
+        "up": false,
+        "down": false
+    },
+    "cycleActive": {
+        "next": false,
+        "prev": false
+    },
+    "key": {
+        "alt": false,
+        "esc": false,
+        "ctrl": false,
+        "shift": false
+    },
+    "copy": false,
+    "paste": false,
+    "duplicate": {
+        "": false,
+        "file": false,
+        "folder": false
+    },
+    "preview": false,
+    "cancel": false,
+    "create": {
+        "": false,
+        "type": false
+    },
+    "rename": {
+        "": false,
+        "type": false
+    },
+    "delete": {
+        "": false,
+        "type": false
+    },
+    "rescan": false,
+    "download": false,
+    "save": {
+        "": false,
+        "all": false,
+        "active": false
+    },
+    "open": false,
+    "close": {
+        "": false,
+        "all": "Close All",
+        "active": false
+    },
+    "closeUnsavedFile": false,
+    "save&close": false,
+    "discardChanges": false,
+    "ln": false,
+    "in": false,
+    "all": false,
+    "col": false,
+    "help": false,
+    "mode": false,
+    "more": false,
+    "less": false,
+    "users": false,
+    "name": false,
+    "search": false,
+    "filterTree": false,
+    "prefix": false,
+    "substring": false,
+    "regex": false,
+    "scout": {
+        "open": false,
+        "query": false,
+        "searching": false,
+        "searchFiles": false,
+        "fileTypes": false,
+        "withinWorkSpace": false
+    },
+    "noShell": false,
+    "themes": false,
+    "branch": false,
+    "editor": false,
+    "extension": false,
+    "extensions": false,
+    "textmode": false,
+    "textmodes": false,
+    "saveExtensions": false,
+    "extensionSet": false,
+    "keybindings": false,
+    "plugins": false,
+    "system": false,
+    "administration": false,
+    "wrap": {
+        "": false,
+        "on": false,
+        "off": false
+    },
+    "confirm": false,
+    "explore": false,
+    "continue": false,
+    "timezone": false,
+    "settings": {
+        "": false,
+        "autosave": false,
+        "editor": false,
+        "system": false,
+        "codegit": false
+    },
+    "account": {
+        "": false,
+        "new": false,
+        "create": false,
+        "delete": false,
+        "confirm": false
+    },
+    "account:": false,
+    "username": {
+        "": false,
+        "new": false,
+        "create": false
+    },
+    "username:": false,
+    "password": {
+        "": false,
+        "new": false,
+        "change": false,
+        "changeUser": false,
+        "confirm": false
+    },
+    "password:": false,
+    "project": {
+        "": false,
+        "current": false,
+        "noActive": false,
+        "create": false,
+        "exists": {
+            "path": false,
+            "name": false
+        },
+        "unableCreate": false,
+        "unableAbsolute": false,
+        "unablePermissions": false,
+        "new": false,
+        "list": false,
+        "name": false,
+        "rename": false,
+        "unableRename": false,
+        "delete": false,
+        "confirm": false,
+        "loaded": false,
+        "missing": false
+    },
+    "project:": false,
+    "projects": false,
+    "projects:": false,
+    "editUserACL": false,
+    "workspaceProjects": false,
+    "accessAllProjects": false,
+    "onlySelectedProjects": false,
+    "update": {
+        "": false,
+        "check": false,
+        "current": false
+    },
+    "install": false,
+    "nightly": false,
+    "yourVersion": false,
+    "latestVersion": false,
+    "changesOnAtheos": false,
+    "downloadAtheos": false,
+    "language": false,
+    "collapse": false,
+    "highlightActiveLine": false,
+    "fontSize": false,
+    "pixel": {
+        "": false,
+        "default": false
+    },
+    "tabs": {
+        "soft": false,
+        "size": false
+    },
+    "userList": false,
+    "directory": {
+        "": false,
+        "invalid": false
+    },
+    "file": {
+        "": false,
+        "new": false,
+        "type": false,
+        "saved": false
+    },
+    "fileNew": false,
+    "fileType": false,
+    "fileSaved": false,
+    "fileUpload": false,
+    "filesUpload": false,
+    "folderNew": false,
+    "path": {
+        "": false,
+        "exists": false,
+        "unableCreate": false,
+        "unableRename": false
+    },
+    "restricted": {
+        "": false,
+        "userList": false,
+        "updates": false,
+        "marketplace": false,
+        "textmodes": false
+    },
+    "unauthorized": false,
+    "wrapLines": false,
+    "printMarginShow": false,
+    "printMarginColumn": false,
+    "theme": false,
+    "hover": {
+        "": false,
+        "duration": false
+    },
+    "click": {
+        "": false,
+        "single": false,
+        "double": false
+    },
+    "loop": {
+        "behavior": false,
+        "onlyActive": false,
+        "incDropdown": false
+    },
+    "showHidden": false,
+    "trigger": {
+        "fileManager": false,
+        "projectDock": false,
+        "rightSidebar": false,
+        "leftSidebar": false
+    },
+    "contextMenu": {
+        "delay": false
+    },
+    "newExtension": false,
+    "fileExtension": false,
+    "defaultTextmode": false,
+    "indentGuides": false,
+    "inlinePreview": false,
+    "close_uploader": false,
+    "close_modal": false,
+    "installationError": false,
+    "existsAndWriteable:": false,
+    "envVariablesSet:": false,
+    "retest": false,
+    "initialSetup": false,
+    "dependencies": false,
+    "connectionError": false,
+    "market": {
+        "": false,
+        "atheos": false,
+        "install": {
+            "gitRepo": false,
+            "manually": false,
+            "success": false
+        },
+        "unableExtract": false,
+        "unableDownload": false,
+        "noZip": false,
+        "missingDesc": false,
+        "missingAuth": false
+    },
+    "complete": false,
+    "installed": false,
+    "available": false,
+    "reloadAtheos": false,
+    "split": {
+        "": false,
+        "h": false,
+        "v": false,
+        "editor": {
+            "h": false,
+            "v": false
+        }
+    },
+    "merge": {
+        "": false,
+        "all": false,
+        "editor": false
+    },
+    "time": {
+        "ms": {
+            "": false,
+            "default": false
+        },
+        "second": {
+            "single": false,
+            "plural": false
+        },
+        "minute": {
+            "single": false,
+            "plural": false
+        },
+        "hour": {
+            "single": false,
+            "plural": false
+        }
+    },
+    "warning": {
+        "fileOpen": false
+    },
+    "NothingInYourClipboard": false,
+    "folderNameOrAbsolutePath": false,
+    "enterGitHUbRepositoryURL": false,
+    "noOpenFilesOrSelect": false,
+    "dragFilesOrClickHereToUpload": false,
+    "fileManager": false,
+    "gitRepository": false,
+    "codegit": {
+        "": false,
+        "banner": false,
+        "status": false
+    },
+    "overview": false,
+    "log": false,
+    "transfer": false,
+    "configure": false
+}

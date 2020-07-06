@@ -1,172 +1,114 @@
 <?php
-/*
- * Copyright (c) Codiad & Andr3as, distributed
- * as-is and without warranty under the MIT License.
- * See http://opensource.org/licenses/MIT for more information.
- * This information must remain intact.
- */
-require_once('../../common.php');
-require_once('class.git.php');
+//////////////////////////////////////////////////////////////////////////////80
+// CodeGit Controller
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Andr3as, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-//////////////////////////////////////////////////////////////////
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////
-Common::checkSession();
+require_once(__DIR__ . "/../../common.php");
 
-set_time_limit(0); 
+require_once("class.git.php");
 
 $action = Common::data('action');
-$path = Common::data('path');
+
 $repo = Common::data('repo');
+$path = Common::data('path');
 
-$remote = Common::data('remote');
-$branch = Common::data('branch');
+$repo = Common::getWorkspacePath($repo);
+$path = Common::getWorkspacePath($path);
 
-$commit = Common::data('commit');
-$settings = Common::data('settings');
-
-if (!$action) {
-	die(Common::sendJSON("error", "missing action"));
-}
-
-if ($action !== 'scanForGit') {
-	$CodeGit = new CodeGit($path, $repo);
-	$activeUser = Common::data("user", "session");
-	define('CONFIG', 'git.' . $activeUser . '.php');
-}
+$CodeGit = new CodeGit($path, $repo);
 
 switch ($action) {
 
-	case 'scanForGit':
-		if ($path) {
-			$reply = array(
-				"data" => false,
-				"message" => "Repo not found",
-				"status" => "success"
-			);
-			if (file_exists(getWorkspacePath($path . '/.git'))) {
-				$reply["message"] = "Repo found";
-				$reply["data"] = true;
-
-			}
-			Common::sendJSON("success", 'test');
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'status':
-		if ($path) {
-			$result = $CodeGit->status(getWorkspacePath($path));
-			if ($result === false) {
-				Common::sendJSON("error", "Failed to get status.");
-			} else {
-				Common::sendJSON("success", $result);
-			}
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'commit':
-		$message = Common::data('message');
-		$files = Common::data('files');
-		if ($path && $files && $message) {
-			$files = explode(',', $files);
-
-			foreach ($files as $file) {
-				$added = $CodeGit->add($path, $file);
-				if (!$added) {
-					die(Common::sendJSON("error", "Could not add file: $file"));
-				}
-			}
-
-			$result = $CodeGit->commit($path, $message);
-
-			if ($result) {
-				Common::sendJSON("success", "Files Committed.");
-			} else {
-				Common::sendJSON("error", "Files could not be committed.");
-			}
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'diff':
-		if ($repo && $path) {
-			$result = $CodeGit->loadDiff(getWorkspacePath($repo), $path);
-			if ($result === false) {
-				echo '{"status":"error","message":"Failed to get diff!"}';
-			} else {
-				echo $result;
-			}
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'push':
-		if ($repo && $remote && $branch) {
-			$CodeGit->push(getWorkspacePath($repo), $remote, $branch);
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'pull':
-		if ($repo && $remote && $branch) {
-			$CodeGit->pull(getWorkspacePath($repo), $remote, $branch);
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
-
-	case 'fetch':
-		if ($repo && $remote) {
-			$CodeGit->fetch(getWorkspacePath($repo), $remote);
-		} else {
-			Common::sendJSON("E403g");
-		}
+	// Check status of overall repo, mostly used for the banner
+	case 'repoStatus':
+		$CodeGit->repoStatus();
 		break;
 
 	case 'fileStatus':
 		if ($path) {
-			$result = $CodeGit->fileStatus(getWorkspacePath($path));
-			if ($result !== false) {
-				Common::sendJSON("success", $result);
-			} else {
-				Common::sendJSON("error", "Failed to get file stats.");
+			$CodeGit->fileStatus($path);
+		} else {
+			Common::sendJSON("E403g");
+		}
+		break;
+
+	// Adds and commits with message
+	case 'commit':
+		$message = Common::data('message');
+		$files = Common::data('files');
+		if ($repo && $files && $message) {
+			$CodeGit->commit($message, $files);
+		} else {
+			Common::sendJSON("E403g");
+		}
+		break;
+
+	case 'clone':
+		$repoURL = Common::data('repoURL');
+		if ($path && $repoURL) {
+			$CodeGit->cloneRepo($path, $repoURL);
+		} else {
+			Common::sendJSON("E403g");
+		}
+		break;
+
+	case 'transfer':
+		$type = Common::data('type');
+		$remote = Common::data('remote');
+		$branch = Common::data('branch');
+
+		if ($type && $repo && $remote && $branch) {
+			switch ($type) {
+				case 'pull':
+					$CodeGit->push($repo, $remote, $branch);
+					break;
+				case 'push':
+					$CodeGit->push($repo, $remote, $branch);
+					break;
+				case 'fetch':
+					$CodeGit->fetch($repo, $remote, $branch);
+					break;
 			}
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
-	case 'showCommit':
-		if ($path && $commit) {
-			echo $CodeGit->showCommit(getWorkspacePath($path), $commit);
+	case 'initRepo':
+		if ($repo) {
+			// $repo = GitRepository::init($repo);
+			$CodeGit->initRepo($repo);
+			// $result = $CodeGit->init($repo);
+			// if ($result === false) {
+			// 	Common::sendJSON("error", "Failed to initialize repo.");
+			// } else {
+			// 	echo '{"status":"success","message":"Initialized empty Git repository!"}';
+			// }
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
-	case 'blame':
-		if ($repo && $path) {
-			$result = $CodeGit->loadBlame(getWorkspacePath($repo), $path);
-			if ($result === false) {
-				echo '{"status":"error","message":"Failed to get diff!"}';
-			} else {
-				echo $result;
-			}
+	case 'checkout':
+		$file= Common::data("file");
+		if ($repo && $file) {
+			$CodeGit->checkout($repo, $file);
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'getSettings':
+		$settings = Common::data('settings');
+
 		if ($path) {
-			$settings = $CodeGit->getSettings(getWorkspacePath($path));
+			$settings = $CodeGit->getSettings($path);
 			echo '{"status":"success","data":'. json_encode($settings) .'}';
 		} else {
 			Common::sendJSON("E403g");
@@ -174,6 +116,9 @@ switch ($action) {
 		break;
 
 	case 'setSettings':
+		$activeUser = Common::data("user", "session");
+		$settings = Common::data('settings');
+
 		if (isset($settings) && $path) {
 			$settings = json_decode($settings, true);
 
@@ -185,36 +130,17 @@ switch ($action) {
 				}
 			}
 
-			$CodeGit->setSettings($settings, getWorkspacePath($path));
+			$CodeGit->setSettings($settings, $path);
 			echo '{"status":"success","message":"Settings saved"}';
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Default: Invalid Action
+	//////////////////////////////////////////////////////////////////////////80
 	default:
-		echo '{"status":"error","message":"No Type"}';
+		Common::sendJSON("E401i");
 		break;
 }
-
-
-function getWorkspacePath($path) {
-	//Security check
-	if (!Common::checkPath($path)) {
-		die('{"status":"error","message":"Invalid path"}');
-	}
-	if (strpos($path, "/") === 0) {
-		//Unix absolute path
-		return $path;
-	}
-	if (strpos($path, ":/") !== false) {
-		//Windows absolute path
-		return $path;
-	}
-	if (strpos($path, ":\\") !== false) {
-		//Windows absolute path
-		return $path;
-	}
-	return WORKSPACE."/".$path;
-}
-?>
