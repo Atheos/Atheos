@@ -137,7 +137,7 @@
 			var slideDuration = 200;
 			rescan = rescan || false;
 
-			var node = oX('#file-manager a[data-path="' + path + '"]');
+			var node = oX('#file-manager a[data-path="' + CSS.escape(path) + '"]');
 			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {

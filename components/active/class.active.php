@@ -65,7 +65,7 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// List User's Active Files
 	//////////////////////////////////////////////////////////////////////////80
-	public function list($activeUser) {
+	public function listActive($activeUser) {
 
 		if (!$this->activeFiles || !array_key_exists($activeUser, $this->activeFiles)) {
 			Common::sendJSON("E404g");

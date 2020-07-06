@@ -46,8 +46,8 @@ class Market {
 	// Init
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		$marketMTime = filemtime(DATA . "/cache/market.json");
-		$addonsMTime = filemtime(DATA . "/cache/addons.json");
+		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
+		$addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 

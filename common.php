@@ -46,7 +46,7 @@ class Common {
 		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
 		$path = str_replace("controller.php", "", $path);
 		$path = str_replace("dialog.php", "", $path);
-		
+
 		$path = __DIR__;
 
 		if (file_exists($path.'config.php')) {
@@ -112,10 +112,10 @@ class Common {
 		//Some security checks, helps with securing the service
 		if (isset($_SESSION['user']) && isset($_SESSION['_USER_LOOSE_IP'])) {
 			$badSession = false;
-			$badSession = $badSession ?: $_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
-			$badSession = $badSession ?: $_SESSION['_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT'];
-			$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_ENCODING'] !== $_SERVER['HTTP_ACCEPT_ENCODING'];
-			$badSession = $badSession ?: $_SESSION['_USER_ACCEPT_LANG'] !== $_SERVER['HTTP_ACCEPT_LANGUAGE'];
+			$badSession = $badSession ? $badSession : $_SESSION['_USER_LOOSE_IP'] !== long2ip(ip2long($_SERVER['REMOTE_ADDR']) & ip2long("255.255.0.0"));
+			$badSession = $badSession ? $badSession : $_SESSION['_USER_AGENT'] !== $_SERVER['HTTP_USER_AGENT'];
+			$badSession = $badSession ? $badSession : $_SESSION['_USER_ACCEPT_ENCODING'] !== $_SERVER['HTTP_ACCEPT_ENCODING'];
+			$badSession = $badSession ? $badSession : $_SESSION['_USER_ACCEPT_LANG'] !== $_SERVER['HTTP_ACCEPT_LANGUAGE'];
 
 			if ($badSession) {
 				//Bad session detected, let's not allow any further data to be transfered and redirect to logout.
@@ -310,11 +310,11 @@ class Common {
 			$reply = Common::parseStatusCodes($status, $text);
 		} elseif (is_array($text)) {
 			$reply = $text;
-			$reply["status"] = $status ?? "error";
+			$reply["status"] = $status ? $status : "error";
 		} else {
 			$reply = array(
-				"text" => $text ?? "no data",
-				"status" => $status ?? "error"
+				"text" => $text ? $text : "no data",
+				"status" => $status ? $status : "error"
 			);
 		}
 
@@ -521,7 +521,7 @@ class Common {
 		$path = str_replace('\\', '/', $path);
 
 		// allow only valid chars in paths$
-		$path = preg_replace('/[^A-Za-z0-9 \-\._\/]/', '', $path);
+		$path = preg_replace('/[^A-Za-z0-9 :\-\._\/]/', '', $path);
 		// maybe this is not needed anymore
 		// prevent Poison Null Byte injections
 		$path = str_replace(chr(0), '', $path);
