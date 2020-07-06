@@ -43,7 +43,7 @@ class Update {
 	// Set Initial Version
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		$updateMTime = filemtime(DATA . "/cache/update.json");
+		$updateMTime = file_exists(DATA . "/cache/update.json") ? filemtime(DATA . "/cache/update.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 

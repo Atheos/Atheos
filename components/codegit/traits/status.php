@@ -48,8 +48,8 @@ trait Status {
 
 		if (count($result) > 0) {
 			$stats = explode("\t", $result[0]);
-			$additions = $stats[0];
-			$deletions = $stats[1] ?? 0;
+			$additions = $stats[0] ? $stats[1] : 0;
+			$deletions = $stats[1] ? $stats[1] : 0;
 
 		} else {
 			$result = $this->execute("git status --branch --porcelain");
