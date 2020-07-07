@@ -28,6 +28,7 @@ class TextMode {
 		'php4' => 'php',
 		'php5' => 'php',
 		'phtml' => 'php',
+		'twig' => 'twig',
 		'json' => 'json',
 		'java' => 'java',
 		'xml' => 'xml',
