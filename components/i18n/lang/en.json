@@ -497,6 +497,16 @@
 		"commit": {
 			"success": "Changes commited.",
 			"failed": "Changes could not be committed."
+		},
+		"settings": {
+			"save": {
+				"success": "Settings saved.",
+				"failed": "Unabled to save settings."
+			},
+			"apply": {
+				"success": "Settings Applied.",
+				"failed": "Unabled to apply settings."
+			}
 		}
 	},
 
