@@ -49,8 +49,8 @@ class Common {
 
 		$path = __DIR__;
 
-		if (file_exists($path.'config.php')) {
-			require_once($path.'config.php');
+		if (file_exists($path.'/config.php')) {
+			require_once($path.'/config.php');
 		}
 
 		if (file_exists($path.'/components/i18n/class.i18n.php')) {
