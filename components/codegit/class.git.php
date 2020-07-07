@@ -54,7 +54,7 @@ class CodeGit {
 		chdir($this->repo);
 
 		if (!$this->setGitSettings($this->repo)) {
-			Common::sendJSON("error", i18n("git_settigns_apply_failed")); die;
+			Common::sendJSON("error", i18n("git_settings_apply_failed")); die;
 		}
 
 		foreach (getConfig() as $name => $value) {
