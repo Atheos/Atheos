@@ -215,7 +215,8 @@
 		"delete": "Delete Project",
 		"confirm": "Confirm Project Deletion",
 		"loaded": "%s Loaded",
-		"missing": "Project not found"
+		"missing": "Project not found",
+		"note": "This will only work if your Git Repo does not require Interactive Authentication and your Server has Git installed."
 	},
 
 	"project:": "Project:",
