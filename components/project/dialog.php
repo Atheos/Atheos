@@ -136,7 +136,7 @@ switch ($action) {
 					</td>
 				</tr>
 				<tr>
-					<td colspan="3" class="note"><?php echo i18n("noteThisWillOnlyWorkIfYourGitRepoDoesNotRequireInteractiveAuthenticationAndYourServerHasGitInstalled."); ?></td>
+					<td colspan="3" class="note"><?php echo i18n("project_gitnote."); ?></td>
 				</tr>
 			</table>
 			<!--// </div>-->
