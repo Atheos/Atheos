@@ -66,7 +66,7 @@ switch ($action) {
 		if ($type && $repo && $remote && $branch) {
 			switch ($type) {
 				case 'pull':
-					$CodeGit->push($repo, $remote, $branch);
+					$CodeGit->pull($repo, $remote, $branch);
 					break;
 				case 'push':
 					$CodeGit->push($repo, $remote, $branch);
