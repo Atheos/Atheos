@@ -1,9 +1,8 @@
 <?php
-$localRepo = "atheos"; // basename `git rev-parse --show-toplevel`
-
+$localRepo = false; // basename `git rev-parse --show-toplevel`
 
 $settings = $CodeGit->settings($repo);
-echo $settings;
+
 ?>
 
 
@@ -13,7 +12,7 @@ echo $settings;
 	<fieldset id="remote">
 		<legend>Global<span> - Global for all repositories</span></legend>
 		<label for="global_username">Username</label>
-		<input type="text" name="global_username" id="global_username" placeholder="<?php echo $settings["username"]?>">
+		<input type="text" name="global_username" id="global_username" placeholder="<?php echo $settings["name"]?>">
 		<label for="global_email">E-Mail</label>
 		<input type="text" name="global_email" id="global_email" placeholder="<?php echo $settings["email"]?>">
 	</fieldset>
