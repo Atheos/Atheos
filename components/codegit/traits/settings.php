@@ -5,6 +5,8 @@ trait Settings {
 
 	private function setGitSettings($repo) {
 		$settings = $this->settings($repo);
+		
+		return true;
 
 		$name = isset($settings['name']) ? $settings['name'] : false;
 		$name = isset($settings['email']) ? $settings['email'] : false;
