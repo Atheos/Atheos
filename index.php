@@ -21,6 +21,7 @@ header("Feature-Policy: sync-xhr 'self'");
 header("Access-Control-Allow-Origin: *");
 
 require_once('common.php');
+
 require_once('public/class.sourcemanager.php');
 
 $SourceManager = new SourceManager;
