@@ -10,45 +10,36 @@
 // Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
 require_once 'class.textmode.php';
-
-Common::checkSession();
-
-$action = Common::data("action");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 $TextMode = new TextMode();
 
 switch ($action) {
 	case 'settings':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u"); die;
-		}
+			?>
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted"); ?></label>
+			<form>
+				<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted_textmodes"); ?></label>
+			</form>
+			<?php
+		} else {
 
-		$map = Common::readJSON("extensions");
+			$map = Common::readJSON("extensions");
 
-		if (!$map || !is_array($map)) {
-			$map = $TextMode->getDefaultExtensionMap();
-		}
+			if (!$map || !is_array($map)) {
+				$map = $TextMode->getDefaultExtensionMap();
+			}
 
-		if (!@ksort($map)) {
-			die(Common::sendJSON("error", "PHP: Missing ksort"));
-		}
+			@ksort($map);
 
-		?>
-		<h2><i class="icon-pencil big-icon"></i><?php i18n("Extensions"); ?></h2>
-		<form>
-
+			?>
+			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("extensions"); ?></label>
 			<table id="textmode">
 				<thead>
 					<tr>
-						<th><?php i18n("Extension"); ?></th>
-						<th><?php i18n("Mode"); ?></th>
+						<th><?php echo i18n("fileExtension"); ?></th>
+						<th><?php echo i18n("defaultTextmode"); ?></th>
 					</tr>
 				</thead>
 				<tbody id="textmodes">
@@ -70,10 +61,10 @@ switch ($action) {
 				</tbody>
 			</table>
 			<br>
-			<button class="btn-left" onClick="atheos.textmode.addFieldToForm(); return false;"><?php i18n("New Extension"); ?></button>
-			<button class="btn-right" onClick="atheos.textmode.saveExtensions(); return false;"><?php i18n("Save Extensions"); ?></button>
-		</form>
-		<?php
+			<button class="btn-left" onClick="atheos.textmode.addFieldToForm(); return false;"><?php echo i18n("newExtension"); ?></button>
+			<button class="btn-right" onClick="atheos.textmode.saveExtensions(); return false;"><?php echo i18n("saveExtensions"); ?></button>
+			<?php
+		}
 		break;
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action

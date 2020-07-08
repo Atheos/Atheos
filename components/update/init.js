@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
@@ -24,8 +22,6 @@
 
 	atheos.update = {
 
-		controller: 'components/update/controller.php',
-		dialog: 'components/update/dialog.php',
 		home: null,
 		repo: null,
 		local: null,
@@ -37,17 +33,23 @@
 		init: function() {
 			self = this;
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'update',
 					action: 'init'
 				},
-				success: function(data) {
-					self.local = data.local;
-					self.home = data.remote;
-					self.repo = data.github;
+				success: function(reply) {
+					if (reply.status === 'error') {
+						return;
+					}
+					self.local = reply.local;
+					self.home = reply.remote;
+					self.repo = reply.github;
 
-					self.loadLatest();
+					if (reply.request) {
+						self.loadLatest();
+					}
 				}
 			});
 		},
@@ -58,41 +60,49 @@
 		download: function() {
 			var archive = oX('#modal_content form input[name="archive"]').value();
 			oX('#download').attr('src', archive);
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'update',
 					action: 'clear'
 				}
 			});
 			atheos.modal.unload();
 		},
-		
+
 		//////////////////////////////////////////////////////////////////
 		// Update Check
 		//////////////////////////////////////////////////////////////////
 		check: function() {
-			var listener = function() {
-				var form = oX('#modal_content form');
-				if (form) {
-					form.find('input[name="archive"').value(self.remote.zipball_url);
-					form.find('input[name="remoteversion"').value(self.remote.tag_name);
-					form.find('#remote_latest').text(self.remote.tag_name);
-					form.find('#remote_body').text(self.remote.body);
-				}
-			};
-			atheos.modal.load(500, self.dialog, {
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'update',
 				action: 'check'
-			}, listener);
+			});
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Load Latest from the Repo
 		//////////////////////////////////////////////////////////////////////80
 		loadLatest() {
-			ajax({
+			echo({
 				url: self.repo,
 				success: function(reply) {
-					self.remote = reply;
+					log(reply);
+					self.saveCache(reply);
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Load Latest from the Repo
+		//////////////////////////////////////////////////////////////////////80	
+		saveCache: function(cache) {
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'update',
+					action: 'saveCache',
+					cache: JSON.stringify(cache)
 				}
 			});
 		}

@@ -10,8 +10,6 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-
 class Scout {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -25,7 +23,7 @@ class Scout {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		if (!function_exists('shell_exec')) {
-			Common::sendJSON("error", "Shell_exec() Command Not Enabled.");
+			Common::sendJSON("error", i18n("noShell"));
 			die;
 		}
 	}
@@ -95,14 +93,7 @@ class Scout {
 		$query = Common::data("query");
 		$filter = Common::data("filter");
 
-
-		if ($type === 1) {
-			$path = WORKSPACE;
-		} else {
-			$path = Common::getWorkspacePath($path);
-		}
-
-
+		$path = $type ? WORKSPACE : Common::getWorkspacePath($path);
 		$root = WORKSPACE;
 
 		$results = array();

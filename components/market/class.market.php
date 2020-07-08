@@ -1,19 +1,23 @@
 <?php
 
-/*
-*  Copyright (c) Codiad & daeks (codiad.com), distributed
-*  as-is and without warranty under the MIT License. See
-*  [root]/license.txt for more. This information must remain intact.
-*/
+//////////////////////////////////////////////////////////////////////////////80
+// Market Class
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
+require_once(__DIR__ . "/../../helpers/version-compare.php");
+require_once(__DIR__ . "/../../helpers/recurse-delete.php");
 
-class Market
-{
+class Market {
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
 	public $local = array();
 	public $market = 'https://www.atheos.io/market/json';
@@ -21,76 +25,122 @@ class Market
 	public $tmp = array();
 	public $old = null;
 
-	//////////////////////////////////////////////////////////////////
+	private $cMarket = array();
+	private $cAddons = array();
+
+	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
 	// -----------------------------||----------------------------- //
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
+	// Construct
+	//////////////////////////////////////////////////////////////////////////80
+	public function __construct() {
+		$this->cAddons = Common::readJSON("addons", "cache");
+		$this->cMarket = Common::readJSON("market", "cache");
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Init
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
+		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
+		$addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
+
+		$oneWeekAgo = time() - (168 * 3600);
+
+		// In summary, if there is a cache file, and it's less than a week old,
+		// don't send a request for new MarketCache, otherwise, do so.
+		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
+		$request = $this->cMarket ? $request : true;
+
+		if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
+			$this->buildCache();
+		}
+
+		$reply = array(
+			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
+			"request" => $request
+		);
+
+		Common::sendJSON("success", $reply);
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Save  Market Cache
+	//////////////////////////////////////////////////////////////////////////80
+	public function saveCache($cache) {
+		$cache = json_decode($cache);
+		$this->cMarket = $cache;
+		Common::saveJSON("market", $cache, "cache");
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Build Installed Addon Cache
+	//////////////////////////////////////////////////////////////////////////80
+	public function buildCache() {
+		global $components; global $themes;
 
 		// Scan plugins directory for missing plugins
-		$temp = array();
+		$addons = array(
+			"plugins" => array(),
+			"themes" => array()
+		);
+
 		foreach ($plugins as $plugin) {
 			if (is_readable(PLUGINS . "/$plugin/plugin.json")) {
 				$data = file_get_contents(PLUGINS . "/$plugin/plugin.json");
-				$data = json_decode($data);
-				$data->type = "plugin";
-				unset($data->config);
-				$temp[$data->name] = $data;
+				$data = json_decode($data, true);
+				unset($data["config"]);
+				$addons["plugins"][$data["category"]][$data["name"]] = $data;
 			}
 		}
 
 		foreach ($themes as $theme) {
 			if (is_readable(THEMES . "/$theme/theme.json")) {
 				$data = file_get_contents(THEMES . "/$theme/theme.json");
-				$data = json_decode($data);
-				$data->type = "theme";
-
-
-				$temp[$data->name] = $data;
+				$data = json_decode($data, true);
+				$data["type"] = "theme";
+				$addons["themes"][$data["category"]][$data["name"]] = $data;
 			}
 		}
 
-		$cache = Common::readJSON("market", "cache");
-
-		$reply = array(
-			"addons" => $temp,
-			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
-			"cache" => $cache
-		);
-
-		Common::sendJSON("success", $reply);
+		$this->cAddons = $addons;
+		Common::saveJSON("addons", $addons, "cache");
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// Save Cache
-	//////////////////////////////////////////////////////////////////
-	public function saveCache($cache) {
-		$string = Common::data('string');
-		$cache = json_decode($string);
-
-		Common::saveJSON("market", $cache, "cache");
-		Common::sendJSON("success", $cache);
-
-		// Common::sendJSON("S2000");
+	//////////////////////////////////////////////////////////////////////////80
+	// Find Repo URL
+	//////////////////////////////////////////////////////////////////////////80
+	public function findRepo($name, $type, $category) {
+		if (!$this->cMarket) {
+			return false;
+		}
+		if (!array_key_exists($category, $this->cMarket[$type])) {
+			return false;
+		}
+		if (array_key_exists($name, $this->cMarket[$type][$category])) {
+			return $this->cMarket[$type][$category][$name]["url"];
+		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Install Plugin
-	//////////////////////////////////////////////////////////////////
-	public function install($type, $name, $repo) {
+	//////////////////////////////////////////////////////////////////////////80
+	public function install($name, $type, $category) {
+
+		$repo = $this->findRepo($name, $type, $category);
+
 		if (substr($repo, -4) == '.git') {
 			$repo = substr($repo, 0, -4);
 		}
 
 		// For manual install, there will be no type, so it checks the github repo to detect the type.
-		if ($type == '') {
+		if ($type === '') {
 			$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/plugin.json'));
 			if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
 				$type = 'plugins';
@@ -118,13 +168,11 @@ class Market
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::sendJSON("error", "Unable to extract Archive.");
-					die;
+					Common::sendJSON("error", i18n("market_unableExtract")); die;
 				}
 
 			} else {
-				Common::sendJSON("error", "ZIP Extension not found.");
-				die;
+				Common::sendJSON("error", i18n("market_noZip")); die;
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -133,106 +181,118 @@ class Market
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 			// Response
-			Common::sendJSON("success", "Successfully installed $repo.");
+			Common::sendJSON("success", i18n("market_install_success", $name));
+
+			// Log Action
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
+			$this->buildCache();
 		} else {
-			Common::sendJSON("error", "Unable to download $repo.");
-			die;
+			Common::sendJSON("error", i18n("market_unableDownload"));
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Remove Plugin
-	//////////////////////////////////////////////////////////////////
-
-	public function remove($type, $name) {
-		function rrmdir($path) {
-			return is_file($path)?
-			@unlink($path):
-			@array_map('rrmdir', glob($path.'/*')) == @rmdir($path);
-		}
-
-		rrmdir(BASE_PATH.'/'.$type.'/'.$name);
+	//////////////////////////////////////////////////////////////////////////80
+	public function remove($name, $type) {
+		rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		Common::sendJSON("S2000");
+		// Log Action
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
+
+		$this->buildCache();
+
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// Update Plugin
-	//////////////////////////////////////////////////////////////////
 
-	public function update($type, $name) {
-		function rrmdir($path) {
-			return is_file($path)?
-			@unlink($path):
-			@array_map('rrmdir', glob($path.'/*')) == @rmdir($path);
-		}
+	//////////////////////////////////////////////////////////////////////////80
+	// Render Market
+	//////////////////////////////////////////////////////////////////////////80
+	public function renderMarket() {
+		$market = $this->cMarket;
+		$addons = $this->cAddons;
 
-		function cpy($source, $dest, $ign) {
-			if (is_dir($source)) {
-				$dir_handle = opendir($source);
-				while ($file = readdir($dir_handle)) {
-					if (!in_array($file, $ign)) {
-						if (is_dir($source."/".$file)) {
-							if (!file_exists($dest."/".$file)) {
-								mkdir($dest."/".$file);
+		$iTable = "";
+		foreach ($addons as $type => $listT) {
+			foreach ($listT as $category => $listC) {
+				foreach ($listC as $addon => $data) {
+					$name = $data["name"];
+
+
+					if (!empty($market)) {
+						if (array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
+							$iVersion = $data["version"];
+							$uVersion = $market[$type][$category][$name]["version"];
+
+							if (compareVersions($iVersion, $uVersion) < 0) {
+								$data = $market[$type][$category][$name];
+								$data["status"] = "updatable";
 							}
-							cpy($source."/".$file, $dest."/".$file, $ign);
-						} else {
-							copy($source."/".$file, $dest."/".$file);
+							unset($market[$type][$category][$name]);
 						}
 					}
-				}
-				closedir($dir_handle);
-			} else {
-				copy($source, $dest);
-			}
-		}
 
-		if (file_exists(BASE_PATH.'/'.$type.'/'.$name.'/'.rtrim($type, "s").'.json')) {
-			$data = json_decode(file_get_contents(BASE_PATH.'/'.$type.'/'.$name.'/'.rtrim($type, "s").'.json'), true);
-			if (substr($data[0]['url'], -4) == '.git') {
-				$data[0]['url'] = substr($data[0]['url'], 0, -4);
-			}
-			$data[0]['url'] .= '/archive/master.zip';
+					$url = isset($data["url"]) ? $data["url"] : "false";
+					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
+					$status = isset($data["status"]) ? $data["status"] : "unavailable";
+					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
+					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
 
-			$ign = array(".", "..");
-			if (isset($data[0]['exclude'])) {
-				foreach (explode(",", $data[0]['exclude']) as $exclude) {
-					array_push($ign, $exclude);
-				}
-			}
 
-			if (file_exists(BASE_PATH.'/'.$type.'/_'.session_id()) || mkdir(BASE_PATH.'/'.$type.'/_'.session_id())) {
-				if (file_put_contents(BASE_PATH.'/'.$type.'/_'.session_id().'/'.$name.'.zip', fopen($data[0]['url'], 'r'))) {
-					$zip = new ZipArchive;
-					$res = $zip->open(BASE_PATH.'/'.$type.'/_'.session_id().'/'.$name.'.zip');
-					// open downloaded archive
-					if ($res === true) {
-						// extract archive
-						if ($zip->extractTo(BASE_PATH.'/'.$type.'/_'.session_id().'') === true) {
-							$zip->close();
-							$srcname = $name;
-							if (substr($srcname, -6) != "master") {
-								$srcname = $srcname.'-master';
-							}
-							cpy(BASE_PATH.'/'.$type.'/_'.session_id().'/'.$srcname, BASE_PATH.'/'.$type.'/'.$name, $ign);
-						} else {
-							Common::sendJSON("error", "Unable to open ".$name.".zip"); die;
-						}
+
+					if ($status === "updatable") {
+						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
+						$action .= "<a class=\"fas fa-times-circle\" onclick=\"atheos.market.remove('$name', '$type', '$category');return false;\"></a>";
 					} else {
-						Common::sendJSON("error", "ZIP Extension not found"); die;
+						$action = "<a class =\"fas fa-times-circle\" onclick=\"atheos.market.remove('$name', '$type', '$category');return false;\"></a>";
 					}
 
-					rrmdir(BASE_PATH.'/'.$type.'/_'.session_id());
-					// Response
-					Common::sendJSON("S2000");
-				} else {
-					Common::sendJSON("error", "Unable to download ".$repo); die;
+					$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
+
+					$iTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
+				<td>" . $addon . "</td>
+				<td>" . $description . "</td>
+				<td>" . $author . "</td>
+				<td>" . $action . "</td>
+				</tr>
+				";
 				}
-			} else {
-				Common::sendJSON("error", "Unable to create temp dir"); die;
 			}
-		} else {
-			Common::sendJSON("error", "Unable to find ".$name); die;
 		}
+
+		$aTable = "";
+		if (empty($market)) {
+			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>" . i18n("connectionError") . "</h3></td></tr>";
+		} else {
+			foreach ($market as $type => $listT) {
+				foreach ($listT as $category => $listC) {
+					foreach ($listC as $addon => $data) {
+						$url = $data["url"];
+						$keywords = implode(", ", $data["keywords"]);
+
+						if ($data["status"] !== "available") {
+							continue;
+						}
+
+						$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
+						$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
+
+						$aTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
+				<td>" . $addon . "</td>
+				<td>" . $data["description"] . "</td>
+				<td>" . implode(", ", $data["author"]) . "</td>
+				<td>" . $action . "</td>
+				</tr>
+				";
+					}
+				}
+			}
+		}
+
+		return array(
+			"i" => $iTable,
+			"a" => $aTable
+		);
+
 	}
 }

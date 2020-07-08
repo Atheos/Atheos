@@ -1,0 +1,519 @@
+{
+
+	"deny": "No",
+	"affirm": "Yes",
+
+	"enabled": "Enabled",
+	"disabled": "Disabled",
+
+	"on": "On",
+	"off": "Off",
+
+	"true": "True",
+	"false": "False",
+
+	"passed": "PASSED",
+	"failed": "FAILED",
+
+	"show": "Show",
+	"hide": "Hide",
+
+	"login": {
+		"": "Login",
+		"last": "Last Login: %s"
+	},
+	"logout": "Logout",
+	"rememberMe": "Remember Me",
+
+	"find": "Find",
+	"find:": "Find:",
+
+	"replace": {
+		"": "Replace",
+		"all": "Replace All"
+	},
+	"replace:": "Replace:",
+
+	"gotoLine": "Goto Line",
+
+	"moveLine": {
+		"up": "Move Line Up",
+		"down": "Move Line Down"
+	},
+
+	"cycleActive": {
+		"next": "Cycle to new file",
+		"prev": "Cycle to previous file"
+	},
+
+	"key": {
+		"alt": "Atl",
+		"esc": "Esc",
+		"ctrl": "Ctrl",
+		"shift": "Shift"
+
+	},
+
+	"copy": "Copy",
+	"paste": "Paste",
+	"duplicate": {
+		"": "Duplicate",
+		"name": "Enter new name:",
+		"file": "File Duplicated",
+		"folder": "Folder Duplicated"
+	},
+	"preview": "Preview",
+	"cancel": "Cancel",
+	"create": {
+		"": "Create",
+		"type": "Create %s"
+	},
+
+	"rename": {
+		"": "Rename",
+		"type": "Rename %s"
+	},
+
+	"delete": {
+		"": "Delete",
+		"type": "Delete %s"
+	},
+
+	"rescan": "Rescan",
+
+	"download": "Download",
+
+	"save": {
+		"": "Save",
+		"all": "Save All",
+		"active": "Save Active File"
+	},
+	"open": "Open",
+	"close": {
+		"": "Close",
+		"all": "Close All",
+		"active": "Close Active File"
+	},
+
+	"closeUnsavedFile": "Close Unsaved File?",
+
+	"save&close": "Save & Close",
+	"discardChanges": "Discard Changes",
+
+	"ln": "Ln",
+	"in": "In:",
+	"all": "All",
+	"col": "Col",
+	"help": "Help",
+	"mode": "Mode",
+
+
+
+	"more": "More",
+	"less": "Less",
+	"users": "Users",
+	"name": "Name",
+
+	"search": "Search",
+
+	"filterTree": "Filter Tree",
+	"prefix": "Prefix",
+	"substring": "Substring",
+	"regex": "Regex",
+
+	"scout": {
+		"open": "Open Scout",
+		"query": "Query:",
+		"searching": "Searching...",
+		"searchFiles": "Search Files:",
+		"fileTypes": "space seperated file types",
+		"withinWorkSpace": "Within Workspace"
+	},
+
+	"noShell": "Shell_exec() command not enabled",
+
+	"themes": "Themes",
+	"branch": "Branch",
+	"editor": "Editor",
+	"extension": "Extension",
+	"extensions": "Extensions",
+	"textmode": "Textmode",
+	"textmodes": "Textmodes",
+	"saveExtensions": "Save Extensions",
+	"extensionSet": "%s is already set",
+
+	"keybindings": "Keybindings",
+	"plugins": "Plugins",
+	"system": "System",
+	"administration": "Administration",
+
+
+	"wrap": {
+		"": "Line Wrap",
+		"on": "Wrap Lines",
+		"off": "No Wrap"
+	},
+
+	"confirm": "Confirm",
+	"explore": "Explore",
+	"continue": "Continue",
+
+	"timezone": "Timezone",
+	"settings": {
+		"": "Settings",
+		"autosave": "Settings are automatically saved.",
+		"editor": "Editor Settings",
+		"system": "System Settings",
+		"codegit": "CodeGit Settings"
+	},
+
+	"account": {
+		"": "Account",
+		"new": "New Account",
+		"create": "Create Account",
+		"delete": "Delete Account",
+		"confirm": "Confirm Account Deletion"
+	},
+	"account:": "Account:",
+
+	"username": {
+		"": "Username",
+		"new": "New Username",
+		"create": "Create Username"
+	},
+	"username:": "Username:",
+
+
+	"password": {
+		"": "Password",
+		"new": "New Password",
+		"change": "Change Password",
+		"changeUser": "Change %s's Password",
+		"confirm": "Confirm Password"
+	},
+	"password:": "Password:",
+
+	"project": {
+		"": "Project",
+		"current": "Current Project",
+		"noActive": "No Active Projects",
+		"create": "Create Project",
+		"exists": {
+			"path": "Project path already exists.",
+			"name": "Project name already exists."
+		},
+		"unableCreate": "Cannot create path.",
+		"unableAbsolute": "Unable to create absolute path.",
+		"unablePermissions": "No Read/Write Permission.",
+
+		"new": "New Project",
+		"list": "Project List",
+
+		"name": "Project Name",
+		"rename": "Rename Project",
+		"unableRename": "Cannot rename path.",
+		"delete": "Delete Project",
+		"confirm": "Confirm Project Deletion",
+		"loaded": "%s Loaded",
+		"missing": "Project not found"
+	},
+
+	"project:": "Project:",
+	"projects": "Projects",
+	"projects:": "Projects:",
+
+	"editUserACL": "Edit %s's ACL",
+
+	"workspaceProjects": "Workspace Projects",
+
+	"accessAllProjects": "Access ALL Projects",
+	"onlySelectedProjects": "Only Selected Projects",
+
+	"update": {
+		"": "Update",
+		"check": "Update Check",
+		"changes": "Changes on Atheos:",
+		"current": "Your System Is Up To Date."
+	},
+	"install": "Install",
+	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
+	"yourVersion": "Your Version",
+	"latestVersion": "Latest Version",
+	"downloadAtheos": "Download Atheos",
+
+	"language": "Language",
+	"collapse": "Collapse",
+
+	"highlightActiveLine": "Highlight Active Line",
+	"fontSize": "Font Size",
+	"pixel": {
+		"": "%spx",
+		"default": "%spx (default)"
+	},
+
+	"tabs": {
+		"soft": "Soft Tabs",
+		"size": "Tab Size"
+	},
+	"userList": "User List",
+
+	"directory": {
+		"": "Directory",
+		"invalid": "Invalid Directory"
+	},
+
+	"file": {
+		"": "File",
+		"new": "New File",
+		"type": "File Type:",
+		"saved": "File saved"
+	},
+
+	"fileNew": "New File",
+	"fileType": "File Type:",
+	"fileSaved": "File saved",
+
+	"fileUpload": "Upload File",
+	"filesUpload": "Upload Files",
+
+	"folderNew": "New Folder",
+
+	"path": {
+		"": "Path",
+		"missing": "Path doesn't exist.",
+		"exists": "Path already exists.",
+		"unableCreate": "Cannot create path.",
+		"unableRename": "Cannot rename path."
+	},
+
+	"restricted": {
+		"": "Restricted",
+		"userList": "Not authorized to edit UserList",
+		"updates": "You can not check for updates",
+		"marketplace": "You can not access the Marketplace",
+		"textmodes": "You can not access the Textmodes"
+	},
+
+	"unauthorized": "You are not Authorized to %s",
+	"wrapLines": "Wrap Lines",
+
+	"printMarginShow": "Print Margin",
+	"printMarginColumn": "Print Margin Column",
+
+	"theme": "Theme",
+	"hover": {
+		"": "Hover",
+		"duration": "Sidebar Hover Duration"
+	},
+	"click": {
+		"": "Click",
+		"single": "Single Click",
+		"double": "Double Click"
+	},
+
+	"loop": {
+		"behavior": "Active File Loop Behavior",
+		"onlyActive": "Loop only active tabs",
+		"incDropdown": "Include dropdown menu"
+	},
+
+	"showHidden": "Show Hidden Files",
+
+	"trigger": {
+		"fileManager": "Filemanager Trigger",
+		"projectDock": "ProjectDock Trigger",
+		"rightSidebar": "Right Sidebar Trigger",
+		"leftSidebar": "Left Sidebar Trigger"
+	},
+
+	"contextMenu": {
+		"delay": "Context Menu Close Delay"
+	},
+
+
+	"newExtension": "New Extension",
+	"fileExtension": "File Extension",
+	"defaultTextmode": "Default Textmode",
+	"indentGuides": "Indent Guides",
+	"inlinePreview": "Inline Preview",
+
+	"close_uploader": "Close Uploader",
+	"close_modal": "Close Modal",
+
+	"installationError": "Installation Error",
+	"existsAndWriteable:": "Please make sure the following exist and are writeable:",
+	"envVariablesSet:": "Please make sure these environmental variables are set:",
+	"retest": "Re-Test",
+
+	"initialSetup": "Initial Setup",
+	"dependencies": "Dependencies",
+
+	"connectionError": "Connection Error",
+
+	"market": {
+		"": "Marketplace",
+		"atheos": "Atheos Marketplace",
+		"install": {
+			"gitRepo": "... from Git Repo",
+			"manually": "Install Manually",
+			"success": "Successfully installed %s"
+		},
+		"unableExtract": "Unable to extract Archive.",
+		"unableDownload": "Unable to download Archive.",
+		"noZip": "Zip Extension not found.",
+		"missingDesc": "Missing Description.",
+		"missingAuth": "Unknown"
+	},
+	"complete": "Complete!",
+	"installed": "Installed",
+	"available": "Available",
+	"reloadAtheos": "Reload Atheos",
+
+	"split": {
+		"": "Split",
+		"h": "Split Horizontally",
+		"v": "Split Vertically",
+		"editor": {
+			"h": "Split Editor Horizontally",
+			"v": "Split Editor Vertically"
+		}
+	},
+	"merge": {
+		"": "Merge",
+		"all": "Merge all",
+		"editor": "Merged Editor Panes"
+	},
+
+
+	"time": {
+		"ms": {
+			"": "%sms",
+			"default": "%sms (default)"
+		},
+		"second": {
+			"single": "%s Second",
+			"plural": "%s Seconds"
+		},
+		"minute": {
+			"single": "%s Minute",
+			"plural": "%s Minutes"
+		},
+		"hour": {
+			"single": "%s Hour",
+			"plural": "%s Hours"
+		}
+	},
+
+
+	"warning": {
+		"fileOpen": "Warning: File Currently Opened By: %s"
+	},
+
+
+	"NothingInYourClipboard": "Nothing in Your Clipboard",
+	"folderNameOrAbsolutePath": "Folder Name Or Absolute Path",
+
+	"noOpenFilesOrSelect": "No Open Files or Selected Text",
+
+	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
+
+	"fileManager": "File Manager",
+	"gitRepository": "Git Repository",
+
+	"codegit": {
+		"": "CodeGit",
+		"open": "Open CodeGit",
+		"banner": "Banner above FileManager",
+		"status": "File Status in BottomBar",
+		"unknown": "Unknown",
+		"untracked": "Untracked",
+		"uncommitted": "Uncommitted",
+		"committed": "Committed",
+		"error": {
+			"statusFail": "Unable to load Repository status"
+		},
+		"diff": "Diff Viewer",
+		"blame": "Blame Viewer",
+		"log": "Log Viewer"
+	},
+
+	"git": {
+		"init": {
+			"": "Git Init",
+			"success": "Initialized empty Git repository.",
+			"failed": "Failed to initialize repository."
+		},
+		"clone": {
+			"": "Git Clone",
+			"success": "Successfully cloned repository.",
+			"failed": "Failed to clone repository."
+		},
+		"repoURL": {
+			"": "Github Repository URL:",
+			"invalid": "Invalid Repository URL"
+		},
+		"status": {
+			"current": "Branch is up to date",
+			"ahead": {
+				"single": "Ahead %s Commit",
+				"plural": "Ahead %s Commits"
+			},
+			"behind": {
+				"single": "Behind %s Commit",
+				"plural": "Behind %s Commits"
+			}
+		},
+		"diff": "Git Diff",
+		"blame": "Git Blame",
+		"log": "Git Log",
+		"undo": {
+			"": "Git Undo",
+			"file": "Undo changes on %s?",
+			"success": "Changes reverted.",
+			"failed": "Unable to revert changes."
+		},
+		"pull": {
+			"": "Pull",
+			"success": "Repo pull successful.",
+			"failed": "Repo pull failed."
+		},
+		"push": {
+			"": "Push",
+			"success": "Repo push successful.",
+			"failed": "Repo push failed."
+		},
+		"fetch": {
+			"": "Fetch",
+			"success": "Repo fetch successful.",
+			"failed": "Repo fetch failed."
+		},
+		"remote": {
+			"new": "New Remote"
+		},
+		"branch": {
+			"new": "New Branch"
+		},
+		"addFailed": "Failed to add %s",
+		"commit": {
+			"success": "Changes commited.",
+			"failed": "Changes could not be committed."
+		},
+		"settings": {
+			"save": {
+				"success": "Settings saved.",
+				"failed": "Unabled to save settings."
+			},
+			"apply": {
+				"success": "Settings Applied.",
+				"failed": "Unabled to apply settings."
+			}
+		}
+	},
+
+	"overview": "Overview",
+	"log": "Log",
+	"transfer": "Transfer",
+	"configure": "Configure"
+
+
+}

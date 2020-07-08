@@ -13,25 +13,25 @@
 
 	.hash {
 		display: inline;
-		color: $font-color-subtle;
+		color: $fontColorMinor;
 
 		a,
 		span {
-			font-family: 'Ubuntu-Fira';
+			font-family: 'Ubuntu-Fira', monospace;
 			// color: $dark-yellow;
 			color: $olive;
 		}
 	}
 
 	.date {
-		color: $font-color-subtle;
+		color: $fontColorMinor;
 		user-select: none;
 		float: right;
 	}
 
 	.author {
 		display: block;
-		color: $font-color-subtle;
+		color: $fontColorMinor;
 
 		span {
 			color: $blue;
@@ -39,7 +39,7 @@
 	}
 
 	.message {
-		color: $font-color-primary;
+		color: $fontColorMajor;
 		margin: 5px 0;
 	}
 }

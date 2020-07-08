@@ -36,11 +36,11 @@ switch ($action) {
 	case 'preview':
 		?>
 		<form>
-			<h3><i class="fas fa-eye"></i><?php i18n("Inline Preview"); ?></h3>
+			<h3><i class="fas fa-eye"></i><?php echo i18n("inlinePreview"); ?></h3>
 			<div>
 				<br><br><img src="<?php echo(str_replace(BASE_PATH . "/", "", WORKSPACE) . "/" . $path); ?>"><br><br>
 			</div>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Close"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php echo i18n("close"); ?></button>
 		</form>
 
 		<?php

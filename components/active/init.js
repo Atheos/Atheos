@@ -1,21 +1,19 @@
 /*jshint esversion: 6 */
 
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Active Init
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 
 (function(global) {
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		ajax = global.ajax,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
@@ -25,16 +23,14 @@
 
 	amplify.subscribe('system.loadMajor', () => atheos.active.init());
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////80
 	//
 	// Active Files Component for atheos
 	// ---------------------------------
 	// Track and manage EditSession instaces of files being edited.
 	//
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////80
 	atheos.active = {
-
-		controller: 'components/active/controller.php',
 
 		tabList: oX('#tab-list-active-files'),
 		dropDownMenu: oX('#dropdown-list-active-files'),
@@ -58,9 +54,10 @@
 				self.closeAll();
 			});
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'list'
 				},
 				success: function(reply) {
@@ -68,9 +65,16 @@
 						return;
 					}
 					delete reply.status;
+					var focused;
 					for (var path in reply) {
-						var focused = reply[path] === 'focus' ? true : false;
+						focused = reply[path] === 'focus' ? true : false;
 						atheos.filemanager.openFile(path, focused);
+					}
+					if (focused !== true) {
+						var paths = Object.keys(reply);
+						if (paths.length > 0) {
+							atheos.filemanager.openFile(path, true);
+						}
 					}
 
 				}
@@ -196,7 +200,7 @@
 			var fn = function() {
 				//var session = new EditSession(content, new Mode());
 				var session = new EditSession(content);
-				session.setMode("ace/mode/" + mode);
+				session.setMode('ace/mode/' + mode);
 				session.setUndoManager(new UndoManager());
 				session.path = path;
 				session.serverMTime = modifyTime;
@@ -221,9 +225,9 @@
 		},
 
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Get active editor path
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		getPath: function() {
 			try {
@@ -235,14 +239,15 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Check if opened by another user
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		check: function(path) {
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'check',
 					path: path
 				},
@@ -254,9 +259,9 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Add newly opened file to list
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		add: function(path, session, focus) {
 			if (focus === undefined) {
@@ -269,7 +274,7 @@
 				* first tab to dropdown, then add a new tab. */
 			if (self.isTabListOverflowed(true)) {
 				var tab = self.tabList.find('li:first-child');
-				self.moveTabToDropdownMenu(tab);
+				self.moveTab(self.dropDownMenu, tab);
 			}
 
 			var listItem = self.createListItem(path);
@@ -278,9 +283,10 @@
 
 			self.updateTabDropdownVisibility();
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'add',
 					path: path
 				}
@@ -291,9 +297,9 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Focus on opened file
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		focus: function(path, direction) {
 			direction = direction || false;
@@ -303,9 +309,10 @@
 			if (path !== self.getPath()) {
 				atheos.editor.setSession(self.sessions[path]);
 
-				ajax({
-					url: self.controller,
-					data: {
+				echo({
+					url: atheos.controller,
+				data: {
+					target: 'active',
 						'action': 'setFocus',
 						'path': path
 					}
@@ -316,7 +323,7 @@
 			self.check(path);
 
 			/* Notify listeners. */
-			amplify.publish('active.onFocus', path);
+			amplify.publish('active.focus', path);
 		},
 
 		highlightEntry: function(path, direction) {
@@ -332,7 +339,7 @@
 
 			if (dropDown) {
 				var listItem = session.listItem;
-				self.moveDropdownMenuItemToTab(listItem, direction);
+				self.moveTab(self.tabList, listItem, direction);
 
 				var tab;
 				if (direction === 'up') {
@@ -340,41 +347,36 @@
 				} else {
 					tab = self.tabList.find('li:first-child');
 				}
-				self.moveTabToDropdownMenu(tab, direction);
+				self.moveTab(self.dropDownMenu, tab, direction);
 			}
 
 			session.listItem.addClass('active');
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Mark changed
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		markChanged: function(path) {
 			self.sessions[path].status = 'changed';
 			self.sessions[path].listItem.addClass('changed');
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Save active editor
 		// I'm pretty sure the save methods are magic and should
 		// be worshipped.
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		save: function(path) {
 			/* Notify listeners. */
-			amplify.publish('active.onSave', path);
+			amplify.publish('active.save', path);
 
 			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
-				atheos.toast.show('error', 'No Open Files to save');
+				atheos.toast.show('error', 'No open files.');
 				return;
 			}
-			var session;
-			if (path) {
-				session = self.sessions[path];
-			} else {
-				session = atheos.editor.getActive().getSession();
-			}
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
 			var content = session.getValue();
 			path = session.path;
 
@@ -418,9 +420,9 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Save all files
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		saveAll: function() {
 			for (var session in self.sessions) {
 				if (self.sessions[session].status === 'changed') {
@@ -429,15 +431,16 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Close file
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		close: function(path) {
-			if (!self.isOpen(path)) {
+			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
+				atheos.toast.show('error', 'No open files');
 				return;
 			}
-			var session = self.sessions[path];
-
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			path = session.path;
 			var basename = pathinfo(path).basename;
 
 			if (session.status === 'changed') {
@@ -527,9 +530,10 @@
 			}
 			delete self.sessions[path];
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'remove',
 					path: path
 				}
@@ -546,21 +550,26 @@
 
 			self.updateTabDropdownVisibility();
 			atheos.editor.exterminate();
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'removeAll'
 				}
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Process rename
-		//////////////////////////////////////////////////////////////////
+		reload: function(path, focus) {
+			log(focus);
 
+			self.close(path);
+			atheos.filemanager.openFile(path, focus);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Rename tab to new name
+		//////////////////////////////////////////////////////////////////////80
 		rename: function(oldPath, newPath) {
-			log(oldPath + ':' + newPath);
-
 			var switchSessions = function(oldPath, newPath) {
 				var listItem = self.sessions[oldPath].listItem;
 				listItem.attr('data-path', newPath);
@@ -600,8 +609,8 @@
 					newSession.removeListener('changeMode', fn);
 				};
 
-				newSession.on("changeMode", fn);
-				newSession.setMode("ace/mode/" + mode);
+				newSession.on('changeMode', fn);
+				newSession.setMode('ace/mode/' + mode);
 			} else {
 				// A folder was renamed
 				var newKey;
@@ -613,25 +622,26 @@
 				}
 			}
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'active',
 					action: 'rename',
 					path: oldPath,
 					newPath: newPath
 				},
 				success: function() {
 					amplify.publish('active.onRename', {
-						"oldPath": oldPath,
-						"newPath": newPath
+						'oldPath': oldPath,
+						'newPath': newPath
 					});
 				}
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Move Up (Key Combo)
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Move Up or down (Key Combo)
+		//////////////////////////////////////////////////////////////////////80
 		move: function(direction) {
 
 			var activeTabs = self.tabList.findAll('li');
@@ -669,54 +679,22 @@
 			}
 		},
 
-		moveTabToDropdownMenu: function(oldListItem, direction) {
+		//////////////////////////////////////////////////////////////////////80
+		// Move tab between Active & Dropdown
+		//////////////////////////////////////////////////////////////////////80
+		moveTab: function(destination, listItem, direction) {
 			direction = direction || false;
 
-			var path = oldListItem.attr('data-path');
-
-			var listItem = self.createListItem(path);
-
 			if (direction === 'up') {
-				self.dropDownMenu.prepend(listItem);
+				destination.prepend(listItem);
 			} else {
-				self.dropDownMenu.append(listItem);
+				destination.append(listItem);
 			}
-
-			if (oldListItem.hasClass('changed')) {
-				listItem.addClass('changed');
-			}
-
-			self.sessions[path].listItem = listItem;
-			oldListItem.remove();
-
 		},
 
-		moveDropdownMenuItemToTab: function(oldListItem, direction) {
-			direction = direction || false;
-
-			var path = oldListItem.attr('data-path');
-
-			var listItem = self.createListItem(path);
-
-			if (direction === 'up') {
-				self.tabList.prepend(listItem);
-			} else {
-				self.tabList.append(listItem);
-			}
-
-			if (oldListItem.hasClass('changed')) {
-				listItem.addClass('changed');
-			}
-
-			if (oldListItem.hasClass('active')) {
-				listItem.addClass('active');
-			}
-
-			self.sessions[path].listItem = listItem;
-			oldListItem.remove();
-
-		},
-
+		//////////////////////////////////////////////////////////////////////80
+		// Is the activeTabs overflowed
+		//////////////////////////////////////////////////////////////////////80
 		isTabListOverflowed: function(includeFictiveTab) {
 			includeFictiveTab = includeFictiveTab || false;
 
@@ -744,20 +722,25 @@
 			return (room < 0);
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Update tab visibility
+		//////////////////////////////////////////////////////////////////////80
 		updateTabDropdownVisibility: function() {
+			var listItem;
+
 			while (self.isTabListOverflowed()) {
-				var tab = self.tabList.find('li:last-child');
-				if (tab) {
-					self.moveTabToDropdownMenu(tab);
+				listItem = self.tabList.find('li:last-child');
+				if (listItem) {
+					self.moveTab(self.dropDownMenu, listItem);
 				} else {
 					break;
 				}
 			}
 
 			while (!self.isTabListOverflowed(true)) {
-				var menuItem = self.dropDownMenu.find('li:last-child');
-				if (menuItem) {
-					self.moveDropdownMenuItemToTab(menuItem);
+				listItem = self.dropDownMenu.find('li:last-child');
+				if (listItem) {
+					self.moveTab(self.tabList, listItem);
 				} else {
 					break;
 				}
@@ -776,12 +759,9 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Factory
-		//////////////////////////////////////////////////////////////////
-
-
-
+		//////////////////////////////////////////////////////////////////////80
 		createListItem: function(path) {
 			var split = pathinfo(path);
 

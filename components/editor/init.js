@@ -10,7 +10,6 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		amplify = global.amplify,
 		oX = global.onyx,
 		storage = atheos.storage;
 
@@ -66,8 +65,12 @@
 
 			var editor = oX('#editor-region');
 
-			// editor = oX('#editor-region');
-
+			//////////////////////////////////////////////////////////////////80
+			// h-resize & v-resize events are custom events triggered solely for
+			// use in allowing you to resize split containers. The -root events
+			// are triggered throughout Atheos as needed, and cascade down into 
+			// any split containers. - Liam Siira
+			//////////////////////////////////////////////////////////////////80
 			editor.on('h-resize-root, v-resize-root', function(e) {
 				var wrapper = oX('#editor-region .editor-wrapper');
 				if (wrapper) {
@@ -123,6 +126,7 @@
 				enableSnippets: true,
 				enableLiveAutocompletion: true
 			});
+			instance.setAnimatedScroll(true);
 
 			instance.setFontSize(self.settings.fontSize);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
@@ -130,10 +134,8 @@
 			instance.setHighlightActiveLine(self.settings.highlightLine);
 			instance.setDisplayIndentGuides(self.settings.indentGuides);
 			instance.getSession().setUseWrapMode(self.settings.wrapMode);
-			self.setTabSize(self.settings.tabSize,
-				instance);
-			self.setSoftTabs(self.settings.softTabs,
-				instance);
+			self.setTabSize(self.settings.tabSize, instance);
+			self.setSoftTabs(self.settings.softTabs, instance);
 		},
 
 
@@ -712,34 +714,10 @@
 		//
 		//////////////////////////////////////////////////////////////////
 
-		promptLine: function() {
-			if (atheos.editor.getActive() !== null) {
-
-				var listener = function() {
-					oX('#modal_content form').on('submit', function(e) {
-						e.preventDefault();
-						var line = oX('#modal_content form input[name="line"]').value();
-
-						if (!isNaN(line)) {
-							atheos.editor.gotoLine(line);
-						}
-
-						atheos.modal.unload();
-					});
-				};
-
-				amplify.subscribe('modal.loaded',
-					listener);
-
-				atheos.modal.load(250,
-					'components/editor/dialog.php?action=promptLine');
-
-			}
-		},
-
 		gotoLine: function(line, i) {
 			i = i || this.getActive();
 			if (!i) return;
+			i.scrollToLine(line, true, true);
 			i.gotoLine(line, 0, true);
 			self.focus();
 		},
@@ -792,9 +770,6 @@
 		//////////////////////////////////////////////////////////////////
 
 		bindKeys: function(instance) {
-
-			var self = this;
-
 			// instance.commands.addCommand({
 			// 	name: "Beautify",
 			// 	bindKey: {
@@ -805,30 +780,6 @@
 			// 		self.beautify();
 			// 	}
 			// });
-
-			// Find
-			instance.commands.addCommand({
-				name: 'Find',
-				bindKey: {
-					win: 'Ctrl-F',
-					mac: 'Command-F'
-				},
-				exec: function(e) {
-					self.openSearch('find');
-				}
-			});
-
-			// Find + Replace
-			instance.commands.addCommand({
-				name: 'Replace',
-				bindKey: {
-					win: 'Ctrl-R',
-					mac: 'Command-R'
-				},
-				exec: function(e) {
-					self.openSearch('replace');
-				}
-			});
 
 			instance.commands.addCommand({
 				name: 'Move Up',
@@ -852,92 +803,7 @@
 				}
 			});
 
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Present the Search (Find + Replace) dialog box
-		//
-		// Parameters:
-		//   type - {String} Optional, defaults to find. Provide 'replace' for replace dialog.
-		//
-		//////////////////////////////////////////////////////////////////
-
-		openSearch: function(type) {
-			if (this.getActive()) {
-				var highlight = atheos.editor.getSelectedText();
-				atheos.modal.load(400,
-					'components/editor/dialog.php', {
-						action: type,
-						highlight
-					});
-				atheos.common.hideOverlay();
-			} else {
-				atheos.toast.show('error', 'No Open Files');
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Perform Search (Find + Replace) operation
-		//
-		// Parameters:
-		//   action - {String} find | replace | replaceAll
-		//   i - {Editor} Defaults to active Editor instance
-		//
-		//////////////////////////////////////////////////////////////////
-
-		search: function(action, i) {
-			i = i || this.getActive();
-			if (!i) return;
-			var find = oX('#modal_wrapper input[name="find"]'),
-				replace = oX('#modal_wrapper input[name="replace"]');
-
-			find = find ? find.value() : false;
-			replace = replace ? replace.value() : false;
-
-
-			switch (action) {
-				case 'find':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-
-					break;
-
-				case 'replace':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-					i.replace(replace);
-
-					break;
-
-				case 'replaceAll':
-
-					i.find(find, {
-						backwards: false,
-						wrap: true,
-						caseSensitive: false,
-						wholeWord: false,
-						regExp: false
-					});
-					i.replaceAll(replace);
-
-					break;
-			}
 		}
-
 	};
 
 })(this);

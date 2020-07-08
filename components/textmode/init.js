@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		ajax = global.ajax,
 		oX = global.onyx;
 
 	var self = null;
@@ -24,19 +22,17 @@
 
 	atheos.textmode = {
 
-		dialog: 'components/textmode/dialog.php',
-		controller: 'components/textmode/controller.php',
-
 		extensionMap: {},
 		availableModes: [],
 
 		init: function() {
 			self = this;
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
-					'action': 'loadExtensionMap'
+					target: 'textmode',
+					action: 'loadExtensionMap'
 				},
 				success: function(reply) {
 					if (reply.status === 'success') {
@@ -152,6 +148,7 @@
 			var len = form.elements.length;
 
 			var data = {
+				target: 'textmode',
 				action: 'saveExtensionMap',
 				map: {}
 			};
@@ -170,8 +167,8 @@
 				}
 			}
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: data,
 				success: function(reply) {
 					atheos.toast[reply.status](reply.message);

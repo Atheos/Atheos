@@ -1,4 +1,4 @@
-(function(global, undefined) {
+(function(global) {
 
 	var slice = [].slice,
 		subscriptions = {};
@@ -26,8 +26,10 @@
 
 			topicSubscriptions = subscriptions[topic].slice();
 			for (length = topicSubscriptions.length; i < length; i++) {
+				
 				subscription = topicSubscriptions[i];
-				ret = subscription.callback.apply(subscription.context, args);
+				ret = subscription.callback.apply(null, args);
+				
 				if (ret === false) {
 					break;
 				}
@@ -35,29 +37,23 @@
 			return ret !== false;
 		},
 
-		subscribe: function(topic, context, callback, priority) {
+		// Topics need to be comma delimited
+		subscribe: function(topic, callback, priority) {
 			if (typeof topic !== 'string') {
 				throw new Error('You must provide a valid topic to create a subscription.');
 			}
 
-			if (arguments.length === 3 && typeof callback === 'number') {
-				priority = callback;
-				callback = context;
-				context = null;
-			}
-			if (arguments.length === 2) {
-				callback = context;
-				context = null;
-			}
 			priority = priority || 10;
 
 			var topicIndex = 0,
-				topics = topic.split(/\s/),
+				topics = topic.split(','),
 				topicLength = topics.length,
 				added;
 			for (; topicIndex < topicLength; topicIndex++) {
-				topic = topics[topicIndex];
+
+				topic = topics[topicIndex].trim();
 				added = false;
+
 				if (!subscriptions[topic]) {
 					subscriptions[topic] = [];
 				}
@@ -65,7 +61,6 @@
 				var i = subscriptions[topic].length - 1,
 					subscriptionInfo = {
 						callback: callback,
-						context: context,
 						priority: priority
 					};
 
@@ -85,14 +80,9 @@
 			return callback;
 		},
 
-		unsubscribe: function(topic, context, callback) {
+		unsubscribe: function(topic, callback) {
 			if (typeof topic !== 'string') {
 				throw new Error('You must provide a valid topic to remove a subscription.');
-			}
-
-			if (arguments.length === 2) {
-				callback = context;
-				context = null;
 			}
 
 			if (!subscriptions[topic]) {
@@ -104,19 +94,17 @@
 
 			for (; i < length; i++) {
 				if (subscriptions[topic][i].callback === callback) {
-					if (!context || subscriptions[topic][i].context === context) {
-						subscriptions[topic].splice(i, 1);
+					subscriptions[topic].splice(i, 1);
 
-						// Adjust counter and length for removed item
-						i--;
-						length--;
-					}
+					// Adjust counter and length for removed item
+					i--;
+					length--;
 				}
 			}
 		},
-		
+
 		unsubscribeAll: function(topic) {
-			if (typeof topic === "string") {
+			if (typeof topic === 'string') {
 				delete subscriptions[topic];
 			} else {
 				for (var key in subscriptions) {

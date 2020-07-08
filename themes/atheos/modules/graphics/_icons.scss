@@ -4,6 +4,25 @@ i {
 	text-align: center;
 }
 
-a i {
-	margin-right: 5px;
+.merged-icon {
+	float: right;
+	position: relative;
+	top: 13px;
+	right: 24px;
+	height: 0;
+	width: 0;
+	cursor: pointer;
+}
+
+a,
+h1,
+h2,
+h3,
+h4,
+hint,
+span,
+label {
+	i {
+		margin-right: 5px;
+	}
 }

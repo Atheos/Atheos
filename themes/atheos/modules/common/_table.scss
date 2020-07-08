@@ -1,0 +1,23 @@
+/* TABLES */
+table {
+	width: 100%;
+	border-collapse: collapse;
+
+	td,
+	th {
+		vertical-align: middle;
+		padding: 3px 10px;
+		border: 1px solid $foreground;
+		overflow: hidden;
+
+		&.action {
+			text-align: center;
+		}
+	}
+
+	th {
+		text-align: left;
+		font-weight: bold;
+		background: $background;
+	}
+}
