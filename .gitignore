@@ -5,13 +5,14 @@
 config.php
 !*/README.md
 data/*
-!data/version.json
 !data/.htaccess
 workspace/*
 plugins/*
 public/*.min.*
+themes/*
 !themes/atheos/
 
+*.disabled*
 js/*.disabled.*
 components/*/*.disabled.*
 

@@ -10,20 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../common.php");
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 $path = Common::data("path");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 switch ($action) {
 
@@ -32,35 +19,21 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'probe':
 		$loadingText = '';
-		foreach (str_split(i18n("Searching...", "return")) as $character) {
+		foreach (str_split(i18n("scout_searching")) as $character) {
 			$loadingText .= "<em>$character</em>";
 		}
 
 		?>
+		<label class="title"><i class="fas fa-search"></i><?php echo i18n("scout_searchFiles"); ?></label>
 		<form>
 			<table id="probe_table">
 				<tr>
 					<td width="65%">
-						<label><?php i18n("Search Files:"); ?></label>
-						<input type="text" name="probe_query" autofocus="autofocus">
+						<input type="text" name="probe_query" placeholder="<?php echo i18n("scout_query"); ?>" autofocus="autofocus">
 					</td>
 					<td width="5%">&nbsp;&nbsp;</td>
 					<td>
-						<label><?php i18n("In:"); ?></label>
-						<select name="probe_type">
-							<option value="0"><?php i18n("Current Project"); ?></option>
-							<?php if (Common::checkAccess("configure")) {
-								?>
-								<option value="1"><?php i18n("Workspace Projects"); ?></option>
-								<?php
-							} ?>
-						</select>
-					</td>
-				</tr>
-				<tr>
-					<td coli="3">
-						<label><?php i18n("File Type:"); ?></label>
-						<input type="text" name="probe_filter" placeholder="<?php i18n("space seperated file types eg: js c php"); ?>">
+						<input type="text" name="probe_filter" placeholder="<?php echo i18n("scout_fileTypes"); ?>">
 					</td>
 				</tr>
 			</table>
@@ -68,8 +41,10 @@ switch ($action) {
 			<div id="probe_processing" class="loader">
 				<h2><?php echo($loadingText); ?></h2>
 			</div>
-			<button class="btn-left"><?php i18n("Search"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php i18n("Cancel"); ?></button>
+			<toolbar>
+				<button class="btn-left"><?php echo i18n("search"); ?></button>
+			</toolbar>
+
 		</form>
 		<?php
 		break;

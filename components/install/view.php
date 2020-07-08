@@ -1,10 +1,11 @@
+<canvas id="synthetic"></canvas>
 <div id="logo">
 	<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1920 1920" width="320" height="400" version="1.1">
-		<path class="delay-0" style="fill:#111111" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
-		<path class="delay-1" style="fill:#0074d9" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
-		<path class="delay-2" style="fill:#0074d9" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
-		<path class="delay-3" style="fill:#0074d9" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
-		<path class="delay-3" style="fill:#0074d9" d="M960 980L520 740v80l440 240 440-220v-80z" />
+		<path class="delay-0" style="fill:var(--black)" d="M80 480L960 0l880 480v960l-880 480-880-480z" />
+		<path class="delay-1" style="fill:var(--blue)" d="M560 217.68L80 480v360L0 880v160l80 40v360l480 260v-80l-400-220v-360l-80-40v-80l80-40V520l266.84-146.76L560 300zm800 2.32v80l400 220v360l80 40v80l-80 40v360l-400 220v80c162.74-81.368 318.86-175.56 480-260v-360l80-60V900l-80-60V480z" />
+		<path class="delay-2" style="fill:var(--blue)" d="M240 420v1080h80V420zm1360 0v1080h80V420z" />
+		<path class="delay-3" style="fill:var(--blue)" d="M960 180L480 440v1040l240 120V560l240-140 240 140v1040l240-120V440zm0 80l400 220v960l-80 40V520L960 340 640 520v960l-80-40V480z" />
+		<path class="delay-3" style="fill:var(--blue)" d="M960 980L520 740v80l440 240 440-220v-80z" />
 	</svg>
 </div>
 <div id="installer">
@@ -62,65 +63,41 @@
 	}
 
 	if (!$workspace || !$data || !$config || $register || $newrelic) {
+		$passed = "<font style=\"color:green\">" . i18n("passed") . "</font>";
+		$failed = "<font style=\"color:red\">" . i18n("failed") . "</font>";
+
+
 		?>
-		<h1><?php i18n("Installation Error"); ?></h1>
+		<h1><?php echo i18n("installationError"); ?></h1>
 		<p>
-			<?php i18n("Please make sure the following exist and are writeable:"); ?>
+			<?php echo i18n("existsAndWriteable"); ?>
 		</p>
 		<div class="install_issues">
 			<p>
 				[SYSTEM]/config.php -
-				<?php
-				if ($config) {
-					echo '<font style="color:green">PASSED</font>';
-				} else {
-					echo '<font style="color:red">ERROR</font>';
-				}
-				?>
+				<?php echo $config ? $passed : $error; ?>
 			</p>
 			<p>
 				[SYSTEM]/workspace -
-				<?php
-				if ($workspace) {
-					echo '<font style="color:green">PASSED</font>';
-				} else {
-					echo '<font style="color:red">ERROR</font>';
-				}
-				?>
+				<?php echo $workspace ? $passed : $error; ?>
 			</p>
 			<p>
 				[SYSTEM]/plugins -
-				<?php
-				if ($plugins) {
-					echo '<font style="color:green">PASSED</font>';
-				} else {
-					echo '<font style="color:red">ERROR</font>';
-				}
-				?>
+				<?php echo $plugins ? $passed : $error; ?>
 			</p>
 			<p>
 				[SYSTEM]/themes -
-				<?php if ($themes) {
-					echo '<font style="color:green">PASSED</font>';
-				} else {
-					echo '<font style="color:red">ERROR</font>';
-				} ?>
+				<?php echo $themes ? $passed : $error; ?>
 			</p>
 			<p>
 				[SYSTEM]/data -
-				<?php
-				if ($data) {
-					echo '<font style="color:green">PASSED</font>';
-				} else {
-					echo '<font style="color:red">ERROR</font>';
-				}
-				?>
+				<?php echo $data ? $passed : $error; ?>
 			</p>
 		</div>
 		<?php if ($register || $newrelic) {
 			?>
 			<p>
-				<?php i18n("Please make sure these environmental variables are set:"); ?>
+				<?php echo i18n("envVariablesSet"); ?>
 			</p>
 			<div class="install_issues">
 				<?php
@@ -134,14 +111,14 @@
 			</div>
 			<?php
 		} ?>
-		<button onclick="window.location.reload();">Re-Test</button>
+		<button onclick="window.location.reload();"<?php echo i18n("retest"); ?></button>
 		<?php
 	} else {
 		?>
 		<form id="install">
-			<h1><?php i18n("Initial Setup"); ?></h1>
+			<h1><?php echo i18n("initialSetup"); ?></h1>
 
-			<label><?php i18n("Dependencies"); ?></label>
+			<label><?php echo i18n("dependencies"); ?></label>
 			<div id="dependencies">
 				<?php
 				foreach (array("ZIP", "OpenSSL", "MBString") as $dep) {
@@ -164,19 +141,19 @@
 
 			<input type="hidden" name="path" value="<?php echo($path); ?>">
 
-			<label><?php i18n("New Username"); ?></label>
+			<label><?php echo i18n("username_new"); ?></label>
 			<input type="text" name="username" autofocus="autofocus" value="<?php echo($autocomplete['username']); ?>">
 
 			<div style="float:left; width: 48%; margin-right: 4%;">
 
-				<label><?php i18n("Password"); ?></label>
+				<label><?php echo i18n("password"); ?></label>
 				<input type="password" name="password" value="<?php echo($autocomplete['password']); ?>">
 
 			</div>
 
 			<div style="float:left; width: 48%;">
 
-				<label><?php i18n("Confirm Password"); ?></label>
+				<label><?php echo i18n("Confirm Password"); ?></label>
 				<input type="password" name="confirm" value="<?php echo($autocomplete['confirm']); ?>">
 
 			</div>
@@ -185,9 +162,9 @@
 
 			<hr>
 
-			<label><?php i18n("New Project Name"); ?></label>
+			<label><?php echo i18n("New Project Name"); ?></label>
 			<input type="text" name="projectName" value="<?php echo($autocomplete['projectName']); ?>">
-			<label><?php i18n("Folder Name or Absolute Path"); ?></label>
+			<label><?php echo i18n("Folder Name or Absolute Path"); ?></label>
 			<input type="text" name="projectPath" value="<?php echo($autocomplete['projectPath']); ?>">
 			<hr>
 			<?php
@@ -285,7 +262,7 @@
 			);
 			?>
 
-			<label><?php i18n("Timezone"); ?></label>
+			<label><?php echo i18n("timezone"); ?></label>
 			<select name="timezone">
 				<?php
 				$timezones = '';
@@ -300,11 +277,12 @@
 				?>
 			</select>
 
-			<button><?php i18n("Install"); ?></button>
+			<button><?php echo i18n("install"); ?></button>
 		</form>
 		<?php
 	}
 	?>
 
 </div>
+<script src="components/i18n/init.js"></script>
 <script src="components/install/init.js"></script>

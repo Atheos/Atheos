@@ -1,0 +1,18 @@
+label {
+	display: block;
+
+	&.title {
+		font-size: $fontSizeH1;
+		padding: 2px 8px;
+		font-weight: 700;
+		background-color: $foreground;
+		
+		// i:before {
+			// color: $blue;
+		// }
+	}
+
+	&.dialog {
+		font-size: $fontSizeH3;
+	}
+}

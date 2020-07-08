@@ -1,43 +1,117 @@
 <?php
 
-/*
-*  Copyright (c) Codiad & Kent Safranski (codiad.com), distributed
-*  as-is and without warranty under the MIT License. See
-*  [root]/license.txt for more. This information must remain intact.
-*/
+//////////////////////////////////////////////////////////////////////////////80
+// FileManager Class
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../lib/diff_match_patch.php');
-require_once('../../common.php');
+require_once("lib/diff_match_patch.php");
+require_once("helpers/recurse-delete.php");
 
 class Filemanager {
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 
 	// -----------------------------||----------------------------- //
 
-	//////////////////////////////////////////////////////////////////
-	// INDEX (Returns list of files and directories)
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
+	// Create (Creates a new file or directory)
+	//////////////////////////////////////////////////////////////////////////80
+	public function create($path, $type) {
 
-	public function index($path) {
+		if (file_exists($path)) {
+			Common::sendJSON("error", i18n("path_exists")); die;
+		}
+
+		$path = strip_tags($path);
+
+		if ($type === "directory" && mkdir($path)) {
+			Common::sendJSON("S2000");
+		} elseif ($type === "file" && $file = fopen($path, 'w')) {
+			$modifyTime = filemtime($path);
+			fclose($file);
+			Common::sendJSON("success", array("modifyTime" => $modifyTime));
+
+			Common::sendJSON("S2000");
+		} else {
+			Common::sendJSON("error", i18n("path_unableCreate"));
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Delete (Deletes a file or directory (+contents))
+	//////////////////////////////////////////////////////////////////////////80
+	public function delete($path) {
 		if (!file_exists($path)) {
-			Common::sendJSON("E402m");
-			die;
+			Common::sendJSON("E402i"); die;
 		}
 
-		$relativePath = Common::cleanPath($path);
-		if ($relativePath !== "/") {
-			$relativePath .= "/";
+		rDelete($path);
+		Common::sendJSON("S2000");
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Duplicate (Creates a duplicate of the object - (cut/copy/paste)
+	//////////////////////////////////////////////////////////////////////////80
+	public function duplicate($path, $dest) {
+		if (!file_exists($path) || !$dest) {
+			Common::sendJSON("E403g"); die;
 		}
 
+		if (file_exists($dest)) {
+			Common::sendJSON("error", i18n("path_exists")); die;
+		}
+
+		function rCopyDirectory($src, $dst) {
+			$dir = opendir($src);
+			@mkdir($dst);
+			while (false !== ($file = readdir($dir))) {
+				if (($file !== '.') && ($file !== '..')) {
+					if (is_dir($src . '/' . $file)) {
+						rCopyDirectory($src . '/' . $file, $dst . '/' . $file);
+					} else {
+						copy($src . '/' . $file, $dst . '/' . $file);
+					}
+				}
+			}
+			closedir($dir);
+		}
+
+		if (is_file($path)) {
+			copy($path, $dest);
+			Common::sendJSON("success", i18n("duplicated_file"));
+		} else {
+			rCopyDirectory($path, $dest);
+			Common::sendJSON("success", i18n("duplicated_folder"));
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Index (Returns list of files and directories)
+	//////////////////////////////////////////////////////////////////////////80
+	public function index($path) {
+		$path = Common::cleanPath($path);
+
+		$relativePath = $path !== "/" ? "$path/" : $path;
+		$path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
+
+		if (!file_exists($path)) {
+			Common::sendJSON("E402m"); die;
+		}
+
+		if (!is_dir($path) || !($handle = opendir($path))) {
+			Common::sendJSON("error", i18n("directory_invalid")); die;
+		}
 
 		$index = array();
-		if (!is_dir($path) || !($handle = opendir($path))) {
-			Common::sendJSON("error", "Not a valid directory.");
-			die;
-		}
+
 
 		while (false !== ($object = readdir($handle))) {
 			if ($object === "." || $object === "..") {
@@ -52,8 +126,9 @@ class Filemanager {
 				$size = @filesize($path.'/'.$object);
 			}
 
+
 			$index[] = array(
-				"path" => $relativePath . $object,
+				"path" => strip_tags($relativePath . $object),
 				"type" => $type,
 				"size" => $size
 			);
@@ -93,16 +168,14 @@ class Filemanager {
 		$output = array_merge($folders, $files);
 
 		Common::sendJSON("success", array("index" => $output));
-
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// OPEN (Returns the contents of a file)
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
+	// Open (Returns the contents of a file)
+	//////////////////////////////////////////////////////////////////////////80
 	public function open($path) {
 		if (!$path || !is_file($path)) {
-			Common::sendJSON("E402i");
-			die;
+			Common::sendJSON("E402i"); die;
 		}
 
 		$output = file_get_contents($path);
@@ -119,91 +192,33 @@ class Filemanager {
 
 		$modifyTime = filemtime($path);
 		Common::sendJSON("success", array("content" => $output, "modifyTime" => $modifyTime));
-
 	}
 
-	//////////////////////////////////////////////////////////////////
-	// CREATE (Creates a new file or directory)
-	//////////////////////////////////////////////////////////////////
-	public function create($path, $type) {
-
-		if (file_exists($path)) {
-			Common::sendJSON("error", "Path already exists.");
-			die;
-		}
-
-		if ($type === "directory" && mkdir($path)) {
-			Common::sendJSON("S2000");
-		} elseif ($type === "file" && $file = fopen($path, 'w')) {
-			$modifyTime = filemtime($path);
-			fclose($file);
-			Common::sendJSON("success", array("modifyTime" => $modifyTime));
-
-			Common::sendJSON("S2000");
-		} else {
-			Common::sendJSON("error", "Cannot create path.");
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// DELETE (Deletes a file or directory (+contents))
-	//////////////////////////////////////////////////////////////////
-	public function delete($path) {
-
-		if (!file_exists($path)) {
-			Common::sendJSON("E402i");
-			die;
-		}
-
-		function rDelete($target) {
-			// Unnecessary, but rather be safe that sorry.
-			if ($target === "." || $target === "..") {
-				return;
-			}
-			if (is_dir($target)) {
-				$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
-
-				foreach ($files as $file) {
-					rDelete($file);
-				}
-				if (file_exists($target)) {
-					rmdir($target);
-				}
-			} elseif (is_file($target)) {
-				unlink($target);
-			}
-		}
-
-		rDelete($path);
-
-		Common::sendJSON("S2000");
-
-	}
-
+	//////////////////////////////////////////////////////////////////////////80
+	// Rename
+	//////////////////////////////////////////////////////////////////////////80
 	public function rename($path, $name) {
 		$parent = dirname($path);
 		$newPath = $parent . "/" . $name;
 		if (file_exists($newPath)) {
-			Common::sendJSON("error", "Path already exists.");
+			Common::sendJSON("error", i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {
 			Common::sendJSON("S2000");
 		} else {
-			Common::sendJSON("error", "Unable to rename path.");
+			Common::sendJSON("error", i18n("path_unableRename"));
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Save (Modifies a file name/contents or directory name)
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	public function save($path, $modifyTime, $patch, $content) {
 		// Change content
 		if (!$content && !$patch) {
 			// Common::sendJSON("E403m", "Content");
 			$file = fopen($path, 'w');
 			fclose($file);
-			Common::debug("FileSave with no content or Patch");
-			Common::sendJSON("success", array("modifyTime" => filemtime($path)));
-			die;
+			Common::sendJSON("success", array("modifyTime" => filemtime($path))); die;
 		}
 
 		if ($content === ' ') {
@@ -220,7 +235,7 @@ class Filemanager {
 		$fileContents = file_get_contents($path);
 
 		if ($patch && $serverModifyTime !== (int)$modifyTime) {
-			Common::sendJSON("warning", "Client is out of sync."); die;
+			Common::sendJSON("warning", "out of sync"); die;
 		} elseif (strlen(trim($patch)) === 0 && !$content) {
 			// Do nothing if the patch is empty and there is no content
 			Common::sendJSON("success", array("modifyTime" => $serverModifyTime)); die;
@@ -231,8 +246,6 @@ class Filemanager {
 				$dmp = new diff_match_patch();
 				$patch = $dmp->patch_apply($dmp->patch_fromText($patch), $fileContents);
 				$content = $patch[0];
-				//DEBUG : file_put_contents($this->path.".orig",$fileContents );
-				//DEBUG : file_put_contents($this->path.".patch", $this->patch);
 			}
 
 			if (fwrite($file, $content)) {
@@ -250,77 +263,5 @@ class Filemanager {
 			Common::sendJSON("E430c");
 		}
 
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// DUPLICATE (Creates a duplicate of the object - (cut/copy/paste)
-	//////////////////////////////////////////////////////////////////
-
-	public function duplicate($path, $dest) {
-
-		if (!file_exists($path) || !$dest) {
-			Common::sendJSON("E403g");
-			die;
-		}
-
-		if (file_exists($dest)) {
-			Common::sendJSON("error", "Path already exists.");
-			die;
-		}
-
-		function rCopyDirectory($src, $dst) {
-			$dir = opendir($src);
-			@mkdir($dst);
-			while (false !== ($file = readdir($dir))) {
-				if (($file !== '.') && ($file !== '..')) {
-					if (is_dir($src . '/' . $file)) {
-						rCopyDirectory($src . '/' . $file, $dst . '/' . $file);
-					} else {
-						copy($src . '/' . $file, $dst . '/' . $file);
-					}
-				}
-			}
-			closedir($dir);
-		}
-
-		if (is_file($path)) {
-			copy($path, $dest);
-			Common::sendJSON("success", "File Duplicated");
-		} else {
-			rCopyDirectory($path, $dest);
-			Common::sendJSON("success", "Folder Duplicated");
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////
-	// RESPOND (Outputs data in JSON [JSEND] format)
-	//////////////////////////////////////////////////////////////////
-
-	public function respond($adjusted = false) {
-
-		// Success ///////////////////////////////////////////////
-		if ($this->status == "success") {
-			if ($this->data) {
-				if ($adjusted == true) {
-					$json = '{"status":"success","data":'.$this->data.'}';
-				} else {
-					$json = '{"status":"success","data":{'.$this->data.'}}';
-
-				}
-			} else {
-				$json = '{"status":"success","data":null}';
-			}
-
-			// Upload JSON ///////////////////////////////////////////
-		} elseif ($this->upload_json != '') {
-			$json = $this->upload_json;
-
-			// Error /////////////////////////////////////////////////
-		} else {
-			$json = '{"status":"error","message":"'.$this->message.'"}';
-		}
-
-		// Output ////////////////////////////////////////////////
-		echo($json);
 	}
 }

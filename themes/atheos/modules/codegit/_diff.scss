@@ -13,8 +13,8 @@
 	}
 
 	li {
-		color: $font-color-subtle;
-		font-family: 'Ubuntu-Fira';
+		color: $fontColorMinor;
+		font-family: 'Ubuntu-Fira', monospace;
 		white-space: pre;
 
 		span {
@@ -38,7 +38,7 @@
 		}
 
 		&.context span {
-			color: $font-color-primary;
+			color: $fontColorMajor;
 		}
 
 	}

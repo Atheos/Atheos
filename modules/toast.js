@@ -20,7 +20,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		i18n = global.i18n,
 		types = global.types;
 		
 	atheos.toast = {

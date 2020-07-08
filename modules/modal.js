@@ -29,8 +29,8 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
 		amplify = global.amplify,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -73,10 +73,21 @@
 			return wrapper;
 		},
 
-		load: function(width, url, data, callback) {
-			callback = types.isFunction(data) ? data : callback;
+		load: function(width, url, data) {
 			data = data || {};
 			width = width > 400 ? width : 400;
+
+			var listener, callback;
+
+			if (data.listener && types.isFunction(data.listener)) {
+				listener = data.listener;
+				delete data.listener;
+			}
+
+			if (data.callback && types.isFunction(data.callback)) {
+				callback = data.callback;
+				delete data.callback;
+			}
 
 			var overlay = atheos.common.createOverlay('modal', true),
 				wrapper = oX('#modal_wrapper') || self.create(),
@@ -96,17 +107,18 @@
 			if (content.find('form')) {
 				content.find('form').off('submit');
 			}
-
-			ajax({
+			echo({
 				url: url,
-				type: 'GET',
 				data: data,
-				success: function(data) {
+				success: function(reply) {
+					if (reply.status && reply.status === 'error') {
+						return;
+					}
 					clearTimeout(loadTimeout);
-					content.html(data);
+					content.html(reply);
 					content.css('height', '');
 
-					// oX(content).html(data);
+					// oX(content).html(reply);
 					// var script = oX(oX(content).find('script'));
 					// if (script) {
 					// 	eval(script.text());
@@ -118,9 +130,12 @@
 						input.focus();
 					}
 					amplify.publish('modal.loaded');
-					if (callback) {
-						callback();
+					if (listener && wrapper.find('form')) {
+						wrapper.find('form').on('submit', listener);
 					}
+					if (callback) {
+						callback(wrapper);
+					}					
 				}
 			});
 
@@ -195,7 +210,7 @@
 			<h2>${wrapText}</h2>
 			</div>
 			`;
-			
+
 			loading = `<div class="loader"><h2>${wrapText}</h2><span class="dual-ring"></span></div>`;
 
 			var screen = oX('#modal_content');
@@ -205,7 +220,9 @@
 
 		drag: function(wrapper) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-
+			if (!wrapper) {
+				return;
+			}
 			var element = wrapper.el;
 
 			var rect = wrapper.offset(),
@@ -216,15 +233,8 @@
 				modalY = rect.top; // Stores top, left values (edge) of the element
 
 			function moveElement(event) {
-				if (element) {
-					// console.log(wrapper);
-					// wrapper.css({
-					// 	'top': modalY + event.clientY - mouseY + 'px',
-					// 	'left': modalX + event.clientX - mouseX + 'px'
-					// });
-					element.style.left = modalX + event.clientX - mouseX + 'px';
-					element.style.top = modalY + event.clientY - mouseY + 'px';
-				}
+				element.style.left = modalX + event.clientX - mouseX + 'px';
+				element.style.top = modalY + event.clientY - mouseY + 'px';
 			}
 
 			function disableSelect(e) {

@@ -172,7 +172,9 @@
 
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
-					if (swap) swap.parentNode.insertBefore(target, swap);
+					if (swap) {
+						swap.parentNode.insertBefore(target, swap);
+					}
 				}
 			}
 

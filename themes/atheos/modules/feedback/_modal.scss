@@ -10,7 +10,7 @@
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
-	border: $border-thick;
+	@include border(3px);
 	@include border-radius;
 }
 
@@ -18,8 +18,24 @@
 	background-color: $background;
 
 	form {
-		padding: 10px;
-		background-color: $foreground;
+		padding: 0 10px;
+		background-color: $midground;
+
+		// table {
+
+		// 	td,
+		// 	th {
+		// 		border: 1px solid $background;
+		// 	}
+
+		// 	th {
+		// 		background: $background;
+		// 	}
+		// }
+
+		toolbar {
+			margin: 0 -10px;
+		}
 	}
 
 }

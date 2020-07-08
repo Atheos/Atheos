@@ -10,7 +10,7 @@
 		width: 384px;
 
 		border: 1px solid #0074D9;
-		background-color: #111111;
+		background-color: $background;
 		margin: auto;
 		// margin-top: 15px;
 		// width: 310px;
@@ -18,13 +18,25 @@
 	}
 
 	legend {
-		font-size: 3rem;
+		font-size: 32px;
 		font-weight: 700;
 		text-align: center;
 
 		span {
 			font-size: 1rem;
 		}
+	}
+
+	label {
+		font-size: 14px;
+		display: inline-block;
+		vertical-align: super;
+	}
+
+	input[type="password"],
+	input[type="text"] {
+		margin-top: 0;
+		margin-bottom: 8px;
 	}
 
 	#login_options {
@@ -35,7 +47,12 @@
 	button {
 		float: right;
 	}
+
 	button+button {
 		margin-right: 6px;
+	}
+
+	.merged-icon {
+		top: -30px;
 	}
 }

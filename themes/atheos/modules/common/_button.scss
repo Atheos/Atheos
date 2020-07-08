@@ -3,30 +3,43 @@ button {
 	width: auto;
 	margin: 3px 0;
 	min-width: 80px;
-	color: #242424;
-	font-size: 13px;
+	color: $background;
 	font-weight: bold;
-	background-color: #EEEEEE;
-	border: none;
-	border-bottom: 2px solid #7d7d7d;
+	background-color: $fontColorMajor;
+	// border: none;
+	cursor: pointer;
 
 	&.bottom-left {
 		position: absolute;
 		bottom: 10px;
 		left: 10px;
 	}
+
+	&:disabled {
+		color: $grey;
+		cursor: unset;
+
+		&:hover {
+			color: $grey;
+			background-color: $fontColorMajor;
+		border-color: $metal;
+		}
+	}
+
+	&:hover {
+		background-color: $fontColorMinor;
+		border-color: $coal;
+	}
+	
+	&:focus {
+		outline: none;
+	}
+
+	&+button {
+		margin-left: 6px;
+	}
 }
 
-button+button {
-	margin-left: 6px;
-}
-
-button:hover {
-	color: #333;
-	background-color: #f3f3f3;
-	cursor: pointer;
-	border-bottom: 2px solid #919191;
-}
 
 // button.btn-left {
 //     // border-radius: 3px 0px 0px 3px;
@@ -42,7 +55,3 @@ button:hover {
 //     // border-radius: 0px 3px 3px 0px;
 //     border-radius: $border-radius;
 // }
-
-button .icon {
-	padding: 0 5px 0 0;
-}

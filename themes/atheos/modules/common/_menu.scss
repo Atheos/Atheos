@@ -1,0 +1,19 @@
+menu {
+	max-height: 55vh;
+	overflow: auto;
+	width: 200px;
+
+	li {
+		list-style: none;
+
+		a {
+			display: block;
+			padding: 10px;
+			user-select: none;
+		}
+	}
+
+	.active {
+		background-color: $blue;
+	}
+}
