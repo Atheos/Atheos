@@ -17,14 +17,12 @@ use MatthiasMullie\Minify;
 
 class SourceManager {
 
-
 	private $modules = array(
 		// "modules/jquery-1.7.2.min.js",
 		"modules/amplify.js",
-		"modules/ajax.js",
-		"modules/file-icons.js",
+		"modules/echo.js",
+		"modules/icons.js",
 		"modules/global.js",
-		// "modules/i18n.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
 		"modules/types.js",
@@ -46,7 +44,7 @@ class SourceManager {
 
 	private $pluginsJS = array();
 	private $pluginsCSS = array();
-	
+
 	private $fonts = array(
 		"fonts/file-icons/webfont.min.css",
 		"fonts/fontawesome/webfont.css",
@@ -54,15 +52,15 @@ class SourceManager {
 	);
 
 	function __construct() {
-		$temp = Common::readDirectory(COMPONENTS);
-		foreach ($temp as $component) {
+		global $components; global $plugins;
+		
+		foreach ($components as $component) {
 			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
 				$this->components[] = "components/$component/init.js";
 			}
 		}
 
-		$temp = Common::readDirectory(PLUGINS);
-		foreach ($temp as $plugin) {
+		foreach ($plugins as $plugin) {
 			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
 				$this->pluginsJS[] = "plugins/$plugin/init.js";
 			}
@@ -72,19 +70,17 @@ class SourceManager {
 		}
 	}
 
-	function loadAndMinify($type, $minifiedFileName, $files) {
+	function loadAndMinifyJS($minifiedFileName, $files) {
 
 		$content = '';
-		$minified = "// Creation Time: " . date('Y-m-d H:i:s', time()) . PHP_EOL;
+		$minified = "/* Creation Time: " . date('Y-m-d H:i:s', time()) . "*/" . PHP_EOL;
 
 		foreach ($files as $file) {
 			if (is_readable($file)) {
 				$content = file_get_contents($file);
-				$minified .= "// $file" . PHP_EOL;
-				if ($type === "js")	$minifier = new Minify\JS($content);
-				else $minifier = new Minify\CSS($content);
-
-				$minified .= $minifier->minify() . PHP_EOL;
+				$minified .= "/* $file */" . PHP_EOL;
+				$minifier = new Minify\JS($content);
+				$minified .= $minifier->minify() . ';' . PHP_EOL;
 			}
 		}
 		file_put_contents($minifiedFileName, $minified);
@@ -114,15 +110,17 @@ class SourceManager {
 				break;
 		}
 
+		$minifiedFileName = "public/$dataset.min.js";
+
 		if ($raw) {
 			$scripts = '';
 			foreach ($files as $file) {
 				$scripts .= ("<script type=\"text/javascript\" src=\"$file\"></script>");
 			}
 			echo $scripts;
+			if (file_exists($minifiedFileName)) unlink($minifiedFileName);
 
 		} else {
-			$minifiedFileName = "public/$dataset.min.js";
 
 			if (is_readable($minifiedFileName)) {
 				$mostRecent = filemtime($minifiedFileName);
@@ -133,14 +131,26 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinify("js", $minifiedFileName, $files);
+					$this->loadAndMinifyJS($minifiedFileName, $files);
 				}
 			} else {
-				$this->loadAndMinify("js", $minifiedFileName, $files);
+				$this->loadAndMinifyJS($minifiedFileName, $files);
 			}
 			echo("<script src=\"$minifiedFileName\"></script>");
 		}
 	}
+
+	function loadAndMinifyCSS($minifiedFileName, $files) {
+		$minifier = new Minify\CSS();
+
+		foreach ($files as $file) {
+			if (is_readable($file)) {
+				$minifier->add($file);
+			}
+		}
+		$minifier->minify($minifiedFileName);
+	}
+
 	function echoStyles($dataset = [], $raw = false) {
 		echo "<!-- " . strtoupper($dataset) . " -->";
 
@@ -152,11 +162,13 @@ class SourceManager {
 				break;
 			case "fonts":
 				$files = $this->fonts;
-				break;				
+				break;
 			default:
 				return false;
 				break;
 		}
+
+		$minifiedFileName = "public/$dataset.min.css";
 
 		if ($raw) {
 			$scripts = '';
@@ -164,10 +176,9 @@ class SourceManager {
 				$scripts .= ("<link rel=\"stylesheet\" href=\"$file\">");
 			}
 			echo $scripts;
+			if (file_exists($minifiedFileName)) unlink($minifiedFileName);
 
 		} else {
-			$minifiedFileName = "public/$dataset.min.css";
-
 			if (is_readable($minifiedFileName)) {
 				$mostRecent = filemtime($minifiedFileName);
 				foreach ($files as $file) {
@@ -177,10 +188,10 @@ class SourceManager {
 					}
 				}
 				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinify("css", $minifiedFileName, $files);
+					$this->loadAndMinifyCSS($minifiedFileName, $files);
 				}
 			} else {
-				$this->loadAndMinify("css", $minifiedFileName, $files);
+				$this->loadAndMinifyCSS($minifiedFileName, $files);
 			}
 			echo("<link rel=\"stylesheet\" href=\"$minifiedFileName\">");
 		}

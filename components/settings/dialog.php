@@ -10,102 +10,80 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("../../common.php");
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
-
 switch ($action) {
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Settings iFrame
-	//////////////////////////////////////////////////////////////////////////80
-	case "iframe":
-		?>
-		<script>
-			/*
-                 *  Storage Event:
-                 *  Note: Event fires only if change was made in different window and not in this one
-                 *  Details: http://dev.w3.org/html5/webstorage/#dom-localstorage
-                 */
-			window.addEventListener('storage',
-				function(e) {
-					if (/^atheos/.test(e.key)) {
-						var obj = {
-							key: e.key,
-							oldValue: e.oldValue,
-							newValue: e.newValue
-						};
-						/* Notify listeners */
-						window.parent.amplify.publish('settings.changed', obj);
-					}
-				},
-				false);
-		</script>
-		<?php
-		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Main Settings Window
 	//////////////////////////////////////////////////////////////////////////80
 	case "settings":
 		?>
-		<h1><i class="fas fa-cog"></i><?php i18n("Settings"); ?></h1>
+		<label class="title"><i class="fas fa-cog"></i><?php echo i18n("settings"); ?></label>
 
-		<div id="settings">
+		<div class="settings">
 			<!--<div class="panels-components">-->
-			<ul id="panel_menu">
+			<menu>
 				<li>
-					<a name="editor-settings" data-file="components/settings/settings.editor.php" data-name="editor" class="active"><i class="fas fa-home"></i><?php i18n("Editor"); ?></a>
+					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
 				</li>
 				<li>
-					<a name="system-settings" data-file="components/settings/settings.system.php" data-name="system"><i class="fas fa-sliders-h"></i><?php i18n("System"); ?></a>
+					<a data-panel="system"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
 				</li>
 				<li>
-					<a name="codegit-settings" data-file="components/settings/settings.codegit.php" data-name="codegit"><i class="fas fa-code-branch"></i><?php i18n("CodeGit"); ?></a>
+					<a data-panel="codegit"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
 				</li>
+				<li>
+					<a data-panel="keybindings"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
+				</li>
+
 				<?php
-				if (Common::checkAccess()) {
+				if (Common::checkAccess("configure")) {
 					?>
 					<li>
-						<a name="extension-settings" data-file="components/textmode/dialog.php?action=settings" data-name="fileext_textmode"><i class="fas fa-pencil-alt"></i><?php i18n("Extensions"); ?></a>
+						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
 					<?php
 				}
 				?>
+
 				<hr>
 				<?php
-				$plugins = Common::readDirectory(PLUGINS);
-
+				global $plugins;
 				foreach ($plugins as $plugin) {
 					if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
 						$data = json_decode(file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json"), true);
-						if (isset($data['config'])) {
-							foreach ($data['config'] as $config) {
-								if (isset($config['file']) && isset($config['icon']) && isset($config['title'])) {
-									echo('<li><a data-file="plugins/' . $plugin . '/' .$config['file'].'" data-name="'. $data['name'] .'"><i class="' . $config['icon'] . '"></i>' . $config['title'] . '</a></li>');
-								}
+						if (isset($data["config"])) {
+							$config = $data["config"][0];
+							if (isset($config['icon']) && isset($config['title'])) {
+								echo('<li><a data-panel="' . $plugin . '"><i class="' . $config['icon'] . '"></i>' . i18n($config['title']) . '</a></li>');
 							}
 						}
 
 					}
 				}
 				?>
-			</ul>
-			<div id="panel_view">
-				<?php include('settings.editor.php'); ?>
-			</div>
+			</menu>
+			<panel>
+				<?php include("panels/editor.php"); ?>
+			</panel>
+
 		</div>
+		<toolbar>
+			<?php echo i18n("settings_autosave"); ?>
+		</toolbar>
 		<?php
+		break;
+
+
+	case "loadPanel":
+		$panel = Common::data("panel");
+		if (file_exists(__DIR__ . "/panels/$panel.php")) {
+			include(__DIR__ . "/panels/$panel.php");
+		} elseif (file_exists("plugins/$panel/settings.php")) {
+			include("plugins/$panel/settings.php");
+		} else {
+			echo $panel;
+		}
+
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80

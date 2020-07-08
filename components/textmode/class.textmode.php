@@ -28,6 +28,7 @@ class TextMode {
 		'php4' => 'php',
 		'php5' => 'php',
 		'phtml' => 'php',
+		'twig' => 'twig',
 		'json' => 'json',
 		'java' => 'java',
 		'xml' => 'xml',
@@ -227,8 +228,8 @@ class TextMode {
 			}
 
 
-			if (isset($textmodeMap[$extension])) {
-				Common::sendJSON("error", "$extension is already set."); die;
+			if (isset($customMap[$extension])) {
+				Common::sendJSON("error", i18n("extensionSet")); die;
 			} else {
 				$customMap[$extension] = $mode;
 			}

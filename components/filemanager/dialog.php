@@ -10,24 +10,10 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
- 
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 $path = Common::data("path");
 $name = Common::data("name");
-
 $type = Common::data("type");
 
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 switch ($action) {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -35,12 +21,30 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		?>
+		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("create_type", (ucfirst($type))); ?></label>
 		<form>
-			<h3><i class="fas fa-plus-circle"></i><?php echo i18n("New " . (ucfirst($type))); ?></h3>
 			<input type="text" name="nodeName" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only">
-			<button class="btn-left"><?php i18n("Create"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<button class="btn-left"><?php echo i18n("create"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
+		<?php
+		break;
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Duplicate
+	//////////////////////////////////////////////////////////////////////////80
+	case 'duplicate':
+		?>
+		<label class="title"><i class="fa fa-clone"></i> <?php echo i18n("duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></label>
+		<form>
+			<p>
+				<?php echo i18n("duplicate_name"); ?>
+			</p>
+			<input type="text" name="clone" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
+			<button class="btn-left"><?php echo i18n("duplicate"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
+		</form>
+
 		<?php
 		break;
 
@@ -49,34 +53,16 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'rename':
 		?>
+		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
 		<form>
-			<h3><i class="fas fa-pencil-alt"></i> <?php i18n("Rename"); ?> <?php echo i18n((ucfirst($type))); ?></h3>
 			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
-			<button class="btn-left"><?php i18n("Rename"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<button class="btn-left"><?php echo i18n("rename"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
 
 	</form>
 	<?php
 	break;
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Duplicate
-	//////////////////////////////////////////////////////////////////////////80
-	case 'duplicate':
-		?>
-		<form>
-			<h3><i class="fa fa-clone"></i> <?php i18n("Duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></h3>
-			<p>
-				<?php i18n("Enter new name:"); ?>
-			</p>
-			<input type="text" name="clone" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
-			<button class="btn-left"><?php i18n("Duplicate"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
-		</form>
-
-		<?php
-		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action

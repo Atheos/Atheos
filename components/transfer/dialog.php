@@ -10,21 +10,8 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 $path = Common::data("path");
 
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 switch ($action) {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -36,10 +23,10 @@ switch ($action) {
 		}
 		?>
 		<form enctype="multipart/form-data">
-			<h3><i class="fas fa-upload"></i><?php i18n("Upload Files"); ?></h3>
+			<h3><i class="fas fa-upload"></i><?php echo i18n("uploadFiles"); ?></h3>
 			<pre><?php echo($path); ?></pre>
 			<label id="upload_wrapper">
-				<?php i18n("Drag Files or Click Here to Upload"); ?>
+				<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
 				<input type="file" name="upload[]" multiple>
 			</label>
 			<div id="progress_wrapper">

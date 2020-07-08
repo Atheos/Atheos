@@ -10,23 +10,10 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
-
-//////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////////////////80
-Common::checkSession();
-
-$action = Common::data("action");
 $user = Common::data("user", "session");
 
 $path = Common::data("path");
 $name = Common::data("name");
-
-if (!$action) {
-	Common::sendJSON("E401m");
-	die;
-}
 
 switch ($action) {
 
@@ -52,9 +39,7 @@ switch ($action) {
 			<?php echo($projectList); ?>
 		</ul>
 
-		<?php
-
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////
 	// List Projects
@@ -74,133 +59,114 @@ switch ($action) {
 		}
 
 		?>
-		<h1><i class="fas fa-archive"></i><?php i18n("Project List"); ?></h1>
-
-		<form>
-			<div id="project-list">
-				<table>
-					<tr>
-						<th class="action"><?php i18n("Open"); ?></th>
-						<th><?php i18n("Project Name"); ?></th>
-						<th><?php i18n("Path"); ?></th>
-						<?php if (Common::checkAccess("configure")) {
-							?>
-							<th class="action"><?php i18n("Delete"); ?></th>
-							<th class="action"><?php i18n("Rename"); ?></th>
-							<?php
-						} ?>
-					</tr>
-					<?php
-					$activeProject = Common::data("project", "session");
-					foreach ($projectList as $projectPath => $projectName) {
+		<label class="title"><i class="fas fa-archive"></i><?php echo i18n("project_list"); ?></label>
+			<table id="project-list">
+				<tr>
+					<th class="action"><?php echo i18n("open"); ?></th>
+					<th><?php echo i18n("project_name"); ?></th>
+					<th><?php echo i18n("path"); ?></th>
+					<?php if (Common::checkAccess("configure")) {
 						?>
-						<tr>
-							<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive"></a></td>
-							<td><?php echo($projectName); ?></td>
-							<td><?php echo($projectPath); ?></td>
-							<?php
-							if (Common::checkAccess("configure")) {
-								if ($activeProject == $projectPath) {
-									?>
-									<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
-									<?php
-								} else {
-									?>
-									<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt"></a></td>
-									<?php
-								}
+						<th class="action"><?php echo i18n("delete"); ?></th>
+						<th class="action"><?php echo i18n("rename"); ?></th>
+						<?php
+					} ?>
+				</tr>
+				<?php
+				$activeProject = Common::data("project", "session");
+				foreach ($projectList as $projectPath => $projectName) {
+					?>
+					<tr>
+						<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive blue"></a></td>
+						<td><?php echo($projectName); ?></td>
+						<td><?php echo($projectPath); ?></td>
+						<?php
+						if (Common::checkAccess("configure")) {
+							if ($activeProject == $projectPath) {
 								?>
-								<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt"></a></td>
+								<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+								<?php
+							} else {
+								?>
+								<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt metal"></a></td>
 								<?php
 							}
 							?>
-						</tr>
-						<?php
+							<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt orange"></a></td>
+							<?php
+						}
+						?>
+					</tr>
+					<?php
 
-					}
-					?>
-				</table>
-			</div>
+				}
+				?>
+			</table>
 			<?php if (Common::checkAccess("configure")) {
-				?><button class="btn-left" onclick="atheos.project.create();"><?php i18n("New Project"); ?></button><?php
+				?>
+				<toolbar>
+					<button class="btn-left" onclick="atheos.project.create();"><?php echo i18n("project_new"); ?></button>
+				</toolbar>
+				<?php
 			} ?>
-		</form>
-		<?php
-
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Create New Project
 	//////////////////////////////////////////////////////////////////////
-
-	case 'create':
-
-		?>
+	case 'create': ?>
 		<form style="width: 500px;">
-			<label><?php i18n("Project Name"); ?></label>
+			<label><?php echo i18n("project_name"); ?></label>
 			<input name="projectName" autofocus="autofocus" autocomplete="off">
-			<label><?php i18n("Folder Name or Absolute Path"); ?></label>
+			<label><?php echo i18n("folderNameOrAbsolutePath"); ?></label>
 			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/]+" autocomplete="off" title="Please input a valid file path.">
 
 			<!-- Clone From GitHub -->
 			<!--<div style="width: 500px;">-->
-				<table style="display: none;" id="git_options">
-					<tr>
-						<td>
-							<label><?php i18n("Git Repository"); ?></label>
-							<input name="gitRepo">
-						</td>
-						<td width="5%">&nbsp;</td>
-						<td width="25%">
-							<label><?php i18n("Branch"); ?></label>
-							<input name="gitBranch" value="master">
-						</td>
-					</tr>
-					<tr>
-						<td colspan="3" class="note"><?php i18n("Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed."); ?></td>
-					</tr>
-				</table>
+			<table style="display: none;" id="git_options">
+				<tr>
+					<td>
+						<label><?php echo i18n("gitRepository"); ?></label>
+						<input name="gitRepo">
+					</td>
+					<td width="5%">&nbsp;</td>
+					<td width="25%">
+						<label><?php echo i18n("branch"); ?></label>
+						<input name="gitBranch" value="master">
+					</td>
+				</tr>
+				<tr>
+					<td colspan="3" class="note"><?php echo i18n("noteThisWillOnlyWorkIfYourGitRepoDoesNotRequireInteractiveAuthenticationAndYourServerHasGitInstalled."); ?></td>
+				</tr>
+			</table>
 			<!--// </div>-->
-			<button class="btn-left"><?php i18n("Create Project"); ?></button>
-			<button id="show_git_options" class="btn-mid"><?php i18n("...From Git Repo"); ?></button>
-			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<button class="btn-left"><?php echo i18n("project_create"); ?></button>
+			<button id="show_git_options" class="btn-mid"><?php echo i18n("market_install_gitRepo"); ?></button>
+			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
-		<?php
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////
 	// Rename
 	//////////////////////////////////////////////////////////////////
-	case 'rename':
-		?>
+	case 'rename': ?>
 		<form>
-			<label><i class="fas fa-pencil-alt"></i><?php i18n("Rename Project"); ?></label>
-			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($projectName); ?>">
-			<button class="btn-left"><?php i18n("Rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php i18n("Cancel"); ?></button>
+			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("project_rename"); ?></label>
+			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
+			<button class="btn-left"><?php echo i18n("rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
-		<?php
-		break;
+		<?php break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////
-
-	case 'delete':
-
-		?>
+	case 'delete': ?>
 		<form>
-			<label><?php i18n("Confirm Project Deletion"); ?></label>
-			<pre><?php i18n("Name:"); ?> <?php echo($projectName); ?>, <?php i18n("Path:") ?> <?php echo($projectPath); ?></pre>
-			<table>
-				<tr><td width="5"><input type="checkbox" name="delete" id="delete" value="true"></td><td><?php i18n("Delete Project Files"); ?></td></tr>
-				<tr><td width="5"><input type="checkbox" name="follow" id="follow" value="true"></td><td><?php i18n("Follow Symbolic Links "); ?></td></tr>
-			</table>
-			<button class="btn-left"><?php i18n("Confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php i18n("Cancel"); ?></button>
+			<label><i class="fas fa-trash-alt"></i><?php echo i18n("project_confirm"); ?></label>
+			<pre><?php echo i18n("name"); ?> <?php echo($name); ?>, <?php echo i18n("path") ?> <?php echo($path); ?></pre>
+			<button class="btn-left"><?php echo i18n("confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
-
-		<?php
-		break;
+		<?php break;
 
 }
-
 ?>

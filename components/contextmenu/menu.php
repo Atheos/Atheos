@@ -2,16 +2,20 @@
 
 	<?php
 
+	// Context Menu
+	$context_menu = file_get_contents(COMPONENTS . "/contextmenu/context_menu.json");
+	$context_menu = json_decode($context_menu, true);
+
 	////////////////////////////////////////////////////////////
 	// Load Context Menu
 	////////////////////////////////////////////////////////////
 
 	foreach ($context_menu as $menuItem => $data) {
 		if ($data['enabled']) {
-			if ($data['title'] == 'Break') {
-				echo('<hr class="'.$data['applies-to'].'">');
-			} else {
+			if (isset($data['title'])) {
 				echo('<a class="'.$data['applies-to'].'" onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], 'return').'</a>');
+			} else {
+				echo('<hr class="'.$data['applies-to'].'">');
 			}
 		}
 	}

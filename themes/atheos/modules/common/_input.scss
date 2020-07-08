@@ -1,0 +1,37 @@
+#dependencies,
+button,
+dropdown,
+input,
+select,
+textarea {
+	// display: block;
+	width: 100%;
+	margin: 5px 0;
+	padding: 7px 10px;
+	line-height: normal;
+	@include input;
+	@include border-radius;
+}
+
+#dependencies .error {
+	color: red;
+}
+
+#dependencies .success {
+	color: green;
+}
+
+select option {
+	background-color: $inputBackground;
+}
+
+textarea {
+	min-height: 100px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-bottom: 2px solid $highlight;
+}

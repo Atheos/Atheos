@@ -14,7 +14,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -88,8 +88,8 @@
 		},
 
 		install: function() {
-			var data = atheos.common.serializeForm(self.form.el);
-			ajax({
+			var data = serializeForm(self.form.el);
+			echo({
 				url: 'components/install/process.php',
 				data,
 				success: function(reply) {
@@ -103,6 +103,7 @@
 								'Okay': function() {}
 							}
 						};
+						atheos.alert.show(dialog);
 					}
 				}
 			});

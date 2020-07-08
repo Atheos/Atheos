@@ -9,11 +9,13 @@
 (function(global) {
 	'use strict';
 
+
+	//////////////////////////////////////////////////////////////////////
+	// Path helper functions
+	//////////////////////////////////////////////////////////////////////
 	global.pathinfo = function(path) {
 		var index = path.lastIndexOf('/');
-		//////////////////////////////////////////////////////////////////////
-		// Path helper functions
-		//////////////////////////////////////////////////////////////////////
+
 		let getBaseName = function(path) {
 			return path.split('/').pop();
 		};
@@ -38,7 +40,9 @@
 		};
 	};
 
-
+	//////////////////////////////////////////////////////////////////////
+	// Debounce and Throttle
+	//////////////////////////////////////////////////////////////////////
 	global.debounce = function(fn, delay) {
 		// Source: https://remysharp.com/2010/07/21/throttling-function-calls
 		var timer = null;
@@ -70,6 +74,14 @@
 		};
 	};
 
+
+	//////////////////////////////////////////////////////////////////////
+	// Open External Link
+	//////////////////////////////////////////////////////////////////////
+	global.openExternal = function(url) {
+		window.open(addon.url, '_newtab');
+	};
+
 	//////////////////////////////////////////////////////////////////////
 	// Extend / Combine JS objects without modifying the source object
 	//////////////////////////////////////////////////////////////////////
@@ -81,6 +93,45 @@
 			}
 		}
 		return temp;
+	};
+
+
+	//////////////////////////////////////////////////////////////////////80
+	// SerializeForm
+	//////////////////////////////////////////////////////////////////////80
+	global.serializeForm = function(form) {
+		var field, l, s = [];
+		var o = {};
+		if (typeof form === 'object' && form.nodeName === 'FORM') {
+
+			var len = form.elements.length;
+
+			for (var i = 0; i < len; i++) {
+				field = form.elements[i];
+				// field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button' &&
+				if (!field.name || field.disabled || field.nodeName === 'BUTTON' || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) {
+					continue;
+				}
+
+				if (field.type === 'select-multiple') {
+					l = form.elements[i].options.length;
+					for (var j = 0; j < l; j++) {
+						if (field.options[j].selected) {
+							o[field.name] = field.options[j].value;
+						}
+					}
+				} else if (field.type !== 'checkbox' && field.type !== 'radio') {
+					o[field.name] = field.value;
+				} else if (field.checked) {
+					if (o[field.name]) {
+						o[field.name].push(field.value);
+					} else {
+						o[field.name] = [field.value];
+					}
+				}
+			}
+		}
+		return o;
 	};
 
 	//////////////////////////////////////////////////////////////////////
