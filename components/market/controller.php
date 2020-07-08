@@ -1,34 +1,24 @@
 <?php
 
-/*
-    *  Copyright (c) Codiad & daeks (codiad.com), distributed
-    *  as-is and without warranty under the MIT License. See
-    *  [root]/license.txt for more. This information must remain intact.
-    */
+//////////////////////////////////////////////////////////////////////////////80
+// Market Controller
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
+// See [root]/license.md for more. This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
 require_once('class.market.php');
-//////////////////////////////////////////////////////////////////
-// Verify Session or Key
-//////////////////////////////////////////////////////////////////
-Common::checkSession();
-
-//////////////////////////////////////////////////////////////////
-// Get Action
-//////////////////////////////////////////////////////////////////
-$action = Common::data("action");
-if (!$action) {
-	Common::sendJSON("error", "Missing Action");
-	die;
-}
 
 if (!Common::checkAccess("configure")) {
-	Common::sendJSON("E430u");
-	die;
+	Common::sendJSON("E430u"); die;
 }
 
 $type = Common::data("type");
 $name = Common::data("name");
+$category = Common::data("category");
 $repo = Common::data("repo");
 
 $Market = new Market();
@@ -46,21 +36,22 @@ switch ($action) {
 	// Install
 	//////////////////////////////////////////////////////////////////
 	case 'install':
-		$Market->install($type, $name, $repo);
+		$Market->install($name, $type, $category);
 		break;
 
 	//////////////////////////////////////////////////////////////////
 	// Remove
 	//////////////////////////////////////////////////////////////////
 	case 'remove':
-		$Market->remove($type, $name);
+		$Market->remove($name, $type);
 		break;
 
 	//////////////////////////////////////////////////////////////////
 	// Update
 	//////////////////////////////////////////////////////////////////
 	case 'update':
-		$Market->update($type, $name);
+		$Market->remove($name, $type);
+		$Market->install($name, $type, $category);
 		break;
 
 	//////////////////////////////////////////////////////////////////

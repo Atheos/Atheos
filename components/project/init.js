@@ -13,8 +13,6 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
@@ -23,12 +21,9 @@
 
 	atheos.project = {
 
-		controller: 'components/project/controller.php',
-		dialog: 'components/project/dialog.php',
-
 		//projectmanager
 		sideExpanded: true,
-		openTrigger: 'single',
+		openTrigger: 'click',
 		current: {
 			name: '',
 			path: ''
@@ -37,8 +32,8 @@
 		init: function() {
 			self = this;
 
-			self.loadCurrent();
-			self.loadDock();
+			self.load();
+			self.dock.load();
 
 			var projectCreate = oX('#projects-create'),
 				projectManage = oX('#projects-manage'),
@@ -59,9 +54,9 @@
 			if (projectCollpse) {
 				projectCollpse.on('click', function() {
 					if (self.sideExpanded) {
-						self.collapse();
+						self.dock.collapse();
 					} else {
-						self.expand();
+						self.dock.expand();
 					}
 				});
 			}
@@ -72,72 +67,48 @@
 
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('project.openTrigger');
-				if (local === 'single' || local === 'double') {
+				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
 			});
 
-			self.nodeListener();
-		},
+			oX('#project_list .content li', true).on('click, dblclick', function(e) {
+				if (self.openTrigger === e.type) {
+					var node = oX(e.target);
 
-		nodeListener: function() {
-
-			var nodeFunctions = (function(node) {
-				node = oX(node);
-
-				var tagName = node.el.tagName;
-
-				if (tagName === 'UL') {
-					return false;
-				} else if (tagName !== 'LI') {
-					node = node.parent();
-				}
-				self.open(node.attr('data-project'));
-
-			}).bind(this);
-
-			oX('#project_list .content').on('click', function(e) {
-				if (self.openTrigger === 'single') {
-					nodeFunctions(e.target);
+					if (node.tagName === 'UL') {
+						return false;
+					} else if (node.tagName !== 'LI') {
+						node = node.parent();
+					}
+					self.open(node.attr('data-project'));
 				}
 			});
-
-			oX('#project_list .content').on('dblclick', function(e) {
-				if (self.openTrigger === 'double') {
-					nodeFunctions(e.target);
-				}
-			});
-
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Get Current Project
 		//////////////////////////////////////////////////////////////////
-
-		loadCurrent: function() {
-			var project = this;
-			ajax({
-				url: this.controller,
+		load: function() {
+			echo({
+				url: atheos.controller,
 				data: {
-					'action': 'load'
+					target: 'project',
+					action: 'load'
 				},
-				success: function(data) {
-					atheos.toast.show(data, 'Project Loaded');
-					if (data.status !== 'error') {
-						project.current = {
-							name: data.name,
-							path: data.path
-						};
-						oX('#file-manager').empty();
-						oX('#file-manager').html(`<ul><li>
-									<a id="project-root" data-type="root" data-path="${data.path}">
-									<i class="root fa fa-folder medium-blue"></i>
-									<span>${data.name}</span>
-									</a>
-								</li></ul>`);
-						atheos.filemanager.openDir(data.path);
-						atheos.user.saveActiveProject(data.path);
+				success: function(reply) {
+					atheos.toast.show(reply);
+					if (reply.status === 'error') {
+						return;
 					}
+					var logSpan = oX('#last_login');
+					if (reply.lastLogin && logSpan) {
+						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
+						logSpan.find('span').text(reply.lastLogin);
+					}
+
+					self.setRoot(reply.name, reply.path);
+
 				}
 			});
 		},
@@ -147,33 +118,58 @@
 		//////////////////////////////////////////////////////////////////
 		open: function(projectPath) {
 			atheos.scout.hideFilter();
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'project',
 					action: 'open',
 					projectPath
 				},
-				success: function(data) {
-					if (data.status !== 'error') {
-						self.loadCurrent();
-						if (atheos.modal.modalVisible) {
-							atheos.modal.unload();
-						}
-						atheos.user.saveActiveProject(projectPath);
-						localStorage.removeItem('lastSearched');
-						/* Notify listeners. */
-						amplify.publish('project.onOpen', projectPath);
+				success: function(reply) {
+					atheos.toast.show(reply);
+					if (reply.status === 'error') {
+						return;
 					}
+
+					self.setRoot(reply.name, reply.path);
+
+					if (atheos.modal.modalVisible) {
+						atheos.modal.unload();
+					}
+
+					atheos.user.saveActiveProject(projectPath);
+					localStorage.removeItem('lastSearched');
+					/* Notify listeners. */
+					amplify.publish('project.open', projectPath);
+
 				}
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////
+		// Set project root in file manager
+		//////////////////////////////////////////////////////////////////		
+		setRoot: function(name, path) {
+			self.current = {
+				name,
+				path
+			};
+			oX('#file-manager').empty();
+			oX('#file-manager').html(`<ul><li>
+									<a id="project-root" data-type="root" data-path="${path}">
+									<i class="root fa fa-folder blue"></i>
+									<span>${name}</span>
+									</a>
+								</li></ul>`);
+			atheos.filemanager.openDir(path);
+		},
+
+		//////////////////////////////////////////////////////////////////
 		// Open the project manager dialog
 		//////////////////////////////////////////////////////////////////
-
 		list: function() {
-			atheos.modal.load(500, this.dialog, {
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'project',
 				action: 'list'
 			});
 		},
@@ -181,35 +177,38 @@
 		//////////////////////////////////////////////////////////////////
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
-		loadDock: function() {
-			ajax({
-				url: this.dialog,
-				data: {
-					action: 'projectDock'
-				},
-				success: function(reply) {
-					oX('#project_list .content').html(reply);
-				}
-			});
-		},
+		dock: {
+			load: function() {
+				echo({
+					url: atheos.dialog,
+					data: {
+						target: 'project',
+						action: 'projectDock'
+					},
+					success: function(reply) {
+						oX('#project_list .content').html(reply);
+					}
+				});
+			},
 
-		expand: function() {
-			this.sideExpanded = true;
-			oX('#sb_left #project_list').css('height', '');
-			oX('#sb_left>.content').css('bottom', '');
+			expand: function() {
+				self.sideExpanded = true;
+				oX('#sb_left #project_list').css('height', '');
+				oX('#sb_left>.content').css('bottom', '');
 
-			oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
-		},
+				oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
+			},
 
-		collapse: function() {
-			this.sideExpanded = false;
-			var height = oX('#sb_left #project_list .title').height();
+			collapse: function() {
+				self.sideExpanded = false;
+				var height = oX('#sb_left #project_list .title').height();
 
-			oX('#sb_left #project_list').css('height', height + 'px');
-			oX('#sb_left>.content').css('bottom', height + 'px');
+				oX('#sb_left #project_list').css('height', height + 'px');
+				oX('#sb_left>.content').css('bottom', height + 'px');
 
-			oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
+				oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
 
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -221,6 +220,7 @@
 
 			var createProject = function() {
 				var data = {
+					target: 'project',
 					action: 'create',
 					projectName,
 					projectPath,
@@ -228,13 +228,13 @@
 					gitBranch
 				};
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data,
 					success: function(reply) {
 						if (reply.status !== 'error') {
 							self.open(reply.path);
-							self.loadSide();
+							self.dock.load();
 							/* Notify listeners. */
 							delete data.action;
 							amplify.publish('project.create', data);
@@ -268,19 +268,18 @@
 				}
 			};
 
-			amplify.subscribe('modal.loaded', function() {
-				oX('#modal_content form').once('submit', listener);
-
-				// More Selector
-				oX('#show_git_options').on('click', function(e) {
-					e.preventDefault();
-					oX(e.target).hide();
-					atheos.flow.slide('open', oX('#git_options').el);
-				});
-
-			});
-			atheos.modal.load(500, self.dialog, {
-				action: 'create'
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
+				action: 'create',
+				listener,
+				callback: function() {
+					// More Selector
+					oX('#show_git_options').on('click', function(e) {
+						e.preventDefault();
+						oX(e.target).hide();
+						atheos.flow.slide('open', oX('#git_options').el);
+					});
+				}
 			});
 		},
 
@@ -296,18 +295,19 @@
 				projectName = oX('#modal_content form input[name="projectName"]').value();
 
 				var data = {
+					target: 'project',
 					action: 'rename',
 					projectPath,
 					projectName
 				};
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data,
 					success: function(reply) {
 						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'Project renamed');
-							self.loadSide();
+							self.dock.load();
 							atheos.modal.unload();
 							/* Notify listeners. */
 							delete data.action;
@@ -317,41 +317,38 @@
 				});
 			};
 
-			amplify.subscribe('modal.loaded', function() {
-				oX('#modal_content form').once('submit', listener);
-			});
-			atheos.modal.load(500, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
 				action: 'rename',
-				projectName
+				name: projectName,
+				listener
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////
 		// Delete Project
 		//////////////////////////////////////////////////////////////////
-
 		delete: function(projectName, projectPath) {
 			var listener = function(e) {
 				e.preventDefault();
 
-				var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
-				var followLinks = oX('input:checkbox[name="follow"]:checked').value();
+				// var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
+				// var followLinks = oX('input:checkbox[name="follow"]:checked').value();
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'project',
 						action: 'delete',
 						projectPath,
-						projectName,
-						deleteFiles,
-						followLinks
+						projectName
 					},
 					success: function(data) {
 						if (data.status === 'success') {
 							atheos.toast.show('success', 'Project Deleted');
-							atheos.toast.show('notice', 'Project file deletion not implemented');
+
 							self.list();
-							self.loadDock();
+							self.dock.load();
 
 							for (var path in atheos.active.sessions) {
 								if (path.indexOf(projectPath) === 0) {
@@ -369,13 +366,12 @@
 				});
 			};
 
-			amplify.subscribe('modal.loaded', function() {
-				oX('#modal_content form').once('submit', listener);
-			});
-			atheos.modal.load(500, self.dialog, {
-				action: 'rename',
-				projectName,
-				projectPath
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'project',
+				action: 'delete',
+				name: projectName,
+				path: projectPath,
+				listener
 			});
 		},
 
@@ -384,9 +380,10 @@
 		// Get Current (Path)
 		//////////////////////////////////////////////////////////////////
 		getCurrent: function() {
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'project',
 					action: 'current'
 				},
 				success: function(data) {

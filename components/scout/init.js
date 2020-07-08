@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
@@ -23,8 +21,7 @@
 	amplify.subscribe('system.loadExtra', () => atheos.scout.init());
 
 	atheos.scout = {
-		controller: 'components/scout/controller.php',
-		dialog: 'components/scout/dialog.php',
+
 		cachedFileTree: null,
 		rootPath: null,
 		rootName: null,
@@ -84,24 +81,24 @@
 
 				oX('#probe_processing').show();
 
-				var query = oX('#modal_content form input[name="probe_query"]').value();
-				var fileExtensions = oX('#modal_content form input[name="probe_filter"]').value();
-				var filter = fileExtensions.trim();
+				var query = oX('#modal_content input[name="probe_query"]').value();
+				var extensions = oX('#modal_content input[name="probe_filter"]').value();
+				var filter = extensions.trim();
+				// var type = oX('#modal_content select[name="probe_type"]').prop('checked');
 				if (filter !== '') {
 					//season the string to use in find command
 					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
 				}
 
-				var type = oX('#modal_content form select[name="probe_type"]').value();
-
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'scout',
 						action: 'probe',
-						type: type,
-						path: path,
-						query: query,
-						filter: filter
+						// type,
+						path,
+						query,
+						filter
 					},
 					success: function(reply) {
 						table.empty();
@@ -139,44 +136,45 @@
 						results = table.html();
 						atheos.flow.slide('open', table.el);
 
-						self.saveSearchResults(query, type, filter, results);
+						self.saveSearchResults(query, extensions, results);
 						atheos.modal.resize();
 
 					}
 				});
 			};
 
-			atheos.modal.load(500, self.dialog, {
-				action: 'probe'
-			}, () => {
-				var table = oX('#probe_results');
+			atheos.modal.load(500, atheos.dialog, {
+				target: 'scout',
+				action: 'probe',
+				listener,
+				callback: function() {
+					var table = oX('#probe_results');
 
-				var lastSearched = JSON.parse(atheos.storage('lastSearched'));
+					var lastSearched = JSON.parse(atheos.storage('lastSearched'));
 
-				if (lastSearched) {
-					oX('#modal_content form input[name="probe_query"]').value(lastSearched.searchText);
-					oX('#modal_content form input[name="probe_filter"]').value(lastSearched.fileExtension);
-					oX('#modal_content form select[name="probe_type"]').value(lastSearched.searchType);
-					if (lastSearched.searchResults !== '') {
-						table.html(lastSearched.searchResults);
-						atheos.flow.slide('open', table.el);
-						atheos.modal.resize();
+					if (lastSearched) {
+						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
+						oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
+						// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
+						if (lastSearched.results !== '') {
+							table.html(lastSearched.results);
+							atheos.flow.slide('open', table.el);
+							atheos.modal.resize();
+						}
 					}
 				}
-
-				oX('#modal_content').on('submit', listener);
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Save Search Results
 		//////////////////////////////////////////////////////////////////////80
-		saveSearchResults: function(searchText, searchType, fileExtensions, searchResults) {
+		saveSearchResults: function(query, extensions, results) {
 			var lastSearched = {
-				searchText: searchText,
-				searchType: searchType,
-				fileExtension: fileExtensions,
-				searchResults: searchResults
+				query,
+				extensions,
+				results,
+				// type
 			};
 			atheos.storage('lastSearched', JSON.stringify(lastSearched));
 		},
@@ -221,9 +219,10 @@
 			}
 
 			self.currentlyFiltering = input;
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'scout',
 					action: 'filter',
 					filter: input,
 					path: self.rootPath,
@@ -309,8 +308,8 @@
 		// Create Filtered Directory Item
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
-			
-			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : global.FileIcons.getClassWithColor(name);
+
+			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			var isOpen = '';

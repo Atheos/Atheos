@@ -22,17 +22,25 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
+		echo = global.echo,
 		oX = global.onyx;
 
-
+	var self = null;
 
 	atheos.common = {
 
+		init: function() {
+			self = this;
 
-		//////////////////////////////////////////////////////////////////////
+			self.initDropdown();
+			self.initTogglePassword();
+			self.initCheckMonitors();
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
 		// Options Menu Event Handlers
-		//////////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		optionMenus: [],
 
 		initMenuHandler: function(button, menu, switchClasses) {
@@ -84,42 +92,76 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////////
-		// SerializeForm
-		//////////////////////////////////////////////////////////////////////
-		serializeForm: function(form) {
-			var field, l, s = [];
-			var o = {};
-			if (typeof form === 'object' && form.nodeName === 'FORM') {
+		//////////////////////////////////////////////////////////////////////80
+		// Dropdown Menu Handler
+		//////////////////////////////////////////////////////////////////////80
+		initDropdown: function() {
+			var close = function() {
+				oX('dropdown.expanded').removeClass('expanded');
+				oX('dropdown', true).off('click');
+			};
 
-				var len = form.elements.length;
+			oX('dropdown', true).on('click', function(e) {
+				e.preventDefault();
+				e.stopPropagation();
 
-				for (var i = 0; i < len; i++) {
-					field = form.elements[i];
-					// field.type === 'file' && field.type === 'reset' && field.type === 'submit' && field.type === 'button' &&
-					if (!field.name || field.disabled || field.nodeName === 'BUTTON' || ['file', 'reset', 'submit', 'button'].indexOf(field.type) > -1) {
-						continue;
-					}
+				var target = oX(e.target),
+					parent = target.parent('dropdown');
 
-					if (field.type === 'select-multiple') {
-						l = form.elements[i].options.length;
-						for (var j = 0; j < l; j++) {
-							if (field.options[j].selected) {
-								o[field.name] = field.options[j].value;
-							}
-						}
-					} else if (field.type !== 'checkbox' && field.type !== 'radio') {
-						o[field.name] = field.value;
-					} else if (field.checked) {
-						if (o[field.name]) {
-							o[field.name].push(field.value);
-						} else {
-							o[field.name] = [field.value];
-						}
-					}
+
+				parent.addClass('expanded');
+
+				oX('#' + target.attr('for')).prop('checked', true);
+
+				window.addEventListener('click', close);
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide Password Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initTogglePassword: function() {
+			oX('i.togglePassword', true).on('click', function(e) {
+				var icon = oX(e.target);
+				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
+				if (!field) {
+					return;
 				}
-			}
-			return o;
+				if (field.prop('type') === 'password') {
+					field.prop('type', 'text');
+				} else {
+					field.prop('type', 'password');
+				}
+				icon.switchClass('fa-eye', 'fa-eye-slash');
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Checkbox Group Handler
+		//////////////////////////////////////////////////////////////////////80		
+		initCheckMonitors: function() {
+			oX('input[type="checkbox"][group]', true).on('click', function(e) {
+				var input = oX(e.target);
+				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
+				var checked = input.prop('checked');
+
+				if (input.attr('parent')) {
+					members.forEach((c) => c.prop('checked', checked));
+				}
+
+				var parent = members.filter((c) => c.attr('parent'))[0];
+				if (!checked) {
+					parent.prop('checked', checked);
+				} else {
+					var allChecked = true;
+					members.forEach((c) => {
+						if (c !== parent) {
+							allChecked = allChecked && (c.prop('checked') === true);
+						}
+					});
+					parent.prop('checked', allChecked);
+				}
+			});
 		},
 
 		createOverlay: function(type, hidden) {
@@ -137,7 +179,13 @@
 			if (hidden) {
 				overlay.hide();
 			}
-			document.body.appendChild(overlay.el);
+			var toast = oX('#toast-container');
+			if (toast) {
+				toast.before(overlay.el);
+			} else {
+				document.body.appendChild(overlay.el);
+
+			}
 			return overlay;
 		},
 
@@ -149,7 +197,7 @@
 		// Check Absolute Path
 		//////////////////////////////////////////////////////////////////////
 		isAbsPath: function(path) {
-			if (path.indexOf("/") === 0) {
+			if (path.indexOf('/') === 0) {
 				return true;
 			} else {
 				return false;
@@ -183,15 +231,7 @@
 				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
 
 				//didn't find it in the page, so load it
-				// jQuery.ajax({
-				// 	type: 'GET',
-				// 	url: url,
-				// 	success: callback,
-				// 	dataType: 'script',
-				// 	cache: cache
-				// });
-
-				// ajax({
+				// echo({
 				// 	url: url,
 				// 	success: function(data) {
 				// 		eval(data);

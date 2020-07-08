@@ -4,7 +4,7 @@ Your contributions are welcome and we're very open about how contributions are m
 
 * Check the issues to ensure that someone else isn't already working on the bug or feature
 * Submit an issue for bugs and feature additions before you start with it
-* Familiarize yourself with the documentation in the [Wiki](https://github.com/Atheos/Atheos/wiki)
+* Familiarize yourself with the documentation on [the home page](https://atheos.io)
 
 There is an established format for `components` which utilizes one JS (`init.js`) and one CSS (`screen.css`) which is handled by the loader file. Any other resources used should be loaded or accessed from one of these.
 

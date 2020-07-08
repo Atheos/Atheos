@@ -32,10 +32,13 @@
 	atheos.contextmenu = {
 
 		contextMenu: {},
+		baseMenu: '',
 
 		init: function() {
 			self = this;
 			menu = oX('#contextmenu');
+
+			self.baseMenu = menu.html();
 
 			var checkAnchor = function(node) {
 				node = oX(node);
@@ -61,7 +64,18 @@
 			// Initialize node listener
 			oX('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
-				self.show(e, checkAnchor(e.target));
+				menu.html(self.baseMenu);
+				var active = oX('#file-manager a.context-menu-active');
+				if (active) {
+					active.removeClass('context-menu-active');
+				}
+				self.adjust(checkAnchor(e.target));
+				self.show(e);
+			});
+			oX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
+				e.preventDefault();
+				self.topBarMenu(checkAnchor(e.target));
+				self.show(e);
 			});
 		},
 
@@ -69,6 +83,33 @@
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		show: function(e, node) {
+			// Show menu
+			var top = e.pageY;
+			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
+			if (top > windowHeight - menu.height()) {
+				top -= menu.height();
+			}
+			if (top < 10) {
+				top = 10;
+			}
+
+			var max = windowHeight - top - 10;
+
+			menu.css({
+				'top': top + 'px',
+				'left': e.pageX + 'px',
+				'max-height': max + 'px',
+				'display': 'block'
+			});
+
+			self.keepOpen();
+
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Show Context Menu
+		//////////////////////////////////////////////////////////////////////80
+		adjust: function(node) {
 			if (!node) {
 				return;
 			}
@@ -112,25 +153,6 @@
 				children.forEach((child) => child.show());
 			}
 
-			// Show menu
-			var top = e.pageY;
-			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-			if (top > windowHeight - menu.height()) {
-				top -= menu.height();
-			}
-			if (top < 10) {
-				top = 10;
-			}
-
-			var max = windowHeight - top - 10;
-
-			menu.css({
-				'top': top + 'px',
-				'left': e.pageX + 'px',
-				'max-height': max + 'px',
-				'display': 'block'
-			});
-
 			menu.attr({
 				'data-path': path,
 				'data-type': type,
@@ -159,9 +181,6 @@
 			menu.on('click', function() {
 				self.hide();
 			});
-
-			self.keepOpen();
-
 		},
 
 		keepOpen: function() {
@@ -179,13 +198,35 @@
 			});
 		},
 
+		topBarMenu: function(node) {
+			if (!node) {
+				return;
+			}
+			node = node.parent('li');
+
+			var path = node.attr('data-path'),
+				type = node.attr('data-type'),
+				name = node.find('span').html(),
+				active = node.hasClass('active');
+
+			var html = '<a class="directory-only" onclick="atheos.active.reload(onyx(\'#contextmenu\').attr(\'data-path\'), ' + active +');" style="display: block;"><i class="fas fa-sync-alt"></i>Reload</a>';
+
+			menu.attr({
+				'data-path': path,
+				'data-type': type,
+				'data-name': name
+			});
+
+			menu.html(html);
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Hide Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		hide: function() {
 			menu.hide();
 			menu.off('*');
-			
+
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
 				active.removeClass('context-menu-active');

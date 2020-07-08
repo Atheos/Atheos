@@ -1,27 +1,26 @@
 /*jshint esversion: 6 */
 
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // FileManager Init
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
 // See [root]/license.md for more. This information must remain intact.
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 // Notes:
 // Goodness this file is very complex; it's going to take a very long time
 // to really get a grasp of what's going on in this file and how to
 // refactor it.
 //												- Liam Siira
-//////////////////////////////////////////////////////////////////////////////80
+//////////////////////////////////////////////////////////////////////80////////////80
 
 (function(global) {
 	'use strict';
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		ajax = global.ajax,
-		fileIcons = global.FileIcons,
+		echo = global.echo,
 		oX = global.onyx;
 
 	var self = null;
@@ -35,9 +34,7 @@
 		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
 		noBrowser: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 
-		controller: 'components/filemanager/controller.php',
-		dialog: 'components/filemanager/dialog.php',
-		openTrigger: 'single',
+		openTrigger: 'click',
 		showHidden: true,
 
 		init: function() {
@@ -47,31 +44,30 @@
 
 			amplify.subscribe('settings.loaded', function() {
 				var local = atheos.storage('filemanager.openTrigger');
-				if (local === 'single' || local === 'double') {
+				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
 				self.showHidden = atheos.storage('filemanager.showHidden') === false ? false : self.showHidden;
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Listen for click events on nodes
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
 
 			var checkAnchor = function(node) {
 				node = oX(node);
-				//////////////////////////////////////////////////////////////////
+				//////////////////////////////////////////////////////////////////////80
 				// This tagname business is due to the logical but annoying way
 				// event delegation is handled. I keep trying to avoid organizing
 				// the css in a better way for the file manager, and this is the
 				// result.
-				//////////////////////////////////////////////////////////////////
-				var tagName = node.el.tagName;
-				if (tagName === 'UL') {
+				//////////////////////////////////////////////////////////////////////80
+				if (node.tagName === 'UL') {
 					return false;
-				} else if (tagName !== 'A') {
-					if (tagName === 'LI') {
+				} else if (node.tagName !== 'A') {
+					if (node.tagName === 'LI') {
 						node = node.find('a');
 					} else {
 						node = node.parent('a');
@@ -80,36 +76,25 @@
 				return node;
 			};
 
-			var nodeFunctions = function(node) {
-				if (node) {
+			oX('#file-manager a', true).on('click, dblclick', function(e) {
+				if (self.openTrigger === e.type) {
+					var node = checkAnchor(e.target);
 					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
 						self.openDir(node.attr('data-path'));
 					} else if (node.attr('data-type') === 'file') {
 						self.openFile(node.attr('data-path'));
 					}
 				}
-			};
-
-			oX('#file-manager').on('click', function(e) {
-				if (self.openTrigger === 'single') {
-					nodeFunctions(checkAnchor(e.target));
-				}
 			});
 
-			oX('#file-manager').on('dblclick', function(e) {
-				if (self.openTrigger === 'double') {
-					nodeFunctions(checkAnchor(e.target));
-				}
-			});
-
-			oX('#file-manager').on('mousedown', function(e) {
-				var options = {
-					dragZone: oX('#file-manager').el,
-					direction: 'vertical',
-					drop: self.handleDrop
-				};
-				atheos.flow.dragNdrop(e, options);
-			});
+			// oX('#file-manager').on('mousedown', function(e) {
+			// 	var options = {
+			// 		dragZone: oX('#file-manager').el,
+			// 		direction: 'vertical',
+			// 		drop: self.handleDrop
+			// 	};
+			// 	atheos.flow.dragNdrop(e, options);
+			// });
 		},
 
 		handleDrop: function(node) {
@@ -124,15 +109,15 @@
 
 			var basename = pathinfo(oldPath).basename;
 			var newPath = parPath + '/' + basename;
-			log(oldPath, newPath);
 
 			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
 				atheos.toast.show('warning', 'Path already exists.');
 				return false;
 			} else {
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'move',
 						oldPath,
 						newPath
@@ -145,14 +130,14 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Loop out all files and folders in directory path
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		openDir: function(path, rescan) {
 			var slideDuration = 200;
 			rescan = rescan || false;
 
-			var node = oX('#file-manager a[data-path="' + path + '"]');
+			var node = oX('#file-manager a[data-path="' + CSS.escape(path) + '"]');
 			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {
@@ -173,9 +158,10 @@
 				if (icon) {
 					icon.addClass('loading');
 				}
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'index',
 						path
 					},
@@ -195,7 +181,12 @@
 								var appendage = '<ul' + display + '>';
 
 								files.forEach(function(file) {
-									appendage += self.createDirectoryItem(file.path, file.type, file.size);
+									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
+
+									if (pathinfo(file.path).basename === '.git') {
+										atheos.codegit.addRepoIcon(path);
+									}
+
 								});
 
 								appendage += '</ul>';
@@ -234,11 +225,11 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
-		createDirectoryItem: function(path, type, size) {
+		createDirectoryItem: function(path, type, size, repo) {
 
 			var basename = pathinfo(path).basename;
 
@@ -246,19 +237,23 @@
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder medium-blue' : fileIcons.getClassWithColor(basename);
+			var fileClass = type === 'directory' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
 			if (type === 'directory' && (size > 0)) {
 				nodeClass = 'fa fa-plus';
 			}
 
-			fileClass = fileClass || 'fa fa-file medium-green';
+			fileClass = fileClass || 'fa fa-file green';
+
+			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
+			var repoClass = repo ? ' class="repo"' : '';
 
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}">
+			<a data-type="${type}" data-path="${path}"${repoClass}>
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
+			${repoIcon}
 			<span>${basename}</span>
 			</a>
 			</li>`;
@@ -282,19 +277,20 @@
 			self.openDir(path, true);
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Open File
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		openFile: function(path, focus, line) {
-			focus = focus || true;
+			focus = typeof(focus) !== 'undefined' ? focus : true;
 
 			var ext = pathinfo(path).extension.toLowerCase();
 
 			if (self.noOpen.indexOf(ext) < 0) {
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'open',
 						path: path
 					},
@@ -320,18 +316,19 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Save file
 		// I'm pretty sure the save methods on this are magic and should
 		// be worshipped.
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		saveModifications: function(path, data, callbacks) {
 			callbacks = callbacks || {};
+			data.target = 'filemanager';
 			data.action = 'save';
 			data.path = path;
 
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: data,
 				success: function(data) {
 					var context;
@@ -343,7 +340,7 @@
 							callbacks.success.call(context, data.modifyTime);
 						}
 					} else {
-						if (data.text === 'Client is out of sync.') {
+						if (data.text === 'out of sync') {
 							atheos.alert.show({
 								banner: 'File changed on server!',
 								message: 'Would you like to load the updated file?\n' +
@@ -361,7 +358,6 @@
 										atheos.active.save();
 									}
 								}
-
 							});
 						} else {
 							atheos.toast.show('error', 'File could not be saved');
@@ -376,13 +372,6 @@
 		},
 
 		saveFile: function(path, content, callbacks) {
-			trace({
-				file: {
-					path,
-					content,
-					callbacks
-				}
-			});
 			self.saveModifications(path, {
 					content: content
 				},
@@ -390,14 +379,6 @@
 		},
 
 		savePatch: function(path, patch, mtime, callbacks) {
-			trace({
-				patch: {
-					path,
-					patch,
-					mtime,
-					callbacks
-				}
-			});
 			if (patch.length > 0) {
 				self.saveModifications(path, {
 					patch: patch,
@@ -409,18 +390,17 @@
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Copy to Clipboard
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		copy: function(path) {
 			self.clipboard = path;
 			atheos.toast.show('success', 'Copied to Clipboard');
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Paste
-		//////////////////////////////////////////////////////////////////
-
+		//////////////////////////////////////////////////////////////////////80
 		paste: function(path) {
 			var split = pathinfo(self.clipboard);
 			var copy = split.basename;
@@ -432,9 +412,10 @@
 					copy = 'copy_' + copy;
 				}
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'duplicate',
 						path: self.clipboard,
 						dest: path + '/' + copy
@@ -478,9 +459,9 @@
 
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Duplicate Object
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		duplicate: function(path) {
 			var split = pathinfo(path);
 			var name = split.basename;
@@ -495,9 +476,10 @@
 				var parent = path.split('/').slice(0, -1).join('/');
 				var clonePath = parent + '/' + clone;
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'duplicate',
 						path: path,
 						dest: clonePath
@@ -521,19 +503,19 @@
 			};
 
 			atheos.modal.load(250,
-				self.dialog, {
+				atheos.dialog, {
+					target: 'filemanager',
 					action: 'duplicate',
 					name: name,
-					type: type
-				}, () => {
-					oX('#modal_content').on('submit', listener);
+					type: type,
+					listener
 				});
 
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Create new node
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		create: function(path, type) {
 			var listener = function(e) {
 				e.preventDefault();
@@ -541,15 +523,15 @@
 				var nodeName = oX('#modal_content form input[name="nodeName"]').value();
 				var newPath = path + '/' + nodeName;
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'create',
 						path: newPath,
 						type: type
 					},
 					success: function(reply) {
-						log(reply);
 						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'File Created');
 							atheos.modal.unload();
@@ -570,17 +552,17 @@
 				});
 			};
 
-			atheos.modal.load(250, self.dialog, {
+			atheos.modal.load(250, atheos.dialog, {
+				target: 'filemanager',
 				action: 'create',
-				type: type
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				type: type,
+				listener
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		addToFileManager: function(path, type, parent) {
 			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
 			if (!oX('#file-manager a[data-path="' + path + '"]')) {
@@ -607,9 +589,9 @@
 				}
 			}
 		},
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Sort nodes in file tree during node creation
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		sortNodes: function(list) {
 			var nodesToSort = list.children;
 
@@ -635,9 +617,9 @@
 		},
 
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Rename
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		rename: function(path) {
 			var split = pathinfo(path);
 			var nodeName = split.basename;
@@ -653,9 +635,10 @@
 					temp.push(arr[i]);
 				}
 				var newPath = temp.join('/') + '/' + newName;
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						target: 'filemanager',
 						action: 'rename',
 						path: path,
 						name: newName
@@ -677,9 +660,9 @@
 							if (type === 'file') {
 								// Change icons for file
 								icon.removeClass();
-								var ico = fileIcons.getClassWithColor(newName);
+								var ico = icons.getClassWithColor(newName);
 								if (ico) {
-									icon.addClass(fileIcons.getClassWithColor(newName));
+									icon.addClass(icons.getClassWithColor(newName));
 								}
 							} else {
 								// Change pathing on any sub-files/directories
@@ -694,15 +677,13 @@
 			};
 
 			atheos.modal.load(250,
-				self.dialog, {
+				atheos.dialog, {
+					target: 'filemanager',
 					action: 'rename',
 					name: nodeName,
-					type: type
-				},
-				() => {
-					oX('#modal_content form').on('submit', listener);
-				}
-			);
+					type: type,
+					listener
+				});
 
 		},
 
@@ -721,18 +702,19 @@
 
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Delete
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		delete: function(path) {
 			atheos.alert.show({
 				message: 'Are you sure you wish to delete the following:',
-				data: path,
+				data: pathinfo(path).basename,
 				actions: {
 					'Delete': function() {
-						ajax({
-							url: self.controller,
+						echo({
+							url: atheos.controller,
 							data: {
+								target: 'filemanager',
 								action: 'delete',
 								path
 							},

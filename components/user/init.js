@@ -14,8 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		ajax = global.ajax,
-		amplify = global.amplify,
 		oX = global.onyx;
 
 	var self = null;
@@ -26,7 +24,6 @@
 
 		loginForm: oX('#login'),
 		controller: 'components/user/controller.php',
-		dialog: 'components/user/dialog.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -37,19 +34,43 @@
 			if (self.loginForm) {
 				self.loginForm.on('submit', function(e) {
 					e.preventDefault();
+
+					if (oX('#remember').prop('checked')) {
+						// Save Username
+						atheos.storage('username', oX('#username').value());
+						atheos.storage('remember', true);
+					} else {
+						atheos.storage('username', false);
+						atheos.storage('remember', false);
+
+						oX('#password').focus();
+					}
+
 					// Save Language
 					atheos.storage('language', oX('#language').value());
 					// Save Theme
 					atheos.storage('editor.theme', oX('#theme').value());
+
 					self.authenticate();
 				});
+
+				var element;
+
+
+				var username = atheos.storage('username');
+				var remember = atheos.storage('remember');
+				if (username && remember) {
+					element = oX('#username');
+					oX('#username').value(username);
+					oX('#remember').prop('checked', true);
+				}
 
 
 				// Get Theme
 				var theme = atheos.storage('theme');
-				var select = oX('#theme');
-				if (select && select.findAll('option').length > 1) {
-					select.findAll('option').forEach(function(option) {
+				element = oX('#theme');
+				if (element && element.findAll('option').length > 1) {
+					element.findAll('option').forEach(function(option) {
 						if (option.value() === theme) {
 							option.attr('selected', 'selected');
 						}
@@ -58,9 +79,9 @@
 
 				// Get Language
 				var language = atheos.storage('language');
-				select = oX('#language');
-				if (select && select.findAll('option').length > 1) {
-					select.findAll('option').forEach(function(option) {
+				element = oX('#language');
+				if (element && element.findAll('option').length > 1) {
+					element.findAll('option').forEach(function(option) {
 						if (option.value() === language) {
 							option.attr('selected', 'selected');
 						}
@@ -71,22 +92,23 @@
 				oX('#show_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
-					oX('#hide_login_options').show();
+					oX('#hide_login_options').show('inline-block');
 					oX('#login_options').show();
 				});
 				oX('#hide_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
-					oX('#show_login_options').show();
+					oX('#show_login_options').show('inline-block');
 					oX('#login_options').hide();
 				});
 			}
 
 			amplify.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
-				ajax({
-					url: atheos.user.controller,
+				echo({
+					url: atheos.controller,
 					data: {
+						'target': 'user',
 						'action': 'keepAlive'
 					},
 					success: function(reply) {
@@ -103,17 +125,17 @@
 		// Authenticate User
 		//////////////////////////////////////////////////////////////////////80
 		authenticate: function() {
-			var data = atheos.common.serializeForm(self.loginForm.el);
+			var data = serializeForm(self.loginForm.el);
 			if (data.password === '' || data.username === '') {
 				atheos.toast.show('notice', 'Username/Password not provided.');
 				return;
 			}
+			data.target = 'user';
 			data.action = 'authenticate';
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: data,
 				success: function(reply) {
-					log(reply);
 					if (reply.status !== 'error') {
 						window.location.reload();
 					} else {
@@ -137,12 +159,13 @@
 				if (!password) {
 					atheos.toast.show('error', 'Passwords do not match.');
 				} else {
-					ajax({
-						url: self.controller,
+					echo({
+						url: atheos.controller,
 						data: {
-							'action': 'changePassword',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'changePassword',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -154,11 +177,11 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'changePassword',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 
 		},
@@ -187,12 +210,13 @@
 					username = false;
 				}
 				if (password && username) {
-					ajax({
-						url: self.controller,
+					echo({
+						url: atheos.controller,
 						data: {
-							'action': 'create',
-							'username': username,
-							'password': password
+							target: 'user',
+							action: 'create',
+							username: username,
+							password: password
 						},
 						success: function(reply) {
 							if (reply.status !== 'error') {
@@ -204,10 +228,10 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'create',
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				listener
 			});
 		},
 
@@ -218,26 +242,27 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
-						'action': 'delete',
-						'username': username
+						target: 'user',
+						action: 'delete',
+						username: username
 					},
 					success: function(reply) {
 						if (reply.status !== 'error') {
 							atheos.toast.show('success', 'Account Deleted');
-							self.showUserList();
+							self.list();
 						}
 					}
 				});
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'delete',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 
@@ -245,7 +270,8 @@
 		// Open the user manager dialog
 		//////////////////////////////////////////////////////////////////////80
 		list: function() {
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'list'
 			});
 		},
@@ -257,10 +283,11 @@
 			var postLogout = function() {
 				amplify.publish('user.logout');
 				atheos.settings.save();
-				ajax({
-					url: self.controller,
+				echo({
+					url: atheos.controller,
 					data: {
-						'action': 'logout'
+						target: 'user',
+						action: 'logout'
 					},
 					success: function() {
 						window.location.reload();
@@ -304,9 +331,10 @@
 		// Save active project to server
 		//////////////////////////////////////////////////////////////////////80
 		saveActiveProject: function(project) {
-			ajax({
-				url: self.controller,
+			echo({
+				url: atheos.controller,
 				data: {
+					target: 'user',
 					action: 'saveActiveProject',
 					activeProject: project
 				}
@@ -320,7 +348,8 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var data = atheos.common.serializeForm(e.target);
+				var data = serializeForm(e.target);
+				data.target = 'user';
 				data.action = 'updateACL';
 				data.username = username;
 
@@ -334,8 +363,8 @@
 				if (data.userACL !== 'full' && data.userACL.length < 0) {
 					atheos.toast.show('error', 'At least one project must be selected');
 				} else {
-					ajax({
-						url: self.controller,
+					echo({
+						url: atheos.controller,
 						data: data,
 						success: function() {
 							atheos.modal.unload();
@@ -344,11 +373,11 @@
 				}
 			};
 
-			atheos.modal.load(400, self.dialog, {
+			atheos.modal.load(400, atheos.dialog, {
+				target: 'user',
 				action: 'showUserACL',
-				username
-			}, () => {
-				oX('#modal_content').on('submit', listener);
+				username,
+				listener
 			});
 		},
 

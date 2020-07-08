@@ -18,6 +18,7 @@ class User {
 
 	public $username = '';
 	public $password = '';
+	private $activeUser = '';
 	public $permissions = '';
 	public $activeProject = '';
 	public $userACL = '';
@@ -38,6 +39,8 @@ class User {
 	public function __construct() {
 		$this->users = Common::readJSON('users');
 		$this->activeFiles = Common::readJSON('active');
+
+		$this->activeUser = Common::data("user", "session");
 
 		// Check if array is Associative or Sequential. Sequential is
 		// the old file format, so it needs to be pivoted.
@@ -67,10 +70,23 @@ class User {
 				if ($user['activeProject'] !== '') {
 					$_SESSION['project'] = $user['activeProject'];
 				}
+				$reply = array(
+					"username" => $this->username,
+					"lastLogin" => $user["lastLogin"]
+				);
 
-				Common::sendJSON("success", array("username" => $this->username));
+				$this->users[$this->username]["lastLogin"] = date("Y-m-d H:i:s");
+				Common::saveJSON('users', $this->users);
+
+				Common::sendJSON("success", $reply);
+				// Log Action
+				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->username . "} logged in", "access");
+
 			} else {
 				Common::sendJSON("error", "Invalid Password.");
+				// Log Action
+				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->username . "} attempted log in", "access");
+
 			}
 
 		} else {
@@ -89,6 +105,8 @@ class User {
 		Common::saveJSON('users', $this->users);
 		// Response
 		Common::sendJSON("S2000");
+		// Log
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -100,6 +118,8 @@ class User {
 		Common::saveJSON('users', $this->users);
 		// Response
 		Common::sendJSON("S2000");
+		// Log
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -116,10 +136,20 @@ class User {
 		$this->password = password_hash($this->password, PASSWORD_DEFAULT);
 
 		if (!array_key_exists($this->username, $this->users)) {
-			$this->users[$this->username] = array("password" => $this->password, "activeProject" => "", "permissions" => ["read", "write"], "userACL" => "full");
+			$this->users[$this->username] = array(
+				"password" => $this->password,
+				"creationDate" => date("Y-m-d H:i:s"),
+				"activeProject" => "",
+				"lastLogin" => false,
+				"permissions" => ["read", "write"],
+				"userACL" => "full"
+			);
 
 			Common::saveJSON('users', $this->users);
 			Common::sendJSON("success", array("username" => $this->username));
+			// Log
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $this->username . "}", "access");
+
 		} else {
 			Common::sendJSON("error", "That username is already taken.");
 		}
@@ -143,10 +173,14 @@ class User {
 
 		// Response
 		Common::sendJSON("S2000");
+
+		// Log
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Pivot the Users from the old file format to the new file format
+	// ALERT: Pivot functions will be removed on 01/01/2022
 	//////////////////////////////////////////////////////////////////////////80
 	private function pivotUsers() {
 		$revisedArray = array();
@@ -162,6 +196,7 @@ class User {
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Pivot ActiveFiles from the old format to the new file format
+	// ALERT: Pivot functions will be removed on 01/01/2022
 	//////////////////////////////////////////////////////////////////////////80
 	private function pivotActives() {
 		$revisedArray = array();
@@ -201,6 +236,8 @@ class User {
 		Common::saveJSON('users', $this->users);
 		// Response
 		Common::sendJSON("S2000");
+		// Log
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $this->username . "}", "access");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

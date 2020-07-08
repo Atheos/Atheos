@@ -1,138 +1,124 @@
 [{
-		"title": "New File",
+		"title": "fileNew",
 		"enabled": true,
 		"icon": "fas fa-plus-circle",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.create(onyx('#contextmenu').attr('data-path'),'file');"
 	},
 	{
-		"title": "New Folder",
+		"title": "folderNew",
 		"enabled": true,
 		"icon": "fas fa-folder",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.create(onyx('#contextmenu').attr('data-path'),'directory');"
 	},
 	{
-		"title": "Break",
 		"enabled": false,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
-		"title": "Search",
+		"title": "search",
 		"enabled": false,
 		"icon": "fas fa-search",
 		"applies-to": "directory-only",
 		"onclick": "atheos.scout.probe(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
-		"title": "Upload Files",
+		"title": "filesUpload",
 		"enabled": true,
 		"icon": "fas fa-upload",
 		"applies-to": "directory-only",
 		"onclick": "atheos.transfer.upload(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Preview",
+		"title": "preview",
 		"enabled": false,
 		"icon": "fas fa-eye",
 		"applies-to": "both no-external",
 		"onclick": "atheos.preview.openInBrowser(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
-		"title": "Copy",
+		"title": "copy",
 		"enabled": true,
 		"icon": "fas fa-copy",
 		"applies-to": "both",
 		"onclick": "atheos.filemanager.copy(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Paste",
+		"title": "paste",
 		"enabled": true,
 		"icon": "fas fa-paste",
 		"applies-to": "directory-only",
 		"onclick": "atheos.filemanager.paste(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Duplicate",
+		"title": "duplicate",
 		"enabled": true,
 		"icon": "fas fa-clone",
 		"applies-to": "both",
 		"onclick": "atheos.filemanager.duplicate(onyx('#contextmenu').attr('data-path'));"
 	},	
 	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "non-root",
 		"onclick": null
 	},
 	{
-		"title": "Rename",
+		"title": "rename",
 		"enabled": true,
 		"icon": "fas fa-pencil-alt",
 		"applies-to": "non-root",
 		"onclick": "atheos.filemanager.rename(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Rename Project",
-		"enabled": true,
-		"icon": "fas fa-pencil-alt",
-		"applies-to": "root-only",
-		"onclick": "atheos.project.rename(onyx('#contextmenu').attr('data-name'),onyx('#contextmenu').attr('data-path'));"
-	},
-	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "non-root",
 		"onclick": null
 	},
 	{
-		"title": "Delete",
+		"title": "delete",
 		"enabled": true,
 		"icon": "fas fa-trash-alt",
 		"applies-to": "non-root",
 		"onclick": "atheos.filemanager.delete(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "both",
 		"onclick": null
 	},
 	{
-		"title": "Download",
+		"title": "download",
 		"enabled": true,
 		"icon": "fas fa-download",
 		"applies-to": "both",
 		"onclick": "atheos.transfer.download(onyx('#contextmenu').attr('data-path'));"
 	},
 	{
-		"title": "Break",
 		"enabled": true,
 		"icon": null,
 		"applies-to": "directory-only",
 		"onclick": null
 	},
 	{
-		"title": "Rescan",
+		"title": "rescan",
 		"enabled": true,
 		"icon": "fas fa-sync-alt",
 		"applies-to": "directory-only",
