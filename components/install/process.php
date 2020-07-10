@@ -100,7 +100,7 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 		}
 
 	} else {
-		$projectPath = str_replace(" ", "_", preg_replace('/[^\w-\.]/', '', $projectPath));
+		$projectPath = str_replace(" ", "_", preg_replace('/[^\w\-\.]/', '', $projectPath));
 		mkdir($workspace . "/" . $projectPath);
 	}
 
