@@ -44,6 +44,7 @@ class TextMode {
 		'erb' => 'html_ruby',
 		'jade' => 'jade',
 		'coffee' => 'coffee',
+		'yml' => 'elm',
 		'vm' => 'velocity');
 
 	//////////////////////////////////////////////////////////////////
