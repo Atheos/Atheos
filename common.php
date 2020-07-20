@@ -445,7 +445,7 @@ class Common {
 		} elseif (array_key_exists($key, Common::$data["get"])) {
 			$value = Common::$data["get"][$key];
 		}
-
+		
 		if ($type) {
 			if ($type === "server") {
 				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
