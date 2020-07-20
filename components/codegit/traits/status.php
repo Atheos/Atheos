@@ -82,6 +82,7 @@ trait Status {
 		if (!is_array($status) || empty($status)) {
 			return i18n("git_status_current");
 		}
+		
 
 		$int = (int)preg_replace("/(ahead|behind)/", "", $status[0]);
 		$count = $int === 1 ? "plural" : "single";
