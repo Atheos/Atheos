@@ -14,7 +14,7 @@
 	$tableTransfer = array();
 
 	$icons = "<i class=\"fas fa-pencil-alt\"></i><i class=\"fas fa-trash-alt\"></i>";
-	$buttons = "<button>" . i18n("edit") . "</button><button>" . i18n("delete") . "</button>";
+	$buttons = "<button disabled>" . i18n("edit") . "</button><button disabled>" . i18n("delete") . "</button>";
 
 
 	foreach ($remotes as $i => $item) {
