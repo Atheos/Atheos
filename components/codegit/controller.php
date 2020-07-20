@@ -82,21 +82,14 @@ switch ($action) {
 
 	case 'initRepo':
 		if ($repo) {
-			// $repo = GitRepository::init($repo);
 			$CodeGit->initRepo($repo);
-			// $result = $CodeGit->init($repo);
-			// if ($result === false) {
-			// 	Common::sendJSON("error", "Failed to initialize repo.");
-			// } else {
-			// 	echo '{"status":"success","message":"Initialized empty Git repository!"}';
-			// }
 		} else {
 			Common::sendJSON("E403g");
 		}
 		break;
 
 	case 'checkout':
-		$file= Common::data("file");
+		$file = Common::data("file");
 		if ($repo && $file) {
 			$CodeGit->checkout($repo, $file);
 		} else {
@@ -104,37 +97,19 @@ switch ($action) {
 		}
 		break;
 
-	case 'getSettings':
-		$settings = Common::data('settings');
+	case 'configure':
+		$settings = array(
+			"type" => Common::data("type"),
+			"name" => Common::data("name"),
+			"email" => Common::data("email")
+		);
 
-		if ($path) {
-			$settings = $CodeGit->getSettings($path);
-			echo '{"status":"success","data":'. json_encode($settings) .'}';
-		} else {
-			Common::sendJSON("E403g");
-		}
-		break;
+		debug($settings);
 
-	case 'setSettings':
-		$activeUser = Common::data("user", "session");
-		$settings = Common::data('settings');
+		$result = $CodeGit->settings($repo, $settings);
 
-		if (isset($settings) && $path) {
-			$settings = json_decode($settings, true);
+		Common::sendJSON("success", $result);
 
-			$pluginSettings = getJSON('git.settings.php', 'config');
-			if ($pluginSettings['lockuser'] == "true") {
-				$settings['username'] = $activeUser;
-				if (strlen($settings['local_username']) != 0) {
-					$settings['local_username'] = $activeUser;
-				}
-			}
-
-			$CodeGit->setSettings($settings, $path);
-			echo '{"status":"success","message":"Settings saved"}';
-		} else {
-			Common::sendJSON("E403g");
-		}
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
