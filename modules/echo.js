@@ -32,6 +32,8 @@
 		options = options || {};
 
 		options.type = options.type || ((options.data) ? 'POST' : 'GET');
+		
+		// const serialize = obj => Object.keys(obj).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])).join('&');
 
 		var data = [];
 		if (options.data && typeof options.data === 'object') {
