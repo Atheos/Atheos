@@ -78,6 +78,8 @@
 		"": "Delete",
 		"type": "Delete %s"
 	},
+	
+	"edit" : "Edit",
 
 	"rescan": "Rescan",
 
@@ -493,6 +495,10 @@
 		},
 		"branch": {
 			"new": "New Branch"
+		},
+		"transfer": {
+			"": "Git Transfer",
+			"edit": "Edit Transfer Options"
 		},
 		"addFailed": "Failed to add %s",
 		"commit": {
