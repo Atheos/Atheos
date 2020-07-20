@@ -455,6 +455,31 @@
 			});
 		},
 
+		configure: function(type) {
+			var data = {
+				target: 'codegit',
+				action: 'configure',
+				repo: self.activeRepo,
+				type
+			};
+
+			var name = oX('#' + type + '_name');
+			var email = oX('#' + type + '_email');
+
+			data.name = name ? name.value() : false;
+			data.email = email ? email.value() : false;
+
+			log(data);
+
+			echo({
+				url: atheos.controller,
+				data,
+				success: function(reply) {
+					log(reply);
+				}
+			})
+		},
+
 		addStatusElements: function() {
 			self.repoBanner = oX('#codegit_repo_banner');
 			self.repoStatus = oX('#codegit_repo_status');
