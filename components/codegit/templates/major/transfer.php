@@ -11,8 +11,10 @@
 	$remoteOptions = array();
 	$brancheOptions = '';
 
-	$tableRemotes = array();
-	$tableBranches = '';
+	$tableTransfer = array();
+
+	$icons = "<i class=\"fas fa-pencil-alt\"></i><i class=\"fas fa-trash-alt\"></i>";
+	$buttons = "<button>" . i18n("edit") . "</button><button>" . i18n("delete") . "</button>";
 
 
 	foreach ($remotes as $i => $item) {
@@ -20,14 +22,14 @@
 		$value = explode("\t", $item)[0];
 		$remoteOptions[] = "<option value=\"$value\">$item</option>";
 
-		$tableRemotes[] = "<tr data-value=\"$value\"><td><input type=\"text\" placeholder=\"$item\"></input></td><td><i class=\"fas fa-save\"></i><i class=\"fas fa-trash-alt\"></i></td></tr>";
+		$tableTransfer[] = "<tr data-value=\"$value\"><td><input type=\"text\" placeholder=\"$item\"></input></td><td>$buttons</td></tr>";
 	}
 
 	$remoteOptions = array_unique($remoteOptions);
 	$remoteOptions = implode("", $remoteOptions);
 
-	$tableRemotes = array_unique($tableRemotes);
-	$tableRemotes = implode("", $tableRemotes);
+	$tableTransfer = array_unique($tableTransfer);
+	$tableTransfer = implode("", $tableTransfer);
 
 	foreach ($branches["branches"] as $i => $item) {
 		if ($item === $branches["current"]) {
@@ -42,28 +44,37 @@
 	<!--	<button onclick="atheos.codegit.newRemote();"><?php echo i18n("git_remote_new") ?></button>-->
 	<!--	<button onclick="atheos.codegit.newBranch();"><?php echo i18n("git_branch_new") ?></button>-->
 	<!--</toolbar>-->
-	<!--<table>-->
-	<!--	<?php echo $tableRemotes; ?>-->
-	<!--</table>-->
-	<!--<br />-->
-	<toolbar>
-		<button onclick="atheos.codegit.transfer('push');"><?php echo i18n("git_push") ?></button>
-		<button onclick="atheos.codegit.transfer('pull');"><?php echo i18n("git_pull") ?></button>
-		<button onclick="atheos.codegit.transfer('fetch');"><?php echo i18n("git_fetch") ?></button>
-	</toolbar>
+	<label class="title"><i class="fas fa-cloud"></i><?php echo i18n("git_transfer"); ?></label>
+
 	<table>
 		<tr>
-			<td width="50%">Remote:</td>
-			<td><select id="git_remotes">
-				<?php echo $remoteOptions; ?>
-			</select></td>
+			<th>Remote</th>
+			<th>Branch</th>
+			<th>Actions</th>
 		</tr>
 		<tr>
-			<td width="50%">Branch:</td>
-			<td><select id="git_branches">
-				<?php echo $brancheOptions; ?>
-			</select></td>
+			<td>
+				<select id="git_remotes">
+					<?php echo $remoteOptions; ?>
+				</select>
+			</td>
+			<td>
+				<select id="git_branches">
+					<?php echo $brancheOptions; ?>
+				</select>
+			</td>
+			<td>
+				<button onclick="atheos.codegit.transfer('push');"><?php echo i18n("git_push") ?></button>
+				<button onclick="atheos.codegit.transfer('pull');"><?php echo i18n("git_pull") ?></button>
+				<button onclick="atheos.codegit.transfer('fetch');"><?php echo i18n("git_fetch") ?></button>
+			</td>
 		</tr>
+	</table>
+	<br />
+	<br />
+	<label class="title"><i class="fas fa-cogs"></i><?php echo i18n("git_transfer_edit"); ?></label>
+	<table>
+		<?php echo $tableTransfer; ?>
 	</table>
 	<hint id="git_transfer_text">
 	</hint>
