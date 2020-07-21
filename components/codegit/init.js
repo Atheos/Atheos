@@ -156,7 +156,7 @@
 				if (obj.node.hasClass('repo')) {
 					html += (anchor + 'showCodeGit(\'' + path + '\');">' + self.icon + i18n('codegit_open') + '</a>');
 				} else {
-					html += (anchor + 'gitInit(\'' + path + '\', \'initRepo\');">' + self.icon + i18n('git_init') + '</a>');
+					html += (anchor + 'gitInit(\'' + path + '\', \'repo\');">' + self.icon + i18n('git_init') + '</a>');
 				}
 				html += (anchor + 'gitClone(\'' + path + '\');">' + self.icon + i18n('git_clone') + '</a>');
 			} else {
@@ -220,19 +220,18 @@
 		},
 
 		gitInit: function(repo, type) {
-			var action = type === 'repo' ? 'initRepo' : 'initSubModule';
-
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'codegit',
-					action,
+					action: 'init',
+					type,
 					repo
 				},
 				success: function(reply) {
 					log(reply);
 					if (reply.status === 'success') {
-						self.addRepoIcon(path);
+						self.addRepoIcon(repo);
 					}
 				}
 			});
@@ -468,8 +467,6 @@
 
 			data.name = name ? name.value() : false;
 			data.email = email ? email.value() : false;
-
-			log(data);
 
 			echo({
 				url: atheos.controller,
