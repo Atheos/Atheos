@@ -64,6 +64,9 @@
 	},
 	"preview": "Preview",
 	"cancel": "Cancel",
+	"clear": "Clear",
+	"name": "Name",
+	"email": "Email",
 	"create": {
 		"": "Create",
 		"type": "Create %s"
@@ -506,6 +509,8 @@
 			"failed": "Changes could not be committed."
 		},
 		"settings": {
+			"local": "Git Settings for %s",
+			"global": "Global Git Settings",
 			"save": {
 				"success": "Settings saved.",
 				"failed": "Unabled to save settings."
