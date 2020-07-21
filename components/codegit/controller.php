@@ -23,6 +23,7 @@ $path = Common::getWorkspacePath($path);
 
 $CodeGit = new CodeGit($path, $repo);
 
+
 switch ($action) {
 
 	// Check status of overall repo, mostly used for the banner
@@ -80,9 +81,12 @@ switch ($action) {
 		}
 		break;
 
-	case 'initRepo':
-		if ($repo) {
-			$CodeGit->initRepo($repo);
+	case 'init':
+		$type = Common::data('type');
+		
+		if ($repo && $type) {
+			debug($repo);
+			$CodeGit->init($repo, $type);
 		} else {
 			Common::sendJSON("E403g");
 		}
@@ -103,8 +107,6 @@ switch ($action) {
 			"name" => Common::data("name"),
 			"email" => Common::data("email")
 		);
-
-		debug($settings);
 
 		$result = $CodeGit->settings($repo, $settings);
 
