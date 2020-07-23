@@ -8,6 +8,7 @@
 
 @import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/input", "modules/common/button";
 @import "modules/common/dropdown";
+@import "modules/common/fieldset";
 @import "modules/common/hint";
 @import "modules/common/label";
 @import "modules/common/menu";
@@ -48,8 +49,9 @@ html {
 	width: 100%;
 	height: 100%;
 	color: $white;
+	background-color: $background;
 	font: normal $fontSizePr 'Ubuntu', sans-serif;
-	overflow: hidden;
+	// overflow: hidden;
 }
 
 /* MAIN */
