@@ -3,13 +3,17 @@
 
 trait Initialize {
 
-	public function initRepo($path) {
+	public function init($path, $type) {
 		if (!is_dir($path)) return false;
 		chdir($path);
 		
-		$result = $this->execute("git init");
+		$result = false;
+
+		if ($type === "repo") {
+			$result = $this->execute("git init");
+		}
 		
-		if ($result["status"]) {
+		if ($result && $result["status"]) {
 			Common::sendJSON("success", i18n("git_init_success"));
 		} else {
 			Common::sendJSON("error", i18n("git_init_failed"));
@@ -34,7 +38,7 @@ trait Initialize {
 		}
 
 		$result = $this->execute($command);
-		
+
 		if ($result["status"]) {
 			Common::sendJSON("success", i18n("git_clone_success"));
 		} else {

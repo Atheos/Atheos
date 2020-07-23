@@ -53,10 +53,6 @@ class CodeGit {
 		}
 		chdir($this->repo);
 
-		if (!$this->setGitSettings($this->repo)) {
-			Common::sendJSON("error", i18n("git_settings_apply_failed")); die;
-		}
-
 		foreach (getConfig() as $name => $value) {
 			$result = $this->executeCommand("git config " . $name . " " . $value);
 		}
@@ -81,7 +77,7 @@ class CodeGit {
 			return false;
 		}
 	}
-
+	
 	private function returnMessage($status, $msg) {
 		return '{"status":"' . $status . '","message":"' . $msg . '"}';
 	}

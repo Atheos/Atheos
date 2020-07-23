@@ -82,13 +82,14 @@ trait Status {
 		if (!is_array($status) || empty($status)) {
 			return i18n("git_status_current");
 		}
+		
 
 		$int = (int)preg_replace("/(ahead|behind)/", "", $status[0]);
 		$count = $int === 1 ? "plural" : "single";
 
-		if (strpos($status, "ahead") !== false) {
+		if (strpos($status[0], "ahead") !== false) {
 			$status = i18n("git_status_ahead_$count", $int);
-		} elseif (strpos($status, "behind") !== false) {
+		} elseif (strpos($status[0], "behind") !== false) {
 			$status = i18n("git_status_behind_$count", $int);
 		}
 
