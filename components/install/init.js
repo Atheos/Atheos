@@ -34,7 +34,7 @@
 			if (!self.form) {
 				return;
 			}
-			document.body.style.overflow = 'auto';
+			// document.body.style.overflow = 'auto';
 
 			var timezone = self.getTimeZone();
 			oX('[name=timezone]').findAll('option').forEach(function(option) {

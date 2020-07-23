@@ -1,27 +1,38 @@
 <?php
-$localRepo = false; // basename `git rev-parse --show-toplevel`
-
 $settings = $CodeGit->settings($repo);
 
+$global_name = isset($settings["global"]["name"]) ? $settings["global"]["name"] : "";
+$global_email = isset($settings["global"]["email"]) ? $settings["global"]["email"] : "";
+$local_name = isset($settings[$repo]["name"]) ? $settings[$repo]["name"] : "";
+$local_email = isset($settings[$repo]["email"]) ? $settings[$repo]["email"] : "";
 ?>
 
-
-<label class="title"><i class="fas fa-git-branch"></i><?php echo i18n("configure"); ?></label>
-
 <div id="codegit_configure" class="content">
-	<fieldset id="remote">
-		<legend>Global<span> - Global for all repositories</span></legend>
-		<label for="global_username">Username</label>
-		<input type="text" name="global_username" id="global_username" placeholder="<?php echo $settings["name"]?>">
-		<label for="global_email">E-Mail</label>
-		<input type="text" name="global_email" id="global_email" placeholder="<?php echo $settings["email"]?>">
-	</fieldset>
-
-	<!--<fieldset id="local">-->
-	<!--	<legend>Local<span> - for <?php echo $localRepo ?></span></legend>-->
-	<!--	<label for="local_username">Username</label>-->
-	<!--	<input type="text" name="local_username" id="local_username" class="local">-->
-	<!--	<label for="local_email">E-Mail</label>-->
-	<!--	<input type="text" name="local_email" id="local_email" class="local">-->
-	<!--</fieldset>-->
+	<label class="title"><i class="fas fa-user-cog"></i><?php echo i18n("configure"); ?></label>
+	<table>
+		<tr>
+			<td>
+				<fieldset id="global">
+					<legend><?php echo i18n("git_settings_global")?></legend>
+					<label for="global_name"><?php echo i18n("name")?></label>
+					<input type="text" name="global_name" id="global_name" placeholder="<?php echo $global_name ?>">
+					<label for="global_email"><?php echo i18n("email")?></label>
+					<input type="text" name="global_email" id="global_email" placeholder="<?php echo $global_email ?>">
+					<button onclick="atheos.codegit.configure('global');"><?php echo i18n("update") ?></button>
+					<button onclick="atheos.codegit.configure('clear_global');"><?php echo i18n("clear") ?></button>
+				</fieldset>
+			</td>
+			<td>
+				<fieldset id="local">
+					<legend><?php echo i18n("git_settings_local", $repo)?></legend>
+					<label for="local_name"><?php echo i18n("name")?></label>
+					<input type="text" name="local_name" id="local_name" placeholder="<?php echo $local_name ?>">
+					<label for="local_email"><?php echo i18n("email")?></label>
+					<input type="text" name="local_email" id="local_email" placeholder="<?php echo $local_email ?>">
+					<button onclick="atheos.codegit.configure('local');"><?php echo i18n("update") ?></button>
+					<button onclick="atheos.codegit.configure('clear_local');"><?php echo i18n("clear") ?></button>
+				</fieldset>
+			</td>
+		</tr>
+	</table>
 </div>

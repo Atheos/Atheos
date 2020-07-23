@@ -64,6 +64,9 @@
 	},
 	"preview": "Preview",
 	"cancel": "Cancel",
+	"clear": "Clear",
+	"name": "Name",
+	"email": "Email",
 	"create": {
 		"": "Create",
 		"type": "Create %s"
@@ -78,6 +81,8 @@
 		"": "Delete",
 		"type": "Delete %s"
 	},
+	
+	"edit" : "Edit",
 
 	"rescan": "Rescan",
 
@@ -215,7 +220,8 @@
 		"delete": "Delete Project",
 		"confirm": "Confirm Project Deletion",
 		"loaded": "%s Loaded",
-		"missing": "Project not found"
+		"missing": "Project not found",
+		"gitnote": "This will only work if your Git Repo does not require Interactive Authentication and your Server has Git installed."
 	},
 
 	"project:": "Project:",
@@ -493,12 +499,18 @@
 		"branch": {
 			"new": "New Branch"
 		},
+		"transfer": {
+			"": "Git Transfer",
+			"edit": "Edit Transfer Options"
+		},
 		"addFailed": "Failed to add %s",
 		"commit": {
 			"success": "Changes commited.",
 			"failed": "Changes could not be committed."
 		},
 		"settings": {
+			"local": "Git Settings for %s",
+			"global": "Global Git Settings",
 			"save": {
 				"success": "Settings saved.",
 				"failed": "Unabled to save settings."
