@@ -41,6 +41,8 @@ Atheos can be installed by placing Atheos in a web accessible folder and pointin
 ```
 If any dependencies have not been met, the system will alert you on the installation screen.
 
+For more detailed information see https://www.atheos.io/docs/installation
+
 *Please note: Atheos is primarily developed using with a Debian LAMP Server. If you run into installation issues utilizing another stack, please let us know.*
 
 ### Docker
@@ -55,3 +57,5 @@ Atheos is an almost complete rewrite of Codiad, using the latest best practices 
 * Complete removal of jQuery and it's plugins
 * Built-in Git integration **(WIP)**
 * And an incredibly strong emphasis on standardized components and modules throughout the project in order to encourage easier plugin development and user contribution.
+
+Documentation is available at https://www.atheos.io/docs/
