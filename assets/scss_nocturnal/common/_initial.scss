@@ -1,0 +1,213 @@
+/*   
+ * Original Template Name: Developer
+ * Original Author: Xiaoying Riley
+ * Twitter: @3rdwave_themes
+ * Website: http://themes.3rdwavemedia.com/
+ * Modified by: HTMLy Team
+*/
+
+
+
+img {
+	display: block;
+	height: auto;
+	max-width: 100%;
+}
+
+img:hover {
+	opacity: 0.8;
+}
+
+.text-highlight {
+	color: $primary;
+}
+
+.label-theme {
+	background: #3893bd;
+	font-size: 12px;
+}
+
+pre {
+	margin: 1em 0;
+}
+
+.tags {
+	margin-right: 5px;
+}
+
+.tags a {
+	background-color: #f9f2f4;
+	border-radius: 4px;
+	color: #c7254e;
+	padding: 2px 4px;
+}
+
+
+.breadcrumb {
+	list-style: outside none none;
+	margin-bottom: #{$sectionMargin};
+	padding: 5px #{$sectionPadding};
+	@include foreground();
+
+	ol {
+		// color: $secondary;
+		font-size: 18px;
+	}
+}
+
+.breadcrumb-list {
+	margin: 0;
+	padding: 0;
+}
+
+.breadcrumb-list li {
+	display: inline-block;
+	list-style: none;
+}
+
+/* About Section */
+/* Latest Section */
+.title {
+	color: $fontColorMinor;
+}
+
+.post .item .project-image:hover {
+	-webkit-opacity: 0.8;
+	-moz-opacity: 0.8;
+	opacity: 0.8;
+}
+
+.post .item .title {
+	margin-bottom: 10px;
+	font-size: 24px;
+	margin-top: 0;
+}
+
+
+
+.post .item img {
+	margin: 1em 0px;
+}
+
+.post .featured-image img {
+	margin-top: 0;
+}
+
+.post .item .info,
+.post .item .desc {
+	margin-bottom: 1em;
+}
+
+.inpost .post .item .desc {
+	margin: 0;
+}
+
+.post .featured {
+	margin-bottom: 1em;
+}
+
+.post .featured-image {
+	position: relative;
+}
+
+.item .quote .fa-quote-left {
+	color: #337ab7;
+	margin-right: 15px;
+}
+
+.item .quote .fa-quote-right {
+	color: #337ab7;
+	margin-left: 15px;
+}
+
+.featured-quote blockquote {
+	font-size: 26px;
+	margin: 0;
+	border: none;
+}
+
+.featured-link {
+	font-size: 26px;
+}
+
+.featured-link .fa {
+	margin-right: 5px;
+}
+
+.tab {
+	margin-bottom: 20px;
+}
+
+.pager {
+	margin-top: 0px;
+	margin-bottom: 30px;
+}
+
+.in-profile .pager {
+	margin-bottom: 0px;
+}
+
+/* share section */
+.share {
+	padding-top: 0;
+}
+
+.in-post .share {
+	padding-top: 0;
+}
+
+.share a {
+	color: #479fc8;
+	padding: 4px;
+	vertical-align: middle;
+	display: inline-block;
+	line-height: 1.42857;
+	margin-bottom: 0
+}
+
+hr {
+	margin: 10px 0;
+}
+
+
+/* Extra small devices (phones, less than 768px) */
+@media (max-width: 767px) {
+	.header {
+		text-align: center;
+	}
+
+	.header .logo {
+		float: none !important;
+		margin: 0 auto;
+	}
+
+	.header .branding {
+		float: none !important;
+		text-align: center;
+	}
+
+	.header .btn {
+		margin-top: 30px;
+		float: none !important;
+	}
+
+	.sections-wrapper {
+		padding-top: 30px;
+		padding-bottom: 0px;
+	}
+
+	.project-image {
+		margin-bottom: 15px;
+	}
+
+	.main-nav .navbar-toggle,
+	#navbar {
+		float: none !important;
+		text-align: center;
+	}
+}
+
+.pagination {
+	margin-top: 0;
+	margin-bottom: 15px;
+}

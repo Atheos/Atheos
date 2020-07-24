@@ -1,0 +1,81 @@
+@mixin background() {
+	background-color: $background;
+}
+
+@mixin foreground() {
+	border: 1px solid $smoke;
+	backdrop-filter: blur(2px);
+	background-color: #{$foreground}99;
+	// border-left: none;
+	// border-right: none;
+
+	// @media (min-width: 768px) {
+	// 	border: 1px solid $smoke;
+	// }
+}
+
+// h1 { font-size: 2.552em;	}
+// h2 { font-size: 1.841em;	}
+// h3 { font-size: 1.553em;	}
+// h4 { font-size: 1.063em;	}
+// h5 { font-size: 1.05em;	}
+
+//h1 { font-size: 2.352em; }
+//h2 { font-size: 1.741em; }
+//h3 { font-size: 1.353em; }
+//h4 { font-size: 1.063em; }
+//h5 { font-size: 1.25em; }
+@mixin header($type: false) {
+	@if $type==false {
+		font-family: 'Ubuntu', sans-serif;
+		font-weight: 700;
+		/*display: inline-block;*/
+		line-height: 1.15;
+
+		@media (min-width: 768px) {
+			vertical-align: middle;
+		}
+	}
+
+	@else if $type==1 {
+		font-size: 2.552em;
+	}
+
+	@else if $type==2 {
+		font-size: 1.841em;
+	}
+
+	@else if $type==3 {
+		font-size: 1.553em;
+	}
+
+	@else if $type==4 {
+		font-size: 1.553em;
+	}
+
+	@else if $type==5 {
+		font-size: 1.05em;
+	}
+}
+
+@mixin code() {
+	font-family: 'Ubuntu-Fira', monospace;
+	background: $raven;
+	border-radius: 0.3em;
+}
+
+@mixin codeblock() {
+	line-height: 1.4;
+	padding: 5px;
+	overflow-x: auto;
+	white-space: pre;
+	word-spacing: normal;
+	word-break: normal;
+	word-wrap: normal;
+}
+
+@mixin inlinecode() {
+	padding: 2px 4px;
+	white-space: normal;
+	vertical-align: middle;
+}

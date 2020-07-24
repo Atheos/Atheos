@@ -1,0 +1,38 @@
+<aside id="archive">
+	<h3>Archive</h3>
+	<?php
+	$by_year=archive_list(true);
+	$script="this.parentNode.classList.toggle('expanded');";
+	$icon='<a class="toggle" onclick="' . $script . '"></a>';
+
+	$i=0;
+
+	foreach ($by_year as $year=> $months) {
+	$class=$i===0 ? 'expanded' : '';
+	$i++;
+
+	$by_month=array_count_values($months);
+	# Sort the months
+	krsort($by_month);
+
+
+	echo '<ul class="' . $year .' archivegroup">';
+	echo '<li class="' . $class . '">';
+	echo $icon;
+	echo '<a href="' . site_url() . 'archive/' . $year . '">' . $year . '</a> ';
+	echo '<span class="count">(' . count($months) . ')</span>';
+	echo '<ul class="month">';
+
+	foreach ($by_month as $month=> $count) {
+	$name=strftime('%B', mktime(0, 0, 0, $month, 1, 2010));
+	echo '<li class="item"><a href="' . site_url() . 'archive/' . $year . '-' . $month . '">' . $name . '</a>';
+	echo ' <span class="count">(' . $count . ')</span></li>';
+	}
+
+	echo '</ul>';
+	}
+
+
+	?>
+</ul>
+</aside>

@@ -1,0 +1,14 @@
+/* ======= Header ======= */
+header {
+	margin-top: 0;
+	@include foreground();
+
+	@media (min-width: 768px) {
+		padding: $sectionPadding;
+	}
+	
+	span {
+		color: $fontColorMajor;
+		font-size: 1.553em;
+	}
+}

@@ -1,0 +1,14 @@
+section {
+	padding: 0.5rem 0.5rem;
+	&:not(:last-child) {
+		margin-bottom: $sectionMargin;
+	}
+	@include foreground;
+
+	/* Desktop View */
+	@media (min-width: $desktop-width) {
+
+		padding: 0.5rem 1rem;
+
+	}
+}

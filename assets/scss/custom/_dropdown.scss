@@ -1,0 +1,39 @@
+#drop_down {
+	// display: none;
+	margin-top: -170px;
+	margin-bottom: 0;
+	width: 100%;
+	height: 250px;
+	text-align: right;
+	-webkit-box-shadow: inset 0 -5px 15px 0 rgba(0, 0, 0, 1);
+	box-shadow: inset 0 -10px 20px 0 rgba(0, 0, 0, 1);
+	background-color: $black;
+	background: url(../images/atheos_sneak_peak.png) 0 70px no-repeat $black;
+	overflow: hidden;
+	transition: color .5s ease-in, margin .5s ease-in;
+	-moz-transition: color .5s ease-in, margin .5s ease-in;
+	-o-transition: color .5s ease-in, margin .5s ease-in;
+	-webkit-transition: color .5s ease-in, margin .5s ease-in;
+
+	a {}
+
+	&:hover {
+		text-decoration: none;
+		margin-top: -70px;
+		transition-delay: 0.2s;
+	}
+
+	a span {
+		display: block;
+		font-weight: normal;
+		margin: 215px 20px 0 20px;
+		font-size: 18px;
+		text-shadow: 0 1px 0 rgba(0, 0, 0, 0.8);
+	}
+
+	/* Desktop View */
+	@media (min-width: $desktop-width) {
+
+		display: inline-block;
+	}
+}

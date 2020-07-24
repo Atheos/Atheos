@@ -1,0 +1,40 @@
+brand {
+	display: block;
+	padding: 5px 10px;
+
+	@media (min-width: 768px) {
+		vertical-align: middle;
+		padding: 0;
+		display: inline-block;
+	}
+
+	name,
+	tagline {
+		@include header();
+	}
+
+	name {
+		@include header(1);
+		display: inline-block;
+		color: $primary;
+
+		@media (max-width: 768px) {
+			line-height: unset;
+		}
+
+		@media (min-width: 768px) {
+			margin: -10px 0;
+			display: block;
+		}
+	}
+
+	tagline {
+		@include header(2);
+		color: $fontColorMajor;
+		display: none;
+
+		@media (min-width: 768px) {
+			display: block;
+		}
+	}
+}

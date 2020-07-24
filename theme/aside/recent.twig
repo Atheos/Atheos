@@ -1,0 +1,18 @@
+<aside id="recent_posts">
+	<h3>Recent Posts</h3>
+	<ul class="content">
+		{% set posts = [] %}
+		{% for page in pages("slog") %}
+		{% if page.meta.template == "post" %}
+		{% set posts = posts|merge([page]) %}
+		{% endif %}
+		{% endfor %}
+
+
+		{% for post in posts | sort_by("time") | reverse | slice(0, 5) %}
+		<li>
+			<a class="title" href="{{ post.url }}">{{ post.title }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+</aside>

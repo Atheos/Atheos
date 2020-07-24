@@ -1,0 +1,15 @@
+name,
+tagline {
+	display: block;
+	// padding: 0 5px 2px;
+	margin: 4px 8px;
+	@include header;
+}
+
+name {
+	font-size: 2.041em;
+}
+
+tagline {
+	font-size: 1.353em;
+}

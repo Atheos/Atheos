@@ -1,0 +1,14 @@
+api_version: 3                  # Use Pico's latest API version for themes
+
+meta:                           # Register meta headers used by this theme
+    Logo: logo                  # The URL to your website's logo (value is passed to Pico's "url" Twig filter)
+    Tagline: tagline            # Your website's tag line, shown right below your site title (supports Markdown)
+    Social: social              # A list of social icons that will be shown in your website's footer;
+                                #     You must specify a "title", "url" and "icon" per entry
+
+twig_config:                    # Twig template engine config
+    autoescape: html            # Let Twig escape variables by default
+    strict_variables: false     # If set to true, Twig will bail out when unset variables are being used
+    charset: utf-8              # The charset used by Twig templates
+
+widescreen: false               # Use more horicontal space (i.e. make the site container wider)

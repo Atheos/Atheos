@@ -1,0 +1,60 @@
+## Basic
+site_title: Atheos Cloud IDE                    # The title of your website
+#base_url: ~                         # Pico will try to guess its base URL, if this fails, override it here;
+                                    #     Example: https://example.com/pico/
+rewrite_url: ~                      # A boolean (true or false) indicating whether URL rewriting is forced
+debug: true                            # Set this to true to enable Pico's debug mode
+timezone: ~                         # Your PHP installation might require you to manually specify a timezone
+
+description: Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte and the Codiad Team.
+tagline: A development blog
+image: https://www.atheos.io/assets/images/atheos.png
+
+## Theme
+theme: theme                      # The name of your custom theme
+themes_url: ~                       # Pico will try to guess the URL to the themes dir of your installation;
+                                    #     If this fails, override it here. Example: https://example.com/pico/themes/
+theme_config:                       # Additional theme-specific config
+    widescreen: false               # Default theme: Use more horizontal space (i.e. make the site container wider)
+twig_config:                        # Twig template engine config
+    autoescape: html                # Let Twig escape variables by default
+    strict_variables: false         # If set to true, Twig will bail out when unset variables are being used
+    charset: utf-8                  # The charset used by Twig templates
+    debug: ~                        # Enable Twig's debug mode
+    cache: false                    # Enable Twig template caching by specifying a path to a writable directory
+    auto_reload: ~                  # Recompile Twig templates whenever the source code changes
+
+## Date
+date_format: %d %b %Y                  # Pico's default date format;
+                                    #     See https://php.net/manual/en/function.strftime.php for more info
+## Content
+pages_order_by_meta: author         # Sort pages by meta value "author" (set "pages_order_by" to "meta")
+pages_order_by: date               # Change how Pico sorts pages ("alpha" for alphabetical order, "date", or "meta")
+pages_order: desc                    # Sort pages in ascending ("asc") or descending ("desc") order
+content_dir: ~                      # The path to Pico's content directory
+content_ext: .md                    # The file extension of your Markdown files
+content_config:                     # Parsedown Markdown parser config
+    extra: true                     # Use the Parsedown Extra parser to support extended markup;
+                                    #     See https://michelf.ca/projects/php-markdown/extra/ for more info
+    breaks: false                   # A boolean indicating whether breaks in the markup should be reflected in the
+                                    #     parsed contents of the page
+    escape: false                   # Escape HTML markup in your content files; don't confuse this with some sort of
+                                    #     safe mode, enabling this doesn't allow you to process untrusted user input!
+    auto_urls: true                 # Automatically link URLs found in your markup
+assets_dir: assets/                 # The path to Pico's assets directory
+assets_url: ~                       # Pico will try to guess the URL to the assets dir of your installation;
+                                    #     If this fails, override it here. Example: https://example.com/pico/assets/
+
+## Plugins
+plugins_url: ~                      # Pico will try to guess the URL to the plugins dir of your installation;
+RssMaker.enabled: true
+
+PicoOutput:
+    formats: [json, xml]
+
+
+
+## Custom
+copyright: &copy; Copyright 2020, Liam Siira
+social_twitter:
+social_github: https://github.com/hlsiira/

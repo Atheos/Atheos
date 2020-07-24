@@ -1,0 +1,55 @@
+fieldset {
+	border: 1px solid $primary;
+	backdrop-filter: blur(2px);
+	background-color: #21212144;
+	/*display: inline-block;*/
+	margin: auto;
+	margin-top: 8px;
+	width: 310px;
+	padding: 10px;
+	overflow: hidden;
+}
+
+legend {
+	font-size: 1.2rem;
+	font-weight: 700;
+}
+
+.btn,
+input,
+button,
+textarea {
+	font-size: 1rem;
+	background-color: rgba(0, 0, 0, 0.25);
+	display: block;
+	border: 1px solid $primary;
+	text-align: left;
+	margin: 5px 0;
+	padding: 5px;
+	width: 300px;
+	color: inherit;
+}
+
+.btn,
+button,
+input[type="submit"] {
+	cursor: pointer;
+	text-align: center;
+	transition: border $transitionDuration ease-in-out;
+	// font-weight: 700;
+
+	&:hover {
+		border: 1px solid $secondary;
+	}
+}
+
+textarea {
+	height: 150px;
+	max-width: 100%;
+	resize: none;
+}
+
+.download {
+	display: block;
+	margin: 0 auto;
+}

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'parts/copyright.twig' %}
+
+<head>
+	{% include 'parts/meta.twig' %}
+</head>
+<body id="aeon" class="language-js">
+	<canvas id="synthetic"></canvas>
+
+	<main class="aeon container fade3">
+		{% include 'parts/header.twig' %}
+		{{ content }}
+	</main>
+
+	{% include 'parts/footer.twig' %}
+</body>
+</html>

@@ -1,0 +1,170 @@
+toast {
+	visibility: hidden;
+	max-width: 50px;
+	height: 50px;
+	margin: auto;
+	background-color: rgb(50, 50, 50);
+	background-color: rgba(50, 50, 50, 0.5);
+	position: absolute;
+	z-index: 100;
+	left: 0;
+	right: 0;
+	bottom: 8%;
+	white-space: nowrap;
+	text-align: center;
+	overflow: hidden;
+
+	&.show {
+		visibility: visible;
+		animation: toast_fadein 0.4s, toast_expand 0.4s 0.4s, toast_stay 300s 0.8s;
+	}
+
+	&.move-left {
+		left: 0;
+	}
+
+	icon {
+		width: 50px;
+		height: 50px;
+		float: left;
+		padding: 0;
+		line-height: 50px;
+		font-size: 1.5em;
+		background-color: rgb(50, 50, 50);
+		background-color: rgba(50, 50, 50, 0.5);
+	}
+
+	span {
+		color: $fontColorMinor;
+		padding: 0 16px;
+		line-height: 50px;
+		font-size: 1.2em;
+		overflow: hidden;
+		white-space: nowrap;
+	}
+
+	.check,
+	.fa-check-circle {
+		color: $green;
+	}
+
+	.warning,
+	.fa-exclmation-triangle {
+		color: $orange;
+	}
+
+	.error,
+	.fa-exclmation-circle {
+		color: $red;
+	}
+
+}
+
+
+@-webkit-keyframes toast_fadein {
+	from {
+		bottom: 0;
+		opacity: 0;
+	}
+
+	to {
+		bottom: 30px;
+		opacity: 1;
+	}
+}
+
+@keyframes toast_fadein {
+	from {
+		bottom: 0;
+		opacity: 0;
+	}
+
+	to {
+		bottom: 30px;
+		opacity: 1;
+	}
+}
+
+@-webkit-keyframes toast_expand {
+	from {
+		min-width: 50px
+	}
+
+	to {
+		min-width: 350px
+	}
+}
+
+@keyframes toast_expand {
+	from {
+		min-width: 50px
+	}
+
+	to {
+		min-width: 350px
+	}
+}
+
+@-webkit-keyframes toast_stay {
+	from {
+		min-width: 350px
+	}
+
+	to {
+		min-width: 350px
+	}
+}
+
+@keyframes toast_stay {
+	from {
+		min-width: 350px
+	}
+
+	to {
+		min-width: 350px
+	}
+}
+
+@-webkit-keyframes toast_shrink {
+	from {
+		min-width: 350px;
+	}
+
+	to {
+		min-width: 50px;
+	}
+}
+
+@keyframes toast_shrink {
+	from {
+		min-width: 350px;
+	}
+
+	to {
+		min-width: 50px;
+	}
+}
+
+@-webkit-keyframes toast_fadeout {
+	from {
+		bottom: 30px;
+		opacity: 1;
+	}
+
+	to {
+		bottom: 60px;
+		opacity: 0;
+	}
+}
+
+@keyframes toast_fadeout {
+	from {
+		bottom: 30px;
+		opacity: 1;
+	}
+
+	to {
+		bottom: 60px;
+		opacity: 0;
+	}
+}

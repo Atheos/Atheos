@@ -1,0 +1,10 @@
+<aside id="popular_posts">
+	<h3>Popular Posts</h3>
+	<ul class="content">
+		{% for page in popular_posts %}
+		<li>
+			<a class="title" href="{{ page.url }}">{{ page.title }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+</aside>

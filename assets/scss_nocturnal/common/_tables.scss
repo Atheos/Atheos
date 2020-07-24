@@ -1,0 +1,56 @@
+/*-------------------------
+        Table
+--------------------------*/
+table {
+  //width: 100%;
+  //color: #333333;
+  //border: 1px solid #ddd;
+  //margin: 1em 0;
+  //white-space: pre-wrap;
+  //word-wrap: break-word;
+  
+  		border-collapse: collapse;
+		margin: 0;
+  
+}
+/*
+th, td {
+  padding: 5px 10px;
+  border: none;
+}
+th {
+  border-bottom: 1px solid #ddd;
+  border-right: 1px solid #ddd;
+  font-size: 16px;
+}
+td {
+  border: 1px solid #ddd;
+  border-top: none;
+  border-left: none;
+}
+*/
+.argTable {
+	text-align: center;
+
+	table {
+		display: inline-block;
+
+		@media (min-width: 768px) {
+			margin: 0 15px;
+		}
+
+		th,
+		td {
+			border: 1px solid $blue;
+			padding: 0.125em 0.5em;
+		}
+
+		th {
+			text-align: center;
+		}
+
+		td {
+			text-align: left;
+		}
+	}
+}

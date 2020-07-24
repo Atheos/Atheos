@@ -1,0 +1,21 @@
+.fade1 {	animation: fadein 1s; }
+.fade3 {	animation: fadein 3s; }
+.fade6 {	animation: fadein 6s; }
+.fade9 {	animation: fadein 9s; }
+
+@keyframes fadein {
+    from { opacity: 0; }
+    to   { opacity: 1; }
+}
+
+
+@keyframes float {
+	100% {
+		transform: translateY(8px);
+	}
+}
+
+.delay1 { animation-delay: 0.1s !important; }
+.delay2 { animation-delay: 0.2s !important; }
+.delay3 { animation-delay: 0.3s !important; }
+.delay4 { animation-delay: 0.4s !important; }

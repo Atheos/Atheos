@@ -1,0 +1,19 @@
+ul {
+	list-style: none;
+	// padding: 0 5px;
+	margin-bottom: 0.5em;
+
+	li {
+		// margin-bottom: 10px;
+
+		&:before {
+			color: $primary;
+			content: "\2B22";
+			margin-right: 5px;
+		}
+
+		&:last-child {
+			margin-bottom: 0;
+		}
+	}
+}

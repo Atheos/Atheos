@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'parts/copyright.twig' %}
+
+<head>
+	{% include 'parts/meta.twig' %}
+</head>
+<body id="aeon">
+	<canvas id="synthetic"></canvas>
+
+	<card class="fade3">
+		<!-- Header -->
+		{{ content }}
+
+		<fieldset>
+				<a href="{{ base_url }}" class="btn">Go to Home Page</a>
+				<a onclick="history.back(-1)" class="btn">Go Back</a>
+		</fieldset>
+	</card>
+
+	<!-- Shadow -->
+	<shadow class="fade6"></shadow>
+
+</body>
+</html>

@@ -1,0 +1,1 @@
+Removing PicoDepreciated from the plugins list and any reference to it.

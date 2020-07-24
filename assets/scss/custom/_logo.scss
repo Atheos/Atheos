@@ -1,0 +1,13 @@
+#logo {
+	display: none;
+	padding: 8px;
+
+	img {
+		margin: 0 auto;
+	}
+
+	@media (min-width: $desktop-width) {
+		display: block;
+	}
+
+}

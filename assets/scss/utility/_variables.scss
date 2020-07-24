@@ -1,0 +1,40 @@
+$transitionDuration: 0.25s;
+
+$transitionBorder: border-color $transitionDuration ease;
+$transitionBackground: background $transitionDuration ease;
+$transitionColor: color $transitionDuration ease;
+$transition: $transitionDuration all ease-in-out;
+
+
+// * * * COLORS * * *
+$background: darken(#230101, 10%); //#230101;
+$foreground: #212121; //#13181e;
+
+
+$fontColorMajor: $white;
+$fontColorMinor: $gray;
+
+$primary: $blue;
+$secondary: $aqua;
+$tertiary: #DC9200;
+
+$feedbackNeutral : #DDDDEE;
+$feedbackEmphasis : #FFD426;
+$feedbackPositive : #3273dc;
+$feedbackNegative : #FF7E26;
+
+
+$sectionPadding: 10px;
+$sectionMargin: 15px;
+
+
+
+
+
+$sidebar-width: 300px;
+$desktop-width: 959px;
+
+
+
+
+

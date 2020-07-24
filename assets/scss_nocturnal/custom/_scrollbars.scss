@@ -1,0 +1,26 @@
+::-webkit-scrollbar-track {
+	-webkit-box-shadow: inset 0 0 5px rgba(0, 0, 0, 0.3);
+	background-color: $ebony;
+}
+
+::-webkit-scrollbar {
+	width: 8px;
+	height: 8px;
+	background-color: $ebony;
+}
+
+::-webkit-scrollbar-thumb {
+	background-color: $smoke;
+}
+
+::-webkit-input-placeholder,
+::-moz-placeholder,
+:-ms-input-placeholder,
+:-moz-placeholder {
+	color: $fontColorMinor;
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: $smoke transparent;
+}

@@ -1,0 +1,30 @@
+card {
+	height: 300px;
+	width: 380px;
+	position: absolute;
+	top: calc(35% - 150px);
+	left: calc(50% - 190px);
+
+	.hexcon {
+		text-align: center;
+		margin-bottom: 4px;
+	}
+
+
+
+	footer {
+		position: absolute;
+		bottom: 0;
+		height: 40px;
+		width: 100%;
+		text-align: center;
+
+		@media (min-width: 768px) {
+			width: calc(100% - 100px);
+		}
+
+		small {
+			display: block;
+		}
+	}
+}

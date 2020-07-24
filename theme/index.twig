@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'parts/copyright.twig' %}
+
+<head>
+	{% include 'parts/meta.twig' %}
+</head>
+<body id="aeon">
+	<canvas id="synthetic"></canvas>
+
+	{% include 'parts/sidebar.twig' %}
+
+	<!-- Main -->
+	<main class="aeon">
+		{{ content }}
+	</main>
+
+	<!-- Footer -->
+	<footer>
+		<p>
+			Atheos is maintained by <a href="https://github.com/HLSiira">Liam Siira</a><br>
+		</p>
+	</footer>
+
+	<!-- Shadow -->
+	<shadow class="fade6"></shadow>
+
+</body>
+</html>

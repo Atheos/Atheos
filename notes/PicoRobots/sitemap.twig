@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+    {% for record in sitemap %}
+        <url>
+            <loc>{{ record.url|e("html") }}</loc>
+            {% if record.modificationTime is not null %}
+                <lastmod>{{ record.modificationTime|date("c") }}</lastmod>
+            {% endif %}
+            {% if record.changeFrequency is not null %}
+                <changefreq>{{ record.changeFrequency }}</changefreq>
+            {% endif %}
+            {% if record.priority is not null %}
+                <priority>{{ record.priority }}</priority>
+            {% endif %}
+        </url>
+    {% endfor %}
+</urlset>

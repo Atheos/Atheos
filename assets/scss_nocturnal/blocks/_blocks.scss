@@ -1,0 +1,33 @@
+/* ======= Sections======= */
+.sections-wrapper {
+	padding-top: 60px;
+	padding-bottom: 30px;
+}
+
+aside,
+section {
+	margin-bottom: $sectionMargin;
+	padding: $sectionPadding;
+	@include foreground();
+	
+	&:last-child {
+		margin-bottom: 0;
+	}
+}
+
+.section .section-inner {
+	// background: #fff;
+	// padding: 30px;
+}
+
+.section .heading {
+	margin-top: 0;
+	margin-bottom: 20px;
+	color: #5f6b77;
+	font-size: 20px;
+}
+
+.section .content .more-link .fa {
+	margin-right: 5px;
+	font-size: 14px;
+}

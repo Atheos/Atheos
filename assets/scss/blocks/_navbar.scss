@@ -1,0 +1,50 @@
+nav {
+	height: 100%;
+	position: relative;
+
+	@media (min-width: $desktop-width) {
+		border-top: 1px solid $silver;
+	}
+
+	ul {
+		position: absolute;
+		// top: 4em;
+		left: 0;
+		margin: 0;
+		padding: 0;
+		width: $sidebar-width;
+		overflow: auto;
+		height: 100%;
+
+	}
+
+	a {
+		width: 100%;
+		padding: 10px 15px;
+		border-bottom: 1px solid $silver;
+		position: relative;
+		display: inline-block;
+		font-weight: bold;
+		color: $white;
+		vertical-align: middle;
+
+
+		i {
+			display: inline-block;
+			pointer-events: none;
+
+			// font-size: 18px;
+		}
+
+		span {
+			pointer-events: none;
+		}
+
+		&:hover {
+			background-color: $ebony;
+		}
+
+	}
+
+
+}

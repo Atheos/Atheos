@@ -1,46 +1,37 @@
-(function() {
+//////////////////////////////////////////////////////////////////////////////80
+// Main Controller
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
 
-	'use strict';
-	document.addEventListener("DOMContentLoaded", function() {
-		ajax({
-			url: 'https://api.github.com/repos/Atheos/Atheos/tags',
-			type: 'GET',
-			success: function(data) {
-				data = JSON.parse(data);
-				document.querySelector('#version_tag').innerText = data[0].name;
-			}
+document.addEventListener("DOMContentLoaded", function() {
+
+	// Shorthand for sending to console
+	window.log = Function.prototype.bind.call(console.log, console);
+
+	console.log([
+		"                                 ",
+		"╭───────────────────────────────╮",
+		"│                               │",
+		"│  Hi, I'm Liam Siira.          │",
+		"│  Want to get in touch?        │",
+		"│  Contact me at liam@siira.io. │",
+		"│                               │",
+		"╰───────────────────────────────╯"
+	].join("\n"));
+
+	if (typeof Contact !== 'undefined') Contact.init();
+	if (typeof Synthetic !== 'undefined') Synthetic.init();
+	if (typeof Aeon !== 'undefined') {
+		Aeon.init();
+
+		Aeon.Dispatcher.on('transitionCompleted', () => {
+			if (typeof Activity !== 'undefined') Activity.init();
+			if (typeof Lumin !== 'undefined') Lumin.init();
 		});
-
-		if (window.console && window.console.log) {
-			window.console.log([
-				"",
-				"╭───────────────────────────────╮",
-				"│                               │",
-				"│  Hi, I'm Liam Siira.          │",
-				"│  Want to get in touch?        │",
-				"│  Contact me at liam@siira.us. │",
-				"│                               │",
-				"╰───────────────────────────────╯"
-			].join("\n"));
-		}
-		if (typeof Synthetic !== 'undefined') Synthetic.init();
-
-	});
-	document.addEventListener("change", function(e) {
-		if (e.target.tagName === 'SELECT') {
-			var sel = e.target,
-				type = sel.id.split('_').pop(),
-				file = sel.value;
-			ajax({
-				url: `/raw?des=blog&type=${type}&file=${file}`,
-				success: function(data) {
-					var p = document.getElementById('blog_p_' + type);
-					p.innerHTML = data;
-				},
-				error: function(data) {
-					console.log('server error');
-				}
-			});
-		}
-	});
-})();
+	}
+	if (typeof Activity !== 'undefined') Activity.init();
+	if (typeof Lumin !== 'undefined') Lumin.init();
+});

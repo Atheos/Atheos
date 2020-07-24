@@ -1,0 +1,58 @@
+pre,
+code,
+pre code,
+pre code span {
+	@include code();
+}
+
+pre {
+	@include codeblock();
+}
+
+:not(pre)>code {
+	@include inlinecode();
+
+}
+
+.ll-nam {
+	// color: #2196f3;
+	// color: $blue;
+}
+
+.ll-con {
+	color: $yellow;
+}
+
+.ll-boo,
+.ll-num {
+	color: $green;
+	// color: $pink;
+	// color: $blue;
+}
+
+.ll-str {
+	// color: $green;
+	color: $aqua; // Was green
+	// color: #43a047
+}
+
+.ll-rex {
+	color: #ef6c00
+}
+
+.ll-pct {
+	color: $orange;
+}
+
+.ll-brc {
+	color: $silver;
+}
+
+.ll-key {
+	color: $red;
+	// color: #EEE;
+}
+
+.ll-com {
+	color: $fontColorMinor;
+}

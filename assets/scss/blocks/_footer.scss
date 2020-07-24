@@ -1,0 +1,15 @@
+footer {
+	padding: 0 0 20px 0;
+	font-size: 13px;
+	color: $gray;
+	display: none;
+
+
+	a {
+		color: $gray;
+	}
+
+	a:hover {
+		color: $silver;
+	}
+}

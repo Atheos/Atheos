@@ -1,1 +1,0 @@
-* **[Poller](/docs/api/modules/chonometer)** - Working with the `chonometer` object

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+{% include 'parts/copyright.twig' %}
+
+<head>
+	{% include 'parts/meta.twig' %}
+</head>
+<body id="aeon">
+	<canvas id="synthetic"></canvas>
+	
+	<main class="aeon container fade3">
+	{% include 'parts/header.twig' %}
+		<div class="row">
+			<div class="primary col-8">
+				<section class="post">
+					<div class="desc text-left" itemprop="articleBody">
+						{{ content }}
+					</div>
+				</section>
+
+				<div id="related">
+
+					{% for post in related_posts %}
+					{% if post.meta.template == "post" %}
+					<item class="col-4">
+
+						<h3 class="title"><a href="{{ post.url }}">{{ post.title }}</a></h3>
+						<p>
+							{{ post.description }}
+						</p>
+						<a class="read-more" href="{{ post.url }}">Read More</a>
+					</item>
+					{% endif %}
+					{% endfor %}
+				</div>
+
+
+			</div>
+
+			<div class="secondary col-4">
+				{% include 'aside/feed.twig' %}
+				{% include 'aside/popular.twig' %}
+				{% include 'aside/recent.twig' %}
+			</div>
+		</div>
+	</main>
+
+	{% include 'parts/footer.twig' %}
+</body>
+</html>

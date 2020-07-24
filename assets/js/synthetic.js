@@ -1,6 +1,14 @@
-//	Synthetic | Simple pulsing hexagonal background for websites
-//	(c) 2020 Liam Siira (liam@siira.us)
-//	Created from Hexagons.js by ZackTheHuman (https://gist.github.com/zackthehuman/1867663)
+//////////////////////////////////////////////////////////////////////////////80
+// Synthetic: Simple pulsing hexagonal background for websites
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright 2011 ZackTheHuman
+// Source: https://gist.github.com/zackthehuman/1867663
+//////////////////////////////////////////////////////////////////////////////80
+
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
 		define([], function() {
@@ -12,7 +20,8 @@
 		root.Synthetic = factory(root);
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
-
+	'use strict';
+	
 	let rndColor = [],
 		colors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
 		seed = 5309,
@@ -102,14 +111,14 @@
 			if (!canvas) return;
 
 			rndColor = localStorage.getItem('synthetic');
-			if (!rndColor || typeof(rndColor) !== 'string') {
+			if (rndColor && typeof(rndColor) !== 'string') {
+				rndColor = JSON.parse(rndColor);
+			} else {
 				rndColor = [];
 				for (var i = 0; i < 5000; ++i) {
 					rndColor.push(colors[sRnd(4)]);
 				}
 				localStorage.setItem('synthetic', JSON.stringify(rndColor));
-			} else {
-				rndColor = JSON.parse(rndColor);
 			}
 			drawSynthetic();
 		}

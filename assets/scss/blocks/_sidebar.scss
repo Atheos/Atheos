@@ -1,0 +1,79 @@
+sidebar {
+	position: fixed;
+	top: 0;
+	left: -($sidebar-width);
+	overflow: hidden;
+	transition: all .3s ease-in;
+	width: $sidebar-width;
+	flex: 1;
+	z-index: 99;
+	background-color: $foreground;
+	border-right: 1px solid $silver;
+
+	top: 2px;
+	height: calc(100% - 4px);
+
+	/* Desktop View */
+	@media (min-width: $desktop-width) {
+		@include foreground;
+		left: auto;
+		top: $sectionMargin;
+		height: calc(100% - (#{$sectionMargin} * 2));
+	}
+}
+
+sidebar .trigger {
+	z-index: 2;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 4em;
+	padding: 15px;
+	background-color: $foreground;
+	border-bottom: 1px solid $silver;
+	text-align: center;
+
+	@media (min-width: $desktop-width) {
+		display: none;
+	}
+
+	name,
+	i {
+		display: inline-block;
+		vertical-align: middle;
+
+	}
+
+	i {
+		position: fixed;
+		left: 0;
+		font-size: 25px;
+
+		// top: 2px;
+	}
+
+	a {
+		display: inline-block;
+		font-size: 22px;
+		font-weight: bold;
+		color: $white;
+	}
+
+
+}
+
+
+sidebar:hover,
+sidebar:focus,
+sidebar .trigger:focus+nav,
+sidebar .trigger:hover+sidebar {
+	left: 0;
+
+	@media (min-width: $desktop-width) {
+		width: $sidebar-width;
+		left: auto;
+
+	}
+
+}

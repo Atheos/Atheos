@@ -1,0 +1,13 @@
+<aside id="category">
+	<h3>Categories</h3>
+	<ul class="content">
+		<?php
+		$lists=category_list(true);
+		foreach ($lists as $l):
+		if ($l[0]==="uncategorized") continue; ?>
+		<li>
+			<a class="title" href="<?php echo site_url(); ?>category/<?php echo $l[0]; ?>"><?php echo shorten($l[1], 60); ?></a>
+		</li>
+		<?php endforeach; ?>
+	</ul>
+</aside>

@@ -1,12 +1,22 @@
-#Options -Indexes
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+    # May be required to access sub directories
+    #RewriteBase /
 
-DirectorySlash Off
+    # Deny access to internal dirs and files by passing the URL to Pico
+    RewriteRule ^(config|content|vendor|CHANGELOG\.md|composer\.(json|lock|phar))(/|$) index.php [L]
+    RewriteRule (^\.|/\.)(?!well-known(/|$)) index.php [L]
 
-RewriteEngine On
-RewriteBase /
-#RewriteCond %{REQUEST_URI} !^/index.html$
-#RewriteCond %{REQUEST_FILENAME} !-f
-#RewriteCond %{REQUEST_FILENAME} !-d
-RewriteCond %{REQUEST_URI} !\.(json|css|gif|ico|jpg|js|png|swf|txt|svg|woff|ttf|eot|webmanifest)$
-RewriteCond %{REQUEST_URI} !/index.php$
-RewriteRule .* /index.php [L]
+    # Enable URL rewriting
+    RewriteCond %{REQUEST_FILENAME} !-f
+    RewriteCond %{REQUEST_FILENAME} !-d
+    RewriteRule ^ index.php [L]
+
+    <IfModule mod_env.c>
+        # Let Pico know about available URL rewriting
+        SetEnv PICO_URL_REWRITING 1
+    </IfModule>
+</IfModule>
+
+# Prevent file browsing
+Options -Indexes -MultiViews

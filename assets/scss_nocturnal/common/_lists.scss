@@ -1,0 +1,42 @@
+ul,
+ol {
+
+	&:not(:last-child),
+	li:not(:last-child) {
+		margin-bottom: 0.5em;
+	}
+
+	li {
+		line-height: 1.6em;
+	}
+}
+
+ul {
+	list-style: none;
+
+	li {
+
+		&:before {
+			color: $primary;
+			content: "\2B22";
+			margin-right: 5px;
+		}
+	}
+}
+
+ul.inline {
+	padding-left: 0;
+	// margin-left: -5px;
+
+	li {
+		display: inline-block;
+		margin-right: 5px;
+		// padding-left: 5px;
+	}
+}
+
+ol {
+	li {
+		margin-left: 20px;
+	}
+}

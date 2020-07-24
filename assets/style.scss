@@ -1,0 +1,81 @@
+@import 'scss/utility/colors';
+@import 'scss/utility/mixins';
+@import 'scss/utility/variables';
+@import 'scss/utility/animation';
+
+@font-face {
+	font-family: 'CFA';
+	src: url('fonts/CFA/cfa.eot?75429923');
+	src: url('fonts/CFA/cfa.eot?75429923#iefix') format('embedded-opentype'),
+		url('fonts/CFA/cfa.woff?75429923') format('woff'),
+		url('fonts/CFA/cfa.ttf?75429923') format('truetype'),
+		url('fonts/CFA/cfa.svg?75429923#cfa') format('svg');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+html {
+	font-size: 16px;
+}
+
+
+body {
+	background-color: #000;
+	max-width: 1280px;
+	margin: auto;
+
+	font-family: 'Lato', 'Ubuntu', sans-serif;
+	font-weight: 400;
+	line-height: 1.5;
+	color: $fontColorMajor;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	padding: 2px;
+
+	@media (min-width: 768px) {
+		padding: $sectionMargin;
+	}
+}
+
+main {
+	max-width: 960px;
+	margin: 0 auto;
+}
+
+header,
+footer {
+	margin: $sectionMargin auto;
+
+	@media (min-width: 768px) {}
+}
+
+@import 'scss/common/icons';
+@import 'scss/common/lists';
+@import 'scss/common/table';
+@import 'scss/common/typography';
+
+@import 'scss/custom/brand';
+@import 'scss/custom/download';
+@import 'scss/custom/dropdown';
+@import 'scss/custom/features';
+@import 'scss/custom/logo';
+@import 'scss/custom/scrollbars';
+@import 'scss/custom/synthetic';
+// @import 'scss/custom/visualization';
+
+@import 'scss/blocks/breadcrumbs';
+// @import 'scss/blocks/content';
+@import 'scss/blocks/footer';
+@import 'scss/blocks/header';
+@import 'scss/blocks/main';
+@import 'scss/blocks/navbar';
+@import 'scss/blocks/sidebar';
+@import 'scss/blocks/section';
+
+
+@import 'scss/markdown';
+
+@import 'scss/utility/reset';

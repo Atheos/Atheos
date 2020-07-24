@@ -1,0 +1,52 @@
+	<title>{% if meta.title %}{{ meta.title ~ ' | ' }}{% endif %}{{ site_title }}</title>
+
+	<meta charset='utf-8'>
+	<meta http-equiv="X-UA-Compatible" content="chrome=1">
+	<meta name="description" content="{{ meta.description|striptags }}" />
+	<meta name=”keywords” content=”atheos, code anywhere, ide, cloud, open source, code editor, minimal footprint, codiad, php, javascript, html, web-based, firefox, chrome, safari, linux, windows, apache, nginx, docker” />
+	<meta name="viewport" content="width=device-width, initial-scale=1" />
+	<meta name="author" content="Liam Siira, Liam@Siira.us">
+	<meta name="generator" content="Pico" />
+
+	<!-- Facebook and Twitter integration -->
+	<meta property="og:title" content="{{ site_title }}" />
+	<meta property="og:image" content="{{ meta.image }}" />
+	<meta property="og:url" content="{{ base_url }}" />
+	<meta property="og:site_name" content="{{ site_title }}" />
+	<meta property="og:description" content="{{ meta.description|striptags }}" />
+	<meta name="twitter:title" content="{{ site_title }}" />
+	<meta name="twitter:image" content="{{ meta.image }}" />
+	<meta name="twitter:url" content="{{ base_url }}" />
+	<meta name="twitter:card" content="summary_large_image" />
+
+	<!-- Theme CSS -->
+	<link rel="preload" as="style" href="{{ assets_url }}/style.min.css">
+	<link rel="stylesheet" type="text/css" href="{{ assets_url }}/style.min.css" media="screen">
+
+	<!-- Preconnect -->
+	<link rel="preconnect" href="https://api.github.com">
+
+	<!-- Font CSS -->
+	<link rel="preload" as="style" href="/cdn/fonts.css?family=lato|ubuntu|icons">
+	<link rel="stylesheet" type="text/css" href="/cdn/fonts.css?family=lato|ubuntu|icons" defer>
+
+	<link rel="preload" as="font" href="/cdn/fonts/icons/custom.woff2" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/cdn/fonts/ubuntu/Ubuntu-Bold-Compact.woff2" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/cdn/fonts/lato/Lato-Regular.woff2" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/cdn/fonts/lato/Lato-Bold.woff2" type="font/woff2" crossorigin="anonymous">
+
+
+	<!-- Favicon -->
+	<link rel="apple-touch-icon" sizes="180x180" href="{{ assets_url }}/favicons/apple-touch-icon.png?v=2">
+	<link rel="icon" type="image/png" sizes="32x32" href="{{ assets_url }}/favicons/favicon-32x32.png?v=2">
+	<link rel="icon" type="image/png" sizes="16x16" href="{{ assets_url }}/favicons/favicon-16x16.png?v=2">
+	<link rel="manifest" href="{{ assets_url }}/favicons/site.webmanifest">
+	<link rel="mask-icon" href="{{ assets_url }}/favicons/safari-pinned-tab.svg?v=2" color="#5bbad5">
+	<link rel="shortcut icon" href="{{ assets_url }}/favicons/favicon.ico?v=2">
+	<meta name="msapplication-TileColor" content="#111111">
+	<meta name="msapplication-config" content="{{ assets_url }}/favicons/browserconfig.xml">
+	<meta name="theme-color" content="#ffffff">
+
+
+	<!-- Javascript -->
+	<script defer type="text/javascript" src="/cdn/core.js?js=sc|eo|an"></script>

@@ -1,0 +1,10 @@
+<aside id="libraries">
+	<h3>Libraries</h3>
+	<ul class="content">
+		{% for page in pages("libraries") %}
+		<li>
+			<a class="title" href="{{ page.url }}">{{ page.title }}</a>
+		</li>
+		{% endfor %}
+	</ul>
+</aside>

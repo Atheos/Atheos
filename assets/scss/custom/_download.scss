@@ -1,0 +1,17 @@
+#download-zip,
+#download-tar-gz {
+	display: none;
+}
+
+/* Desktop View */
+@media (min-width: $desktop-width) {
+
+	#download-zip,
+	#download-tar-gz {
+		display: block;
+	}
+
+	#drop_down {
+		display: inline-block;
+	}
+}

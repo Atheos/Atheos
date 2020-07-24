@@ -1,0 +1,25 @@
+#synthetic {
+	left: -20px;
+	position: fixed;
+	top: -20px;
+	z-index: -2;
+	pointer-events: none;
+	min-height: 120vh;
+	min-width: 120vw;
+	background-color: #000;
+	background: linear-gradient(-45deg, #000 45%, #001467 50%, #000 55%);
+	background-size: 600% 600%;
+	animation: gradient 16s linear infinite;
+}
+
+@keyframes gradient {
+	0% {
+		background-position:0% 51%
+	}
+	50% {
+		background-position:100% 50%
+	}
+	100% {
+		background-position:0% 51%
+	}
+}

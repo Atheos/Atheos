@@ -1,54 +1,30 @@
-<?php
-header("Access-Control-Allow-Origin: *");
+<?php // @codingStandardsIgnoreFile
+/**
+* This file is part of Pico. It's copyrighted by the contributors recorded
+* in the version control history of the file, available from the following
+* original location:
+*
+* <https://github.com/picocms/Pico/blob/master/index.php.dist>
+*
+* SPDX-License-Identifier: MIT
+* License-Filename: LICENSE
+*/
 
+// load dependencies
+require_once __DIR__ . '/vendor/composer/autoload.php';
 
-$request = parse_url($_SERVER['REQUEST_URI']);
-$request = array_key_exists("path", $request) ? $request["path"] : false;
-if ($request) {
-	$request = str_replace(' ', '', $request);
-	$request = strtolower(trim($request, '/'));
-	$request = !empty($request) ? $request : 'home';
-}
-include "libs/parsedown/Parsedown.php";
-$Parsedown = new Parsedown();
+Autoloader::getLoader();
 
-if ($request == 'raw') {
-	$destination = $_GET['des'];
-	include "$destination.php";
-} elseif ($request == 'market/json' || $request == 'market/stats') {
-	include "$request.php";
-} elseif ($request == 'update') {
-	include "update/index.php";
-} else {
-	?>
-	<!DOCTYPE html>
-	<html lang="en">
-	<head>
-		<?php include "assets/php/meta.php"; ?>
-		<?php echo "<!--" . $request . "-->"; ?>
+// instance Pico
+$pico = new Pico(
+	__DIR__, // root dir
+	'config/', // config dir
+	'plugins/', // plugins dir
+	''   // themes dir
+);
 
-	</head>
-	<body>
-		<canvas id="synthetic"></canvas>
-		<sidebar>
-			<div class="background">
-				<div class="trigger">
-					<i class="icon-menu"></i>
-					<h1>Atheos</h1>
-				</div>
-				<header>
-					<a id="logo" href="/"><img src="/assets/images/logo-new.png"></a>
-					<h1>Atheos<small id="version_tag">v.1.0</small></h1>
-					<h2>Web Based, Cloud IDE</h2>
-				</header>
-				<?php include "assets/php/navagation.php"; ?>
-			</div>
-		</sidebar>
-		<?php include "assets/php/main.php"; ?>
+// header("Access-Control-Allow-Origin: *");
+header("strict-transport-security: max-age=600");
 
-		<?php include "assets/php/footer.php"; ?>
-		<?php include "assets/php/scripts.php"; ?>
-	</body>
-</html>
-<?php
-}
+// run application
+echo $pico->run();

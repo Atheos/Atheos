@@ -1,0 +1,97 @@
+/* PrismJS 1.20.0
+https://prismjs.com/download.html#themes=prism-tomorrow&languages=clike+javascript */
+/**
+ * prism.js tomorrow night eighties for JavaScript, CoffeeScript, CSS and HTML
+ * Based on https://github.com/chriskempson/tomorrow-theme
+ * @author Rose Pritchard
+ */
+
+pre,
+code,
+pre code,
+pre code span {
+	@include code();
+}
+
+pre {
+	@include codeblock();
+}
+
+:not(pre)>code {
+	@include inlinecode();
+
+}
+
+.token.comment,
+.token.block-comment,
+.token.prolog,
+.token.doctype,
+.token.cdata {
+	color: $fontColorMinor;
+}
+
+.token.punctuation {
+	color: $silver;
+}
+
+.token.tag,
+.token.attr-name,
+.token.namespace,
+.token.deleted {
+	color: $pink;
+}
+
+.token.function-name {
+	color: $blue;
+}
+
+.token.boolean,
+.token.number {
+	color: $green;
+}
+
+.token.property,
+.token.class-name,
+.token.constant,
+.token.symbol {
+	color: $yellow;
+}
+
+.token.selector,
+.token.important,
+.token.atrule,
+.token.keyword,
+.token.builtin {
+	color: $red;
+}
+
+.token.string,
+.token.char,
+.token.attr-value,
+.token.regex,
+.token.variable {
+	color: $aqua;
+}
+
+.token.operator,
+.token.entity,
+.token.url {
+	color: $orange;
+}
+
+.token.important,
+.token.bold {
+	font-weight: bold;
+}
+
+.token.italic {
+	font-style: italic;
+}
+
+.token.entity {
+	cursor: help;
+}
+
+.token.inserted {
+	color: green;
+}
