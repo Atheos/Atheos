@@ -17,6 +17,8 @@
 	var running = false;
 
 	var atheos = global.atheos = {
+		
+		path: window.location.href,
 		controller: 'controller.php',
 		dialog: 'dialog.php',
 
