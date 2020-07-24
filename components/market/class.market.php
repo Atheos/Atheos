@@ -82,7 +82,7 @@ class Market {
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
 	public function buildCache() {
-		global $components; global $themes;
+		global $plugins; global $themes;
 
 		// Scan plugins directory for missing plugins
 		$addons = array(
@@ -211,13 +211,12 @@ class Market {
 	public function renderMarket() {
 		$market = $this->cMarket;
 		$addons = $this->cAddons;
-
+		
 		$iTable = "";
 		foreach ($addons as $type => $listT) {
 			foreach ($listT as $category => $listC) {
 				foreach ($listC as $addon => $data) {
 					$name = $data["name"];
-
 
 					if (!empty($market)) {
 						if (array_key_exists($category, $market[$type]) && array_key_exists($name, $market[$type][$category])) {
@@ -237,8 +236,6 @@ class Market {
 					$status = isset($data["status"]) ? $data["status"] : "unavailable";
 					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
 					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
-
-
 
 					if ($status === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
@@ -261,6 +258,7 @@ class Market {
 		}
 
 		$aTable = "";
+		$cTable = "";
 		if (empty($market)) {
 			$aTable = "<tr class=\"error\"><td colspan=\"4\"><h3>" . i18n("connectionError") . "</h3></td></tr>";
 		} else {
@@ -269,21 +267,29 @@ class Market {
 					foreach ($listC as $addon => $data) {
 						$url = $data["url"];
 						$keywords = implode(", ", $data["keywords"]);
+						
+						$action = '';
 
-						if ($data["status"] !== "available") {
-							continue;
+						if ($data["status"] === "available") {
+							$action .= "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
 						}
 
-						$action = "<a class =\"fas fa-plus-circle\" onclick=\"atheos.market.install('$addon', '$type', '$category');return false;\"></a>";
 						$action .= "<a class =\"fas fa-external-link-alt\" onclick=\"openExternal('$url');return false;\"></a>";
 
-						$aTable .= "<tr class=" . $type . " data-keywords=\"$keywords\">
-				<td>" . $addon . "</td>
-				<td>" . $data["description"] . "</td>
-				<td>" . implode(", ", $data["author"]) . "</td>
-				<td>" . $action . "</td>
-				</tr>
-				";
+						$item = "<tr class=\"" . $data["status"] . " $type\" data-keywords=\"$keywords\">
+							<td>" . $addon . "</td>
+							<td>" . $data["description"] . "</td>
+							<td>" . implode(", ", $data["author"]) . "</td>
+							<td>" . $action . "</td>
+						</tr>";
+
+						if ($data["status"] === "available") {
+
+							$aTable .= $item;
+						} else {
+							$cTable .= $item;
+						}
+
 					}
 				}
 			}
@@ -291,7 +297,8 @@ class Market {
 
 		return array(
 			"i" => $iTable,
-			"a" => $aTable
+			"a" => $aTable,
+			"c" => $cTable
 		);
 
 	}
