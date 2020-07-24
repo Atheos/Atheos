@@ -75,31 +75,16 @@
 		//////////////////////////////////////////////////////////////////
 
 		list: function(type, note) {
-			var listener = function() {
-				var manualRepo = oX('#manual_repo');
-
-				oX('#manual_install').on('click', function(e) {
-					e.preventDefault();
-					if (manualRepo.value()) {
-						// Install Manually
-					}
-				});
-
-				manualRepo.on('keypress', function(e) {
-					var keyCode = e.keyCode || e.which;
-					if (keyCode === '13') {
-						e.preventDefault();
-						// Install Manually
-					}
-				});
+			var callback = function() {
+				atheos.modal.resize();
 			};
 
-			atheos.modal.load(1000, atheos.dialog, {
+			atheos.modal.load(960, atheos.dialog, {
 				target:'market',
 				action: 'list',
 				type: type,
 				note: note,
-				listener
+				callback
 			});
 		},
 
