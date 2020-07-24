@@ -33,7 +33,7 @@ switch ($action) {
 
 			$table = $Market->renderMarket();
 			?>
-			<label class="title"><i class="fas fa-store"></i><?php echo i18n("atheosMarketplace"); ?></label>
+			<label class="title"><i class="fas fa-store"></i><?php echo i18n("market_atheos"); ?></label>
 			<div id="market">
 				<!--<table width="100%">-->
 				<!--	<tr>-->
@@ -49,25 +49,31 @@ switch ($action) {
 				<table id="market_table" width="100%">
 					<thead>
 						<tr>
-							<th>Name</th>
-							<th>Description</th>
-							<th>Author</th>
-							<th>Actions</th>
+							<th><?php echo i18n("name"); ?></th>
+							<th><?php echo i18n("description"); ?></th>
+							<th><?php echo i18n("author"); ?></th>
+							<th><?php echo i18n("actions"); ?></th>
 						</tr>
 					</thead>
 					<tbody>
 						<tr>
 							<td colspan="4">
-								<h2>Installed</h2>
+								<h2><?php echo i18n("installed"); ?></h2>
 							</td>
 						</tr>
 						<?php echo $table["i"]; ?>
 						<tr>
 							<td colspan="4">
-								<h2>Available</h2>
+								<h2><?php echo i18n("available"); ?></h2>
 							</td>
 						</tr>
 						<?php echo $table["a"]; ?>
+						<tr>
+							<td colspan="4">
+								<h2><?php echo i18n("coming"); ?></h2>
+							</td>
+						</tr>
+						<?php echo $table["c"]; ?>						
 					</tbody>
 
 				</table>
