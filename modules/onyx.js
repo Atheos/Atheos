@@ -34,7 +34,7 @@
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
 	'use strict';
-
+	
 	var activeEvents = {};
 	let alwaysRun = [
 		'*',
@@ -403,73 +403,73 @@
 			return api;
 		}
 
-		api.focus = () => element.focus();
-		api.show = (d) => element.style.display = d || 'block';
-		api.hide = (d) => element.style.display = d || 'none';
-		api.trigger = (event) => triggerEvent(element, event);
+		api.focus           = () => element.focus();
+		api.show            = (d) => element.style.display = d || 'block';
+		api.hide            = (d) => element.style.display = d || 'none';
+		api.trigger         = (event) => triggerEvent(element, event);
 
-		// api.once = (t, fn) => events.once(t, selector, fn);
-		// api.on = (t, fn) => events.on(t, selector, fn);
-		// api.off = (t, fn) => events.off(t, selector, fn);
+		// api.once         = (t, fn) => events.once(t, selector, fn);
+		// api.on           = (t, fn) => events.on(t, selector, fn);
+		// api.off          = (t, fn) => events.off(t, selector, fn);
 
-		// on: (t, s, fn) => attach('on', t, s, fn),
-		// off: (t, s, fn) => attach('off', s, fn),
+		// on: (t, s, fn)   => attach('on', t, s, fn),
+		// off: (t, s, fn)  => attach('off', s, fn),
 		// once: (t, s, fn) => attach('once', t, s, fn),
 
-		api.css = (k, v) => setStyle(element, k, v);
+		api.css             = (k, v) => setStyle(element, k, v);
 
-		api.data = (v) => IO(element, 'data', v);
-		api.prop = (k, v) => IO(element, 'prop', v, k);
-		api.html = (v) => IO(element, 'innerHTML', v);
-		api.text = (v) => IO(element, 'innerText', v);
-		api.value = (v) => IO(element, 'value', v);
+		api.data            = (v) => IO(element, 'data', v);
+		api.prop            = (k, v) => IO(element, 'prop', v, k);
+		api.html            = (v) => IO(element, 'innerHTML', v);
+		api.text            = (v) => IO(element, 'innerText', v);
+		api.value           = (v) => IO(element, 'value', v);
 
-		api.empty = () => element.innerHTML = element.value = '';
+		api.empty           = () => element.innerHTML = element.value = '';
 
-		api.attr = (k, v) => IO(element, 'attr', v, k);
-		api.removeAttr = (k) => element.removeAttribute(k);
+		api.attr            = (k, v) => IO(element, 'attr', v, k);
+		api.removeAttr      = (k) => element.removeAttribute(k);
 
-		api.addClass = (c) => setClass(element, 'add', c);
-		api.hasClass = (c) => setClass(element, 'contains', c);
-		api.removeClass = (c) => setClass(element, 'remove', c);
-		api.switchClass = (c, n) => setClass(element, 'switch', c, n);
-		api.toggleClass = (c) => setClass(element, 'toggle', c);
-		api.replaceClass = (c, n) => setClass(element, 'replace', c, n);
+		api.addClass        = (c) => setClass(element, 'add', c);
+		api.hasClass        = (c) => setClass(element, 'contains', c);
+		api.removeClass     = (c) => setClass(element, 'remove', c);
+		api.switchClass     = (c, n) => setClass(element, 'switch', c, n);
+		api.toggleClass     = (c) => setClass(element, 'toggle', c);
+		api.replaceClass    = (c, n) => setClass(element, 'replace', c, n);
 
-		api.find = (s) => onyx(element.querySelector(s));
-		api.parent = (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement);
-		api.findAll = (s) => search(element, 'find', s);
-		api.sibling = (s) => search(element, 'siblings', s, true);
-		api.siblings = (s) => search(element, 'siblings', s);
-		api.children = (s) => search(element, 'children', s);
+		api.find            = (s) => onyx(element.querySelector(s));
+		api.parent          = (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement);
+		api.findAll         = (s) => search(element, 'find', s);
+		api.sibling         = (s) => search(element, 'siblings', s, true);
+		api.siblings        = (s) => search(element, 'siblings', s);
+		api.children        = (s) => search(element, 'children', s);
 
-		api.before = insertAdjacent('beforebegin', element);
-		api.after = insertAdjacent('afterend', element);
-		api.first = insertAdjacent('afterbegin', element);
-		api.last = insertAdjacent('beforeend', element);
+		api.before          = insertAdjacent('beforebegin', element);
+		api.after           = insertAdjacent('afterend', element);
+		api.first           = insertAdjacent('afterbegin', element);
+		api.last            = insertAdjacent('beforeend', element);
 
-		api.insertBefore = insertToAdjacent('beforebegin', element);
-		api.insertAfter = insertToAdjacent('afterend', element);
-		api.insertFirst = insertToAdjacent('afterbegin', element);
-		api.insertLast = insertToAdjacent('beforeend', element);
+		api.insertBefore    = insertToAdjacent('beforebegin', element);
+		api.insertAfter     = insertToAdjacent('afterend', element);
+		api.insertFirst     = insertToAdjacent('afterbegin', element);
+		api.insertLast      = insertToAdjacent('beforeend', element);
 
-		api.prepend = insertAdjacent('afterbegin', element);
-		api.append = insertAdjacent('beforeend', element);
+		api.prepend         = insertAdjacent('afterbegin', element);
+		api.append          = insertAdjacent('beforeend', element);
 
-		api.remove = () => element.remove();
+		api.remove          = () => element.remove();
 
-		api.offset = () => element.getBoundingClientRect();
-		api.clientHeight = () => element.clientHeight;
-		api.clientWidth = () => element.clientWidth;
-		api.height = (o) => getSize(element, 'height', false, o);
-		api.width = (o) => getSize(element, 'width', false, o);
+		api.offset          = () => element.getBoundingClientRect();
+		api.clientHeight    = () => element.clientHeight;
+		api.clientWidth     = () => element.clientWidth;
+		api.height          = (o) => getSize(element, 'height', false, o);
+		api.width           = (o) => getSize(element, 'width', false, o);
 
-		api.style = () => element.style;
-		api.tagName = element.tagName;
-		api.type = element.type;
-		api.el = element;
-		api.exists = () => (element && element.nodeType);
-		api.isOnyx = true;
+		api.style           = () => element.style;
+		api.tagName         = element.tagName;
+		api.type            = element.type;
+		api.el              = element;
+		api.exists          = () => (element && element.nodeType);
+		api.isOnyx          = true;
 
 
 		return api;
