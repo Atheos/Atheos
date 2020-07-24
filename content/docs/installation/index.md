@@ -45,7 +45,7 @@ For a proper usage of the marketplace you need to set the following parameter
 
 and the following extensions to be loaded
 
-    ZIP
+    ZIP  -- needed for downloading plugins (not needed if manually downloading/installing plugins)
     OPENSSL
     MBSTRING
 
