@@ -66,6 +66,10 @@
 	"cancel": "Cancel",
 	"clear": "Clear",
 	"name": "Name",
+			"description": "Description",
+		"author": "Author",
+	"actions": "Actions",
+	
 	"email": "Email",
 	"create": {
 		"": "Create",
@@ -373,6 +377,7 @@
 	"complete": "Complete!",
 	"installed": "Installed",
 	"available": "Available",
+	"coming": "Coming Soon",
 	"reloadAtheos": "Reload Atheos",
 
 	"split": {
