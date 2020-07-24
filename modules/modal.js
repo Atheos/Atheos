@@ -83,7 +83,7 @@
 				listener = data.listener;
 				delete data.listener;
 			}
-
+			
 			if (data.callback && types.isFunction(data.callback)) {
 				callback = data.callback;
 				delete data.callback;
