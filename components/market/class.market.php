@@ -47,7 +47,7 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
-		$addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
+		// $addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 
@@ -56,9 +56,9 @@ class Market {
 		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
 		$request = $this->cMarket ? $request : true;
 
-		if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
+		// if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
 			$this->buildCache();
-		}
+		// }
 
 		$reply = array(
 			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
@@ -81,8 +81,13 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
-	public function buildCache() {
+	public function buildCache($rebuild = false) {
 		global $plugins; global $themes;
+
+		if ($rebuild) {
+			$plugins = Common::readDirectory(PLUGINS);
+			$themes = Common::readDirectory(THEMES);
+		}
 
 		// Scan plugins directory for missing plugins
 		$addons = array(
@@ -132,6 +137,13 @@ class Market {
 	// Install Plugin
 	//////////////////////////////////////////////////////////////////////////80
 	public function install($name, $type, $category) {
+
+		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
+			unlink(__DIR__ . "/../../public/plugins.min.js");
+		}
+		if (file_exists(__DIR__ . "/../../public/plugins.min.css")) {
+			unlink(__DIR__ . "/../../public/plugins.min.css");
+		}
 
 		$repo = $this->findRepo($name, $type, $category);
 
@@ -185,7 +197,7 @@ class Market {
 
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
-			$this->buildCache();
+			$this->buildCache(true);
 		} else {
 			Common::sendJSON("error", i18n("market_unableDownload"));
 		}
@@ -195,12 +207,15 @@ class Market {
 	// Remove Plugin
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($name, $type) {
+		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
+			unlink(__DIR__ . "/../../public/plugins.min.js");
+		}
 		rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		Common::sendJSON("S2000");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
 
-		$this->buildCache();
+		$this->buildCache(true);
 
 	}
 
@@ -211,7 +226,7 @@ class Market {
 	public function renderMarket() {
 		$market = $this->cMarket;
 		$addons = $this->cAddons;
-		
+
 		$iTable = "";
 		foreach ($addons as $type => $listT) {
 			foreach ($listT as $category => $listC) {
@@ -267,7 +282,7 @@ class Market {
 					foreach ($listC as $addon => $data) {
 						$url = $data["url"];
 						$keywords = implode(", ", $data["keywords"]);
-						
+
 						$action = '';
 
 						if ($data["status"] === "available") {
