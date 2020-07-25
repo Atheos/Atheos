@@ -88,7 +88,6 @@ class SourceManager {
 
 	// This is a conditional that helps during developement of Atheos.
 	function echoScripts($dataset = [], $raw = false) {
-		echo "<!-- " . strtoupper($dataset) . " -->";
 
 		$files = array();
 
@@ -99,17 +98,15 @@ class SourceManager {
 			case "components":
 				$files = $this->components;
 				break;
-			case "pluginsJS":
+			case "plugins":
 				$files = $this->pluginsJS;
-				break;
-			case "pluginsCSS":
-				$files = $this->pluginsCSS;
 				break;
 			default:
 				return false;
 				break;
 		}
-
+		
+		echo "<!-- " . strtoupper($dataset) . " -->";
 		$minifiedFileName = "public/$dataset.min.js";
 
 		if ($raw) {
@@ -157,7 +154,7 @@ class SourceManager {
 		$files = array();
 
 		switch ($dataset) {
-			case "pluginsCSS":
+			case "plugins":
 				$files = $this->pluginsCSS;
 				break;
 			case "fonts":
