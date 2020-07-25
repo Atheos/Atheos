@@ -28,7 +28,7 @@
 			<toggle>
 				<input id="filemanager_showHidden_true" data-setting="filemanager.showHidden" value="true" name="filemanager.showHidden" type="radio" checked />
 				<label for="filemanager_showHidden_true"><?php echo i18n("true"); ?></label>
-				<input id="filemanager_showHidden_false" data-setting="filemanager.showHidden" value="loopBoth" name="filemanager.showHidden" type="radio" />
+				<input id="filemanager_showHidden_false" data-setting="filemanager.showHidden" value="false" name="filemanager.showHidden" type="radio" />
 				<label for="filemanager_showHidden_false"><?php echo i18n("false"); ?></label>
 			</toggle>
 		</td>
