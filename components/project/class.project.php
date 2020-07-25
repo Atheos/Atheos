@@ -131,7 +131,10 @@ class Project {
 
 			// Set Session Project
 			$_SESSION['project'] = $projectPath;
+		}
 
+		if (is_null($projectName) && $projectPath === BASE_PATH) {
+			$projectName = "Atheos IDE";
 		}
 
 		Common::sendJSON("success", array(
@@ -158,6 +161,13 @@ class Project {
 				"name" => $projectName,
 				"path" => $projectPath,
 				"text" => $projectName . " Loaded."
+			));
+		} elseif ($projectPath === BASE_PATH) {
+			$_SESSION['project'] = $projectPath;
+			Common::sendJSON("success", array(
+				"name" => "Atheos IDE",
+				"path" => $projectPath,
+				"text" => "Atheos IDE Loaded."
 			));
 		} else {
 			Common::sendJSON("error", i18n("project_missing"));
