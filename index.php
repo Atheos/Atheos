@@ -66,7 +66,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 	// LOAD MODULES
 	//////////////////////////////////////////////////////////////////
 	$SourceManager->echoScripts("modules", DEVELOPMENT);
-	$SourceManager->echoStyles("pluginsCSS", DEVELOPMENT);
+	$SourceManager->echoStyles("plugins", DEVELOPMENT);
 
 	?>
 
@@ -141,7 +141,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 		//////////////////////////////////////////////////////////////////
 		// LOAD PLUGINS
 		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("pluginsJS", DEVELOPMENT);
+		$SourceManager->echoScripts("plugins", DEVELOPMENT);
 	} else {
 		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
 
