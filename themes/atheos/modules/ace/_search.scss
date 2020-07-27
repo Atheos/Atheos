@@ -55,7 +55,7 @@
 		@include input();
 		@include border(1px, left);
 
-		&::hover {
+		&:hover {
 			background-color: lighten($inputBackground, $hoverPercent);
 		}
 
