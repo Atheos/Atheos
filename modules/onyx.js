@@ -1,25 +1,18 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////////////80
-// OnyxJS 
+// Onyx / Singularity
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) Liam Siira (Siira.us), distributed as-is and without warranty
-// under the modified MIT License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Notes:
-// Built from FemtoJS: https://github.com/vladocar/femtoJS
-// Bioflux wasn't quite meeting my needs and I wanted something a little
-// more thoughout, but still close enough to vanillaJS that it won't cause
-// too many issues. Onyx has similar functions to FemtoJS, but only on
-// single elements.
-// 
-//												- Liam Siira
+// Copyright (c) 2019 Go Make Things, LLC
+// Source: https://github.com/cferdinandi/events
+// Copyright (c) 2019 Vladimir Carrer
+// Source: https://github.com/vladocar/femtoJS
 //////////////////////////////////////////////////////////////////////////////80
 
 // https://github.com/finom/balalaika/blob/master/balalaika.umd.js
 // https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
-// https://vladocar.github.io/femtoJS/
 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -29,12 +22,14 @@
 	} else if (typeof exports === 'object') {
 		module.exports = factory(root);
 	} else {
-		root.onyx = factory(root);
+		let temp = factory(root);
+		root.Onyx = root.oX = temp[0];
+		root.Singularity = root.sY = temp[1];
 	}
 })(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
 
 	'use strict';
-	
+
 	var activeEvents = {};
 	let alwaysRun = [
 		'*',
@@ -58,9 +53,7 @@
 	};
 
 	var activeMatch = function(target, selector) {
-		if (alwaysRun.includes(selector)) {
-			return true;
-		}
+		if (alwaysRun.includes(selector)) return true;
 		if (typeof selector !== 'string' && selector.contains) {
 			return selector === target || selector.contains(target);
 		}
@@ -76,85 +69,88 @@
 		});
 	};
 
-	var events = {
-		on: function(types, selector, callback) {
+	let eOn = (types, selector, callback) => {
+		if (!selector || !callback) return;
 
-			if (!selector || !callback) {
-				return;
+		types.split(',').forEach(function(type) {
+			type = type.trim();
+			if (!activeEvents[type]) {
+				activeEvents[type] = [];
+				window.addEventListener(type, eventHandler, true);
 			}
 
-			types.split(',').forEach(function(type) {
-
-				type = type.trim();
-
-				if (!activeEvents[type]) {
-					activeEvents[type] = [];
-					window.addEventListener(type, eventHandler, true);
-				}
-
-				activeEvents[type].push({
-					selector: selector,
-					callback: callback
-				});
-
+			activeEvents[type].push({
+				selector,
+				callback
 			});
 
-		},
+		});
+	};
 
-		off: function(types, selector, callback) {
-			if (types === '*' && selector && !callback) {
-				for (var type in activeEvents) {
-					var index = getIndex(activeEvents[type], selector);
-					if (index > -1) {
-						activeEvents[type].splice(index, 1);
-						if (activeEvents[type].length === 0) {
-							delete activeEvents[type];
-						}
+	let eOff = (types, selector, callback) => {
+		if (types === '*' && selector && !callback) {
+			for (var type in activeEvents) {
+				var index = getIndex(activeEvents[type], selector);
+				if (index > -1) {
+					activeEvents[type].splice(index, 1);
+					if (activeEvents[type].length === 0) {
+						delete activeEvents[type];
 					}
 				}
-			} else {
-				types.split(',').forEach(function(type) {
-					type = type.trim();
-					if (!activeEvents[type]) {
-						return;
-					}
-
-					if (activeEvents[type].length < 2 || !selector) {
-						delete activeEvents[type];
-						window.removeEventListener(type, eventHandler, true);
-						return;
-					}
-
-					var index = getIndex(activeEvents[type], selector, callback);
-					if (index < 0) {
-						return;
-					}
-					activeEvents[type].splice(index, 1);
-
-				});
 			}
-		},
+		} else {
+			types.split(',').forEach(function(type) {
+				type = type.trim();
+				if (!activeEvents[type]) return;
 
-		once: function(types, selector, callback) {
-			events.on(types, selector, function temp(event) {
-				callback(event);
-				events.off(types, selector, temp);
+
+				if (activeEvents[type].length < 2 || !selector) {
+					delete activeEvents[type];
+					window.removeEventListener(type, eventHandler, true);
+					return;
+				}
+
+				var index = getIndex(activeEvents[type], selector, callback);
+				if (index < 0) return;
+				activeEvents[type].splice(index, 1);
 			});
 		}
 	};
 
+	let eOnce = (types, selector, callback) => {
+		eOn(types, selector, function temp(event) {
+			callback(event);
+			eOff(types, selector, temp);
+		});
+	};
 
-	// Lazy method to list currently active listeners in events, useful for debugging.
-	window.events = {
-		list: function() {
-			var obj = {};
-			for (var type in activeEvents) {
-				if (activeEvents.hasOwnProperty(type)) {
-					obj[type] = activeEvents[type];
-				}
-			}
-			return obj;
+	let eList = (s) => {
+		var obj = {};
+		for (var type in activeEvents) {
+			if (activeEvents.hasOwnProperty(type)) obj[type] = activeEvents[type];
 		}
+		return obj;
+	};
+
+	let exists = (s) => document.querySelector(s) ? true : false;
+
+	const singularity = function(s) {
+		// s  => Selector
+		// t  => EventType
+		// fn => Functions
+		// e  => Event
+		// o  => Options
+
+		let api = {
+			on: (t, fn) => eOn(t, s, fn),
+			off: (t, fn) => eOff(t, s, fn),
+			once: (t, fn) => eOnce(t, s, fn),
+			list: () => eList(s),
+			exists: (s) => exists(s),
+			trigger: (e, o) => eTrigger(s, e, o)
+		};
+
+		return api;
 	};
 
 	let alwaysReturn = [
@@ -392,9 +388,14 @@
 		selector = isSelectorValid(selector) ? selector : element;
 
 		let api = {
-			once: (t, fn) => events.once(t, selector, fn),
-			on: (t, fn) => events.on(t, selector, fn),
-			off: (t, fn) => events.off(t, selector, fn),
+			// once: (t, fn) => singularity.once(t, selector, fn),
+			// on: (t, fn) => singularity.on(t, selector, fn),
+			// off: (t, fn) => singularity.off(t, selector, fn)
+
+			on: (t, fn) => singularity(selector).on(t, fn),
+			off: (t, fn) => singularity(selector).off(t, fn),
+			once: (t, fn) => singularity(selector).once(t, fn)
+
 		};
 
 		if (!element && !eventsOnly) {
@@ -403,77 +404,69 @@
 			return api;
 		}
 
-		api.focus           = () => element.focus();
-		api.show            = (d) => element.style.display = d || 'block';
-		api.hide            = (d) => element.style.display = d || 'none';
-		api.trigger         = (event) => triggerEvent(element, event);
+		api.focus = () => element.focus();
+		api.show = (d) => element.style.display = d || 'block';
+		api.hide = (d) => element.style.display = d || 'none';
+		api.trigger = (event) => triggerEvent(element, event);
 
-		// api.once         = (t, fn) => events.once(t, selector, fn);
-		// api.on           = (t, fn) => events.on(t, selector, fn);
-		// api.off          = (t, fn) => events.off(t, selector, fn);
+		api.css = (k, v) => setStyle(element, k, v);
 
-		// on: (t, s, fn)   => attach('on', t, s, fn),
-		// off: (t, s, fn)  => attach('off', s, fn),
-		// once: (t, s, fn) => attach('once', t, s, fn),
+		api.data = (v) => IO(element, 'data', v);
+		api.prop = (k, v) => IO(element, 'prop', v, k);
+		api.html = (v) => IO(element, 'innerHTML', v);
+		api.text = (v) => IO(element, 'innerText', v);
+		api.value = (v) => IO(element, 'value', v);
 
-		api.css             = (k, v) => setStyle(element, k, v);
+		api.empty = () => element.innerHTML = element.value = '';
 
-		api.data            = (v) => IO(element, 'data', v);
-		api.prop            = (k, v) => IO(element, 'prop', v, k);
-		api.html            = (v) => IO(element, 'innerHTML', v);
-		api.text            = (v) => IO(element, 'innerText', v);
-		api.value           = (v) => IO(element, 'value', v);
+		api.attr = (k, v) => IO(element, 'attr', v, k);
+		api.removeAttr = (k) => element.removeAttribute(k);
 
-		api.empty           = () => element.innerHTML = element.value = '';
+		api.addClass = (c) => setClass(element, 'add', c);
+		api.hasClass = (c) => setClass(element, 'contains', c);
+		api.removeClass = (c) => setClass(element, 'remove', c);
+		api.switchClass = (c, n) => setClass(element, 'switch', c, n);
+		api.toggleClass = (c) => setClass(element, 'toggle', c);
+		api.replaceClass = (c, n) => setClass(element, 'replace', c, n);
 
-		api.attr            = (k, v) => IO(element, 'attr', v, k);
-		api.removeAttr      = (k) => element.removeAttribute(k);
+		api.find = (s) => onyx(element.querySelector(s));
+		api.parent = (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement);
+		api.findAll = (s) => search(element, 'find', s);
+		api.sibling = (s) => search(element, 'siblings', s, true);
+		api.siblings = (s) => search(element, 'siblings', s);
+		api.children = (s) => search(element, 'children', s);
 
-		api.addClass        = (c) => setClass(element, 'add', c);
-		api.hasClass        = (c) => setClass(element, 'contains', c);
-		api.removeClass     = (c) => setClass(element, 'remove', c);
-		api.switchClass     = (c, n) => setClass(element, 'switch', c, n);
-		api.toggleClass     = (c) => setClass(element, 'toggle', c);
-		api.replaceClass    = (c, n) => setClass(element, 'replace', c, n);
+		api.before = insertAdjacent('beforebegin', element);
+		api.after = insertAdjacent('afterend', element);
+		api.first = insertAdjacent('afterbegin', element);
+		api.last = insertAdjacent('beforeend', element);
 
-		api.find            = (s) => onyx(element.querySelector(s));
-		api.parent          = (s) => s ? onyx(element.closest(s)) : onyx(element.parentElement);
-		api.findAll         = (s) => search(element, 'find', s);
-		api.sibling         = (s) => search(element, 'siblings', s, true);
-		api.siblings        = (s) => search(element, 'siblings', s);
-		api.children        = (s) => search(element, 'children', s);
+		api.insertBefore = insertToAdjacent('beforebegin', element);
+		api.insertAfter = insertToAdjacent('afterend', element);
+		api.insertFirst = insertToAdjacent('afterbegin', element);
+		api.insertLast = insertToAdjacent('beforeend', element);
 
-		api.before          = insertAdjacent('beforebegin', element);
-		api.after           = insertAdjacent('afterend', element);
-		api.first           = insertAdjacent('afterbegin', element);
-		api.last            = insertAdjacent('beforeend', element);
+		api.prepend = insertAdjacent('afterbegin', element);
+		api.append = insertAdjacent('beforeend', element);
 
-		api.insertBefore    = insertToAdjacent('beforebegin', element);
-		api.insertAfter     = insertToAdjacent('afterend', element);
-		api.insertFirst     = insertToAdjacent('afterbegin', element);
-		api.insertLast      = insertToAdjacent('beforeend', element);
+		api.remove = () => element.remove();
 
-		api.prepend         = insertAdjacent('afterbegin', element);
-		api.append          = insertAdjacent('beforeend', element);
+		api.offset = () => element.getBoundingClientRect();
+		api.clientHeight = () => element.clientHeight;
+		api.clientWidth = () => element.clientWidth;
+		api.height = (o) => getSize(element, 'height', false, o);
+		api.width = (o) => getSize(element, 'width', false, o);
 
-		api.remove          = () => element.remove();
-
-		api.offset          = () => element.getBoundingClientRect();
-		api.clientHeight    = () => element.clientHeight;
-		api.clientWidth     = () => element.clientWidth;
-		api.height          = (o) => getSize(element, 'height', false, o);
-		api.width           = (o) => getSize(element, 'width', false, o);
-
-		api.style           = () => element.style;
-		api.tagName         = element.tagName;
-		api.type            = element.type;
-		api.el              = element;
-		api.exists          = () => (element && element.nodeType);
-		api.isOnyx          = true;
+		api.style = () => element.style;
+		api.tagName = element.tagName;
+		api.type = element.type;
+		api.el = element;
+		api.exists = () => (element && element.nodeType);
+		api.isOnyx = true;
 
 
 		return api;
 	};
-	return onyx;
+	return [onyx, singularity];
 
 });

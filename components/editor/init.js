@@ -10,7 +10,6 @@
 
 	var ace = global.ace,
 		atheos = global.atheos,
-		oX = global.onyx,
 		storage = atheos.storage;
 
 	// Classes from Ace

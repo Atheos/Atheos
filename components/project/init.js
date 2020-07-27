@@ -12,8 +12,7 @@
 
 (function(global) {
 
-	var atheos = global.atheos,
-		oX = global.onyx;
+	var atheos = global.atheos;
 
 	var self = null;
 
@@ -85,7 +84,6 @@
 				},
 				success: function(reply) {
 					atheos.toast.show(reply);
-					log(reply);
 					if (reply.status === 'error') {
 						return;
 					}

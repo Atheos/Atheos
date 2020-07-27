@@ -24,8 +24,7 @@
 	var menu = null;
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		oX = global.onyx;
+		amplify = global.amplify;
 
 	amplify.subscribe('system.loadMinor', () => atheos.contextmenu.init());
 
