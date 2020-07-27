@@ -30,8 +30,7 @@
 
 	var atheos = global.atheos,
 		amplify = global.amplify,
-		echo = global.echo,
-		oX = global.onyx;
+		echo = global.echo;
 
 	var self = null;
 
