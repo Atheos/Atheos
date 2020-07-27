@@ -20,12 +20,6 @@ switch ($action) {
 		Common::sendJSON("success", $cache);
 		break;
 
-	case 'show':
-		$lang = Common::data("lang");
-		$data = array("data" => $i18n->getRaw($lang));
-		Common::sendJSON("success", $data);
-		break;
-
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80

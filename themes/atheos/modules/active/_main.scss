@@ -1,19 +1,11 @@
 #editor-top-bar {
-	//top       : 0;
-	//position  : fixed;
-	//height    : 35px;
 	width: 100%;
 	color: $fontColorMinor;
 	background: $foreground;
-	/*box-shadow: inset 0px 0px 10px 0px rgba(0, 0, 0, .9);*/
-	// overflow: hidden;
 	position: relative;
 	transition: border $transitionDuration ease;
 }
 
-/************************
- * Close All & Dropdown Buttons
- ************************/
 #tab_close,
 #tab_dropdown {
 	position: absolute;
@@ -32,7 +24,6 @@
 
 #tab_close {
 	right: 10px;
-
 }
 
 #tab_dropdown {

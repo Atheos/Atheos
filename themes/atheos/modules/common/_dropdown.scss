@@ -3,22 +3,15 @@ $timing: 0.3s;
 
 dropdown {
 	width: 100%;
-
 	position: absolute;
-
 	top: 0;
 	left: 0;
-
 	max-height: 2em;
-
 	cursor: pointer;
 	text-align: left;
-	
 	overflow: hidden;
-
 	outline: none;
 	transition: $timing all ease-in-out;
-	
 	z-index: 99;
 
 	input:focus+label {
@@ -64,7 +57,6 @@ dropdown {
 		max-height: 15em;
 
 		label {
-
 			&:hover {
 				color: $color;
 			}
