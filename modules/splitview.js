@@ -13,8 +13,7 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
-		oX = global.onyx;
+		amplify = global.amplify;
 
 	amplify.subscribe('system.loadExtra', () => atheos.splitview.init());
 

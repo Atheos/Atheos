@@ -37,14 +37,6 @@
 		display: table;
 		width: 100%;
 		table-layout: fixed;
-		/* even columns width , fix width of table too*/
-	}
-
-	thead {
-		// Account for Scrollbar width
-		// overflow-y: scroll;
-		// box-shadow: #333 $scrollbarWidth 0px;
-		// width: calc(100% - 10px);
 	}
 
 	th[colspan="4"],
@@ -95,7 +87,4 @@
 			color: $blue;
 		}
 	}
-
-
-
 }

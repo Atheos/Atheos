@@ -20,8 +20,7 @@
 
 	'use strict';
 
-	var atheos = global.atheos,
-		oX = global.onyx;
+	var atheos = global.atheos;
 
 	atheos.alert = {
 
