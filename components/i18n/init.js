@@ -13,8 +13,7 @@
 (function(global) {
 	'use strict';
 
-	var atheos = global.atheos,
-		oX = global.onyx;
+	var atheos = global.atheos;
 
 	var self = null;
 
@@ -29,9 +28,6 @@
 			self = this;
 
 			window.i18n = Function.prototype.bind.call(atheos.i18n.translate);
-
-			// return new Promise(resolve => {
-
 			echo({
 				url: atheos.controller,
 				data: {
@@ -43,28 +39,6 @@
 						return;
 					}
 					self.cache = reply.cache;
-					// resolve(self);
-				}
-			});
-			// });
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Initilization
-		//////////////////////////////////////////////////////////////////////80
-		loadRaw: function(lang) {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'i18n',
-					action: 'show',
-					lang
-				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						log(reply.data);
-
-					}
 				}
 			});
 		},
@@ -82,7 +56,3 @@
 	};
 
 })(this);
-
-// function vsprintf(string, args) {
-// 	args = 
-// }

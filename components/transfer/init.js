@@ -19,8 +19,7 @@
 (function(global) {
 	'use strict';
 	
-	var atheos = global.atheos,
-		oX = global.onyx;
+	var atheos = global.atheos;
 
 	var self = null;
 

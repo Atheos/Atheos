@@ -42,6 +42,14 @@
 				<i id="projects-manage" class="fas fa-archive"></i>
 				<i id="projects-create" class="fas fa-plus-circle" alt="<?php echo i18n("project_create"); ?>"></i>
 				<?php
+
+
+				if (DEVELOPMENT) {
+					?>
+					<i id="project-atheos" class="fas fa-code"></i>
+					<?php
+
+				}
 			} ?>
 		</div>
 

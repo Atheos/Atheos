@@ -13,8 +13,7 @@
 (function(global) {
 
 	var ace = global.ace,
-		atheos = global.atheos,
-		oX = global.onyx;
+		atheos = global.atheos;
 
 	var self = null;
 
@@ -231,9 +230,7 @@
 
 		getPath: function() {
 			try {
-				return atheos.editor.getActive()
-					.getSession()
-					.path;
+				return atheos.editor.getActive().getSession().path;
 			} catch (e) {
 				return null;
 			}
@@ -311,8 +308,8 @@
 
 				echo({
 					url: atheos.controller,
-				data: {
-					target: 'active',
+					data: {
+						target: 'active',
 						'action': 'setFocus',
 						'path': path
 					}
@@ -378,6 +375,7 @@
 			}
 			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
 			var content = session.getValue();
+			var newContent = content.slice(0);
 			path = session.path;
 
 			var handleSuccess = function(mtime) {
@@ -395,7 +393,6 @@
 			// discrepancies due to content changes during
 			// computation of diff
 
-			var newContent = content.slice(0);
 			if (session.serverMTime && session.untainted) {
 				atheos.workerManager.addTask({
 					taskType: 'diff',

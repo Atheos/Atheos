@@ -14,10 +14,10 @@ function compareVersions($v1, $v2) {
 	for ($i = 0; $i < $k; $i++) {
 		$v1[$i] = (int)$v1[$i];
 		$v2[$i] = (int)$v1[$i];
-		if ($v1[i] > $v2[i]) {
+		if ($v1[$i] > $v2[$i]) {
 			return 1;
 		}
-		if ($v1[i] < $v2[i]) {
+		if ($v1[$i] < $v2[$i]) {
 			return -1;
 		}
 	}

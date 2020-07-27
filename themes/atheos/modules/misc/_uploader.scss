@@ -1,4 +1,3 @@
-/* UPLOADER */
 #upload_wrapper {
 	position: relative;
 	display: block;
@@ -9,9 +8,9 @@
 	font-size: 25px;
 	color: $fontColorMinor;
 	background-color: $inputBackground;
+
 	@include border-radius;
 	@include box-shadow;
-
 
 	&:hover {
 		color: $fontColorMajor;
@@ -35,6 +34,7 @@
 	background-color: $inputBackground;
 	position: relative;
 	height: 20px;
+
 	@include border(1px);
 	@include border-radius;
 
@@ -58,13 +58,9 @@
 
 	div {
 		background-color: $green;
-		// background: linear-gradient(90deg, #{$red} 10%, #{$green} 100%);
-		// background: linear-gradient(-45deg, #{$green} 25%, #{$dark-green} 25%, #{$dark-green} 50%, #{$green} 50%, #{$green} 75%, #{$dark-green} 75%, #{$dark-green});
-		// background-size: 20px 20px;
 
 		&.error {
 			background-color: $red;
 		}
 	}
-
 }
