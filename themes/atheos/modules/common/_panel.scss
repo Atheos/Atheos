@@ -5,6 +5,7 @@ panel {
 	overflow-y: scroll;
 	height: 500px;
 	position: relative;
+
 	@include border(1px, left);
 
 	form {

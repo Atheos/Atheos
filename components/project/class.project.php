@@ -117,9 +117,10 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	public function load($active) {
 		if ($active) {
+			debug($active);
 			// Load currently active project
 			$projectPath = $active;
-			$projectName = $this->projects[$projectPath];
+			$projectName = isset($this->projects[$projectPath]) ? $this->projects[$projectPath] : null;
 		} else {
 			// Load default/first project
 			if ($this->userData["userACL"] !== "full") {

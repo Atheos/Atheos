@@ -2,6 +2,7 @@ toggle {
 	display: block;
 	overflow: hidden;
 	text-align: center;
+
 	@include input();
 
 	label {
@@ -14,11 +15,11 @@ toggle {
 		z-index: 2;
 		transition: background-color $transitionDuration ease-in-out;
 		font-size: unset;
-		
+
 		&:hover {
 			background-color: lighten($inputBackground, $hoverPercent);
 		}
-		
+
 		&:not(first-of-type) {
 			margin-left: -2px;
 		}
