@@ -47,7 +47,6 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
-		$addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 
@@ -56,9 +55,7 @@ class Market {
 		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
 		$request = $this->cMarket ? $request : true;
 
-		if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
-			$this->buildCache();
-		}
+		$this->buildCache();
 
 		$reply = array(
 			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
@@ -81,8 +78,13 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
-	public function buildCache() {
+	public function buildCache($rebuild = false) {
 		global $plugins; global $themes;
+
+		if ($rebuild) {
+			$plugins = Common::readDirectory(PLUGINS);
+			$themes = Common::readDirectory(THEMES);
+		}
 
 		// Scan plugins directory for missing plugins
 		$addons = array(
@@ -133,32 +135,21 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function install($name, $type, $category) {
 
+		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
+			unlink(__DIR__ . "/../../public/plugins.min.js");
+		}
+		if (file_exists(__DIR__ . "/../../public/plugins.min.css")) {
+			unlink(__DIR__ . "/../../public/plugins.min.css");
+		}
+
 		$repo = $this->findRepo($name, $type, $category);
 
 		if (substr($repo, -4) == '.git') {
 			$repo = substr($repo, 0, -4);
 		}
 
-		// For manual install, there will be no type, so it checks the github repo to detect the type.
-		if ($type === '') {
-			$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/plugin.json'));
-			if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
-				$type = 'plugins';
-			} else {
-				$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/theme.json'));
-				if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
-					$type = 'themes';
-				} else {
-					Common::sendJSON("error", "Invalid Repository"); die;
-				}
-			}
-		} else {
-			//Used to ping the market server to let Atheos that it was installed. Tracking / Stats; no need right now.
-			// $reponame = explode('/', $repo);
-			// $tmp = file_get_contents($this->url.'/?t='.rtrim($type, "s").'&i='.str_replace("-master", "", $reponame[sizeof($repo)-1]));
-		}
-
 		if (file_put_contents(BASE_PATH.'/'.$type.'/'.$name.'.zip', fopen($repo.'/archive/master.zip', 'r'))) {
+			
 			$zip = new ZipArchive;
 			$res = $zip->open(BASE_PATH.'/'.$type.'/'.$name.'.zip');
 
@@ -170,7 +161,6 @@ class Market {
 				} else {
 					Common::sendJSON("error", i18n("market_unableExtract")); die;
 				}
-
 			} else {
 				Common::sendJSON("error", i18n("market_noZip")); die;
 			}
@@ -185,7 +175,7 @@ class Market {
 
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
-			$this->buildCache();
+			$this->buildCache(true);
 		} else {
 			Common::sendJSON("error", i18n("market_unableDownload"));
 		}
@@ -195,12 +185,15 @@ class Market {
 	// Remove Plugin
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($name, $type) {
+		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
+			unlink(__DIR__ . "/../../public/plugins.min.js");
+		}
 		rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		Common::sendJSON("S2000");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
 
-		$this->buildCache();
+		$this->buildCache(true);
 
 	}
 
@@ -211,7 +204,7 @@ class Market {
 	public function renderMarket() {
 		$market = $this->cMarket;
 		$addons = $this->cAddons;
-		
+
 		$iTable = "";
 		foreach ($addons as $type => $listT) {
 			foreach ($listT as $category => $listC) {
@@ -267,7 +260,7 @@ class Market {
 					foreach ($listC as $addon => $data) {
 						$url = $data["url"];
 						$keywords = implode(", ", $data["keywords"]);
-						
+
 						$action = '';
 
 						if ($data["status"] === "available") {

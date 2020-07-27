@@ -14,7 +14,6 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		oX = global.onyx,
 		storage = atheos.storage;
 
 	var self = null;

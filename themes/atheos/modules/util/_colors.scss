@@ -17,24 +17,23 @@ $fushia:  #F012BE;
 $purple:  #BF5AF2; 
 $pink:    #FF375F; //#FF375F; 
 
-
 /*============================================================================*
 	CSS CLASSES
 /*============================================================================*/
 
-.red:before		{ color: $red; }
-.yellow:before	{ color: $yellow; }
-.orange:before	{ color: $orange; }
-.lime:before	{ color: $lime; }
-.green:before	{ color: $green; }
-.olive:before	{ color: $olive; }
-.teal:before	{ color: $teal; }
-.aqua:before	{ color: $aqua; }
-.cyan:before	{ color: $cyan; }
-.indigo:before	{ color: $indigo; }
-.blue:before	{ color: $blue; }
-.navy:before	{ color: $navy; }
-.maroon:before	{ color: $maroon; }
-.fushia:before	{ color: $fushia; }
-.purple:before	{ color: $purple; }
-.pink:before	{ color: $pink; }
+.red::before	{ color: $red; }
+.yellow::before	{ color: $yellow; }
+.orange::before	{ color: $orange; }
+.lime::before	{ color: $lime; }
+.green::before	{ color: $green; }
+.olive::before	{ color: $olive; }
+.teal::before	{ color: $teal; }
+.aqua::before	{ color: $aqua; }
+.cyan::before	{ color: $cyan; }
+.indigo::before	{ color: $indigo; }
+.blue::before	{ color: $blue; }
+.navy::before	{ color: $navy; }
+.maroon::before	{ color: $maroon; }
+.fushia::before	{ color: $fushia; }
+.purple::before	{ color: $purple; }
+.pink::before	{ color: $pink; }

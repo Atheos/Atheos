@@ -8,7 +8,7 @@
 			}
 
 			&:nth-child(even) {
-				font-family: 'Ubuntu-Fira';
+				font-family: 'Ubuntu-Fira', monospace;
 			}
 		}
 	}
@@ -26,7 +26,7 @@
 		display: inline-block;
 		text-transform: uppercase;
 	}
-	
+
 	.cmd {
 		padding: 2px;
 		width: 35px;

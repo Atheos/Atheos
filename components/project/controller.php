@@ -75,6 +75,9 @@ switch ($action) {
 	// Open Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'open':
+		$projectPath = $projectPath === "ATHEOS" ? BASE_PATH : $projectPath;
+		
+		
 		if (!Common::checkPath($projectPath)) {
 			Common::sendJSON("E430u");
 		} elseif (!$projectPath) {

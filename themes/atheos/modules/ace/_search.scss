@@ -1,10 +1,6 @@
-/* ------------------------------------------------------------------------------------------
- * Editor Search Form
- * --------------------------------------------------------------------------------------- */
 .ace_search {
 	border-radius: 0 !important;
 	border: 1px solid $grey !important;
-
 	color: unset;
 	background-color: $foreground;
 	padding: 5px;
@@ -53,8 +49,9 @@
 		position: relative;
 		width: 4.5em;
 		text-align: center;
-		font-family: 'Ubuntu';
+		font-family: 'Ubuntu', sans-serif;
 		vertical-align: middle;
+
 		@include input();
 		@include border(1px, left);
 
@@ -73,18 +70,18 @@
 		padding-top: 9px;
 		width: calc(4.5em / 2);
 
-		&:after {
+		&::after {
 			display: none;
 		}
 	}
 
 
-	.ace_searchbtn.prev:before {
+	.ace_searchbtn.prev::before {
 		content: "\f053";
 
 	}
 
-	.ace_searchbtn.next:before {
+	.ace_searchbtn.next::before {
 		content: "\f054";
 
 	}
@@ -110,7 +107,7 @@
 		position: absolute;
 		top: 6px;
 
-		&:before {
+		&::before {
 			content: "\f057";
 		}
 	}
@@ -137,7 +134,7 @@
 		}
 	}
 
-	.ace_button+.ace_button {
+	.ace_button + .ace_button {
 		margin-left: 2px;
 	}
 
@@ -170,5 +167,4 @@
 		margin-top: 2px;
 		font-family: 'Ubuntu-Fira';
 	}
-
 }
