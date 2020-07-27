@@ -22,8 +22,7 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		echo = global.echo,
-		oX = global.onyx;
+		echo = global.echo;
 
 	var self = null;
 
@@ -197,27 +196,17 @@
 		// Check Absolute Path
 		//////////////////////////////////////////////////////////////////////
 		isAbsPath: function(path) {
-			if (path.indexOf('/') === 0) {
-				return true;
-			} else {
-				return false;
-			}
+			// const isRelative = path => !/^([a-z]+:)?[\\/]/i.test(path);
+			// log(isRelative(path));
+			return path.indexOf('/') === 0;
 		},
+
 		//////////////////////////////////////////////////////////////////////
 		// Load Script: Used to add new JS to the page.
 		//  Notes: could probably be optimized to cache the scripts nodeArray
 		//////////////////////////////////////////////////////////////////////
-		loadScript: function(url, arg1, arg2) {
-			var cache = true,
-				callback = null;
-
-			if (typeof arg1 === 'function') {
-				callback = arg1;
-				cache = arg2 || cache;
-			} else {
-				cache = arg1 || cache;
-				callback = arg2 || callback;
-			}
+		scriptCache: [],
+		loadScript: function(url, callback) {
 
 			var load = true;
 			//check all existing script tags in the page for the url
@@ -226,31 +215,18 @@
 				load = (url !== scripts[i].src);
 			}
 
-			if (load) {
-				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function
-				//https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/eval
-
-				//didn't find it in the page, so load it
-				// echo({
-				// 	url: url,
-				// 	success: function(data) {
-				// 		eval(data);
-				// 		if (typeof callback === 'function') {
-				// 			callback.call(this);
-				// 		}
-				// 	},
-				// });
+			if (self.scriptCache.includes(url)) {
+				//already loaded so just call the callback
+				if (typeof callback === 'function') {
+					callback.call(this);
+				}
+			} else {
+				this.scriptCache.push(url);
 
 				var script = document.createElement('script');
 				script.type = 'text/javascript';
 				script.src = url;
 				document.getElementsByTagName('head')[0].appendChild(script);
-				if (typeof callback === 'function') {
-					callback.call(this);
-				}
-
-			} else {
-				//already loaded so just call the callback
 				if (typeof callback === 'function') {
 					callback.call(this);
 				}

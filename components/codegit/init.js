@@ -15,8 +15,7 @@
 
 	var self = null;
 
-	var atheos = global.atheos,
-		oX = global.onyx;
+	var atheos = global.atheos;
 
 	//////////////////////////////////////////////////////////////////////
 	// Codegit
