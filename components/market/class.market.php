@@ -47,7 +47,6 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$marketMTime = file_exists(DATA . "/cache/market.json") ? filemtime(DATA . "/cache/market.json") : false;
-		// $addonsMTime = file_exists(DATA . "/cache/addons.json") ? filemtime(DATA . "/cache/addons.json") : false;
 
 		$oneWeekAgo = time() - (168 * 3600);
 
@@ -56,9 +55,7 @@ class Market {
 		$request = $marketMTime ? $marketMTime < $oneWeekAgo : true;
 		$request = $this->cMarket ? $request : true;
 
-		// if (!$addonsMTime || $addonsMTime < $oneWeekAgo) {
-			$this->buildCache();
-		// }
+		$this->buildCache();
 
 		$reply = array(
 			"market" => defined('MARKETURL') ? MARKETURL : $this->market,
@@ -151,26 +148,8 @@ class Market {
 			$repo = substr($repo, 0, -4);
 		}
 
-		// For manual install, there will be no type, so it checks the github repo to detect the type.
-		if ($type === '') {
-			$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/plugin.json'));
-			if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
-				$type = 'plugins';
-			} else {
-				$file_headers = @get_headers(str_replace('github.com', 'raw.github.com', $repo.'/master/theme.json'));
-				if ($file_headers[0] != 'HTTP/1.1 404 Not Found') {
-					$type = 'themes';
-				} else {
-					Common::sendJSON("error", "Invalid Repository"); die;
-				}
-			}
-		} else {
-			//Used to ping the market server to let Atheos that it was installed. Tracking / Stats; no need right now.
-			// $reponame = explode('/', $repo);
-			// $tmp = file_get_contents($this->url.'/?t='.rtrim($type, "s").'&i='.str_replace("-master", "", $reponame[sizeof($repo)-1]));
-		}
-
 		if (file_put_contents(BASE_PATH.'/'.$type.'/'.$name.'.zip', fopen($repo.'/archive/master.zip', 'r'))) {
+			
 			$zip = new ZipArchive;
 			$res = $zip->open(BASE_PATH.'/'.$type.'/'.$name.'.zip');
 
@@ -182,7 +161,6 @@ class Market {
 				} else {
 					Common::sendJSON("error", i18n("market_unableExtract")); die;
 				}
-
 			} else {
 				Common::sendJSON("error", i18n("market_noZip")); die;
 			}

@@ -186,30 +186,6 @@ class i18n {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Get/Set Applied Language
-	//////////////////////////////////////////////////////////////////////////80
-	public function appliedLang($val = false) {
-		$this->appliedLang = $val ?: $this->appliedLang;
-		return $this->appliedLang;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Get/Set Fallback Language
-	//////////////////////////////////////////////////////////////////////////80
-	public function fallbackLang($val = false) {
-		$this->fallbackLang = $val ?: $this->appliedLang;
-		return $this->fallbackLang;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Get/Set Forced Language
-	//////////////////////////////////////////////////////////////////////////80
-	public function forcedLang($val = false) {
-		$this->forcedLang = $val ?: $this->forcedLang;
-		return $this->forcedLang;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
 	// Get user langauges by priorty: Forced, Session, Fallback
 	//////////////////////////////////////////////////////////////////////////80
 	public function getUserLangs() {
@@ -267,20 +243,6 @@ class i18n {
 	protected function load($code) {
 		$filename = $this->getLangFileName($code);
 		return json_decode(file_get_contents($filename), true);
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Load language file code
-	//////////////////////////////////////////////////////////////////////////80
-	public function getRaw($code) {
-		$lang = $this->getLangFileName("en");
-
-		// $lang = json_decode(file_get_contents($lang), true);
-		$lang = json_decode(file_get_contents($lang), true);
-
-		$lang = $this->cleanLang($lang);
-		Common::saveJSON($code . "_clean", $lang, "lang");
-		return $lang;
 	}
 
 	public function codes() {

@@ -1,8 +1,7 @@
 #tab-list-active-files {
-	margin: 0px;
+	margin: 0;
 	padding: 10px 0 0 18px;
 	overflow: hidden;
-	//float: left;
 	list-style-type: none;
 	height: $topBarHeight;
 
@@ -16,10 +15,6 @@
 		z-index: 2;
 		position: relative;
 		cursor: pointer;
-		//color: #777;
-
-		//text-transform: uppercase;
-		//transition: all 250ms ease;
 		user-select: none;
 		@include box-shadow;
 
@@ -40,7 +35,7 @@
 				color: lighten($fontColorMinor, 20%);
 			}
 
-			&:before {
+			&::before {
 				content: '';
 				width: 100%;
 				height: 100%;
@@ -59,14 +54,12 @@
 
 			&:hover {
 				color: $fontColorMajor;
-
 			}
 		}
-
 	}
 
-	li:before,
-	li:after {
+	li::before,
+	li::after {
 		display: block;
 		content: " ";
 		position: absolute;
@@ -74,17 +67,16 @@
 		height: 100%;
 		width: 44px;
 		background-color: inherit;
-		//transition: all 250ms ease;
 		z-index: -1;
 	}
 
-	li:before {
+	li::before {
 		right: -18px;
 		transform: skew(30deg, 0deg);
 		box-shadow: rgba(0, 0, 0, .1) 3px 2px 5px, inset rgba(255, 255, 255, .09) -1px 0;
 	}
 
-	li:after {
+	li::after {
 		left: -10px;
 		transform: skew(-30deg, 0deg);
 		box-shadow: rgba(0, 0, 0, .1) -3px 2px 5px, inset rgba(255, 255, 255, .09) 1px 0;
@@ -93,12 +85,12 @@
 	li:hover {
 		background-color: darken($tabListBackground, 15%);
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			background-color: darken($tabListBackground, 15%);
 		}
 
-		a:before {
+		a::before {
 			background: linear-gradient(to left, transparent 90%, #{darken($tabListBackground, 15%)});
 		}
 	}
@@ -108,37 +100,34 @@
 		background-color: $tabListBackground;
 		color: $fontColorMajor;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			background-color: $tabListBackground;
 			color: $fontColorMajor;
 		}
 
 		a {
 			color: darken($fontColorMajor, 20%);
-			// color: $fontColorMinor;
 
 			.file-name {
 				color: $fontColorMajor;
 			}
 
-			&:before {
+			&::before {
 				background: linear-gradient(to left, transparent 90%, #{$tabListBackground});
 			}
 		}
 	}
 
-
 	li.changed {
 		background-color: $green;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			background-color: $green;
-
 		}
 
-		a:before {
+		a::before {
 			background: linear-gradient(to left, transparent 90%, #{$green});
 		}
 	}
