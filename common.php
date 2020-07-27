@@ -445,7 +445,7 @@ class Common {
 		} elseif (array_key_exists($key, Common::$data["get"])) {
 			$value = Common::$data["get"][$key];
 		}
-		
+
 		if ($type) {
 			if ($type === "server") {
 				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
@@ -537,16 +537,29 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80////////80
 	// Execute Command
 	//////////////////////////////////////////////////////////////////////////80////////80
-	public function executeCommand($cmd) {
+	public function execute($cmd = false) {
+		$output = false;
+		if (!$cmd) return "No command provided";
+
 		if (function_exists('system')) {
 			ob_start();
 			system($cmd);
+			$output = ob_get_contents();
 			ob_end_clean();
+			// } else if (function_exists('passthru')) {
+			// 	ob_start();
+			// 	passthru($cmd);
+			// 	$output = ob_get_contents();
+			// 	ob_end_clean();
 		} elseif (function_exists('exec')) {
-			exec($cmd, $this->output);
+			exec($cmd, $output);
+			$output = implode("\n", $output);
 		} elseif (function_exists('shell_exec')) {
-			shell_exec($cmd);
+			$output = shell_exec($cmd);
+		} else {
+			$output = 'Command execution not possible on this system';
 		}
+		return $output;
 	}
 
 }
