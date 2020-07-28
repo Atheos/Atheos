@@ -1,9 +1,3 @@
-/*============================================================================*
-	PALETTE	
-	From https://clrs.cc/
-	Based on File-Icons
-/*============================================================================*/
-
 $white: #F5F9F9;
 $silver: #D5D9DD;
 $grey: #A5A9AA;
@@ -12,18 +6,14 @@ $coal: #414141;
 $smoke: #353533;
 $raven: #252525;
 $ebony: #1C1C1E;
-$black: #151516; //#17171C;
+$black: #151516;
 
-/*============================================================================*
-	CSS CLASSES
-/*============================================================================*/
-
-.white:before	{ color: $white; }
-.silver:before	{ color: $silver; }
-.grey:before	{ color: $grey; }
-.metal:before	{ color: $metal; }
-.coal:before	{ color: $coal; }
-.smoke:before	{ color: $smoke; }
-.raven:before	{ color: $raven; }
-.ebony:before	{ color: $ebony; }
-.black:before	{ color: $black; }
+.white::before	{ color: $white; }
+.silver::before	{ color: $silver; }
+.grey::before	{ color: $grey; }
+.metal::before	{ color: $metal; }
+.coal::before	{ color: $coal; }
+.smoke::before	{ color: $smoke; }
+.raven::before	{ color: $raven; }
+.ebony::before	{ color: $ebony; }
+.black::before	{ color: $black; }
