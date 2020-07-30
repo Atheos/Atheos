@@ -117,7 +117,6 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	public function load($active) {
 		if ($active) {
-			debug($active);
 			// Load currently active project
 			$projectPath = $active;
 			$projectName = isset($this->projects[$projectPath]) ? $this->projects[$projectPath] : null;

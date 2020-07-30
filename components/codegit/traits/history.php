@@ -110,8 +110,6 @@ trait History {
 	}
 
 	public function checkout($repo, $file) {
-		debug($repo);
-		debug($file);
 		$result = $this->execute("git checkout -- " . $file);
 		if ($result["status"]) {
 			Common::sendJSON("success", i18n("git_undo_success")); die;
