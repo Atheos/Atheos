@@ -1,4 +1,4 @@
-#tab-list-active-files {
+ul.tabList {
 	margin: 0;
 	padding: 10px 0 0 18px;
 	overflow: hidden;
@@ -23,17 +23,18 @@
 			text-align: right;
 			width: 150px;
 			margin-left: -10px;
-			color: $fontColorMinor;
 			overflow: hidden;
 			direction: rtl;
 			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 			padding-bottom: 1px;
 			cursor: inherit;
 			white-space: nowrap;
+			color: $grey;
 
-			.file-name {
-				color: lighten($fontColorMinor, 20%);
+			.subtle {
+				color: $fontColorMinor;
 			}
+
 
 			&::before {
 				content: '';
@@ -51,6 +52,7 @@
 			position: absolute;
 			right: -12px;
 			top: 6px;
+			color: lighten($fontColorMinor, 20%);
 
 			&:hover {
 				color: $fontColorMajor;
@@ -107,10 +109,10 @@
 		}
 
 		a {
-			color: darken($fontColorMajor, 20%);
+			color: $fontColorMajor;
 
-			.file-name {
-				color: $fontColorMajor;
+			.subtle {
+				color: darken($fontColorMajor, 20%);
 			}
 
 			&::before {

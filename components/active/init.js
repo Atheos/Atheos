@@ -765,8 +765,8 @@
 			// For some reason, leaving the leading slash on a path causes the
 			// leading slash to be moved to the end of the element, as in at the
 			// end of the file name and subsequently needs to be removed first.
-			var item = '<li class="draggable" data-path="' + path + '"><a>' +
-				split.directory.replace(/^\/+/g, '') + '/<span class="file-name">' + split.basename + '</span>' +
+			var item = '<li class="draggable" data-path="' + path + '"><a><span  class="subtle">' +
+				split.directory.replace(/^\/+/g, '') + '/</span>' + split.basename + 
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
