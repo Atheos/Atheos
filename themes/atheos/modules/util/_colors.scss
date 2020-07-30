@@ -1,6 +1,4 @@
-$adjust-tone: 20%;
-
-$red:     #FF453A;
+$red:     #FF483A; //#FF453A;
 $orange:  #F08D24; //#FF9F0A;
 $yellow:  #FFD60A; //#E69900;
 $lime:    #01FF70;
@@ -8,22 +6,22 @@ $green:   #46A609; //#30D158;
 $olive:   #3D9970;
 $teal:    #008080; //Need to find a better teal
 $aqua:    #7FDBFF; //#1CC3E8;
-$cyan:    #1CC3E8;
+$cyan:    #1CC3E8; //#80FFF4;
 $indigo:  #5E5CE6; 
-$blue:    #0074D9; //#0A84FF
+$blue:    #0074D9; //#0A84FF; 
 $navy:    #001f3f;
 $maroon:  #85144b;
 $fushia:  #F012BE;
 $purple:  #BF5AF2; 
-$pink:    #FF375F; //#FF375F; 
+$pink:    #FF375F; //#A2777A; 
 
 /*============================================================================*
 	CSS CLASSES
 /*============================================================================*/
 
 .red::before	{ color: $red; }
-.yellow::before	{ color: $yellow; }
 .orange::before	{ color: $orange; }
+.yellow::before	{ color: $yellow; }
 .lime::before	{ color: $lime; }
 .green::before	{ color: $green; }
 .olive::before	{ color: $olive; }
@@ -37,3 +35,22 @@ $pink:    #FF375F; //#FF375F;
 .fushia::before	{ color: $fushia; }
 .purple::before	{ color: $purple; }
 .pink::before	{ color: $pink; }
+
+:root {
+	--red: $red;
+	--orange: $orange;
+	--yellow: $yellow;
+	--lime: $lime;
+	--green: $green;
+	--olive: $olive;
+	--teal: $teal;
+	--aqua: $aqua;
+	--cyan: $cyan;
+	--indigo: $indigo;
+	--blue: $blue;
+	--navy: $navy;
+	--maroon: $maroon;
+	--fushia: $fushia;
+	--purple: $purple;
+	--pink: $pink;
+}

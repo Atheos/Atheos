@@ -1,29 +1,34 @@
-/*============================================================================*
-	PALETTE	
-	From https://clrs.cc/
-	Based on File-Icons
-/*============================================================================*/
+$white:   #F5F9F9;
+$silver:  #D5D9DD;
+$grey:    #A5A9AA;
+$metal:   #757577;
+$coal:    #414141;
+$smoke:   #353533;
+$raven:   #252525;
+$ebony:   #1C1C1E;
+$black:   #151516;
+$vanta:   #010101;
 
-$white: #F5F9F9;
-$silver: #D5D9DD;
-$grey: #A5A9AA;
-$metal: #757577;
-$coal: #414141;
-$smoke: #353533;
-$raven: #252525;
-$ebony: #1C1C1E;
-$black: #151516; //#17171C;
+.white::before	{ color: $white; }
+.silver::before	{ color: $silver; }
+.grey::before	{ color: $grey; }
+.metal::before	{ color: $metal; }
+.coal::before	{ color: $coal; }
+.smoke::before	{ color: $smoke; }
+.raven::before	{ color: $raven; }
+.ebony::before	{ color: $ebony; }
+.black::before	{ color: $black; }
+.vanta::before	{ color: $vanta; }
 
-/*============================================================================*
-	CSS CLASSES
-/*============================================================================*/
-
-.white:before	{ color: $white; }
-.silver:before	{ color: $silver; }
-.grey:before	{ color: $grey; }
-.metal:before	{ color: $metal; }
-.coal:before	{ color: $coal; }
-.smoke:before	{ color: $smoke; }
-.raven:before	{ color: $raven; }
-.ebony:before	{ color: $ebony; }
-.black:before	{ color: $black; }
+:root {
+	--white: $white;
+	--silver: $silver;
+	--grey: $grey;
+	--metal: $metal;
+	--coal: $coal;
+	--smoke: $smoke;
+	--raven: $raven;
+	--ebony: $ebony;
+	--black: $black;
+	--vanta: $vanta;
+}
