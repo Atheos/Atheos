@@ -21,6 +21,7 @@
 		position: absolute;
 		right: 9px;
 		top: 6px;
+		color: $fontColorMinor;
 	}
 
 	a {
@@ -32,9 +33,9 @@
 		text-align: right;
 		height: 25px;
 		overflow: hidden;
-		color: $fontColorMinor;
 		text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 		white-space: nowrap;
+		color: $silver;
 
 		&::before {
 			content: '';
@@ -47,8 +48,9 @@
 		}
 	}
 
-	.file-name {
-		color: #FAFAFA;
+	.subtle {
+		color: $fontColorMinor;
+		// color: #FAFAFA;
 	}
 
 	a:hover {
