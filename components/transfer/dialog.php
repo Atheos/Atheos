@@ -22,8 +22,8 @@ switch ($action) {
 			$path .= "/";
 		}
 		?>
+		<label class="title"><i class="fas fa-upload"></i><?php echo i18n("filesUpload"); ?></label>
 		<form enctype="multipart/form-data">
-			<h3><i class="fas fa-upload"></i><?php echo i18n("uploadFiles"); ?></h3>
 			<pre><?php echo($path); ?></pre>
 			<label id="upload_wrapper">
 				<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
