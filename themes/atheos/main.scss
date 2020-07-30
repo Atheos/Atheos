@@ -1,6 +1,9 @@
 /* SCSS IMPORT FILES */
 @import "modules/util/reset";
-@import "modules/util/mixins", "modules/util/colors", "modules/util/shades", "modules/util/variables";
+@import "modules/util/mixins"; 
+@import "modules/util/colors";
+@import "modules/util/shades";
+@import "modules/util/variables";
 @import "modules/util/animations";
 
 @import "modules/util/scrollbars";

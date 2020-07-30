@@ -298,7 +298,10 @@
 	};
 
 	let insertToAdjacent = (location, element) => function(target) {
-		if (target instanceof HTMLElement) {
+		if (typeof target === 'string') {
+			target = argToElement(target);
+			target.insertAdjacentElement(location, element);
+		} else if (target instanceof HTMLElement) {
 			target.insertAdjacentElement(location, element);
 		} else if ('isOnyx' in target) {
 			target = target.el;
@@ -448,6 +451,7 @@
 
 		api.prepend = insertAdjacent('afterbegin', element);
 		api.append = insertAdjacent('beforeend', element);
+		api.replaceWith = (el) => element.replaceWith(el);
 
 		api.remove = () => element.remove();
 
