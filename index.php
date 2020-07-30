@@ -92,7 +92,7 @@ $theme = Common::data("theme", "session") ?: THEME;
 
 			<div id="editor-region">
 				<div id="editor-top-bar">
-					<ul id="tab-list-active-files" class="customSortable"></ul>
+					<ul id="tab-list-active-files" class="tabList"></ul>
 					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
 					<a id="tab_close" class="fas fa-times-circle"></a>
 					<ul id="dropdown-list-active-files" style="display: none;"></ul>
