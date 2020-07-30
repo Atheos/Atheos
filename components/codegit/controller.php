@@ -85,7 +85,6 @@ switch ($action) {
 		$type = Common::data('type');
 		
 		if ($repo && $type) {
-			debug($repo);
 			$CodeGit->init($repo, $type);
 		} else {
 			Common::sendJSON("E403g");
