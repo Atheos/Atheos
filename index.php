@@ -121,11 +121,8 @@ $theme = Common::data("theme", "session") ?: THEME;
 
 
 		<iframe id="download"></iframe>
-
-		<div id="autocomplete">
-			<ul id="suggestions"></ul>
-		</div>
-
+		
+		<div id="toast_container"></div>
 
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
