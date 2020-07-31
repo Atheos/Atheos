@@ -1,7 +1,31 @@
 <?php
+
+$access = Common::checkAccess("configure");
+
 // Right Bar
 $right_bar = file_get_contents(COMPONENTS . "/sidebars/right_bar.json");
 $right_bar = json_decode($right_bar, true);
+
+$pluginHTML = "";
+
+foreach ($plugins as $plugin) {
+	if (!file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) continue;
+
+	$data = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
+	$data = json_decode($data, true);
+	if (!isset($data['rightbar'])) continue;
+
+	foreach ($data['rightbar'] as $rightbar) {
+		if (!$access && isset($rightbar['admin']) && $rightbar['admin']) continue;
+
+
+		if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
+			$pluginHTML .= '<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.$rightbar['title'].'</a>';
+		}
+	}
+
+}
+
 ?>
 <div id="sb_right" class="sidebar">
 
@@ -14,13 +38,10 @@ $right_bar = json_decode($right_bar, true);
 	</div>
 
 	<div class="content">
-
 		<?php
-
 		////////////////////////////////////////////////////////////
 		// Load Right Bar
 		////////////////////////////////////////////////////////////
-		$access = Common::checkAccess("configure");
 		foreach ($right_bar as $item_rb => $data) {
 			$data["admin"] = isset($data["admin"]) ? $data["admin"] : false;
 
@@ -34,22 +55,7 @@ $right_bar = json_decode($right_bar, true);
 				}
 			} elseif ($data['title'] === 'pluginbar') {
 				if (!$data['admin'] || $access) {
-					foreach ($plugins as $plugin) {
-						if (file_exists(PLUGINS . "/" . $plugin . "/plugin.json")) {
-							$pdata = file_get_contents(PLUGINS . "/" . $plugin . "/plugin.json");
-							$pdata = json_decode($pdata, true);
-							if (isset($pdata['rightbar'])) {
-								foreach ($pdata['rightbar'] as $rightbar) {
-									if ((!isset($rightbar['admin']) || ($rightbar['admin']) && $access) || !$rightbar['admin']) {
-										if (isset($rightbar['action']) && isset($rightbar['icon']) && isset($rightbar['title'])) {
-											echo('<a onclick="'.$rightbar['action'].'"><i class="'.$rightbar['icon'].'"></i>'.i18n($rightbar['title'], "return").'</a>');
-										}
-									}
-								}
-								//echo("<hr>");
-							}
-						}
-					}
+					echo($pluginHTML);
 				}
 			} else {
 				if (!$data['admin'] || $access) {
