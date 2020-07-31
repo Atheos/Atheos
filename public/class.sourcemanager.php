@@ -24,7 +24,6 @@ class SourceManager {
 		"modules/global.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
-		"modules/types.js",
 		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",
