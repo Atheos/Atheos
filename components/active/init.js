@@ -172,14 +172,6 @@
 				};
 				atheos.flow.dragNdrop(e, options);
 			});
-
-			// self.dropDownMenu.on('drag', function(e) {
-			// 	atheos.ux.handleDrag(e.target, e);
-			// });
-
-			// self.dropDownMenu.on('dragend', function(e) {
-			// 	atheos.ux.handleDrop(e.target, e);
-			// });
 		},
 
 		open: function(path, content, modifyTime, focus) {
