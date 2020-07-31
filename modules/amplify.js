@@ -9,9 +9,7 @@
 			subscriptions = {};
 		},
 		publish: function(topic) {
-			if (typeof topic !== 'string') {
-				throw new Error('You must provide a valid topic to publish.');
-			}
+			if (typeof topic !== 'string') return false;
 
 			var args = slice.call(arguments, 1),
 				topicSubscriptions,
@@ -26,22 +24,15 @@
 
 			topicSubscriptions = subscriptions[topic].slice();
 			for (length = topicSubscriptions.length; i < length; i++) {
-				
 				subscription = topicSubscriptions[i];
 				ret = subscription.callback.apply(null, args);
-				
-				if (ret === false) {
-					break;
-				}
 			}
 			return ret !== false;
 		},
 
 		// Topics need to be comma delimited
 		subscribe: function(topic, callback, priority) {
-			if (typeof topic !== 'string') {
-				throw new Error('You must provide a valid topic to create a subscription.');
-			}
+			if (typeof topic !== 'string') return false;
 
 			priority = priority || 10;
 
@@ -81,9 +72,7 @@
 		},
 
 		unsubscribe: function(topic, callback) {
-			if (typeof topic !== 'string') {
-				throw new Error('You must provide a valid topic to remove a subscription.');
-			}
+			if (typeof topic !== 'string') return false;
 
 			if (!subscriptions[topic]) {
 				return;
