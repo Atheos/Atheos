@@ -41,7 +41,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $keywordsReserved = array();
+    protected $keywordsReserved = array("do","if","in","for","let","new","try","var","case","else","enum","eval","null","this","true","void","with","break","catch","class","const","false","super","throw","while","yield","delete","export","import","public","return","static","switch","typeof","default","extends","finally","package","private","continue","debugger","function","arguments","interface","protected","implements","instanceof","abstract","boolean","byte","char","double","final","float","goto","int","long","native","short","synchronized","throws","transient","volatile");
 
     /**
      * List of JavaScript reserved words that accept a <variable, value, ...>
@@ -56,7 +56,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $keywordsBefore = array();
+    protected $keywordsBefore = array("do","in","let","new","var","case","else","enum","void","with","class","const","yield","delete","export","import","public","static","typeof","extends","package","private","function","protected","implements","instanceof");
 
     /**
      * List of JavaScript reserved words that accept a <variable, value, ...>
@@ -71,7 +71,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $keywordsAfter = array();
+    protected $keywordsAfter = array("in","public","extends","private","protected","implements","instanceof");
 
     /**
      * List of all JavaScript operators.
@@ -82,7 +82,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $operators = array();
+    protected $operators = array("+","-","*","/","%","=","+=","-=","*=","/=","%=","<<=",">>=",">>>=","&=","^=","|=","&","|","^","~","<<",">>",">>>","==","===","!=","!==",">","<",">=","<=","&&","||","!",".","[","]","?",":",",",";","(",")","{","}");
 
     /**
      * List of JavaScript operators that accept a <variable, value, ...> after
@@ -98,7 +98,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $operatorsBefore = array();
+    protected $operatorsBefore = array("+","-","*","/","%","=","+=","-=","*=","/=","%=","<<=",">>=",">>>=","&=","^=","|=","&","|","^","~","<<",">>",">>>","==","===","!=","!==",">","<",">=","<=","&&","||","!",".","[","?",":",",",";","(","{");
 
     /**
      * List of JavaScript operators that accept a <variable, value, ...> before
@@ -117,7 +117,7 @@ class JS extends Minify
      *
      * @var string[]
      */
-    protected $operatorsAfter = array();
+    protected $operatorsAfter = array("+","-","*","/","%","=","+=","-=","*=","/=","%=","<<=",">>=",">>>=","&=","^=","|=","&","|","^","<<",">>",">>>","==","===","!=","!==",">","<",">=","<=","&&","||",".","[","]","?",":",",",";","(",")","}");
 
     /**
      * {@inheritdoc}
@@ -126,14 +126,14 @@ class JS extends Minify
     {
         call_user_func_array(array('parent', '__construct'), func_get_args());
 
-        $dataDir = __DIR__.'/../data/js/';
-        $options = FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES;
-        $this->keywordsReserved = file($dataDir.'keywords_reserved.txt', $options);
-        $this->keywordsBefore = file($dataDir.'keywords_before.txt', $options);
-        $this->keywordsAfter = file($dataDir.'keywords_after.txt', $options);
-        $this->operators = file($dataDir.'operators.txt', $options);
-        $this->operatorsBefore = file($dataDir.'operators_before.txt', $options);
-        $this->operatorsAfter = file($dataDir.'operators_after.txt', $options);
+        // $dataDir = __DIR__.'/../data/js/';
+        // $options = FILE_IGNORE_NEW_LINES | FILE_SKIP_EMPTY_LINES;
+        // $this->keywordsReserved = file($dataDir.'keywords_reserved.txt', $options);
+        // $this->keywordsBefore = file($dataDir.'keywords_before.txt', $options);
+        // $this->keywordsAfter = file($dataDir.'keywords_after.txt', $options);
+        // $this->operators = file($dataDir.'operators.txt', $options);
+        // $this->operatorsBefore = file($dataDir.'operators_before.txt', $options);
+        // $this->operatorsAfter = file($dataDir.'operators_after.txt', $options);
     }
 
     /**
