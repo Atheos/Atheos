@@ -24,20 +24,4 @@ trait Commit {
 			Common::sendJSON("success", i18n("git_commit_failed"));
 		}
 	}
-
-	public function showCommit($commit) {
-		$result = $this->execute("git show " . $commit);
-		
-		if ($result["status"]) {
-			foreach ($result["data"] as $index => $line) {
-				$line = str_replace ("\t", "    ", $line);
-				$this->resultArray[$index] = htmlentities($line);
-			}
-			return json_encode(array("status" => "success", "data" => $this->resultArray));
-		} else {
-
-			return $this->returnMessage("error", "Failed to show commit");
-
-		}
-	}
 }
