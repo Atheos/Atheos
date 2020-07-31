@@ -35,41 +35,29 @@
 			document.addEventListener('keydown', self.handler);
 
 			// Close Modals [Esc] ////////////////////////////////////////////80
-			self.bind(27, false, function() {
-				atheos.modal.unload();
-			});
-
-			// Open CodeGit [Ctrl + C] ///////////////////////////////////////80
-			self.bind(0, 'ctrl', function() {
-				atheos.codegit.showCodeGit();
-			});
+			self.bind(27, false, atheos.modal.unload);
 
 			// Save [CTRL+S] /////////////////////////////////////////////////80
-			self.bind(83, 'ctrl', function() {
-				atheos.active.save();
-			});
+			self.bind(83, 'ctrl', atheos.active.save);
 
 			// Open in browser [CTRL+O] //////////////////////////////////////80
-			self.bind(79, 'ctrl', function() {
-				atheos.filemanager.openInBrowser();
-			});
+			self.bind(79, 'ctrl', atheos.filemanager.openInBrowser);
 
 			// Open Scout [CTRL+E] ///////////////////////////////////////////80
-			self.bind(69, 'ctrl', function() {
-				atheos.scout.probe();
-			});
+			self.bind(69, 'ctrl', atheos.scout.probe);
+
+			// Close [CTRL+Q] ////////////////////////////////////////////////80
+			self.bind(81, 'ctrl', atheos.active.close);
 
 			// Find [CTRL+F] /////////////////////////////////////////////////80
 			self.bind(70, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				editor.execCommand('find');
-				// atheos.editor.openSearch('find');
 			});
 
 			// GotoLine [CTRL+G] /////////////////////////////////////////////80
 			self.bind(71, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
-				// atheos.editor.promptLine();
 				editor.execCommand('gotoline');
 			});
 
@@ -77,12 +65,6 @@
 			self.bind(82, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				editor.execCommand('replace');
-			});
-
-
-			// Close [CTRL+Q] ////////////////////////////////////////////////80
-			self.bind(81, 'ctrl', function() {
-				atheos.active.close();
 			});
 
 			// Active List Previous [CTRL+UP] ////////////////////////////////80
@@ -111,19 +93,6 @@
 			self.bind(186, 'alt', function() {
 				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'bottom');
 			});
-
-
-
-			// Autocomplete [CTRL+SPACE] /////////////////////////////////////80
-			// $.ctrl(32, function() {
-			//     atheos.autocomplete.suggest();
-			// });
-
-			// this.bind(71, function() {
-			// 	if (atheos.finder) {
-			// 		atheos.finder.expandFinder();
-			// 	}
-			// });
 		},
 
 		//////////////////////////////////////////////////////////////////////
