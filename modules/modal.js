@@ -23,8 +23,6 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-
-
 (function(global) {
 	'use strict';
 
@@ -82,7 +80,7 @@
 				listener = data.listener;
 				delete data.listener;
 			}
-			
+
 			if (data.callback && types.isFunction(data.callback)) {
 				callback = data.callback;
 				delete data.callback;
@@ -99,6 +97,7 @@
 				'min-width': width + 'px',
 				'height': ''
 			});
+
 			var loadTimeout;
 			if (self.modalVisible) {
 				loadTimeout = setTimeout(self.setLoadingScreen, 1000);
@@ -117,12 +116,6 @@
 					content.html(reply);
 					content.css('height', '');
 
-					// oX(content).html(reply);
-					// var script = oX(oX(content).find('script'));
-					// if (script) {
-					// 	eval(script.text());
-					// }
-
 					// Fix for Firefox autofocus goofiness
 					var input = wrapper.find('input[autofocus="autofocus"]');
 					if (input) {
@@ -134,7 +127,7 @@
 					}
 					if (callback) {
 						callback(wrapper);
-					}					
+					}
 				}
 			});
 
@@ -142,9 +135,6 @@
 				atheos.flow.fade('in', wrapper.el, self.fadeDuration);
 				atheos.flow.fade('in', overlay.el, self.fadeDuration);
 			}
-			// wrapper.show();
-			// overlay.show();
-
 			self.modalVisible = true;
 		},
 
@@ -176,11 +166,9 @@
 			}
 			if (overlay) {
 				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
-				// overlay.remove();
 			}
 			if (wrapper) {
 				atheos.flow.fade('out', wrapper.el, self.fadeDuration);
-				// wrapper.hide();
 			}
 
 			if (content) {
