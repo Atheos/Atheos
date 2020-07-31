@@ -1,32 +1,3 @@
-.icon:before{
-	font-weight: normal;
-	font-style: normal;
-	text-align: center;
-	width: 16px;
-	line-height: 1;
-	position: relative;
-	display: inline-block;
-	-webkit-font-smoothing: antialiased;
-}
-
-// Tweak Atom's default icon classes
-.header > .icon-repo:before            { top: 1px; text-align: left; }
-.header > .icon-file-directory:before  { top: 1px }
-
-// Avoid enforcing fixed-width icons in tabs
-.tab > .icon:before { width: auto; }
-
-// ... unless the theme uses proportional units
-.theme-one-dark-ui,
-.theme-one-light-ui{
-	.tab-bar .tab > .title.icon:before{
-		font-size: 1.1em;
-		margin-right: .3em;
-		width: 1em;
-		top: auto;
-	}
-}
-
 // Turn off antialiasing for macOS
 @mixin thicken{
 	-webkit-font-smoothing: subpixel-antialiased;
@@ -875,7 +846,7 @@
 	font-style: normal;
 	font-display: swap;
 	src: local("Octicons Regular"),
-		url('octicons.woff');
+		url('octicons.woff2') format("woff2");
 }
 
 @font-face {
@@ -884,7 +855,7 @@
 	font-style: normal;
 	font-display: swap;
 	src: local("Devicons"),
-		url('devopicons.woff2');
+		url('devopicons.woff2') format("woff2");
 }
 
 @font-face {
@@ -893,5 +864,5 @@
 	font-style: normal;
 	font-display: swap;
 	src: local("file-icons"),
-		url('file-icons.woff2');
+		url('file-icons.woff2') format("woff2");
 }
