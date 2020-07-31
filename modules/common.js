@@ -176,12 +176,11 @@
 			if (hidden) {
 				overlay.hide();
 			}
-			var toast = oX('#toast-container');
+			var toast = oX('#toast_container');
 			if (toast) {
 				toast.before(overlay.el);
 			} else {
 				document.body.appendChild(overlay.el);
-
 			}
 			return overlay;
 		},
