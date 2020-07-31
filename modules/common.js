@@ -21,8 +21,7 @@
 (function(global) {
 	'use strict';
 
-	var atheos = global.atheos,
-		echo = global.echo;
+	var atheos = global.atheos;
 
 	var self = null;
 
@@ -30,7 +29,6 @@
 
 		init: function() {
 			self = this;
-
 			self.initDropdown();
 			self.initTogglePassword();
 			self.initCheckMonitors();
@@ -207,14 +205,6 @@
 		//////////////////////////////////////////////////////////////////////
 		scriptCache: [],
 		loadScript: function(url, callback) {
-
-			var load = true;
-			//check all existing script tags in the page for the url
-			var scripts = document.getElementsByTagName('script');
-			for (var i = 0; i < scripts.length; i++) {
-				load = (url !== scripts[i].src);
-			}
-
 			if (self.scriptCache.includes(url)) {
 				//already loaded so just call the callback
 				if (typeof callback === 'function') {
