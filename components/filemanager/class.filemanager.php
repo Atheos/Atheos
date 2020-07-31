@@ -29,7 +29,8 @@ class Filemanager {
 			Common::sendJSON("error", i18n("path_exists")); die;
 		}
 
-		$path = strip_tags($path);
+		// $path = strip_tags($path);
+		$path = htmlspecialchars($path);
 
 		if ($type === "directory" && mkdir($path)) {
 			Common::sendJSON("S2000");
@@ -127,7 +128,8 @@ class Filemanager {
 
 
 			$index[] = array(
-				"path" => strip_tags($relativePath . $object),
+				// "path" => strip_tags($relativePath . $object),
+				"path" => htmlspecialchars($relativePath . $object),
 				"type" => $type,
 				"size" => $size
 			);
@@ -198,7 +200,11 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function rename($path, $name) {
 		$parent = dirname($path);
+
 		$newPath = $parent . "/" . $name;
+		// $newPath = strip_tags($newPath);
+		$newPath = htmlspecialchars($newPath);
+
 		if (file_exists($newPath)) {
 			Common::sendJSON("error", i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {
