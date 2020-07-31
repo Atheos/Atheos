@@ -1,11 +1,11 @@
-#toast-container {
+#toast_container {
 	min-width: 280px;
 	max-width: 480px;
 	z-index: 99999;
-	position: absolute;
+	position: fixed;
 
 
-	.toast-wrapper {
+	toast {
 		height: auto;
 		background: #333;
 		padding: 5px;
@@ -18,95 +18,83 @@
 		opacity: 0;
 	}
 
-	.toast-active {
+	.active {
 		opacity: 1;
 	}
 
-	.toast-message {
+	.message {
 		text-align: left;
 		margin: 0 5px;
 		display: inline-block;
 	}
 
-	.toast-close {
+	.close {
 		font-size: 14px;
 		float: right;
 		cursor: pointer;
 	}
 
-	.toast-icon {
+	i:not(.close) {
 		font-size: 14px;
 		float: left;
 	}
 
-	.toast-icon.fa-check-circle {
+	i.fa-check-circle {
 		color: $green;
 	}
 
-	.toast-icon.fa-info-circle {
+	i.fa-info-circle {
 		color: $cyan;
 	}
 
-	.toast-icon.fa-exclamation-triangle {
+	i.fa-exclamation-triangle {
 		color: $orange;
 	}
 
-	.toast-icon.fa-exclamation-circle {
+	i.fa-exclamation-circle {
 		color: $red;
 	}
-}
 
-/**
- * positions
- *
- * pattern: toast-position-[value]
- * where 'value' is the real value of the plugin option 'position'
- *
- */
-.toast-position-top-left {
-	position: fixed;
-	left: 20px;
-	top: 20px;
-}
 
-.toast-position-top-center {
-	position: fixed;
-	top: 20px;
-	left: 50%;
-	margin-left: -140px;
-}
+	&.top-left {
+		left: 20px;
+		top: 20px;
+	}
 
-.toast-position-top-right {
-	position: fixed;
-	top: 20px;
-	right: 20px;
-}
+	&.top-center {
+		top: 20px;
+		left: 50%;
+		margin-left: -140px;
+	}
 
-.toast-position-middle-left {
-	position: fixed;
-	left: 20px;
-	top: 50%;
-	margin-top: -40px;
-}
+	&.top-right {
+		top: 20px;
+		right: 20px;
+	}
 
-.toast-position-middle-center {
-	position: fixed;
-	left: 50%;
-	margin-left: -140px;
-	margin-top: -40px;
-	top: 50%;
-}
+	&.middle-left {
+		left: 20px;
+		top: 50%;
+		margin-top: -40px;
+	}
 
-.toast-position-middle-right {
-	position: fixed;
-	right: 20px;
-	margin-left: -140px;
-	margin-top: -40px;
-	top: 50%;
-}
+	&.middle-center {
+		left: 50%;
+		margin-left: -140px;
+		margin-top: -40px;
+		top: 50%;
+	}
 
-.toast-position-bottom-right {
-	position: fixed;
-	bottom: 30px;
-	right: 25px;
+	&.middle-right {
+		right: 20px;
+		margin-left: -140px;
+		margin-top: -40px;
+		top: 50%;
+	}
+
+	&.bottom-right {
+		bottom: 30px;
+		right: 25px;
+	}
+
 }
