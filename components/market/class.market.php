@@ -10,9 +10,6 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once(__DIR__ . "/../../helpers/version-compare.php");
-require_once(__DIR__ . "/../../helpers/recurse-delete.php");
-
 class Market {
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -188,7 +185,7 @@ class Market {
 		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
 			unlink(__DIR__ . "/../../public/plugins.min.js");
 		}
-		rDelete(BASE_PATH.'/'.$type.'/'.$name);
+		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		Common::sendJSON("S2000");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
@@ -216,7 +213,7 @@ class Market {
 							$iVersion = $data["version"];
 							$uVersion = $market[$type][$category][$name]["version"];
 
-							if (compareVersions($iVersion, $uVersion) < 0) {
+							if (Common::compareVersions($iVersion, $uVersion) < 0) {
 								$data = $market[$type][$category][$name];
 								$data["status"] = "updatable";
 							}
