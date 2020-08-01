@@ -52,8 +52,8 @@ function return_bytes($val) {
 				<pre><?php echo($path); ?></pre>
 				<label id="upload_wrapper">
 					<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
-					<input type="file" name="upload[]" multiple >
 					<input type=“hidden” name=“MAX_FILE_SIZE” value=“<?php echo max_file_upload_in_bytes(); ?>”>
+					<input type="file" name="upload[]" multiple >
 				</label>
 				<div id="progress_wrapper">
 				</div>
