@@ -23,20 +23,20 @@ trait Execute {
 
 	private function parseCommandCodes($code) {
 
-		$codes = array(
-			0 => true,
-			1 => false,
-			3 => "login_required",
-			4 => "login_required",
-			7 => "password_required",
-			64 => "error",
-		);
+		// $codes = array(
+		// 	0 => true,
+		// 	1 => false,
+		// 	3 => "login_required",
+		// 	4 => "login_required",
+		// 	7 => "password_required",
+		// 	64 => "error",
+		// );
 		
-		if(in_array($code, $codes)) {
-			return $codes[$code];
-		} else {
-			return false;
-		}
+		// if(in_array($code, $codes)) {
+		// 	return $codes[$code];
+		// } else {
+		// 	return false;
+		// }
 
 		switch ($code) {
 			// Success
@@ -45,9 +45,6 @@ trait Execute {
 				break;
 			case 1:
 				return false;
-				break;
-			case 3 || 4:
-				return "Login required";
 				break;
 			default:
 				return $code;
