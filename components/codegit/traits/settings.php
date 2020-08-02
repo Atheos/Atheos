@@ -30,9 +30,10 @@ trait Settings {
 		}
 
 		if ($data) {
+			debug($data);
 			$type = $data["type"];
-			$name = $data["name"];
-			$email = $data["email"];
+			$name = isset($data["name"]) ? $data["name"] : false;
+			$email = isset($data["email"]) ? $data["email"] : false;
 
 			if (strpos($type, "clear_") === 0) {
 				$type = str_replace("clear_", "", $type);
@@ -46,12 +47,16 @@ trait Settings {
 				$type = $type === "local" ? $repo : "global";
 
 				$where = array("user" => $activeUser, "path" => $type);
-				$value = array("user" => $activeUser, "path" => $type, "name" => $name, "email" => $email);
+				$value = array("user" => $activeUser, "path" => $type);
+				if($name) $value["name"] = $name;
+				if($email) $value["email"] = $email;
 				$results = $db->select($where);
+							debug($results);
+
 				if (empty($results)) {
 					$db->insert($value);
 				} else {
-					$db->update($value, $where);
+					$db->update($where, $value);
 				}
 			}
 		}
