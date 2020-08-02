@@ -3,8 +3,9 @@ $settings = $CodeGit->settings($repo);
 
 $global_name = isset($settings["global"]["name"]) ? $settings["global"]["name"] : "";
 $global_email = isset($settings["global"]["email"]) ? $settings["global"]["email"] : "";
-$local_name = isset($settings[$repo]["name"]) ? $settings[$repo]["name"] : "";
-$local_email = isset($settings[$repo]["email"]) ? $settings[$repo]["email"] : "";
+$local_name = isset($settings["local"]["name"]) ? $settings["local"]["name"] : "";
+$local_email = isset($settings["local"]["email"]) ? $settings["local"]["email"] : "";
+
 ?>
 
 <div id="codegit_configure" class="content">

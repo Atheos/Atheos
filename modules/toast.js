@@ -19,69 +19,62 @@
 
 	'use strict';
 
-	var atheos = global.atheos,
-		types = global.types;
-		
+	var atheos = global.atheos;
+
+	var self = null;
+
+	amplify.subscribe('system.loadMinor', () => atheos.toast.init());
+
 	atheos.toast = {
 
 		global: {
 			position: 'bottom-right', // top-left, top-center, top-right, middle-left, middle-center, middle-right
-			sticky: false,
 			text: 'Message undefined'
 		},
 		types: {
 			success: {
 				icon: 'check-circle',
-				sticky: false,
 				stayTime: 3000,
 			},
 			error: {
 				icon: 'exclamation-circle',
-				sticky: false,
 				stayTime: 10000,
 			},
 			warning: {
 				icon: 'exclamation-triangle',
-				sticky: false,
 				stayTime: 5000,
 			},
 			notice: {
 				icon: 'info-circle',
-				sticky: false,
 				stayTime: 3000,
 			},
 		},
 
+		init: function() {
+			self = this;
+			
+			self.container = oX('#toast_container');
+
+			oX('#toast_container .close', true).on('click', function(e) {
+				var wrapper = oX(e.target).parent('toast');
+				atheos.toast.hide(wrapper.el);
+			});
+
+		},
+
 		createContainer: function(position) {
 			var container = document.createElement('div');
-			container.id = 'toast-container';
+			container.id = 'toast_container';
 			container.classList.add('toast-position-' + position);
 			document.body.appendChild(container);
 			return container;
 		},
 
 		createToast: function(text, type) {
-			var wrapper = document.createElement('div'),
-				message = document.createElement('p'),
-				icon = document.createElement('i'),
-				close = document.createElement('i');
+			var html = `<toast><i class="fas fa-${ type }"></i><p class="message">${ text || global.text }</p><i class="fas fa-times-circle close"></i></toast>`;
 
-			wrapper.classList.add('toast-wrapper');
-			message.classList.add('toast-message');
-			message.innerText = text || 'Default Text';
-
-			icon.classList.add('fas', 'fa-' + type, 'toast-icon');
-			close.classList.add('fas', 'fa-times-circle', 'toast-close');
-
-			wrapper.appendChild(icon);
-			wrapper.appendChild(message);
-			wrapper.appendChild(close);
-
-			close.addEventListener('click', function() {
-				atheos.toast.hide(wrapper);
-			});
-
-			return wrapper;
+			var wrapper = oX(html);
+			return wrapper.el;
 		},
 
 		showToast: function(options) {
@@ -89,19 +82,15 @@
 			options.text = options.raw ? options.text : i18n(options.text);
 
 			// declare variables
-			var container = document.querySelector('#toast-container') || this.createContainer(options.position),
-				wrapper = this.createToast(options.text, options.icon);
+			var wrapper = this.createToast(options.text, options.icon);
 
-			container.appendChild(wrapper);
+			self.container.append(wrapper);
+			self.container.removeClass();
+			self.container.addClass(options.position);
 
 			setTimeout(function() {
-				wrapper.classList.add('toast-active');
-
-				if (!options.sticky) {
-					setTimeout(function() {
-						atheos.toast.hide(wrapper);
-					}, options.stayTime);
-				}
+				wrapper.classList.add('active');
+				setTimeout(() => self.hide(wrapper), options.stayTime);
 			}, 10);
 
 			return wrapper;
@@ -122,11 +111,8 @@
 
 		},
 		hide: function(wrapper) {
-			wrapper.classList.remove('toast-active');
-			wrapper.addEventListener('transitionend', function() {
-				wrapper.remove();
-			});
+			wrapper.classList.remove('active');
+			wrapper.addEventListener('transitionend', wrapper.remove);
 		}
 	};
-	atheos.message = atheos.toast;
 })(this);

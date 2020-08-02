@@ -1,3 +1,7 @@
+#modal_content form[enctype="multipart/form-data"] {
+	padding: 5px 10px 10px;
+}
+
 #upload_wrapper {
 	position: relative;
 	display: block;
@@ -30,7 +34,7 @@
 }
 
 .upload-progress {
-	margin: 5px auto;
+	margin: 5px auto 0;
 	background-color: $inputBackground;
 	position: relative;
 	height: 20px;

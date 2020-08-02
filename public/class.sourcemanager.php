@@ -1,19 +1,12 @@
 <?php
 
-// require 'lib/Minifier.php';
-
-require_once 'lib/minify/src/Minify.php';
-require_once 'lib/minify/src/CSS.php';
-require_once 'lib/minify/src/JS.php';
-require_once 'lib/minify/src/Exception.php';
-require_once 'lib/minify/src/Exceptions/BasicException.php';
-require_once 'lib/minify/src/Exceptions/FileImportException.php';
-require_once 'lib/minify/src/Exceptions/IOException.php';
-require_once 'lib/path-converter/src/ConverterInterface.php';
-require_once 'lib/path-converter/src/Converter.php';
+require_once 'lib/minify/Minify.php';
+require_once 'lib/minify/CSS.php';
+require_once 'lib/minify/JS.php';
+require_once 'lib/path-converter/ConverterInterface.php';
+require_once 'lib/path-converter/Converter.php';
 
 use MatthiasMullie\Minify;
-
 
 class SourceManager {
 
@@ -25,7 +18,6 @@ class SourceManager {
 		"modules/global.js",
 		"modules/onyx.js",
 		"modules/synthetic.js",
-		"modules/types.js",
 		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",

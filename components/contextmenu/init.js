@@ -208,7 +208,7 @@
 				name = node.find('span').html(),
 				active = node.hasClass('active');
 
-			var html = '<a class="directory-only" onclick="atheos.active.reload(onyx(\'#contextmenu\').attr(\'data-path\'), ' + active +');" style="display: block;"><i class="fas fa-sync-alt"></i>Reload</a>';
+			var html = '<a class="directory-only" onclick="atheos.active.reload(oX(\'#contextmenu\').attr(\'data-path\'), ' + active +');" style="display: block;"><i class="fas fa-sync-alt"></i>Reload</a>';
 
 			menu.attr({
 				'data-path': path,
