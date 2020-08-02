@@ -10,8 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("lib/diff_match_patch.php");
-require_once("helpers/recurse-delete.php");
+require_once("lib/differential/diff_match_patch.php");
 
 class Filemanager {
 
@@ -30,7 +29,8 @@ class Filemanager {
 			Common::sendJSON("error", i18n("path_exists")); die;
 		}
 
-		$path = strip_tags($path);
+		// $path = strip_tags($path);
+		$path = htmlspecialchars($path);
 
 		if ($type === "directory" && mkdir($path)) {
 			Common::sendJSON("S2000");
@@ -53,7 +53,7 @@ class Filemanager {
 			Common::sendJSON("E402i"); die;
 		}
 
-		rDelete($path);
+		Common::rDelete($path);
 		Common::sendJSON("S2000");
 	}
 
@@ -128,7 +128,8 @@ class Filemanager {
 
 
 			$index[] = array(
-				"path" => strip_tags($relativePath . $object),
+				// "path" => strip_tags($relativePath . $object),
+				"path" => htmlspecialchars($relativePath . $object),
 				"type" => $type,
 				"size" => $size
 			);
@@ -199,7 +200,11 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function rename($path, $name) {
 		$parent = dirname($path);
+
 		$newPath = $parent . "/" . $name;
+		// $newPath = strip_tags($newPath);
+		$newPath = htmlspecialchars($newPath);
+
 		if (file_exists($newPath)) {
 			Common::sendJSON("error", i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {

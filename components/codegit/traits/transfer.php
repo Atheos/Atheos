@@ -39,22 +39,4 @@ trait Transfer {
 			Common::sendJSON("error", $result);
 		}
 	}
-
-	public function checkUserInfo($command) {
-		$username = Common::data("username");
-		$password = Common::data("password");
-		$passphrase = Common::data("passphrase");
-
-		if ($username) {
-			$command = $command . ' -u "' . $username . '"';
-		}
-		if ($password) {
-			$command = $command . ' -p "' . $password . '"';
-		}
-		if ($passphrase) {
-			$command = $command . ' -k "' . $passphrase . '"';
-		}
-
-		return $command;
-	}
 }

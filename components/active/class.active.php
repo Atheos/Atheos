@@ -16,7 +16,7 @@ class Active {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	public $activeFiles = "";
+	private $db = null;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -27,35 +27,30 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
-
 	public function __construct() {
-		$this->activeFiles = Common::readJSON('active');
+		$this->db = Common::getDB("active");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Add File
 	//////////////////////////////////////////////////////////////////////////80
-	public function add($user, $path) {
-		$this->activeFiles[$user][$path] = "active";
-		Common::saveJSON('active', $this->activeFiles);
+	public function add($activeUser, $path) {
+		$query = array("user" => $activeUser, "path" => $path, "status" => "active");
+		$this->db->insert($query);
 		Common::sendJSON("S2000");
 	}
-
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Check File
 	//////////////////////////////////////////////////////////////////////////80
 	public function check($activeUser, $path) {
-		$activeUsers = array();
-		foreach ($this->activeFiles as $username => $files) {
-			if ($username === $activeUser) {
-				continue;
-			} elseif (isset($files[$path])) {
-				$activeUsers[] = ucfirst($username);
+		$where = array("user" => "*", "path" => $path);
+		$result = $this->db->select($where);
+		if (count($result) > 1) {
+			$activeUsers = array();
+			foreach ($result as $item) {
+				if ($item["user"] !== $activeUser) $activeUsers[] = $item["user"];
 			}
-		}
-		if (!empty($activeUsers)) {
-			$file = substr($path, strrpos($path, "/") + 1);
 			Common::sendJSON("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
 		} else {
 			Common::sendJSON("S2000");
@@ -66,42 +61,18 @@ class Active {
 	// List User's Active Files
 	//////////////////////////////////////////////////////////////////////////80
 	public function listActive($activeUser) {
-
-		if (!$this->activeFiles || !array_key_exists($activeUser, $this->activeFiles)) {
-			Common::sendJSON("E404g");
-		} else {
-
-			$userActiveFiles = $this->activeFiles[$activeUser];
-
-			foreach ($userActiveFiles as $path => $status) {
-				$fullPath = Common::isAbsPath($path) ? $path : WORKSPACE. "/$path";
-				if (file_exists($fullPath)) {
-					$userActiveFiles[$path] = $status;
-				}
-
-				// $userActiveFiles[$path] = file_exists($fullPath) ? $status : "invalid";
-			}
-			Common::sendJSON("S2000", $userActiveFiles);
-		}
+		$where = array("user" => $activeUser);
+		$result = $this->db->select($where);
+		Common::sendJSON("S2000", $result);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename File
 	//////////////////////////////////////////////////////////////////////////80
 	public function rename($oldPath, $newPath) {
-		$revisedActiveFiles = array();
-		foreach ($this->activeFiles as $username => $data) {
-
-			foreach ($data as $path => $status) {
-				if ($path === $oldPath) {
-					$revisedActiveFiles[$username][$newPath] = $status;
-				} else {
-					$revisedActiveFiles[$username][$path] = $status;
-				}
-			}
-		}
-
-		Common::saveJSON('active', $revisedActiveFiles);
+		$where = array("user" => $activeUser, "path" => $oldPath);
+		$value = array("path" => $newPath);
+		$this->db->update($where, $value);
 		Common::sendJSON("S2000");
 	}
 
@@ -109,8 +80,8 @@ class Active {
 	// Remove File
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($activeUser, $path) {
-		unset($this->activeFiles[$activeUser][$path]);
-		Common::saveJSON('active', $this->activeFiles);
+		$where = array("user" => $activeUser, "path" => $path);
+		$this->db->delete($where);
 		Common::sendJSON("S2000");
 	}
 
@@ -118,8 +89,8 @@ class Active {
 	// Remove All Files
 	//////////////////////////////////////////////////////////////////////////80
 	public function removeAll($activeUser) {
-		unset($this->activeFiles[$activeUser]);
-		Common::saveJSON('active', $this->activeFiles);
+		$where = array("user" => $activeUser);
+		$this->db->delete($where);
 		Common::sendJSON("S2000");
 	}
 
@@ -128,14 +99,13 @@ class Active {
 	//  All other files will be marked as non-focused.
 	//////////////////////////////////////////////////////////////////////////80
 	public function setFocus($activeUser, $focus) {
-		$userActiveFiles = $this->activeFiles[$activeUser];
-		foreach ($userActiveFiles as $path => $type) {
-			$userActiveFiles[$path] = $path === $focus ? "focus": "active";
-		}
+		$where = array("user" => $activeUser, "path" => "*");
+		$value = array("status" => "active");
+		$this->db->update($where, $value);
 
-		$this->activeFiles[$activeUser] = $userActiveFiles;
-
-		Common::saveJSON('active', $this->activeFiles);
+		$where = array("user" => $activeUser, "path" => $path);
+		$value = array("status" => "focus");
+		$this->db->update($where, $value);
 		Common::sendJSON("S2000");
 	}
 }

@@ -26,22 +26,7 @@
 
 		create: function(text, type) {
 			var element = oX('<div>');
-			// drag = oX('<i>'),
-			// close = oX('<i>');
-
 			element.attr('id', 'alert');
-
-			// close.addClass('close fas fa-times-circle');
-			// close.on('click', atheos.alert.unload);
-
-			// drag.addClass('drag fas fa-arrows-alt');
-			// drag.on('mousedown', function() {
-			// 	drag.addClass('active');
-			// 	modal.drag(wrapper);
-			// }, false);
-
-			// element.append(close);
-
 			document.body.appendChild(element.el);
 			return element;
 		},

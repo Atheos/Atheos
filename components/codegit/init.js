@@ -122,7 +122,6 @@
 			}
 		},
 
-
 		showContextMenu: function(obj) {
 			var path = obj.path,
 				root = oX('#project-root').attr('data-path'),
@@ -259,7 +258,6 @@
 				});
 			};
 
-
 			atheos.modal.load(250, atheos.dialog, {
 				target: 'codegit',
 				action: 'clone',
@@ -275,23 +273,6 @@
 			if (!node.find('i.repo-icon')) {
 				node.append('<i class="repo-icon fas fa-code-branch"></i>');
 			}
-		},
-
-		login: function() {
-			// var username = $('.git_login_area #username').val();
-			// var password = $('.git_login_area #password').val();
-			// atheos.modal.unload();
-			// $.post(codegit.path + 'controller.php?action=clone&path=' + path + '&repo=' + repo + '&init_submodules=' + init_submodules, {
-			// 		username: username,
-			// 		password: password
-			// 	},
-			// 	function(result) {
-			// 		result = JSON.parse(result);
-			// 		atheos.toast[result.status](result.message);
-			// 		if (result.status == 'success') {
-			// 			atheos.filemanager.rescan(path);
-			// 		}
-			// 	});
 		},
 
 		commit: function() {

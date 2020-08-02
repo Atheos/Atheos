@@ -4,45 +4,56 @@
 trait Settings {
 
 	public function settings($repo, $data = false) {
+		$db = Common::getDB("codegit");
 		$activeUser = Common::data("user", "session");
-		$users = Common::readJSON("codegit");
-		$settings = false;
 
-		if (isset($users[$activeUser])) {
-			$settings = $users[$activeUser];
+		$where = array("user" => $activeUser);
+		$results = $db->select(where);
+		$settings = array();
 
-			if (isset($settings[$repo])) {
-				$this->execute("git config user.name " . $settings[$repo]["name"]);
-				$this->execute("git config user.email " . $settings[$repo]["email"]);
+		if (!empty($results)) {
+			foreach ($results as $res) {
+				if ($res["path"] === "global") {
+					$settings["global"] = $res;
+				} elseif ($res["path"] === $repo) {
+					$settings["local"] = $res;
+				}
+			}
+
+			if (isset($settings["local"])) {
+				$this->execute("git config user.name '" . $settings["local"]["name"] . "'");
+				$this->execute("git config user.email '" . $settings["local"]["email"] . "'");
 			} elseif (isset($settings["global"])) {
-				$this->execute("git config user.name " . $settings["global"]["name"]);
-				$this->execute("git config user.email " . $settings["global"]["email"]);
+				$this->execute("git config user.name '" . $settings["global"]["name"] . "'");
+				$this->execute("git config user.email '" . $settings["global"]["email"] . "'");
 			}
 		}
 
 		if ($data) {
-			$settings = is_array($settings) ? $settings : array();
-
 			$type = $data["type"];
 			$name = $data["name"];
 			$email = $data["email"];
 
-			if (strpos($type, "clear_") > -1) {
+			if (strpos($type, "clear_") === 0) {
 				$type = str_replace("clear_", "", $type);
 				$type = $type === "local" ? $repo : "global";
 
-				unset($settings[$type]);
+				$where = array("user" => $activeUser, "path" => $type);
+				$db->delete($where);
 				$this->execute("git config --unset user.name");
 				$this->execute("git config --unset user.email");
 			} else {
 				$type = $type === "local" ? $repo : "global";
-				if ($data["name"]) $settings[$type]["name"] = $data["name"];
-				if ($data["email"]) $settings[$type]["email"] = $data["email"];
+
+				$where = array("user" => $activeUser, "path" => $type);
+				$value = array("user" => $activeUser, "path" => $type, "name" => $name, "email" => $email);
+				$results = $db->select($where);
+				if (empty($results)) {
+					$db->insert($value);
+				} else {
+					$db->update($value, $where);
+				}
 			}
-
-			$users[$activeUser] = $settings;
-
-			Common::saveJSON("codegit", $users);
 		}
 
 		return $settings;
