@@ -44,8 +44,8 @@ class Active {
 	// Check File
 	//////////////////////////////////////////////////////////////////////////80
 	public function check($activeUser, $path) {
-		$query = array("user" => "*", "path" => $path);
-		$result = $this->db->select($query);
+		$where = array("user" => "*", "path" => $path);
+		$result = $this->db->select($where);
 		if (count($result) > 1) {
 			$activeUsers = array();
 			foreach ($result as $item) {
@@ -61,8 +61,8 @@ class Active {
 	// List User's Active Files
 	//////////////////////////////////////////////////////////////////////////80
 	public function listActive($activeUser) {
-		$query = array("user" => $activeUser);
-		$result = $this->db->select($query);
+		$where = array("user" => $activeUser);
+		$result = $this->db->select($where);
 		Common::sendJSON("S2000", $result);
 	}
 
