@@ -21,8 +21,6 @@ require_once("traits/path.php");
 require_once("traits/reply.php");
 require_once("traits/session.php");
 
-require_once("lib/sleek/SleekDB.php");
-
 class Common {
 	
 	use Database;
@@ -43,6 +41,8 @@ class Common {
 		"post" => array(),
 		"get" => array(),
 	);
+	
+	private static $database = null;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
