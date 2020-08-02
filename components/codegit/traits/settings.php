@@ -21,12 +21,11 @@ trait Settings {
 			}
 
 			if (isset($settings["local"])) {
-				debug($settings);
-				$this->execute("git config user.name \"" . $settings["local"]["name"] . "\"");
-				$this->execute("git config user.email \"" . $settings["local"]["email"] . "\"");
+				$this->execute("git config user.name '" . $settings["local"]["name"] . "'");
+				$this->execute("git config user.email '" . $settings["local"]["email"] . "'");
 			} elseif (isset($settings["global"])) {
-				$this->execute("git config user.name \"" . $settings["global"]["name"]) . "\"";
-				$this->execute("git config user.email \"" . $settings["global"]["email"] . "\"");
+				$this->execute("git config user.name '" . $settings["global"]["name"] . "'");
+				$this->execute("git config user.email '" . $settings["global"]["email"] . "'");
 			}
 		}
 
