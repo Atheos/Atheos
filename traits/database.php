@@ -60,6 +60,8 @@ class Scroll {
 
 	/* Create a new entry into the data base. */
 	public function insert($value) {
+		if (!$value) return "missing_parameter";
+
 		$this->data[] = $value;
 		$this->data = array_unique($this->data, SORT_REGULAR);
 		$this->data = array_values($this->data);
