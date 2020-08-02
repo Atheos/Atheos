@@ -85,7 +85,8 @@
 			echo({
 				url: atheos.controller,
 				data: {
-					action: 'ping'
+					action: 'debug',
+					path: atheos.project.current.path
 				},
 				success: function(reply) {
 					log(reply);
