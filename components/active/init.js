@@ -62,15 +62,16 @@
 						return;
 					}
 					delete reply.status;
-					var focused;
-					for (var path in reply) {
-						focused = reply[path] === 'focus' ? true : false;
-						atheos.filemanager.openFile(path, focused);
+					var focused = false;
+					for (var key in reply) {
+						var item = reply[key];
+						focused = item.status === 'focus' ? true : focused;
+						atheos.filemanager.openFile(item.path, item.status === 'focus');
 					}
 					if (focused !== true) {
-						var paths = Object.keys(reply);
-						if (paths.length > 0) {
-							atheos.filemanager.openFile(path, true);
+						var keys = Object.keys(reply);
+						if (keys.length > 0) {
+							atheos.filemanager.openFile(reply[0].path, true);
 						}
 					}
 
@@ -756,7 +757,7 @@
 			// leading slash to be moved to the end of the element, as in at the
 			// end of the file name and subsequently needs to be removed first.
 			var item = '<li class="draggable" data-path="' + path + '"><a><span  class="subtle">' +
-				split.directory.replace(/^\/+/g, '') + '/</span>' + split.basename + 
+				split.directory.replace(/^\/+/g, '') + '/</span>' + split.basename +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
