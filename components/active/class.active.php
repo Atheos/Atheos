@@ -98,7 +98,7 @@ class Active {
 	// Mark File As Focused
 	//  All other files will be marked as non-focused.
 	//////////////////////////////////////////////////////////////////////////80
-	public function setFocus($activeUser, $focus) {
+	public function setFocus($activeUser, $path) {
 		$where = array("user" => $activeUser, "path" => "*");
 		$value = array("status" => "active");
 		$this->db->update($where, $value);
