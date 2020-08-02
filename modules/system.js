@@ -35,6 +35,7 @@
 			//Synthetic Login Overlay
 			if (document.querySelector('#login')) {
 				global.synthetic.init();
+				atheos.toast.init();
 				atheos.user.init();
 			} else if (document.querySelector('#installer')) {
 				global.synthetic.init();
