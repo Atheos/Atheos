@@ -12,14 +12,12 @@
 
 require_once 'class.user.php';
 
-$User = new User();
+$activeUser = Common::data("user", "session");
+$User = new User($activeUser);
 
 $username = Common::data('username');
 $password = Common::data('password');
-$activeProject = Common::data('activeProject');
-$userACL = Common::data('userACL');
 $language = Common::data('language');
-$theme = Common::data('theme');
 
 if ($username) {
 	$username = User::cleanUsername($username);
@@ -31,20 +29,12 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'authenticate':
 		if ($username && $password) {
-			$User->username = $username;
-			$User->password = $password;
-
+			$theme = Common::data('theme');
 			$languages = $i18n->codes();
-			if ($language && isset($languages[$language])) {
-				// if (isset($lang) && isset($languages[$lang])) {
-				$User->lang = $language;
-			} else {
-				$User->lang = 'en';
-			}
+			if (!$language || !isset($languages[$language])) $language = "en";
 
 			// theme
-			$User->theme = $theme;
-			$User->authenticate();
+			$User->authenticate($username, $password, $language, $theme);
 		} elseif (!$username) {
 			Common::sendJSON("error", "Missing username."); die;
 		} else {
@@ -61,9 +51,10 @@ switch ($action) {
 		}
 
 		if (Common::checkAccess("configure") || $username === Common::data("user", "session")) {
-			$User->username = $username;
-			$User->password = $password;
-			$User->changePassword();
+			$User->changePassword($username, $password);
+		} else {
+			Common::sendJSON("E430u");
+			die;
 		}
 		break;
 
@@ -71,38 +62,38 @@ switch ($action) {
 	// Create User
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
-		if (Common::checkAccess("configure")) {
-			if (!$username || !$password) {
-				die(Common::sendJSON("error", "Missing username or password"));
-			}
-
-			$User->username = User::cleanUsername($username);
-			$User->password = $password;
-			$User->create();
+		if (!Common::checkAccess("configure")) {
+			Common::sendJSON("E430u");
+			die;
 		}
+		if (!$username || !$password) {
+			die(Common::sendJSON("error", "Missing username or password"));
+		}
+
+		$User->create($username, $password);
+
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Delete User
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
-		if (Common::checkAccess("configure")) {
-			if (!$username) {
-				die(Common::sendJSON("error", "Missing username"));
-			}
-
-			$User->username = $username;
-			$User->delete();
+		if (!Common::checkAccess("configure")) {
+			Common::sendJSON("E430u");
+			die;
 		}
+		if (!$username) {
+			die(Common::sendJSON("error", "Missing username"));
+		}
+		$User->delete($username);
+
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Verify Session
 	//////////////////////////////////////////////////////////////////////////80
 	case 'keepAlive':
-
-		$User->username = Common::data("user", "session");
-		$User->verify();
+		$User->verify($activeUser);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -118,25 +109,27 @@ switch ($action) {
 	// Save Active Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'saveActiveProject':
+		$activeProject = Common::data('activeProject');
+
 		if (!isset($activeProject)) {
 			die(Common::sendJSON("error", "Missing project"));
 		}
-		$User->username = Common::data("user", "session");
-		$User->activeProject = $activeProject;
-		$User->saveActiveProject();
+		$User->saveActiveProject($activeProject);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////////80
 	case 'updateACL':
-		if (Common::checkAccess("configure")) {
-			if (!$username) {
-				die(Common::sendJSON("error", "Missing username"));
-			}
-			$User->username = $username;
-			$User->userACL = $userACL;
-			$User->updateACL();
+		if (!Common::checkAccess("configure")) {
+			Common::sendJSON("E430u");
+			die;
+		}
+		if (!$username) {
+			die(Common::sendJSON("error", "Missing username"));
+
+			$userACL = Common::data('userACL');
+			$User->updateACL($username, $userACL);
 		}
 		break;
 
