@@ -1,4 +1,4 @@
-importScripts('../../lib/diff_match_patch.js');
+importScripts('../../lib/differential/diff_match_patch.min.js');
 
 var tasks = {
     diff: function(config){

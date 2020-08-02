@@ -24,7 +24,7 @@
 			return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
 		};
 
-		let getType = function() {
+		let getType = function() {  
 			var element = document.querySelector('#file-manager a[data-path="' + path + '"]');
 			return element ? element.getAttribute('data-type') : false;
 		};
@@ -132,6 +132,45 @@
 			}
 		}
 		return o;
+	};
+
+	//////////////////////////////////////////////////////////////////////
+	// Methods for determining whether something is or isn't
+	//////////////////////////////////////////////////////////////////////
+	global.types = {
+		isString: function(value) {
+			return typeof value === 'string' || value instanceof String;
+		},
+		isNumber: function(value) {
+			return typeof value === 'number' && isFinite(value);
+		},
+		isArray: function(value) {
+			return value && typeof value === 'object' && value.constructor === Array;
+		},
+		isFunction: function(value) {
+			return typeof value === 'function';
+		},
+		isObject: function(value) {
+			return value && typeof value === 'object' && value.constructor === Object;
+		},
+		isNull: function(value) {
+			return value === null;
+		},
+		isBoolean: function(value) {
+			return typeof value === 'boolean';
+		},
+		isRegExp: function(value) {
+			return value && typeof value === 'object' && value.constructor === RegExp;
+		},
+		isError: function(value) {
+			return value instanceof Error && typeof value.message !== 'undefined';
+		},
+		isDate: function(value) {
+			return value instanceof Date;
+		},
+		isSymbol: function(value) {
+			return typeof value === 'symbol';
+		}
 	};
 
 	//////////////////////////////////////////////////////////////////////

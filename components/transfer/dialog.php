@@ -12,34 +12,61 @@
 
 $path = Common::data("path");
 
-switch ($action) {
+function return_bytes($val) {
+	$val = trim($val);
+	$last = strtolower($val[strlen($val)-1]);
+	switch ($last) {
+		case 'g':
+			$val *= 1024;
+			case 'm':
+				$val *= 1024;
+				case 'k':
+					$val *= 1024;
+			}
+			return $val;
+	}
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Upload
-	//////////////////////////////////////////////////////////////////////////80
-	case 'upload':
-		if (!Common::isAbsPath($path)) {
-			$path .= "/";
-		}
-		?>
-		<form enctype="multipart/form-data">
-			<h3><i class="fas fa-upload"></i><?php echo i18n("uploadFiles"); ?></h3>
-			<pre><?php echo($path); ?></pre>
-			<label id="upload_wrapper">
-				<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
-				<input type="file" name="upload[]" multiple>
-			</label>
-			<div id="progress_wrapper">
-			</div>
-		</form>
+	function max_file_upload_in_bytes() {
+		//select maximum upload size
+		$max_upload = return_bytes(ini_get('upload_max_filesize'));
+		//select post limit
+		$max_post = return_bytes(ini_get('post_max_size'));
+		//select memory limit
+		$memory_limit = return_bytes(ini_get('memory_limit'));
+		// return the smallest of them, this defines the real limit
+		return min($max_upload, $max_post, $memory_limit);
+	}
 
-		<?php
-		break;
+	switch ($action) {
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Default: Invalid Action
-	//////////////////////////////////////////////////////////////////////////80
-	default:
-		Common::sendJSON("E401i");
-		break;
-}
+		//////////////////////////////////////////////////////////////////////////80
+		// Upload
+		//////////////////////////////////////////////////////////////////////////80
+		case 'upload':
+			if (!Common::isAbsPath($path)) {
+				$path .= "/";
+			}
+			?>
+			<label class="title"><i class="fas fa-upload"></i><?php echo i18n("filesUpload"); ?></label>
+			<form enctype="multipart/form-data">
+				<pre><?php echo($path); ?></pre>
+				<label id="upload_wrapper">
+					<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
+					<input type=“hidden” name=“MAX_FILE_SIZE” value=“<?php echo max_file_upload_in_bytes(); ?>”>
+					<input type="file" name="upload[]" multiple >
+				</label>
+				<div id="progress_wrapper">
+				</div>
+			</form>
+			
+
+			<?php
+			break;
+
+		//////////////////////////////////////////////////////////////////////////80
+		// Default: Invalid Action
+		//////////////////////////////////////////////////////////////////////////80
+		default:
+			Common::sendJSON("E401i");
+			break;
+	}

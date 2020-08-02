@@ -54,7 +54,7 @@ class CodeGit {
 		chdir($this->repo);
 
 		foreach (getConfig() as $name => $value) {
-			$result = $this->executeCommand("git config " . $name . " " . $value);
+			$this->execute("git config " . $name . " " . $value);
 		}
 	}
 
@@ -78,10 +78,6 @@ class CodeGit {
 		}
 	}
 	
-	private function returnMessage($status, $msg) {
-		return '{"status":"' . $status . '","message":"' . $msg . '"}';
-	}
-
 	// The new parsing status function
 	private function parseChanges($array) {
 		$added = array();

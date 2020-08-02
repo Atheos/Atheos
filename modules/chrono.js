@@ -18,6 +18,8 @@
 	var atheos = global.atheos,
 		amplify = global.amplify;
 
+	var self = null;
+
 	amplify.subscribe('system.loadMinor', () => atheos.chrono.init());
 
 	atheos.chrono = {
@@ -27,14 +29,14 @@
 		giga: '',
 
 		init: function() {
-			var chrono = this;
-			chrono.kilo = setInterval(function() {
+			self = this;
+			self.kilo = setInterval(function() {
 				amplify.publish('chrono.kilo');
 			}, 1000);
-			chrono.mega = setInterval(function() {
+			self.mega = setInterval(function() {
 				amplify.publish('chrono.mega');
 			}, 10000);
-			chrono.giga = setInterval(function() {
+			self.giga = setInterval(function() {
 				amplify.publish('chrono.giga');
 			}, 100000);
 		},
