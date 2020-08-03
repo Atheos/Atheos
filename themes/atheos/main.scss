@@ -1,13 +1,11 @@
-/* SCSS IMPORT FILES */
 @import "modules/util/reset";
-@import "modules/util/mixins"; 
+@import "modules/util/mixins";
 @import "modules/util/colors";
 @import "modules/util/shades";
 @import "modules/util/variables";
 @import "modules/util/animations";
 
 @import "modules/util/scrollbars";
-
 
 @import "modules/common/checkbox", "modules/common/optionsmenu", "modules/common/input", "modules/common/button";
 @import "modules/common/dropdown";
@@ -36,14 +34,12 @@
 // @import "modules/graphics/icons";
 
 @import "modules/textmode", "modules/market";
-
 @import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
 @import "modules/misc/contextmenu", "modules/misc/scout", "modules/misc/uploader";
 @import "modules/misc/login", "modules/misc/synthetic", "modules/misc/installer";
 @import "modules/misc/update", "modules/misc/keybindings";
-
 @import "modules/settings", "modules/user";
- 
+
 // @import "modules/util/cursor";
 
 /* DOCUMENT */

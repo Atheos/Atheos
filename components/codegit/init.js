@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////////////80
 // Codegit Init
 //////////////////////////////////////////////////////////////////////////////80
@@ -393,7 +391,7 @@
 						atheos.toast.show(reply);
 					}
 				});
-			}
+			};
 
 			atheos.alert.show({
 				banner: i18n('git_undo'),
@@ -454,7 +452,7 @@
 				success: function(reply) {
 					log(reply);
 				}
-			})
+			});
 		},
 
 		addStatusElements: function() {
@@ -468,7 +466,7 @@
 				self.repoStatus = oX('#codegit_repo_status');
 
 				// Add eventListener to open CodeGit
-				oX("#codegit_repo_banner").on('click', function() {
+				oX('#codegit_repo_banner').on('click', function() {
 					self.showCodeGit();
 				});
 			}
