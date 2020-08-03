@@ -1,8 +1,7 @@
 .settings {
 	display: flex;
+
 	@include border(1px, top);
-
-
 
 	table {
 		margin: 0 5px;
@@ -19,7 +18,7 @@
 				padding-left: 20px;
 				font-weight: bold;
 			}
-			
+
 			&:not(:first-child) {
 				text-align: center;
 			}
