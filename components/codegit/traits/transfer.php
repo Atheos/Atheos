@@ -4,7 +4,7 @@
 trait Transfer {
 
 
-	public function push($repo, $remote, $branch) {
+	public function push($remote, $branch) {
 		$command = "git push $remote $branch";
 		$result = $this->execute($command);
 		$result["text"] = implode("\n", $result["data"]);
@@ -16,7 +16,7 @@ trait Transfer {
 		}
 	}
 
-	public function pull($repo, $remote, $branch) {
+	public function pull($remote, $branch) {
 		$command = "git pull $remote $branch";
 		$result = $this->execute($command);
 		$result["text"] = implode("\n", $result["data"]);
@@ -28,7 +28,7 @@ trait Transfer {
 		}
 	}
 
-	public function fetch($repo, $remote) {
+	public function fetch($remote) {
 		$command = "git fetch $remote $branch";
 		$result = $this->execute($command);
 		$result["text"] = implode("\n", $result["data"]);

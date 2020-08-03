@@ -67,13 +67,13 @@ switch ($action) {
 		if ($type && $repo && $remote && $branch) {
 			switch ($type) {
 				case 'pull':
-					$CodeGit->pull($repo, $remote, $branch);
+					$CodeGit->pull($remote, $branch);
 					break;
 				case 'push':
-					$CodeGit->push($repo, $remote, $branch);
+					$CodeGit->push($remote, $branch);
 					break;
 				case 'fetch':
-					$CodeGit->fetch($repo, $remote, $branch);
+					$CodeGit->fetch($remote, $branch);
 					break;
 			}
 		} else {
