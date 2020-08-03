@@ -1,5 +1,14 @@
 <?php
 
+//////////////////////////////////////////////////////////////////////////////80
+// Session trait
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 trait Session {
 
@@ -73,20 +82,6 @@ trait Session {
 		}
 	}
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Check Session / Key
-	//////////////////////////////////////////////////////////////////////////80
-	public static function checkSession() {
-		// Set any API keys
-		$api_keys = array();
-		// Check API Key or Session Authentication
-		$key = "";
-		if (isset($_GET['key'])) {
-			$key = $_GET['key'];
-		}
-		if (!isset($_SESSION['user']) && !in_array($key, $api_keys)) {
-			exit('{"status":"error","message":"Authentication Error"}');
-		}
-	}
+
 
 }

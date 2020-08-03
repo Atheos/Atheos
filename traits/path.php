@@ -1,5 +1,14 @@
 <?php
 
+//////////////////////////////////////////////////////////////////////////////80
+// Path trait
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 trait Path {
 
@@ -29,36 +38,6 @@ trait Path {
 			$path = str_replace('../', '', $path);
 		}
 		return $path;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Check Path
-	//////////////////////////////////////////////////////////////////////////80
-	public static function checkPath($path) {
-		$users = Common::readJSON("users");
-		$username = Common::data("user", "session");
-		$projects = Common::readJSON('projects');
-
-		if (!array_key_exists($username, $users)) {
-			return false;
-		}
-
-		$userACL = $users[$username]["userACL"];
-
-		if ($userACL === "full") {
-			return true;
-		} else {
-			foreach ($projects as $projectPath => $projectName) {
-				if (!in_array($projectPath, $userACL)) {
-					continue;
-				}
-
-				if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
-					return true;
-				}
-			}
-		}
-		return false;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

@@ -14,6 +14,7 @@
 // Common Class
 //////////////////////////////////////////////////////////////////
 
+require_once("traits/checks.php");
 require_once("traits/database.php");
 require_once("traits/helpers.php");
 require_once("traits/json.php");
@@ -23,6 +24,7 @@ require_once("traits/session.php");
 
 class Common {
 	
+	use Check;
 	use Database;
 	use Helpers;
 	use JSON;
@@ -102,94 +104,6 @@ class Common {
 
 		if (file_exists(BASE_PATH .'/components/i18n/class.i18n.php')) {
 			require_once(BASE_PATH .'/components/i18n/class.i18n.php');
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Read Content of directory
-	//////////////////////////////////////////////////////////////////////////80
-	public static function readDirectory($foldername) {
-		$tmp = array();
-		$allFiles = scandir($foldername);
-		foreach ($allFiles as $fname) {
-			if ($fname === '.' || $fname === '..') {
-				continue;
-			}
-
-			$length = strlen(".disabled");
-			if (substr($fname, -$length) === ".disabled") {
-				continue;
-			}
-
-			if (is_dir($foldername.'/'.$fname)) {
-				$tmp[] = $fname;
-			}
-		}
-		return $tmp;
-	}
-
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Log Action
-	//////////////////////////////////////////////////////////////////////////80
-	public static function log($text, $name = "global") {
-		$path = DATA . "/log/";
-		$path = preg_replace('#/+#', '/', $path);
-
-		if (!is_dir($path)) mkdir($path);
-
-		$file = "$name.log";
-		$text = $text . PHP_EOL;
-
-		if (file_exists($path . $file)) {
-			$lines = file($path . $file);
-			if (sizeof($lines) > 100) {
-				unset($lines[0]);
-			}
-			$lines[] = $text;
-
-			$write = fopen($path . $file, 'w');
-			fwrite($write, implode('', $lines));
-			fclose($write);
-		} else {
-			$write = fopen($path . $file, 'w');
-			fwrite($write, $text);
-			fclose($write);
-		}
-	}
-
-	// This debug function will be simplified once the langaue work is completed.
-	public static function debug($val, $name = "debug") {
-		Common::$debugStack[] = $val;
-
-		$time = date("Y-m-d H:i:s");
-		$trace = debug_backtrace(null, 5);
-		if (is_array($trace) && count($trace) > 2) {
-			$function = $trace[1]['function'];
-			$file = $trace[2]['file'];
-
-			$val = is_array($val) ? json_encode($val) : "\"$val\"";
-			$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-			$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
-
-			$text = "@$time:\t$val < $function in $file";
-
-			Common::log($text, $name);
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Check if user can configure Atheos
-	//////////////////////////////////////////////////////////////////////////80
-	public static function checkAccess($permission = "configure") {
-		$users = Common::readJSON("users");
-		$username = Common::data("user", "session");
-
-		if (array_key_exists($username, $users)) {
-			$permissions = $users[$username]["permissions"];
-			return in_array($permission, $permissions);
-		} else {
-			return false;
 		}
 	}
 
