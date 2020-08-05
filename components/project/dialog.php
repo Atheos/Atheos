@@ -122,7 +122,6 @@ switch ($action) {
 			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/]+" autocomplete="off" title="Please input a valid file path.">
 
 			<!-- Clone From GitHub -->
-			<!--<div style="width: 500px;">-->
 			<table style="display: none;" id="git_options">
 				<tr>
 					<td>

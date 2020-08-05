@@ -33,7 +33,7 @@ switch ($action) {
 		} elseif (!$projectName) {
 			Common::sendJSON("E403m");
 		} else {
-			$projectPath = $projectPath ?: $projectName;
+			$projectPath = $projectPath ? $projectPath : $projectName;
 			$Project->create($projectName, $projectPath, $gitRepo, $gitBranch);
 		}
 
