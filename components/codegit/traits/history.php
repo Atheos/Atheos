@@ -15,7 +15,6 @@ trait History {
 			return "Error loading log";
 		}
 
-		// $result = $this->resultArray;
 		$pivot = array();
 		foreach ($result["data"] as $i => $item) {
 			$item = explode('\\|', $item);

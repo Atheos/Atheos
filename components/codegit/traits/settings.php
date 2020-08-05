@@ -4,11 +4,10 @@
 trait Settings {
 
 	public function settings($repo, $data = false) {
-		$db = Common::getDB("codegit");
+		$db = Common::getDB("codegit", $this->activeUser);
 		$activeUser = Common::data("user", "session");
 
-		$where = array("user" => $activeUser);
-		$results = $db->select(where);
+		$results = $db->select("*");
 		$settings = array();
 
 		if (!empty($results)) {
@@ -39,25 +38,21 @@ trait Settings {
 				$type = str_replace("clear_", "", $type);
 				$type = $type === "local" ? $repo : "global";
 
-				$where = array("user" => $activeUser, "path" => $type);
+				$where = array(["path", "==", $type]);
 				$db->delete($where);
+				
 				$this->execute("git config --unset user.name");
 				$this->execute("git config --unset user.email");
 			} else {
 				$type = $type === "local" ? $repo : "global";
 
-				$where = array("user" => $activeUser, "path" => $type);
+				$where = array(["path", "==", $type]);
 				$value = array("user" => $activeUser, "path" => $type);
-				if($name) $value["name"] = $name;
-				if($email) $value["email"] = $email;
-				$results = $db->select($where);
-							debug($results);
 
-				if (empty($results)) {
-					$db->insert($value);
-				} else {
-					$db->update($where, $value);
-				}
+				if ($name) $value["name"] = $name;
+				if ($email) $value["email"] = $email;
+
+				$db->update($where, $value, true);
 			}
 		}
 
