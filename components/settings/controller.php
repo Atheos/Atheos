@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Settings Controller
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -14,7 +14,7 @@ require_once('class.settings.php');
 
 $activeUser = Common::data("user", "session");
 
-$Settings = new Settings();
+$Settings = new Settings($activeUser);
 
 switch ($action) {
 
@@ -22,7 +22,6 @@ switch ($action) {
 	// Load User Settings
 	//////////////////////////////////////////////////////////////////////////80
 	case "load":
-		$Settings->username = $activeUser;
 		$Settings->load();
 		break;
 
@@ -33,7 +32,6 @@ switch ($action) {
 		$key = Common::data("key");
 		$value = Common::data("value");
 		if ($key && $value) {
-			$Settings->username = $activeUser;
 			$Settings->save($key, $value);
 		} else {
 			Common::sendJSON("E403g");
