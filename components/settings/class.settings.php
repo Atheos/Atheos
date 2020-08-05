@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Settings Class
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -15,9 +15,8 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
-	public $username = '';
-	private $settings = '';
+	private $activeUser = null;
+	private $db = null;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -28,25 +27,19 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
-	public function __construct() {
-		$this->settings = Common::readJSON('settings');
-		if ($this->username) {
-			if (!$this->settings) {
-				$this->settings = array(
-					$this->username => array("username" => $this->username)
-				);
-			} elseif (!$this->settings[$this->username]) {
-				$this->settings[$this->username] = array("username" => $this->username);
-			}
-		}
+	public function __construct($activeUser) {
+		$this->activeUser = $activeUser;
+		$this->db = Common::getParchment("settings", $activeUser);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Load User Settings
 	//////////////////////////////////////////////////////////////////////////80
 	public function load() {
-		if (array_key_exists($this->username, $this->settings)) {
-			Common::sendJSON("success", $this->settings[$this->username]);
+		$settings = $this->db->select("*");
+		debug($settings);
+		if (!empty($settings)) {
+			Common::sendJSON("success", $settings);
 		} else {
 			Common::sendJSON("error", "Settings for user not found.");
 		}
@@ -56,10 +49,7 @@ class Settings {
 	// Save User Settings
 	//////////////////////////////////////////////////////////////////////////80
 	public function save($key, $value) {
-		$this->settings[$this->username][$key] = $value;
-		Common::saveJSON("settings", $this->settings);
+		$this->db->update($key, $value, true);
 		Common::sendJSON("S2000");
 	}
-
-
 }
