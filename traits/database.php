@@ -217,13 +217,10 @@ class Scroll extends Codec {
 		if (!$where) return "missing_parameter";
 
 		$temp = array();
-		debug($this->data);
 
 		if ($where !== "*") {
 			$temp =& $this->filter($where, true);
 		}
-
-		debug($temp);
 
 		$this->data = $temp;
 		$this->save(true);
