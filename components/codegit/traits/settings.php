@@ -29,7 +29,6 @@ trait Settings {
 		}
 
 		if ($data) {
-			debug($data);
 			$type = $data["type"];
 			$name = isset($data["name"]) ? $data["name"] : false;
 			$email = isset($data["email"]) ? $data["email"] : false;

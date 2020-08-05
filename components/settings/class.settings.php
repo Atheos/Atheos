@@ -37,7 +37,6 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	public function load() {
 		$settings = $this->db->select("*");
-		debug($settings);
 		if (!empty($settings)) {
 			Common::sendJSON("success", $settings);
 		} else {
