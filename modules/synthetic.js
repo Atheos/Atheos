@@ -21,17 +21,12 @@
 
 	colors = ['#0F0F0F', '#121212', '#151515', '#181818'];
 
-
 	function sRnd(max) {
 		//Source: http://indiegamr.com/generate-repeatable-random-numbers-in-js/
 		seed = (seed * 9301 + 49297) % 233280;
-		var rnd = seed / 233280;
-
 		//Uses a faster method of flooring the decimal to an integer
-		return (rnd * max) << 0;
+		return (seed / 233280 * max) << 0;
 	}
-
-
 
 	function draw(ctx, x, y, hex) {
 		ctx.beginPath();
