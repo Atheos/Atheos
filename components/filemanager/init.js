@@ -1,5 +1,3 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////80////////////80
 // FileManager Init
 //////////////////////////////////////////////////////////////////////80////////////80
@@ -442,7 +440,7 @@
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
-					data: `/${path}/${copy}`,
+					data: `${path}/${copy}`,
 					actions: {
 						'Overwrite': function() {
 							processPaste(path, false);
