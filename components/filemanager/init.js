@@ -232,7 +232,7 @@
 
 			var basename = pathinfo(path).basename;
 
-			if (!self.showHidden && basename.charAt(0) === '.') {
+			if (self.showHidden === false && basename.charAt(0) === '.') {
 				return '';
 			}
 
