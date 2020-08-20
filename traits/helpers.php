@@ -88,26 +88,6 @@ trait Helpers {
 		}
 	}
 
-	// This debug function will be simplified once the langaue work is completed.
-	public static function debug($val, $name = "debug") {
-		Common::$debugStack[] = $val;
-
-		$time = date("Y-m-d H:i:s");
-		$trace = debug_backtrace(null, 5);
-		if (is_array($trace) && count($trace) > 2) {
-			$function = $trace[1]['function'];
-			$file = $trace[2]['file'];
-
-			$val = is_array($val) ? json_encode($val) : "\"$val\"";
-			$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-			$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
-
-			$text = "@$time:\t$val < $function in $file";
-
-			Common::log($text, $name);
-		}
-	}
-
 	//////////////////////////////////////////////////////////////////////////80
 	// Check If WIN based system
 	//////////////////////////////////////////////////////////////////////////80
