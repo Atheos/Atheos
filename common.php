@@ -58,23 +58,24 @@ class Common {
 	public static function initialize() {
 		$path = __DIR__;
 
-		if (defined(LIFETIME) && LIFETIME !== "") {
+		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
+		
+		if (defined("LIFETIME") && LIFETIME !== "") {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
 
-		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
 
-		if (!defined('BASE_PATH')) define("BASE_PATH", $path);
-		if (!defined('COMPONENTS')) define('COMPONENTS', BASE_PATH . '/components');
-		if (!defined('PLUGINS')) define('PLUGINS', BASE_PATH . '/plugins');
-		if (!defined('DATA')) define('DATA', BASE_PATH . '/data');
-		if (!defined('THEMES')) define("THEMES", BASE_PATH . "/themes");
-		if (!defined('THEME')) define("THEME", "atheos");
-		if (!defined('LANGUAGE')) define("LANGUAGE", "en");
-		if (!defined('DEVELOPMENT')) define("DEVELOPMENT", false);
+		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
+		if (!defined("COMPONENTS")) define('COMPONENTS', BASE_PATH . "/components");
+		if (!defined("PLUGINS")) define('PLUGINS', BASE_PATH . "/plugins");
+		if (!defined("DATA")) define('DATA', BASE_PATH . "/data");
+		if (!defined("THEMES")) define("THEMES", BASE_PATH . "/themes");
+		if (!defined("THEME")) define("THEME", "atheos");
+		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
+		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
-		if (file_exists(BASE_PATH .'/components/i18n/class.i18n.php')) {
-			require_once(BASE_PATH .'/components/i18n/class.i18n.php');
+		if (file_exists(BASE_PATH ."/components/i18n/class.i18n.php")) {
+			require_once(BASE_PATH ."/components/i18n/class.i18n.php");
 		}
 
 		// Set up language translation
@@ -83,7 +84,7 @@ class Common {
 		$i18n->init();
 
 		//Check for external authentification
-		if (defined('AUTH_PATH') && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
+		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
 		global $components; global $plugins; global $themes;
 		// Read Components, Plugins, Themes
@@ -156,8 +157,8 @@ function i18n($string, $args = false) {
 }
 
 
-function debug($val, $name = "debug") {
-	Common::debug($val, $name);
+function debug($val) {
+	Common::$debugStack[] = $val;
 }
 
 ?>
