@@ -58,21 +58,40 @@ trait Check {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Check Session / Key
+	// Check Session
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkSession() {
-		// Set any API keys
-		$api_keys = array();
-		// Check API Key or Session Authentication
-		$key = "";
-		if (isset($_GET['key'])) {
-			$key = $_GET['key'];
+		$loose_ip = long2ip(ip2long($_SERVER["REMOTE_ADDR"]) & ip2long("255.255.0.0"));
+
+		//Some security checks, helps with securing the service
+		if (isset($_SESSION["user"]) && isset($_SESSION["LOOSE_IP"])) {
+			$destroy = false;
+
+			$destroy = $destroy ?: $_SESSION["LOOSE_IP"] !== $loose_ip;
+			$destroy = $destroy ?: $_SESSION["AGENT_STRING"] !== $_SERVER["HTTP_USER_AGENT"];
+			$destroy = $destroy ?: $_SESSION["ACCEPT_ENCODING"] !== $_SERVER["HTTP_ACCEPT_ENCODING"];
+			$destroy = $destroy ?: $_SESSION["ACCEPT_LANGUAGE"] !== $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+
+			if ($destroy) {
+				session_unset();
+				session_destroy();
+				Common::sendJSON("error", "Security violation");
+				exit;
+			}
+
+			$_SESSION["LAST_ACTIVE"] = time(); //Reset user activity timer
+		} else {
+			//Store identification data so we can detect malicous logins potentially. (Like XSS)
+			$_SESSION["AGENT_STRING"] = $_SERVER["HTTP_USER_AGENT"];
+			$_SESSION["ACCEPT_ENCODING"] = $_SERVER["HTTP_ACCEPT_ENCODING"];
+			$_SESSION["ACCEPT_LANGUAGE"] = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+			$_SESSION["LOOSE_IP"] = $loose_ip;
+			$_SESSION["LAST_ACTIVE"] = time();
 		}
-		if (!isset($_SESSION['user']) && !in_array($key, $api_keys)) {
-			exit('{"status":"error","message":"Authentication Error"}');
+
+		if (!isset($_SESSION['user'])) {
+			Common::sendJSON("error", "Authentication error");
+			exit;
 		}
 	}
-
-
-
 }
