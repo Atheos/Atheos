@@ -46,13 +46,15 @@
 				}
 			} catch (e) {}
 
-			let status = 'success';
-			if (isObject(data)) {
-				status = data.status;
-				delete data.status;
-			}
-
 			if (opts.settled && typeof opts.settled === 'function') {
+
+				let status = 'success';
+				if (isObject(data)) {
+					status = data.status;
+					delete data.status;
+				}
+
+
 				opts.settled(status, data);
 			} else if (xhr.status >= 200 && xhr.status < 300) {
 				if (opts.success && typeof opts.success === 'function') {
@@ -78,7 +80,7 @@
 		return xhr;
 
 	};
-	
+
 	global.echo = echo;
-	
+
 })(this);
