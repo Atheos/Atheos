@@ -184,7 +184,8 @@ class Scroll extends Codec {
 			if ($match) $positive[] =& $item;
 			if (!$match) $negative[] =& $item;
 		}
-		return $reverse ? $negative : $positive;
+		$result = $reverse ? $negative : $positive;
+		return $result;
 	}
 
 	public function select($where = false) {
