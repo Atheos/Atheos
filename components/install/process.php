@@ -172,8 +172,8 @@ define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 // THEME : default, modern or clear (look at /themes)
 define("THEME", "atheos");
 
-// SESSIONS (e.g. 7200)
-$cookie_lifetime = "0";
+// SESSION LIFETIME (e.g. 7200 = 2 hours)
+define("LIFETIME", 7200);
 
 // TIMEZONE
 date_default_timezone_set("' . $timezone . '");
