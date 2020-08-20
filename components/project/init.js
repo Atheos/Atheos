@@ -154,7 +154,7 @@
 		// Open the project manager dialog
 		//////////////////////////////////////////////////////////////////
 		list: function() {
-			atheos.modal.load(500, atheos.dialog, {
+			atheos.modal.load(500, {
 				target: 'project',
 				action: 'list'
 			});
@@ -254,7 +254,7 @@
 				}
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'create',
 				listener,
@@ -303,7 +303,7 @@
 				});
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'rename',
 				name: projectName,
@@ -352,7 +352,7 @@
 				});
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'delete',
 				name: projectName,

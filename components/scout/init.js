@@ -142,7 +142,7 @@
 				});
 			};
 
-			atheos.modal.load(500, atheos.dialog, {
+			atheos.modal.load(500, {
 				target: 'scout',
 				action: 'probe',
 				listener,

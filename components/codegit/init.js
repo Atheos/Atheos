@@ -173,7 +173,7 @@
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 
-			atheos.modal.load(800, atheos.dialog, {
+			atheos.modal.load(800, {
 				target: 'codegit',
 				action: 'codegit',
 				repo
@@ -206,7 +206,7 @@
 		showDialog: function(type, repo, path) {
 			path = path || oX('#project-root').attr('data-path');
 			self.location = repo || self.location;
-			atheos.modal.load(600, atheos.dialog, {
+			atheos.modal.load(600, {
 				target: 'codegit',
 				action: 'loadPanel',
 				panel: type,
@@ -256,7 +256,7 @@
 				});
 			};
 
-			atheos.modal.load(250, atheos.dialog, {
+			atheos.modal.load(250, {
 				target: 'codegit',
 				action: 'clone',
 				path,
