@@ -70,9 +70,11 @@
 			return wrapper;
 		},
 
-		load: function(width, url, data) {
+		load: function(width, data) {
 			data = data || {};
 			width = width > 400 ? width : 400;
+			
+			let url = data.url || atheos.dialog;
 
 			var listener, callback;
 

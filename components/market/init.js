@@ -78,7 +78,7 @@
 				atheos.modal.resize();
 			};
 
-			atheos.modal.load(960, atheos.dialog, {
+			atheos.modal.load(960, {
 				target:'market',
 				action: 'list',
 				type: type,
@@ -93,7 +93,7 @@
 		search: function(e, query, note) {
 			var key = e.charCode || e.keyCode || e.which;
 			if (query !== '' && key === 13) {
-				atheos.modal.load(800, atheos.dialog, {
+				atheos.modal.load(800, {
 				target:'market',action: 'list',
 					query: query,
 					note: note

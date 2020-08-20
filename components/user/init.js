@@ -176,7 +176,7 @@
 				}
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'user',
 				action: 'changePassword',
 				username,
@@ -227,7 +227,7 @@
 				}
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'user',
 				action: 'create',
 				listener
@@ -257,7 +257,7 @@
 				});
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'user',
 				action: 'delete',
 				username,
@@ -269,7 +269,7 @@
 		// Open the user manager dialog
 		//////////////////////////////////////////////////////////////////////80
 		list: function() {
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'user',
 				action: 'list'
 			});
@@ -372,7 +372,7 @@
 				}
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'user',
 				action: 'showUserACL',
 				username,

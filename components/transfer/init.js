@@ -117,7 +117,7 @@
 				send.send(data);
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'transfer',
 				action: 'upload',
 				path: path,
