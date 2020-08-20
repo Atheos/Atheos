@@ -549,7 +549,7 @@
 				});
 			};
 
-			atheos.modal.load(250, atheos.dialog, {
+			atheos.modal.load(250, {
 				target: 'filemanager',
 				action: 'create',
 				type: type,
