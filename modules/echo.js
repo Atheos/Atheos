@@ -2,46 +2,27 @@
 // Echo
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Notes:
-// Echo was built specifically for Atheos and as such may not be suitable for
-// other uses, but Echo is incredibly versitile and configurable. I suggest
-// looking at older versions of this file, or grabbing the original source that
-// I used as a starter if you're looking to use this elsewhere.
-// Source: https://github.com/WeideMo/miniAjax
-//												- Liam Siira
+// Authors: Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define([], function() {
-			return factory(root);
-		});
-	} else if (typeof exports === 'object') {
-		module.exports = factory(root);
-	} else {
-		root.echo = factory(root);
-	}
-})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
-
+(function(global) {
 	'use strict';
 
-	const echo = function(options) {
-		options = options || {};
+	const echo = function(opts) {
+		opts = opts || {};
+		opts.url = opts.url || atheos.controller;
 
-		options.type = options.type || ((options.data) ? 'POST' : 'GET');
-		
+		opts.type = opts.type || ((opts.data) ? 'POST' : 'GET');
+
 		// const serialize = obj => Object.keys(obj).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])).join('&');
 
 		var data = [];
-		if (options.data && typeof options.data === 'object') {
-			for (var name in options.data) {
-				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(options.data[name]));
-			}
-			if (options.random) {
-				data.push(('v=' + Math.random()).replace('.', ''));
+		if (opts.data && typeof opts.data === 'object') {
+			for (var name in opts.data) {
+				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opts.data[name]));
 			}
 			data = data.join('&');
 		} else {
@@ -50,9 +31,9 @@
 
 		var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 
-		if (options.timeout) {
-			xhr.timeout = options.timeout;
-			xhr.ontimeout = options.failure;
+		if (opts.timeout) {
+			xhr.timeout = opts.timeout;
+			xhr.ontimeout = opts.failure;
 		}
 
 		xhr.onload = function() {
@@ -64,25 +45,32 @@
 					delete data.debug;
 				}
 			} catch (e) {}
-			if (options.settled && typeof options.settled === 'function') {
-				options.settled(data, xhr.status);
+
+			let status = 'success';
+			if (isObject(data)) {
+				status = data.status;
+				delete data.status;
+			}
+
+			if (opts.settled && typeof opts.settled === 'function') {
+				opts.settled(status, data);
 			} else if (xhr.status >= 200 && xhr.status < 300) {
-				if (options.success && typeof options.success === 'function') {
-					options.success(data, xhr.status);
+				if (opts.success && typeof opts.success === 'function') {
+					opts.success(data, xhr.status);
 				}
 			} else {
-				if (options.failure && typeof options.failure === 'function') {
-					options.failure(data, xhr.status);
+				if (opts.failure && typeof opts.failure === 'function') {
+					opts.failure(data, xhr.status);
 				}
 			}
 		};
 
-		if (options.type === 'GET') {
+		if (opts.type === 'GET') {
 			data = data ? '?' + data : '';
-			xhr.open('GET', options.url + data, true);
+			xhr.open('GET', opts.url + data, true);
 			xhr.send(null);
-		} else if (options.type === 'POST') {
-			xhr.open('POST', options.url, true);
+		} else if (opts.type === 'POST') {
+			xhr.open('POST', opts.url, true);
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 			xhr.send(data);
 		}
@@ -90,5 +78,7 @@
 		return xhr;
 
 	};
-	return echo;
-});
+	
+	global.echo = echo;
+	
+})(this);
