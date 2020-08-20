@@ -65,7 +65,21 @@ class Active {
 	public function listActive() {
 		$where = array(["user", "==", $this->activeUser]);
 		$result = $this->db->select($where);
-		Common::sendJSON("S2000", $result);
+
+		$temp = array();
+		foreach ($result as $file) {
+			$path = $file["path"];
+			if (file_exists(Common::getWorkspacePath($path))) {
+				$temp[] = $file;
+			} else {
+
+				// Invalid file path
+				$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+				$this->db->delete($where);
+			}
+		}
+
+		Common::sendJSON("S2000", $temp);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
