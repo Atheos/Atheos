@@ -565,8 +565,9 @@
 				if (atheos.common.isAbsPath(newPath)) {
 					title = newPath.substring(1);
 				}
-
-				listItem.find('.file-name').text(title);
+				
+				let info = pathinfo(newPath);
+				listItem.find('a').html(`<span class="subtle">${info.directory}</span>${info.basename}`);
 
 				self.sessions[newPath] = self.sessions[oldPath];
 				self.sessions[newPath].path = newPath;
