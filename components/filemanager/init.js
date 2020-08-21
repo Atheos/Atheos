@@ -499,8 +499,7 @@
 				atheos.modal.unload();
 			};
 
-			atheos.modal.load(250,
-				atheos.dialog, {
+			atheos.modal.load(250, {
 					target: 'filemanager',
 					action: 'duplicate',
 					name: name,
@@ -673,8 +672,7 @@
 				atheos.modal.unload();
 			};
 
-			atheos.modal.load(250,
-				atheos.dialog, {
+			atheos.modal.load(250, {
 					target: 'filemanager',
 					action: 'rename',
 					name: nodeName,
