@@ -131,7 +131,7 @@ class i18n {
 
 		}
 
-		if ($outdated || true) {
+		if ($outdated) {
 			$appliedData = $this->load($this->appliedLang);
 			if ($this->appliedLang !== $this->fallbackLang) {
 				$fallbackData = $this->load($this->fallbackLang);
