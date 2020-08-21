@@ -64,7 +64,6 @@ class Common {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
 
-
 		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
 		if (!defined("COMPONENTS")) define('COMPONENTS', BASE_PATH . "/components");
 		if (!defined("PLUGINS")) define('PLUGINS', BASE_PATH . "/plugins");
