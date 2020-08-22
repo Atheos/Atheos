@@ -37,6 +37,25 @@ trait Helpers {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
+	// Read Post/Get/Server/Session Data
+	//////////////////////////////////////////////////////////////////////////80
+	public static function newData($key = false, $type = false, $val = null) {
+		if (!$key || !$type) return $val;
+
+		if (!empty($val) && $type === "SESSION") {
+			$_SESSION[$key] = $val;
+		}
+
+		if ($type === "SESSION") {
+			$val = array_key_exists($key, $_SESSION) ? $_SESSION[$key] : null;
+		} elseif ($type === "POST") {
+			$val = array_key_exists($key, $_POST) ? $_POST[$key] : null;
+		}
+
+		return $val;
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Read Content of directory
 	//////////////////////////////////////////////////////////////////////////80
 	public static function readDirectory($foldername) {

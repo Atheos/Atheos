@@ -59,7 +59,7 @@ class Common {
 		$path = __DIR__;
 
 		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
-		
+
 		if (defined("LIFETIME") && LIFETIME !== "") {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
@@ -155,9 +155,18 @@ function i18n($string, $args = false) {
 	return $i18n->translate($string, $args);
 }
 
-
 function debug($val) {
 	Common::$debugStack[] = $val;
+}
+
+function POST($key, $val = null) {
+	$val = Common::newData($key, "POST", $val);
+	if ($key === "username") $val = Common::cleanUsername($val);
+	return $val;
+}
+
+function SESSION($key, $val = null) {
+	return Common::newData($key, "SESSION", $val);
 }
 
 ?>
