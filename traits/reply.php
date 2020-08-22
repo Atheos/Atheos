@@ -13,6 +13,38 @@
 trait Reply {
 
 	//////////////////////////////////////////////////////////////////////////80
+	// Format and send JSON responses
+	// 200: Success
+	// 201: Created				202: Accepted			204: No Content
+	//
+	// 400: Bad Request
+	// 401: Unauthorized		403: Forbidden			404: Not Found
+	// 409: Conflict/Duplicate
+	// 417: Missing Data		418: Invalid Data		419: Outdated Data
+	// 451: Security Violation
+	//
+	// 500: Internal Error
+	// 501: Not Implemented		503: Maintenance
+	//////////////////////////////////////////////////////////////////////////80
+	public static function send($code, $data = array()) {
+		http_response_code(200);
+
+		if (!is_array($data)) {
+			$data = array(
+				"text" => $data
+			);
+		}
+
+		// Debug
+		if (!empty(Common::$debugStack)) $data["debug"] = Common::$debugStack;
+
+		$data["status"] = $code;
+
+		// Return
+		exit(json_encode($data));
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Format JSON Responses
 	//////////////////////////////////////////////////////////////////////////80
 	public static function sendJSON($status, $text = false) {
