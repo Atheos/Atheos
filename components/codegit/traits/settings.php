@@ -5,7 +5,7 @@ trait Settings {
 
 	public function settings($repo, $data = false) {
 		$db = Common::getDB("codegit", $this->activeUser);
-		$activeUser = Common::data("user", "session");
+		$activeUser = SESSION("user");
 
 		$results = $db->select("*");
 		$settings = array();

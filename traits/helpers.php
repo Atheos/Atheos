@@ -12,6 +12,13 @@
 
 trait Helpers {
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Clean Username
+	//////////////////////////////////////////////////////////////////////////80
+	public static function cleanUsername($username) {
+		return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
+	}
+
 	function compareVersions($v1, $v2) {
 		// Src: https://helloacm.com/the-javascript-function-to-compare-version-number-strings/
 		if (!is_string($v1) || !is_string($v2)) {

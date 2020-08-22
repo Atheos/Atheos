@@ -12,7 +12,7 @@
 
 require_once('class.settings.php');
 
-$activeUser = Common::data("user", "session");
+$activeUser = SESSION("user");
 
 $Settings = new Settings($activeUser);
 
@@ -29,8 +29,8 @@ switch ($action) {
 	// Save User Settings
 	//////////////////////////////////////////////////////////////////////////80
 	case "save":
-		$key = Common::data("key");
-		$value = Common::data("value");
+		$key = POST("key");
+		$value = POST("value");
 		if ($key && $value) {
 			$Settings->save($key, $value);
 		} else {

@@ -4,8 +4,8 @@
 // Market Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -16,10 +16,10 @@ if (!Common::checkAccess("configure")) {
 	Common::sendJSON("E430u"); die;
 }
 
-$type = Common::data("type");
-$name = Common::data("name");
-$category = Common::data("category");
-$repo = Common::data("repo");
+$type = POST("type");
+$name = POST("name");
+$category = POST("category");
+$repo = POST("repo");
 
 $Market = new Market();
 //////////////////////////////////////////////////////////////////
@@ -58,7 +58,7 @@ switch ($action) {
 	// Save Cache
 	//////////////////////////////////////////////////////////////////
 	case 'saveCache':
-		$cache = Common::data("cache");
+		$cache = POST("cache");
 		$Market->saveCache($cache);
 		break;
 
