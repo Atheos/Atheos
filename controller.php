@@ -10,28 +10,34 @@
 // Authors: Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
+set_error_handler(function($severity, $message, $file, $line) {
+	if (error_reporting() & $severity) {
+		throw new ErrorException($message, 0, $severity, $file, $line);
+	}
+});
+
 require_once('common.php');
 
-$action = Common::data("action");
-$target = Common::data("target");
+$action = POST("action");
+$target = POST("target");
 
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
 if ($action !== 'authenticate') {
 	Common::checkSession();
-} 
+}
 
 if ($action === "debug") {
-	Common::sendJSON("success"); die;
-} elseif($action ==="error") {
+	Common::send("success");
+} elseif ($action === "error") {
 	$message = Common::debug("message");
 	Common::log($message, "trace-" . date("Y-m-d"));
 	die;
 }
 
 if (!$action || !$target) {
-	Common::sendJSON("E401m"); die;
+	Common::send("error", "Missing parameter");
 }
 
 if (file_exists("components/$target/controller.php")) {
@@ -39,5 +45,5 @@ if (file_exists("components/$target/controller.php")) {
 } elseif (file_exists("plugins/$target/controller.php")) {
 	require("plugins/$target/controller.php");
 } else {
-	Common::sendJSON("E401m"); die;
+	Common::send("error", "Bad target destination");
 }

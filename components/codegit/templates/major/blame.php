@@ -1,6 +1,6 @@
 <?php
 $repo = Common::getWorkspacePath($repo);
-$files = Common::data('files');
+$files = POST('files');
 if ($files) {
 	$files = explode(',', $files);
 } else {

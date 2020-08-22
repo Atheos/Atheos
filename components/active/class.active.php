@@ -51,7 +51,7 @@ class Active {
 		if (count($result) > 0) {
 			$activeUsers = array();
 			foreach ($result as $item) {
-				if ($item["user"] !== $activeUser) $activeUsers[] = $item["user"];
+				if ($item["user"] !== $this->activeUser) $activeUsers[] = $item["user"];
 			}
 			Common::sendJSON("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
 		} else {

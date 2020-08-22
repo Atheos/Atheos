@@ -75,7 +75,7 @@ switch ($action) {
 
 
 	case "loadPanel":
-		$panel = Common::data("panel");
+		$panel = POST("panel");
 		if (file_exists(__DIR__ . "/panels/$panel.php")) {
 			include(__DIR__ . "/panels/$panel.php");
 		} elseif (file_exists("plugins/$panel/settings.php")) {

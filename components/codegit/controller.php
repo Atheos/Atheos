@@ -3,8 +3,8 @@
 // CodeGit Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Andr3as, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -13,10 +13,10 @@ require_once(__DIR__ . "/../../common.php");
 
 require_once("class.git.php");
 
-$action = Common::data('action');
+$action = POST('action');
 
-$repo = Common::data('repo');
-$path = Common::data('path');
+$repo = POST('repo');
+$path = POST('path');
 
 $repo = Common::getWorkspacePath($repo);
 $path = Common::getWorkspacePath($path);
@@ -41,8 +41,8 @@ switch ($action) {
 
 	// Adds and commits with message
 	case 'commit':
-		$message = Common::data('message');
-		$files = Common::data('files');
+		$message = POST('message');
+		$files = POST('files');
 		if ($repo && $files && $message) {
 			$CodeGit->commit($message, $files);
 		} else {
@@ -51,7 +51,7 @@ switch ($action) {
 		break;
 
 	case 'clone':
-		$repoURL = Common::data('repoURL');
+		$repoURL = POST('repoURL');
 		if ($path && $repoURL) {
 			$CodeGit->cloneRepo($path, $repoURL);
 		} else {
@@ -60,9 +60,9 @@ switch ($action) {
 		break;
 
 	case 'transfer':
-		$type = Common::data('type');
-		$remote = Common::data('remote');
-		$branch = Common::data('branch');
+		$type = POST('type');
+		$remote = POST('remote');
+		$branch = POST('branch');
 
 		if ($type && $repo && $remote && $branch) {
 			switch ($type) {
@@ -82,7 +82,7 @@ switch ($action) {
 		break;
 
 	case 'init':
-		$type = Common::data('type');
+		$type = POST('type');
 		
 		if ($repo && $type) {
 			$CodeGit->init($repo, $type);
@@ -92,7 +92,7 @@ switch ($action) {
 		break;
 
 	case 'checkout':
-		$file = Common::data("file");
+		$file = POST("file");
 		if ($repo && $file) {
 			$CodeGit->checkout($repo, $file);
 		} else {
@@ -102,9 +102,9 @@ switch ($action) {
 
 	case 'configure':
 		$settings = array(
-			"type" => Common::data("type"),
-			"name" => Common::data("name"),
-			"email" => Common::data("email")
+			"type" => POST("type"),
+			"name" => POST("name"),
+			"email" => POST("email")
 		);
 
 		$result = $CodeGit->settings($repo, $settings);

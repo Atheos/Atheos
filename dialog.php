@@ -17,8 +17,8 @@ require_once('common.php');
 //////////////////////////////////////////////////////////////////////////////80
 Common::checkSession();
 
-$action = Common::data("action");
-$target = Common::data("target");
+$action = POST("action");
+$target = POST("target");
 
 if (!$action || !$target) {
 	Common::sendJSON("E401m"); die;

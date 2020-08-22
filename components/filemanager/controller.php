@@ -4,25 +4,25 @@
 // FileManager Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 require_once("class.filemanager.php");
 
-$action = Common::data("action");
+$action = POST("action");
 
-$dest = Common::data('dest');
-$name = Common::data('name');
-$path = Common::data('path');
-$type = Common::data('type');
+$dest = POST('dest');
+$name = POST('name');
+$path = POST('path');
+$type = POST('type');
 
-$modifyTime = Common::data('modifyTime');
-$content = Common::data('content');
-$patch = Common::data('patch');
-$type = Common::data('type');
+$modifyTime = POST('modifyTime');
+$content = POST('content');
+$patch = POST('patch');
+$type = POST('type');
 
 //////////////////////////////////////////////////////////////////////////////80
 // Security Check
