@@ -12,8 +12,8 @@
 
 require_once('class.active.php');
 
-$activeUser = Common::data("user", "session");
-$path = Common::data("path");
+$activeUser = SESSION("user");
+$path = POST("path");
 $Active = new Active($activeUser);
 
 switch ($action) {
@@ -42,7 +42,7 @@ switch ($action) {
 	// Rename
 	//////////////////////////////////////////////////////////////////////////80
 	case "rename":
-		$newPath = Common::data("newPath");
+		$newPath = POST("newPath");
 		$Active->rename($path, $newPath);
 		break;
 

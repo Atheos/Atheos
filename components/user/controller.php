@@ -12,16 +12,12 @@
 
 require_once 'class.user.php';
 
-$activeUser = Common::data("user", "session");
+$activeUser = SESSION("user");
 $User = new User($activeUser);
 
-$username = Common::data('username');
-$password = Common::data('password');
-$language = Common::data('language');
-
-if ($username) {
-	$username = User::cleanUsername($username);
-}
+$username = POST('username');
+$password = POST('password');
+$language = POST('language');
 
 switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
@@ -29,7 +25,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'authenticate':
 		if ($username && $password) {
-			$theme = Common::data('theme');
+			$theme = POST('theme');
 			$languages = $i18n->codes();
 			if (!$language || !isset($languages[$language])) $language = "en";
 
@@ -50,7 +46,7 @@ switch ($action) {
 			die(Common::sendJSON("error", "Missing username or password"));
 		}
 
-		if (Common::checkAccess("configure") || $username === Common::data("user", "session")) {
+		if (Common::checkAccess("configure") || $username === SESSION("user")) {
 			$User->changePassword($username, $password);
 		} else {
 			Common::sendJSON("E430u");
@@ -109,7 +105,7 @@ switch ($action) {
 	// Save Active Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'saveActiveProject':
-		$activeProject = Common::data('activeProject');
+		$activeProject = POST('activeProject');
 
 		if (!isset($activeProject)) {
 			die(Common::sendJSON("error", "Missing project"));
@@ -128,7 +124,7 @@ switch ($action) {
 		if (!$username) {
 			die(Common::sendJSON("error", "Missing username"));
 
-			$userACL = Common::data('userACL');
+			$userACL = POST('userACL');
 			$User->updateACL($username, $userACL);
 		}
 		break;

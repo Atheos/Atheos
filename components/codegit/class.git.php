@@ -43,7 +43,7 @@ class CodeGit {
 	public $repoURL;
 
 	function __construct($path = '', $repo = false) {
-		$this->activeUser = Common::data("user", "session");
+		$this->activeUser = SESSION("user");
 		
 		$this->path = $path;
 		$this->repo = $repo ? $repo : $this->findRepo($path);

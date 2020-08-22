@@ -17,7 +17,7 @@ trait Check {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkAccess($permission = "configure") {
 		$users = Common::readJSON("users");
-		$username = Common::data("user", "session");
+		$username = SESSION("user");
 
 		if (array_key_exists($username, $users)) {
 			$permissions = $users[$username]["permissions"];
@@ -32,7 +32,7 @@ trait Check {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkPath($path) {
 		$users = Common::readJSON("users");
-		$username = Common::data("user", "session");
+		$username = SESSION("user");
 		$projects = Common::readJSON('projects');
 
 		if (!array_key_exists($username, $users)) {
