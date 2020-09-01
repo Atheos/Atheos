@@ -2,8 +2,8 @@
 // Modal
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Notes:
 // In an effort of removing jquery and saving myself time, I removed persistant
@@ -70,9 +70,11 @@
 			return wrapper;
 		},
 
-		load: function(width, url, data) {
+		load: function(width, data) {
 			data = data || {};
 			width = width > 400 ? width : 400;
+			
+			let url = data.url || atheos.dialog;
 
 			var listener, callback;
 

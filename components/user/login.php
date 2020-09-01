@@ -63,5 +63,7 @@
 
 	</fieldset>
 </form>
+		<div id="toast_container" class="bottom-right"></div>
+
 <script src="components/i18n/init.js"></script>
 <script src="components/user/init.js"></script>

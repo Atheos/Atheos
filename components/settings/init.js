@@ -1,11 +1,9 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////////////80
 // Settings Init
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -26,6 +24,40 @@
 		init: function() {
 			self = this;
 			self.load();
+
+			oX('#modal_wrapper .settings', true).on('change', function(e) {
+				var target = oX(e.target);
+				var tagName = target.el.tagName;
+				var type = target.el.type;
+
+				var key = target.attr('data-setting'),
+					value;
+
+				if (tagName === 'SELECT') {
+					value = target.value();
+
+				} else if (tagName === 'INPUT' && type === 'checkbox') {
+					value = target.prop('checked');
+
+				} else if (tagName === 'INPUT' && type === 'radio') {
+					value = target.value();
+
+				} else {
+					return;
+				}
+
+				storage(key, value);
+				self.save(key, value);
+				self.publish(key, value);
+			});
+
+			oX('#modal_wrapper .settings menu', true).on('click', function(e) {
+				var target = oX(e.target);
+				var tagName = target.el.tagName;
+				if (tagName === 'A') {
+					self.showTab(target);
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -111,7 +143,7 @@
 					atheos.editor.setWrapMode(boolean);
 					break;
 				case 'filemanager.showHidden':
-					if (atheos.filemanager.showHidden !== value) {
+					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;
 						atheos.filemanager.rescan();
 					}
@@ -154,6 +186,7 @@
 					value
 				},
 				success: function(reply) {
+					log(reply);
 					if (reply.status === 'error') {
 						atheos.toast.show(reply);
 					} else if (!hidden) {
@@ -222,52 +255,15 @@
 		// Show Setting Dialog
 		//////////////////////////////////////////////////////////////////////80
 		show: function(dataFile) {
-			var listener = function(e) {
-				var target = oX(e.target);
-				var tagName = target.el.tagName;
-				var type = target.el.type;
-
-				var key = target.attr('data-setting'),
-					value;
-
-				if (tagName === 'SELECT') {
-					value = target.value();
-
-				} else if (tagName === 'INPUT' && type === 'checkbox') {
-					value = target.prop('checked');
-
-				} else if (tagName === 'INPUT' && type === 'radio') {
-					value = target.value();
-
-				} else {
-					return;
-				}
-
-				storage(key, value);
-				self.save(key, value);
-				self.publish(key, value);
-			};
-
-			atheos.modal.load(800, atheos.dialog, {
+			atheos.modal.load(800, {
 				target: 'settings',
 				action: 'settings',
 				callback: function() {
-					oX('#modal_wrapper').on('change', listener);
-
-					oX('.settings menu').on('click', function(e) {
-						var target = oX(e.target);
-						var tagName = target.el.tagName;
-						if (tagName === 'A') {
-							self.showTab(target);
-						}
-					});
-
 					if (typeof(dataFile) === 'string') {
 						self.showTab(dataFile);
 					} else {
 						self.loadTabValues();
 					}
-
 				}
 			});
 		},
@@ -281,7 +277,6 @@
 			var dest = target.attr('data-panel') || target.attr('data-file');
 
 			if (target.attr('data-panel')) {
-log(dest);
 				echo({
 					url: atheos.dialog,
 					data: {
@@ -293,6 +288,7 @@ log(dest);
 						oX('.settings menu .active').removeClass('active');
 						oX('.settings menu a[data-panel="' + dest + '"]').addClass('active');
 						oX('.settings panel').html(reply);
+						self.loadTabValues();
 					}
 				});
 

@@ -6,13 +6,13 @@
 
 require_once('class.git.php');
 
-$path = Common::data('path');
-$repo = Common::data('repo');
+$path = POST('path');
+$repo = POST('repo');
 
 $CodeGit = new CodeGit($path, $repo);
 
 if ($action === "loadPanel") {
-	$panel = Common::data('panel');
+	$panel = POST('panel');
 
 	switch ($panel) {
 		case 'blame': //Checked

@@ -4,8 +4,8 @@
 // Update Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -89,20 +89,5 @@ class Update {
 		$this->local = $cache;
 		Common::saveJSON("update", $cache, "cache");
 		Common::sendJSON("S2000");
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// GetBrowserName
-	//////////////////////////////////////////////////////////////////////////80
-	public function getBrowserName() {
-		$userAgent = Common::data("HTTP_USER_AGENT", "server");
-		if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) return 'Opera';
-		elseif (strpos($userAgent, 'Edge')) return 'Edge';
-		elseif (strpos($userAgent, 'Chrome')) return 'Chrome';
-		elseif (strpos($userAgent, 'Safari')) return 'Safari';
-		elseif (strpos($userAgent, 'Firefox')) return 'Firefox';
-		elseif (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) return 'Internet Explorer';
-
-		return 'Other';
 	}
 }

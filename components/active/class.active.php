@@ -3,9 +3,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Active Class
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -15,7 +15,7 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
+	private $activeUser = null;
 	private $db = null;
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -27,15 +27,16 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
-	public function __construct() {
-		$this->db = Common::getDB("active");
+	public function __construct($activeUser) {
+		$this->activeUser = $activeUser;
+		$this->db = Common::getScroll("active");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Add File
 	//////////////////////////////////////////////////////////////////////////80
-	public function add($activeUser, $path) {
-		$query = array("user" => $activeUser, "path" => $path, "status" => "active");
+	public function add($path) {
+		$query = array("user" => $this->activeUser, "path" => $path, "status" => "active");
 		$this->db->insert($query);
 		Common::sendJSON("S2000");
 	}
@@ -43,13 +44,14 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Check File
 	//////////////////////////////////////////////////////////////////////////80
-	public function check($activeUser, $path) {
-		$where = array("user" => "*", "path" => $path);
+	public function check($path) {
+		$where = array(["user", "!=", $this->activeUser], ["path", "==", $path]);
 		$result = $this->db->select($where);
-		if (count($result) > 1) {
+
+		if (count($result) > 0) {
 			$activeUsers = array();
 			foreach ($result as $item) {
-				if ($item["user"] !== $activeUser) $activeUsers[] = $item["user"];
+				if ($item["user"] !== $this->activeUser) $activeUsers[] = $item["user"];
 			}
 			Common::sendJSON("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
 		} else {
@@ -60,17 +62,31 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// List User's Active Files
 	//////////////////////////////////////////////////////////////////////////80
-	public function listActive($activeUser) {
-		$where = array("user" => $activeUser);
+	public function listActive() {
+		$where = array(["user", "==", $this->activeUser]);
 		$result = $this->db->select($where);
-		Common::sendJSON("S2000", $result);
+
+		$temp = array();
+		foreach ($result as $file) {
+			$path = $file["path"];
+			if (file_exists(Common::getWorkspacePath($path))) {
+				$temp[] = $file;
+			} else {
+
+				// Invalid file path
+				$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+				$this->db->delete($where);
+			}
+		}
+
+		Common::sendJSON("S2000", $temp);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename File
 	//////////////////////////////////////////////////////////////////////////80
 	public function rename($oldPath, $newPath) {
-		$where = array("user" => $activeUser, "path" => $oldPath);
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $oldPath]);
 		$value = array("path" => $newPath);
 		$this->db->update($where, $value);
 		Common::sendJSON("S2000");
@@ -79,8 +95,8 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Remove File
 	//////////////////////////////////////////////////////////////////////////80
-	public function remove($activeUser, $path) {
-		$where = array("user" => $activeUser, "path" => $path);
+	public function remove($path) {
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$this->db->delete($where);
 		Common::sendJSON("S2000");
 	}
@@ -88,8 +104,8 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Remove All Files
 	//////////////////////////////////////////////////////////////////////////80
-	public function removeAll($activeUser) {
-		$where = array("user" => $activeUser);
+	public function removeAll() {
+		$where = array(["user", "==", $this->activeUser]);
 		$this->db->delete($where);
 		Common::sendJSON("S2000");
 	}
@@ -98,12 +114,11 @@ class Active {
 	// Mark File As Focused
 	//  All other files will be marked as non-focused.
 	//////////////////////////////////////////////////////////////////////////80
-	public function setFocus($activeUser, $focus) {
-		$where = array("user" => $activeUser, "path" => "*");
+	public function setFocus($path) {
+		$where = array(["user", "==", $this->activeUser], ["path", "==", "*"]);
 		$value = array("status" => "active");
 		$this->db->update($where, $value);
-
-		$where = array("user" => $activeUser, "path" => $path);
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$value = array("status" => "focus");
 		$this->db->update($where, $value);
 		Common::sendJSON("S2000");

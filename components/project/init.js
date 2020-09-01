@@ -1,11 +1,9 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////////////80
 // Project Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -154,7 +152,7 @@
 		// Open the project manager dialog
 		//////////////////////////////////////////////////////////////////
 		list: function() {
-			atheos.modal.load(500, atheos.dialog, {
+			atheos.modal.load(500, {
 				target: 'project',
 				action: 'list'
 			});
@@ -254,7 +252,7 @@
 				}
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'create',
 				listener,
@@ -303,7 +301,7 @@
 				});
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'rename',
 				name: projectName,
@@ -352,7 +350,7 @@
 				});
 			};
 
-			atheos.modal.load(400, atheos.dialog, {
+			atheos.modal.load(400, {
 				target: 'project',
 				action: 'delete',
 				name: projectName,

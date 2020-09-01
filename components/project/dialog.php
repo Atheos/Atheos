@@ -4,16 +4,16 @@
 // Project Dialog
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-$user = Common::data("user", "session");
+$user = SESSION("user");
 
-$path = Common::data("path");
-$name = Common::data("name");
+$path = POST("path");
+$name = POST("name");
 
 switch ($action) {
 
@@ -73,7 +73,7 @@ switch ($action) {
 					} ?>
 				</tr>
 				<?php
-				$activeProject = Common::data("project", "session");
+				$activeProject = SESSION("project");
 				foreach ($projectList as $projectPath => $projectName) {
 					?>
 					<tr>
@@ -122,7 +122,6 @@ switch ($action) {
 			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/]+" autocomplete="off" title="Please input a valid file path.">
 
 			<!-- Clone From GitHub -->
-			<!--<div style="width: 500px;">-->
 			<table style="display: none;" id="git_options">
 				<tr>
 					<td>

@@ -1,14 +1,12 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////80////////////80
 // FileManager Init
-//////////////////////////////////////////////////////////////////////80////////////80
+//////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
-//////////////////////////////////////////////////////////////////////80////////////80
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////80////////////80
+//////////////////////////////////////////////////////////////////////////////80
 // Notes:
 // Goodness this file is very complex; it's going to take a very long time
 // to really get a grasp of what's going on in this file and how to
@@ -232,7 +230,7 @@
 
 			var basename = pathinfo(path).basename;
 
-			if (!self.showHidden && basename.charAt(0) === '.') {
+			if (self.showHidden === false && basename.charAt(0) === '.') {
 				return '';
 			}
 
@@ -442,7 +440,7 @@
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
-					data: `/${path}/${copy}`,
+					data: `${path}/${copy}`,
 					actions: {
 						'Overwrite': function() {
 							processPaste(path, false);
@@ -501,8 +499,7 @@
 				atheos.modal.unload();
 			};
 
-			atheos.modal.load(250,
-				atheos.dialog, {
+			atheos.modal.load(250, {
 					target: 'filemanager',
 					action: 'duplicate',
 					name: name,
@@ -551,7 +548,7 @@
 				});
 			};
 
-			atheos.modal.load(250, atheos.dialog, {
+			atheos.modal.load(250, {
 				target: 'filemanager',
 				action: 'create',
 				type: type,
@@ -675,8 +672,7 @@
 				atheos.modal.unload();
 			};
 
-			atheos.modal.load(250,
-				atheos.dialog, {
+			atheos.modal.load(250, {
 					target: 'filemanager',
 					action: 'rename',
 					name: nodeName,
