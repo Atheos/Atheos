@@ -1,7 +1,48 @@
 <?php
 
+//////////////////////////////////////////////////////////////////////////////80
+// Reply trait
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
 trait Reply {
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Format and send JSON responses
+	// 200: Success
+	// 201: Created				202: Accepted			204: No Content
+	//
+	// 400: Bad Request
+	// 401: Unauthorized		403: Forbidden			404: Not Found
+	// 409: Conflict/Duplicate
+	// 417: Missing Data		418: Invalid Data		419: Outdated Data
+	// 451: Security Violation
+	//
+	// 500: Internal Error
+	// 501: Not Implemented		503: Maintenance
+	//////////////////////////////////////////////////////////////////////////80
+	public static function send($code, $data = array()) {
+		http_response_code(200);
+
+		if (!is_array($data)) {
+			$data = array(
+				"text" => $data
+			);
+		}
+
+		// Debug
+		if (!empty(Common::$debugStack)) $data["debug"] = Common::$debugStack;
+
+		$data["status"] = $code;
+
+		// Return
+		exit(json_encode($data));
+	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Format JSON Responses

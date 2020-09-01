@@ -32,7 +32,7 @@ $plugins = Common::readDirectory(PLUGINS);
 $themes = Common::readDirectory(THEMES);
 
 // Theme
-$theme = Common::data("theme", "session") ?: THEME;
+$theme = SESSION("theme") ?: THEME;
 
 ?>
 <!doctype html>
@@ -74,13 +74,12 @@ $theme = Common::data("theme", "session") ?: THEME;
 <body>
 
 	<?php
-	$activeUser = Common::data("user", "session");
-	
+
 	//////////////////////////////////////////////////////////////////
 	// LOGGED IN
 	//////////////////////////////////////////////////////////////////
 
-	if ($activeUser) {
+	if (SESSION("user")) {
 		?>
 
 		<div id="workspace">

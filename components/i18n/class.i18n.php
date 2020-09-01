@@ -4,10 +4,10 @@
 // i18n Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: @hlsiira, @Philipp15b (https://github.com/Philipp15b/php-i18n)
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 class i18n {
@@ -131,7 +131,7 @@ class i18n {
 
 		}
 
-		if ($outdated || true) {
+		if ($outdated) {
 			$appliedData = $this->load($this->appliedLang);
 			if ($this->appliedLang !== $this->fallbackLang) {
 				$fallbackData = $this->load($this->fallbackLang);

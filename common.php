@@ -10,10 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-//////////////////////////////////////////////////////////////////
-// Common Class
-//////////////////////////////////////////////////////////////////
-
+require_once("traits/checks.php");
 require_once("traits/database.php");
 require_once("traits/helpers.php");
 require_once("traits/json.php");
@@ -22,7 +19,8 @@ require_once("traits/reply.php");
 require_once("traits/session.php");
 
 class Common {
-	
+
+	use Check;
 	use Database;
 	use Helpers;
 	use JSON;
@@ -41,7 +39,7 @@ class Common {
 		"post" => array(),
 		"get" => array(),
 	);
-	
+
 	private static $database = null;
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -53,143 +51,47 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
-	public static function construct() {
-		$path = str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']);
-		$path = str_replace("controller.php", "", $path);
-		$path = str_replace("dialog.php", "", $path);
-
+	public static function initialize() {
 		$path = __DIR__;
 
-		if (file_exists($path.'/config.php')) {
-			require_once($path.'/config.php');
+		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
+
+		if (defined("LIFETIME") && LIFETIME !== "") {
+			ini_set("session.cookie_lifetime", LIFETIME);
 		}
 
-		if (file_exists($path.'/components/i18n/class.i18n.php')) {
-			require_once($path.'/components/i18n/class.i18n.php');
+		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
+		if (!defined("COMPONENTS")) define('COMPONENTS', BASE_PATH . "/components");
+		if (!defined("PLUGINS")) define('PLUGINS', BASE_PATH . "/plugins");
+		if (!defined("DATA")) define('DATA', BASE_PATH . "/data");
+		if (!defined("THEMES")) define("THEMES", BASE_PATH . "/themes");
+		if (!defined("THEME")) define("THEME", "atheos");
+		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
+		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
+
+		if (file_exists(BASE_PATH ."/components/i18n/class.i18n.php")) {
+			require_once(BASE_PATH ."/components/i18n/class.i18n.php");
 		}
 
-		if (!defined('BASE_PATH')) {
-			define("BASE_PATH", __DIR__);
-		}
+		// Set up language translation
+		global $i18n;
+		$i18n = new i18n(LANGUAGE);
+		$i18n->init();
 
-		if (!defined('COMPONENTS')) {
-			define('COMPONENTS', BASE_PATH . '/components');
-		}
+		//Check for external authentification
+		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
-		if (!defined('PLUGINS')) {
-			define('PLUGINS', BASE_PATH . '/plugins');
-		}
+		global $components; global $plugins; global $themes;
+		// Read Components, Plugins, Themes
+		$components = Common::readDirectory(COMPONENTS);
+		$plugins = Common::readDirectory(PLUGINS);
+		$themes = Common::readDirectory(THEMES);
 
-		if (!defined('DATA')) {
-			define('DATA', BASE_PATH . '/data');
-		}
-
-		if (!defined('THEMES')) {
-			define("THEMES", BASE_PATH . "/themes");
-		}
-
-		if (!defined('THEME')) {
-			define("THEME", "atheos");
-		}
-
-		if (!defined('LANGUAGE')) {
-			define("LANGUAGE", "en");
-		}
-
-		if (!defined('DEVELOPMENT')) {
-			define("DEVELOPMENT", false);
-		}
-
-		if (file_exists(BASE_PATH .'/components/i18n/class.i18n.php')) {
-			require_once(BASE_PATH .'/components/i18n/class.i18n.php');
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Read Content of directory
-	//////////////////////////////////////////////////////////////////////////80
-	public static function readDirectory($foldername) {
-		$tmp = array();
-		$allFiles = scandir($foldername);
-		foreach ($allFiles as $fname) {
-			if ($fname === '.' || $fname === '..') {
-				continue;
+		// Add data to global variables
+		if ($_POST && !empty($_POST)) {
+			foreach ($_POST as $key => $value) {
+				Common::$data["post"][$key] = $value;
 			}
-
-			$length = strlen(".disabled");
-			if (substr($fname, -$length) === ".disabled") {
-				continue;
-			}
-
-			if (is_dir($foldername.'/'.$fname)) {
-				$tmp[] = $fname;
-			}
-		}
-		return $tmp;
-	}
-
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Log Action
-	//////////////////////////////////////////////////////////////////////////80
-	public static function log($text, $name = "global") {
-		$path = DATA . "/log/";
-		$path = preg_replace('#/+#', '/', $path);
-
-		if (!is_dir($path)) mkdir($path);
-
-		$file = "$name.log";
-		$text = $text . PHP_EOL;
-
-		if (file_exists($path . $file)) {
-			$lines = file($path . $file);
-			if (sizeof($lines) > 100) {
-				unset($lines[0]);
-			}
-			$lines[] = $text;
-
-			$write = fopen($path . $file, 'w');
-			fwrite($write, implode('', $lines));
-			fclose($write);
-		} else {
-			$write = fopen($path . $file, 'w');
-			fwrite($write, $text);
-			fclose($write);
-		}
-	}
-
-	// This debug function will be simplified once the langaue work is completed.
-	public static function debug($val, $name = "debug") {
-		Common::$debugStack[] = $val;
-
-		$time = date("Y-m-d H:i:s");
-		$trace = debug_backtrace(null, 5);
-		if (is_array($trace) && count($trace) > 2) {
-			$function = $trace[1]['function'];
-			$file = $trace[2]['file'];
-
-			$val = is_array($val) ? json_encode($val) : "\"$val\"";
-			$val = str_pad($val, 40, ".", STR_PAD_RIGHT);
-			$function = str_pad($function, 10, ".", STR_PAD_RIGHT);
-
-			$text = "@$time:\t$val < $function in $file";
-
-			Common::log($text, $name);
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Check if user can configure Atheos
-	//////////////////////////////////////////////////////////////////////////80
-	public static function checkAccess($permission = "configure") {
-		$users = Common::readJSON("users");
-		$username = Common::data("user", "session");
-
-		if (array_key_exists($username, $users)) {
-			$permissions = $users[$username]["permissions"];
-			return in_array($permission, $permissions);
-		} else {
-			return false;
 		}
 	}
 
@@ -229,11 +131,6 @@ class Common {
 			system($cmd);
 			$output = ob_get_contents();
 			ob_end_clean();
-			// } else if (function_exists('passthru')) {
-			// 	ob_start();
-			// 	passthru($cmd);
-			// 	$output = ob_get_contents();
-			// 	ob_end_clean();
 		} elseif (function_exists('exec')) {
 			exec($cmd, $output);
 			$output = implode("\n", $output);
@@ -246,6 +143,7 @@ class Common {
 	}
 }
 
+Common::initialize();
 Common::startSession();
 
 function i18n($string, $args = false) {
@@ -253,9 +151,18 @@ function i18n($string, $args = false) {
 	return $i18n->translate($string, $args);
 }
 
+function debug($val) {
+	Common::$debugStack[] = $val;
+}
 
-function debug($val, $name = "debug") {
-	Common::debug($val, $name);
+function POST($key, $val = null) {
+	$val = Common::newData($key, "POST", $val);
+	if ($key === "username") $val = Common::cleanUsername($val);
+	return $val;
+}
+
+function SESSION($key, $val = null) {
+	return Common::newData($key, "SESSION", $val);
 }
 
 ?>

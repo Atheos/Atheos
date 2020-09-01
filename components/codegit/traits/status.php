@@ -32,10 +32,16 @@ trait Status {
 	public function fileStatus($path) {
 		if (!file_exists($path)) {
 			Common::sendJSON("error", i18n("path_missing"));
+			return;
 		}
 
 		$dirname = dirname($path);
 		$filename = basename($path);
+
+		if (!is_dir($dirname)) {
+			Common::sendJSON("success", $result);
+			return;
+		}
 		chdir($dirname);
 
 		$result = $this->execute("git diff --numstat " . $filename);
@@ -82,7 +88,7 @@ trait Status {
 		if (!is_array($status) || empty($status)) {
 			return i18n("git_status_current");
 		}
-		
+
 
 		$int = (int)preg_replace("/(ahead|behind)/", "", $status[0]);
 		$count = $int === 1 ? "plural" : "single";

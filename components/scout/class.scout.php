@@ -4,8 +4,8 @@
 // Scout Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
@@ -32,10 +32,10 @@ class Scout {
 	// Filter File Tree
 	//////////////////////////////////////////////////////////////////////////80
 	public function filter() {
-		$path = Common::data("path");
+		$path = POST("path");
 		$path = Common::getWorkspacePath($path);
-		$strategy = Common::data("strategy");
-		$filter = Common::data("filter");
+		$strategy = POST("strategy");
+		$filter = POST("filter");
 
 
 		chdir($path);
@@ -87,11 +87,11 @@ class Scout {
 	// Probe: Deep file content search
 	//////////////////////////////////////////////////////////////////////////80
 	public function probe() {
-		$type = Common::data("type");
-		$path = Common::data("path");
+		$type = POST("type");
+		$path = POST("path");
 		$path = Common::cleanPath($path);
-		$query = Common::data("query");
-		$filter = Common::data("filter");
+		$query = POST("query");
+		$filter = POST("filter");
 
 		$path = $type ? WORKSPACE : Common::getWorkspacePath($path);
 		$root = WORKSPACE;

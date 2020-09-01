@@ -4,10 +4,10 @@
 // TextMode Controller
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 require_once "class.textmode.php";
@@ -20,7 +20,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	case 'saveExtensionMap':
 		if (Common::checkAccess("configure")) {
-			$map = Common::data('map');
+			$map = POST('map');
 			if (!is_array($map)) {
 				Common::sendJSON("E403i", "Map"); die;
 			}
