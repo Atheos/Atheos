@@ -2,8 +2,8 @@
 // Atheos Specific Helper functions
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
 // This helper module is potentially temporary, but will be used to
@@ -90,7 +90,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Dropdown Menu Handler
+		// Dropdown Menu Handler (WIP for custom drop downs)
 		//////////////////////////////////////////////////////////////////////80
 		initDropdown: function() {
 			var close = function() {

@@ -1,13 +1,11 @@
-/*jshint esversion: 6 */
-
 //////////////////////////////////////////////////////////////////////////////80
 // Codegit Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the modified License: MIT - Hippocratic 1.2: firstdonoharm.dev
-// See [root]/license.md for more. This information must remain intact.
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @Andr3as, Atheos Team, @hlsiira
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
@@ -175,7 +173,7 @@
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 
-			atheos.modal.load(800, atheos.dialog, {
+			atheos.modal.load(800, {
 				target: 'codegit',
 				action: 'codegit',
 				repo
@@ -208,7 +206,7 @@
 		showDialog: function(type, repo, path) {
 			path = path || oX('#project-root').attr('data-path');
 			self.location = repo || self.location;
-			atheos.modal.load(600, atheos.dialog, {
+			atheos.modal.load(600, {
 				target: 'codegit',
 				action: 'loadPanel',
 				panel: type,
@@ -258,7 +256,7 @@
 				});
 			};
 
-			atheos.modal.load(250, atheos.dialog, {
+			atheos.modal.load(250, {
 				target: 'codegit',
 				action: 'clone',
 				path,
@@ -393,7 +391,7 @@
 						atheos.toast.show(reply);
 					}
 				});
-			}
+			};
 
 			atheos.alert.show({
 				banner: i18n('git_undo'),
@@ -454,7 +452,7 @@
 				success: function(reply) {
 					log(reply);
 				}
-			})
+			});
 		},
 
 		addStatusElements: function() {
@@ -468,7 +466,7 @@
 				self.repoStatus = oX('#codegit_repo_status');
 
 				// Add eventListener to open CodeGit
-				oX("#codegit_repo_banner").on('click', function() {
+				oX('#codegit_repo_banner').on('click', function() {
 					self.showCodeGit();
 				});
 			}

@@ -36,15 +36,15 @@ class CodeGit {
 	use Status; // status, loadChanges, parseChanges, fileStatus
 	use Transfer; // push, pull, fetch
 
-	public $resultArray;
-	public $result;
-
+	private $activeUser;
 	private $path;
 	private $repo;
 
 	public $repoURL;
 
 	function __construct($path = '', $repo = false) {
+		$this->activeUser = SESSION("user");
+		
 		$this->path = $path;
 		$this->repo = $repo ? $repo : $this->findRepo($path);
 
