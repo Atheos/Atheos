@@ -56,7 +56,7 @@ class Common {
 
 		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
 
-		if (defined("LIFETIME") && LIFETIME !== "") {
+		if (defined("LIFETIME") && LIFETIME !== false) {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
 
