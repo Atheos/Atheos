@@ -49,7 +49,7 @@ trait Path {
 		}
 		//Security check
 		if (!Common::checkPath($path)) {
-			Common::sendJSON("E430c"); die;
+			Common::send("error", "Client does not have access.");
 		}
 		if (strpos($path, "/") === 0) {
 			//Unix absolute path
