@@ -31,7 +31,7 @@ if ($action !== 'authenticate') {
 if ($action === "debug") {
 	Common::send("success");
 } elseif ($action === "error") {
-	$message = Common::debug("message");
+	$message = POST("message");
 	Common::log($message, "trace-" . date("Y-m-d"));
 	die;
 }
