@@ -566,9 +566,9 @@
 				if (atheos.common.isAbsPath(newPath)) {
 					title = newPath.substring(1);
 				}
-				
+
 				let info = pathinfo(newPath);
-				listItem.find('a').html(`<span class="subtle">${info.directory}</span>${info.basename}`);
+				listItem.find('a').html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
 
 				self.sessions[newPath] = self.sessions[oldPath];
 				self.sessions[newPath].path = newPath;
@@ -753,13 +753,13 @@
 		// Factory
 		//////////////////////////////////////////////////////////////////////80
 		createListItem: function(path) {
-			var split = pathinfo(path);
+			var info = pathinfo(path);
 
 			// For some reason, leaving the leading slash on a path causes the
 			// leading slash to be moved to the end of the element, as in at the
 			// end of the file name and subsequently needs to be removed first.
-			var item = '<li class="draggable" data-path="' + path + '"><a><span  class="subtle">' +
-				split.directory.replace(/^\/+/g, '') + '/</span>' + split.basename +
+			var item = '<li class="draggable" data-path="' + path + '"><a><span class="subtle">' +
+				info.directory.replace(/^\/+/g, '') + '/</span>' + info.basename +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
