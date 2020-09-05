@@ -80,7 +80,7 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-				if (self.hasUnsavedChanges()) {
+				if (self.unsavedChanges()) {
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
 
@@ -106,7 +106,7 @@
 			});
 		},
 
-		hasUnsavedChanges() {
+		unsavedChanges() {
 			var changedTabs = [];
 			var path;
 
