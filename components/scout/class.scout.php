@@ -23,8 +23,7 @@ class Scout {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		if (!function_exists('shell_exec')) {
-			Common::sendJSON("error", i18n("noShell"));
-			die;
+			Common::send("error", i18n("noShell"));
 		}
 	}
 
@@ -77,9 +76,9 @@ class Scout {
 		}
 
 		if (count($results) > 0) {
-			Common::sendJSON("success", $results);
+			Common::send("success", $results);
 		} else {
-			Common::sendJSON("error", "No Results Found");
+			Common::send("error", "No results found.");
 		}
 	}
 
@@ -127,9 +126,9 @@ class Scout {
 			}
 		}
 		if (count($results) > 0) {
-			Common::sendJSON("success", $results);
+			Common::send("success", $results);
 		} else {
-			Common::sendJSON("error", "No Results Found");
+			Common::send("error", "No results found.");
 		}
 
 	}

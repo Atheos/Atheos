@@ -26,7 +26,7 @@ trait Reply {
 	// 500: Internal Error
 	// 501: Not Implemented		503: Maintenance
 	//////////////////////////////////////////////////////////////////////////80
-	public static function send($code, $data = array()) {
+	public static function send($status, $data = array()) {
 		http_response_code(200);
 
 		if (!is_array($data)) {
@@ -38,7 +38,7 @@ trait Reply {
 		// Debug
 		if (!empty(Common::$debugStack)) $data["debug"] = Common::$debugStack;
 
-		$data["status"] = $code;
+		$data["status"] = $status;
 
 		// Return
 		exit(json_encode($data));

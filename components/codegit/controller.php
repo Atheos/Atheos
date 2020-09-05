@@ -13,8 +13,6 @@ require_once(__DIR__ . "/../../common.php");
 
 require_once("class.git.php");
 
-$action = POST('action');
-
 $repo = POST('repo');
 $path = POST('path');
 
@@ -35,7 +33,7 @@ switch ($action) {
 		if ($path) {
 			$CodeGit->fileStatus($path);
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing path.");
 		}
 		break;
 
@@ -46,7 +44,7 @@ switch ($action) {
 		if ($repo && $files && $message) {
 			$CodeGit->commit($message, $files);
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing repo, file or message.");
 		}
 		break;
 
@@ -55,7 +53,7 @@ switch ($action) {
 		if ($path && $repoURL) {
 			$CodeGit->cloneRepo($path, $repoURL);
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing path or URL.");
 		}
 		break;
 
@@ -77,17 +75,17 @@ switch ($action) {
 					break;
 			}
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing type, repo, remote, or branch.");
 		}
 		break;
 
 	case 'init':
 		$type = POST('type');
-		
+
 		if ($repo && $type) {
 			$CodeGit->init($repo, $type);
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing repo or type.");
 		}
 		break;
 
@@ -96,7 +94,7 @@ switch ($action) {
 		if ($repo && $file) {
 			$CodeGit->checkout($repo, $file);
 		} else {
-			Common::sendJSON("E403g");
+			Common::send("error", "Missing repo or file.");
 		}
 		break;
 
@@ -109,7 +107,7 @@ switch ($action) {
 
 		$result = $CodeGit->settings($repo, $settings);
 
-		Common::sendJSON("success", $result);
+		Common::send("success", $result);
 
 		break;
 
@@ -117,6 +115,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }

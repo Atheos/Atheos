@@ -24,21 +24,17 @@ class Transfer {
 	//////////////////////////////////////////////////////////////////////////80
 	public function download($path = false, $type = false) {
 		if (!$path || !file_exists($path)) {
-			Common::sendJSON("E402i");
-			die;
+			Common::send("error", "Invalid path.");
 		}
 		if (preg_match('#^[\\\/]?$#i', trim($path)) || preg_match('#[\:*?\"<>\|]#i', $path) || substr_count($path, './') > 0) {
-		//  Attempting to download all Projects	  or illegal characters in filepaths
-			Common::sendJSON("error", "Invalid Path.");
-			die;
+			//  Attempting to download all Projects	  or illegal characters in filepaths
+			Common::send("error", "Invalid path.");
 		}
-		
+
 		if (!$type) {
-			Common::sendJSON("E403m", "Type");
-			die;
+			Common::send("error", "Missing type.");
 		} elseif (($type === "directory" && !is_dir($path)) || ($type === "file" && !is_file($path))) {
-			Common::sendJSON("E403i", "Type");
-			die;
+			Common::send("error", "Invalid type.");
 		}
 
 		$pathInfo = pathinfo($path);
@@ -66,14 +62,14 @@ class Transfer {
 				$downloadFile = $targetPath . $filename;
 				$this->zipDir($path, $downloadFile);
 			} else {
-				Common::sendJSON("error", "Could not zip folder, zip-extension missing");
+				Common::send("error", "Could not zip folder, zip-extension missing");
 
 			}
 		} elseif ($type === "file") {
 			$downloadFile = WORKSPACE . '/' . $filename;
 			copy($path, WORKSPACE . "/" . $filename);
 		}
-		Common::sendJSON("success", array("download" => $downloadFile));
+		Common::send("success", array("download" => $downloadFile));
 	}
 
 	/**
@@ -132,8 +128,7 @@ class Transfer {
 
 		// Check that the path exists and is a directory
 		if (!file_exists($path) || is_file($path)) {
-			Common::sendJSON("error", "Invalid Path");
-			die;
+			Common::send("error", "Invalid path.");
 		}
 		// Handle upload
 		$info = array();
@@ -153,6 +148,6 @@ class Transfer {
 				}
 			}
 		}
-		Common::sendJSON("success", array("data" => $info));
+		Common::send("success", array("data" => $info));
 	}
 }

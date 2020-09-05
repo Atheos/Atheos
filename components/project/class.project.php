@@ -59,9 +59,9 @@ class Project {
 		}
 
 		if (array_key_exists($projectPath, $this->projects)) {
-			Common::sendJSON("error", i18n("project_exists_path")); die;
+			Common::send("error", i18n("project_exists_path"));
 		} elseif (in_array($projectName, $this->projects)) {
-			Common::sendJSON("error", i18n("project_exists_name")); die;
+			Common::send("error", i18n("project_exists_name"));
 		}
 
 
@@ -70,11 +70,11 @@ class Project {
 		} else {
 			if (!file_exists($projectPath)) {
 				if (!mkdir($projectPath . '/', 0755, true)) {
-					Common::sendJSON("error", i18n("project_unableAbsolute")); die;
+					Common::send("error", i18n("project_unableAbsolute"));
 				}
 			} else {
 				if (!is_writable($projectPath) || !is_readable($projectPath)) {
-					Common::sendJSON("error", i18n("project_unablePermissions")); die;
+					Common::send("error", i18n("project_unablePermissions"));
 				}
 			}
 		}
@@ -90,9 +90,9 @@ class Project {
 			Common::executeCommand($cmd);
 		}
 
-		Common::sendJSON("success", array("name" => $projectName, "path" => $projectPath));
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "access");
+		Common::send("success", array("name" => $projectName, "path" => $projectPath));
 
 	}
 
@@ -106,10 +106,9 @@ class Project {
 		// Save array back to JSON
 		Common::saveJSON('projects', $this->projects);
 
-		// Response
-		Common::sendJSON("S2000");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "access");
+		Common::send("S2000");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -137,11 +136,11 @@ class Project {
 			$projectName = "Atheos IDE";
 		}
 
-		Common::sendJSON("success", array(
+		Common::send("success", array(
 			"name" => $projectName,
 			"path" => $projectPath,
 			"text" => $projectName . " Loaded.",
-			// While I don't approve of user information being passed thoguh the
+			// While I don't approve of user information being passed through the
 			// project class, it seems significantly more effective to do so as
 			// opposed to creating an entire process to pass lastLogin data to
 			// the client when I can accomplish it by adding this line here.
@@ -157,20 +156,20 @@ class Project {
 		if (isset($this->projects[$projectPath])) {
 			$projectName = $this->projects[$projectPath];
 			$_SESSION['project'] = $projectPath;
-			Common::sendJSON("success", array(
+			Common::send("success", array(
 				"name" => $projectName,
 				"path" => $projectPath,
 				"text" => $projectName . " Loaded."
 			));
 		} elseif ($projectPath === BASE_PATH) {
 			$_SESSION['project'] = $projectPath;
-			Common::sendJSON("success", array(
+			Common::send("success", array(
 				"name" => "Atheos IDE",
 				"path" => $projectPath,
 				"text" => "Atheos IDE Loaded."
 			));
 		} else {
-			Common::sendJSON("error", i18n("project_missing"));
+			Common::send("error", i18n("project_missing"));
 		}
 	}
 
@@ -200,10 +199,10 @@ class Project {
 		// Save array back to JSON
 		Common::saveJSON('projects', $this->projects);
 
-		// Response
-		Common::sendJSON("S2000");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$projectName}", "access");
+
+		Common::send("S2000");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
