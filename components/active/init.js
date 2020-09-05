@@ -347,6 +347,7 @@
 
 		markChanged: function(path) {
 			self.sessions[path].status = 'changed';
+			self.sessions[path].autosaved = false;
 			self.sessions[path].listItem.addClass('changed');
 		},
 
