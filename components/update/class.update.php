@@ -59,7 +59,7 @@ class Update {
 			"request" => $request
 		);
 
-		Common::sendJSON("success", $reply);
+		Common::send("success", $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -88,6 +88,6 @@ class Update {
 		$cache = json_decode($cache);
 		$this->local = $cache;
 		Common::saveJSON("update", $cache, "cache");
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 }

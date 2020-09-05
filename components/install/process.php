@@ -15,9 +15,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 $data = $_POST;
 
-$path = $data['path'] ?: false;
+$path = $data["path"] ?: false;
 
-$rel = str_replace('/components/install/process.php', '', $_SERVER['REQUEST_URI']);
+$rel = str_replace("/components/install/process.php", "", $_SERVER['REQUEST_URI']);
 
 $workspace = $path . "/workspace";
 $users = $path . "/data/users.json";
@@ -33,7 +33,7 @@ $config = $path . "/config.php";
 //////////////////////////////////////////////////////////////////////////////80
 
 function saveFile($file, $data) {
-	$write = fopen($file, 'w') or die("Unable to open file:$file");
+	$write = fopen($file, "w") or die("Unable to open file:$file");
 	fwrite($write, $data);
 	fclose($write);
 }
@@ -44,21 +44,20 @@ function saveJSON($file, $data) {
 }
 
 function cleanUsername($username) {
-	// return preg_replace('#[^A-Za-z0-9'.preg_quote('-_@. ').']#', '', $username);
-	return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
+	return strtolower(preg_replace("#[^A-Za-z0-9\-\_\@\.]#", "", $username));
 }
 
 function isAbsPath($path) {
-	return ($path[0] === '/' || $path[1] === ':')?true:false;
+	return ($path[0] === "/" || $path[1] === ":") ? true : false;
 }
 
 function cleanPath($path) {
 	// prevent Poison Null Byte injections
-	$path = str_replace(chr(0), '', $path);
+	$path = str_replace(chr(0), "", $path);
 
 	// prevent escaping out of the workspace
-	while (strpos($path, '../') !== false) {
-		$path = str_replace('../', '', $path);
+	while (strpos($path, "../") !== false) {
+		$path = str_replace("../", "", $path);
 	}
 
 	return $path;
@@ -73,11 +72,12 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////
 
-	$username = cleanUsername($data['username']);
-	$password = password_hash($data['password'], PASSWORD_DEFAULT);
+	$username = cleanUsername($data["username"]);
+	$password = password_hash($data["password"], PASSWORD_DEFAULT);
 	$projectName = $data["projectName"] ?: false;
 	$projectPath = $data["projectPath"] ?: $projectName;
-	$timezone = $data['timezone'] ?: false;
+	$timezone = $data["timezone"] ?: false;
+	$timezone = preg_replace('/[^a-zA-Z\/]/', "", $timezone);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Projects files
@@ -86,11 +86,11 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	$projectPath = cleanPath($projectPath);
 
 	if (isAbsPath($projectPath)) {
-		if (substr($projectPath, -1) == '/') {
+		if (substr($projectPath, -1) === "/") {
 			$projectPath = substr($projectPath, 0, strlen($projectPath)-1);
 		}
 		if (!file_exists($projectPath)) {
-			if (!mkdir($projectPath.'/', 0755, true)) {
+			if (!mkdir($projectPath . "/", 0755, true)) {
 				die("Unable to create Absolute Path");
 			}
 		} else {
@@ -169,14 +169,18 @@ define("BASE_PATH", __DIR__);
 // BASE URL TO ATHEOS (without trailing slash)
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
-// THEME : default, modern or clear (look at /themes)
+// THEME : atheos, modern or clear (look at /themes)
 define("THEME", "atheos");
 
-// SESSION LIFETIME (e.g. 7200 = 2 hours)
-define("LIFETIME", 7200);
+// SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
+define("LIFETIME", false);
 
 // TIMEZONE
-date_default_timezone_set("' . $timezone . '");
+try {
+    date_default_timezone_set("' . $timezone . '");
+} catch (Exception $e) {
+    date_default_timezone_set("UTC");
+}
 
 // DEVELOPMENT MODE
 define("DEVELOPMENT", false);

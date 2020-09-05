@@ -28,7 +28,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'saveCache':
 		$cache = POST("cache");
-		$Update->saveCache($cache);		
+		$Update->saveCache($cache);
 		break;
 
 
@@ -36,6 +36,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }
