@@ -26,22 +26,20 @@ class Filemanager {
 	public function create($path, $type) {
 
 		if (file_exists($path)) {
-			Common::sendJSON("error", i18n("path_exists")); die;
+			Common::send("error", i18n("path_exists"));
 		}
 
 		// $path = strip_tags($path);
 		$path = htmlspecialchars($path);
 
 		if ($type === "directory" && mkdir($path)) {
-			Common::sendJSON("S2000");
+			Common::send("success");
 		} elseif ($type === "file" && $file = fopen($path, 'w')) {
 			$modifyTime = filemtime($path);
 			fclose($file);
-			Common::sendJSON("success", array("modifyTime" => $modifyTime));
-
-			Common::sendJSON("S2000");
+			Common::send("success", array("modifyTime" => $modifyTime));
 		} else {
-			Common::sendJSON("error", i18n("path_unableCreate"));
+			Common::send("error", i18n("path_unableCreate"));
 		}
 	}
 
@@ -50,11 +48,11 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function delete($path) {
 		if (!file_exists($path)) {
-			Common::sendJSON("E402i"); die;
+			Common::send("error", "Invalid path.");
 		}
 
 		Common::rDelete($path);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -62,11 +60,11 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function duplicate($path, $dest) {
 		if (!file_exists($path) || !$dest) {
-			Common::sendJSON("E403g"); die;
+			Common::send("error", "Invalid path.");
 		}
 
 		if (file_exists($dest)) {
-			Common::sendJSON("error", i18n("path_exists")); die;
+			Common::send("error", "Duplicate path.");
 		}
 
 		function rCopyDirectory($src, $dst) {
@@ -86,10 +84,10 @@ class Filemanager {
 
 		if (is_file($path)) {
 			copy($path, $dest);
-			Common::sendJSON("success", i18n("duplicated_file"));
+			Common::send("success", i18n("duplicated_file"));
 		} else {
 			rCopyDirectory($path, $dest);
-			Common::sendJSON("success", i18n("duplicated_folder"));
+			Common::send("success", i18n("duplicated_folder"));
 		}
 	}
 
@@ -103,11 +101,11 @@ class Filemanager {
 		$path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
 
 		if (!file_exists($path)) {
-			Common::sendJSON("E402m"); die;
+			Common::send("error", "Invalid path.");
 		}
 
 		if (!is_dir($path) || !($handle = opendir($path))) {
-			Common::sendJSON("error", i18n("directory_invalid")); die;
+			Common::send("error", "Unreadable path.");
 		}
 
 		$index = array();
@@ -168,7 +166,7 @@ class Filemanager {
 
 		$output = array_merge($folders, $files);
 
-		Common::sendJSON("success", array("index" => $output));
+		Common::send("success", array("index" => $output));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -176,7 +174,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function open($path) {
 		if (!$path || !is_file($path)) {
-			Common::sendJSON("E402i"); die;
+			Common::send("error", "Invalid path.");
 		}
 
 		$output = file_get_contents($path);
@@ -192,7 +190,7 @@ class Filemanager {
 		}
 
 		$modifyTime = filemtime($path);
-		Common::sendJSON("success", array("content" => $output, "modifyTime" => $modifyTime));
+		Common::send("success", array("content" => $output, "modifyTime" => $modifyTime));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -206,11 +204,11 @@ class Filemanager {
 		$newPath = htmlspecialchars($newPath);
 
 		if (file_exists($newPath)) {
-			Common::sendJSON("error", i18n("path_exists"));
+			Common::send("success", i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {
-			Common::sendJSON("S2000");
+			Common::send("S2000");
 		} else {
-			Common::sendJSON("error", i18n("path_unableRename"));
+			Common::send("success", i18n("path_unableRename"));
 		}
 	}
 
@@ -220,30 +218,29 @@ class Filemanager {
 	public function save($path, $modifyTime, $patch, $content) {
 		// Change content
 		if (!$content && !$patch) {
-			// Common::sendJSON("E403m", "Content");
 			$file = fopen($path, 'w');
 			fclose($file);
-			Common::sendJSON("success", array("modifyTime" => filemtime($path))); die;
+			Common::send("success", array("modifyTime" => filemtime($path)));
 		}
 
 		if ($content === ' ') {
 			$content = ''; // Blank out file
 		}
 		if ($patch && ! $modifyTime) {
-			Common::sendJSON("E403m", "ModifyTime");
+			Common::send("error", "ModifyTime");
 		}
 		if (!is_file($path)) {
-			Common::sendJSON("E402i"); die;
+			Common::send("error", "Invalid path.");
 		}
 
 		$serverModifyTime = filemtime($path);
 		$fileContents = file_get_contents($path);
 
 		if ($patch && $serverModifyTime !== (int)$modifyTime) {
-			Common::sendJSON("warning", "out of sync"); die;
+			Common::send("warning", "out of sync");
 		} elseif (strlen(trim($patch)) === 0 && !$content) {
 			// Do nothing if the patch is empty and there is no content
-			Common::sendJSON("success", array("modifyTime" => $serverModifyTime)); die;
+			Common::send("success", array("modifyTime" => $serverModifyTime));
 		}
 
 		if ($file = fopen($path, 'w')) {
@@ -258,14 +255,14 @@ class Filemanager {
 				// returned instead of new modification time after editing
 				// the file.
 				clearstatcache();
-				Common::sendJSON("success", array("modifyTime" => filemtime($path)));
+				Common::send("success", array("modifyTime" => filemtime($path)));
 			} else {
-				Common::sendJSON("E430c");
+				Common::send("error", "Client does not have access.");
 			}
 
 			fclose($file);
 		} else {
-			Common::sendJSON("E430c");
+			Common::send("error", "Client does not have access.");
 		}
 
 	}
