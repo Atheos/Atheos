@@ -294,6 +294,7 @@
 
 			var changedTabs = atheos.active.unsavedChanges();
 			if (changedTabs) {
+				atheos.active.focus(changedTabs[0]);
 				var changes = '';
 				changedTabs.forEach(function(path, i) {
 					changes += pathinfo(path).basename + '\n';

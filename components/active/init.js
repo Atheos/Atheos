@@ -80,7 +80,9 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-				if (self.unsavedChanges()) {
+				let changedTabs = self.unsavedChanges();
+				if (changedTabs) {
+					self.focus(changedTabs[0]);
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
 
@@ -117,7 +119,6 @@
 			}
 
 			if (changedTabs.length > 0) {
-				self.focus(changedTabs[0]);
 				return changedTabs;
 			}
 
@@ -358,8 +359,7 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		save: function(path) {
-			/* Notify listeners. */
-			amplify.publish('active.save', path);
+
 
 			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
 				atheos.toast.show('error', 'No open files.');
@@ -369,6 +369,9 @@
 			var content = session.getValue();
 			var newContent = content.slice(0);
 			path = session.path;
+
+			/* Notify listeners. */
+			amplify.publish('active.save', path);
 
 			var handleSuccess = function(mtime) {
 				var session = atheos.active.sessions[path];
