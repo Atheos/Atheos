@@ -36,8 +36,8 @@ class Active {
 	// Add File
 	//////////////////////////////////////////////////////////////////////////80
 	public function add($path) {
-		$query = array("user" => $this->activeUser, "path" => $path, "status" => "active");
-		$this->db->insert($query);
+		$value = array("user" => $this->activeUser, "path" => $path, "status" => "active");
+		$this->db->insert($value);
 		Common::send("success");
 	}
 
@@ -97,7 +97,6 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($path) {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
-		debug($where);
 		$this->db->delete($where);
 		Common::send("success");
 	}
