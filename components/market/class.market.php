@@ -156,10 +156,10 @@ class Market {
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::send("error", i18n("market_unableExtract")); die;
+					Common::send("error", i18n("market_unableExtract")); 
 				}
 			} else {
-				Common::send("error", i18n("market_noZip")); die;
+				Common::send("error", i18n("market_noZip")); 
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
