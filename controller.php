@@ -37,7 +37,7 @@ if ($action === "debug") {
 }
 
 if (!$action || !$target) {
-	Common::send("error", "Missing parameter");
+	Common::send("error", "Missing target or action.");
 }
 
 if (file_exists("components/$target/controller.php")) {
