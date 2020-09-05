@@ -108,7 +108,7 @@ class Project {
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "access");
-		Common::send("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -202,7 +202,7 @@ class Project {
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$projectName}", "access");
 
-		Common::send("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

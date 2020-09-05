@@ -206,7 +206,7 @@ class Filemanager {
 		if (file_exists($newPath)) {
 			Common::send("success", i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {
-			Common::send("S2000");
+			Common::send("success");
 		} else {
 			Common::send("success", i18n("path_unableRename"));
 		}
