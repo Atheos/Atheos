@@ -75,8 +75,7 @@ trait Check {
 			if ($destroy) {
 				session_unset();
 				session_destroy();
-				Common::sendJSON("error", "Security violation");
-				exit;
+				Common::send("error", "Security violation");
 			}
 
 			$_SESSION["LAST_ACTIVE"] = time(); //Reset user activity timer
@@ -90,8 +89,7 @@ trait Check {
 		}
 
 		if (!isset($_SESSION['user'])) {
-			Common::sendJSON("error", "Authentication error");
-			exit;
+			Common::send("error", "Authentication error");
 		}
 	}
 }

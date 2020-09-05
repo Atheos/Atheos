@@ -222,7 +222,7 @@ class Scroll extends Codec {
 		if ($where !== "*") {
 			$temp =& $this->filter($where, true);
 		}
-
+		
 		$this->data = $temp;
 		$this->save(true);
 	}

@@ -7,7 +7,7 @@ trait Status {
 		$result = $this->execute("git status --branch --porcelain");
 
 		if (!$result["status"]) {
-			Common::sendJSON("error", i18n("codegit_error_statusFail")); die;
+			Common::send("error", i18n("codegit_error_statusFail"));
 		} else {
 			$result = $result["data"];
 		}
@@ -26,28 +26,26 @@ trait Status {
 			$status = 'Committed';
 		}
 
-		Common::sendJSON("success", $status);
+		Common::send("success", $status);
 	}
 
 	public function fileStatus($path) {
 		if (!file_exists($path)) {
-			Common::sendJSON("error", i18n("path_missing"));
-			return;
+			Common::send("error", i18n("path_missing"));
 		}
 
 		$dirname = dirname($path);
 		$filename = basename($path);
 
 		if (!is_dir($dirname)) {
-			Common::sendJSON("success", $result);
-			return;
+			Common::send("error", "Invalid path.");
 		}
 		chdir($dirname);
 
 		$result = $this->execute("git diff --numstat " . $filename);
 
 		if (!$result["status"]) {
-			Common::sendJSON("error", i18n("codegit_error_statusFail")); die;
+			Common::send("error", i18n("codegit_error_statusFail"));
 		} else {
 			$result = $result["data"];
 		}
@@ -74,7 +72,7 @@ trait Status {
 			$deletions = 0;
 		}
 		$result = array("branch" => $this->getCurrentBranch(), "insertions" => $additions, "deletions" => $deletions);
-		Common::sendJSON("success", $result);
+		Common::send("success", $result);
 	}
 
 	public function branchStatus($repo) {

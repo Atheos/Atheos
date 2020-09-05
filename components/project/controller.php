@@ -21,17 +21,15 @@ $gitBranch = POST("gitBranch");
 
 $Project = new Project();
 
-
-
 switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
+			Common::send("error", "User does not have access.");
 		} elseif (!$projectName) {
-			Common::sendJSON("E403m");
+			Common::send("error", "Missing project name.");
 		} else {
 			$projectPath = $projectPath ? $projectPath : $projectName;
 			$Project->create($projectName, $projectPath, $gitRepo, $gitBranch);
@@ -44,9 +42,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'current':
 		if ($activeProject) {
-			Common::sendJSON("success", array("path" => $activeProject));
+			Common::send("success", array("path" => $activeProject));
 		} else {
-			Common::sendJSON("error", i18n("project_noActive"));
+			Common::send("error", i18n("project_noActive"));
 		}
 		break;
 
@@ -55,9 +53,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
+			Common::send("error", "User does not have access.");
 		} elseif (!$projectPath) {
-			Common::sendJSON("E403m");
+			Common::send("error", "Missing project path.");
 		} else {
 			$Project->delete($projectPath);
 		}
@@ -76,12 +74,12 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'open':
 		$projectPath = $projectPath === "ATHEOS" ? BASE_PATH : $projectPath;
-		
-		
+
+
 		if (!Common::checkPath($projectPath)) {
-			Common::sendJSON("E430u");
+			Common::send("error", "User does not have access.");
 		} elseif (!$projectPath) {
-			Common::sendJSON("E403m");
+			Common::send("error", "Missing project path.");
 		} else {
 			$Project->open($projectPath);
 		}
@@ -93,9 +91,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'rename':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
+			Common::send("error", "User does not have access.");
 		} elseif (!$projectName || !$projectPath) {
-			Common::sendJSON("E403m");
+			Common::send("error", "Missing project path or name.");
 		} else {
 			$Project->rename($projectName, $projectPath);
 		}
@@ -103,6 +101,6 @@ switch ($action) {
 		break;
 
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }
