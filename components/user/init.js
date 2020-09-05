@@ -292,7 +292,7 @@
 				});
 			};
 
-			var changedTabs = atheos.active.hasUnsavedChanges();
+			var changedTabs = atheos.active.unsavedChanges();
 			if (changedTabs) {
 				var changes = '';
 				changedTabs.forEach(function(path, i) {
