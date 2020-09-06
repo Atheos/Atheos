@@ -164,7 +164,7 @@ class Scroll extends Codec {
 			$match = true;
 
 			foreach ($where as $w) {
-				if (count($w) !== 3) return "invalid_where";
+				if (!is_array($w) || count($w) !== 3) return "invalid_where";
 				$k = $w[0];
 				$o = $w[1];
 				$v = $w[2];
@@ -222,7 +222,7 @@ class Scroll extends Codec {
 		if ($where !== "*") {
 			$temp =& $this->filter($where, true);
 		}
-
+		
 		$this->data = $temp;
 		$this->save(true);
 	}

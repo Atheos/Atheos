@@ -134,44 +134,21 @@
 		return o;
 	};
 
-	//////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
 	// Methods for determining whether something is or isn't
-	//////////////////////////////////////////////////////////////////////
-	global.types = {
-		isString: function(value) {
-			return typeof value === 'string' || value instanceof String;
-		},
-		isNumber: function(value) {
-			return typeof value === 'number' && isFinite(value);
-		},
-		isArray: function(value) {
-			return value && typeof value === 'object' && value.constructor === Array;
-		},
-		isFunction: function(value) {
-			return typeof value === 'function';
-		},
-		isObject: function(value) {
-			return value && typeof value === 'object' && value.constructor === Object;
-		},
-		isNull: function(value) {
-			return value === null;
-		},
-		isBoolean: function(value) {
-			return typeof value === 'boolean';
-		},
-		isRegExp: function(value) {
-			return value && typeof value === 'object' && value.constructor === RegExp;
-		},
-		isError: function(value) {
-			return value instanceof Error && typeof value.message !== 'undefined';
-		},
-		isDate: function(value) {
-			return value instanceof Date;
-		},
-		isSymbol: function(value) {
-			return typeof value === 'symbol';
-		}
-	};
+	//////////////////////////////////////////////////////////////////////////80
+	global.isArray = (value) => value && typeof value === 'object' && value.constructor === Array;
+	global.isObject = (value) => value && typeof value === 'object' && value.constructor === Object;
+	global.isRegExp = (value) => value && typeof value === 'object' && value.constructor === RegExp;
+	global.isError = (value) => value instanceof Error && typeof value.message !== 'undefined';
+	global.isString = (value) => typeof value === 'string' || value instanceof String;
+	global.isNumber = (value) => typeof value === 'number' && isFinite(value);
+	global.isUndefined = (value) => typeof value === 'undefined';
+	global.isFunction = (value) => typeof value === 'function';
+	global.isBoolean = (value) => typeof value === 'boolean';
+	global.isSymbol = (value) => typeof value === 'symbol';
+	global.isDate = (value) => value instanceof Date;
+	global.isNull = (value) => value === null;
 
 	//////////////////////////////////////////////////////////////////////
 	// Shorthand for sending to console

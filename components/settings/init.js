@@ -186,7 +186,6 @@
 					value
 				},
 				success: function(reply) {
-					log(reply);
 					if (reply.status === 'error') {
 						atheos.toast.show(reply);
 					} else if (!hidden) {

@@ -49,7 +49,7 @@ class CodeGit {
 		$this->repo = $repo ? $repo : $this->findRepo($path);
 
 		if (!is_dir($this->repo)) {
-			Common::sendJSON("error", i18n("path_missing")); die;
+			Common::send("error", i18n("path_missing"));
 		}
 		chdir($this->repo);
 

@@ -20,15 +20,13 @@ $path = Common::getWorkspacePath($path);
 // Security Check
 //////////////////////////////////////////////////////////////////////////////80
 if (!Common::checkPath($path)) {
-	Common::sendJSON("E430u"); die;
+	Common::send("error", "User does not have access.");
 }
 
 //////////////////////////////////////////////////////////////////////////////80
 // Handle Action
 //////////////////////////////////////////////////////////////////////////////80
 $Transfer = new Transfer();
-// $Filemanager->project = @$_SESSION['project']['path'];
-
 $Transfer->root = WORKSPACE;
 
 switch ($action) {
@@ -48,6 +46,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }

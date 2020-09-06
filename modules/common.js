@@ -45,7 +45,7 @@
 
 			menu.close = function() {
 				if (menuOpen) {
-					if (types.isArray(switchClasses)) {
+					if (isArray(switchClasses)) {
 						// I could have made a nice If statement to switch the appropriate classes
 						// on menu open vs close, however converting the boolean value to a number
 						// was an inspirational moment and seemed really cool.
@@ -65,7 +65,7 @@
 				// Close other menus
 				this.closeMenus(menu);
 
-				if (types.isArray(switchClasses)) {
+				if (isArray(switchClasses)) {
 					// I could have made a nice If statement to switch the appropriate classes
 					// on menu open vs close, however converting the boolean value to a number
 					// was an inspirational moment and seemed really cool.

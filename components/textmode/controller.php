@@ -22,12 +22,12 @@ switch ($action) {
 		if (Common::checkAccess("configure")) {
 			$map = POST('map');
 			if (!is_array($map)) {
-				Common::sendJSON("E403i", "Map"); die;
+				Common::send("error", "Invalid map type.");
 			}
 
 			$TextMode->saveExtensionMap($map);
 		} else {
-			Common::sendJSON("E430u"); die;
+			Common::send("error", "User does not have access.");
 		}
 		break;
 
@@ -38,6 +38,6 @@ switch ($action) {
 		$TextMode->loadExtensionMap();
 		break;
 	default:
-		Common::sendJSON("E401i"); die;
+		Common::send("error", "Invalid action.");
 		break;
 }

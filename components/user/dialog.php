@@ -24,8 +24,7 @@ switch ($action) {
 		}
 
 		if (!Common::checkAccess("configure") && $username !== $activeUser) {
-			Common::sendJSON("E430u");
-			die;
+			Common::send("error", "User does not have access.");
 		}
 
 		?>
@@ -33,7 +32,7 @@ switch ($action) {
 		<form>
 			<label><?php echo i18n("password_new"); ?></label>
 			<input type="password" name="password1" autofocus="autofocus">
-			<i for="password1"  class="fas fa-eye-slash merged-icon togglePassword"></i>
+			<i for="password1" class="fas fa-eye-slash merged-icon togglePassword"></i>
 			<label><?php echo i18n("password_confirm"); ?></label>
 			<input type="password" name="password2">
 			<i for="password2" class="fas fa-eye-slash merged-icon togglePassword"></i>
@@ -173,6 +172,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }

@@ -13,7 +13,7 @@
 require_once('class.market.php');
 
 if (!Common::checkAccess("configure")) {
-	Common::sendJSON("E430u"); die;
+	Common::send("error", "User does not have access.");
 }
 
 $type = POST("type");
@@ -63,7 +63,6 @@ switch ($action) {
 		break;
 
 	default:
-		Common::sendJSON("E401i");
-		die;
+		Common::send("error", "Invalid action.");
 		break;
 }
