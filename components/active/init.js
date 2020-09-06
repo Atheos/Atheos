@@ -175,7 +175,7 @@
 		},
 
 		open: function(path, content, modifyTime, focus) {
-			if (focus === undefined) {
+			if (typeof focus === 'undefined') {
 				focus = true;
 			}
 
