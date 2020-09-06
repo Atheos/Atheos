@@ -31,13 +31,13 @@ if ($action !== 'authenticate') {
 if ($action === "debug") {
 	Common::send("success");
 } elseif ($action === "error") {
-	$message = Common::debug("message");
+	$message = POST("message");
 	Common::log($message, "trace-" . date("Y-m-d"));
 	die;
 }
 
 if (!$action || !$target) {
-	Common::send("error", "Missing parameter");
+	Common::send("error", "Missing target or action.");
 }
 
 if (file_exists("components/$target/controller.php")) {

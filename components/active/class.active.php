@@ -36,9 +36,9 @@ class Active {
 	// Add File
 	//////////////////////////////////////////////////////////////////////////80
 	public function add($path) {
-		$query = array("user" => $this->activeUser, "path" => $path, "status" => "active");
-		$this->db->insert($query);
-		Common::sendJSON("S2000");
+		$value = array("user" => $this->activeUser, "path" => $path, "status" => "active");
+		$this->db->insert($value);
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -53,9 +53,9 @@ class Active {
 			foreach ($result as $item) {
 				if ($item["user"] !== $this->activeUser) $activeUsers[] = $item["user"];
 			}
-			Common::sendJSON("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
+			Common::send("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
 		} else {
-			Common::sendJSON("S2000");
+			Common::send("success");
 		}
 	}
 
@@ -79,7 +79,7 @@ class Active {
 			}
 		}
 
-		Common::sendJSON("S2000", $temp);
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -89,7 +89,7 @@ class Active {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $oldPath]);
 		$value = array("path" => $newPath);
 		$this->db->update($where, $value);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -98,7 +98,7 @@ class Active {
 	public function remove($path) {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$this->db->delete($where);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -107,7 +107,7 @@ class Active {
 	public function removeAll() {
 		$where = array(["user", "==", $this->activeUser]);
 		$this->db->delete($where);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -121,6 +121,6 @@ class Active {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$value = array("status" => "focus");
 		$this->db->update($where, $value);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 }

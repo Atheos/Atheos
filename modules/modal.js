@@ -78,12 +78,12 @@
 
 			var listener, callback;
 
-			if (data.listener && types.isFunction(data.listener)) {
+			if (data.listener && isFunction(data.listener)) {
 				listener = data.listener;
 				delete data.listener;
 			}
 
-			if (data.callback && types.isFunction(data.callback)) {
+			if (data.callback && isFunction(data.callback)) {
 				callback = data.callback;
 				delete data.callback;
 			}

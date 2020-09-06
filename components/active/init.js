@@ -80,7 +80,9 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-				if (self.hasUnsavedChanges()) {
+				let changedTabs = self.unsavedChanges();
+				if (changedTabs) {
+					self.focus(changedTabs[0]);
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
 
@@ -106,7 +108,7 @@
 			});
 		},
 
-		hasUnsavedChanges() {
+		unsavedChanges() {
 			var changedTabs = [];
 			var path;
 
@@ -117,7 +119,6 @@
 			}
 
 			if (changedTabs.length > 0) {
-				self.focus(changedTabs[0]);
 				return changedTabs;
 			}
 
@@ -347,6 +348,7 @@
 
 		markChanged: function(path) {
 			self.sessions[path].status = 'changed';
+			self.sessions[path].autosaved = false;
 			self.sessions[path].listItem.addClass('changed');
 		},
 
@@ -357,8 +359,7 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		save: function(path) {
-			/* Notify listeners. */
-			amplify.publish('active.save', path);
+
 
 			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
 				atheos.toast.show('error', 'No open files.');
@@ -368,6 +369,9 @@
 			var content = session.getValue();
 			var newContent = content.slice(0);
 			path = session.path;
+
+			/* Notify listeners. */
+			amplify.publish('active.save', path);
 
 			var handleSuccess = function(mtime) {
 				var session = atheos.active.sessions[path];
@@ -565,9 +569,9 @@
 				if (atheos.common.isAbsPath(newPath)) {
 					title = newPath.substring(1);
 				}
-				
+
 				let info = pathinfo(newPath);
-				listItem.find('a').html(`<span class="subtle">${info.directory}</span>${info.basename}`);
+				listItem.find('a').html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
 
 				self.sessions[newPath] = self.sessions[oldPath];
 				self.sessions[newPath].path = newPath;
@@ -752,13 +756,13 @@
 		// Factory
 		//////////////////////////////////////////////////////////////////////80
 		createListItem: function(path) {
-			var split = pathinfo(path);
+			var info = pathinfo(path);
 
 			// For some reason, leaving the leading slash on a path causes the
 			// leading slash to be moved to the end of the element, as in at the
 			// end of the file name and subsequently needs to be removed first.
-			var item = '<li class="draggable" data-path="' + path + '"><a><span  class="subtle">' +
-				split.directory.replace(/^\/+/g, '') + '/</span>' + split.basename +
+			var item = '<li class="draggable" data-path="' + path + '"><a><span class="subtle">' +
+				info.directory.replace(/^\/+/g, '') + '/</span>' + info.basename +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
