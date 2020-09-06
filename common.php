@@ -34,14 +34,6 @@ class Common {
 
 	public static $debugStack = array();
 
-	private static $data = array(
-		"session" => array(),
-		"post" => array(),
-		"get" => array(),
-	);
-
-	private static $database = null;
-
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
 	//////////////////////////////////////////////////////////////////////////80
@@ -86,37 +78,6 @@ class Common {
 		$components = Common::readDirectory(COMPONENTS);
 		$plugins = Common::readDirectory(PLUGINS);
 		$themes = Common::readDirectory(THEMES);
-
-		// Add data to global variables
-		if ($_POST && !empty($_POST)) {
-			foreach ($_POST as $key => $value) {
-				Common::$data["post"][$key] = $value;
-			}
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Read Post/Get/Server/Session Data
-	//////////////////////////////////////////////////////////////////////////80
-	public static function data($key, $type = false) {
-		$value = false;
-
-		if (array_key_exists($key, Common::$data["post"])) {
-			$value = Common::$data["post"][$key];
-		} elseif (array_key_exists($key, Common::$data["get"])) {
-			$value = Common::$data["get"][$key];
-		}
-
-		if ($type) {
-			if ($type === "server") {
-				$value = array_key_exists($key, $_SERVER) ? $_SERVER[$key] : false;
-			} elseif ($type === "session") {
-				$value = array_key_exists($key, $_SESSION) ? $_SESSION[$key] : false;
-			} else {
-				$value = array_key_exists($key, Common::$data[$type]) ? Common::$data[$type][$key] : false;
-			}
-		}
-		return $value;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80////////80
@@ -156,13 +117,13 @@ function debug($val) {
 }
 
 function POST($key, $val = null) {
-	$val = Common::newData($key, "POST", $val);
+	$val = Common::data($key, "POST", $val);
 	if ($key === "username") $val = Common::cleanUsername($val);
 	return $val;
 }
 
 function SESSION($key, $val = null) {
-	return Common::newData($key, "SESSION", $val);
+	return Common::data($key, "SESSION", $val);
 }
 
 ?>
