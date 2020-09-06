@@ -77,7 +77,7 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	$projectName = $data["projectName"] ?: false;
 	$projectPath = $data["projectPath"] ?: $projectName;
 	$timezone = $data["timezone"] ?: false;
-	$timezone = preg_replace('/[^a-zA-Z\/]/', "", $timezone);
+	$timezone = preg_replace('/[^a-zA-Z\/_\+]/', "", $timezone);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Projects files
