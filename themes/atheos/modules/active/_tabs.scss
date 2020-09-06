@@ -75,13 +75,13 @@ ul.tabList {
 	li::before {
 		right: -18px;
 		transform: skew(30deg, 0deg);
-		box-shadow: rgba(0, 0, 0, .1) 3px 2px 5px, inset rgba(255, 255, 255, .09) -1px 0;
+		box-shadow: rgba(0, 0, 0, 0.1) 3px 2px 5px, inset rgba(255, 255, 255, 0.09) -1px 0;
 	}
 
 	li::after {
 		left: -10px;
 		transform: skew(-30deg, 0deg);
-		box-shadow: rgba(0, 0, 0, .1) -3px 2px 5px, inset rgba(255, 255, 255, .09) 1px 0;
+		box-shadow: rgba(0, 0, 0, 0.1) -3px 2px 5px, inset rgba(255, 255, 255, 0.09) 1px 0;
 	}
 
 	li:hover {

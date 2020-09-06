@@ -60,17 +60,17 @@
 		margin-left: 3px;
 		border-right: 2px solid $borderLight;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			right: -2px;
 			border-right: 2px solid $borderLight;
 		}
 
-		&:before {
+		&::before {
 			transform: skew(0deg, 30deg);
 		}
 
-		&:after {
+		&::after {
 			transform: skew(0deg, -30deg);
 		}
 
