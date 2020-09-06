@@ -25,7 +25,6 @@
 		}
 	}
 
-
 	.ace_search_field {
 		border-radius: 0 !important;
 		font-size: inherit;
@@ -75,17 +74,13 @@
 		}
 	}
 
-
 	.ace_searchbtn.prev::before {
 		content: "\f053";
-
 	}
 
 	.ace_searchbtn.next::before {
 		content: "\f054";
-
 	}
-
 
 	.ace_searchbtn.prev,
 	.ace_searchbtn.next,
@@ -138,7 +133,6 @@
 		margin-left: 2px;
 	}
 
-
 	.ace_button:active {
 		background-color: #ddd;
 	}
@@ -156,7 +150,7 @@
 		top: 6px;
 
 		.ace_button:first-of-type {
-			font-family: 'Ubuntu-Fira';
+			font-family: 'Ubuntu-Fira', monospace;
 			color: $fontColorMajor;
 			line-height: 1.3;
 		}
@@ -165,6 +159,6 @@
 	.ace_search_counter {
 		float: left;
 		margin-top: 2px;
-		font-family: 'Ubuntu-Fira';
+		font-family: 'Ubuntu-Fira', monospace;
 	}
 }
