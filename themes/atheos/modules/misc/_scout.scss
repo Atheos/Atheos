@@ -21,7 +21,6 @@
 			display: block;
 			white-space: nowrap;
 
-
 			span:nth-child(1) {
 				padding: 4px 6px 3px 6px;
 				color: $teal;
@@ -37,24 +36,12 @@
 
 #probe_processing {
 	display: none;
-	// margin: 0;
-	// width: 40px;
-	// height: 40px;
-	// float: right;
-	// .loader h2 {
-	// 	top: 10%;
-	// }
 }
-
 
 #probe_table tr td {
 	border: none;
 	padding: 0;
 }
-
-/* Filter */
-#filter_open {}
-
 
 #filter_wrapper {
 	position: absolute;
@@ -62,7 +49,7 @@
 	top: 0;
 	left: 0;
 	bottom: 0;
-	right: 0px;
+	right: 0;
 	background-color: $foreground;
 	display: none;
 }

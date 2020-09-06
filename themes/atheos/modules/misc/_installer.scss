@@ -1,4 +1,3 @@
-/* INSTALLER */
 #installer {
 	position: absolute;
 	width: 450px;
@@ -9,7 +8,6 @@
 	overflow: auto;
 	z-index: 1;
 
-
 	h1 {
 		font-size: 24px;
 		margin: 0 0 15px;
@@ -19,6 +17,7 @@
 		height: 0;
 		border: none;
 		margin: 20px 0;
+
 		@include border(1px, top);
 	}
 }
@@ -27,10 +26,10 @@
 	background: $inputBackground;
 	padding: 10px;
 	margin: 10px 0 5px;
-	@include border-radius;
 	font-family: monospace;
-	/*box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);*/
 	overflow: auto;
+
+	@include border-radius;
 }
 
 .install_issues p {

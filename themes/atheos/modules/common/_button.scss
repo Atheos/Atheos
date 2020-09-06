@@ -6,7 +6,6 @@ button {
 	color: $background;
 	font-weight: bold;
 	background-color: $fontColorMajor;
-	// border: none;
 	cursor: pointer;
 
 	&.bottom-left {
@@ -22,7 +21,7 @@ button {
 		&:hover {
 			color: $grey;
 			background-color: $fontColorMajor;
-		border-color: $metal;
+			border-color: $metal;
 		}
 	}
 
@@ -30,7 +29,7 @@ button {
 		background-color: $fontColorMinor;
 		border-color: $coal;
 	}
-	
+
 	&:focus {
 		outline: none;
 	}
@@ -39,19 +38,3 @@ button {
 		margin-left: 6px;
 	}
 }
-
-
-// button.btn-left {
-//     // border-radius: 3px 0px 0px 3px;
-//     border-radius: $border-radius;
-//     border-right: none;
-// }
-// button.btn-mid {
-//     // border-radius: 0;
-//     border-radius: $border-radius;
-//     border-right: none;
-// }
-// button.btn-right {
-//     // border-radius: 0px 3px 3px 0px;
-//     border-radius: $border-radius;
-// }

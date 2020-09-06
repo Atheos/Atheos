@@ -11,7 +11,6 @@
 (function(global) {
 	'use strict';
 
-	// Define core
 	var atheos = global.atheos;
 
 	var self = null;

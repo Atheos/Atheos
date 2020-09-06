@@ -10,7 +10,11 @@
 .editor {
 	width: 100%;
 	height: 100%;
-	// color: $fontColorMajor;
+	position: absolute;
+	top: 0;
+	left: 0;
+	right: 0;
+	bottom: 0;
 }
 
 .ace_editor {
@@ -25,6 +29,7 @@
 .ace_gutter {
 	z-index: 1;
 }
+
 .ace_gutter-layer {
 	padding: 0;
 	background: url(images/default/gutter-bg.jpg);
@@ -70,12 +75,4 @@ editor-region {
 	left: 0;
 }
 
-.editor {
-	position: absolute;
-	top: 0;
-	left: 0;
-	right: 0;
-	bottom: 0;
-}
-
-@import "autocomplete", "bottom_bar", "splitter";
+@import "bottom_bar", "splitter";

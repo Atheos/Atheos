@@ -21,6 +21,7 @@
 			line-height: 18px;
 			margin-left: 5px;
 			padding: 2px 10px 2px 0;
+
 			@include border(1px, left);
 		}
 
@@ -40,6 +41,5 @@
 		&.context span {
 			color: $fontColorMajor;
 		}
-
 	}
 }
