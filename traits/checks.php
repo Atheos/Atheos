@@ -63,14 +63,18 @@ trait Check {
 	public static function checkSession() {
 		$loose_ip = long2ip(ip2long($_SERVER["REMOTE_ADDR"]) & ip2long("255.255.0.0"));
 
+		$userAgent = isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : md5("userAgent" . $loose_ip);
+		$encoding = isset($_SERVER["HTTP_ACCEPT_ENCODING"]) ? $_SERVER["HTTP_ACCEPT_ENCODING"] : md5("encoding" . $loose_ip);
+		$language = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? $_SERVER["HTTP_ACCEPT_LANGUAGE"] : md5("language" . $loose_ip);
+
 		//Some security checks, helps with securing the service
 		if (isset($_SESSION["user"]) && isset($_SESSION["LOOSE_IP"])) {
 			$destroy = false;
 
-			$destroy = $destroy ?: $_SESSION["LOOSE_IP"] !== $loose_ip;
-			$destroy = $destroy ?: $_SESSION["AGENT_STRING"] !== $_SERVER["HTTP_USER_AGENT"];
-			$destroy = $destroy ?: $_SESSION["ACCEPT_ENCODING"] !== $_SERVER["HTTP_ACCEPT_ENCODING"];
-			$destroy = $destroy ?: $_SESSION["ACCEPT_LANGUAGE"] !== $_SERVER["HTTP_ACCEPT_LANGUAGE"];
+			$destroy = $destroy ?: SESSION("LOOSE_IP") !== $loose_ip;
+			$destroy = $destroy ?: SESSION("AGENT_STRING") !== $userAgent;
+			$destroy = $destroy ?: SESSION("ACCEPT_ENCODING") !== $encoding;
+			$destroy = $destroy ?: SESSION("ACCEPT_LANGUAGE") !== $language;
 
 			if ($destroy) {
 				session_unset();
@@ -78,17 +82,17 @@ trait Check {
 				Common::send("error", "Security violation");
 			}
 
-			$_SESSION["LAST_ACTIVE"] = time(); //Reset user activity timer
+			SESSION("LAST_ACTIVE", time()); // Reset user activity timer
 		} else {
 			//Store identification data so we can detect malicous logins potentially. (Like XSS)
-			$_SESSION["AGENT_STRING"] = $_SERVER["HTTP_USER_AGENT"];
-			$_SESSION["ACCEPT_ENCODING"] = $_SERVER["HTTP_ACCEPT_ENCODING"];
-			$_SESSION["ACCEPT_LANGUAGE"] = $_SERVER["HTTP_ACCEPT_LANGUAGE"];
-			$_SESSION["LOOSE_IP"] = $loose_ip;
-			$_SESSION["LAST_ACTIVE"] = time();
+			SESSION("AGENT_STRING", $userAgent);
+			SESSION("ACCEPT_ENCODING", $encoding);
+			SESSION("ACCEPT_LANGUAGE", $language);
+			SESSION("LOOSE_IP", $loose_ip);
+			SESSION("LAST_ACTIVE", time()); // Set user activity timer
 		}
 
-		if (!isset($_SESSION['user'])) {
+		if (!SESSION("user")) {
 			Common::send("error", "Authentication error");
 		}
 	}
