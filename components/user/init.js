@@ -53,7 +53,6 @@
 
 				var element;
 
-
 				var username = atheos.storage('username');
 				var remember = atheos.storage('remember');
 				if (username && remember) {

@@ -197,12 +197,12 @@ class i18n {
 		}
 
 		// 2nd highest priority: SESSION parameter 'lang'
-		if (isset($_SESSION['lang']) && is_string($_SESSION['lang'])) {
-			$userLangs[] = $_SESSION['lang'];
+		if (isset($_SESSION["lang"]) && is_string($_SESSION['lang'])) {
+			$userLangs[] = $_SESSION["lang"];
 		}
 
 		// 3rd highest priority: HTTP_ACCEPT_LANGUAGE
-		if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
 			foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $part) {
 				$userLangs[] = strtolower(substr($part, 0, 2));
 			}

@@ -9,6 +9,7 @@
 	border: 3px solid rgba(255, 255, 255, 0.5);
 	padding: 10px;
 	z-index: 9999999;
+
 	@include border-radius;
 
 	h1 {
@@ -33,38 +34,3 @@
 		}
 	}
 }
-
-
-// This isn't used at all but I'm keeping it for when I start really going through the CSS and want inspiration
-/*.dialog-box {
-	background: #f8f8f8;
-	color: #39342d;
-	box-shadow: inset 0 1px 0 #fff, 0 1px 3px rgba(0, 0, 0, .3);
-	padding: 20px;
-	max-width: 300px;
-	position: absolute;
-	z-index: 2;
-}
-
-.dialog-box button {
-	color: #fff;
-	border: 1px solid rgba(0, 0, 0, .2);
-	background: #27ae60;
-	border-radius: 2px;
-	cursor: pointer;
-}
-
-#cancel {
-	background-color: #e74c3c;
-}
-
-.overlay {
-	padding: 0;
-	margin: 0;
-	background: rgba(0, 0, 0, .4);
-	position: absolute;
-	top: 0;
-	height: 100%;
-	width: 100%;
-	z-index: 1;
-}*/

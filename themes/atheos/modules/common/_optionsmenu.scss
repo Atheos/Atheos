@@ -2,6 +2,7 @@
 	position: absolute;
 	z-index: 9999;
 	background-color: $background;
+
 	@include border(1px);
 	@include border-radius;
 
@@ -33,7 +34,5 @@
 			background-color: $highlight;
 			color: white;
 		}
-
 	}
-
 }

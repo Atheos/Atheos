@@ -25,7 +25,6 @@ toggle {
 		}
 	}
 
-
 	input {
 		width: 32px;
 		height: 32px;
@@ -41,6 +40,5 @@ toggle {
 		&:checked+label {
 			background-color: $colorMajor;
 		}
-
 	}
 }
