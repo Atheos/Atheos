@@ -85,7 +85,7 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	// Change Permissions
 	//////////////////////////////////////////////////////////////////////////80
-	public function changePermissions($permissions) {
+	public function changePermissions($username, $permissions) {
 		$this->users[$username]["permissions"] = $permissions;
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
