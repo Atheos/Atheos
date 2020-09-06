@@ -61,7 +61,8 @@ class Codec {
 	}
 
 	protected function save($shuffle = false) {
-		$this->data = array_unique($this->data, SORT_REGULAR);
+		// $this->data = array_unique($this->data, SORT_REGULAR);
+
 		if ($shuffle) $this->data = array_values($this->data);
 		$data = json_encode($this->data, JSON_PRETTY_PRINT);
 		$write = fopen($this->path, 'w') or die("can't open file: " . $this->path);
@@ -93,8 +94,8 @@ class Parchment extends Codec {
 	}
 
 	/* Select all entries into the given group. */
-	public function update($key = false, $value = false, $insert = false) {
-		if (!$key || !$value) return "missing_parameter";
+	public function update($key = null, $value = null, $insert = false) {
+		if (empty($key) || empty($value)) return "missing_parameter";
 
 		if (is_array($key)) {
 			$count = count($key);
@@ -222,7 +223,7 @@ class Scroll extends Codec {
 		if ($where !== "*") {
 			$temp =& $this->filter($where, true);
 		}
-		
+
 		$this->data = $temp;
 		$this->save(true);
 	}

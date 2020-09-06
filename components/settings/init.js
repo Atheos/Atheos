@@ -176,7 +176,7 @@
 			if (!key || (typeof(value) === 'undefined')) {
 				return;
 			}
-
+			
 			echo({
 				url: atheos.controller,
 				data: {
