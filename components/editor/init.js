@@ -586,10 +586,10 @@
 
 		setTabSize: function(s, i) {
 			if (i) {
-				i.getSession().setTabSize(parseInt(s));
+				i.getSession().setTabSize(parseInt(s, 10));
 			} else {
 				this.forEach(function(i) {
-					i.getSession().setTabSize(parseInt(s), 10);
+					i.getSession().setTabSize(parseInt(s, 10));
 				});
 			}
 			// LocalStorage
