@@ -57,11 +57,11 @@
 					target: 'active',
 					action: 'list'
 				},
-				success: function(reply) {
-					if (reply.status !== 'success') {
+				settled: function(status, reply) {
+					if (status !== 'success') {
 						return;
 					}
-					delete reply.status;
+
 					var focused = false;
 					for (var key in reply) {
 						var item = reply[key];
