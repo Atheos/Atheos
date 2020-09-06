@@ -28,8 +28,8 @@
 		letter-spacing: 0;
 		@include box-shadow;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			content: '';
 			height: 20px;
 			width: 18px;
@@ -37,13 +37,13 @@
 			background-color: $midground;
 		}
 
-		&:before {
+		&::before {
 			top: -6px;
 			border-top: solid 2px $borderLight;
 
 		}
 
-		&:after {
+		&::after {
 			bottom: -6px;
 			border-bottom: solid 2px $borderLight;
 		}

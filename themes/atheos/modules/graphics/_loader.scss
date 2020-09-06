@@ -9,7 +9,6 @@
 		position: absolute;
 		top: calc(50% - 60px);
 
-
 		em {
 			display: inline-block;
 			animation: jump 1500ms infinite ease-in-out;
@@ -30,8 +29,8 @@
 		width: 40px;
 		height: 40px;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			content: " ";
 			display: block;
 			width: 100%;
@@ -41,13 +40,13 @@
 			position: absolute;
 		}
 
-		&:before {
+		&::before {
 			border: 6px solid $blue;
 			opacity: 0.2;
 			animation: glow 3s linear infinite;
 		}
 
-		&:after {
+		&::after {
 			border: 6px solid $blue;
 			border-color: $blue transparent $blue transparent;
 			animation: spin 1.5s linear infinite;
