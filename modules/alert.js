@@ -61,10 +61,10 @@
 
 				for (var key in options.actions) {
 					let button = document.createElement('button');
+					let callback = options.actions[key];
 					button.innerText = i18n(key);
 					button.addEventListener('click', function() {
-						options.actions[button.innerText]();
-						button.remove();
+						callback();
 						alert.unload();
 					});
 					actions.append(button);
