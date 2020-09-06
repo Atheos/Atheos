@@ -40,19 +40,21 @@ class User {
 			$user = $this->users[$username];
 
 			if (password_verify($password, $user["password"])) {
-				$_SESSION['user'] = $username;
-				$_SESSION['lang'] = $language;
-				$_SESSION['theme'] = $theme;
-				if ($user['activeProject'] !== '') {
-					$_SESSION['project'] = $user['activeProject'];
+				SESSION("user", $username);
+				SESSION("lang", $language);
+				SESSION("theme", $theme);
+
+				if ($user["activeProject"] !== '') {
+					SESSION("project", $user["activeProject"]);
 				}
+				
 				$reply = array(
 					"username" => $username,
 					"lastLogin" => $user["lastLogin"]
 				);
 
 				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
-				Common::saveJSON('users', $this->users);
+				Common::saveJSON("users", $this->users);
 
 				// Log Action
 				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
