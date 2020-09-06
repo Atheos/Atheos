@@ -189,11 +189,11 @@ class TextMode {
 	public function getAvailableModes() {
 		return $this->availableModes;
 	}
-	
+
 	public function getDefaultExtensionMap() {
 		return $this->defaultExtensionMap;
 	}
-	
+
 	//////////////////////////////////////////////////////////////////
 	//checks if the sended extensions are valid to prevent any injections
 	//////////////////////////////////////////////////////////////////
@@ -225,19 +225,19 @@ class TextMode {
 			}
 
 			if (!validMode($mode) || !validateExtension($extension)) {
-				Common::sendJSON("E403g"); die;
+				Common::send("error", "Invalid mode or extension.");
 			}
 
 
 			if (isset($customMap[$extension])) {
-				Common::sendJSON("error", i18n("extensionSet")); die;
+				Common::send("error", i18n("extensionSet"));
 			} else {
 				$customMap[$extension] = $mode;
 			}
 		}
 
 		Common::saveJSON("extensions", $customMap);
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -258,7 +258,7 @@ class TextMode {
 				$validMap[$extension] = $mode;
 			}
 		}
-		Common::sendJSON("success", array('extensionMap' => $validMap, 'modes' => $this->availableModes));
+		Common::send("success", array('extensionMap' => $validMap, 'modes' => $this->availableModes));
 	}
 
 	//////////////////////////////////////////////////////////////////

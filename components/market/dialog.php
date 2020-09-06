@@ -73,7 +73,7 @@ switch ($action) {
 								<h2><?php echo i18n("coming"); ?></h2>
 							</td>
 						</tr>
-						<?php echo $table["c"]; ?>						
+						<?php echo $table["c"]; ?>
 					</tbody>
 
 				</table>
@@ -82,7 +82,6 @@ switch ($action) {
 		}
 		break;
 	default:
-		Common::sendJSON("E401i");
-		die;
+		Common::send("error", "Invalid action.");
 		break;
 } ?>

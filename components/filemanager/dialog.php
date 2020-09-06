@@ -19,7 +19,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Create
 	//////////////////////////////////////////////////////////////////////////80
-	case 'create':
+	case "create":
 		?>
 		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("create_type", (ucfirst($type))); ?></label>
 		<form>
@@ -33,7 +33,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Duplicate
 	//////////////////////////////////////////////////////////////////////////80
-	case 'duplicate':
+	case "duplicate":
 		?>
 		<label class="title"><i class="fa fa-clone"></i> <?php echo i18n("duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></label>
 		<form>
@@ -51,7 +51,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename
 	//////////////////////////////////////////////////////////////////////////80
-	case 'rename':
+	case "rename":
 		?>
 		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
 		<form>
@@ -68,6 +68,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }

@@ -10,9 +10,9 @@ trait Transfer {
 		$result["text"] = implode("\n", $result["data"]);
 
 		if ($result["status"]) {
-			Common::sendJSON("success", $result);
+			Common::send("success", $result);
 		} else {
-			Common::sendJSON("error", $result);
+			Common::send("error", $result);
 		}
 	}
 
@@ -22,9 +22,9 @@ trait Transfer {
 		$result["text"] = implode("\n", $result["data"]);
 
 		if ($result["status"]) {
-			Common::sendJSON("success", $result);
+			Common::send("success", $result);
 		} else {
-			Common::sendJSON("error", $result);
+			Common::send("error", $result);
 		}
 	}
 
@@ -34,9 +34,9 @@ trait Transfer {
 		$result["text"] = implode("\n", $result["data"]);
 
 		if ($result["status"]) {
-			Common::sendJSON("success", $result);
+			Common::send("success", $result);
 		} else {
-			Common::sendJSON("error", $result);
+			Common::send("error", $result);
 		}
 	}
 }

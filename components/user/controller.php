@@ -32,9 +32,9 @@ switch ($action) {
 			// theme
 			$User->authenticate($username, $password, $language, $theme);
 		} elseif (!$username) {
-			Common::sendJSON("error", "Missing username."); die;
+			Common::send("error", "Missing username.");
 		} else {
-			Common::sendJSON("error", "Missing password."); die;
+			Common::send("error", "Missing password.");
 		}
 		break;
 
@@ -43,14 +43,13 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'changePassword':
 		if (!$username || !$password) {
-			die(Common::sendJSON("error", "Missing username or password"));
+			Common::send("error", "Missing username or password.");
 		}
 
 		if (Common::checkAccess("configure") || $username === SESSION("user")) {
 			$User->changePassword($username, $password);
 		} else {
-			Common::sendJSON("E430u");
-			die;
+			Common::send("error", "User does not have access.");
 		}
 		break;
 
@@ -59,11 +58,10 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'create':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
-			die;
+			Common::send("error", "User does not have access.");
 		}
 		if (!$username || !$password) {
-			die(Common::sendJSON("error", "Missing username or password"));
+			Common::send("error", "Missing username or password.");
 		}
 
 		$User->create($username, $password);
@@ -75,11 +73,10 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'delete':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
-			die;
+			Common::send("error", "User does not have access.");
 		}
 		if (!$username) {
-			die(Common::sendJSON("error", "Missing username"));
+			Common::send("error", "Missing username.");
 		}
 		$User->delete($username);
 
@@ -108,7 +105,7 @@ switch ($action) {
 		$activeProject = POST('activeProject');
 
 		if (!isset($activeProject)) {
-			die(Common::sendJSON("error", "Missing project"));
+			Common::send("error", "Missing project.");
 		}
 		$User->saveActiveProject($activeProject);
 		break;
@@ -118,11 +115,10 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case 'updateACL':
 		if (!Common::checkAccess("configure")) {
-			Common::sendJSON("E430u");
-			die;
+			Common::send("error", "User does not have access.");
 		}
 		if (!$username) {
-			die(Common::sendJSON("error", "Missing username"));
+			Common::send("error", "Missing username.");
 
 			$userACL = POST('userACL');
 			$User->updateACL($username, $userACL);
@@ -133,6 +129,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::sendJSON("E401i");
+		Common::send("error", "Invalid action.");
 		break;
 }

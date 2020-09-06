@@ -97,11 +97,11 @@
 		},
 
 		show: function(type, text, options) {
-			if (types.isObject(type)) {
+			if (isObject(type)) {
 				options = type;
 				type = options.status;
 			} else {
-				options = types.isObject(options) ? options : {};
+				options = isObject(options) ? options : {};
 			}
 			if (this.types.hasOwnProperty(type)) {
 				options = extend(this.types[type], options);

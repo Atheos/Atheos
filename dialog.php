@@ -21,7 +21,7 @@ $action = POST("action");
 $target = POST("target");
 
 if (!$action || !$target) {
-	Common::sendJSON("E401m"); die;
+	Common::send("error", "Missing target or action.");
 }
 
 if (file_exists("components/$target/dialog.php")) {
@@ -29,5 +29,5 @@ if (file_exists("components/$target/dialog.php")) {
 } elseif (file_exists("plugins/$target/dialog.php")) {
 	require("plugins/$target/dialog.php");
 } else {
-	Common::sendJSON("E401m"); die;
+	Common::send("error", "Bad target destination");
 }

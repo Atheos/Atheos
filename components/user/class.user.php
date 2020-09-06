@@ -54,19 +54,17 @@ class User {
 				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
 				Common::saveJSON('users', $this->users);
 
-				Common::sendJSON("success", $reply);
 				// Log Action
 				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
-
+				Common::send("success", $reply);
 			} else {
-				Common::sendJSON("error", "Invalid Password.");
 				// Log Action
 				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} attempted log in", "access");
-
+				Common::send("error", "Invalid password.");
 			}
 
 		} else {
-			Common::sendJSON("error", "Username not found.");
+			Common::send("error", "Username not found.");
 		}
 	}
 
@@ -79,23 +77,21 @@ class User {
 
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
-		// Response
-		Common::sendJSON("S2000");
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Change Permissions
 	//////////////////////////////////////////////////////////////////////////80
-	public function changePermissions($permissions) {
+	public function changePermissions($username, $permissions) {
 		$this->users[$username]["permissions"] = $permissions;
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
-		// Response
-		Common::sendJSON("S2000");
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -122,12 +118,12 @@ class User {
 			);
 
 			Common::saveJSON('users', $this->users);
-			Common::sendJSON("success", array("username" => $username));
 			// Log
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $username . "}", "access");
+			Common::send("success", array("username" => $username));
 
 		} else {
-			Common::sendJSON("error", "That username is already taken.");
+			Common::send("error", "That username is already taken.");
 		}
 	}
 
@@ -146,7 +142,7 @@ class User {
 		$db->delete($where);
 
 		// Response
-		Common::sendJSON("S2000");
+		Common::send("success");
 
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
@@ -161,7 +157,7 @@ class User {
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
 		// Response
-		Common::sendJSON("S2000");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -175,10 +171,9 @@ class User {
 		$this->users[$username]["userACL"] = $userACL;
 		// Save array back to JSON
 		Common::saveJSON('users', $this->users);
-		// Response
-		Common::sendJSON("S2000");
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -186,9 +181,9 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function verify($username) {
 		if (array_key_exists($username, $this->users)) {
-			Common::sendJSON("S2000");
+			Common::send("success");
 		} else {
-			Common::sendJSON("E404g");
+			Common::send("error", "Invalid account.");
 		}
 	}
 }
