@@ -10,14 +10,14 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once 'class.user.php';
+require_once "class.user.php";
 
 $activeUser = SESSION("user");
 $User = new User($activeUser);
 
-$username = POST('username');
-$password = POST('password');
-$language = POST('language');
+$username = POST("username");
+$password = POST("password");
+$language = POST("language");
 
 switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
