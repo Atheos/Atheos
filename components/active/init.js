@@ -61,9 +61,7 @@
 					if (status !== 'success') {
 						return;
 					}
-					
-					log(reply);
-					
+
 					var focused = false;
 					for (var key in reply) {
 						var item = reply[key];
