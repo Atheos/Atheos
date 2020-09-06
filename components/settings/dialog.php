@@ -32,6 +32,9 @@ switch ($action) {
 					<a data-panel="codegit"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
 				</li>
 				<li>
+					<a data-panel="draft"><i class="fas fa-save"></i><?php echo i18n("draft"); ?></a>
+				</li>
+				<li>
 					<a data-panel="keybindings"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
 				</li>
 

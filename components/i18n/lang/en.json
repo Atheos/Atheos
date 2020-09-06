@@ -172,8 +172,16 @@
 		"": "Settings",
 		"autosave": "Settings are automatically saved.",
 		"editor": "Editor Settings",
+		"draft": "Draft Settings",
 		"system": "System Settings",
 		"codegit": "CodeGit Settings"
+	},
+	
+	"draft": {
+		"": "Draft",
+		"enable": "Enable autosaving files in draft",
+		"interval": "Draft saving interval",
+		"verbose": "Verbose autosaving"
 	},
 
 	"account": {
