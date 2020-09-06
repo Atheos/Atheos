@@ -5,7 +5,6 @@
 	margin: 0;
 	padding: 0;
 	background: $midground;
-	/*box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);*/
 	cursor: col-resize;
 
 	span {
@@ -26,6 +25,7 @@
 		background: $midground;
 		z-index: 10;
 		letter-spacing: 0;
+
 		@include box-shadow;
 
 		&::before,
@@ -40,7 +40,6 @@
 		&::before {
 			top: -6px;
 			border-top: solid 2px $borderLight;
-
 		}
 
 		&::after {
@@ -84,17 +83,17 @@
 		margin-left: -20px;
 		border-left: 2px solid $borderLight;
 
-		&:before,
-		&:after {
+		&::before,
+		&::after {
 			left: -2px;
 			border-left: 2px solid $borderLight;
 		}
 
-		&:before {
+		&::before {
 			transform: skew(0deg, -30deg);
 		}
 
-		&:after {
+		&::after {
 			transform: skew(0deg, 30deg);
 		}
 
