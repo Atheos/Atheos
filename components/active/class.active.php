@@ -69,6 +69,7 @@ class Active {
 		$temp = array();
 		foreach ($result as $file) {
 			$path = $file["path"];
+
 			if (file_exists(Common::getWorkspacePath($path))) {
 				$temp[] = $file;
 			} else {
@@ -79,7 +80,7 @@ class Active {
 			}
 		}
 
-		Common::send("success");
+		Common::send("success", $temp);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
