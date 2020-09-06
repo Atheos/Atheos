@@ -20,9 +20,9 @@ header("Feature-Policy: sync-xhr 'self'");
 // header("Access-Control-Allow-Origin: https://www.atheos.io");
 header("Access-Control-Allow-Origin: *");
 
-require_once('common.php');
+require_once("common.php");
 
-require_once('public/class.sourcemanager.php');
+require_once("public/class.sourcemanager.php");
 
 $SourceManager = new SourceManager;
 
@@ -138,11 +138,11 @@ $theme = SESSION("theme") ?: THEME;
 		//////////////////////////////////////////////////////////////////
 		$SourceManager->echoScripts("plugins", DEVELOPMENT);
 	} else {
-		$path = rtrim(str_replace("index.php", "", $_SERVER['SCRIPT_FILENAME']), "/");
+		$path = __DIR__ . "/data/";
 
-		$users = file_exists($path . "/data/users.php") || file_exists($path . "/data/users.json");
-		$projects = file_exists($path . "/data/projects.php") || file_exists($path . "/data/projects.json");
-		$active = file_exists($path . "/data/active.php") || file_exists($path . "/data/active.json");
+		$users = file_exists($path . "users.php") || file_exists($path . "users.json");
+		$projects = file_exists($path . "projects.php") || file_exists($path . "projects.json");
+		$active = file_exists($path . "active.php") || file_exists($path . "active.json");
 
 		if (!$users && !$projects && !$active) {
 			// Installer
