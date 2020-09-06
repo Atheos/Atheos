@@ -22,9 +22,10 @@
 			padding: 2px 0;
 
 			&.line {
-				@include border(1px, right);
 				color: $fontColorMinor;
 				white-space: pre;
+
+				@include border(1px, right);
 			}
 
 			&.code {
@@ -49,9 +50,10 @@
 				}
 
 				.hash {
-					@include border(1px, right);
 					color: $red;
-				white-space: pre;
+					white-space: pre;
+
+					@include border(1px, right);
 				}
 
 			}

@@ -16,6 +16,7 @@ ul.tabList {
 		position: relative;
 		cursor: pointer;
 		user-select: none;
+
 		@include box-shadow;
 
 		a {
@@ -34,7 +35,6 @@ ul.tabList {
 			.subtle {
 				color: $fontColorMinor;
 			}
-
 
 			&::before {
 				content: '';

@@ -1,12 +1,11 @@
-/* Git log */
 #codegit_log {
 
 	.commit {
-		@include border(1px, bottom);
 		padding: 8px 5px;
 
+		@include border(1px, bottom);
+
 		p {
-			// padding-top: 2px;
 			line-height: 18px;
 		}
 	}
