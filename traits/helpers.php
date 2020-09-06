@@ -46,7 +46,7 @@ trait Helpers {
 	//////////////////////////////////////////////////////////////////////////80
 	// Read Post/Get/Server/Session Data
 	//////////////////////////////////////////////////////////////////////////80
-	public static function newData($key = false, $type = false, $val = null) {
+	public static function data($key = false, $type = false, $val = null) {
 		if (!$key || !$type) return $val;
 
 		if (!empty($val) && $type === "SESSION") {
