@@ -129,7 +129,8 @@ class Project {
 			$projectName = $this->projects[$projectPath];
 
 			// Set Session Project
-			$_SESSION['project'] = $projectPath;
+			SESSION("project", $projectPath);
+
 		}
 
 		if (is_null($projectName) && $projectPath === BASE_PATH) {
@@ -155,14 +156,14 @@ class Project {
 	public function open($projectPath) {
 		if (isset($this->projects[$projectPath])) {
 			$projectName = $this->projects[$projectPath];
-			$_SESSION['project'] = $projectPath;
+			SESSION("project", $projectPath);
 			Common::send("success", array(
 				"name" => $projectName,
 				"path" => $projectPath,
 				"text" => $projectName . " Loaded."
 			));
 		} elseif ($projectPath === BASE_PATH) {
-			$_SESSION['project'] = $projectPath;
+			SESSION("project", $projectPath);
 			Common::send("success", array(
 				"name" => "Atheos IDE",
 				"path" => $projectPath,
