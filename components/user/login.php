@@ -37,33 +37,33 @@
 					}
 				} ?>
 			</select>
-			<label for="lanauge"><i class="fas fa-language"></i> <?php echo i18n("language"); ?></label>
+			<label for="language"><i class="fas fa-language"></i> <?php echo i18n("language"); ?></label>
 			<select name="language" id="language">
 				<?php
 				$languages = $i18n->codes();
-				foreach (glob("languages/*.php") as $filename):
-				$lang_code = str_replace(array("languages/", ".php"), "", $filename);
-				if (!isset($languages[$lang_code])) {
-					continue;
-				}
-				$lang_disp = ucfirst(strtolower($languages[$lang_code])); ?>
-				<option value="<?php echo $lang_code; ?>" <?php if ($lang_code == "en") {
-					echo "selected";
-				} ?>><?php echo $lang_disp; ?></option>
-				<?php endforeach; ?>
+				foreach ($languages as $code => $lang) {
+
+					$lang = ucfirst(strtolower($lang));
+					
+					$option = "<option value=\"$code\"";
+					if ($code === "en") $option .= "selected";
+					$option .= ">$lang</option>";
+					
+					echo $option;
+				} ?>
 			</select>
 		</div>
-		
+
 		<input id="remember" type="checkbox" name="remember" class="large">
 		<label for="remember"><?php echo i18n("rememberMe"); ?></label>
-		
+
 		<button><?php echo i18n("login"); ?></button>
 		<button id="show_login_options"><?php echo i18n("more"); ?></button>
 		<button id="hide_login_options" style="display:none;"><?php echo i18n("less"); ?></button>
 
 	</fieldset>
 </form>
-		<div id="toast_container" class="bottom-right"></div>
+<div id="toast_container" class="bottom-right"></div>
 
 <script src="components/i18n/init.js"></script>
 <script src="components/user/init.js"></script>

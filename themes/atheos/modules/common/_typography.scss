@@ -39,9 +39,9 @@ pre {
 	margin: 5px 0;
 	font-family: 'Ubuntu-Fira', monospace;
 	overflow: auto;
+
 	@include border-radius;
 	@include box-shadow;
-
 }
 
 hr {
