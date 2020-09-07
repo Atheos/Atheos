@@ -23,9 +23,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Authenticate / LogIn
 	//////////////////////////////////////////////////////////////////////////80
-	case 'authenticate':
+	case "authenticate":
 		if ($username && $password) {
-			$theme = POST('theme');
+			$theme = POST("theme");
 			$languages = $i18n->codes();
 			if (!$language || !isset($languages[$language])) $language = "en";
 
@@ -41,7 +41,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Change Password
 	//////////////////////////////////////////////////////////////////////////80
-	case 'changePassword':
+	case "changePassword":
 		if (!$username || !$password) {
 			Common::send("error", "Missing username or password.");
 		}
@@ -56,7 +56,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Create User
 	//////////////////////////////////////////////////////////////////////////80
-	case 'create':
+	case "create":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		}
@@ -71,7 +71,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Delete User
 	//////////////////////////////////////////////////////////////////////////80
-	case 'delete':
+	case "delete":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		}
@@ -85,14 +85,14 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Verify Session
 	//////////////////////////////////////////////////////////////////////////80
-	case 'keepAlive':
+	case "keepAlive":
 		$User->verify($activeUser);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Logout
 	//////////////////////////////////////////////////////////////////////////80
-	case 'logout':
+	case "logout":
 		session_unset();
 		session_destroy();
 		session_start();
@@ -101,26 +101,27 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Save Active Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'saveActiveProject':
-		$activeProject = POST('activeProject');
+	case "saveActiveProject":
+		$activeName = POST("name");
+		$activePath = POST("path");
 
-		if (!isset($activeProject)) {
-			Common::send("error", "Missing project.");
+		if (!$activeName || !$activePath) {
+			Common::send("error", "Missing name or path.");
 		}
-		$User->saveActiveProject($activeProject);
+		$User->saveActiveProject($activeName, $activePath);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////////80
-	case 'updateACL':
+	case "updateACL":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		}
 		if (!$username) {
 			Common::send("error", "Missing username.");
 
-			$userACL = POST('userACL');
+			$userACL = POST("userACL");
 			$User->updateACL($username, $userACL);
 		}
 		break;

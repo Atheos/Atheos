@@ -22,7 +22,10 @@ class Project {
 	public $gitBranch = '';
 	private $projects = '';
 	private $activeUser = '';
+
 	private $userData = false;
+	private $db = null;
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -34,14 +37,24 @@ class Project {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
-		$this->projects = Common::load('projects');
+		$this->db = Common::getParchment("projects");
+
 		$this->activeUser = SESSION("user");
 		$this->userData = Common::load("users")[$this->activeUser];
 
-		// Check if array is Associative or Sequential. Sequential is
-		// the old file format, so it needs to be pivoted.
-		if (array_keys($this->projects) === range(0, count($this->projects) - 1)) {
-			$this->pivotProjects();
+		if (file_exists(DATA . "/projects.json")) {
+			$this->projects = Common::load("projects");
+
+			// Check if array is Associative or Sequential. Sequential is
+			// the old file format, so it needs to be pivoted.
+			if (array_keys($this->projects) === range(0, count($this->projects) - 1)) {
+				$this->pivotProjects();
+			}
+
+			foreach ($this->projects as $projectPath => $projectName) {
+				$this->db->update($projectName, $projectPath, true);
+			}
+			unlink(DATA . "/projects.json");
 		}
 
 	}
@@ -54,18 +67,13 @@ class Project {
 		$projectPath = Common::cleanPath($projectPath);
 		$projectName = htmlspecialchars($projectName);
 
-		if (!Common::isAbsPath($projectPath)) {
-			$projectPath = $this->sanitizePath($projectPath);
-		}
-
-		if (array_key_exists($projectPath, $this->projects)) {
-			Common::send("error", i18n("project_exists_path"));
-		} elseif (in_array($projectName, $this->projects)) {
+		$results = $this->db->select($projectName);
+		if (!empty($results)) {
 			Common::send("error", i18n("project_exists_name"));
 		}
 
-
 		if (!Common::isAbsPath($projectPath)) {
+			$projectPath = $this->sanitizePath($projectPath);
 			mkdir(WORKSPACE . '/' . $projectPath);
 		} else {
 			if (!file_exists($projectPath)) {
@@ -79,8 +87,7 @@ class Project {
 			}
 		}
 
-		$this->projects[$projectPath] = $projectName;
-		Common::save('projects', $this->projects);
+		$this->db->insert($projectName, $projectPath);
 
 		// Pull from Git Repo?
 		if ($gitRepo && filter_var($gitRepo, FILTER_VALIDATE_URL) !== false) {
@@ -91,7 +98,7 @@ class Project {
 		}
 
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "access");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "projects");
 		Common::send("success", array("name" => $projectName, "path" => $projectPath));
 
 	}
@@ -99,37 +106,56 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////////80
-	public function delete($projectPath) {
-		// Remove Project
-		unset($this->projects[$projectPath]);
-
-		// Save array back to JSON
-		Common::save('projects', $this->projects);
+	public function delete($projectName, $scope) {
+		$this->db->delete($projectName);
+		
+		if($scope === "hard") {
+			Common::send("success", "Server file deletion not yet implemented.");
+		}
 
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "access");
-		Common::send("success");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "projects");
+		Common::send("success", "Project Deleted.");
+	}
+
+	public function list() {
+		$projects = $this->db->select("*");
+		$userACL = $this->userData["userACL"];
+		asort($projects);
+
+		if ($userACL !== "full") {
+			foreach ($projects as $projectName => $projectPath) {
+				if (!in_array($projectPath, $userACL)) unset($projects[$projectName]);
+			}
+		}
+
+		return $projects;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Load Active Project, or Default
 	//////////////////////////////////////////////////////////////////////////80
-	public function load($active) {
-		if ($active) {
-			// Load currently active project
-			$projectPath = $active;
-			$projectName = isset($this->projects[$projectPath]) ? $this->projects[$projectPath] : null;
+	public function load($activeName, $activePath) {
+		debug($activeName);
+		if ($activeName && $activePath) {
+			// Load currently active project in session, pulled from cache data in user class
+			$projectName = $activeName;
+			$projectPath = $activePath;
 		} else {
 			// Load default/first project
+
+			$projects = $this->db->select("*");
+
 			if ($this->userData["userACL"] !== "full") {
 				$projectPath = reset($this->userData["userACL"]);
 			} else {
-				$projectPath = reset($projectPath);
+				$projectPath = reset($projects);
 			}
-			$projectName = $this->projects[$projectPath];
+			$projectName = array_search($projectPath, $projects);
 
 			// Set Session Project
-			SESSION("project", $projectPath);
+			SESSION("projectPath", $projectPath);
+			SESSION("projectName", $projectName);
 
 		}
 
@@ -137,7 +163,9 @@ class Project {
 			$projectName = "Atheos IDE";
 		}
 
-		Common::send("success", array(
+
+
+		$reply = array(
 			"name" => $projectName,
 			"path" => $projectPath,
 			"text" => $projectName . " Loaded.",
@@ -147,27 +175,28 @@ class Project {
 			// the client when I can accomplish it by adding this line here.
 			//			- Liam Siira
 			"lastLogin" => $this->userData["lastLogin"]
-		));
+		);
+
+		Common::send("success", $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Open Project
 	//////////////////////////////////////////////////////////////////////////80
-	public function open($projectPath) {
-		if (isset($this->projects[$projectPath])) {
-			$projectName = $this->projects[$projectPath];
-			SESSION("project", $projectPath);
+	public function open($projectName, $projectPath) {
+		if (($projectName !== "Atheos IDE" && $projectPath !== BASE_PATH)) {
+			$projectPath = $this->db->select($projectName);
+		}
+
+		if ($projectName && $projectPath) {
+
+			SESSION("projectName", $projectName);
+			SESSION("projectPath", $projectPath);
+
 			Common::send("success", array(
 				"name" => $projectName,
 				"path" => $projectPath,
 				"text" => $projectName . " Loaded."
-			));
-		} elseif ($projectPath === BASE_PATH) {
-			SESSION("project", $projectPath);
-			Common::send("success", array(
-				"name" => "Atheos IDE",
-				"path" => $projectPath,
-				"text" => "Atheos IDE Loaded."
 			));
 		} else {
 			Common::send("error", i18n("project_missing"));
@@ -193,16 +222,20 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename
 	//////////////////////////////////////////////////////////////////////////80
-	public function rename($projectName, $projectPath) {
-		// Change project name
-		$this->projects[$projectPath] = $projectName;
+	public function rename($oldName, $newName) {
+		$newName = htmlspecialchars($newName);
 
-		// Save array back to JSON
-		Common::save('projects', $this->projects);
+		if (!empty($this->db->select($newName))) {
+			Common::send("error", i18n("project_exists_name"));
+		}
+
+		$projectPath = $this->db->select($oldName);
+
+		$this->db->insert($newName, $projectPath);
+		$this->db->delete($oldName);
 
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$projectName}", "access");
-
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$oldName} to {$newName}", "projects");
 		Common::send("success");
 	}
 
