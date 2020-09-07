@@ -15,17 +15,9 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
-	public $name = '';
-	public $path = '';
-	public $gitRepo = false;
-	public $gitBranch = '';
-	private $projects = '';
-	private $activeUser = '';
-
+	private $activeUser = null;
 	private $userData = false;
 	private $db = null;
-
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -43,15 +35,15 @@ class Project {
 		$this->userData = Common::load("users")[$this->activeUser];
 
 		if (file_exists(DATA . "/projects.json")) {
-			$this->projects = Common::load("projects");
+			$projects = Common::load("projects");
 
 			// Check if array is Associative or Sequential. Sequential is
 			// the old file format, so it needs to be pivoted.
-			if (array_keys($this->projects) === range(0, count($this->projects) - 1)) {
-				$this->pivotProjects();
+			if (array_keys($projects) === range(0, count($projects) - 1)) {
+				$projects = $this->pivotProjects($projects);
 			}
 
-			foreach ($this->projects as $projectPath => $projectName) {
+			foreach ($projects as $projectPath => $projectName) {
 				$this->db->update($projectName, $projectPath, true);
 			}
 			unlink(DATA . "/projects.json");
@@ -207,16 +199,14 @@ class Project {
 	// Pivot the Projects from the old file format to the new file format
 	// ALERT: Pivot functions will be removed on 01/01/2022
 	//////////////////////////////////////////////////////////////////////////80
-	private function pivotProjects() {
+	private function pivotProjects($projects) {
 		$revisedArray = array();
-		foreach ($this->projects as $project => $data) {
+		foreach ($projects as $project => $data) {
 			if (isset($data["path"])) {
 				$revisedArray[$data["path"]] = $data["name"];
 			}
 		}
-		if (count($revisedArray) > 0) {
-			Common::save('projects', $revisedArray);
-		}
+		return $revisedArray;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

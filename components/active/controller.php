@@ -12,9 +12,8 @@
 
 require_once('class.active.php');
 
-$activeUser = SESSION("user");
 $path = POST("path");
-$Active = new Active($activeUser);
+$Active = new Active();
 
 switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
