@@ -61,11 +61,11 @@ trait Check {
 	// Check Session
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkSession() {
-		$loose_ip = long2ip(ip2long($_SERVER["REMOTE_ADDR"]) & ip2long("255.255.0.0"));
+		$loose_ip = long2ip(ip2long(SERVER("REMOTE_ADDR")) & ip2long("255.255.0.0"));
 
-		$userAgent = isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : md5("userAgent" . $loose_ip);
-		$encoding = isset($_SERVER["HTTP_ACCEPT_ENCODING"]) ? $_SERVER["HTTP_ACCEPT_ENCODING"] : md5("encoding" . $loose_ip);
-		$language = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? $_SERVER["HTTP_ACCEPT_LANGUAGE"] : md5("language" . $loose_ip);
+		$userAgent = SERVER("HTTP_USER_AGENT") || md5("userAgent" . $loose_ip);
+		$encoding = SERVER("HTTP_ACCEPT_ENCODING") || md5("encoding" . $loose_ip);
+		$language = SERVER("HTTP_ACCEPT_LANGUAGE") || md5("language" . $loose_ip);
 
 		//Some security checks, helps with securing the service
 		if (SESSION("user") && SESSION("LOOSE_IP")) {
