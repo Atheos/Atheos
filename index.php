@@ -140,11 +140,10 @@ $theme = SESSION("theme") ?: THEME;
 	} else {
 		$path = __DIR__ . "/data/";
 
-		$users = file_exists($path . "users.php") || file_exists($path . "users.json");
-		$projects = file_exists($path . "projects.php") || file_exists($path . "projects.json");
-		$active = file_exists($path . "active.php") || file_exists($path . "active.json");
+		$users = file_exists($path . "users.json");
+		$projects =  file_exists($path . "projects.json");
 
-		if (!$users && !$projects && !$active) {
+		if (!$users && !$projects) {
 			// Installer
 			require_once('components/install/view.php');
 		} else {
