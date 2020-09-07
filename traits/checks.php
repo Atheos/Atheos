@@ -17,10 +17,10 @@ trait Check {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkAccess($permission = "configure") {
 		$users = Common::load("users");
-		$username = SESSION("user");
+		$activeUser = SESSION("user");
 
-		if (array_key_exists($username, $users)) {
-			$permissions = $users[$username]["permissions"];
+		if (array_key_exists($activeUser, $users)) {
+			$permissions = $users[$activeUser]["permissions"];
 			return in_array($permission, $permissions);
 		} else {
 			return false;
@@ -32,14 +32,14 @@ trait Check {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkPath($path) {
 		$users = Common::load("users");
-		$username = SESSION("user");
-		$projects = Common::load('projects');
+		$activeUser = SESSION("user");
+		$projects = Common::load("projects");
 
-		if (!array_key_exists($username, $users)) {
+		if (!array_key_exists($activeUser, $users)) {
 			return false;
 		}
 
-		$userACL = $users[$username]["userACL"];
+		$userACL = $users[$activeUser]["userACL"];
 
 		if ($userACL === "full") {
 			return true;
@@ -68,7 +68,7 @@ trait Check {
 		$language = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? $_SERVER["HTTP_ACCEPT_LANGUAGE"] : md5("language" . $loose_ip);
 
 		//Some security checks, helps with securing the service
-		if (isset($_SESSION["user"]) && isset($_SESSION["LOOSE_IP"])) {
+		if (SESSION("user") && SESSION("LOOSE_IP")) {
 			$destroy = false;
 
 			$destroy = $destroy ?: SESSION("LOOSE_IP") !== $loose_ip;
@@ -79,7 +79,7 @@ trait Check {
 			if ($destroy) {
 				session_unset();
 				session_destroy();
-				Common::send("error", "Security violation");
+				Common::send("error", "Security violation.");
 			}
 
 			SESSION("LAST_ACTIVE", time()); // Reset user activity timer
