@@ -236,7 +236,7 @@ class TextMode {
 			}
 		}
 
-		Common::saveJSON("extensions", $customMap);
+		Common::save("extensions", $customMap);
 		Common::send("success");
 	}
 
@@ -244,7 +244,7 @@ class TextMode {
 	// Send the default extensions
 	//////////////////////////////////////////////////////////////////
 	public function loadExtensionMap() {
-		$map = Common::readJSON("extensions");
+		$map = Common::load("extensions");
 
 		if (!$map || !is_array($map)) {
 			$map = $this->defaultExtensionMap;

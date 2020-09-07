@@ -29,7 +29,7 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		ini_set("user_agent", "Atheos");
-		$this->latest = Common::readJSON("update", "cache");
+		$this->latest = Common::load("update", "cache");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -58,7 +58,7 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	public function saveCache($cache) {
 		$cache = json_decode($cache);
-		Common::saveJSON("update", $cache, "cache");
+		Common::save("update", $cache, "cache");
 		Common::send("success");
 	}
 }

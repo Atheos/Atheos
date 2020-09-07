@@ -34,9 +34,9 @@ class Project {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
-		$this->projects = Common::readJSON('projects');
+		$this->projects = Common::load('projects');
 		$this->activeUser = SESSION("user");
-		$this->userData = Common::readJSON("users")[$this->activeUser];
+		$this->userData = Common::load("users")[$this->activeUser];
 
 		// Check if array is Associative or Sequential. Sequential is
 		// the old file format, so it needs to be pivoted.
@@ -80,7 +80,7 @@ class Project {
 		}
 
 		$this->projects[$projectPath] = $projectName;
-		Common::saveJSON('projects', $this->projects);
+		Common::save('projects', $this->projects);
 
 		// Pull from Git Repo?
 		if ($gitRepo && filter_var($gitRepo, FILTER_VALIDATE_URL) !== false) {
@@ -104,7 +104,7 @@ class Project {
 		unset($this->projects[$projectPath]);
 
 		// Save array back to JSON
-		Common::saveJSON('projects', $this->projects);
+		Common::save('projects', $this->projects);
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "access");
@@ -186,7 +186,7 @@ class Project {
 			}
 		}
 		if (count($revisedArray) > 0) {
-			Common::saveJSON('projects', $revisedArray);
+			Common::save('projects', $revisedArray);
 		}
 	}
 
@@ -198,7 +198,7 @@ class Project {
 		$this->projects[$projectPath] = $projectName;
 
 		// Save array back to JSON
-		Common::saveJSON('projects', $this->projects);
+		Common::save('projects', $this->projects);
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$projectName}", "access");

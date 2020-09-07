@@ -23,9 +23,9 @@ switch ($action) {
 	case 'projectDock':
 
 		// Get access control data
-		$userACL = Common::readJSON("users")[$user]["userACL"];
+		$userACL = Common::load("users")[$user]["userACL"];
 		// Get projects JSON data
-		$projects = Common::readJSON('projects');
+		$projects = Common::load('projects');
 		asort($projects);
 		$projectList = '';
 		foreach ($projects as $projectPath => $projectName) {
@@ -47,9 +47,9 @@ switch ($action) {
 
 	case 'list':
 
-		$userACL = Common::readJSON("users")[$user]["userACL"];
+		$userACL = Common::load("users")[$user]["userACL"];
 		// Get projects JSON data
-		$projects = Common::readJSON('projects');
+		$projects = Common::load('projects');
 		asort($projects);
 		$projectList = array();
 		foreach ($projects as $projectPath => $projectName) {

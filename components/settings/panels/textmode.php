@@ -14,7 +14,7 @@ require_once __DIR__ . "/../../textmode/class.textmode.php";
 
 $TextMode = new TextMode();
 
-$map = Common::readJSON("extensions");
+$map = Common::load("extensions");
 
 if (!$map || !is_array($map)) {
 	$map = $TextMode->getDefaultExtensionMap();
