@@ -40,6 +40,11 @@ if (!$action || !$target) {
 	Common::send("error", "Missing target or action.");
 }
 
+if ($target === "i18n" && $action === "init") {
+	$cache = array("cache" => $i18n->getCache());
+	Common::send("success", $cache);
+}
+
 if (file_exists("components/$target/controller.php")) {
 	require("components/$target/controller.php");
 } elseif (file_exists("plugins/$target/controller.php")) {

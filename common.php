@@ -17,6 +17,8 @@ require_once("traits/json.php");
 require_once("traits/path.php");
 require_once("traits/reply.php");
 
+require_once("traits/i18n.php");
+
 class Common {
 
 	use Check;
@@ -60,17 +62,12 @@ class Common {
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
-		if (file_exists(BASE_PATH ."/components/i18n/class.i18n.php")) {
-			require_once(BASE_PATH ."/components/i18n/class.i18n.php");
-		}
+		// if (file_exists(BASE_PATH ."/components/i18n/class.i18n.php")) {
+		// 	require_once(BASE_PATH ."/components/i18n/class.i18n.php");
+		// }
 
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
-
-		// Set up language translation
-		global $i18n;
-		$i18n = new i18n(LANGUAGE);
-		$i18n->init();
 
 		global $components; global $plugins; global $themes;
 		// Read Components, Plugins, Themes
@@ -85,6 +82,12 @@ class Common {
 	public static function startSession() {
 		session_name(md5(BASE_PATH));
 		session_start();
+		
+				// Set up language translation
+		global $i18n;
+		$i18n = new i18n(LANGUAGE);
+		$i18n->init();
+		
 	}
 
 	//////////////////////////////////////////////////////////////////////////80////////80
@@ -123,6 +126,14 @@ function debug($val) {
 	Common::$debugStack[] = $val;
 }
 
+function SERVER($key, $val = null) {
+	return Common::data("SERVER", $key, $val);
+}
+
+function SESSION($key, $val = null) {
+	return Common::data("SESSION", $key, $val);
+}
+
 function POST($key, $val = null) {
 	$val = Common::data("POST", $key, $val);
 	if ($key === "username") {
@@ -131,8 +142,6 @@ function POST($key, $val = null) {
 	return $val;
 }
 
-function SESSION($key, $val = null) {
-	return Common::data("SESSION", $key, $val);
-}
+
 
 ?>

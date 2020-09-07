@@ -27,15 +27,12 @@
 
 			window.i18n = Function.prototype.bind.call(atheos.i18n.translate);
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'i18n',
 					action: 'init'
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						return;
-					}
+				settled: function(status, reply) {
+					if (status !== 'error') return;
 					self.cache = reply.cache;
 				}
 			});
