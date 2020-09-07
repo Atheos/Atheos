@@ -32,7 +32,7 @@
 					action: 'init'
 				},
 				settled: function(status, reply) {
-					if (status !== 'error') return;
+					if (status !== 'success') return;
 					self.cache = reply.cache;
 				}
 			});
