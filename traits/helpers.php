@@ -46,10 +46,12 @@ trait Helpers {
 			$_SESSION[$key] = $val;
 		}
 
-		if ($type === "SESSION") {
-			$val = array_key_exists($key, $_SESSION) ? $_SESSION[$key] : null;
-		} elseif ($type === "POST") {
-			$val = array_key_exists($key, $_POST) ? $_POST[$key] : null;
+		if ($type === "SERVER" && array_key_exists($key, $_SERVER)) {
+			$val = $_SERVER[$key];
+		} elseif ($type === "SESSION" && array_key_exists($key, $_SESSION)) {
+			$val = $_SESSION[$key];
+		} elseif ($type === "POST" && array_key_exists($key, $_POST)) {
+			$val = $_POST[$key];
 		}
 
 		return $val;
