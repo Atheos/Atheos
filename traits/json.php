@@ -12,11 +12,12 @@
 
 trait JSON {
 
+
 	//////////////////////////////////////////////////////////////////////////80
 	// Read json
 	// Reads JSON data from the data folder using namespaces.
 	//////////////////////////////////////////////////////////////////////////80
-	public static function readJSON($file, $namespace = "") {
+	public static function load($file, $namespace = "") {
 		$json = false;
 
 		$path = DATA . "/" . $namespace . "/";
@@ -46,7 +47,7 @@ trait JSON {
 	//////////////////////////////////////////////////////////////////////////80
 	// Save JSON
 	//////////////////////////////////////////////////////////////////////////80
-	public static function saveJSON($file, $data, $namespace = "") {
+	public static function save($file, $data, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
 
@@ -60,5 +61,4 @@ trait JSON {
 		fwrite($write, $data);
 		fclose($write);
 	}
-
 }

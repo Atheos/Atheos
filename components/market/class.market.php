@@ -30,8 +30,8 @@ class Market {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
-		$this->cAddons = Common::readJSON("addons", "cache");
-		$this->cMarket = Common::readJSON("market", "cache");
+		$this->cAddons = Common::load("addons", "cache");
+		$this->cMarket = Common::load("market", "cache");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -63,7 +63,7 @@ class Market {
 	public function saveCache($cache) {
 		$cache = json_decode($cache);
 		$this->cMarket = $cache;
-		Common::saveJSON("market", $cache, "cache");
+		Common::save("market", $cache, "cache");
 		Common::send("success");
 	}
 
@@ -103,7 +103,7 @@ class Market {
 		}
 
 		$this->cAddons = $addons;
-		Common::saveJSON("addons", $addons, "cache");
+		Common::save("addons", $addons, "cache");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
