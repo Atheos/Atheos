@@ -1,0 +1,20 @@
+.project-delete {
+	background-color: $ebony;
+
+	tr {
+		td:first-child {
+			font-weight: bold;
+		}
+
+		td+td {
+			padding: 0;
+			pre {
+				margin: 0;
+			}
+		}
+
+		toggle {
+			border-bottom: none;
+		}
+	}
+}
