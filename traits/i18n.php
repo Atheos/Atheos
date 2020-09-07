@@ -83,6 +83,7 @@ class i18n {
 	public function init() {
 		$this->userLangs = $this->getUserLangs();
 
+
 		// search for language file
 		$this->appliedLang = NULL;
 
