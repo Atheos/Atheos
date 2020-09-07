@@ -22,9 +22,7 @@ $rel = str_replace("/components/install/process.php", "", $_SERVER['REQUEST_URI'
 $workspace = $path . "/workspace";
 $users = $path . "/data/users.json";
 $projects = $path . "/data/projects.json";
-$active = $path . "/data/active.json";
-$settings = $path . "/data/settings.json";
-$version = $path . "/data/version.json";
+$analytics = $path . "/data/analytics.db.json";
 
 $config = $path . "/config.php";
 
@@ -67,7 +65,7 @@ function cleanPath($path) {
 // Verify no overwrites
 //////////////////////////////////////////////////////////////////////////////80
 
-if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
+if (!file_exists($users) && !file_exists($projects)) {
 	//////////////////////////////////////////////////////////////////
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////
@@ -78,6 +76,8 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	$projectPath = $data["projectPath"] ?: $projectName;
 	$timezone = $data["timezone"] ?: false;
 	$timezone = preg_replace('/[^a-zA-Z\/_\+]/', "", $timezone);
+	$development = $data["development"] ?: false;
+	$authorized = $data["authorized"] ?: "undecided";
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Projects files
@@ -124,27 +124,23 @@ if (!file_exists($users) && !file_exists($projects) && !file_exists($active)) {
 	saveJSON($users, $userData);
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Create Active and Settings file
+	// Create analytics cache
 	//////////////////////////////////////////////////////////////////////////80
-	$genericData = array($username => array());
-	saveJSON($active, $genericData);
-	saveJSON($settings, $genericData);
-
-	$versionData = array(
+	$analyticsData = array(
 		"atheos_uuid" => uniqid(),
 		"atheos_version" => "v4.2.0",
-		"first_heard" => date("Y-m-d H:i:s"),
-		"last_heard" => date("Y-m-d H:i:s"),
+		"first_heard" => date("Y/m/d"),
+		"last_heard" => date("Y/m/d"),
 		"php_version" => phpversion(),
 		"server_os" => $_SERVER["SERVER_SOFTWARE"],
 		"client_os" => false,
 		"location" => $timezone,
 		"language" => false,
-		"optOut" => true,
+		"authorized" => $authorized,
 		"plugins" => array()
 	);
 
-	saveJSON($version, $versionData);
+	saveJSON($analytics, $analyticsData);
 
 
 
@@ -183,7 +179,7 @@ try {
 }
 
 // DEVELOPMENT MODE
-define("DEVELOPMENT", false);
+define("DEVELOPMENT", ' . $development . ');
 
 // EXTERNAL AUTHENTICATION
 // define("AUTH_PATH", "/path/to/customauth.php");
