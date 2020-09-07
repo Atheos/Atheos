@@ -83,7 +83,8 @@
 
 	"delete": {
 		"": "Delete",
-		"type": "Delete %s"
+		"type": "Delete %s",
+		"scope": "Delete files on server?"
 	},
 	
 	"edit" : "Edit",
