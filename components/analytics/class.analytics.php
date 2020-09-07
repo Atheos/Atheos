@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// Update Class
+// Analytics Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/LICENSE.md for more.
@@ -78,7 +78,7 @@ class Analytics {
 	// GetBrowserName
 	//////////////////////////////////////////////////////////////////////////80
 	public function getBrowserName() {
-		$userAgent = $_SERVER["HTTP_USER_AGENT"];
+		$userAgent = SERVER("HTTP_USER_AGENT");
 		if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) return 'Opera';
 		elseif (strpos($userAgent, 'Edge')) return 'Edge';
 		elseif (strpos($userAgent, 'Chrome')) return 'Chrome';
