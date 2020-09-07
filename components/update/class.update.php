@@ -15,13 +15,8 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
-	private $update = 'https://www.atheos.io/update';
 	private $github = 'https://api.github.com/repos/Atheos/Atheos/releases/latest';
-
-	public $local = array();
-	public $remote = array();
-
+	public $latest = array();
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -34,9 +29,7 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		ini_set("user_agent", "Atheos");
-		
-		$this->local = Common::readJSON("version");
-		$this->remote = Common::readJSON("update", "cache");
+		$this->latest = Common::readJSON("update", "cache");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -50,11 +43,9 @@ class Update {
 		// In summary, if there is a cache file, and it's less than a week old,
 		// don't send a request for new UpdateCache, otherwise, do so.
 		$request = $updateMTime ? $updateMTime < $oneWeekAgo : true;
-		$request = $this->remote ? $request : true;
+		$request = $this->latest ? $request : true;
 
 		$reply = array(
-			"local" => $this->local,
-			"remote" => defined('UPDATEURL') ? UPDATEURL : $this->update,
 			"github" => defined('GITHUBAPI') ? GITHUBAPI : $this->github,
 			"request" => $request
 		);
@@ -63,30 +54,10 @@ class Update {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Check Latest Version
-	//////////////////////////////////////////////////////////////////////////80
-	public function check() {
-		$local = $this->getLocalData();
-
-		return json_encode(array(
-			"local" => $local
-		));
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Get Local Data
-	//////////////////////////////////////////////////////////////////////////80
-	public function getLocalData() {
-		$current = Common::readJSON('version');
-		return $current;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
 	// Save  Market Cache
 	//////////////////////////////////////////////////////////////////////////80
 	public function saveCache($cache) {
 		$cache = json_decode($cache);
-		$this->local = $cache;
 		Common::saveJSON("update", $cache, "cache");
 		Common::send("success");
 	}
