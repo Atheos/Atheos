@@ -23,7 +23,7 @@
 
 	atheos.market = {
 
-		home: null,
+		market: null,
 		cache: null,
 
 		init: function() {
@@ -39,7 +39,7 @@
 					if (reply.status === 'error') {
 						return;
 					}
-					self.home = reply.market;
+					self.market = reply.market;
 
 					if (reply.request) {
 						self.loadMarket();
@@ -51,7 +51,7 @@
 
 		loadMarket: function() {
 			echo({
-				url: self.home,
+				url: self.market,
 				success: function(reply) {
 					self.saveCache(reply);
 				}
