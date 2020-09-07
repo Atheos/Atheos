@@ -24,6 +24,7 @@ class SourceManager {
 		"modules/flow.js",
 		"modules/chrono.js",
 		"modules/common.js",
+		"modules/i18n.js",
 		"modules/keybind.js",
 		"modules/modal.js",
 		"modules/storage.js",

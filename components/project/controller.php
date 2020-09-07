@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('class.project.php');
+require_once("class.project.php");
 
 $activeName = SESSION("projectName");
 $activePath = SESSION("projectPath");
@@ -27,7 +27,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'create':
+	case "create":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		} elseif (!$projectName) {
@@ -42,7 +42,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Return Current
 	//////////////////////////////////////////////////////////////////////////80
-	case 'current':
+	case "current":
 		if ($activeName) {
 			Common::send("success", array("name" => $activeName, "path" => $activePath));
 		} else {
@@ -53,7 +53,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'delete':
+	case "delete":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		} elseif (!$projectName) {
@@ -68,14 +68,14 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Load Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'load':
+	case "load":
 		$Project->load($activeName, $activePath);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Open Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'open':
+	case "open":
 		if ($projectPath === "@TH305" && Common::checkAccess("configure")) {
 			$projectName = "Atheos IDE";
 			$projectPath = BASE_PATH;
@@ -94,7 +94,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'rename':
+	case "rename":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		} elseif (!$projectName || !$projectPath) {
