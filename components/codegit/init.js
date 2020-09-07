@@ -166,12 +166,17 @@
 			}
 
 			obj.menu.append(html);
-
 		},
 
 		showCodeGit: function(repo) {
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
+			
+			let node = oX('[data-path="' + repo + '"]');
+			if(!node.hasClass('repo')) {
+				atheos.toast.show('notice', i18n('git_error_noRepo'));
+				return;
+			}
 
 			atheos.modal.load(800, {
 				target: 'codegit',
