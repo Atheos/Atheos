@@ -457,6 +457,9 @@
 	},
 
 	"git": {
+		"error": {
+			"noRepo": "Git repo not found."
+		},
 		"init": {
 			"": "Git Init",
 			"success": "Initialized empty Git repository.",
