@@ -327,13 +327,14 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save active project to server
 		//////////////////////////////////////////////////////////////////////80
-		saveActiveProject: function(project) {
+		saveActiveProject: function(name, path) {
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'user',
 					action: 'saveActiveProject',
-					activeProject: project
+					name,
+					path
 				}
 			});
 		},
