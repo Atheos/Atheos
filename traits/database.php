@@ -11,16 +11,6 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 trait Database {
-	//////////////////////////////////////////////////////////////////////////80
-	// Open a DB Store
-	//////////////////////////////////////////////////////////////////////////80
-	public static function getDB($table = false, $namespace = "") {
-		$path = DATA . "/" . $namespace . "/";
-		$path = preg_replace('#/+#', '/', $path);
-		$db = new Scroll($table, $path);
-		return $db;
-	}
-
 	public static function getScroll($table = false, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);

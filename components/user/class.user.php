@@ -15,8 +15,8 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-	private $activeUser = '';
-	private $users = '';
+	private $activeUser = "";
+	private $users = "";
 
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
@@ -28,7 +28,7 @@ class User {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct($activeUser) {
-		$this->users = Common::load('users');
+		$this->users = Common::load("users");
 		$this->activeUser = $activeUser;
 	}
 
@@ -44,7 +44,7 @@ class User {
 				SESSION("lang", $language);
 				SESSION("theme", $theme);
 
-				if ($user["activeProject"] !== '') {
+				if ($user["activeProject"] !== "") {
 					SESSION("project", $user["activeProject"]);
 				}
 				
@@ -78,7 +78,7 @@ class User {
 		$this->users[$username]["password"] = $password;
 
 		// Save array back to JSON
-		Common::save('users', $this->users);
+		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
 		Common::send("success");
@@ -90,7 +90,7 @@ class User {
 	public function changePermissions($username, $permissions) {
 		$this->users[$username]["permissions"] = $permissions;
 		// Save array back to JSON
-		Common::save('users', $this->users);
+		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
 		Common::send("success");
@@ -112,7 +112,7 @@ class User {
 				"userACL" => "full"
 			);
 
-			Common::save('users', $this->users);
+			Common::save("users", $this->users);
 			// Log
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $username . "}", "access");
 			Common::send("success", array("username" => $username));
@@ -130,17 +130,15 @@ class User {
 		unset($this->users[$this->username]);
 
 		// Save array back to JSON
-		Common::save('users', $this->users);
+		Common::save("users", $this->users);
 
-		$db = Common::getDB('active');
+		$db = Common::getScroll("active");
 		$where = array("user" => $username);
 		$db->delete($where);
 
-		// Response
-		Common::send("success");
-
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
+		Common::send("success");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -150,7 +148,7 @@ class User {
 		$this->users[$this->activeUser]["activeProject"] = $activeProject;
 
 		// Save array back to JSON
-		Common::save('users', $this->users);
+		Common::save("users", $this->users);
 		// Response
 		Common::send("success");
 	}
@@ -165,7 +163,7 @@ class User {
 		}
 		$this->users[$username]["userACL"] = $userACL;
 		// Save array back to JSON
-		Common::save('users', $this->users);
+		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
 		Common::send("success");
