@@ -12,7 +12,9 @@
 
 require_once('class.project.php');
 
-$activeProject = SESSION("project");
+$activeName = SESSION("projectName");
+$activePath = SESSION("projectPath");
+
 $projectName = POST("projectName");
 $projectPath = POST("projectPath");
 
@@ -41,8 +43,8 @@ switch ($action) {
 	// Return Current
 	//////////////////////////////////////////////////////////////////////////80
 	case 'current':
-		if ($activeProject) {
-			Common::send("success", array("path" => $activeProject));
+		if ($activeName) {
+			Common::send("success", array("name" => $activeName, "path" => $activePath));
 		} else {
 			Common::send("error", i18n("project_noActive"));
 		}
@@ -54,10 +56,11 @@ switch ($action) {
 	case 'delete':
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
-		} elseif (!$projectPath) {
-			Common::send("error", "Missing project path.");
+		} elseif (!$projectName) {
+			Common::send("error", "Missing project name.");
 		} else {
-			$Project->delete($projectPath);
+			$scope = POST("scope");
+			$Project->delete($projectName, $scope);
 		}
 
 		break;
@@ -66,22 +69,24 @@ switch ($action) {
 	// Load Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'load':
-		$Project->load($activeProject);
+		$Project->load($activeName, $activePath);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Open Project
 	//////////////////////////////////////////////////////////////////////////80
 	case 'open':
-		$projectPath = $projectPath === "ATHEOS" ? BASE_PATH : $projectPath;
-
+		if ($projectPath === "@TH305" && Common::checkAccess("configure")) {
+			$projectName = "Atheos IDE";
+			$projectPath = BASE_PATH;
+		}
 
 		if (!Common::checkPath($projectPath)) {
 			Common::send("error", "User does not have access.");
-		} elseif (!$projectPath) {
-			Common::send("error", "Missing project path.");
+		} elseif (!$projectName || !$projectPath) {
+			Common::send("error", "Missing project name or path.");
 		} else {
-			$Project->open($projectPath);
+			$Project->open($projectName, $projectPath);
 		}
 
 		break;

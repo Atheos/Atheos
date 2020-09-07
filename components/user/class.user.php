@@ -44,10 +44,11 @@ class User {
 				SESSION("lang", $language);
 				SESSION("theme", $theme);
 
-				if ($user["activeProject"] !== "") {
-					SESSION("project", $user["activeProject"]);
+				if ($user["activePath"] !== "" && $user["activeName"] !== "") {
+					SESSION("projectPath", $user["activePath"]);
+					SESSION("projectName", $user["activeName"]);
 				}
-				
+
 				$reply = array(
 					"username" => $username,
 					"lastLogin" => $user["lastLogin"]
@@ -144,8 +145,9 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	// Set Current Project
 	//////////////////////////////////////////////////////////////////////////80
-	public function saveActiveProject($activeProject) {
-		$this->users[$this->activeUser]["activeProject"] = $activeProject;
+	public function saveActiveProject($activeName, $activePath) {
+		$this->users[$this->activeUser]["activeName"] = $activeName;
+		$this->users[$this->activeUser]["activePath"] = $activePath;
 
 		// Save array back to JSON
 		Common::save("users", $this->users);
