@@ -71,13 +71,18 @@ class Parchment extends Codec {
 		$this->save();
 	}
 
-	public function select($key) {
+	public function select($key = false, $value = false) {
 		if (!$key) return "missing_parameter";
 
 		if (is_array($key)) {
 			return array_intersect_key($this->data, array_flip($key));
 		} elseif ($key === "*") {
-			return $this->data;
+			if ($value) {
+				$key = array_search($value, $this->data);
+				return $key ? $this->data[$key] : null;
+			} else {
+				return $this->data;
+			}
 		} else {
 			return array_key_exists($key, $this->data) ? $this->data[$key] : null;
 		}
@@ -110,7 +115,7 @@ class Parchment extends Codec {
 		}
 	}
 
-	public function delete($key = false) {
+	public function delete($key = false, $value = false) {
 		if (!$key) return "missing_parameter";
 
 		if (is_array($key)) {
@@ -120,7 +125,12 @@ class Parchment extends Codec {
 
 			$this->save();
 		} elseif ($key === "*") {
-			$this->data = [];
+			if ($value) {
+				$key = array_search($value, $this->data);
+				if ($key) unset($this->data[$key]);
+			} else {
+				$this->data = [];
+			}
 			$this->save();
 		} elseif (array_key_exists($key, $this->data)) {
 			unset($this->data[$key]);
