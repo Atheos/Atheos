@@ -20,9 +20,7 @@ trait Reply {
 		http_response_code(200);
 
 		if (!is_array($data)) {
-			$data = array(
-				"text" => $data
-			);
+			$data = array("text" => $data);
 		}
 
 		// Debug
