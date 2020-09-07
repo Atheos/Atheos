@@ -44,11 +44,11 @@
 				foreach ($languages as $code => $lang) {
 
 					$lang = ucfirst(strtolower($lang));
-					
+
 					$option = "<option value=\"$code\"";
 					if ($code === "en") $option .= "selected";
 					$option .= ">$lang</option>";
-					
+
 					echo $option;
 				} ?>
 			</select>
@@ -60,6 +60,7 @@
 		<button><?php echo i18n("login"); ?></button>
 		<button id="show_login_options"><?php echo i18n("more"); ?></button>
 		<button id="hide_login_options" style="display:none;"><?php echo i18n("less"); ?></button>
+		<a id="github_link" href="https://www.github.com/Atheos/Atheos" target="_blank" rel="noopener"><?php echo VERSION ?></a>
 
 	</fieldset>
 </form>
