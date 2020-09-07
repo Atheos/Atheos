@@ -15,12 +15,7 @@ class Market {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
-	public $local = array();
 	public $market = 'https://www.atheos.io/market/json';
-	public $remote = null;
-	public $tmp = array();
-	public $old = null;
 
 	private $cMarket = array();
 	private $cAddons = array();
@@ -146,7 +141,7 @@ class Market {
 		}
 
 		if (file_put_contents(BASE_PATH.'/'.$type.'/'.$name.'.zip', fopen($repo.'/archive/master.zip', 'r'))) {
-			
+
 			$zip = new ZipArchive;
 			$res = $zip->open(BASE_PATH.'/'.$type.'/'.$name.'.zip');
 
@@ -156,10 +151,10 @@ class Market {
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::send("error", i18n("market_unableExtract")); 
+					Common::send("error", i18n("market_unableExtract"));
 				}
 			} else {
-				Common::send("error", i18n("market_noZip")); 
+				Common::send("error", i18n("market_noZip"));
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -167,12 +162,12 @@ class Market {
 			if (path) {
 				rename($path, BASE_PATH. "/$type/$name");
 			}
-			// Response
-			Common::send("success", i18n("market_install_success", $name));
+
 
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
 			$this->buildCache(true);
+			Common::send("success", i18n("market_install_success", $name));
 		} else {
 			Common::send("error", i18n("market_unableDownload"));
 		}
@@ -186,11 +181,11 @@ class Market {
 			unlink(__DIR__ . "/../../public/plugins.min.js");
 		}
 		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
-		Common::send("success");
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
+		Common::send("success");
 
 	}
 
