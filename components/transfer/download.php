@@ -10,24 +10,28 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('../../common.php');
+require_once("../../common.php");
 
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
 Common::checkSession();
 
-$filename = POST("filename");
+$filename = isset($_GET["filename"]) ? $_GET["filename"] : false;
+$basename = basename($filename);
 Common::cleanPath($filename);
 
-header('Content-Description: File Transfer');
-header('Content-Type: application/octet-stream');
-header('Content-Disposition: attachment; filename="'.basename($filename).'"');
-header('Content-Transfer-Encoding: binary');
-header('Expires: 0');
-header('Cache-Control: must-revalidate');
-header('Pragma: public');
-header('Content-Length: ' . filesize($filename));
+if(strpos($filename, WORKSPACE) !== 0) die;
+
+header("Pragma: public");
+header("Expires: 0");
+header("Cache-Control: must-revalidate, post-check=0, pre-check=0");
+header("Cache-Control: public");
+header("Content-Description: File Transfer");
+header("Content-Type: application/octet-stream");
+header("Content-Disposition: attachment; filename=\"$basename\"");
+header("Content-Transfer-Encoding: binary");
+header("Content-Length: " . filesize($filename));
 
 if (ob_get_contents()) {
 	ob_end_clean();
