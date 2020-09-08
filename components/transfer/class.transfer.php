@@ -12,7 +12,6 @@
 
 class Transfer {
 
-
 	//////////////////////////////////////////////////////////////////////////80
 	// METHODS
 	//////////////////////////////////////////////////////////////////////////80
@@ -26,7 +25,7 @@ class Transfer {
 		if (!$path || !file_exists($path)) {
 			Common::send("error", "Invalid path.");
 		}
-		if (preg_match('#^[\\\/]?$#i', trim($path)) || preg_match('#[\:*?\"<>\|]#i', $path) || substr_count($path, './') > 0) {
+		if (preg_match("#^[\\\/]?$#i", trim($path)) || preg_match("#[\:*?\"<>\|]#i", $path) || substr_count($path, "./") > 0) {
 			//  Attempting to download all Projects	  or illegal characters in filepaths
 			Common::send("error", "Invalid path.");
 		}
@@ -41,84 +40,34 @@ class Transfer {
 
 		$filename = $pathInfo["basename"];
 
-		if ($type === 'directory' || $type === 'root') {
-			$filename .= "-" . date('Y.m.d');
-			$targetPath = WORKSPACE . '/';
+		if ($type === "directory" || $type === "root") {
+			$filename .= "-" . date("Y.m.d");
+			$targetPath = WORKSPACE . "/";
 
 			//////////////////////////////////////////////////////////////////80
 			// Check system() command and a non windows OS
 			//////////////////////////////////////////////////////////////////80
-			if (Common::isAvailable('system') && stripos(PHP_OS, 'win') === false) {
+			if (false && Common::isAvailable("system") && stripos(PHP_OS, "win") === false) {
 				# Execute the tar command and save file
-				$filename .= '.tar.gz';
+				$filename .= ".tar.gz";
 				$downloadFile = $targetPath.$filename;
 				$cmd = "tar -pczf ". escapeshellarg($downloadFile) . " -C " . escapeshellarg($pathInfo["dirname"]) . " " . escapeshellarg($pathInfo["basename"]);
 				exec($cmd);
-			} elseif (extension_loaded('zip')) {
+			} elseif (extension_loaded("zip")) {
 				//Check if zip-Extension is availiable
-				//build zipfile
 
-				$filename .= '.zip';
+				$filename .= ".zip";
 				$downloadFile = $targetPath . $filename;
-				$this->zipDir($path, $downloadFile);
+				Common::zip($path, $downloadFile);
 			} else {
 				Common::send("error", "Could not zip folder, zip-extension missing");
 
 			}
 		} elseif ($type === "file") {
-			$downloadFile = WORKSPACE . '/' . $filename;
+			$downloadFile = WORKSPACE . "/" . $filename;
 			copy($path, WORKSPACE . "/" . $filename);
 		}
 		Common::send("success", array("download" => $downloadFile));
-	}
-
-	/**
-	* @author umbalaconmeogia at NOSPAM dot gmail dot com
-	* @link http://www.php.net/manual/de/class.ziparchive.php#110719*
-	* Add files and sub-directories in a folder to zip file.
-	* @param string $folder
-	* @param ZipArchive $zipFile
-	* @param int $exclusiveLength Number of text to be exclusived from the file path.
-	*/
-	private static function folderToZip($folder, &$zipFile, $exclusiveLength) {
-		$handle = opendir($folder);
-		while ($file = readdir($handle)) {
-			if ($file !== '.' && $file !== '..') {
-				$filePath = "$folder/$file";
-				// Remove prefix from file path before add to zip.
-				$localPath = substr($filePath, $exclusiveLength);
-				if (is_file($filePath)) {
-					$zipFile->addFile($filePath, $localPath);
-				} elseif (is_dir($filePath)) {
-					// Add sub-directory.
-					$zipFile->addEmptyDir($localPath);
-					self::folderToZip($filePath, $zipFile, $exclusiveLength);
-				}
-			}
-		}
-		closedir($handle);
-	}
-
-	/**
-	* @author umbalaconmeogia at NOSPAM dot gmail dot com
-	* @link http://www.php.net/manual/de/class.ziparchive.php#110719*
-	* Zip a folder (include itself).
-	* Usage:
-	*   DirZip::zipDir('/path/to/sourceDir', '/path/to/out.zip');
-	*
-	* @param string $sourcePath Path of directory to be zip.
-	* @param string $outZipPath Path of output zip file.
-	*/
-	public static function zipDir($sourcePath, $outZipPath) {
-		$pathInfo = pathInfo($sourcePath);
-		$parentPath = $pathInfo['dirname'];
-		$dirName = $pathInfo['basename'];
-
-		$archive = new ZipArchive();
-		$archive->open($outZipPath, ZIPARCHIVE::CREATE);
-		$archive->addEmptyDir($dirName);
-		self::folderToZip($sourcePath, $archive, strlen("$parentPath/"));
-		$archive->close();
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -132,11 +81,11 @@ class Transfer {
 		}
 		// Handle upload
 		$info = array();
-		while (list($key, $value) = each($_FILES['upload']['name'])) {
+		while (list($key, $value) = each($_FILES["upload"]["name"])) {
 			if (!empty($value)) {
 				$filename = $value;
 				$add = $path."/$filename";
-				if (@move_uploaded_file($_FILES['upload']['tmp_name'][$key], $add)) {
+				if (@move_uploaded_file($_FILES["upload"]["tmp_name"][$key], $add)) {
 					$info[] = array(
 						"name" => $value,
 						"size" => filesize($add),

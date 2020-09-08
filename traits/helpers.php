@@ -130,7 +130,7 @@ trait Helpers {
 		return true;
 	}
 
-	function rDelete($target) {
+	public static function rDelete($target) {
 		// Unnecessary, but rather be safe that sorry.
 		if ($target === "." || $target === "..") {
 			return;
@@ -148,4 +148,39 @@ trait Helpers {
 			unlink($target);
 		}
 	}
+
+
+	public static function rZip($folder, &$archive, $exclusiveLength) {
+		$handle = opendir($folder);
+		while ($file = readdir($handle)) {
+			if ($file === "." || $file === "..") continue;
+			$filePath = "$folder/$file";
+			$localPath = substr($filePath, $exclusiveLength);
+			if (is_file($filePath)) {
+				$archive->addFile($filePath, $localPath);
+			} elseif (is_dir($filePath)) {
+				Common::rZip($filePath, $archive, $exclusiveLength);
+			}
+
+		}
+		closedir($handle);
+	}
+
+	// @author umbalaconmeogia at NOSPAM dot gmail dot com
+	// @link http://www.php.net/manual/de/class.ziparchive.php#110719*
+	public static function zip($orig, $dest) {
+		$info = pathInfo($orig);
+		$path = $info["dirname"];
+		$name = $info["basename"];
+
+		$archive = new ZipArchive();
+		$archive->open($dest, ZIPARCHIVE::CREATE);
+		// $archive->addEmptyDir($name);
+
+		Common::rZip($orig, $archive, strlen("$path/"));
+
+		$archive->close();
+	}
+
+
 }
