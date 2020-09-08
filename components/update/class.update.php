@@ -15,7 +15,7 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-	private $github = 'https://api.github.com/repos/Atheos/Atheos/releases/latest';
+	private $github = "https://api.github.com/repos/Atheos/Atheos/releases/latest";
 	public $latest = array();
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -40,13 +40,13 @@ class Update {
 
 		$oneWeekAgo = time() - (168 * 3600);
 
-		// In summary, if there is a cache file, and it's less than a week old,
-		// don't send a request for new UpdateCache, otherwise, do so.
+		// In summary, if there is a cache file, and it"s less than a week old,
+		// don"t send a request for new UpdateCache, otherwise, do so.
 		$request = $updateMTime ? $updateMTime < $oneWeekAgo : true;
 		$request = $this->latest ? $request : true;
 
 		$reply = array(
-			"github" => defined('GITHUBAPI') ? GITHUBAPI : $this->github,
+			"github" => defined("GITHUBAPI") ? GITHUBAPI : $this->github,
 			"request" => $request
 		);
 

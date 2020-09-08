@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('class.update.php');
+require_once("class.update.php");
 
 $Update = new Update();
 
@@ -19,7 +19,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Update
 	//////////////////////////////////////////////////////////////////////////80
-	case 'check':
+	case "check":
 
 		if (!Common::checkAccess("configure")) {
 			?>
@@ -31,7 +31,7 @@ switch ($action) {
 		} else {
 			$latest = $Update->latest;
 
-			$body = preg_replace('/\*\*/i', "", $latest["body"]);
+			$body = preg_replace("/\*\*/i", "", $latest["body"]);
 			$body = str_replace("Changes:", "", $body);
 
 			?>
@@ -43,7 +43,7 @@ switch ($action) {
 				<br>
 				<table>
 					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo ucfirst(VERSION); ?></td></tr>
-					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $latest['tag_name']; ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $latest["tag_name"]; ?></td></tr>
 				</table>
 				<br>
 				<label><?php echo i18n("update_changes"); ?></label>
