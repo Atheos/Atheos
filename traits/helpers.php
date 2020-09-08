@@ -170,14 +170,11 @@ trait Helpers {
 	// @link http://www.php.net/manual/de/class.ziparchive.php#110719*
 	public static function zip($orig, $dest) {
 		$info = pathInfo($orig);
-		$path = $info["dirname"];
-		$name = $info["basename"];
 
 		$archive = new ZipArchive();
 		$archive->open($dest, ZIPARCHIVE::CREATE);
-		// $archive->addEmptyDir($name);
 
-		Common::rZip($orig, $archive, strlen("$path/"));
+		Common::rZip($orig, $archive, strlen("$orig/"));
 
 		$archive->close();
 	}
