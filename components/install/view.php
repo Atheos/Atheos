@@ -284,5 +284,4 @@
 	?>
 
 </div>
-<script src="components/i18n/init.js"></script>
 <script src="components/install/init.js"></script>
