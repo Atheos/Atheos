@@ -213,28 +213,33 @@ class TextMode {
 	//////////////////////////////////////////////////////////////////
 	public function saveExtensionMap($map) {
 		$customMap = array();
+		
+		debug($map);
+		debug(gettype($map));
 
-		//Iterate over the sended extensions
-		foreach ($map as $extension => $mode) {
-			// Ignore empty extensions
-			$extension = strtolower(trim($extension));
-			$mode = strtolower(trim($mode));
+		$len = count($map["extension"]);
 
-			if ($mode === '' || $extension === '') {
-				continue;
-			}
+		$extensions = $map["extension"];
+		$textmodes = $map["textmode"];
 
-			if (!validMode($mode) || !validateExtension($extension)) {
+		for ($i = 0; $i < $len; $i++) {
+			$ext = strtolower(trim($extensions[$i]));
+			$mode = strtolower(trim($textmodes[$i]));
+
+			if ($mode === '' || $ext === '') continue;
+
+			if (!$this->validMode($mode) || !$this->validateExtension($ext)) {
 				Common::send("error", "Invalid mode or extension.");
 			}
 
-
-			if (isset($customMap[$extension])) {
+			if (isset($customMap[$ext])) {
 				Common::send("error", i18n("extensionSet"));
 			} else {
-				$customMap[$extension] = $mode;
+				$customMap[$ext] = $mode;
 			}
 		}
+		
+		debug($customMap);
 
 		Common::save("extensions", $customMap);
 		Common::send("success");
