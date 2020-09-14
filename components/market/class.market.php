@@ -159,7 +159,7 @@ class Market {
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
 			$path = glob(BASE_PATH . "/$type/*$name*")[0];
-			if (path) {
+			if ($path) {
 				rename($path, BASE_PATH. "/$type/$name");
 			}
 
