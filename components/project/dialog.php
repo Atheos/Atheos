@@ -27,6 +27,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////
 	case "projectDock":
 		$projectList = "";
+		ksort($projects);
 		foreach ($projects as $projectName => $projectPath) {
 			$projectList .= "<li data-project=\"$projectPath\"><i class=\"fas fa-archive\"></i>$projectName</li>" . PHP_EOL;
 		}
