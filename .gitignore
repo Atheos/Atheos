@@ -18,5 +18,6 @@ components/*/*.disabled.*
 
 notes/*
 restore.php
+restore/*
 
 lib/hub-updater
