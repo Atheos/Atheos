@@ -76,7 +76,7 @@ if (!file_exists($users) && !file_exists($projects)) {
 	$projectPath = $data["projectPath"] ?: $projectName;
 	$timezone = $data["timezone"] ?: false;
 	$timezone = preg_replace('/[^a-zA-Z\/_\+]/', "", $timezone);
-	$development = $data["development"] ?: false;
+	$development = $data["development"] ?: "false";
 	$authorized = $data["authorized"] ?: "undecided";
 
 	//////////////////////////////////////////////////////////////////////////80
