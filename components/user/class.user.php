@@ -44,7 +44,7 @@ class User {
 				SESSION("lang", $language);
 				SESSION("theme", $theme);
 
-				if ($user["activePath"] !== "" && $user["activeName"] !== "") {
+				if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
 					SESSION("projectPath", $user["activePath"]);
 					SESSION("projectName", $user["activeName"]);
 				}
