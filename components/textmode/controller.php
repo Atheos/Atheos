@@ -20,7 +20,8 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	case 'saveExtensionMap':
 		if (Common::checkAccess("configure")) {
-			$map = POST('map');
+			$map = json_decode(POST('map'), true);
+
 			if (!is_array($map)) {
 				Common::send("error", "Invalid map type.");
 			}
