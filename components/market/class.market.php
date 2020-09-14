@@ -16,6 +16,8 @@ class Market {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 	public $market = 'https://www.atheos.io/market/json';
+	
+	private $activeUser = null;
 
 	private $cMarket = array();
 	private $cAddons = array();
@@ -32,6 +34,9 @@ class Market {
 	public function __construct() {
 		$this->cAddons = Common::load("addons", "cache");
 		$this->cMarket = Common::load("market", "cache");
+		
+		$this->activeUser = SESSION("user");
+		
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -165,7 +170,7 @@ class Market {
 
 
 			// Log Action
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} installed plugin {$name}", "market");
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} installed plugin {$name}", "market");
 			$this->buildCache(true);
 			Common::send("success", i18n("market_install_success", $name));
 		} else {
@@ -182,7 +187,7 @@ class Market {
 		}
 		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->user . "} removed plugin {$name}", "market");
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
 		Common::send("success");
