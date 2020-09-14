@@ -242,7 +242,7 @@ class TextMode {
 		debug($customMap);
 
 		Common::save("extensions", $customMap);
-		Common::send("success");
+		Common::send("success", "Textmodes saved.");
 	}
 
 	//////////////////////////////////////////////////////////////////
