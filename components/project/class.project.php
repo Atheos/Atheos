@@ -128,7 +128,6 @@ class Project {
 	// Load Active Project, or Default
 	//////////////////////////////////////////////////////////////////////////80
 	public function load($activeName, $activePath) {
-		debug($activeName);
 		if ($activeName && $activePath) {
 			// Load currently active project in session, pulled from cache data in user class
 			$projectName = $activeName;
