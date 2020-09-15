@@ -761,7 +761,7 @@
 			// For some reason, leaving the leading slash on a path causes the
 			// leading slash to be moved to the end of the element, as in at the
 			// end of the file name and subsequently needs to be removed first.
-			var item = '<li class="draggable" data-path="' + path + '"><a><span class="subtle">' +
+			var item = '<li class="draggable" data-path="' + path + '"><a title="' + path.replace(/^\/+/g, '') + '"><span class="subtle">' +
 				info.directory.replace(/^\/+/g, '') + '/</span>' + info.basename +
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
