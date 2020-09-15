@@ -9,8 +9,6 @@
 // Authors: Codiad Team, @Andr3as, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once(__DIR__ . "/../../common.php");
-
 require_once("class.git.php");
 
 $repo = POST('repo');

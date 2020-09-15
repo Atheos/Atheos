@@ -172,7 +172,7 @@
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 			
-			let node = oX('[data-path="' + repo + '"]');
+			let node = oX('#file-manager [data-path="' + repo + '"]');
 			if(!node.hasClass('repo')) {
 				atheos.toast.show('notice', i18n('git_error_noRepo'));
 				return;
