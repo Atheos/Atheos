@@ -12,13 +12,6 @@
 
 trait Helpers {
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Clean Username
-	//////////////////////////////////////////////////////////////////////////80
-	public static function cleanUsername($username) {
-		return strtolower(preg_replace('#[^A-Za-z0-9\-\_\@\.]#', '', $username));
-	}
-
 	function compareVersions($v1, $v2) {
 		// Src: https://helloacm.com/the-javascript-function-to-compare-version-number-strings/
 		if (!is_string($v1) || !is_string($v2)) {
@@ -46,17 +39,19 @@ trait Helpers {
 	//////////////////////////////////////////////////////////////////////////80
 	// Read Post/Get/Server/Session Data
 	//////////////////////////////////////////////////////////////////////////80
-	public static function data($key = false, $type = false, $val = null) {
-		if (!$key || !$type) return $val;
+	public static function data($type = false, $key = false, $val = null) {
+		if (!$type || !$key) return $val;
 
 		if (!empty($val) && $type === "SESSION") {
 			$_SESSION[$key] = $val;
 		}
 
-		if ($type === "SESSION") {
-			$val = array_key_exists($key, $_SESSION) ? $_SESSION[$key] : null;
-		} elseif ($type === "POST") {
-			$val = array_key_exists($key, $_POST) ? $_POST[$key] : null;
+		if ($type === "SERVER" && array_key_exists($key, $_SERVER)) {
+			$val = $_SERVER[$key];
+		} elseif ($type === "SESSION" && array_key_exists($key, $_SESSION)) {
+			$val = $_SESSION[$key];
+		} elseif ($type === "POST" && array_key_exists($key, $_POST)) {
+			$val = $_POST[$key];
 		}
 
 		return $val;
@@ -69,7 +64,7 @@ trait Helpers {
 		$tmp = array();
 		$allFiles = scandir($foldername);
 		foreach ($allFiles as $fname) {
-			if ($fname === '.' || $fname === '..') {
+			if ($fname === "." || $fname === "..") {
 				continue;
 			}
 
@@ -78,7 +73,7 @@ trait Helpers {
 				continue;
 			}
 
-			if (is_dir($foldername.'/'.$fname)) {
+			if (is_dir($foldername."/".$fname)) {
 				$tmp[] = $fname;
 			}
 		}
@@ -90,7 +85,7 @@ trait Helpers {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function log($text, $name = "global") {
 		$path = DATA . "/log/";
-		$path = preg_replace('#/+#', '/', $path);
+		$path = preg_replace("#/+#", "/", $path);
 
 		if (!is_dir($path)) mkdir($path);
 
@@ -104,11 +99,11 @@ trait Helpers {
 			}
 			$lines[] = $text;
 
-			$write = fopen($path . $file, 'w');
-			fwrite($write, implode('', $lines));
+			$write = fopen($path . $file, "w");
+			fwrite($write, implode("", $lines));
 			fclose($write);
 		} else {
-			$write = fopen($path . $file, 'w');
+			$write = fopen($path . $file, "w");
 			fwrite($write, $text);
 			fclose($write);
 		}
@@ -118,24 +113,24 @@ trait Helpers {
 	// Check If WIN based system
 	//////////////////////////////////////////////////////////////////////////80
 	public static function isWINOS() {
-		return (strtoupper(substr(PHP_OS, 0, 3)) === 'WIN');
+		return (strtoupper(substr(PHP_OS, 0, 3)) === "WIN");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Check Function Availability
 	//////////////////////////////////////////////////////////////////////////80
 	public static function isAvailable($func) {
-		if (ini_get('safe_mode')) return false;
-		$disabled = ini_get('disable_functions');
+		if (ini_get("safe_mode")) return false;
+		$disabled = ini_get("disable_functions");
 		if ($disabled) {
-			$disabled = explode(',', $disabled);
-			$disabled = array_map('trim', $disabled);
+			$disabled = explode(",", $disabled);
+			$disabled = array_map("trim", $disabled);
 			return !in_array($func, $disabled);
 		}
 		return true;
 	}
 
-	function rDelete($target) {
+	public static function rDelete($target) {
 		// Unnecessary, but rather be safe that sorry.
 		if ($target === "." || $target === "..") {
 			return;
@@ -153,4 +148,36 @@ trait Helpers {
 			unlink($target);
 		}
 	}
+
+
+	public static function rZip($folder, &$archive, $exclusiveLength) {
+		$handle = opendir($folder);
+		while ($file = readdir($handle)) {
+			if ($file === "." || $file === "..") continue;
+			$filePath = "$folder/$file";
+			$localPath = substr($filePath, $exclusiveLength);
+			if (is_file($filePath)) {
+				$archive->addFile($filePath, $localPath);
+			} elseif (is_dir($filePath)) {
+				Common::rZip($filePath, $archive, $exclusiveLength);
+			}
+
+		}
+		closedir($handle);
+	}
+
+	// @author umbalaconmeogia at NOSPAM dot gmail dot com
+	// @link http://www.php.net/manual/de/class.ziparchive.php#110719*
+	public static function zip($orig, $dest) {
+		$info = pathInfo($orig);
+
+		$archive = new ZipArchive();
+		$archive->open($dest, ZIPARCHIVE::CREATE);
+
+		Common::rZip($orig, $archive, strlen("$orig/"));
+
+		$archive->close();
+	}
+
+
 }

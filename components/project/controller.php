@@ -10,9 +10,11 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('class.project.php');
+require_once("class.project.php");
 
-$activeProject = SESSION("project");
+$activeName = SESSION("projectName");
+$activePath = SESSION("projectPath");
+
 $projectName = POST("projectName");
 $projectPath = POST("projectPath");
 
@@ -25,7 +27,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'create':
+	case "create":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		} elseif (!$projectName) {
@@ -40,9 +42,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Return Current
 	//////////////////////////////////////////////////////////////////////////80
-	case 'current':
-		if ($activeProject) {
-			Common::send("success", array("path" => $activeProject));
+	case "current":
+		if ($activeName) {
+			Common::send("success", array("name" => $activeName, "path" => $activePath));
 		} else {
 			Common::send("error", i18n("project_noActive"));
 		}
@@ -51,13 +53,14 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'delete':
+	case "delete":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
-		} elseif (!$projectPath) {
-			Common::send("error", "Missing project path.");
+		} elseif (!$projectName) {
+			Common::send("error", "Missing project name.");
 		} else {
-			$Project->delete($projectPath);
+			$scope = POST("scope");
+			$Project->delete($projectName, $scope);
 		}
 
 		break;
@@ -65,23 +68,25 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Load Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'load':
-		$Project->load($activeProject);
+	case "load":
+		$Project->load($activeName, $activePath);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Open Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'open':
-		$projectPath = $projectPath === "ATHEOS" ? BASE_PATH : $projectPath;
-
+	case "open":
+		if ($projectPath === "@TH305" && Common::checkAccess("configure")) {
+			$projectName = "Atheos IDE";
+			$projectPath = BASE_PATH;
+		}
 
 		if (!Common::checkPath($projectPath)) {
 			Common::send("error", "User does not have access.");
-		} elseif (!$projectPath) {
-			Common::send("error", "Missing project path.");
+		} elseif (!$projectName || !$projectPath) {
+			Common::send("error", "Missing project name or path.");
 		} else {
-			$Project->open($projectPath);
+			$Project->open($projectName, $projectPath);
 		}
 
 		break;
@@ -89,7 +94,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename Project
 	//////////////////////////////////////////////////////////////////////////80
-	case 'rename':
+	case "rename":
 		if (!Common::checkAccess("configure")) {
 			Common::send("error", "User does not have access.");
 		} elseif (!$projectName || !$projectPath) {

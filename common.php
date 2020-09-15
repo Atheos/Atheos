@@ -16,7 +16,8 @@ require_once("traits/helpers.php");
 require_once("traits/json.php");
 require_once("traits/path.php");
 require_once("traits/reply.php");
-require_once("traits/session.php");
+
+require_once("traits/i18n.php");
 
 class Common {
 
@@ -26,12 +27,10 @@ class Common {
 	use JSON;
 	use Path;
 	use Reply;
-	use Session;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-
 	public static $debugStack = array();
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -46,29 +45,22 @@ class Common {
 	public static function initialize() {
 		$path = __DIR__;
 
-		if (file_exists($path.'/config.php')) require_once($path.'/config.php');
+		define("VERSION", "v5.0.0");
+
+		if (file_exists($path."/config.php")) require_once($path."/config.php");
 
 		if (defined("LIFETIME") && LIFETIME !== false) {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
 
 		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
-		if (!defined("COMPONENTS")) define('COMPONENTS', BASE_PATH . "/components");
-		if (!defined("PLUGINS")) define('PLUGINS', BASE_PATH . "/plugins");
-		if (!defined("DATA")) define('DATA', BASE_PATH . "/data");
+		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
+		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
+		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
 		if (!defined("THEMES")) define("THEMES", BASE_PATH . "/themes");
 		if (!defined("THEME")) define("THEME", "atheos");
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
-
-		if (file_exists(BASE_PATH ."/components/i18n/class.i18n.php")) {
-			require_once(BASE_PATH ."/components/i18n/class.i18n.php");
-		}
-
-		// Set up language translation
-		global $i18n;
-		$i18n = new i18n(LANGUAGE);
-		$i18n->init();
 
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
@@ -80,6 +72,19 @@ class Common {
 		$themes = Common::readDirectory(THEMES);
 	}
 
+	//////////////////////////////////////////////////////////////////////////80
+	// SESSION
+	//////////////////////////////////////////////////////////////////////////80
+	public static function startSession() {
+		session_name(md5(BASE_PATH));
+		session_start();
+
+		// Set up language translation
+		global $i18n;
+		$i18n = new i18n(LANGUAGE);
+		$i18n->init();
+	}
+
 	//////////////////////////////////////////////////////////////////////////80////////80
 	// Execute Command
 	//////////////////////////////////////////////////////////////////////////80////////80
@@ -87,18 +92,18 @@ class Common {
 		$output = false;
 		if (!$cmd) return "No command provided";
 
-		if (function_exists('system')) {
+		if (function_exists("system")) {
 			ob_start();
 			system($cmd);
 			$output = ob_get_contents();
 			ob_end_clean();
-		} elseif (function_exists('exec')) {
+		} elseif (function_exists("exec")) {
 			exec($cmd, $output);
 			$output = implode("\n", $output);
-		} elseif (function_exists('shell_exec')) {
+		} elseif (function_exists("shell_exec")) {
 			$output = shell_exec($cmd);
 		} else {
-			$output = 'Command execution not possible on this system';
+			$output = "Command execution not possible on this system";
 		}
 		return $output;
 	}
@@ -116,14 +121,22 @@ function debug($val) {
 	Common::$debugStack[] = $val;
 }
 
-function POST($key, $val = null) {
-	$val = Common::data($key, "POST", $val);
-	if ($key === "username") $val = Common::cleanUsername($val);
-	return $val;
+function SERVER($key, $val = null) {
+	return Common::data("SERVER", $key, $val);
 }
 
 function SESSION($key, $val = null) {
-	return Common::data($key, "SESSION", $val);
+	return Common::data("SESSION", $key, $val);
 }
+
+function POST($key, $val = null) {
+	$val = Common::data("POST", $key, $val);
+	if ($key === "username") {
+		$val = strtolower(preg_replace("#[^A-Za-z0-9\-\_\@\.]#", "", $val));
+	}
+	return $val;
+}
+
+
 
 ?>

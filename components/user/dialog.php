@@ -99,7 +99,7 @@ switch ($action) {
 				<th width="70"><?php echo i18n("delete"); ?></th>
 				<?php
 
-				$users = Common::readJSON('users');
+				$users = Common::load('users');
 				foreach ($users as $user => $data) {
 					?>
 					<tr>
@@ -135,8 +135,8 @@ switch ($action) {
 	case 'showUserACL':
 
 		// Get project list
-		$projects = Common::readJSON('projects');
-		$users = Common::readJSON("users");
+		$projects = Common::load('projects');
+		$users = Common::load("users");
 		$userACL = $users[$username]["userACL"];
 		// Get control list (if exists)
 

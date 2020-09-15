@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////80
-// i18n Init
+// Analytics Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/LICENSE.md for more.
@@ -15,9 +15,12 @@
 
 	var self = null;
 
-	atheos.i18n = {
+	amplify.subscribe('system.loadExtra', () => atheos.analytics.init());
 
-		cache: {},
+	atheos.analytics = {
+
+		endpoint: null,
+		local: null,
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -25,31 +28,27 @@
 		init: function() {
 			self = this;
 
-			window.i18n = Function.prototype.bind.call(atheos.i18n.translate);
 			echo({
-				url: atheos.controller,
 				data: {
-					target: 'i18n',
+					target: 'analytics',
 					action: 'init'
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						return;
-					}
-					self.cache = reply.cache;
+				settled: function(status, reply) {
+					if(status !== 'success') return;
+					self.endpoint = reply.endpoint;
+					self.send(reply.data);
 				}
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Download Archive
-		//////////////////////////////////////////////////////////////////
-		translate: function(string, args) {
-			if (!self.cache) {
-				return string;
-			}
-			let result = string in self.cache ? self.cache[string] : string;
-			return args ? result.replace('%s', args) : result;
+		//////////////////////////////////////////////////////////////////////80
+		// Load Latest from the Repo
+		//////////////////////////////////////////////////////////////////////80
+		send(data) {
+			echo({
+				url: self.endpoint,
+				data
+			});
 		}
 	};
 

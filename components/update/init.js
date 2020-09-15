@@ -19,10 +19,7 @@
 
 	atheos.update = {
 
-		home: null,
-		repo: null,
-		local: null,
-		remote: null,
+		github: null,
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -36,13 +33,10 @@
 					target: 'update',
 					action: 'init'
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						return;
-					}
-					self.local = reply.local;
-					self.home = reply.remote;
-					self.repo = reply.github;
+				settled: function(status, reply) {
+					if (status !== 'success') return;
+
+					self.github = reply.github;
 
 					if (reply.request) {
 						self.loadLatest();
@@ -82,10 +76,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		loadLatest() {
 			echo({
-				url: self.repo,
-				success: function(reply) {
-					log(reply);
-					self.saveCache(reply);
+				url: self.github,
+				settled: function(status, reply) {
+					if (status === 'success') self.saveCache(reply);
 				}
 			});
 		},

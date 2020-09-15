@@ -141,35 +141,41 @@
 		// Save the extensions to the server.
 		//////////////////////////////////////////////////////////////////
 		saveExtensions: function() {
-			var form = oX('#modal_content form').el;
-			var len = form.elements.length;
+			var form = oX('#textmodes');
+			var modes = form.findAll('input, select');
 
 			var data = {
 				target: 'textmode',
 				action: 'saveExtensionMap',
-				map: {}
+				map: {
+					extension: [],
+					textmode: []
+				}
 			};
 
-			for (var i = 0; i < len; i++) {
-				var field = form.elements[i];
+			for (var i = 0; i < modes.length; i++) {
+				var field = modes[i].el;
+
+				// log(field);
 
 				if (field.name !== 'extension' && field.name !== 'textmode') {
 					continue;
 				}
 
-				if (data.map[field.name]) {
-					data.map[field.name].push(field.value);
-				} else {
-					data.map[field.name] = [field.value];
-				}
+				data.map[field.name].push(field.value);
 			}
+			data.map = JSON.stringify(data.map);
+			log(data);
 
 			echo({
 				url: atheos.controller,
 				data: data,
-				success: function(reply) {
-					atheos.toast[reply.status](reply.message);
-					if (reply.status !== 'error' && reply.extensions) {
+				settled: function(status, reply) {
+					atheos.toast.show(status, reply.message);
+
+					log(status, reply);
+
+					if (status !== 'error' && reply.extensions) {
 						self.setEditorTextModes(reply);
 					}
 				}
@@ -184,7 +190,7 @@
 			var extensions = oX('#textmodes');
 
 			var html = '<tr><td><input type="text" name="extension" value="" /></td>';
-			html += '<td><select name="textMode">';
+			html += '<td><select name="textmode">';
 			self.availableModes.forEach((mode) => {
 				html += '<option>' + mode + '</option>';
 			});

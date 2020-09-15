@@ -48,7 +48,6 @@
 				success: function(reply) {
 					if (reply.status === 'success') {
 						oX('#download').attr('src', 'components/transfer/download.php?filename=' + encodeURIComponent(reply.download));
-
 					} else {
 						atheos.toast.show('error', reply.text);
 					}
