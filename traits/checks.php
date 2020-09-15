@@ -16,11 +16,11 @@ trait Check {
 	// Check if user can configure Atheos
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkAccess($permission = "configure") {
-		$users = Common::readJSON("users");
-		$username = SESSION("user");
+		$users = Common::load("users");
+		$activeUser = SESSION("user");
 
-		if (array_key_exists($username, $users)) {
-			$permissions = $users[$username]["permissions"];
+		if (array_key_exists($activeUser, $users)) {
+			$permissions = $users[$activeUser]["permissions"];
 			return in_array($permission, $permissions);
 		} else {
 			return false;
@@ -31,15 +31,15 @@ trait Check {
 	// Check Path
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkPath($path) {
-		$users = Common::readJSON("users");
-		$username = SESSION("user");
-		$projects = Common::readJSON('projects');
+		$users = Common::load("users");
+		$activeUser = SESSION("user");
+		$projects = Common::load("projects");
 
-		if (!array_key_exists($username, $users)) {
+		if (!array_key_exists($activeUser, $users)) {
 			return false;
 		}
 
-		$userACL = $users[$username]["userACL"];
+		$userACL = $users[$activeUser]["userACL"];
 
 		if ($userACL === "full") {
 			return true;
@@ -61,14 +61,14 @@ trait Check {
 	// Check Session
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkSession() {
-		$loose_ip = long2ip(ip2long($_SERVER["REMOTE_ADDR"]) & ip2long("255.255.0.0"));
+		$loose_ip = long2ip(ip2long(SERVER("REMOTE_ADDR")) & ip2long("255.255.0.0"));
 
-		$userAgent = isset($_SERVER["HTTP_USER_AGENT"]) ? $_SERVER["HTTP_USER_AGENT"] : md5("userAgent" . $loose_ip);
-		$encoding = isset($_SERVER["HTTP_ACCEPT_ENCODING"]) ? $_SERVER["HTTP_ACCEPT_ENCODING"] : md5("encoding" . $loose_ip);
-		$language = isset($_SERVER["HTTP_ACCEPT_LANGUAGE"]) ? $_SERVER["HTTP_ACCEPT_LANGUAGE"] : md5("language" . $loose_ip);
+		$userAgent = SERVER("HTTP_USER_AGENT") || md5("userAgent" . $loose_ip);
+		$encoding = SERVER("HTTP_ACCEPT_ENCODING") || md5("encoding" . $loose_ip);
+		$language = SERVER("HTTP_ACCEPT_LANGUAGE") || md5("language" . $loose_ip);
 
 		//Some security checks, helps with securing the service
-		if (isset($_SESSION["user"]) && isset($_SESSION["LOOSE_IP"])) {
+		if (SESSION("user") && SESSION("LOOSE_IP")) {
 			$destroy = false;
 
 			$destroy = $destroy ?: SESSION("LOOSE_IP") !== $loose_ip;
@@ -79,7 +79,7 @@ trait Check {
 			if ($destroy) {
 				session_unset();
 				session_destroy();
-				Common::send("error", "Security violation");
+				Common::send("error", "Security violation.");
 			}
 
 			SESSION("LAST_ACTIVE", time()); // Reset user activity timer

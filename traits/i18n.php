@@ -7,7 +7,7 @@
 // warranty under the MIT License. See [root]/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+// Authors: Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
 class i18n {
@@ -16,25 +16,9 @@ class i18n {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	/**
-	* Cache language data
-	* This is the path for all the cache files. Best is an empty directory with no other files in it.
-	*/
 	protected $cache = array();
-
-	/**
-	* Fallback language
-	* This is the language which is used when there is no language file for all other user languages. It has the lowest priority.
-	* Remember to create a language file for the fallback!!
-	*/
 	protected $fallbackLang = 'en';
-
-	/**
-	* Forced language
-	* If you want to force a specific language define it here.
-	*/
 	protected $forcedLang = NULL;
-
 
 	protected $langCodes = array(
 		"en" => "english",
@@ -99,6 +83,7 @@ class i18n {
 	public function init() {
 		$this->userLangs = $this->getUserLangs();
 
+
 		// search for language file
 		$this->appliedLang = NULL;
 
@@ -161,8 +146,6 @@ class i18n {
 	// Translate
 	//////////////////////////////////////////////////////////////////////////80
 	public function translate($string, $args = NULL) {
-		// $result = array_key_exists($string, $this->cache) ? $this->cache[$string] : $string;
-
 		if (array_key_exists($string, $this->cache)) {
 			$result = $this->cache[$string];
 		} else {
@@ -192,18 +175,15 @@ class i18n {
 		$userLangs = array();
 
 		// Highest priority: forced language
-		if ($this->forcedLang !== NULL) {
-			$userLangs[] = $this->forcedLang;
-		}
+		if ($this->forcedLang !== NULL) $userLangs[] = $this->forcedLang;
 
 		// 2nd highest priority: SESSION parameter 'lang'
-		if (isset($_SESSION["lang"]) && is_string($_SESSION['lang'])) {
-			$userLangs[] = $_SESSION["lang"];
-		}
+		if (SESSION("lang")) $userLangs[] = SESSION("lang");
 
 		// 3rd highest priority: HTTP_ACCEPT_LANGUAGE
-		if (isset($_SERVER["HTTP_ACCEPT_LANGUAGE"])) {
-			foreach (explode(',', $_SERVER['HTTP_ACCEPT_LANGUAGE']) as $part) {
+		$languge = SERVER("HTTP_ACCEPT_LANGUAGE");
+		if ($languge) {
+			foreach (explode(',', $languge) as $part) {
 				$userLangs[] = strtolower(substr($part, 0, 2));
 			}
 		}
@@ -225,17 +205,8 @@ class i18n {
 	// Return filename for language data file
 	//////////////////////////////////////////////////////////////////////////80
 	protected function getLangFileName($code) {
-		return str_replace('{LANGUAGE}', $code, __DIR__ . "/lang/{LANGUAGE}.json");
+		return str_replace('{LANGUAGE}', $code, BASE_PATH . "/languages/{LANGUAGE}.json");
 	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Return filename for language data file
-	//////////////////////////////////////////////////////////////////////////80
-	protected function checkPlugins($code) {
-		return str_replace('{LANGUAGE}', $code, __DIR__ . "/lang/{LANGUAGE}.json");
-	}
-
-
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Load language file code

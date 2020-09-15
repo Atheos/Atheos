@@ -13,10 +13,10 @@
 trait Path {
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Check If Path is absolute
+	// Check if Path is absolute
 	//////////////////////////////////////////////////////////////////////////80
 	public static function isAbsPath($path) {
-		return ($path[0] === '/' || $path[1] === ':')?true:false;
+		return ($path[0] === '/' || $path[1] === ':');
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -51,16 +51,7 @@ trait Path {
 		if (!Common::checkPath($path)) {
 			Common::send("error", "Client does not have access.");
 		}
-		if (strpos($path, "/") === 0) {
-			//Unix absolute path
-			return $path;
-		}
-		if (strpos($path, ":/") !== false) {
-			//Windows absolute path
-			return $path;
-		}
-		if (strpos($path, ":\\") !== false) {
-			//Windows absolute path
+		if(Common::isAbsPath($path)) {
 			return $path;
 		}
 		return WORKSPACE . "/" . $path;

@@ -66,10 +66,10 @@
 	"cancel": "Cancel",
 	"clear": "Clear",
 	"name": "Name",
-			"description": "Description",
-		"author": "Author",
+	"description": "Description",
+	"author": "Author",
 	"actions": "Actions",
-	
+
 	"email": "Email",
 	"create": {
 		"": "Create",
@@ -83,10 +83,11 @@
 
 	"delete": {
 		"": "Delete",
-		"type": "Delete %s"
+		"type": "Delete %s",
+		"scope": "Delete files on server?"
 	},
-	
-	"edit" : "Edit",
+
+	"edit": "Edit",
 
 	"rescan": "Rescan",
 
@@ -121,7 +122,6 @@
 	"more": "More",
 	"less": "Less",
 	"users": "Users",
-	"name": "Name",
 
 	"search": "Search",
 
@@ -176,7 +176,7 @@
 		"system": "System Settings",
 		"codegit": "CodeGit Settings"
 	},
-	
+
 	"draft": {
 		"": "Draft",
 		"enable": "Enable autosaving files in draft",
@@ -457,6 +457,9 @@
 	},
 
 	"git": {
+		"error": {
+			"noRepo": "Git repo not found."
+		},
 		"init": {
 			"": "Git Init",
 			"success": "Initialized empty Git repository.",

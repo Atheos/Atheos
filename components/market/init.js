@@ -23,7 +23,7 @@
 
 	atheos.market = {
 
-		home: null,
+		market: null,
 		cache: null,
 
 		init: function() {
@@ -39,7 +39,7 @@
 					if (reply.status === 'error') {
 						return;
 					}
-					self.home = reply.market;
+					self.market = reply.market;
 
 					if (reply.request) {
 						self.loadMarket();
@@ -51,7 +51,7 @@
 
 		loadMarket: function() {
 			echo({
-				url: self.home,
+				url: self.market,
 				success: function(reply) {
 					self.saveCache(reply);
 				}
@@ -79,7 +79,7 @@
 			};
 
 			atheos.modal.load(960, {
-				target:'market',
+				target: 'market',
 				action: 'list',
 				type: type,
 				note: note,
@@ -94,7 +94,8 @@
 			var key = e.charCode || e.keyCode || e.which;
 			if (query !== '' && key === 13) {
 				atheos.modal.load(800, {
-				target:'market',action: 'list',
+					target: 'market',
+					action: 'list',
 					query: query,
 					note: note
 				});
@@ -130,6 +131,9 @@
 		//////////////////////////////////////////////////////////////////
 		remove: function(name, type, category) {
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
+			
+			log(name, type, category);
+			
 			echo({
 				url: atheos.controller,
 				data: {
@@ -138,8 +142,8 @@
 					name,
 					type
 				},
-				success: function(reply) {
-					atheos.toast.show(reply);
+				settled: function(status, reply) {
+					atheos.toast.show(status, reply);
 					atheos.market.list();
 				}
 			});
