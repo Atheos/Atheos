@@ -27,8 +27,8 @@ class Active {
 	//////////////////////////////////////////////////////////////////////////80
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
-	public function __construct($activeUser) {
-		$this->activeUser = $activeUser;
+	public function __construct() {
+		$this->activeUser = SESSION("user");
 		$this->db = Common::getScroll("active");
 	}
 

@@ -160,8 +160,8 @@ class Converter implements ConverterInterface
 
         // strip shared ancestor paths
         $shared = $this->shared($path, $this->to);
-        $path = mb_substr($path, mb_strlen($shared));
-        $to = mb_substr($this->to, mb_strlen($shared));
+        $path = substr($path, strlen($shared));
+        $to = substr($this->to, strlen($shared));
 
         // add .. for every directory that needs to be traversed to new path
         $to = str_repeat('../', count(array_filter(explode('/', $to))));
@@ -189,7 +189,7 @@ class Converter implements ConverterInterface
         // no known file/dir, start making assumptions
 
         // ends in / = dir
-        if (mb_substr($path, -1) === '/') {
+        if (substr($path, -1) === '/') {
             return rtrim($path, '/');
         }
 

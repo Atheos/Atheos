@@ -10,111 +10,94 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-$user = SESSION("user");
+require_once("class.project.php");
 
 $path = POST("path");
 $name = POST("name");
+
+$Project = new Project();
+
+$projects = $Project->list();
+
 
 switch ($action) {
 
 	//////////////////////////////////////////////////////////////
 	// List Projects Mini Sidebar
 	//////////////////////////////////////////////////////////////
-	case 'projectDock':
-
-		// Get access control data
-		$userACL = Common::readJSON("users")[$user]["userACL"];
-		// Get projects JSON data
-		$projects = Common::readJSON('projects');
-		asort($projects);
-		$projectList = '';
-		foreach ($projects as $projectPath => $projectName) {
-			if ($userACL === "full" || in_array($projectPath, $userACL)) {
-				$projectList .= "<li data-project=\"$projectPath\"><i class=\"fas fa-archive\"></i> $projectName</li>" . PHP_EOL;
-			}
+	case "projectDock":
+		$projectList = "";
+		ksort($projects);
+		foreach ($projects as $projectName => $projectPath) {
+			$projectList .= "<li data-project=\"$projectPath\"><i class=\"fas fa-archive\"></i>$projectName</li>" . PHP_EOL;
 		}
-		?>
+		echo("<ul>$projectList</ul>");
 
-		<ul>
-			<?php echo($projectList); ?>
-		</ul>
-
-		<?php break;
+		break;
 
 	//////////////////////////////////////////////////////////////
 	// List Projects
 	//////////////////////////////////////////////////////////////
 
-	case 'list':
-
-		$userACL = Common::readJSON("users")[$user]["userACL"];
-		// Get projects JSON data
-		$projects = Common::readJSON('projects');
-		asort($projects);
-		$projectList = array();
-		foreach ($projects as $projectPath => $projectName) {
-			if ($userACL === "full" || in_array($projectPath, $userACL)) {
-				$projectList[$projectPath] = $projectName;
-			}
-		}
+	case "list":
 
 		?>
 		<label class="title"><i class="fas fa-archive"></i><?php echo i18n("project_list"); ?></label>
-			<table id="project-list">
-				<tr>
-					<th class="action"><?php echo i18n("open"); ?></th>
-					<th><?php echo i18n("project_name"); ?></th>
-					<th><?php echo i18n("path"); ?></th>
-					<?php if (Common::checkAccess("configure")) {
-						?>
-						<th class="action"><?php echo i18n("delete"); ?></th>
-						<th class="action"><?php echo i18n("rename"); ?></th>
-						<?php
-					} ?>
-				</tr>
-				<?php
-				$activeProject = SESSION("project");
-				foreach ($projectList as $projectPath => $projectName) {
+		<table id="project-list">
+			<tr>
+				<th class="action"><?php echo i18n("open"); ?></th>
+				<th><?php echo i18n("project_name"); ?></th>
+				<th><?php echo i18n("path"); ?></th>
+				<?php if (Common::checkAccess("configure")) {
 					?>
-					<tr>
-						<td class="action"><a onclick="atheos.project.open('<?php echo($projectPath); ?>');" class="fas fa-archive blue"></a></td>
-						<td><?php echo($projectName); ?></td>
-						<td><?php echo($projectPath); ?></td>
-						<?php
-						if (Common::checkAccess("configure")) {
-							if ($activeProject == $projectPath) {
-								?>
-								<td class="action"><a onclick="atheos.toast.show('error, 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
-								<?php
-							} else {
-								?>
-								<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt metal"></a></td>
-								<?php
-							}
+					<th class="action"><?php echo i18n("delete"); ?></th>
+					<th class="action"><?php echo i18n("rename"); ?></th>
+					<?php
+				} ?>
+			</tr>
+			<?php
+			$activeName = SESSION("projectName");
+			foreach ($projects as $projectName => $projectPath) {
+				?>
+				<tr>
+					<td class="action"><a onclick="atheos.project.open('<?php echo("$projectName', '$projectPath"); ?>');" class="fas fa-archive blue"></a></td>
+					<td><?php echo($projectName); ?></td>
+					<td><?php echo($projectPath); ?></td>
+					<?php
+					if (Common::checkAccess("configure")) {
+						if ($activeName === $projectName) {
 							?>
-							<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt orange"></a></td>
+							<td class="action"><a onclick="atheos.toast.show('error', 'Active Project Cannot Be Removed');" class="fas fa-ban"></a></td>
+							<?php
+						} else {
+							?>
+							<td class="action"><a onclick="atheos.project.delete('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-trash-alt metal"></a></td>
 							<?php
 						}
 						?>
-					</tr>
-					<?php
-
-				}
-				?>
-			</table>
-			<?php if (Common::checkAccess("configure")) {
-				?>
-				<toolbar>
-					<button class="btn-left" onclick="atheos.project.create();"><?php echo i18n("project_new"); ?></button>
-				</toolbar>
+						<td class="action"><a onclick="atheos.project.rename('<?php echo($projectName); ?>','<?php echo($projectPath); ?>');" class="fas fa-pencil-alt orange"></a></td>
+						<?php
+					}
+					?>
+				</tr>
 				<?php
-			} ?>
+
+			}
+			?>
+		</table>
+		<?php if (Common::checkAccess("configure")) {
+			?>
+			<toolbar>
+				<button class="btn-left" onclick="atheos.project.create();"><?php echo i18n("project_new"); ?></button>
+			</toolbar>
+			<?php
+		} ?>
 		<?php break;
 
 	//////////////////////////////////////////////////////////////////////
 	// Create New Project
 	//////////////////////////////////////////////////////////////////////
-	case 'create': ?>
+	case "create": ?>
 		<form style="width: 500px;">
 			<label><?php echo i18n("project_name"); ?></label>
 			<input name="projectName" autofocus="autofocus" autocomplete="off">
@@ -148,9 +131,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////
 	// Rename
 	//////////////////////////////////////////////////////////////////
-	case 'rename': ?>
+	case "rename": ?>
+		<label class="title"><i class="fas fa-pencil-alt"></i><?php echo i18n("project_rename"); ?></label>
 		<form>
-			<label><i class="fas fa-pencil-alt"></i><?php echo i18n("project_rename"); ?></label>
 			<input type="text" name="projectName" autofocus="autofocus" autocomplete="off" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php echo i18n("rename"); ?></button>&nbsp;<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
@@ -159,11 +142,39 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////
-	case 'delete': ?>
+	case "delete": ?>
+		<label class="title"><i class="fas fa-trash-alt"></i><?php echo i18n("project_confirm"); ?></label>
 		<form>
-			<label><i class="fas fa-trash-alt"></i><?php echo i18n("project_confirm"); ?></label>
-			<pre><?php echo i18n("name"); ?> <?php echo($name); ?>, <?php echo i18n("path") ?> <?php echo($path); ?></pre>
-			<button class="btn-left"><?php echo i18n("confirm"); ?></button><button class="btn-right" onclick="atheos.project.list();return false;"><?php echo i18n("cancel"); ?></button>
+			<table class="project-delete">
+				<tr>
+					<td width="50%"><?php echo i18n("name"); ?></td>
+					<td>
+						<pre><?php echo($name); ?></pre>
+
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo i18n("path"); ?></td>
+					<td>
+						<pre><?php echo($path); ?></pre>
+					</td>
+				</tr>
+				<tr>
+					<td><?php echo i18n("delete_scope"); ?></td>
+					<td>
+						<toggle>
+							<input id="delete_hard" value="hard" name="scope" type="radio" />
+							<label for="delete_hard"><?php echo i18n("true"); ?></label>
+							<input id="delete_soft" value="soft" name="scope" type="radio" checked />
+							<label for="delete_soft"><?php echo i18n("false") ?></label>
+						</toggle>
+					</td>
+				</tr>
+			</table>
+			<toolbar>
+				<button class="btn-left"><?php echo i18n("confirm"); ?></button>
+				<button class="btn-right" onclick="atheos.project.list();return false;"><?php echo i18n("cancel"); ?></button>
+			</toolbar>
 		</form>
 		<?php break;
 

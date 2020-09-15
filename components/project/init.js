@@ -33,7 +33,7 @@
 			self.dock.load();
 
 			oX('#project-atheos', true).on('click', function() {
-				self.open('ATHEOS');
+				self.open('Atheos IDE', '@TH305');
 			});
 			oX('#projects-create', true).on('click', self.create);
 			oX('#projects-manage', true).on('click', self.list);
@@ -65,7 +65,7 @@
 					} else if (node.tagName !== 'LI') {
 						node = node.parent();
 					}
-					self.open(node.attr('data-project'));
+					self.open(node.text(), node.attr('data-project'));
 				}
 			});
 		},
@@ -100,13 +100,15 @@
 		//////////////////////////////////////////////////////////////////
 		// Open Project
 		//////////////////////////////////////////////////////////////////
-		open: function(projectPath) {
+		open: function(projectName, projectPath) {
+			log(projectPath);
 			atheos.scout.hideFilter();
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'project',
 					action: 'open',
+					projectName,
 					projectPath
 				},
 				success: function(reply) {
@@ -121,7 +123,7 @@
 						atheos.modal.unload();
 					}
 
-					atheos.user.saveActiveProject(reply.path);
+					atheos.user.saveActiveProject(reply.name, reply.path);
 					localStorage.removeItem('lastSearched');
 					/* Notify listeners. */
 					amplify.publish('project.open', reply.path);
@@ -217,7 +219,7 @@
 					data,
 					success: function(reply) {
 						if (reply.status !== 'error') {
-							self.open(reply.path);
+							self.open(reply.name, reply.path);
 							self.dock.load();
 							/* Notify listeners. */
 							delete data.action;
@@ -313,23 +315,24 @@
 		// Delete Project
 		//////////////////////////////////////////////////////////////////
 		delete: function(projectName, projectPath) {
+			log(projectName, projectPath);
 			var listener = function(e) {
 				e.preventDefault();
 
-				// var deleteFiles = oX('input:checkbox[name="delete"]:checked').value();
-				// var followLinks = oX('input:checkbox[name="follow"]:checked').value();
+				var scope = oX('input[name="scope"]:checked').value();
 
 				echo({
 					url: atheos.controller,
 					data: {
 						target: 'project',
 						action: 'delete',
+						scope,
 						projectPath,
 						projectName
 					},
-					success: function(data) {
-						if (data.status === 'success') {
-							atheos.toast.show('success', 'Project Deleted');
+					settled: function(status, reply) {
+						if (status === 'success') {
+							atheos.toast.show('success', reply.text);
 
 							self.list();
 							self.dock.load();

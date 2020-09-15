@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// Update Dialog
+// Analytics Dialog
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/LICENSE.md for more.
@@ -10,9 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("class.update.php");
-
-$Update = new Update();
+require_once("../../common.php");
 
 switch ($action) {
 
@@ -22,34 +20,28 @@ switch ($action) {
 	case "check":
 
 		if (!Common::checkAccess("configure")) {
-			?>
-			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted"); ?></label>
-			<form>
-				<label class="title"><i class="fas fa-sync"></i><?php echo i18n("restricted_updates"); ?></label>
-			</form>
-			<?php
+			echo("<h1>" . i18n("restricted") . "</h1>");
+			echo("<pre>" . i18n("youCanNotCheckForUpdates") . "</pre>");
 		} else {
-			$latest = $Update->latest;
-
-			$body = preg_replace("/\*\*/i", "", $latest["body"]);
-			$body = str_replace("Changes:", "", $body);
-
+			require_once("class.update.php");
+			$update = new Update();
+			$vars = json_decode($update->check(), true);
+			$local = $vars["local"];
 			?>
-			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("update_check"); ?></label>
-
+			<label class="title"><i class="fas fa-sync"></i><?php echo i18n("updateCheck"); ?></label>
 			<form>
 				<input type="hidden" name="archive" value="">
 				<input type="hidden" name="remoteversion" value="">
-				<br>
-				<table>
-					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo ucfirst(VERSION); ?></td></tr>
-					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $latest["tag_name"]; ?></td></tr>
+				<br><table>
+					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo $local["atheos_version"]; ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td id="remote_latest"></td></tr>
 				</table>
-				<br>
-				<label><?php echo i18n("update_changes"); ?></label>
-				<pre id="update_changes"><?php echo $body; ?></pre>
-				<?php if (DEVELOPMENT) {
-					echo("<hint>" . i18n("nightly") . "</hint>");
+				<br><label><?php echo i18n("changesOnAtheos"); ?></label>
+				<pre id="update_changes"></pre>
+				<?php if ($local["atheos_version"] === "nightly") {
+					?>
+					<br><em class="note"><?php echo i18n("noteYourInstallationIsANightlyBuildCodiadMightBeUnstable"); ?></em><br>
+					<?php
 				} ?>
 				<br>
 				<toolbar>
