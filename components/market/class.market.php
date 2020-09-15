@@ -16,7 +16,7 @@ class Market {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 	public $market = 'https://www.atheos.io/market/json';
-	
+
 	private $activeUser = null;
 
 	private $cMarket = array();
@@ -34,9 +34,9 @@ class Market {
 	public function __construct() {
 		$this->cAddons = Common::load("addons", "cache");
 		$this->cMarket = Common::load("market", "cache");
-		
+
 		$this->activeUser = SESSION("user");
-		
+
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -182,15 +182,16 @@ class Market {
 	// Remove Plugin
 	//////////////////////////////////////////////////////////////////////////80
 	public function remove($name, $type) {
-		if (file_exists(__DIR__ . "/../../public/plugins.min.js")) {
-			unlink(__DIR__ . "/../../public/plugins.min.js");
+		if ($type === "plugins") {
+			if (file_exists(BASE_PATH . "/public/plugins.min.js")) unlink(BASE_PATH . "/public/plugins.min.js");
+			if (file_exists(BASE_PATH . "/public/plugins.min.css")) unlink(BASE_PATH . "/public/plugins.min.css");
 		}
 		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
-		Common::send("success");
+		Common::send("success", "Plugin successfully removed.");
 
 	}
 
