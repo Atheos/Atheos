@@ -33,21 +33,18 @@ trait Check {
 	public static function checkPath($path) {
 		$users = Common::load("users");
 		$activeUser = SESSION("user");
-		$projects = Common::load("projects");
+		// $projects = Common::load("projects");
+		$projects = Common::getParchment("projects")->select("*");
 
-		if (!array_key_exists($activeUser, $users)) {
-			return false;
-		}
+		if (!array_key_exists($activeUser, $users)) return false;
 
 		$userACL = $users[$activeUser]["userACL"];
 
 		if ($userACL === "full") {
 			return true;
 		} else {
-			foreach ($projects as $projectPath => $projectName) {
-				if (!in_array($projectPath, $userACL)) {
-					continue;
-				}
+			foreach ($projects as $projectName => $projectPath) {
+				if (!in_array($projectPath, $userACL)) continue;
 
 				if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
 					return true;
