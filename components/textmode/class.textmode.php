@@ -24,6 +24,7 @@ class TextMode {
 		'scss' => 'scss',
 		'sass' => 'scss',
 		'less' => 'less',
+		'liquid' => 'twig',
 		'php' => 'php',
 		'php4' => 'php',
 		'php5' => 'php',
