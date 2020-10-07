@@ -1,0 +1,13 @@
+{
+    "atheos_uuid": "5f54523be5368",
+    "atheos_version": "v5.0.0",
+    "first_heard": "2020-09-05 23:06:35",
+    "last_heard": "2020\/10\/07",
+    "php_version": "7.4.11",
+    "server_os": "Apache",
+    "client_os": "Chrome",
+    "location": "America\/New_York",
+    "language": "en",
+    "authorized": "true",
+    "plugins": "AutoAlign,Beautify,SassCompiler,Terminal,Winddown"
+}

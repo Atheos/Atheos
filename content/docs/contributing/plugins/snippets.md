@@ -4,15 +4,14 @@ Description: A small sampling of various usecases a plugin developer might run i
 Date: 2020-07-10
 Cache: true
 ---
-
-This page is intends to show you some examples how to handle different usecases.
-
-## Displaying a dialog window in your plugin
-
-Normally your plugin should do something. Therefore often a small dialog window is required. How do we get it? First we need to edit our ``` dialog.php``` to add a small html snippet like 
-
-```php
-<?php
+<section>
+<h1>Plugin Snippets</h2>
+<p>This page is intends to show you some examples how to handle different usecases.</p>
+</section>
+<section>
+<h2 id="displaying-a-dialog-window-in-your-plugin">Displaying a dialog window in your plugin</h2>
+<p>Normally your plugin should do something. Therefore often a small dialog window is required. How do we get it? First we need to edit our <code>dialog.php</code> to add a small html snippet like </p>
+<pre><code class="lang-php"><span class="php">&lt;?php
     // For config related stuff, we need to include the common.php
     require_once('../../common.php');   
     // also we check for authenitification
@@ -24,12 +23,10 @@ Normally your plugin should do something. Therefore often a small dialog window 
             echo '<b>Hello World</b>';
             break;           
     }   
-?>
-```
-Saving that, we are also editing our ```init.js``` like
-
-```
-(function (global, $) {
+?&gt;
+</code></pre>
+<p>Saving that, we are also editing our <code>init.js</code> like</p>
+<pre><code>(<span class="hljs-name">(function (global) {
 
     // get the relative path of our plugin
     var atheos = global.atheos,
@@ -52,35 +49,30 @@ Saving that, we are also editing our ```init.js``` like
             // use atheos functions to load a dialog with 500px width and our example
             atheos.modal.load(500, this.dialog + '?action=example');
         };
-})(this, jQuery);
-```
-
-## Hooking into an existing function to provide a new functionallity
-
-To provide new functionally, you can also extend existing functions by hooking into their method and overwritting it.
-
-- Example for overwritting rightbar menu entries: 
-
-```javascript
-init: function () {
+})(this);
+</code></pre>
+</section>
+<section>
+<h2>Hooking into an existing function to provide a new functionallity</h2>
+<p>To provide new functionally, you can also extend existing functions by hooking into their method and overwritting it.</p>
+<ul>
+<li>Example for overwritting rightbar menu entries: </li>
+</ul>
+<pre><code>init: function () {
     // look for entry with specific onclick and replace it's onclick function
     $('#sb-right a[onclick="atheos.update.check();"]').attr("onclick", "atheos.autoupdate.check();");
 }
-```
-
-- Example for overwritting filemanager contextmenu entries
-
-```
-init: function() {
+</code></pre>
+<ul>
+<li>Example for overwritting filemanager contextmenu entries</li>
+</ul>
+<pre><code>init: function() {
     // look for menu entry and replace it's onclick function
     $('#context-menu a[onclick="atheos.filemanager.uploadToNode($(\\'#context-menu\\').attr(\\'data-path\\'));"]').attr("onclick", "atheos.demo.denied();");
 }
-```
-
-Advanced example for overwritting dialogs:
-
-```javascript
-init: function() {
+</code></pre>
+<p>Advanced example for overwritting dialogs:</p>
+<pre><code>init: function() {
     $('#modal-content').hover(function() {
         // look for a link and replace it's onclick function
         $('#modal-content a[onclick=\\'atheos.plugin_manager.install();\\']').attr("onclick", "atheos.demo.denied();");
@@ -92,6 +84,5 @@ init: function() {
         $('#modal-content input[name="project_path"]').attr("readonly", true);
     },function() {});
 }
-```
-
-More examples could be found at https://github.com/atheos/atheosDemo/blob/master/demo/instance.instance.js
+</code></pre>
+</section>

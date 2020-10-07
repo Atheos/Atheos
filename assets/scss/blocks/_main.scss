@@ -8,8 +8,8 @@ main {
 	// height: 100%;
 
 	/* Desktop View */
-	@media (min-width: $desktop-width) {
-		margin-left: $sidebar-width + $sectionMargin;
+	@media (min-width: $desktop) {
+		margin-left: $sidebarWidth + $sectionMargin;
 		margin-top: 0;
 	}
 }

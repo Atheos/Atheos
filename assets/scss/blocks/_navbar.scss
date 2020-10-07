@@ -2,7 +2,7 @@ nav {
 	height: 100%;
 	position: relative;
 
-	@media (min-width: $desktop-width) {
+	@media (min-width: $desktop) {
 		border-top: 1px solid $silver;
 	}
 
@@ -12,7 +12,7 @@ nav {
 		left: 0;
 		margin: 0;
 		padding: 0;
-		width: $sidebar-width;
+		width: $sidebarWidth;
 		overflow: auto;
 		height: 100%;
 

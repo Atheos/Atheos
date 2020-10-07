@@ -7,7 +7,7 @@
 			"endorsed": false,
 			"keywords": ["beautify"],
 			"description": "Adds better formatting through variable alignment and spacing",
-			"status": "development",
+			"status": "available",
 			"version": "1.0.0",
 			"url": "https://github.com/HLSiira/Atheos-AutoAlign"
 		},
@@ -15,9 +15,9 @@
 			"author": ["HLSiira", "Andr3as"],
 			"rating": 0,
 			"installs": 0,
-			"endorsed": false,
+			"endorsed": true,
 			"keywords": ["beautify"],
-			"description": "Beautify js, json, html or css files",
+			"description": "Beautify PHP, CSS, JS & HTML for the Atheos IDE",
 			"status": "available",
 			"version": "1.0.0",
 			"url": "https://github.com/HLSiira/Atheos-Beautify"
@@ -41,8 +41,8 @@
 			"installs": 0,
 			"endorsed": false,
 			"keywords": [],
-			"description": "Allows to send other users notification messages",
-			"status": "merging",
+			"description": "Send messages between users within Atheos",
+			"status": "available",
 			"version": "1.0.0",
 			"url": "https://github.com/HLSiira/Atheos-Messaging"
 		}
@@ -54,7 +54,7 @@
 			"installs": 0,
 			"endorsed": false,
 			"keywords": [],
-			"description": "Boilerplate for developing Codiad Plugins",
+			"description": "Boilerplate for developing Atheos Plugins",
 			"status": "available",
 			"version": "1.0.0",
 			"url": "https://github.com/Atheos/Plugin-Template"
@@ -91,8 +91,8 @@
 			"installs": 0,
 			"endorsed": false,
 			"keywords": [],
-			"description": "Allows execution of terminal command through Codiad",
-			"status": "development",
+			"description": "Provides terminal emulation and interaction with server",
+			"status": "available",
 			"version": "1.0.0",
 			"url": "https://github.com/HLSiira/Atheos-Terminal"
 		}
@@ -126,9 +126,9 @@
 			"installs": 0,
 			"endorsed": false,
 			"keywords": [],
-			"description": "Small minimap to get an overview",
-			"status": "merging",
-			"version": "1.0.0",
+			"description": "Creates a minimap to get a quick overview of code",
+			"status": "available",
+			"version": "1.0.1",
 			"url": "https://github.com/HLSiira/Atheos-Minimap"
 		},
 		"Winddown": {
@@ -140,7 +140,7 @@
 			"description": "A Sublte reminder to stand up and exercise",
 			"status": "available",
 			"version": "1.0.0",
-			"url": "https://github.com/HLSiira/Atheos-Windown"
+			"url": "https://github.com/HLSiira/Atheos-Winddown"
 		}
 	}
 }

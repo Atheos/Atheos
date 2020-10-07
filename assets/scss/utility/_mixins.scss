@@ -6,6 +6,12 @@
 	border: 1px solid $smoke;
 	backdrop-filter: blur(2px);
 	background-color: #{$foreground}99;
+	// border-left: none;
+	// border-right: none;
+
+	// @media (min-width: $desktop) {
+	// 	border: 1px solid $smoke;
+	// }
 }
 
 // h1 { font-size: 2.552em;	}
@@ -26,7 +32,7 @@
 		/*display: inline-block;*/
 		line-height: 1.15;
 
-		@media (min-width: 768px) {
+		@media (min-width: $desktop) {
 			vertical-align: middle;
 		}
 	}

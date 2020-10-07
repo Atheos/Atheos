@@ -4,15 +4,15 @@ Description: A short installation guide on NGINX
 Date: 2020-07-10
 Cache: true
 ---
-This tutorial should demonstrate how to setup Atheos on a Nginx based system. Depending on your installation, some steps might not be required anymore. 
+# Install Atheos with NGINX
 
-### Install Atheos
+This tutorial should demonstrate how to setup Atheos on a Nginx based system. Depending on your installation, some steps might not be required anymore. 
 
 - Simply place the contents of the system in a web accessible folder
 - Ensure that the system has write capabilities according to mentioned files and folders
 - Ensure that php is setup correctly
 
-### Nginx
+## Configuration
 
 The following nginx configuration file might not follow all the nginx best practices, but can be a good starting point to set up a atheos instance. Copy it in ```/etc/nginx/sites-available``` and symlink it from ```/etc/nginx/sites-enabled``` to enable it:
 ```
@@ -60,7 +60,7 @@ server {
 	}
 }
 ```
-### Troubleshooting
+## Troubleshooting
 - 502 error likely means php is not setup correctly
  
 Open your installation with http://your-ip-adress/ and finish the installation. 

@@ -3,21 +3,25 @@
 	<meta charset='utf-8'>
 	<meta http-equiv="X-UA-Compatible" content="chrome=1">
 	<meta name="description" content="{{ meta.description|striptags }}" />
-	<meta name=”keywords” content=”atheos, code anywhere, ide, cloud, open source, code editor, minimal footprint, codiad, php, javascript, html, web-based, firefox, chrome, safari, linux, windows, apache, nginx, docker” />
+	<meta name=”keywords” content=”atheos, code anywhere, programming, synthax highlighting, extendable, themes, plugins, ide, cloud, open source, code editor, minimal footprint, codiad, php, javascript, html, web-based, web-development, firefox, chrome, safari, linux, windows, apache, nginx, docker” />
 	<meta name="viewport" content="width=device-width, initial-scale=1" />
 	<meta name="author" content="Liam Siira, Liam@Siira.us">
 	<meta name="generator" content="Pico" />
 
 	<!-- Facebook and Twitter integration -->
 	<meta property="og:title" content="{{ site_title }}" />
-	<meta property="og:image" content="{{ meta.image }}" />
+	<meta property="og:image" content="{{ config.image }}" />
 	<meta property="og:url" content="{{ base_url }}" />
 	<meta property="og:site_name" content="{{ site_title }}" />
+	<meta property="og:type" content="website" />	
 	<meta property="og:description" content="{{ meta.description|striptags }}" />
+	
 	<meta name="twitter:title" content="{{ site_title }}" />
-	<meta name="twitter:image" content="{{ meta.image }}" />
+	<meta name="twitter:image" content="{{ config.image }}" />
+	<meta name="twitter:description" content="{{ meta.description|striptags }}" />
 	<meta name="twitter:url" content="{{ base_url }}" />
 	<meta name="twitter:card" content="summary_large_image" />
+	
 
 	<!-- Theme CSS -->
 	<link rel="preload" as="style" href="{{ assets_url }}/style.min.css">
@@ -34,6 +38,7 @@
 	<link rel="preload" as="font" href="/cdn/fonts/ubuntu/Ubuntu-Bold-Compact.woff2" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" as="font" href="/cdn/fonts/lato/Lato-Regular.woff2" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" as="font" href="/cdn/fonts/lato/Lato-Bold.woff2" type="font/woff2" crossorigin="anonymous">
+	<link rel="preload" as="font" href="/cdn/fonts/lato/Lato-Italic.woff2" type="font/woff2" crossorigin="anonymous">
 
 
 	<!-- Favicon -->
@@ -49,4 +54,4 @@
 
 
 	<!-- Javascript -->
-	<script defer type="text/javascript" src="/cdn/core.js?js=sc|eo|an"></script>
+	<script defer type="text/javascript" src="/cdn/core.js?js=eo|an|sc"></script>

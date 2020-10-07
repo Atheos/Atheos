@@ -8,7 +8,7 @@ Cache: true
 
 	<p>
 		Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte and the Codiad Team.
-		Keep up to date with the latest changes and news on <strong><a title="github" href="https://github.com/Atheos/Atheos">Github</a></strong>
+		Keep up to date with the latest changes and news on <strong><a rel="noreferrer" title="github" href="https://github.com/Atheos/Atheos">Github</a></strong>
 	</p>
 </section>
 <section>
@@ -53,7 +53,7 @@ Cache: true
 		Atheos consists of three panels; a left panel which houses the file manager and active files, center panel which is where editors reside, and a right panel which contains system and other controls. The right &amp; left side panels collapse providing maximum real-estate to the editor.
 	</p>
 
-	<img src="assets/images/atheos.png" alt="Atheos Screenshot">
+	<img src="assets/images/atheos.jpg" alt="Atheos Screenshot">
 </section>
 
 <section>
@@ -84,12 +84,13 @@ Cache: true
 	<h2>Support the Atheos Project</h2>
 
 	<p>
-		Hey, this is @HLSiira.
+		Hey, this is <a href="https://www.siira.io/" rel="noreferrer" title="Developer blog">@HLSiira</a>.
 		<br />
-		If you want to support Codiad, and all the hard work that they did, please donate to them on <a title="codiad" href="https://www.codiad.com">Codiad</a>.
+		If you want to support Codiad, and all the hard work that they did, please donate to them on <a title="codiad" rel="noreferrer" href="https://www.codiad.com">Codiad</a>.
 		I am maintaining my fork of Atheos out of my own personal desire on my own personal time. I am just a dude who likes to program whenever I can as the job that I have has nothing to do with fun.
+		<br />
 		If you want to see Atheos be developed further, don't worry, it most likely will as I love working on it and want to see it succeed. The Codiad folks really created a piece of art.
 		<br />
-		A nice supportive email or message would do me just fine.
+		A nice supportive email would do me just fine.
 	</p>
 </section>

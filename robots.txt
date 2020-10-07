@@ -1,3 +1,2 @@
 User-agent: *
-Disallow: /assets/
 Sitemap: https://www.atheos.io/sitemap.xml

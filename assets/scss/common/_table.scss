@@ -28,7 +28,7 @@ table {
 		border: 1px solid #ebebeb;
 
 		span {
-			color: $metal;
+			color: $fontColorMinor;
 			display: none;
 			font-size: 10px;
 			font-weight: bold;
@@ -39,11 +39,36 @@ table {
 			left: 0;
 		}
 	}
+}
 
+.argTable {
+	text-align: center;
+
+	table {
+		display: inline-block;
+
+		@media (min-width: $desktop) {
+			margin: 0 15px;
+		}
+
+		th,
+		td {
+			border: 1px solid $blue;
+			padding: 0.125em 0.5em;
+		}
+
+		th {
+			text-align: center;
+		}
+
+		td {
+			text-align: left;
+		}
+	}
 }
 
 /* Simple CSS for flexbox table on mobile */
-@media(max-width: 800px) {
+@media(max-width: $desktop) {
 	table {
 		thead {
 			left: -9999px;

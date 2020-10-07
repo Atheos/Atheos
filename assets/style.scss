@@ -53,6 +53,7 @@ footer {
 }
 
 @import 'scss/common/icons';
+@import 'scss/common/input';
 @import 'scss/common/lists';
 @import 'scss/common/table';
 @import 'scss/common/typography';
@@ -61,8 +62,11 @@ footer {
 @import 'scss/custom/download';
 @import 'scss/custom/dropdown';
 @import 'scss/custom/features';
+@import 'scss/custom/hidden';
 @import 'scss/custom/logo';
+@import 'scss/custom/lumin';
 @import 'scss/custom/scrollbars';
+@import 'scss/custom/shadow';
 @import 'scss/custom/synthetic';
 // @import 'scss/custom/visualization';
 

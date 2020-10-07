@@ -8,7 +8,7 @@ timezone: ~                         # Your PHP installation might require you to
 
 description: Atheos is a web-based IDE framework with a small footprint and minimal requirements, built on top of Codiad by FluidByte and the Codiad Team.
 tagline: A development blog
-image: https://www.atheos.io/assets/images/atheos.png
+image: https://www.atheos.io/assets/images/atheos.jpg
 
 ## Theme
 theme: theme                      # The name of your custom theme
