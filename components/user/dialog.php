@@ -135,7 +135,9 @@ switch ($action) {
 	case 'showUserACL':
 
 		// Get project list
-		$projects = Common::load('projects');
+		// $projects = Common::load('projects');
+		$projects = Common::getParchment("projects")->select("*");
+
 		$users = Common::load("users");
 		$userACL = $users[$username]["userACL"];
 		// Get control list (if exists)
@@ -151,7 +153,7 @@ switch ($action) {
 				<table>
 					<?php
 					// Build list
-					foreach ($projects as $projectPath => $projectName) {
+					foreach ($projects as $projectName => $projectPath) {
 						$sel = '';
 						if ($userACL !== "full" && in_array($projectPath, $userACL)) {
 							$sel = 'checked="checked"';
