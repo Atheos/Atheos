@@ -127,7 +127,7 @@ abstract class Minify
 
             // check if we can read the file
             if (!$this->canImportFile($path)) {
-                throw new Exception('The file "'.$path.'" could not be opened for reading. Check if PHP has enough permissions.');
+                throw new \Exception('The file "'.$path.'" could not be opened for reading. Check if PHP has enough permissions.');
             }
 
             $this->add($path);
@@ -472,7 +472,7 @@ abstract class Minify
     protected function openFileForWriting($path)
     {
         if (($handler = @fopen($path, 'w')) === false) {
-            throw new Exception('The file "'.$path.'" could not be opened for writing. Check if PHP has enough permissions.');
+            throw new \Exception('The file "'.$path.'" could not be opened for writing. Check if PHP has enough permissions.');
         }
 
         return $handler;
@@ -490,7 +490,7 @@ abstract class Minify
     protected function writeToFile($handler, $content, $path = '')
     {
         if (($result = @fwrite($handler, $content)) === false || ($result < strlen($content))) {
-            throw new Exception('The file "'.$path.'" could not be written to. Check your disk space and file permissions.');
+            throw new \Exception('The file "'.$path.'" could not be written to. Check your disk space and file permissions.');
         }
     }
 }
