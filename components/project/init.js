@@ -273,25 +273,28 @@
 		// Rename Project
 		//////////////////////////////////////////////////////////////////
 
-		rename: function(projectName, projectPath) {
+		rename: function(oldName, projectPath) {
 
 			var listener = function(e) {
 				e.preventDefault();
 
-				projectName = oX('#modal_content form input[name="projectName"]').value();
+				var newName = oX('#modal_content form input[name="projectName"]').value();
 
 				var data = {
 					target: 'project',
 					action: 'rename',
 					projectPath,
-					projectName
+					oldName,
+					newName
 				};
+				
+				log(data);
 
 				echo({
 					url: atheos.controller,
 					data,
-					success: function(reply) {
-						if (reply.status !== 'error') {
+					settled: function(status, reply) {
+						if (status !== 'error') {
 							atheos.toast.show('success', 'Project renamed');
 							self.dock.load();
 							atheos.modal.unload();
@@ -306,7 +309,7 @@
 			atheos.modal.load(400, {
 				target: 'project',
 				action: 'rename',
-				name: projectName,
+				name: oldName,
 				listener
 			});
 		},
