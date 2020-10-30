@@ -9,195 +9,194 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
-	'use strict';
+    'use strict';
 
-	var atheos = global.atheos;
+    var atheos = global.atheos;
 
-	var self = null;
+    var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.textmode.init());
+    amplify.subscribe('system.loadMinor', () => atheos.textmode.init());
 
-	atheos.textmode = {
+    atheos.textmode = {
 
-		extensionMap: {},
-		availableModes: [],
+        extensionMap: {},
+        availableModes: [],
 
-		init: function() {
-			self = this;
+        init: function() {
+            self = this;
 
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'textmode',
-					action: 'loadExtensionMap'
-				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						delete reply.status;
-						self.extensionMap = reply.extensionMap;
-						self.availableModes = reply.modes;
-						self.createModeMenu();
-					}
-				}
-			});
+            echo({
+                url: atheos.controller,
+                data: {
+                    target: 'textmode',
+                    action: 'loadExtensionMap'
+                },
+                success: function(reply) {
+                    if (reply.status === 'success') {
+                        delete reply.status;
+                        self.extensionMap = reply.extensionMap;
+                        self.availableModes = reply.modes;
+                        self.createModeMenu();
+                    }
+                }
+            });
 
-			atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
+            atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
 
-		},
+        },
 
-		createModeMenu: function() {
-			var menu = oX('#changemode-menu');
+        createModeMenu: function() {
+            var menu = oX('#changemode-menu');
 
-			var modeOptions = [];
-			var maxOptionsColumn = 15;
-			var firstOption = 0;
+            var modeOptions = [];
+            var maxOptionsColumn = 15;
+            var firstOption = 0;
 
-			var max;
+            var max;
 
-			self.availableModes.sort();
-			self.availableModes.forEach((mode) => {
-				modeOptions.push('<li><a>' + mode + '</a></li>');
+            self.availableModes.sort();
+            self.availableModes.forEach((mode) => {
+                modeOptions.push('<li><a>' + mode + '</a></li>');
 
-			});
+            });
 
-			var html = '<table><tr>';
-			while (true) {
-				html += '<td><ul>';
-				if ((modeOptions.length - firstOption) < maxOptionsColumn) {
-					max = modeOptions.length;
-				} else {
-					max = firstOption + maxOptionsColumn;
-				}
-				var currentcolumn = modeOptions.slice(firstOption, max);
-				for (var option in currentcolumn) {
-					html += currentcolumn[option];
-				}
-				html += '</ul></td>';
-				firstOption = firstOption + maxOptionsColumn;
-				if (firstOption >= modeOptions.length) {
-					break;
-				}
-			}
+            var html = '<table><tr>';
+            while (true) {
+                html += '<td><ul>';
+                if ((modeOptions.length - firstOption) < maxOptionsColumn) {
+                    max = modeOptions.length;
+                } else {
+                    max = firstOption + maxOptionsColumn;
+                }
+                var currentcolumn = modeOptions.slice(firstOption, max);
+                for (var option in currentcolumn) {
+                    html += currentcolumn[option];
+                }
+                html += '</ul></td>';
+                firstOption = firstOption + maxOptionsColumn;
+                if (firstOption >= modeOptions.length) {
+                    break;
+                }
+            }
 
-			html += '</tr></table>';
-			menu.html(html);
+            html += '</tr></table>';
+            menu.html(html);
 
-			oX('#changemode-menu').on('click', function(e) {
-				e.stopPropagation();
-				var node = oX(e.target);
-				var tagName = e.target.tagName;
-				if (tagName !== 'A') {
-					return false;
-				}
+            oX('#changemode-menu').on('click', function(e) {
+                e.stopPropagation();
+                var node = oX(e.target);
+                var tagName = e.target.tagName;
+                if (tagName !== 'A') {
+                    return false;
+                }
 
-				var newMode = 'ace/mode/' + node.text();
-				var activeSession = atheos.editor.activeInstance.getSession();
+                var newMode = 'ace/mode/' + node.text();
+                var activeSession = atheos.editor.activeInstance.getSession();
 
-				// handle async mode change
-				var fn = function() {
-					self.setModeDisplay(activeSession);
-					activeSession.removeListener('changeMode', fn);
-				};
-				activeSession.on('changeMode', fn);
+                // handle async mode change
+                var fn = function() {
+                    self.setModeDisplay(activeSession);
+                    activeSession.removeListener('changeMode', fn);
+                };
+                activeSession.on('changeMode', fn);
 
-				activeSession.setMode(newMode);
-			});
-		},
+                activeSession.setMode(newMode);
+            });
+        },
 
-		/////////////////////////////////////////////////////////////////
-		//
-		// Select file mode by extension case insensitive
-		//
-		// Parameters:
-		// extension - {String} File extension
-		//
-		/////////////////////////////////////////////////////////////////
-		selectMode: function(extension) {
-			if (typeof(extension) !== 'string') {
-				return 'text';
-			}
-			extension = extension.toLowerCase();
+        /////////////////////////////////////////////////////////////////
+        //
+        // Select file mode by extension case insensitive
+        //
+        // Parameters:
+        // extension - {String} File extension
+        //
+        /////////////////////////////////////////////////////////////////
+        selectMode: function(extension) {
+            if (typeof(extension) !== 'string') {
+                return 'text';
+            }
+            extension = extension.toLowerCase();
 
-			if (extension in self.extensionMap) {
-				return self.extensionMap[extension];
-			} else {
-				return 'text';
-			}
-		},
+            if (extension in self.extensionMap) {
+                return self.extensionMap[extension];
+            } else {
+                return 'text';
+            }
+        },
 
-		setModeDisplay: function(session) {
-			if (!session) {
-				return;
-			}
-			var currMode = session.getMode().$id;
-			if (currMode) {
-				currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
-				oX('#current_mode>span').html(currMode);
-			} else {
-				oX('#current_mode>span').html('text');
-			}
-		},
-		//////////////////////////////////////////////////////////////////
-		// Save the extensions to the server.
-		//////////////////////////////////////////////////////////////////
-		saveExtensions: function() {
-			var form = oX('#textmodes');
-			var modes = form.findAll('input, select');
+        setModeDisplay: function(session) {
+            if (!session) {
+                return;
+            }
+            var currMode = session.getMode().$id;
+            if (currMode) {
+                currMode = currMode.substring(currMode.lastIndexOf('/') + 1);
+                oX('#current_mode>span').html(currMode);
+            } else {
+                oX('#current_mode>span').html('text');
+            }
+        },
+        //////////////////////////////////////////////////////////////////
+        // Save the extensions to the server.
+        //////////////////////////////////////////////////////////////////
+        saveExtensions: function() {
+            var form = oX('#textmodes');
+            var modes = form.findAll('input, select');
 
-			var data = {
-				target: 'textmode',
-				action: 'saveExtensionMap',
-				map: {
-					extension: [],
-					textmode: []
-				}
-			};
+            var data = {
+                target: 'textmode',
+                action: 'saveExtensionMap',
+                map: {
+                    extension: [],
+                    textmode: []
+                }
+            };
 
-			for (var i = 0; i < modes.length; i++) {
-				var field = modes[i].el;
+            for (var i = 0; i < modes.length; i++) {
+                var field = modes[i].el;
 
-				// log(field);
+                // log(field);
 
-				if (field.name !== 'extension' && field.name !== 'textmode') {
-					continue;
-				}
+                if (field.name !== 'extension' && field.name !== 'textmode') {
+                    continue;
+                }
 
-				data.map[field.name].push(field.value);
-			}
-			data.map = JSON.stringify(data.map);
-			log(data);
+                data.map[field.name].push(field.value);
+            }
+            data.map = JSON.stringify(data.map);
 
-			echo({
-				url: atheos.controller,
-				data: data,
-				settled: function(status, reply) {
-					atheos.toast.show(status, reply.message);
+            echo({
+                url: atheos.controller,
+                data: data,
+                settled: function(status, reply) {
+                    atheos.toast.show(status, reply.message);
 
-					log(status, reply);
+                    log(status, reply);
 
-					if (status !== 'error' && reply.extensions) {
-						self.setEditorTextModes(reply);
-					}
-				}
-			});
+                    if (status !== 'error' && reply.extensions) {
+                        self.setEditorTextModes(reply);
+                    }
+                }
+            });
 
-		},
+        },
 
-		//////////////////////////////////////////////////////////////////
-		//Add a new insert line to the extensions table
-		//////////////////////////////////////////////////////////////////
-		addFieldToForm: function() {
-			var extensions = oX('#textmodes');
+        //////////////////////////////////////////////////////////////////
+        //Add a new insert line to the extensions table
+        //////////////////////////////////////////////////////////////////
+        addFieldToForm: function() {
+            var extensions = oX('#textmodes');
 
-			var html = '<tr><td><input type="text" name="extension" value="" /></td>';
-			html += '<td><select name="textmode">';
-			self.availableModes.forEach((mode) => {
-				html += '<option>' + mode + '</option>';
-			});
+            var html = '<tr><td><input type="text" name="extension" value="" /></td>';
+            html += '<td><select name="textmode">';
+            self.availableModes.forEach((mode) => {
+                html += '<option>' + mode + '</option>';
+            });
 
-			html += '</select></td></tr>';
+            html += '</select></td></tr>';
 
-			extensions.append(html);
-		}
-	};
+            extensions.append(html);
+        }
+    };
 })(this);
