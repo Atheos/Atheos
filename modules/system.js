@@ -89,7 +89,7 @@
 					action: 'debug',
 					path: atheos.project.current.path
 				},
-				success: function(reply) {
+				settled: function(status, reply) {
 					log(reply);
 				}
 			});
