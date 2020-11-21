@@ -43,6 +43,21 @@ If any dependencies have not been met, the system will alert you on the installa
 
 *Please note: Atheos is primarily developed using with a Debian LAMP Server. If you run into installation issues utilizing another stack, please let us know.*
 
+### Updating Atheos
+Atheos has a built in Update Check System, however does not have a system for actually updating the system itself, instead it relies on the admin to copy over the files itself. More information will be provided later as the update system is currently being rewrote.
+
+To upgrade simply delete everything except the following or move these folders to a new directory:
+```
+/config.php
+/data
+/workspace
+/plugins
+/themes
+```
+Navigate to /themes and delete the default folder. Download the neweset verson from the Github repo and extract its content to the root directory of your Atheos installation.
+
+Ensure that the files and folder mentioned above still have write capabilities.
+
 ### Docker
 Atheos can  also be installed using the [docker image on DockerHub]([https://hub.docker.com/r/hlsiira/atheos](https://hub.docker.com/r/hlsiira/atheos)).
 

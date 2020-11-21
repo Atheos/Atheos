@@ -110,10 +110,11 @@
 			echo({
 				url: url,
 				data: data,
-				success: function(reply) {
-					if (reply.status && reply.status === 'error') {
+				settled: function(status, reply) {
+					if (status !== 'success') {
 						return;
 					}
+					
 					clearTimeout(loadTimeout);
 					content.html(reply);
 					content.css('height', '');
