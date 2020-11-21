@@ -28,7 +28,7 @@ trait Transfer {
 		}
 	}
 
-	public function fetch($remote) {
+	public function fetch($remote, $branch) {
 		$command = "git fetch $remote $branch";
 		$result = $this->execute($command);
 		$result["text"] = implode("\n", $result["data"]);

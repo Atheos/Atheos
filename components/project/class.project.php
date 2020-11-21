@@ -211,7 +211,7 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	// Rename
 	//////////////////////////////////////////////////////////////////////////80
-	public function rename($oldName, $newName) {
+	public function rename($oldName, $newName, $projectPath) {
 		$newName = htmlspecialchars($newName);
 
 		if (!empty($this->db->select($newName))) {

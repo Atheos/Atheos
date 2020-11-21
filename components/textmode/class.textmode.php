@@ -20,6 +20,7 @@ class TextMode {
 		'htm' => 'html',
 		'tpl' => 'html',
 		'js' => 'javascript',
+		'vue' => 'javascript',
 		'css' => 'css',
 		'scss' => 'scss',
 		'sass' => 'scss',
