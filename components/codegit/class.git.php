@@ -101,7 +101,7 @@ class CodeGit {
 			} else if (strpos($tag, "R") !== false) {
 				//Renamed
 				$rPos = strpos($line, "->") + 2;
-				$line = trim(substr($line, $rpos));
+				$line = trim(substr($line, $rPos));
 				array_push($renamed, $line);
 			} else if (strpos($tag, "M") !== false || strpos($tag, "U") !== false) {
 				//Modified
