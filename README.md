@@ -28,6 +28,13 @@ Atheos is expanding on that mentality as much as possible, trying to minimizing 
 
 For more information on the project please check out **[the documentation](https://www.atheos.io/docs)** or **[our homepage](http://www.atheos.io)**
 
+### Future Goals
+* Creation of a Node & DJango backend
+* Updating all Codiad plugins to be compatable with Atheos
+* Modifying the Modal into a class to allow for multiple modals
+* Drag/Drop file management within the UI
+* A global custom context menu
+
 ## Getting Started
 ### Manual Installation
 Atheos can be installed by placing Atheos in a web accessible folder and pointing your browser to it.
@@ -68,5 +75,14 @@ Atheos is an almost complete rewrite of Codiad, using the latest best practices 
 * A more complete user permission system 
 * Massive reduction in unnecessary/repeated traffic from server to client.
 * Complete removal of jQuery and it's plugins
-* Built-in Git integration **(WIP)**
+* Built-in Git integration
 * And an incredibly strong emphasis on standardized components and modules throughout the project in order to encourage easier plugin development and user contribution.
+
+
+
+## Contributing
+Contributing to Atheos is very easy and we welcome all contributions. We strive for Atheos' source to follow an extremely standardized structure and as such, learning to understand the logic and structure of a single component within Atheos will carry over to all other components. If you want to contribute to Atheos but can't think of any ideas, please feel free to glance at the issues page for inspiration or email the team to see if there is anything you can help with.
+
+
+
+
