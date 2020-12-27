@@ -108,7 +108,7 @@
 				if (self.rightLockedVisible) {
 					marginR = oX('#sb_right').width();
 					self.sbRight.open();
-				} else if (sbLeftWidth !== null) {
+				} else if (sbRightWidth !== null) {
 					oX('#sb_right').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
 				}
 
