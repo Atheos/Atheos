@@ -21,6 +21,7 @@
 		</div>
 
 		<i class="lock fas fa-lock"></i>
+		<i id="fm_toggle_hidden" class="fas fa-eye"></i>
 		<i id="open_probe" class="fas fa-search"></i>
 		<i id="filter_open"class="fas fa-filter"></i>
 
