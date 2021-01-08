@@ -16,6 +16,7 @@ class TextMode {
 	// Default Extension Map
 	//////////////////////////////////////////////////////////////////
 	private $defaultExtensionMap = array(
+		'sh' => 'batchfile',
 		'html' => 'html',
 		'htm' => 'html',
 		'tpl' => 'html',
@@ -45,6 +46,7 @@ class TextMode {
 		'rb' => 'ruby',
 		'erb' => 'html_ruby',
 		'jade' => 'jade',
+		'pug' => 'jade',
 		'coffee' => 'coffee',
 		'yml' => 'elm',
 		'vm' => 'velocity');
