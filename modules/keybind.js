@@ -122,7 +122,7 @@
 				self.bindings[e.keyCode].forEach(function(bind) {
 					if (bind.cmd.includes('alt') !== e.altKey) {
 						return;
-					} else if (bind.cmd.includes('ctrl') !== (e.ctrlKey || e.metakey)) {
+					} else if (bind.cmd.includes('ctrl') !== (e.ctrlKey || e.metaKey)) {
 						return;
 					} else if (bind.cmd.includes('shift') !== e.shiftKey) {
 						return;
