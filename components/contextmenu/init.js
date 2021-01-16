@@ -22,9 +22,9 @@
 	var menu = null;
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+		carbon = global.carbon;
 
-	amplify.subscribe('system.loadMinor', () => atheos.contextmenu.init());
+	carbon.subscribe('system.loadMinor', () => atheos.contextmenu.init());
 
 	atheos.contextmenu = {
 
@@ -166,7 +166,7 @@
 
 
 			/* Notify listeners. */
-			amplify.publish('contextmenu.show', {
+			carbon.publish('contextmenu.show', {
 				menu: menu,
 				name: name,
 				node: node,
@@ -229,7 +229,7 @@
 				active.removeClass('context-menu-active');
 			}
 
-			amplify.publish('contextmenu.hide', {
+			carbon.publish('contextmenu.hide', {
 				menu: menu,
 				name: menu.attr('data-name'),
 				path: menu.attr('data-path'),

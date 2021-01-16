@@ -20,7 +20,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMajor', () => atheos.editor.init());
+	carbon.subscribe('system.loadMajor', () => atheos.editor.init());
 
 	//////////////////////////////////////////////////////////////////
 	//
@@ -750,7 +750,7 @@
 
 		cursorTracking: function(i) {
 			var col = global.i18n('Col');
-			amplify.subscribe('chrono.kilo', function() {
+			carbon.subscribe('chrono.kilo', function() {
 				var i = atheos.editor.getActive();
 				if (i) {
 					var pos = i.getCursorPosition();

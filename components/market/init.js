@@ -17,7 +17,7 @@
 
 	var atheos = global.atheos;
 
-	amplify.subscribe('system.loadMinor', () => atheos.market.init());
+	carbon.subscribe('system.loadMinor', () => atheos.market.init());
 
 	var self = null;
 

@@ -14,11 +14,11 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+		carbon = global.carbon;
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.keybind.init());
+	carbon.subscribe('system.loadMinor', () => atheos.keybind.init());
 
 
 	//////////////////////////////////////////////////////////////////////

@@ -15,7 +15,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.draft.init());
+	carbon.subscribe('system.loadMinor', () => atheos.draft.init());
 
 	atheos.draft = {
 
@@ -30,22 +30,22 @@
 		init: function() {
 			self = this;
 
-			amplify.subscribe('settings.loaded, settings.save', function() {
+			carbon.subscribe('settings.loaded, settings.save', function() {
 				self.enabled = atheos.storage('draft.enabled') === false ? false : self.enabled;
 				self.verbose = atheos.storage('draft.verbose') === true ? true : self.verbose;
 				
 				let interval = atheos.storage('draft.interval');
 				interval = isNumber(interval) ? interval : self.interval;
 				if (isFunction(self.throttle)) {
-					amplify.unsubscribe('chrono.kilo', self.throttle);
+					carbon.unsubscribe('chrono.kilo', self.throttle);
 				}
 
 				self.throttle = throttle(self.autosave, interval);
-				amplify.subscribe('chrono.kilo', self.throttle);
+				carbon.subscribe('chrono.kilo', self.throttle);
 			});
 
-			amplify.subscribe('active.save', self.delete);
-			amplify.subscribe('active.open', self.check);
+			carbon.subscribe('active.save', self.delete);
+			carbon.subscribe('active.open', self.check);
 		},
 
 		autosave: function() {

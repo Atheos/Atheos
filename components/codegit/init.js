@@ -39,7 +39,7 @@
 	//////////////////////////////////////////////////////////////////////
 
 
-	amplify.subscribe('system.loadExtra', () => atheos.codegit.init());
+	carbon.subscribe('system.loadExtra', () => atheos.codegit.init());
 
 	atheos.codegit = {
 
@@ -78,26 +78,26 @@
 			});
 
 			//Check if directories has git repo
-			amplify.subscribe('filemanager.openDir', self.showRepoStatus);
+			carbon.subscribe('filemanager.openDir', self.showRepoStatus);
 
 			//Repo updates
-			amplify.subscribe('chrono.mega', self.checkRepoStatus);
+			carbon.subscribe('chrono.mega', self.checkRepoStatus);
 
 			//Handle contextmenu
-			amplify.subscribe('contextmenu.show', this.showContextMenu);
+			carbon.subscribe('contextmenu.show', this.showContextMenu);
 
-			amplify.subscribe('active.focus', function(path) {
+			carbon.subscribe('active.focus', function(path) {
 				self.checkFileStatus(path);
 			});
 
-			amplify.subscribe('active.save', function(path) {
+			carbon.subscribe('active.save', function(path) {
 				setTimeout(function() {
 					self.checkFileStatus(path);
 					self.checkRepoStatus();
 				}, 50);
 			});
 
-			amplify.subscribe('active.close active.closeAll', function() {
+			carbon.subscribe('active.close active.closeAll', function() {
 				if (self.fileStatus) {
 					self.fileStatus.empty();
 				}

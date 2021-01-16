@@ -21,7 +21,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.transfer.init());
+	carbon.subscribe('system.loadMinor', () => atheos.transfer.init());
 
 	atheos.transfer = {
 
@@ -133,7 +133,7 @@
 			}
 			reply.data.forEach(function(file) {
 				atheos.filemanager.addToFileManager(path + '/' + file.name, 'file', path);
-				amplify.publish('filemanager.upload', {
+				carbon.publish('filemanager.upload', {
 					name: file.name,
 					path: path
 				});
