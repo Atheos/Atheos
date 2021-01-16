@@ -1,6 +1,6 @@
-$fontColorMajor: $white;
-$fontColorMinor: $metal;
-$fontColorSmall: $smoke;
+$fontColorMajor: $shade0;
+$fontColorMinor: $shade3;
+$fontColorSmall: $shade5;
 
 $fontSizeH1: 20px;
 $fontSizeH2: 20px;
@@ -9,13 +9,13 @@ $fontSizeH4: 16px;
 $fontSizePr: 14px;
 $fontSizeSm: 12px;
 
-$foreground: $coal;
-$background: $black;
-$midground: $smoke;
-$highlight: $grey;
+$foreground: $shade4;
+$background: $shade8;
+$midground: $shade5;
+$highlight: $shade2;
 
-$borderLight: $metal;
-$borderHeavy: $smoke;
+$borderLight: $shade3;
+$borderHeavy: $shade5;
 
 $colorMajor: $blue;
 $colorMinor: $aqua;
@@ -34,7 +34,7 @@ $bottomBarHeight: 23px;
 $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
-$inputBackground: $ebony;
+$inputBackground: $shade7;
 $tabListBackground: $colorMajor;
 
 :root {
@@ -55,11 +55,11 @@ $tabListBackground: $colorMajor;
 
 @mixin border($size: 1px, $direction: 0) {
 	@if $direction !=0 {
-		border-#{$direction}: $size solid $grey;
+		border-#{$direction}: $size solid $shade2;
 	}
 
 	@else {
-		border: $size solid $grey;
+		border: $size solid $shade2;
 	}
 }
 

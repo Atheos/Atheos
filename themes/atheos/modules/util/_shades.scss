@@ -1,38 +1,38 @@
-$white:   #F5F9F9;
-$silver:  #D5D9DD;
-$grey:    #A5A9AA;
-$metal:   #757577;
-$coal:    #414141;
-$smoke:   #353533;
-$raven:   #252525;
-$ebony:   #1C1C1E;
-$black:   #151516;
-$vanta:   #010101;
+$shade0:   #F5F9F9;
+$shade1:  #D5D9DD;
+$shade2:    #A5A9AA;
+$shade3:   #757577;
+$shade4:    #414141;
+$shade5:   #353533;
+$shade6:   #252525;
+$shade7:   #1C1C1E;
+$shade8:   #151516;
+$shade9:   #010101;
 
 //////////////////////////////////////////////////////////////////////////////80
 //	CSS CLASSES
 //////////////////////////////////////////////////////////////////////////////80
 
-.white::before	{ color: $white; }
-.silver::before	{ color: $silver; }
-.grey::before	{ color: $grey; }
-.metal::before	{ color: $metal; }
-.coal::before	{ color: $coal; }
-.smoke::before	{ color: $smoke; }
-.raven::before	{ color: $raven; }
-.ebony::before	{ color: $ebony; }
-.black::before	{ color: $black; }
-.vanta::before	{ color: $vanta; }
+.white::before	{ color: $shade0; }
+.silver::before	{ color: $shade1; }
+.grey::before	{ color: $shade2; }
+.metal::before	{ color: $shade3; }
+.coal::before	{ color: $shade4; }
+.smoke::before	{ color: $shade5; }
+.raven::before	{ color: $shade6; }
+.ebony::before	{ color: $shade7; }
+.black::before	{ color: $shade8; }
+.vanta::before	{ color: $shade9; }
 
 :root {
-	--white: $white;
-	--silver: $silver;
-	--grey: $grey;
-	--metal: $metal;
-	--coal: $coal;
-	--smoke: $smoke;
-	--raven: $raven;
-	--ebony: $ebony;
-	--black: $black;
-	--vanta: $vanta;
+	--white: $shade0;
+	--silver: $shade1;
+	--grey: $shade2;
+	--metal: $shade3;
+	--coal: $shade4;
+	--smoke: $shade5;
+	--raven: $shade6;
+	--ebony: $shade7;
+	--black: $shade8;
+	--vanta: $shade9;
 }
