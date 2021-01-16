@@ -18,7 +18,7 @@
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
-	amplify.subscribe('system.loadMajor', () => atheos.active.init());
+	carbon.subscribe('system.loadMajor', () => atheos.active.init());
 
 	//////////////////////////////////////////////////////////////////////80
 	//
@@ -98,7 +98,7 @@
 
 			window.onresize = self.updateTabDropdownVisibility;
 
-			amplify.subscribe('settings.loaded', function() {
+			carbon.subscribe('settings.loaded', function() {
 				self.loopBehavior = atheos.storage('active.loopBehavior') || self.loopBehavior;
 
 				// This timeout is an effort to double check the tab visibility
@@ -204,7 +204,7 @@
 
 				self.add(path, session, focus);
 				/* Notify listeners. */
-				amplify.publish('active.open', path);
+				carbon.publish('active.open', path);
 			};
 
 			// Assuming the mode file has no dependencies
@@ -312,7 +312,7 @@
 			self.check(path);
 
 			/* Notify listeners. */
-			amplify.publish('active.focus', path);
+			carbon.publish('active.focus', path);
 		},
 
 		highlightEntry: function(path, direction) {
@@ -371,7 +371,7 @@
 			path = session.path;
 
 			/* Notify listeners. */
-			amplify.publish('active.save', path);
+			carbon.publish('active.save', path);
 
 			var handleSuccess = function(mtime) {
 				var session = atheos.active.sessions[path];
@@ -441,12 +441,12 @@
 					data: basename,
 					actions: {
 						'Save & Close': function() {
-							amplify.publish('active.close', path);
+							carbon.publish('active.close', path);
 							self.save(path);
 							self.remove(path);
 						},
 						'Discard Changes': function() {
-							amplify.publish('active.close', path);
+							carbon.publish('active.close', path);
 							self.remove(path);
 						},
 						'Cancel': function() {
@@ -458,7 +458,7 @@
 				atheos.alert.show(dialog);
 
 			} else {
-				amplify.publish('active.close', path);
+				carbon.publish('active.close', path);
 				self.remove(path);
 			}
 		},
@@ -479,12 +479,12 @@
 					data: changedTabs,
 					actions: {
 						'Save All & Close': function() {
-							amplify.publish('active.closeAll');
+							carbon.publish('active.closeAll');
 							self.saveAll();
 							self.removeAll();
 						},
 						'Discard Changes': function() {
-							amplify.publish('active.closeAll');
+							carbon.publish('active.closeAll');
 							self.removeAll();
 						},
 						'Cancel': function() {
@@ -624,7 +624,7 @@
 					newPath: newPath
 				},
 				success: function() {
-					amplify.publish('active.onRename', {
+					carbon.publish('active.onRename', {
 						'oldPath': oldPath,
 						'newPath': newPath
 					});

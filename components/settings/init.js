@@ -77,7 +77,7 @@
 							storage(key, reply[key]);
 						}
 					}
-					amplify.publish('settings.loaded', reply);
+					carbon.publish('settings.loaded', reply);
 				}
 			});
 		},
@@ -196,7 +196,7 @@
 				}
 			});
 
-			amplify.publish('settings.save');
+			carbon.publish('settings.save');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -240,7 +240,7 @@
 				}
 			});
 
-			amplify.publish('settings.save');
+			carbon.publish('settings.save');
 		},
 
 		//////////////////////////////////////////////////////////////////////80

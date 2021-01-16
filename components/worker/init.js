@@ -14,11 +14,11 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+		carbon = global.carbon;
 
 	var self = null;
 
-	amplify.subscribe('system.loadMajor', () => atheos.workerManager.init());
+	carbon.subscribe('system.loadMajor', () => atheos.workerManager.init());
 
 
 	atheos.workerManager = {
