@@ -11,8 +11,7 @@ use MatthiasMullie\Minify;
 class SourceManager {
 
 	private $modules = array(
-		// "modules/jquery-1.7.2.min.js",
-		"modules/amplify.js",
+		"modules/carbon.js",
 		"modules/echo.js",
 		"modules/icons.js",
 		"modules/global.js",
