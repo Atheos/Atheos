@@ -17,20 +17,20 @@ table {
 
 ::-webkit-scrollbar-thumb:vertical {
 	height: 5px;
-	background-color: $coal;
+	background-color: $shade4;
 }
 
 ::-webkit-scrollbar-thumb:vertical:hover {
-	background-color: $metal;
+	background-color: $shade3;
 }
 
 ::-webkit-scrollbar-thumb:horizontal {
 	width: 5px;
-	background-color: $coal;
+	background-color: $shade4;
 }
 
 ::-webkit-scrollbar-thumb:horizontal:hover {
-	background-color: $metal;
+	background-color: $shade3;
 }
 
 ::-webkit-scrollbar-corner {
@@ -39,5 +39,5 @@ table {
 
 * {
 	scrollbar-width: thin;
-	scrollbar-color: $coal transparent;
+	scrollbar-color: $shade4 transparent;
 }

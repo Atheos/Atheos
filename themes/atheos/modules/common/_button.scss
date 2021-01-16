@@ -15,19 +15,19 @@ button {
 	}
 
 	&:disabled {
-		color: $grey;
+		color: $shade2;
 		cursor: unset;
 
 		&:hover {
-			color: $grey;
+			color: $shade2;
 			background-color: $fontColorMajor;
-			border-color: $metal;
+			border-color: $shade3;
 		}
 	}
 
 	&:hover {
 		background-color: $fontColorMinor;
-		border-color: $coal;
+		border-color: $shade4;
 	}
 
 	&:focus {
