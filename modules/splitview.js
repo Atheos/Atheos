@@ -11,9 +11,9 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+		carbon = global.carbon;
 
-	amplify.subscribe('system.loadExtra', () => atheos.splitview.init());
+	carbon.subscribe('system.loadExtra', () => atheos.splitview.init());
 
 	atheos.splitview = {
 

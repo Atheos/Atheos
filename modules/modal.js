@@ -27,12 +27,12 @@
 	'use strict';
 
 	var atheos = global.atheos,
-		amplify = global.amplify,
+		carbon = global.carbon,
 		echo = global.echo;
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.modal.init());
+	carbon.subscribe('system.loadMinor', () => atheos.modal.init());
 
 	atheos.modal = {
 
@@ -124,7 +124,7 @@
 					if (input) {
 						input.focus();
 					}
-					amplify.publish('modal.loaded');
+					carbon.publish('modal.loaded');
 					if (listener && wrapper.find('form')) {
 						wrapper.find('form').on('submit', listener);
 					}
@@ -155,8 +155,8 @@
 		},
 
 		unload: function() {
-			amplify.publish('modal.unload');
-			amplify.unsubscribeAll('modal.loaded');
+			carbon.publish('modal.unload');
+			carbon.unsubscribe('modal.loaded');
 
 			var form = oX('#modal_content form'),
 				overlay = oX('#overlay'),

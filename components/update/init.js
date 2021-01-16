@@ -15,7 +15,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadExtra', () => atheos.update.init());
+	carbon.subscribe('system.loadExtra', () => atheos.update.init());
 
 	atheos.update = {
 

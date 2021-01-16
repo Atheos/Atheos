@@ -14,7 +14,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.project.init());
+	carbon.subscribe('system.loadMinor', () => atheos.project.init());
 
 	atheos.project = {
 
@@ -45,11 +45,11 @@
 				}
 			});
 
-			amplify.subscribe('chrono.mega', function() {
+			carbon.subscribe('chrono.mega', function() {
 				self.getCurrent();
 			});
 
-			amplify.subscribe('settings.loaded', function() {
+			carbon.subscribe('settings.loaded', function() {
 				var local = atheos.storage('project.openTrigger');
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
@@ -126,7 +126,7 @@
 					atheos.user.saveActiveProject(reply.name, reply.path);
 					localStorage.removeItem('lastSearched');
 					/* Notify listeners. */
-					amplify.publish('project.open', reply.path);
+					carbon.publish('project.open', reply.path);
 
 				}
 			});
@@ -223,7 +223,7 @@
 							self.dock.load();
 							/* Notify listeners. */
 							delete data.action;
-							amplify.publish('project.create', data);
+							carbon.publish('project.create', data);
 						}
 					}
 				});
@@ -300,7 +300,7 @@
 							atheos.modal.unload();
 							/* Notify listeners. */
 							delete data.action;
-							amplify.publish('project.rename', data);
+							carbon.publish('project.rename', data);
 						}
 					}
 				});
@@ -346,7 +346,7 @@
 								}
 							}
 
-							amplify.publish('project.delete', {
+							carbon.publish('project.delete', {
 								'path': projectPath,
 								'name': projectName
 							});
