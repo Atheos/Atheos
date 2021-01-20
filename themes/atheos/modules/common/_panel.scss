@@ -5,8 +5,7 @@ panel {
 	overflow-y: scroll;
 	height: 500px;
 	position: relative;
-
-	@include border(1px, left);
+	border-left: $borderLight;
 
 	form {
 		padding: 0;
@@ -16,7 +15,6 @@ panel {
 		font-size: $fontSizeH2;
 		padding: 3px 0;
 		margin-bottom: 3px;
-
-		@include border(3px, bottom);
+		border-bottom: $borderHeavy;
 	}
 }

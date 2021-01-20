@@ -1,7 +1,6 @@
 .settings {
 	display: flex;
-
-	@include border(1px, top);
+	border-top: $borderLight;
 
 	table {
 		margin: 0 5px;

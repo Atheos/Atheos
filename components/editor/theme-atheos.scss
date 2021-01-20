@@ -15,9 +15,9 @@ $olive: var(--olive);
 $background: var(--background);
 $foreground: var(--foreground);
 
-$fontColorMajor: var(--fcMajor);
-$fontColorMinor: var(--fcMinor);
-$fontColorSmall:var(--fcSmall);
+$fontColorMajor: var(--fontColorMajor);
+$fontColorMinor: var(--fontColorMinor);
+$fontColorSmall:var(--fontColorSmall);
 
 .ace-atheos .ace_gutter {
 	background: $background; //background

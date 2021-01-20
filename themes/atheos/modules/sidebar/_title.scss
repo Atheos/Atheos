@@ -4,9 +4,6 @@
 		top: 0;
 		height: $topBarHeight;
 		overflow: hidden;
-
-
-		@include box-shadow;
 		background-color: $foreground;
 		z-index: 9998;
 
@@ -30,7 +27,6 @@
 				color: $hoverMajor;
 			}
 		}
-
 	}
 }
 

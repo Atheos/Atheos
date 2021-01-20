@@ -8,7 +8,6 @@
 
 	ul {
 		background-color: $background;
-		// padding: 5px;
 		overflow-x: auto;
 	}
 
@@ -18,14 +17,12 @@
 
 		span {
 			line-height: 18px;
-			// margin-left: 5px;
 			padding: 2px 0;
 
 			&.line {
 				color: $fontColorMinor;
 				white-space: pre;
-
-				@include border(1px, right);
+				border-right: $borderLight;
 			}
 
 			&.code {
@@ -52,8 +49,7 @@
 				.hash {
 					color: $red;
 					white-space: pre;
-
-					@include border(1px, right);
+					border-right: $borderLight;
 				}
 			}
 		}

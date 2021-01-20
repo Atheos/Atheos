@@ -1,6 +1,6 @@
-$fontColorMajor: $shade0;
-$fontColorMinor: $shade3;
-$fontColorSmall: $shade5;
+$fontColorMajor: var(--fontColorMajor);
+$fontColorMinor: var(--fontColorMinor);
+$fontColorSmall: var(--fontColorSmall);
 
 $fontSizeH1: 20px;
 $fontSizeH2: 20px;
@@ -9,16 +9,34 @@ $fontSizeH4: 16px;
 $fontSizePr: 14px;
 $fontSizeSm: 12px;
 
-$foreground: $shade4;
-$background: $shade8;
-$midground: $shade5;
+$foreground: var(--foreground);
+$mideground: var(--mideground);
+$background: var(--background);
 $highlight: $shade2;
 
-$borderLight: $shade3;
-$borderHeavy: $shade5;
+:root {
+	--foreground: $shade4;
+	--mideground: $shade6;
+	--background: $shade8;
+	--fontColorMajor: $shade0;
+	--fontColorMinor: $shade2;
+	--fontColorSmall: $shade3;
 
-$colorMajor: $blue;
-$colorMinor: $aqua;
+	--borderLight: solid 2px $shade3;
+	--borderHeavy: solid 3px $shade5;
+
+	--colorMajor: $blue;
+	--colorMinor: hsl($blue, 15%);
+	--colorSmall: $navy;
+}
+
+$borderLight: var(--borderLight);
+$borderHeavy: var(--borderHeavy);
+
+$colorMajor: var(--colorMajor);
+$colorMinor: var(--colorMinor);
+$colorSmall: var(--colorSmall);
+
 
 $hoverMajor: $blue;
 $hoverMinor: $highlight;
@@ -35,37 +53,4 @@ $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
 $inputBackground: $shade7;
-$tabListBackground: $colorMajor;
-
-:root {
-	--background: $background;
-	--foreground: $foreground;
-	--fcMajor: $fontColorMajor;
-	--fcMinor: $fontColorMinor;
-	--fcSmall: $fontColorSmall;
-}
-
-@mixin box-shadow {
-	// box-shadow: inset 0px 0px 5px 0px rgba(0, 0, 0, .5);
-}
-
-@mixin border-radius {
-	// border-radius: 30px;
-}
-
-@mixin border($size: 1px, $direction: 0) {
-	@if $direction !=0 {
-		border-#{$direction}: $size solid $shade2;
-	}
-
-	@else {
-		border: $size solid $shade2;
-	}
-}
-
-@mixin input() {
-	background-color: $inputBackground;
-	border: none;
-	border-bottom: 2px solid $borderLight;
-	color: $fontColorMajor;
-}
+$tabListBackground: $blue;
