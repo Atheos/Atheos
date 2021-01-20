@@ -32,7 +32,6 @@
 			padding: 5px;
 			white-space: nowrap;
 			cursor: pointer;
-			@include border-radius;
 
 			&:hover {
 				background-color: $hoverMinor;
