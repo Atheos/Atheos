@@ -5,7 +5,7 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 	exports.cssText = `
 .ace-atheos .ace_gutter {
 	background: var(--background);
-	color: var(--fcMinor);
+	color: var(--fontColorSmall);
 	border-right: 1px solid var(--foreground);
 }
 
@@ -28,12 +28,12 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 
 .ace-atheos .ace_print-margin {
 	width: 1px;
-	background: var(--raven);
+	background: var(--shade6);
 }
 
 .ace-atheos {
 	background-color: var(--background);
-	color: var(--fcMajor);
+	color: var(--fontColorMajor);
 }
 
 .ace-atheos .ace_cursor {
@@ -54,7 +54,7 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 
 .ace-atheos .ace_marker-layer .ace_bracket {
 	margin: -1px 0 0 -1px;
-	border: 1px solid var(--fcMinor);
+	border: 1px solid var(--fontColorSmall);
 }
 
 .ace-atheos .ace_marker-layer .ace_active-line {
@@ -70,7 +70,7 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 }
 
 .ace-atheos .ace_invisible {
-	color: var(--fcSmall);
+	color: var(--fontColorSmall);
 }
 
 .ace-atheos .ace_keyword,
@@ -100,13 +100,13 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 }
 
 .ace-atheos .ace_invalid {
-	color: var(--fcMajor);
+	color: var(--fontColorMajor);
 	background-color: var(--red);
 }
 
 .ace-atheos .ace_fold {
 	background-color: var(--orange);
-	border-color: var(--fcSmall);
+	border-color: var(--fontColorSmall);
 }
 
 .ace-atheos .ace_storage,
@@ -121,16 +121,16 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 
 .ace-atheos .ace_constant,
 .ace-atheos .ace_variable {
-	color: var(--fcMajor);
+	color: var(--fontColorMajor);
 }
 
 .ace-atheos .ace_comment {
-	color: var(--fcMinor);
+	color: var(--fontColorSmall);
 }
 
 .ace-atheos .ace_entity.ace_name.ace_tag,
 .ace-atheos .ace_entity.ace_other.ace_attribute-name {
-	color: var(--metal);
+	color: var(--shade3);
 }
 
 .ace-atheos .ace_indent-guide {

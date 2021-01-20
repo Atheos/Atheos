@@ -9,20 +9,17 @@
 	user-select: none;
 	background-color: $background;
 	transition: right $transitionDuration ease-in-out, left $transitionDuration ease-in-out;
-	// letter-spacing: -0.4px;
 	white-space: nowrap;
 }
 
 #sb_left {
 	width: 300px;
 	left: 0;
-	// overflow: hidden;
 }
 
 #sb_right {
 	width: 200px;
 	right: -185px;
-	// z-index: 99999;
 
 	.category {
 		font-size: $fontSizeH3;
@@ -37,7 +34,6 @@
 		display: block;
 		min-width: 100%;
 		padding: 5px;
-		@include border-radius;
 
 		&:hover {
 			background-color: $hoverMinor;
@@ -48,7 +44,7 @@
 	hr {
 		height: 0;
 		border: none;
-		border-top: 1px solid $borderHeavy;
+		border-top: $borderLight;
 		padding: 0;
 		margin: 10px 0;
 	}

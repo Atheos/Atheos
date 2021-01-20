@@ -4,7 +4,7 @@
 	z-index: 99999;
 	margin: 0;
 	padding: 0;
-	background: $midground;
+	background: $mideground;
 	cursor: col-resize;
 
 	span {
@@ -22,11 +22,9 @@
 
 	&.unlocked span {
 		width: 30px;
-		background: $midground;
+		background: $mideground;
 		z-index: 10;
 		letter-spacing: 0;
-
-		@include box-shadow;
 
 		&::before,
 		&::after {
@@ -34,17 +32,17 @@
 			height: 20px;
 			width: 18px;
 			position: absolute;
-			background-color: $midground;
+			background-color: $mideground;
 		}
 
 		&::before {
 			top: -6px;
-			border-top: solid 2px $borderLight;
+			border-top: $borderLight;
 		}
 
 		&::after {
 			bottom: -6px;
-			border-bottom: solid 2px $borderLight;
+			border-bottom: $borderLight;
 		}
 	}
 }
@@ -53,16 +51,16 @@
 #sb_left .handle {
 	position: absolute;
 	right: 0;
-	border-right: solid 2px $borderLight;
+	border-right:$borderLight;
 
 	&.unlocked span {
 		margin-left: 3px;
-		border-right: 2px solid $borderLight;
+		border-right: $borderLight;
 
 		&::before,
 		&::after {
 			right: -2px;
-			border-right: 2px solid $borderLight;
+			border-right:$borderLight;
 		}
 
 		&::before {
@@ -77,16 +75,16 @@
 }
 
 #sb_right .handle {
-	border-left: solid 2px $borderLight;
+	border-left: $borderLight;
 
 	&.unlocked span {
 		margin-left: -20px;
-		border-left: 2px solid $borderLight;
+		border-left: $borderLight;
 
 		&::before,
 		&::after {
 			left: -2px;
-			border-left: 2px solid $borderLight;
+			border-left: $borderLight;
 		}
 
 		&::before {

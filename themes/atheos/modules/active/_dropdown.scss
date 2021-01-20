@@ -6,10 +6,8 @@
 	max-width: 300px;
 	z-index: 9999;
 	background-color: $foreground;
+	border: $borderLight;
 
-	@include border-radius;
-	@include box-shadow;
-	@include border(3px);
 
 	li {
 		position: relative;
