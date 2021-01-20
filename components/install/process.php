@@ -128,7 +128,7 @@ if (!file_exists($users) && !file_exists($projects)) {
 	//////////////////////////////////////////////////////////////////////////80
 	$analyticsData = array(
 		"atheos_uuid" => uniqid(),
-		"atheos_version" => "v4.2.0",
+		"atheos_version" => "v4.3.0",
 		"first_heard" => date("Y/m/d"),
 		"last_heard" => date("Y/m/d"),
 		"php_version" => phpversion(),
