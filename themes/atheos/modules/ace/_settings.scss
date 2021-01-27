@@ -1,5 +1,5 @@
 #ace_settingsmenu {
-	border: 1px solid $grey !important;
+	border: 1px solid $shade2 !important;
 	color: unset;
 	background-color: $foreground;
 	box-shadow: none;
@@ -13,7 +13,7 @@
 	table th,
 	table td {
 		padding: 0 3px;
-		border-color: $raven;
+		border-color: $shade6;
 	}
 
 	table td[colspan="2"] {
@@ -24,7 +24,7 @@
 
 	button {
 		margin: 3px 0;
-		background-color: $white;
+		background-color: $shade0;
 		box-shadow: none;
 		border: none;
 	}
@@ -35,7 +35,7 @@
 	}
 
 	button[ace_selected_button=true] {
-		background-color: $silver;
+		background-color: $shade1;
 	}
 
 	input[type="checkbox"] {

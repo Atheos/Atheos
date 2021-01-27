@@ -1,6 +1,6 @@
 .ace_search {
 	border-radius: 0 !important;
-	border: 1px solid $grey !important;
+	border: 1px solid $shade2 !important;
 	color: unset;
 	background-color: $foreground;
 	padding: 5px;
@@ -20,8 +20,7 @@
 
 	.ace_nomatch {
 		.ace_search_field {
-			background-color: $red;
-			background-color: mix($inputBackground, $red, 50%);
+			background-color: $maroon;
 		}
 	}
 
@@ -52,7 +51,7 @@
 		vertical-align: middle;
 
 		@include input();
-		@include border(1px, left);
+		border-left: $borderLight;
 
 		&:hover {
 			background-color: lighten($inputBackground, $hoverPercent);

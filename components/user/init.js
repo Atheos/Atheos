@@ -15,7 +15,7 @@
 
     var self = null;
 
-    amplify.subscribe('system.loadMinor', () => atheos.user.init());
+    carbon.subscribe('system.loadMinor', () => atheos.user.init());
 
     atheos.user = {
 
@@ -101,7 +101,7 @@
                 });
             }
 
-            amplify.subscribe('chrono.mega', function() {
+            carbon.subscribe('chrono.mega', function() {
                 // Run controller to check session (also acts as keep-alive) & Check user
                 echo({
                     url: atheos.controller,
@@ -279,7 +279,7 @@
         //////////////////////////////////////////////////////////////////////80
         logout: function() {
             var postLogout = function() {
-                amplify.publish('user.logout');
+                carbon.publish('user.logout');
                 atheos.settings.save();
                 echo({
                     url: atheos.controller,

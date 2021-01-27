@@ -4,10 +4,6 @@
 }
 
 #file-manager .repo-icon {
-	// float: right;
-	// font-size: 16px;
-	// line-height: 16px;
-
 	font-size: 10px;
 	line-height: 20px;
 	position: absolute;
@@ -45,7 +41,7 @@
 
 #codegit {
 	display: flex;
-	@include border(1px, top);
+	border-top: $borderLight;
 }
 
 

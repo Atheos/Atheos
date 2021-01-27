@@ -17,8 +17,7 @@
 		height: 0;
 		border: none;
 		margin: 20px 0;
-
-		@include border(1px, top);
+		border-top: $borderLight;
 	}
 }
 
@@ -28,8 +27,6 @@
 	margin: 10px 0 5px;
 	font-family: monospace;
 	overflow: auto;
-
-	@include border-radius;
 }
 
 .install_issues p {

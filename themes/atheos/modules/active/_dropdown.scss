@@ -6,10 +6,8 @@
 	max-width: 300px;
 	z-index: 9999;
 	background-color: $foreground;
+	border: $borderLight;
 
-	@include border-radius;
-	@include box-shadow;
-	@include border(3px);
 
 	li {
 		position: relative;
@@ -35,7 +33,7 @@
 		overflow: hidden;
 		text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
 		white-space: nowrap;
-		color: $silver;
+		color: $shade1;
 
 		&::before {
 			content: '';

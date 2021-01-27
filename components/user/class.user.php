@@ -128,7 +128,7 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function delete($username) {
 		// Remove User
-		unset($this->users[$this->username]);
+		unset($this->users[$username]);
 
 		// Save array back to JSON
 		Common::save("users", $this->users);

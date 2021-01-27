@@ -1,8 +1,7 @@
 #codegit_log {
 	.commit {
 		padding: 8px 5px;
-
-		@include border(1px, bottom);
+		border-bottom: $borderLight;
 
 		p {
 			line-height: 18px;

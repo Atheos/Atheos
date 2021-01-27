@@ -17,12 +17,12 @@
 (function(global) {
     'use strict';
     var atheos = global.atheos,
-        amplify = global.amplify,
+        carbon = global.carbon,
         echo = global.echo;
 
     var self = null;
 
-    amplify.subscribe('system.loadMajor', () => atheos.filemanager.init());
+    carbon.subscribe('system.loadMajor', () => atheos.filemanager.init());
 
     atheos.filemanager = {
 
@@ -41,7 +41,7 @@
             let toggleHidden = oX('#fm_toggle_hidden');
             toggleHidden.on('click', self.toggleHidden);
 
-            amplify.subscribe('settings.loaded', function() {
+            carbon.subscribe('settings.loaded', function() {
                 var local = atheos.storage('filemanager.openTrigger');
                 if (local === 'click' || local === 'dblclick') {
                     self.openTrigger = local;
@@ -214,7 +214,7 @@
                                     atheos.flow.slide('open', list.el, slideDuration);
                                 }
                             }
-                            amplify.publish('filemanager.openDir', {
+                            carbon.publish('filemanager.openDir', {
                                 files: files,
                                 node: node,
                                 path: path
@@ -437,7 +437,7 @@
                         if (reply.status !== 'error') {
                             self.addToFileManager(path + '/' + copy, type, path);
                             /* Notify listeners. */
-                            amplify.publish('filemanager.paste', {
+                            carbon.publish('filemanager.paste', {
                                 path: path,
                                 dest: copy
                             });
@@ -504,7 +504,7 @@
                             self.addToFileManager(clonePath, type, parent);
                             atheos.modal.unload();
                             /* Notify listeners. */
-                            amplify.publish('filemanager.duplicate', {
+                            carbon.publish('filemanager.duplicate', {
                                 sourcePath: path,
                                 clonePath: clonePath,
                                 type: type
@@ -553,7 +553,7 @@
                                 self.openFile(newPath, true);
                             }
                             /* Notify listeners. */
-                            amplify.publish('filemanager.onCreate', {
+                            carbon.publish('filemanager.onCreate', {
                                 createPath: newPath,
                                 path: path,
                                 nodeName: nodeName,
