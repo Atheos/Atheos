@@ -7,5 +7,5 @@ toolbar {
 
 #codegit+toolbar,
 .settings+toolbar {
-	@include border(1px, top);
+	border-top: $borderLight;
 }

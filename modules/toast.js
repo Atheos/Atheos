@@ -23,7 +23,7 @@
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.toast.init());
+	carbon.subscribe('system.loadMinor', () => atheos.toast.init());
 
 	atheos.toast = {
 

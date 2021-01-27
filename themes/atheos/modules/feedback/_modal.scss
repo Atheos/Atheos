@@ -7,9 +7,7 @@
 	z-index: 9999999;
 	min-height: 100px;
 	min-width: 400px;
-
-	@include border(3px);
-	@include border-radius;
+	border: $borderHeavy;
 }
 
 #modal_content {
@@ -17,7 +15,7 @@
 
 	form {
 		padding: 10px 10px 0;
-		background-color: $midground;
+		background-color: $mideground;
 
 		toolbar {
 			margin: 10px -10px 0;

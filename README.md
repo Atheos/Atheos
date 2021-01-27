@@ -6,7 +6,7 @@
 <div align="center">
 
 [![Codacy Badge](https://api.codacy.com/project/badge/Grade/2c36f9f63b294165b604193efb8cc058)](https://www.codacy.com/gh/Atheos/Atheos?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=Atheos/Atheos&amp;utm_campaign=Badge_Grade)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](https://opensource.org/licenses/MIT)
 [![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=Atheos_Atheos&metric=alert_status)](https://sonarcloud.io/dashboard?id=Atheos_Atheos)
 
 </div>

@@ -15,7 +15,7 @@
 
     var self = null;
 
-    amplify.subscribe('system.loadMinor', () => atheos.textmode.init());
+    carbon.subscribe('system.loadMinor', () => atheos.textmode.init());
 
     atheos.textmode = {
 

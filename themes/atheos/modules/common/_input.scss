@@ -4,13 +4,11 @@ dropdown,
 input,
 select,
 textarea {
-	// display: block;
 	width: 100%;
 	margin: 5px 0;
 	padding: 7px 10px;
 	line-height: normal;
 	@include input;
-	@include border-radius;
 }
 
 #dependencies .error {

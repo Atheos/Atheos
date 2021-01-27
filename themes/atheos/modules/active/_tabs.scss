@@ -9,15 +9,12 @@ ul.tabList {
 		display: block;
 		float: left;
 		padding: 5px 10px 5px;
-		//background-color: #FFF;
-		background-color: darken($tabListBackground, 30%);
+		background-color: $colorSmall;
 		margin-right: 28px;
 		z-index: 2;
 		position: relative;
 		cursor: pointer;
 		user-select: none;
-
-		@include box-shadow;
 
 		a {
 			display: block;
@@ -30,7 +27,7 @@ ul.tabList {
 			padding-bottom: 1px;
 			cursor: inherit;
 			white-space: nowrap;
-			color: $grey;
+			color: $shade2;
 
 			.subtle {
 				color: $fontColorMinor;
@@ -43,7 +40,7 @@ ul.tabList {
 				position: absolute;
 				left: 0;
 				top: 0;
-				background: linear-gradient(to left, transparent 90%, #{darken($tabListBackground, 30%)});
+				background: linear-gradient(to left, transparent 90%, $colorSmall);
 			}
 		}
 
@@ -52,7 +49,7 @@ ul.tabList {
 			position: absolute;
 			right: -12px;
 			top: 6px;
-			color: lighten($fontColorMinor, 20%);
+			color: $fontColorMinor;
 
 			&:hover {
 				color: $fontColorMajor;
@@ -85,26 +82,26 @@ ul.tabList {
 	}
 
 	li:hover {
-		background-color: darken($tabListBackground, 15%);
+		background-color: $colorMinor;
 
 		&::before,
 		&::after {
-			background-color: darken($tabListBackground, 15%);
+			background-color: $colorMinor;
 		}
 
 		a::before {
-			background: linear-gradient(to left, transparent 90%, #{darken($tabListBackground, 15%)});
+			background: linear-gradient(to left, transparent 90%, $colorMinor);
 		}
 	}
 
 	li.active {
 		z-index: 3;
-		background-color: $tabListBackground;
+		background-color: $colorMajor;
 		color: $fontColorMajor;
 
 		&::before,
 		&::after {
-			background-color: $tabListBackground;
+			background-color: $colorMajor;
 			color: $fontColorMajor;
 		}
 
@@ -112,11 +109,11 @@ ul.tabList {
 			color: $fontColorMajor;
 
 			.subtle {
-				color: darken($fontColorMajor, 20%);
+				color: $fontColorMinor;
 			}
 
 			&::before {
-				background: linear-gradient(to left, transparent 90%, #{$tabListBackground});
+				background: linear-gradient(to left, transparent 90%, #{$colorMajor});
 			}
 		}
 	}

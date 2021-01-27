@@ -35,7 +35,7 @@
 	var self = null;
 	var editor = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.sidebars.init());
+	carbon.subscribe('system.loadMinor', () => atheos.sidebars.init());
 
 
 	atheos.sidebars = {
@@ -63,7 +63,7 @@
 			this.sbLeft.init();
 			this.sbRight.init();
 
-			amplify.subscribe('settings.loaded', function() {
+			carbon.subscribe('settings.loaded', function() {
 
 
 				var sbLeftWidth = atheos.storage('sidebars.sb-left-width'),

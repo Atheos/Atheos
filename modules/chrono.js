@@ -16,11 +16,11 @@
 (function(global) {
 
 	var atheos = global.atheos,
-		amplify = global.amplify;
+		carbon = global.carbon;
 
 	var self = null;
 
-	amplify.subscribe('system.loadMinor', () => atheos.chrono.init());
+	carbon.subscribe('system.loadMinor', () => atheos.chrono.init());
 
 	atheos.chrono = {
 
@@ -31,13 +31,13 @@
 		init: function() {
 			self = this;
 			self.kilo = setInterval(function() {
-				amplify.publish('chrono.kilo');
+				carbon.publish('chrono.kilo');
 			}, 1000);
 			self.mega = setInterval(function() {
-				amplify.publish('chrono.mega');
+				carbon.publish('chrono.mega');
 			}, 10000);
 			self.giga = setInterval(function() {
-				amplify.publish('chrono.giga');
+				carbon.publish('chrono.giga');
 			}, 100000);
 		},
 	};

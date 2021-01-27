@@ -13,9 +13,6 @@
 	color: $fontColorMinor;
 	background-color: $inputBackground;
 
-	@include border-radius;
-	@include box-shadow;
-
 	&:hover {
 		color: $fontColorMajor;
 	}
@@ -38,9 +35,7 @@
 	background-color: $inputBackground;
 	position: relative;
 	height: 20px;
-
-	@include border(1px);
-	@include border-radius;
+	border: $borderLight;
 
 	span,
 	div {
