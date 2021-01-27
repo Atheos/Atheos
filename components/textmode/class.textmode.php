@@ -32,6 +32,8 @@ class TextMode {
 		'php5' => 'php',
 		'phtml' => 'php',
 		'twig' => 'twig',
+		'hbs' => 'handlebars',
+		'handlebars' => 'handlebars',
 		'json' => 'json',
 		'java' => 'java',
 		'xml' => 'xml',
