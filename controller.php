@@ -28,14 +28,6 @@ if ($action !== 'authenticate') {
 	Common::checkSession();
 }
 
-if ($action === "debug") {
-	Common::send("success");
-} elseif ($action === "error") {
-	$message = POST("message");
-	Common::log($message, "trace-" . date("Y-m-d"));
-	die;
-}
-
 if (!$action || !$target) {
 	Common::send("error", "Missing target or action.");
 }

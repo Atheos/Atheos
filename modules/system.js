@@ -61,39 +61,7 @@
 				'\\____|__  /__| |___|  /\\___  >____/____  >',
 				'        \\/          \\/     \\/          \\/ '
 			].join('\n'));
-
-		},
-
-		error: function(e) {
-			// scripts/errorAjaxHandlerDom.js
-			var stack = e.error.stack;
-			var message = e.error.toString();
-
-			if (stack) {
-				message += '\n' + stack;
-			}
-
-			echo({
-				url: atheos.controller,
-				data: {
-					action: 'error',
-					message
-				}
-			});
-		},
-
-		debug: function() {
-			echo({
-				url: atheos.controller,
-				data: {
-					action: 'debug',
-					path: atheos.project.current.path
-				},
-				settled: function(status, reply) {
-					log(reply);
-				}
-			});
-		},
+		}
 	};
 	//////////////////////////////////////////////////////////////////////
 	// Init
