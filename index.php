@@ -43,9 +43,7 @@ $theme = SESSION("theme") ?: THEME;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
-	<?php $SourceManager->echoStyles("fonts", DEVELOPMENT); ?>
-
-	<!--Link favicons-->
+	<!-- FAVICONS -->
 	<link rel="icon" type="image/png" sizes="32x32" href="favicons/favicon-32x32.png?v=2">
 	<link rel="icon" type="image/png" sizes="16x16" href="favicons/favicon-16x16.png?v=2">
 	<link rel="manifest" href="favicons/site.webmanifest">
@@ -56,19 +54,21 @@ $theme = SESSION("theme") ?: THEME;
 	<meta name="theme-color" content="#ffffff">
 
 	<?php
-	// Load System CSS Files
-	echo('<link rel="stylesheet" href="themes/' . $theme . '/main.min.css">');
 
+	// Load THEME
+	echo("<!-- THEME: $theme -->\n");
+	echo("\t<link rel=\"stylesheet\" href=\"themes/$theme/main.min.css\">\n\n");
 
+	// LOAD FONTS
+	$SourceManager->echo("css", "fonts", DEVELOPMENT);
 
-	//////////////////////////////////////////////////////////////////
 	// LOAD MODULES
-	//////////////////////////////////////////////////////////////////
-	$SourceManager->echoScripts("modules", DEVELOPMENT);
-	$SourceManager->echoStyles("plugins", DEVELOPMENT);
+	$SourceManager->echo("js", "modules", DEVELOPMENT);
+
+	// LOAD PLUGINS
+	$SourceManager->echo("css", "plugins", DEVELOPMENT);
 
 	?>
-
 </head>
 
 <body>
@@ -119,7 +119,7 @@ $theme = SESSION("theme") ?: THEME;
 
 
 		<iframe id="download"></iframe>
-		
+
 		<div id="toast_container" class="bottom-right"></div>
 
 		<!-- ACE -->
@@ -128,20 +128,18 @@ $theme = SESSION("theme") ?: THEME;
 		<script src="components/editor/ace-editor/ext-beautify.js"></script>
 
 		<?php
-		//////////////////////////////////////////////////////////////////
 		// LOAD COMPONENTS
-		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("components", DEVELOPMENT);
+		echo("\n");
+		$SourceManager->echo("js", "components", DEVELOPMENT);
 
-		//////////////////////////////////////////////////////////////////
 		// LOAD PLUGINS
-		//////////////////////////////////////////////////////////////////
-		$SourceManager->echoScripts("plugins", DEVELOPMENT);
+		$SourceManager->echo("js", "plugins", DEVELOPMENT);
+
 	} else {
 		$path = __DIR__ . "/data/";
 
 		$users = file_exists($path . "users.json");
-		$projects =  file_exists($path . "projects.json");
+		$projects = file_exists($path . "projects.json");
 
 		if (!$users && !$projects) {
 			// Installer
@@ -150,10 +148,6 @@ $theme = SESSION("theme") ?: THEME;
 			// Login form
 			require_once('components/user/login.php');
 		}
-
-		//////////////////////////////////////////////////////////////////
-		// AUTHENTICATED
-		//////////////////////////////////////////////////////////////////
 	}
 
 	?>
