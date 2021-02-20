@@ -35,19 +35,21 @@ textarea:focus {
 }
 
 input {
-	&.weak {
+
+	&.cat1,
+	&.cat2 {
 		background-color: $red;
 	}
 
-	&.okay {
+	&.cat3 {
 		background-color: $orange;
 	}
 
-	&.strong {
+	&.cat4 {
 		background-color: $yellow;
 	}
 
-	&.perfect {
+	&.cat5 {
 		background-color: $green;
 	}
 }
