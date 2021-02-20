@@ -464,6 +464,7 @@
 		api.style = () => element.style;
 		api.tagName = element.tagName;
 		api.type = element.type;
+		api.node = () => element;
 		api.el = element;
 		api.exists = () => (element && element.nodeType);
 		api.isOnyx = true;
