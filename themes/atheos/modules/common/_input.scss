@@ -33,3 +33,21 @@ textarea:focus {
 	outline: none;
 	border-bottom: 2px solid $highlight;
 }
+
+input {
+	&.weak {
+		background-color: $red;
+	}
+
+	&.okay {
+		background-color: $orange;
+	}
+
+	&.strong {
+		background-color: $yellow;
+	}
+
+	&.perfect {
+		background-color: $green;
+	}
+}
