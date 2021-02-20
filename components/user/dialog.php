@@ -30,12 +30,14 @@ switch ($action) {
 		?>
 		<label class="title"><i class="fas fa-key"></i><?php echo i18n("password_change"); ?></label>
 		<form>
-			<label><?php echo i18n("password_new"); ?></label>
-			<input type="password" name="password1" autofocus="autofocus">
-			<i for="password1" class="fas fa-eye-slash merged-icon togglePassword"></i>
-			<label><?php echo i18n("password_confirm"); ?></label>
-			<input type="password" name="password2">
-			<i for="password2" class="fas fa-eye-slash merged-icon togglePassword"></i>
+			<label for="password"><?php echo i18n("password_new"); ?></label>
+			<input type="password"  id="password" name="password">
+			<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
+			
+			<label for="validate"><?php echo i18n("password_confirm"); ?></label>
+			<input type="password"  id="validate" name="validate">
+			<i for="validate" class="fas fa-eye-slash merged-icon togglePassword"></i>
+			
 			<button class="btn-left"><?php echo i18n("password_changeUser", ucfirst($username)) ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
@@ -51,10 +53,15 @@ switch ($action) {
 		<form>
 			<label><?php echo i18n("username"); ?></label>
 			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
-			<label><?php echo i18n("password"); ?></label>
-			<input type="password" name="password1">
-			<label><?php echo i18n("password_confirm"); ?></label>
-			<input type="password" name="password2">
+
+			<label for="password"><?php echo i18n("password"); ?></label>
+			<input type="password"  id="password" name="password">
+			<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
+
+			<label for="validate"><?php echo i18n("password_confirm"); ?></label>
+			<input type="password"  id="validate" name="validate">
+			<i for="validate" class="fas fa-eye-slash merged-icon togglePassword"></i>
+
 			<button class="btn-left"><?php echo i18n("account_create"); ?></button>
 			<button class="btn-right" onclick="atheos.user.list();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
