@@ -1,6 +1,13 @@
-//	Synthetic | Simple pulsing hexagonal background for websites
-//	(c) 2020 Liam Siira (liam@siira.us)
-//	Created from Hexagons.js by ZackTheHuman (https://gist.github.com/zackthehuman/1867663)
+//////////////////////////////////////////////////////////////////////////////80
+// Synthetic | Simple pulsing hexagonal background for websites
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
+// warranty under the MIT License. See [root]/license.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Created from Hexagons.js by ZackTheHuman
+// (https://gist.github.com/zackthehuman/1867663)
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {

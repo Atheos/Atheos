@@ -1,14 +1,12 @@
-/**
-	* ╭─╮ ┬ ┬   ╭─╮    ┬ ╭─╮ ╭─╮ ╭╮╭ ╭─╮
-	* ├┤  │ │   ├┤     │ │   │ │ │││ ╰─╮
-	* ┴   ┴ ┴─╯ ╰─╯    ┴ ╰─╯ ╰─╯ ╯╰╯ ╰─╯
-	* File specific icons for the browser
-	* from Atom File-icons, https://github.com/file-icons/atom
-	*
-	* @link      https://github.com/file-icons/atom
-	* @author    Daniel Brooker, <dan@nocturnalcode.com>
-	* @author    Adnan M.Sagar, <adnan@websemantics.ca>
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// File Icons
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2014-2016 Daniel Brooker
+// Copyright (c) 2016-2021 John Gardner
+// Distributed as-is and without warranty under the MIT License.
+// See [root]/license.md for more. This information must remain intact.
+// Source: https://github.com/file-icons/atom
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(root, factory) {
 	if (typeof define === 'function' && define.amd) {
@@ -1410,8 +1408,8 @@
 		*/
 
 	var FileIcons = function(icondb) {
-		this.db = new IconTables(icondb)
-	}
+		this.db = new IconTables(icondb);
+	};
 
 	/**
 		* Get icon class name of the provided filename. If not found, default to text icon.
@@ -1422,9 +1420,9 @@
 		*/
 
 	FileIcons.prototype.getClass = function(name) {
-		var match = this.db.matchName(name)
-		return match ? match.getClass() : null
-	}
+		var match = this.db.matchName(name);
+		return match ? match.getClass() : null;
+	};
 
 	/**
 		* Get icon class name of the provided filename with color. If not found, default to text icon.
@@ -1435,9 +1433,9 @@
 		*/
 
 	FileIcons.prototype.getClassWithColor = function(name) {
-		var match = this.db.matchName(name)
-		return match ? match.getClass(0) : null
-	}
+		var match = this.db.matchName(name);
+		return match ? match.getClass(0) : null;
+	};
 
-	return new FileIcons(icondb)
+	return new FileIcons(icondb);
 });

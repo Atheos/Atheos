@@ -115,15 +115,12 @@ switch ($action) {
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////////80
 	case "updateACL":
-		if (!Common::checkAccess("configure")) {
-			Common::send("error", "User does not have access.");
-		}
-		if (!$username) {
-			Common::send("error", "Missing username.");
+		if (!Common::checkAccess("configure")) Common::send("error", "User does not have access.");
+		if (!$username) Common::send("error", "Missing username.");
 
-			$userACL = POST("userACL");
-			$User->updateACL($username, $userACL);
-		}
+		$userACL = POST("userACL");
+		$User->updateACL($username, $userACL);
+
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
