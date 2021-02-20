@@ -31,6 +31,7 @@
 			self = this;
 			self.initDropdown();
 			self.initTogglePassword();
+			self.initPasswordMonitor();
 			self.initCheckMonitors();
 		},
 
@@ -131,6 +132,35 @@
 				}
 				icon.switchClass('fa-eye', 'fa-eye-slash');
 			});
+		},
+
+		initPasswordMonitor: function() {
+			let reqs = {
+				lowercase: /[a-z]/,
+				uppercase: /[A-Z]/,
+				numeric: /[0-9]/,
+				symbols: /[^\w\s|_]/
+			};
+
+			let testStrength = throttle(function(e) {
+				if (oX('#login')) return;
+
+				let input = oX(e.target),
+					pwd = input.value(),
+					str = +(pwd.length > 8);
+
+				if (!pwd) return;
+
+				input.removeClass();
+
+				for (let k in reqs) {
+					str += +(reqs[k].test(pwd));
+					log(k, str);
+				}
+				input.addClass('cat' + str);
+			}, 250);
+
+			fX('input[name="password"],input[name="validate"]').on('change, input', testStrength);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
