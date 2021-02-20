@@ -168,7 +168,7 @@ class User {
 		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
-		Common::send("success");
+		Common::send("success", "User ACL updated");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
