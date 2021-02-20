@@ -17,7 +17,7 @@
 	global.carbon = {
 		list: () => subs,
 		reset: () => subs = {},
-		publish: function(topic) {
+		pub: function(topic) {
 			if (!subs[topic]) return;
 
 			topic = subs[topic];
@@ -31,7 +31,7 @@
 		},
 
 		// Topics need to be comma delimited
-		subscribe: function(topic, callback) {
+		sub: function(topic, callback) {
 			var topics = topic.split(','),
 				i = topics.length;
 
@@ -43,7 +43,7 @@
 			return callback;
 		},
 
-		unsubscribe: function(topic, callback) {
+		del: function(topic, callback) {
 			if (!subs[topic]) return;
 			if (!callback) {
 				delete subs[topic];
@@ -60,5 +60,9 @@
 			}
 		}
 	};
+	
+	carbon.publish = carbon.pub;
+	carbon.subscribe = carbon.sub;
+	carbon.unsubscribe = carbon.del;
 
 }(this));
