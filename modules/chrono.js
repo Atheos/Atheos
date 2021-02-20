@@ -15,30 +15,13 @@
 
 (function(global) {
 
-	var atheos = global.atheos,
-		carbon = global.carbon;
-
-	var self = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.chrono.init());
-
-	atheos.chrono = {
-
-		kilo: '',
-		mega: '',
-		giga: '',
-
-		init: function() {
-			self = this;
-			self.kilo = setInterval(function() {
-				carbon.publish('chrono.kilo');
-			}, 1000);
-			self.mega = setInterval(function() {
-				carbon.publish('chrono.mega');
-			}, 10000);
-			self.giga = setInterval(function() {
-				carbon.publish('chrono.giga');
-			}, 100000);
-		},
+	//////////////////////////////////////////////////////////////////////////80
+	// Emit events on regular intervals for timing events
+	//////////////////////////////////////////////////////////////////////////80
+	global.chrono = {
+		kilo: setInterval(() => carbon.pub('chrono.kilo'), 1000), // 1 second
+		mega: setInterval(() => carbon.pub('chrono.mega'), 10000), // 10 Seconds
+		giga: setInterval(() => carbon.pub('chrono.giga'), 100000), // 100 Seconds
+		tera: setInterval(() => carbon.pub('chrono.tera'), 300000) // 5 minutes
 	};
 }(this));
