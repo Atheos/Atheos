@@ -12,6 +12,7 @@
 //
 // The toast messages should have settings options to allow the user to choose 
 // durations, and whether they auto close or not.
+//
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
@@ -52,7 +53,7 @@
 
 		init: function() {
 			self = this;
-			
+
 			self.container = oX('#toast_container');
 
 			oX('#toast_container .close', true).on('click', function(e) {
@@ -78,11 +79,11 @@
 		},
 
 		showToast: function(options) {
-			options = extend(this.global, options);
+			options = extend(self.global, options);
 			options.text = options.raw ? options.text : i18n(options.text);
 
 			// declare variables
-			var wrapper = this.createToast(options.text, options.icon);
+			var wrapper = self.createToast(options.text, options.icon);
 
 			self.container.append(wrapper);
 			self.container.removeClass();
@@ -103,10 +104,15 @@
 			} else {
 				options = isObject(options) ? options : {};
 			}
-			if (this.types.hasOwnProperty(type)) {
-				options = extend(this.types[type], options);
+			
+			if(isObject(text)) {
+				text = text.text;
+			}
+			
+			if (self.types.hasOwnProperty(type)) {
+				options = extend(self.types[type], options);
 				options.text = options.message || options.text || text;
-				this.showToast(options);
+				self.showToast(options);
 			}
 
 		},
@@ -115,4 +121,7 @@
 			wrapper.addEventListener('transitionend', wrapper.remove);
 		}
 	};
+
+	global.toast = atheos.toast.show;
+
 })(this);
