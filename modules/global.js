@@ -24,7 +24,7 @@
 			return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
 		};
 
-		let getType = function() {  
+		let getType = function() {
 			var element = document.querySelector('#file-manager a[data-path="' + path + '"]');
 			return element ? element.getAttribute('data-type') : false;
 		};
@@ -82,6 +82,7 @@
 		window.open(addon.url, '_newtab');
 	};
 
+
 	//////////////////////////////////////////////////////////////////////
 	// Extend / Combine JS objects without modifying the source object
 	//////////////////////////////////////////////////////////////////////
@@ -132,6 +133,11 @@
 			}
 		}
 		return o;
+	};
+
+	global.serialize = function(form) {
+		const data = new FormData(form);
+		return Object.fromEntries(data.entries());
 	};
 
 	//////////////////////////////////////////////////////////////////////////80
