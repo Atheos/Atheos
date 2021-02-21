@@ -38,8 +38,8 @@ $theme = SESSION("theme") ?: THEME;
 <!doctype html>
 <html lang="en">
 <head>
-	<title>Atheos IDE</title>
 	<meta charset="utf-8">
+	<title>Atheos IDE</title>
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
@@ -118,7 +118,7 @@ $theme = SESSION("theme") ?: THEME;
 		</div>
 
 
-		<iframe id="download"></iframe>
+		<iframe id="download" title="download"></iframe>
 
 		<div id="toast_container" class="bottom-right"></div>
 
