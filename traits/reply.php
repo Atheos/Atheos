@@ -18,6 +18,8 @@ trait Reply {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function send($status, $data = array()) {
 		http_response_code(200);
+		header("X-Frame-Options: SAMEORIGIN");
+		header('X-Content-Type-Options: nosniff');
 
 		if (!is_array($data)) {
 			$data = array("text" => $data);
