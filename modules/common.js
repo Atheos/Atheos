@@ -155,7 +155,6 @@
 
 				for (let k in reqs) {
 					str += +(reqs[k].test(pwd));
-					log(k, str);
 				}
 				input.addClass('cat' + str);
 			}, 250);
@@ -168,7 +167,6 @@
 		//////////////////////////////////////////////////////////////////////80		
 		initCheckMonitors: function() {
 			oX('input[type="checkbox"][group]', true).on('click', function(e) {
-				log('test');
 				var input = oX(e.target);
 				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
 				var checked = input.prop('checked');
