@@ -20,7 +20,6 @@
 	atheos.user = {
 
 		loginForm: oX('#login'),
-		controller: 'components/user/controller.php',
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
@@ -104,7 +103,6 @@
 			carbon.subscribe('chrono.mega', function() {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				echo({
-					url: atheos.controller,
 					data: {
 						'target': 'user',
 						'action': 'keepAlive'
@@ -130,7 +128,6 @@
 			data.target = 'user';
 			data.action = 'authenticate';
 			echo({
-				url: atheos.controller,
 				data: data,
 				settled: function(status, reply) {
 					if (status === 'success') {
@@ -156,7 +153,6 @@
 
 				if (vPass) {
 					echo({
-						url: atheos.controller,
 						data: {
 							target: 'user',
 							action: 'changePassword',
@@ -199,7 +195,6 @@
 
 				if (vUser && vPass) {
 					echo({
-						url: atheos.controller,
 						data: {
 							target: 'user',
 							action: 'create',
@@ -231,7 +226,6 @@
 				e.preventDefault();
 
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'user',
 						action: 'delete',
@@ -272,7 +266,6 @@
 				carbon.publish('user.logout');
 				atheos.settings.save();
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'user',
 						action: 'logout'
@@ -321,7 +314,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		saveActiveProject: function(name, path) {
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'user',
 					action: 'saveActiveProject',
@@ -354,7 +346,6 @@
 					toast('error', 'At least one project must be selected');
 				} else {
 					echo({
-						url: atheos.controller,
 						data: data,
 						settled: function(status, reply) {
 							toast(status, reply);
