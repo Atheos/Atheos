@@ -29,7 +29,7 @@
 			self = this;
 
 			if (self.loginForm) {
-				self.loginForm.on('submit', function(e) {
+				fX('#login').on('submit', function(e) {
 					e.preventDefault();
 
 					if (oX('#remember').prop('checked')) {
@@ -48,7 +48,7 @@
 					// Save Theme
 					atheos.storage('editor.theme', oX('#theme').value());
 
-					self.authenticate();
+					self.authenticate(e.target);
 				});
 
 				var element;
@@ -87,13 +87,13 @@
 				}
 
 				// More Selector
-				oX('#show_login_options').on('click', function(e) {
+				fX('#show_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
 					oX('#hide_login_options').show('inline-block');
 					oX('#login_options').show();
 				});
-				oX('#hide_login_options').on('click', function(e) {
+				fX('#hide_login_options').on('click', function(e) {
 					e.preventDefault();
 					oX(e.target).hide();
 					oX('#show_login_options').show('inline-block');
@@ -109,8 +109,8 @@
 						'target': 'user',
 						'action': 'keepAlive'
 					},
-					success: function(reply) {
-						if (reply.status === 'error') {
+					settled: function(status, reply) {
+						if (status !== 'success') {
 							atheos.user.logout();
 						}
 					}
@@ -122,22 +122,19 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Authenticate User
 		//////////////////////////////////////////////////////////////////////80
-		authenticate: function() {
-			var data = serializeForm(self.loginForm.el);
+		authenticate: function(form) {
+			var data = serialize(form);
 			if (data.password === '' || data.username === '') {
-				atheos.toast.show('notice', 'Username/Password not provided.');
-				return;
+				return toast('notice', 'Username/Password not provided.');
 			}
 			data.target = 'user';
 			data.action = 'authenticate';
 			echo({
 				url: atheos.controller,
 				data: data,
-				success: function(reply) {
-					if (reply.status !== 'error') {
+				settled: function(status, reply) {
+					if (status === 'success') {
 						window.location.reload();
-					} else {
-						atheos.toast.show(reply);
 					}
 				}
 			});
@@ -150,24 +147,25 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var password1 = oX('#modal_content form input[name="password1"]').value();
-				var password2 = oX('#modal_content form input[name="password2"]').value();
-				var password = password1 === password2 ? password1 : false;
+				let form = oX('#modal_content form'),
+					data = serialize(form.node());
 
-				if (!password) {
-					atheos.toast.show('error', 'Passwords do not match.');
-				} else {
+				let vPass = data.password === data.validate;
+
+				if (!vPass) toast('error', 'Passwords do not match.');
+
+				if (vPass) {
 					echo({
 						url: atheos.controller,
 						data: {
 							target: 'user',
 							action: 'changePassword',
 							username: username,
-							password: password
+							password: data.password
 						},
-						success: function(reply) {
-							if (reply.status !== 'error') {
-								atheos.toast.show('success', 'Password Changed');
+						settled: function(status, reply) {
+							toast(status, reply);
+							if (status !== 'error') {
 								atheos.modal.unload();
 							}
 						}
@@ -191,34 +189,26 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var username = oX('#modal_content form input[name="username"]').value();
-				var password1 = oX('#modal_content form input[name="password1"]').value();
-				var password2 = oX('#modal_content form input[name="password2"]').value();
+				let data = serialize(e.target);
 
-				var password = password1 === password2 ? password1 : false;
+				let vUser = /^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username) && data.username.length !== 0,
+					vPass = data.password === data.validate;
 
-				// Check matching passwords
-				if (!password) {
-					atheos.toast.show('error', 'Passwords Do Not Match');
-				}
+				if (!vUser) toast('error', 'Username must be an alphanumeric string');
+				if (!vPass) toast('error', 'Passwords do not match.');
 
-				// Check no spaces in username
-				if (!/^[a-z0-9]+$/i.test(username) || username.length === 0) {
-					atheos.toast.show('error', 'Username Must Be Alphanumeric String');
-					username = false;
-				}
-				if (password && username) {
+				if (vUser && vPass) {
 					echo({
 						url: atheos.controller,
 						data: {
 							target: 'user',
 							action: 'create',
-							username: username,
-							password: password
+							username: data.username,
+							password: data.password
 						},
-						success: function(reply) {
-							if (reply.status !== 'error') {
-								atheos.toast.show('success', 'User Account Created');
+						settled: function(status, reply) {
+							toast(status, reply);
+							if (status !== 'error') {
 								self.list();
 							}
 						}
@@ -247,9 +237,9 @@
 						action: 'delete',
 						username: username
 					},
-					success: function(reply) {
-						if (reply.status !== 'error') {
-							atheos.toast.show('success', 'Account Deleted');
+					settled: function(status, reply) {
+						toast(status, reply);
+						if (status !== 'error') {
 							self.list();
 						}
 					}
@@ -287,7 +277,7 @@
 						target: 'user',
 						action: 'logout'
 					},
-					success: function() {
+					settled: function() {
 						window.location.reload();
 					}
 				});
@@ -361,13 +351,13 @@
 
 				// Check and make sure if access level not full that at least on project is selected
 				if (data.userACL !== 'full' && data.userACL.length < 0) {
-					atheos.toast.show('error', 'At least one project must be selected');
+					toast('error', 'At least one project must be selected');
 				} else {
 					echo({
 						url: atheos.controller,
 						data: data,
 						settled: function(status, reply) {
-							atheos.toast.show(status, reply.text);
+							toast(status, reply);
 							if (status !== 'error') {
 								atheos.modal.unload();
 							}
