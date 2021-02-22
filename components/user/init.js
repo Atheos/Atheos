@@ -144,8 +144,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				let form = oX('#modal_content form'),
-					data = serialize(form.node());
+				let data = serialize(form.node());
 
 				let vPass = data.password === data.validate;
 
