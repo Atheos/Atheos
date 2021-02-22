@@ -30,21 +30,17 @@
 			self = this;
 
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'market',
 					action: 'init'
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						return;
-					}
-					self.market = reply.market;
+				settled: function(status, reply) {
+					if (status !== 'success') return;
 
+					self.market = reply.market;
 					if (reply.request) {
 						self.loadMarket();
 					}
-
 				}
 			});
 		},
@@ -52,7 +48,7 @@
 		loadMarket: function() {
 			echo({
 				url: self.market,
-				success: function(reply) {
+				settled: function(success, reply) {
 					self.saveCache(reply);
 				}
 			});
@@ -60,7 +56,6 @@
 
 		saveCache: function(cache) {
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'market',
 					action: 'saveCache',
@@ -110,7 +105,6 @@
 			atheos.modal.setLoadingScreen('Installing ' + name + '...');
 
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'market',
 					action: 'install',
@@ -118,8 +112,8 @@
 					type,
 					category
 				},
-				success: function(reply) {
-					atheos.toast.show(reply);
+				settled: function(status, reply) {
+					atheos.toast.show(status, reply);
 					atheos.market.list();
 				}
 			});
@@ -131,11 +125,8 @@
 		//////////////////////////////////////////////////////////////////
 		remove: function(name, type, category) {
 			atheos.modal.setLoadingScreen('Deleting ' + name + '...');
-			
-			log(name, type, category);
-			
+
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'market',
 					action: 'remove',
@@ -156,7 +147,6 @@
 			atheos.modal.setLoadingScreen('Updating ' + name + '...');
 
 			echo({
-				url: atheos.controller,
 				data: {
 					target: 'market',
 					action: 'update',
@@ -164,7 +154,7 @@
 					type,
 					category
 				},
-				success: function(reply) {
+				settled: function(status, reply) {
 					atheos.toast.show(reply);
 					atheos.market.list();
 
