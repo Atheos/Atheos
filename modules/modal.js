@@ -73,8 +73,6 @@
 		load: function(width, data) {
 			data = data || {};
 			width = width > 400 ? width : 400;
-			
-			let url = data.url || atheos.dialog;
 
 			var listener, callback;
 
@@ -107,14 +105,13 @@
 			if (content.find('form')) {
 				content.find('form').off('submit');
 			}
+
 			echo({
-				url: url,
+				url: data.url || atheos.dialog,
 				data: data,
 				settled: function(status, reply) {
-					if (status !== 'success') {
-						return;
-					}
-					
+					if (status !== 'success') return;
+
 					clearTimeout(loadTimeout);
 					content.html(reply);
 					content.css('height', '');
