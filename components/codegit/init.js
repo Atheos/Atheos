@@ -254,6 +254,7 @@
 						toast(reply);
 						if (status === 'success') {
 							self.addRepoIcon(path);
+							atheos.modal.unload();
 						}
 					}
 				});
