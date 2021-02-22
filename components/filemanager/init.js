@@ -224,7 +224,6 @@
 				self.rescan();
 			} else {
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'move',
@@ -235,6 +234,8 @@
 						if (status !== 'success') {
 							toast('error', reply);
 							self.rescan();
+						} else {
+							node.attr('data-path', newPath);
 						}
 					}
 				});
@@ -270,14 +271,13 @@
 					icon.addClass('loading');
 				}
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'index',
 						path
 					},
-					success: function(reply) {
-						if (reply.status !== 'error') {
+					settled: function(status, reply) {
+						if (status !== 'error') {
 							/* Notify listener */
 
 							var files = reply.index;
@@ -399,19 +399,15 @@
 
 			if (self.noOpen.indexOf(ext) < 0) {
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'open',
 						path: path
 					},
-					success: function(reply) {
-						if (reply.status !== 'error') {
-							atheos.active.open(path, reply.content, reply.modifyTime, focus);
-							if (line) {
-								setTimeout(atheos.editor.gotoLine(line), 500);
-							}
-						}
+					settled: function(status, reply) {
+						if (status !== 'success') return;
+						atheos.active.open(path, reply.content, reply.modifyTime, focus);
+						if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 					}
 				});
 			} else {
@@ -422,7 +418,7 @@
 						self.openInModal(path);
 					}
 				} else {
-					atheos.toast.show('error', 'Unable to open file in Browser');
+					toast('error', 'Unable to open file in Browser');
 				}
 			}
 		},
@@ -439,19 +435,18 @@
 			data.path = path;
 
 			echo({
-				url: atheos.controller,
 				data: data,
-				success: function(data) {
+				settled: function(status, reply) {
 					var context;
 
-					if (data.status === 'success') {
-						atheos.toast.show('success', 'File saved');
+					if (status === 'success') {
+						toast('success', 'File saved');
 						if (typeof callbacks.success === 'function') {
 							context = callbacks.context || self;
 							callbacks.success.call(context, data.modifyTime);
 						}
 					} else {
-						if (data.text === 'out of sync') {
+						if (reply.text === 'out of sync') {
 							atheos.alert.show({
 								banner: 'File changed on server!',
 								message: 'Would you like to load the updated file?\n' +
@@ -471,11 +466,11 @@
 								}
 							});
 						} else {
-							atheos.toast.show('error', 'File could not be saved');
+							toast('error', 'File could not be saved');
 						}
 						if (typeof callbacks.error === 'function') {
 							context = callbacks.context || self;
-							callbacks.error.apply(context, [data.data]);
+							callbacks.error.apply(context, [reply.data]);
 						}
 					}
 				}
@@ -506,7 +501,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		copy: function(path) {
 			self.clipboard = path;
-			atheos.toast.show('success', 'Copied to Clipboard');
+			toast('success', 'Copied to Clipboard');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -524,15 +519,14 @@
 				}
 
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'duplicate',
 						path: self.clipboard,
 						dest: path + '/' + copy
 					},
-					success: function(reply) {
-						if (reply.status !== 'error') {
+					settled: function(status, reply) {
+						if (status !== 'error') {
 							self.addToFileManager(path + '/' + copy, type, path);
 							/* Notify listeners. */
 							carbon.publish('filemanager.paste', {
@@ -545,10 +539,10 @@
 			};
 
 			if (self.clipboard === '') {
-				atheos.toast.show('error', 'Nothing in Your Clipboard');
+				toast('error', 'Nothing in Your Clipboard');
 
 			} else if (path === self.clipboard) {
-				atheos.toast.show('error', 'Cannot Paste Directory Into Itself');
+				toast('error', 'Cannot Paste Directory Into Itself');
 
 			} else if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]')) {
 				atheos.alert.show({
@@ -588,17 +582,16 @@
 				var clonePath = parent + '/' + clone;
 
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'duplicate',
 						path: path,
 						dest: clonePath
 					},
-					success: function(reply) {
-						atheos.toast.show(reply);
+					settled: function(status, reply) {
+						toast(status, reply);
 
-						if (reply.status === 'success') {
+						if (status === 'success') {
 							self.addToFileManager(clonePath, type, parent);
 							atheos.modal.unload();
 							/* Notify listeners. */
@@ -634,30 +627,28 @@
 				var newPath = path + '/' + nodeName;
 
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'create',
 						path: newPath,
 						type: type
 					},
-					success: function(reply) {
-						if (reply.status !== 'error') {
-							atheos.toast.show('success', 'File Created');
-							atheos.modal.unload();
-							// Add new element to filemanager screen
-							self.addToFileManager(newPath, type, path);
-							if (type === 'file') {
-								self.openFile(newPath, true);
-							}
-							/* Notify listeners. */
-							carbon.publish('filemanager.onCreate', {
-								createPath: newPath,
-								path: path,
-								nodeName: nodeName,
-								type: type
-							});
+					settled: function(status, reply) {
+						if (status !== 'success') return;
+						toast('success', 'File Created');
+						atheos.modal.unload();
+						// Add new element to filemanager screen
+						self.addToFileManager(newPath, type, path);
+						if (type === 'file') {
+							self.openFile(newPath, true);
 						}
+						/* Notify listeners. */
+						carbon.publish('filemanager.onCreate', {
+							createPath: newPath,
+							path: path,
+							nodeName: nodeName,
+							type: type
+						});
 					}
 				});
 			};
@@ -746,41 +737,39 @@
 				}
 				var newPath = temp.join('/') + '/' + newName;
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'filemanager',
 						action: 'rename',
 						path: path,
 						name: newName
 					},
-					success: function(reply) {
-						if (reply.status === 'success') {
-							if (type === 'file') {
-								atheos.toast.show('success', 'File Renamed.');
-							} else {
-								atheos.toast.show('success', 'Folder Renamed.');
+					settled: function(status, reply) {
+						if (status !== 'success') return;
+						if (type === 'file') {
+							toast('success', 'File Renamed.');
+						} else {
+							toast('success', 'Folder Renamed.');
 
-							}
-							var node = oX('#file-manager a[data-path="' + path + '"]'),
-								icon = node.find('i:nth-child(2)'),
-								span = node.find('span');
-							// Change pathing and name for node
-							node.attr('data-path', newPath);
-							span.text(newName);
-							if (type === 'file') {
-								// Change icons for file
-								icon.removeClass();
-								var ico = icons.getClassWithColor(newName);
-								if (ico) {
-									icon.addClass(icons.getClassWithColor(newName));
-								}
-							} else {
-								// Change pathing on any sub-files/directories
-								self.repathChildren(path, newPath);
-							}
-							// Change any active files
-							atheos.active.rename(path, newPath);
 						}
+						var node = oX('#file-manager a[data-path="' + path + '"]'),
+							icon = node.find('i:nth-child(2)'),
+							span = node.find('span');
+						// Change pathing and name for node
+						node.attr('data-path', newPath);
+						span.text(newName);
+						if (type === 'file') {
+							// Change icons for file
+							icon.removeClass();
+							var ico = icons.getClassWithColor(newName);
+							if (ico) {
+								icon.addClass(icons.getClassWithColor(newName));
+							}
+						} else {
+							// Change pathing on any sub-files/directories
+							self.repathChildren(path, newPath);
+						}
+						// Change any active files
+						atheos.active.rename(path, newPath);
 					}
 				});
 				atheos.modal.unload();
@@ -800,15 +789,13 @@
 			var node = oX('#file-manager a[data-path="' + newPath + '"]'),
 				ul = node.el.nextElementSibling;
 
-			if (ul) {
-				var children = ul.querySelectorAll('a');
-				for (var i = 0; i < children.length; i++) {
-					var path = children[i].getAttribute('data-path');
-					path = path.replace(oldPath, newPath);
-					children[i].setAttribute('data-path', path);
-				}
+			if (!ul) return;
+			var children = ul.querySelectorAll('a');
+			for (var i = 0; i < children.length; i++) {
+				var path = children[i].getAttribute('data-path');
+				path = path.replace(oldPath, newPath);
+				children[i].setAttribute('data-path', path);
 			}
-
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -821,19 +808,17 @@
 				actions: {
 					'Delete': function() {
 						echo({
-							url: atheos.controller,
 							data: {
 								target: 'filemanager',
 								action: 'delete',
 								path
 							},
-							success: function(reply) {
-								if (reply.status === 'success') {
-									var node = oX('#file-manager a[data-path="' + path + '"]');
-									node.parent('li').remove();
-									// Close any active files
-									atheos.active.remove(path);
-								}
+							settled: function(status, reply) {
+								if (status !== 'success') return;
+								var node = oX('#file-manager a[data-path="' + path + '"]');
+								node.parent('li').remove();
+								// Close any active files
+								atheos.active.remove(path);
 							}
 						});
 					},
