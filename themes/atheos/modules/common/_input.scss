@@ -33,3 +33,23 @@ textarea:focus {
 	outline: none;
 	border-bottom: 2px solid $highlight;
 }
+
+input {
+
+	&.cat1,
+	&.cat2 {
+		background-color: $red;
+	}
+
+	&.cat3 {
+		background-color: $orange;
+	}
+
+	&.cat4 {
+		background-color: $yellow;
+	}
+
+	&.cat5 {
+		background-color: $green;
+	}
+}

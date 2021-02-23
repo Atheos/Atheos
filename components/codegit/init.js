@@ -171,10 +171,10 @@
 		showCodeGit: function(repo) {
 			repo = repo || oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
-			
+
 			let node = oX('#file-manager [data-path="' + repo + '"]');
-			if(!node.hasClass('repo')) {
-				atheos.toast.show('notice', i18n('git_error_noRepo'));
+			if (!node.hasClass('repo')) {
+				toast('notice', i18n('git_error_noRepo'));
 				return;
 			}
 
@@ -229,9 +229,8 @@
 					type,
 					repo
 				},
-				success: function(reply) {
-					log(reply);
-					if (reply.status === 'success') {
+				settled: function(status, reply) {
+					if (status === 'success') {
 						self.addRepoIcon(repo);
 					}
 				}
@@ -245,26 +244,25 @@
 				var repoURL = oX('#modal_content form input[name="clone"]').value();
 
 				echo({
-					url: atheos.controller,
 					data: {
 						target: 'codegit',
 						action: 'clone',
 						repoURL,
 						path
 					},
-					success: function(reply) {
-						atheos.toast.show(reply);
-						if (reply.status === 'success') {
+					settled: function(status, reply) {
+						toast(reply);
+						if (status === 'success') {
 							self.addRepoIcon(path);
+							atheos.modal.unload();
 						}
 					}
 				});
 			};
-
 			atheos.modal.load(250, {
 				target: 'codegit',
 				action: 'clone',
-				path,
+				repo: path,
 				listener
 			});
 
@@ -301,7 +299,7 @@
 				url: atheos.controller,
 				data: data,
 				success: function(reply) {
-					atheos.toast.show(reply);
+					toast(reply);
 					if (reply.status !== 'error') {
 						message.empty();
 						oX('input[type="checkbox"][group="cg_overview"][parent="true"').prop('checked', false);
@@ -393,7 +391,7 @@
 						file
 					},
 					success: function(reply) {
-						atheos.toast.show(reply);
+						toast(reply);
 					}
 				});
 			};
@@ -425,7 +423,7 @@
 				},
 				success: function(reply) {
 					if (reply.status === 'success') {
-						atheos.toast.show('success', i18n('git_' + type + '_success'));
+						toast('success', i18n('git_' + type + '_success'));
 					}
 
 					var text = oX('#git_transfer_text');

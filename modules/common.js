@@ -31,6 +31,7 @@
 			self = this;
 			self.initDropdown();
 			self.initTogglePassword();
+			self.initPasswordMonitor();
 			self.initCheckMonitors();
 		},
 
@@ -133,12 +134,39 @@
 			});
 		},
 
+		initPasswordMonitor: function() {
+			let reqs = {
+				lowercase: /[a-z]/,
+				uppercase: /[A-Z]/,
+				numeric: /[0-9]/,
+				symbols: /[^\w\s|_]/
+			};
+
+			let testStrength = throttle(function(e) {
+				if (oX('#login')) return;
+
+				let input = oX(e.target),
+					pwd = input.value(),
+					str = +(pwd.length > 8);
+
+				if (!pwd) return;
+
+				input.removeClass();
+
+				for (let k in reqs) {
+					str += +(reqs[k].test(pwd));
+				}
+				input.addClass('cat' + str);
+			}, 250);
+
+			fX('input[name="password"],input[name="validate"]').on('change, input', testStrength);
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Checkbox Group Handler
 		//////////////////////////////////////////////////////////////////////80		
 		initCheckMonitors: function() {
 			oX('input[type="checkbox"][group]', true).on('click', function(e) {
-				log('test');
 				var input = oX(e.target);
 				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
 				var checked = input.prop('checked');

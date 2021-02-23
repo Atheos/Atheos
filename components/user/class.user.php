@@ -82,7 +82,7 @@ class User {
 		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
-		Common::send("success");
+		Common::send("success", "Password changed");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -94,7 +94,7 @@ class User {
 		Common::save("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
-		Common::send("success");
+		Common::send("success", "User permissions updated");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -139,7 +139,7 @@ class User {
 
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
-		Common::send("success");
+		Common::send("success", "Account Deleted.");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
