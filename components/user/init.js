@@ -133,6 +133,7 @@
 					if (status === 'success') {
 						window.location.reload();
 					}
+					toast(status, reply);
 				}
 			});
 		},
@@ -186,7 +187,7 @@
 
 				let data = serialize(e.target);
 
-				let vUser = /^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username) && data.username.length !== 0,
+				let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
 					vPass = data.password === data.validate;
 
 				if (!vUser) toast('error', 'Username must be an alphanumeric string');
