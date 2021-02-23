@@ -364,7 +364,8 @@
 	"retest": "Re-Test",
 
 	"initialSetup": "Initial Setup",
-	"dependencies": "Dependencies",
+	"developmentMode": "Development Mode",
+	"analyticsEnable": "Anonymous Analytics",
 
 	"connectionError": "Connection Error",
 
