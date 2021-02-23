@@ -165,13 +165,103 @@
 				activeListener(e);
 			});
 
-			self.tabList.on('mousedown', function(e) {
-				var options = {
-					dragZone: self.tabList.el,
-					direction: 'horizontal'
-				};
-				atheos.flow.dragNdrop(e, options);
-			});
+			self.tabList.on('mousedown', self.handleDrag);
+		},
+
+		handleDrag: function(e) {
+			// Inspired By: https://codepen.io/fitri/pen/VbrZQm
+			// Made with love by @fitri
+			// & https://github.com/io-developer/js-dragndrop
+			e.stopPropagation();
+
+			var target = e.target;
+			var origin, sibling;
+
+			var dragZone = self.tabList.el;
+			var clone, startEX, startEY, startMX, startMY, timeout;
+
+			var xMax, yMax;
+
+			function moveTarget(e) {
+				timeout = false;
+
+				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
+
+				swap = swap.filter((item) => {
+					var rect = item.getBoundingClientRect();
+					if (e.clientX < rect.left || e.clientX >= rect.right) return false;
+					return (item !== clone);
+				});
+
+				if (swap.length === 0) return;
+
+				swap = swap[swap.length - 1];
+				if (dragZone.contains(swap)) {
+					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
+					if (swap) {
+						swap.parentNode.insertBefore(target, swap);
+					}
+				}
+			}
+
+			function dragMove(e) {
+				var x = startEX + e.screenX - startMX;
+				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
+				clone.style.left = (x - dragZone.scrollLeft) + 'px';
+				if (timeout === false) {
+					// In an attempt at optimization, I am setting a timeout on
+					// the moveTarget such that it runs only once every 50ms
+					timeout = setTimeout(() => moveTarget(e), 50);
+				}
+			}
+
+			function dragStart() {
+				timeout = false;
+
+				startEX = target.offsetLeft;
+				startEY = target.offsetTop;
+
+				startMX = e.screenX;
+				startMY = e.screenY;
+
+				clone = target.cloneNode(true);
+				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
+				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
+				clone.style.position = 'absolute';
+				clone.style.cursor = 'grabbing';
+
+				dragZone.append(clone);
+				target.style.opacity = 0;
+
+				xMax = dragZone.offsetWidth - clone.offsetWidth;
+				yMax = dragZone.offsetHeight - clone.offsetHeight;
+
+				document.addEventListener('mousemove', dragMove);
+			}
+
+			function dragEnd() {
+				clearTimeout(timeout);
+				target.style.opacity = '';
+				if (clone) clone.remove();
+				if (target.parentNode !== origin) {
+					if (sibling) {
+						sibling.after(target);
+					} else {
+						origin.append(target);
+					}
+				}
+				document.removeEventListener('mousemove', dragMove);
+				document.removeEventListener('mouseup', dragEnd);
+			}
+
+			target = target.closest('.draggable');
+			if (!target || !dragZone) return;
+
+			origin = target.parentNode;
+			sibling = target.previousSibling;
+
+			timeout = setTimeout(dragStart, 200);
+			document.addEventListener('mouseup', dragEnd);
 		},
 
 		open: function(path, content, modifyTime, focus) {
@@ -231,7 +321,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Check if opened by another user
 		//////////////////////////////////////////////////////////////////////80
-
 		check: function(path) {
 			echo({
 				url: atheos.controller,
@@ -240,9 +329,9 @@
 					action: 'check',
 					path: path
 				},
-				success: function(reply) {
-					if (reply.status === 'warning') {
-						atheos.toast.show(reply);
+				settled: function(status, reply) {
+					if (status === 'warning') {
+						toast(status, reply);
 					}
 				}
 			});
@@ -623,7 +712,8 @@
 					path: oldPath,
 					newPath: newPath
 				},
-				success: function() {
+				settled: function(status) {
+					if (status !== 'success') return;
 					carbon.publish('active.onRename', {
 						'oldPath': oldPath,
 						'newPath': newPath
