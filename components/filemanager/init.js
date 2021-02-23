@@ -428,8 +428,7 @@
 		// I'm pretty sure the save methods on this are magic and should
 		// be worshipped.
 		//////////////////////////////////////////////////////////////////////80
-		saveModifications: function(path, data, callbacks) {
-			callbacks = callbacks || {};
+		saveModifications: function(path, data, callback) {
 			data.target = 'filemanager';
 			data.action = 'save';
 			data.path = path;
@@ -441,58 +440,50 @@
 
 					if (status === 'success') {
 						toast('success', 'File saved');
-						if (typeof callbacks.success === 'function') {
-							context = callbacks.context || self;
-							callbacks.success.call(context, data.modifyTime);
+						if (typeof callback === 'function') {
+							callback.call(self, reply.modifyTime);
 						}
-					} else {
-						if (reply.text === 'out of sync') {
-							atheos.alert.show({
-								banner: 'File changed on server!',
-								message: 'Would you like to load the updated file?\n' +
-									'Pressing no will cause your changes to override the\n' +
-									'server\'s copy upon next save.',
-								actions: {
-									'Reload File': function() {
-										atheos.active.remove(path);
-										self.openFile(path);
-									},
-									'Save Anyway': function() {
-										var session = atheos.editor.getActive().getSession();
-										session.serverMTime = null;
-										session.untainted = null;
-										atheos.active.save();
-									}
+					} else if (reply.text === 'out of sync') {
+						atheos.alert.show({
+							banner: 'File changed on server!',
+							message: 'Would you like to load the updated file?\n' +
+								'Pressing no will cause your changes to override the\n' +
+								'server\'s copy upon next save.',
+							actions: {
+								'Reload File': function() {
+									atheos.active.remove(path);
+									self.openFile(path);
+								},
+								'Save Anyway': function() {
+									var session = atheos.editor.getActive().getSession();
+									session.serverMTime = null;
+									session.untainted = null;
+									atheos.active.save();
 								}
-							});
-						} else {
-							toast('error', 'File could not be saved');
-						}
-						if (typeof callbacks.error === 'function') {
-							context = callbacks.context || self;
-							callbacks.error.apply(context, [reply.data]);
-						}
+							}
+						});
+					} else {
+						toast('error', 'File could not be saved');
 					}
 				}
 			});
 		},
 
-		saveFile: function(path, content, callbacks) {
+		saveFile: function(path, content, callback) {
 			self.saveModifications(path, {
 					content: content
 				},
-				callbacks);
+				callback);
 		},
 
-		savePatch: function(path, patch, mtime, callbacks) {
+		savePatch: function(path, patch, mtime, callback) {
 			if (patch.length > 0) {
 				self.saveModifications(path, {
 					patch: patch,
 					modifyTime: mtime
-				}, callbacks);
-			} else if (typeof callbacks.success === 'function') {
-				var context = callbacks.context || self;
-				callbacks.success.call(context, mtime);
+				}, callback);
+			} else if (typeof callback === 'function') {
+				callback.call(self, mtime);
 			}
 		},
 
