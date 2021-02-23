@@ -56,6 +56,11 @@ function isAbsPath($path) {
 	return ($path[0] === "/" || $path[1] === ":") ? true : false;
 }
 
+function SESSION($key = false, $val = null) {
+	if (!$key || !$val) return;
+	$_SESSION[$key] = $val;
+}
+
 function cleanPath($path) {
 	// prevent Poison Null Byte injections
 	$path = str_replace(chr(0), "", $path);
@@ -82,8 +87,9 @@ if (!file_exists($users) && !file_exists($projects)) {
 	$projectName = $data["projectName"] ?: false;
 	$projectPath = $data["projectPath"] ?: $projectName;
 	$timezone = $data["timezone"] ?: false;
+	$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?: "en";
 	$development = $data["development"] ?: "false";
-	$authorized = $data["authorized"] ?: "undecided";
+	$authorized = $data["analytics"] ?: "false";
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Projects files
@@ -142,7 +148,6 @@ if (!file_exists($users) && !file_exists($projects)) {
 		"client_os" => false,
 		"location" => $timezone,
 		"language" => false,
-		"authorized" => $authorized,
 		"plugins" => array()
 	);
 
@@ -185,6 +190,9 @@ try {
 // DEVELOPMENT MODE
 define("DEVELOPMENT", ' . $development . ');
 
+// ANONYMOUS ANALYTICS
+define("ANALYTICS", ' . $authorized . ');
+
 // EXTERNAL AUTHENTICATION
 // define("AUTH_PATH", "/path/to/customauth.php");
 
@@ -206,5 +214,22 @@ define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest"
 
 	saveFile($config, $configData);
 
-	reply("success", "Installation successful.");
+	session_name(md5($path));
+	session_start();
+
+	SESSION("user", $username);
+	SESSION("lang", $language);
+	SESSION("theme", "atheos");
+
+	SESSION("projectPath", $projectPath);
+	SESSION("projectName", $projectName);
+
+	$reply = array(
+		"status" => "success",
+		"username" => $username,
+		"lastLogin" => date("Y-m-d H:i:s"),
+		"text" => "Installation successful."
+	);
+
+	echo(json_encode($reply, true));
 }

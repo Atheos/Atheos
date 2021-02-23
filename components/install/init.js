@@ -24,18 +24,19 @@
 
 		init: function() {
 			fX('#retest').on('click', () => window.location.reload());
-			
+
+
 			self = this;
-			if (!self.form) return;
-			
+			let form = oX('#install');
+			if (!form) return;
+
 			atheos.toast.init();
 
 			let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone,
 				option = oX('select[name="timezone"] option[value="' + timezone + '"]');
 			if (option) option.attr('selected', 'selected');
 
-
-			self.form.on('submit', self.checkForm);
+			form.on('submit', self.checkForm);
 		},
 
 		checkForm: function(e) {
@@ -76,7 +77,8 @@
 				data,
 				settled: function(status, reply) {
 					if (status === 'success') {
-						window.location.reload();
+						setTimeout(() => window.location.reload(), 100);
+						toast(status, reply);
 					} else {
 						var dialog = {
 							banner: 'An error occurred:',
