@@ -120,8 +120,6 @@ $theme = SESSION("theme") ?: THEME;
 
 		<iframe id="download" title="download"></iframe>
 
-		<div id="toast_container" class="bottom-right"></div>
-
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
 		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
@@ -151,5 +149,6 @@ $theme = SESSION("theme") ?: THEME;
 	}
 
 	?>
+	<toaster class="bottom right"></toaster>
 </body>
 </html>

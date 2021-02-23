@@ -10,7 +10,7 @@
 // message, even though I think it would make more sense for Toast to handle
 // the translation. For Future consideration.
 //
-// The toast messages should have settings options to allow the user to choose 
+// The toast messages should have settings opts to allow the user to choose 
 // durations, and whether they auto close or not.
 //
 //												- Liam Siira
@@ -29,7 +29,7 @@
 	atheos.toast = {
 
 		global: {
-			position: 'bottom-right', // top-left, top-center, top-right, middle-left, middle-center, middle-right
+			position: 'bottom right', // top-left, top-center, top-right, middle-left, middle-center, middle-right
 			text: 'Message undefined'
 		},
 		types: {
@@ -54,71 +54,60 @@
 		init: function() {
 			self = this;
 
-			self.container = oX('#toast_container');
+			self.container = oX('toaster');
 
-			oX('#toast_container .close', true).on('click', function(e) {
-				var wrapper = oX(e.target).parent('toast');
-				atheos.toast.hide(wrapper.el);
+			fX('toast').on('click', function(e) {
+				var toast = e.target.closest('toast');
+				self.hide(toast);
 			});
-
 		},
 
-		createContainer: function(position) {
-			var container = document.createElement('div');
-			container.id = 'toast_container';
-			container.classList.add('toast-position-' + position);
-			document.body.appendChild(container);
-			return container;
+		create: function(type, text) {
+			var html = `<toast><i class="${ type } fas fa-circle"></i><p class="message">${ text || global.text }</p></toast>`;
+
+			let div = document.createElement('div');
+			div.innerHTML = html;
+			return div.firstChild;
 		},
 
-		createToast: function(text, type) {
-			var html = `<toast><i class="fas fa-${ type }"></i><p class="message">${ text || global.text }</p><i class="fas fa-times-circle close"></i></toast>`;
-
-			var wrapper = oX(html);
-			return wrapper.el;
-		},
-
-		showToast: function(options) {
-			options = extend(self.global, options);
-			options.text = options.raw ? options.text : i18n(options.text);
+		showToast: function(opts) {
+			opts = extend(self.global, opts);
+			opts.text = opts.raw ? opts.text : i18n(opts.text);
 
 			// declare variables
-			var wrapper = self.createToast(options.text, options.icon);
+			var toast = self.create(opts.type, opts.text);
 
-			self.container.append(wrapper);
-			self.container.removeClass();
-			self.container.addClass(options.position);
+			self.container.append(toast);
 
 			setTimeout(function() {
-				wrapper.classList.add('active');
-				setTimeout(() => self.hide(wrapper), options.stayTime);
+				toast.classList.add('active');
+				setTimeout(() => self.hide(toast), opts.stayTime);
 			}, 10);
-
-			return wrapper;
 		},
 
-		show: function(type, text, options) {
+		show: function(type, text, opts) {
 			if (isObject(type)) {
-				options = type;
-				type = options.status;
+				opts = type;
+				type = opts.status;
 			} else {
-				options = isObject(options) ? options : {};
+				opts = isObject(opts) ? opts : {};
 			}
-			
-			if(isObject(text)) {
+
+			if (isObject(text)) {
 				text = text.text;
 			}
-			
+
 			if (self.types.hasOwnProperty(type)) {
-				options = extend(self.types[type], options);
-				options.text = options.message || options.text || text;
-				self.showToast(options);
+				opts = extend(self.types[type], opts);
+				opts.type = type;
+				opts.text = opts.message || opts.text || text;
+				self.showToast(opts);
 			}
 
 		},
-		hide: function(wrapper) {
-			wrapper.classList.remove('active');
-			wrapper.addEventListener('transitionend', wrapper.remove);
+		hide: function(toast) {
+			toast.classList = '';
+			toast.addEventListener('transitionend', toast.remove);
 		}
 	};
 
