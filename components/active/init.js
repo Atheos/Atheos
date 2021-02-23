@@ -484,20 +484,16 @@
 					original: session.untainted,
 					changed: newContent
 				}, function(success, patch) {
+					// let type = success ? 'savePatch' : 'saveFile';
+					// atheos.filemanager[type](path,patch,)
 					if (success) {
-						atheos.filemanager.savePatch(path, patch, session.serverMTime, {
-							success: handleSuccess
-						});
+						atheos.filemanager.savePatch(path, patch, session.serverMTime, handleSuccess);
 					} else {
-						atheos.filemanager.saveFile(path, newContent, {
-							success: handleSuccess
-						});
+						atheos.filemanager.saveFile(path, newContent, handleSuccess);
 					}
 				}, self);
 			} else {
-				atheos.filemanager.saveFile(path, newContent, {
-					success: handleSuccess
-				});
+				atheos.filemanager.saveFile(path, newContent, handleSuccess)
 			}
 		},
 
