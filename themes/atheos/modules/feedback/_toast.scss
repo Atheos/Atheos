@@ -1,100 +1,73 @@
-#toast_container {
-	min-width: 280px;
+toaster {
+	min-width: 200px;
 	max-width: 480px;
 	z-index: 99999;
 	position: fixed;
-
+	text-align: left !important;
 
 	toast {
-		height: auto;
-		background: #333;
+		background: $background;
 		padding: 5px;
-		font-size: 12px;
-		border: 2px solid #999;
+		font-size: 0.9rem;
+		border: $borderLight;
 		display: block;
-		position: relative;
-		margin: 0 0 12px 0;
+		margin: 5px;
 		transition: opacity ease-in-out 300ms;
 		opacity: 0;
-	}
-
-	.active {
-		opacity: 1;
-	}
-
-	.message {
-		text-align: left;
-		margin: 0 5px;
-		display: inline-block;
-	}
-
-	.close {
-		font-size: 14px;
-		float: right;
 		cursor: pointer;
+
+		&.active {
+			opacity: 1;
+		}
+
+		.message {
+			text-align: left;
+			margin: 0 5px;
+			display: inline-block;
+		}
+
+		.close {
+			font-size: 14px;
+			float: right;
+			cursor: pointer;
+		}
+
+		i.success {
+			color: $green;
+		}
+
+		i.notice {
+			color: $cyan;
+		}
+
+		i.warning {
+			color: $orange;
+		}
+
+		i.error {
+			color: $red;
+		}
+
 	}
 
-	i:not(.close) {
-		font-size: 14px;
-		float: left;
-	}
-
-	i.fa-check-circle {
-		color: $green;
-	}
-
-	i.fa-info-circle {
-		color: $cyan;
-	}
-
-	i.fa-exclamation-triangle {
-		color: $orange;
-	}
-
-	i.fa-exclamation-circle {
-		color: $red;
-	}
-
-
-	&.top-left {
-		left: 20px;
+	&.top {
 		top: 20px;
 	}
 
-	&.top-center {
-		top: 20px;
-		left: 50%;
-		margin-left: -140px;
-	}
-
-	&.top-right {
-		top: 20px;
-		right: 20px;
-	}
-
-	&.middle-left {
-		left: 20px;
-		top: 50%;
-		margin-top: -40px;
-	}
-
-	&.middle-center {
-		left: 50%;
-		margin-left: -140px;
-		margin-top: -40px;
-		top: 50%;
-	}
-
-	&.middle-right {
-		right: 20px;
-		margin-left: -140px;
-		margin-top: -40px;
-		top: 50%;
-	}
-
-	&.bottom-right {
+	&.bottom {
 		bottom: 30px;
-		right: 25px;
 	}
 
+	&.left {
+		left: 20px;
+	}
+
+	&.center {
+		left: 50%;
+		margin-left: -140px;
+	}
+
+	&.right {
+		right: 20px;
+	}
 }
