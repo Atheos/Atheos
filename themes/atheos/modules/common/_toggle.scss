@@ -8,6 +8,7 @@ toggle {
 	label {
 		padding: 8px 0;
 		width: 50%;
+		float: left;
 		display: inline-block;
 		text-align: center;
 		cursor: pointer;
@@ -20,9 +21,9 @@ toggle {
 			background-color: lighten($inputBackground, $hoverPercent);
 		}
 
-		&:not(first-of-type) {
-			margin-left: -2px;
-		}
+		// &:not(first-of-type) {
+		// 	margin-left: -2px;
+		// }
 	}
 
 	input {

@@ -48,7 +48,7 @@ class Analytics {
 		$reply = array("endpoint" => defined("DATAPOINT") ? DATAPOINT : $this->endpoint);
 		$status = "success";
 
-		if ($data["authorized"] === true) {
+		if (ANALYTICS) {
 			$data["last_heard"] = date("Y/m/d");
 			$data["atheos_version"] = VERSION;
 			$data["php_version"] = phpversion();
@@ -56,7 +56,7 @@ class Analytics {
 			$data["language"] = LANGUAGE;
 			$data["plugins"] = $plugins;
 			$reply["data"] = $data;
-		} elseif ($data["authorized"] === false || !Common::checkAccess("configure")) {
+		} elseif (!ANALYTICS || !Common::checkAccess("configure")) {
 			$reply = "Not authorized.";
 			$status = "warning";
 		} else {

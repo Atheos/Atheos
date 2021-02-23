@@ -13,17 +13,62 @@
 		margin: 0 0 15px;
 	}
 
-	hr {
-		height: 0;
-		border: none;
-		margin: 20px 0;
-		border-top: $borderLight;
+	table {
+		margin: 5px 0;
+		background-color: $background;
+
+		label {
+			margin: 0;
+		}
+
+		td {
+			width: 50%;
+			border: $borderLight;
+			padding: 0;
+
+			&:first-child {
+				padding-left: 8px;
+				font-weight: bold;
+			}
+
+			&:not(:first-child) {
+				text-align: center;
+			}
+
+			toggle,
+			select {
+				border-bottom: none;
+			}
+		}
+
+		select {
+			margin: 0;
+			padding: 7px 3px;
+		}
+	}
+
+	&.errors {
+		label {
+			margin-top: 1rem;
+			margin-bottom: -5px;
+		}
 	}
 }
 
-#dependencies {
-	span {
-		display: block;
+.install_issues {
+	background: $inputBackground;
+	padding: 10px;
+	margin: 10px 0 5px;
+	font-family: 'Ubuntu-Fira'monospace;
+	overflow: auto;
+
+	p {
+		padding: 0;
+		margin: 0;
+
+		i {
+			margin-right: 3px;
+		}
 	}
 
 	.success {
@@ -32,19 +77,6 @@
 
 	.error {
 		color: red;
-	}
-}
-
-.install_issues {
-	background: $inputBackground;
-	padding: 10px;
-	margin: 10px 0 5px;
-	font-family: monospace;
-	overflow: auto;
-
-	p {
-		padding: 0;
-		margin: 0;
 	}
 
 }
