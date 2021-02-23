@@ -11,14 +11,6 @@ textarea {
 	@include input;
 }
 
-#dependencies .error {
-	color: red;
-}
-
-#dependencies .success {
-	color: green;
-}
-
 select option {
 	background-color: $inputBackground;
 }

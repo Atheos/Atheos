@@ -21,15 +21,30 @@
 	}
 }
 
+#dependencies {
+	span {
+		display: block;
+	}
+
+	.success {
+		color: green;
+	}
+
+	.error {
+		color: red;
+	}
+}
+
 .install_issues {
 	background: $inputBackground;
 	padding: 10px;
 	margin: 10px 0 5px;
 	font-family: monospace;
 	overflow: auto;
-}
 
-.install_issues p {
-	padding: 0;
-	margin: 0;
+	p {
+		padding: 0;
+		margin: 0;
+	}
+
 }
