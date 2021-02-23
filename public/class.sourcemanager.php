@@ -93,29 +93,28 @@ class SourceManager {
 			foreach ($files as $file) {
 				$scripts .= $this->getTag($type, $file);
 			}
-			echo $scripts;
 			if (file_exists($minifiedFileName)) unlink($minifiedFileName);
+			echo $scripts;
+			return;
 
-		} else {
-			if (is_readable($minifiedFileName)) {
-				$mostRecent = filemtime($minifiedFileName);
-				foreach ($files as $file) {
-					if (filemtime($file) > $mostRecent) {
-						$mostRecent = filemtime($file);
-						break;
-					}
+		} elseif (is_readable($minifiedFileName)) {
+			$mostRecent = filemtime($minifiedFileName);
+			foreach ($files as $file) {
+				if (filemtime($file) > $mostRecent) {
+					$mostRecent = filemtime($file);
+					break;
 				}
-				if (filemtime($minifiedFileName) < $mostRecent) {
-					$this->loadAndMinify($minifiedFileName, $files);
-				}
-			} else {
-				$this->loadAndMinify($minifiedFileName, $files);
 			}
-			echo($this->getTag($type, $minifiedFileName));
+			if (filemtime($minifiedFileName) < $mostRecent) {
+				$this->loadAndMinify($type, $minifiedFileName, $files);
+			}
+		} else {
+			$this->loadAndMinify($type, $minifiedFileName, $files);
 		}
+		echo($this->getTag($type, $minifiedFileName));
 	}
 
-	function loadAndMinify($type = "css", $files) {
+	function loadAndMinify($type = "css", $minifiedFileName, $files) {
 		if ($type === "css") {
 			$this->loadAndMinifyCSS($minifiedFileName, $files);
 		} else {
