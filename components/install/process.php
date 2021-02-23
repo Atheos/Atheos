@@ -15,9 +15,8 @@
 //////////////////////////////////////////////////////////////////////////////80
 $data = $_POST;
 
-$path = $data["path"] ?: false;
-
 $rel = str_replace("/components/install/process.php", "", $_SERVER['REQUEST_URI']);
+$path = str_replace("/components/install/process.php", "", $_SERVER['SCRIPT_FILENAME']);
 
 $workspace = $path . "/workspace";
 $users = $path . "/data/users.json";
@@ -30,8 +29,16 @@ $config = $path . "/config.php";
 // Functions
 //////////////////////////////////////////////////////////////////////////////80
 
+function reply($status = "error", $text) {
+	$reply = array(
+		"status" => $status,
+		"text" => $text
+	);
+	die(json_encode($reply));
+}
+
 function saveFile($file, $data) {
-	$write = fopen($file, "w") or die("Unable to open file:$file");
+	$write = fopen($file, "w") or reply("error", "Unable to open $file");
 	fwrite($write, $data);
 	fclose($write);
 }
@@ -75,7 +82,6 @@ if (!file_exists($users) && !file_exists($projects)) {
 	$projectName = $data["projectName"] ?: false;
 	$projectPath = $data["projectPath"] ?: $projectName;
 	$timezone = $data["timezone"] ?: false;
-	$timezone = preg_replace('/[^a-zA-Z\/_\+]/', "", $timezone);
 	$development = $data["development"] ?: "false";
 	$authorized = $data["authorized"] ?: "undecided";
 
@@ -91,11 +97,11 @@ if (!file_exists($users) && !file_exists($projects)) {
 		}
 		if (!file_exists($projectPath)) {
 			if (!mkdir($projectPath . "/", 0755, true)) {
-				die("Unable to create Absolute Path");
+				reply("error", "Unable to create Absolute Path");
 			}
 		} else {
 			if (!is_writable($projectPath) || !is_readable($projectPath)) {
-				die("No Read/Write Permission");
+				reply("error", "No Read/Write Permission");
 			}
 		}
 
@@ -141,8 +147,6 @@ if (!file_exists($users) && !file_exists($projects)) {
 	);
 
 	saveJSON($analytics, $analyticsData);
-
-
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Config
@@ -202,5 +206,5 @@ define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest"
 
 	saveFile($config, $configData);
 
-	echo("success");
+	reply("success", "Installation successful.");
 }
