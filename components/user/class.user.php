@@ -51,7 +51,8 @@ class User {
 
 				$reply = array(
 					"username" => $username,
-					"lastLogin" => $user["lastLogin"]
+					"lastLogin" => $user["lastLogin"],
+					"text" => "Successfully authenticated."
 				);
 
 				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
