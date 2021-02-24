@@ -1,4 +1,4 @@
-//////////////////////////////////////////////////////////////////////80////////////80
+//////////////////////////////////////////////////////////////////////////////80
 // FileManager Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
@@ -12,7 +12,7 @@
 // to really get a grasp of what's going on in this file and how to
 // refactor it.
 //												- Liam Siira
-//////////////////////////////////////////////////////////////////////80////////////80
+//////////////////////////////////////////////////////////////////////////////80
 
 (function(global) {
 	'use strict';
@@ -432,12 +432,12 @@
 			data.target = 'filemanager';
 			data.action = 'save';
 			data.path = path;
+			
+			trace(data);
 
 			echo({
 				data: data,
 				settled: function(status, reply) {
-					var context;
-
 					if (status === 'success') {
 						toast('success', 'File saved');
 						if (typeof callback === 'function') {
@@ -471,19 +471,19 @@
 
 		saveFile: function(path, content, callback) {
 			self.saveModifications(path, {
-					content: content
+					content
 				},
 				callback);
 		},
 
-		savePatch: function(path, patch, mtime, callback) {
+		savePatch: function(path, patch, callback, modifyTime) {
 			if (patch.length > 0) {
 				self.saveModifications(path, {
-					patch: patch,
-					modifyTime: mtime
+					patch,
+					modifyTime
 				}, callback);
 			} else if (typeof callback === 'function') {
-				callback.call(self, mtime);
+				callback.call(self, modifyTime);
 			}
 		},
 
