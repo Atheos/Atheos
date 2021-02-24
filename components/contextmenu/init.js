@@ -203,10 +203,15 @@
 
 			var path = node.attr('data-path'),
 				type = node.attr('data-type'),
-				name = node.find('span').html(),
-				active = node.hasClass('active');
+				name = node.find('span').html();
 
-			var html = '<a class="directory-only" onclick="atheos.active.reload(oX(\'#contextmenu\').attr(\'data-path\'), ' + active +');" style="display: block;"><i class="fas fa-sync-alt"></i>Reload</a>';
+			var html = '<a id="reload_file"><i class="fas fa-sync-alt"></i>Reload</a><a id="reset_file"><i class="fas fa-sync-alt"></i>Reset</a>';
+
+			self.active = {
+				path,
+				type,
+				name
+			};
 
 			menu.attr({
 				'data-path': path,
@@ -223,6 +228,8 @@
 		hide: function() {
 			menu.hide();
 			menu.off('*');
+			
+			self.active = false;
 
 			var active = oX('#file-manager a.context-menu-active');
 			if (active) {
