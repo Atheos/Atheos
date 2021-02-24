@@ -29,6 +29,7 @@
 	//////////////////////////////////////////////////////////////////////80
 	atheos.active = {
 
+
 		tabList: oX('#tab-list-active-files'),
 		dropDownMenu: oX('#dropdown-list-active-files'),
 
@@ -270,9 +271,7 @@
 			}
 
 			if (self.isOpen(path)) {
-				if (focus) {
-					self.focus(path);
-				}
+				if (focus) self.focus(path);
 				return;
 			}
 			var ext = pathinfo(path).extension;
@@ -448,35 +447,33 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		save: function(path) {
+			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
+			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
 
-
-			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
-				atheos.toast.show('error', 'No open files.');
-				return;
-			}
 			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
 			var content = session.getValue();
 			var newContent = content.slice(0);
+
+			// Get the path from active session
 			path = session.path;
 
 			/* Notify listeners. */
 			carbon.publish('active.save', path);
 
 			var handleSuccess = function(mtime) {
-				var session = atheos.active.sessions[path];
-				if (typeof session !== 'undefined') {
-					session.untainted = newContent;
-					session.serverMTime = mtime;
-					session.status = 'current';
-					if (session.listItem) {
-						session.listItem.removeClass('changed');
-					}
+				if (typeof session === 'undefined') return;
+
+				session.untainted = newContent;
+				session.serverMTime = mtime;
+				session.status = 'current';
+				if (session.listItem) {
+					session.listItem.removeClass('changed');
 				}
 			};
+
 			// Replicate the current content so as to avoid
 			// discrepancies due to content changes during
 			// computation of diff
-
 			if (session.serverMTime && session.untainted) {
 				atheos.workerManager.addTask({
 					taskType: 'diff',
@@ -484,13 +481,8 @@
 					original: session.untainted,
 					changed: newContent
 				}, function(success, patch) {
-					// let type = success ? 'savePatch' : 'saveFile';
-					// atheos.filemanager[type](path,patch,)
-					if (success) {
-						atheos.filemanager.savePatch(path, patch, session.serverMTime, handleSuccess);
-					} else {
-						atheos.filemanager.saveFile(path, newContent, handleSuccess);
-					}
+					let type = success ? 'savePatch' : 'saveFile';
+					atheos.filemanager[type](path, patch, handleSuccess, session.serverMTime);
 				}, self);
 			} else {
 				atheos.filemanager.saveFile(path, newContent, handleSuccess)
@@ -637,10 +629,27 @@
 		},
 
 		reload: function(path, focus) {
-			log(focus);
+			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
+			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
 
-			self.close(path);
-			atheos.filemanager.openFile(path, focus);
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			var content = session.getValue();
+			var newContent = content.slice(0);
+
+			// self.close(path);
+			// atheos.filemanager.openFile(path, focus);
+		},
+
+		reset: function(path, focus) {
+			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
+			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
+
+			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			var content = session.getValue();
+			var newContent = content.slice(0);
+
+			// self.close(path);
+			// atheos.filemanager.openFile(path, focus);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
