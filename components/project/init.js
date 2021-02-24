@@ -101,7 +101,6 @@
 		// Open Project
 		//////////////////////////////////////////////////////////////////
 		open: function(projectName, projectPath) {
-			log(projectPath);
 			atheos.scout.hideFilter();
 			echo({
 				url: atheos.controller,
@@ -288,8 +287,6 @@
 					newName
 				};
 				
-				log(data);
-
 				echo({
 					url: atheos.controller,
 					data,
@@ -318,7 +315,6 @@
 		// Delete Project
 		//////////////////////////////////////////////////////////////////
 		delete: function(projectName, projectPath) {
-			log(projectName, projectPath);
 			var listener = function(e) {
 				e.preventDefault();
 
