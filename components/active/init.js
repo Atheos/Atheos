@@ -647,7 +647,7 @@
 					if (session.listItem) {
 						session.listItem.removeClass('changed');
 					}
-					toast('success', 'File reset from server.');
+					toast('success', 'File reloaded from server.');
 				}
 			});
 		},
