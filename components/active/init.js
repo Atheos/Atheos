@@ -52,6 +52,9 @@
 				self.closeAll();
 			});
 
+			fX('#reload_file').on('click', () => self.reload());
+			fX('#reset_file').on('click', () => self.reset());
+
 			echo({
 				url: atheos.controller,
 				data: {
@@ -270,7 +273,7 @@
 				focus = true;
 			}
 
-			if (self.isOpen(path)) {
+			if (self.sessions[path]) {
 				if (focus) self.focus(path);
 				return;
 			}
@@ -300,15 +303,15 @@
 			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', fn);
 		},
 
-		isOpen: function(path) {
-			return !!self.sessions[path];
+		getSession: function(path) {
+			if (path && !self.sessions[path]) return 'File path not open.';
+			if (!path && !atheos.editor.getActive()) return 'No open files.';
+			return path ? self.sessions[path] : atheos.editor.getActive().getSession();
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Get active editor path
 		//////////////////////////////////////////////////////////////////////80
-
 		getPath: function() {
 			try {
 				return atheos.editor.getActive().getSession().path;
@@ -377,7 +380,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Focus on opened file
 		//////////////////////////////////////////////////////////////////////80
-
 		focus: function(path, direction) {
 			direction = direction || false;
 
@@ -445,26 +447,22 @@
 		// I'm pretty sure the save methods are magic and should
 		// be worshipped.
 		//////////////////////////////////////////////////////////////////////80
-
 		save: function(path) {
-			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
-			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
+			let session = self.getSession(path);
+			if (isString(session)) return toast('error', session);
+			path = session.path;
 
-			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
 			var content = session.getValue();
 			var newContent = content.slice(0);
-
-			// Get the path from active session
-			path = session.path;
 
 			/* Notify listeners. */
 			carbon.publish('active.save', path);
 
-			var handleSuccess = function(mtime) {
+			var handleSuccess = function(modifyTime) {
 				if (typeof session === 'undefined') return;
 
 				session.untainted = newContent;
-				session.serverMTime = mtime;
+				session.serverMTime = modifyTime;
 				session.status = 'current';
 				if (session.listItem) {
 					session.listItem.removeClass('changed');
@@ -504,11 +502,8 @@
 		// Close file
 		//////////////////////////////////////////////////////////////////////80
 		close: function(path) {
-			if ((path && !self.isOpen(path)) || (!path && !atheos.editor.getActive())) {
-				atheos.toast.show('error', 'No open files');
-				return;
-			}
-			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			let session = self.getSession(path);
+			if (isString(session)) return toast('error', session);
 			path = session.path;
 			var basename = pathinfo(path).basename;
 
@@ -628,28 +623,50 @@
 			});
 		},
 
-		reload: function(path, focus) {
-			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
-			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
+		reload: function(path) {
+			if (!path && atheos.contextmenu.active) {
+				path = atheos.contextmenu.active.path;
+			}
 
-			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
-			var content = session.getValue();
-			var newContent = content.slice(0);
+			let session = self.getSession(path);
+			if (isString(session)) return toast('error', session);
+			path = session.path;
 
-			// self.close(path);
-			// atheos.filemanager.openFile(path, focus);
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'open',
+					path: path
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return toast('error', 'Unable to reload file.');
+					session.serverMTime = reply.modifyTime;
+					session.untainted = reply.content;
+					session.setValue(reply.content);
+					session.status = 'current';
+					if (session.listItem) {
+						session.listItem.removeClass('changed');
+					}
+					toast('success', 'File reset from server.');
+				}
+			});
 		},
 
-		reset: function(path, focus) {
-			if (path && !self.isOpen(path)) return toast('error', 'File path not open.');
-			if (!path && !atheos.editor.getActive()) return toast('error', 'No open files.');
+		reset: function(path) {
+			if (!path && atheos.contextmenu.active) {
+				path = atheos.contextmenu.active.path;
+			}
 
-			var session = path ? self.sessions[path] : atheos.editor.getActive().getSession();
-			var content = session.getValue();
-			var newContent = content.slice(0);
+			let session = self.getSession(path);
+			if (isString(session)) return toast('error', session);
+			path = session.path;
 
-			// self.close(path);
-			// atheos.filemanager.openFile(path, focus);
+			session.setValue(session.untainted);
+			session.status = 'current';
+			if (session.listItem) {
+				session.listItem.removeClass('changed');
+			}
+			toast('success', 'File reset from cache.');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
