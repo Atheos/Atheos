@@ -236,6 +236,7 @@
 							self.rescan();
 						} else {
 							node.attr('data-path', newPath);
+							atheos.active.rename(oldPath, newPath);
 						}
 					}
 				});
@@ -432,7 +433,7 @@
 			data.target = 'filemanager';
 			data.action = 'save';
 			data.path = path;
-			
+
 			trace(data);
 
 			echo({
