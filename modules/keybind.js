@@ -23,32 +23,43 @@
 
 (function() {
 
-	let self = false;
+	let self = false,
+		bindings = {};
 
 	carbon.subscribe('system.loadMinor', () => atheos.keybind.init());
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default Bindings
-	//////////////////////////////////////////////////////////////////////////80////////////////////////////////////
-	// HotKey  | Function                                | HotKey             | Function                           |
-	// ------- | --------------------------------------- | ------------------ | ---------------------------------- |
-	// ESC     | Close any open dialogs / Exit multiedit | CTRL+Space bar     | Autocomplete                       |
-	// CTRL+S  | Save current file                       | ALT+UP             | Move current line(s) up            |
-	// CTRL+O  | Open current file in browser            | ALT+DOWN           | Move current line(s) down          |
-	// CTRL+F  | Find in current editor                  | ALT+Shift+UP       | Copy current line(s) above current |
-	// CTRL+R  | Find & Replace/All in current editor    | ALT+Shift+DOWN     | Copy current line(s) below current |
-	// CTRL+H  | Advanced Search / Search & Replace      | CTRL+UP            | Switch to previous tab             |
-	// CTRL+A  | Select All                              | CTRL+DOWN          | Switch to next tab                 |
-	// CTRL+D  | Delete current line(s)                  | CTRL+Z             | Undo                               |
-	// CTRL+P  | Find matching element [{()}]            | CTRL+Y             | Redo                               |
-	// CTRL+L  | Go To Line                              | ALT+0              | Fold all                           |
-	// CTRL+\[ | Decrease current line(s) indent         | ALT+Shift+0        | Unfold all                         |
-	// CTRL+]  | Increase current line(s) indent         | CTRL+/             | Comment Line                       |
-	//////////////////////////////////////////////////////////////////////////80////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////80
+	// HotKey             | Function                                
+	// ------------------ | -------------------------------------------------- |
+	// ESC                | Close any open dialogs / Exit multiedit            |
+	// CTRL+S             | Save current file                                  |
+	// CTRL+O             | Open current file in browser                       |
+	// CTRL+F             | Find in current editor                             |
+	// CTRL+R             | Find & Replace/All in current editor               |
+	// CTRL+H             | Advanced Search / Search & Replace                 |
+	// CTRL+A             | Select All                                         |
+	// CTRL+D             | Delete current line(s)                             |
+	// CTRL+P             | Find matching element [{()}]                       |
+	// CTRL+L             | Go To Line                                         |
+	// CTRL+\[            | Decrease current line(s) indent                    |
+	// CTRL+]             | Increase current line(s) indent                    |
+	// CTRL+Space bar     | Autocomplete                                       |
+	// ALT+UP             | Move current line(s) up                            |
+	// ALT+DOWN           | Move current line(s) down                          |
+	// ALT+Shift+UP       | Copy current line(s) above current                 |
+	// ALT+Shift+DOWN     | Copy current line(s) below current                 |
+	// CTRL+UP            | Switch to previous tab                             |
+	// CTRL+DOWN          | Switch to next tab                                 |
+	// CTRL+Z             | Undo                                               |
+	// CTRL+Y             | Redo                                               |
+	// ALT+0              | Fold all                                           |
+	// ALT+Shift+0        | Unfold all                                         |
+	// CTRL+/             | Comment Line                                       |
+	//////////////////////////////////////////////////////////////////////////80
 
 	atheos.keybind = {
-
-		bindings: {},
 
 		init: function() {
 			if (self) return;
@@ -121,34 +132,29 @@
 		// Key Bind
 		//////////////////////////////////////////////////////////////////////80
 		bind: function(key, cmd, callback, args) {
-			if (!(key in self.bindings)) {
-				self.bindings[key] = [];
-			}
-
-			self.bindings[key].push({
+			let data = {
 				args: args || [],
 				cmd: cmd ? cmd.split(' ') : [],
 				callback
-			});
+			};
+			(bindings[key] = bindings[key] || []).push(data);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Key Rebind
 		//////////////////////////////////////////////////////////////////////80
 		rebind: function(oldKey, newKey) {
-			if (oldKey in self.bindings) {
-				self.bindings[newKey] = self.bindings[oldKey];
-				delete self.bindings[oldKey];
-			}
+			if (oldKey in bindings) delete bindings[oldKey];
+			bindings[newKey] = bindings[oldKey];
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Event Handler
 		//////////////////////////////////////////////////////////////////////80
 		handler: function(e) {
-			if (!(e.keyCode in self.bindings)) return;
+			if (!(e.keyCode in bindings)) return;
 
-			self.bindings[e.keyCode].forEach(function(bind) {
+			bindings[e.keyCode].forEach(function(bind) {
 				if (bind.cmd.includes('alt') !== e.altKey) return;
 				if (bind.cmd.includes('ctrl') !== (e.ctrlKey || e.metaKey)) return;
 				if (bind.cmd.includes('shift') !== e.shiftKey) return;
