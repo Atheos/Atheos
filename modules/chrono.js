@@ -11,7 +11,7 @@
 //	Intervals running while providing plugins the ability to use timed events.
 //////////////////////////////////////////////////////////////////////////////80
 // Suggestions:
-//	Move debounce/throttle here to break up globals.js
+//	- Move debounce/throttle here to break up globals.js
 //////////////////////////////////////////////////////////////////////////////80
 // Usage:
 //  - kilo: publishes an event every 1000 milliseconds (1 second)
