@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("lib/differential/diff_match_patch.php");
+require_once("libraries/differential/diff_match_patch.php");
 
 class Filemanager {
 
