@@ -6,9 +6,12 @@
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Description: 
-// The Chronometer Module sets global intervals that are published through
-// Amplify subscriptions; allowing the client browser to only have a select few
-// Intervals running while providing plugins the ability to use timed events.
+//	The Chronometer Module sets global intervals that are published through
+//	Carbon subscriptions; allowing the client browser to only have a select few
+//	Intervals running while providing plugins the ability to use timed events.
+//////////////////////////////////////////////////////////////////////////////80
+// Suggestions:
+//	Move debounce/throttle here to break up globals.js
 //////////////////////////////////////////////////////////////////////////////80
 // Usage:
 //  - kilo: publishes an event every 1000 milliseconds (1 second)
