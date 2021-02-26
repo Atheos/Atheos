@@ -13,6 +13,7 @@
 // Suggestions:
 //	- Language translation isn't handled very well
 //	- Allow user settings of durations per toast type
+//	- Modify all existing calls to utilize simpler calls
 //////////////////////////////////////////////////////////////////////////////80
 // Usage:
 //	- success: Show a success message with a green circle for 3 seconds
