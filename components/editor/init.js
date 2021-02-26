@@ -303,9 +303,12 @@
 		// editor pane user is currently working on.
 		//
 		/////////////////////////////////////////////////////////////////
-		getActive: function() {
-			return self.activeInstance;
-		},
+		getActive: () => self.activeInstance,
+		getSession: () => self.activeInstance.getSession(),
+		getSelection: () => self.activeInstance.getSelection(),
+		getSelectionRange: () => self.activeInstance.getSelection().getRange(),
+		getDocument: () => self.activeInstance.getSession().getDocument(),
+		getContent: () => self.activeInstance.getSession().getValue(),
 
 		/////////////////////////////////////////////////////////////////
 		//
