@@ -22,17 +22,16 @@
 //	carbon.subscribe('chrono.kilo', function() {
 //		console.log("This will log every 1 second");
 //	}
+//
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Emit events on regular intervals for timing events
-	//////////////////////////////////////////////////////////////////////////80
 	window.chrono = {
 		kilo: setInterval(() => carbon.pub('chrono.kilo'), 1000), // 1 second
 		mega: setInterval(() => carbon.pub('chrono.mega'), 10000), // 10 Seconds
 		giga: setInterval(() => carbon.pub('chrono.giga'), 100000), // 100 Seconds
 		tera: setInterval(() => carbon.pub('chrono.tera'), 300000) // 5 minutes
 	};
+
 }());

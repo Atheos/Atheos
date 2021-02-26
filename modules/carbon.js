@@ -29,6 +29,7 @@
 //	carbon.sub('chrono.kilo', function() {
 //		console.log("This will log every 1 second");
 //	}
+//
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
@@ -52,7 +53,6 @@
 			}
 		},
 
-		// Topics need to be comma delimited
 		sub: function(topic, callback) {
 			var topics = topic.split(','),
 				i = topics.length;
