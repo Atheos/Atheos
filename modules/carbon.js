@@ -4,9 +4,7 @@
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
 //	warranty under the MIT License. See [root]/license.md for more.
 //	This information must remain intact.
-// Copyright (c) 2013 appendTo LLC.
-// Source: https://amplifyjs.com/
-//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) 2013 appendTo LLC - https://amplifyjs.com/
 //////////////////////////////////////////////////////////////////////////////80
 // Description: 
 //	Carbon provides methods to facilitate the Publish and Subscribe messaging

@@ -5,32 +5,25 @@
 // warranty under the MIT License. See [root]/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-	var self = null;
+	var self = false;
 
 	atheos.install = {
 
-		form: oX('#install'),
-
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Initilization
-		//////////////////////////////////////////////////////////////////
-
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			fX('#retest').on('click', () => window.location.reload());
 
-
+			if (self) return;
 			self = this;
+
 			let form = oX('#install');
 			if (!form) return;
-
-			atheos.toast.init();
 
 			let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone,
 				option = oX('select[name="timezone"] option[value="' + timezone + '"]');
@@ -71,6 +64,9 @@
 			}
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Post install data
+		//////////////////////////////////////////////////////////////////////80
 		install: function(data) {
 			echo({
 				url: 'components/install/process.php',
@@ -94,4 +90,4 @@
 		},
 	};
 
-})(this);
+})();
