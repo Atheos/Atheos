@@ -14,6 +14,7 @@
 //	- Move debounce/throttle here to break up globals.js
 //////////////////////////////////////////////////////////////////////////////80
 // Usage:
+//  - byte: publishes an event every 100 milliseconds (10th of a second)
 //  - kilo: publishes an event every 1000 milliseconds (1 second)
 //  - mega: publishes an event every 10000 milliseconds (10 seconds)
 //  - giga: publishes an event every 100000 milliseconds (100 seconds)
@@ -28,6 +29,7 @@
 (function() {
 
 	window.chrono = {
+		byte: setInterval(() => carbon.pub('chrono.byte'), 100), // 10th of a second
 		kilo: setInterval(() => carbon.pub('chrono.kilo'), 1000), // 1 second
 		mega: setInterval(() => carbon.pub('chrono.mega'), 10000), // 10 Seconds
 		giga: setInterval(() => carbon.pub('chrono.giga'), 100000), // 100 Seconds
