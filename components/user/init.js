@@ -84,23 +84,23 @@
 					oX('#show_login_options').show('inline-block');
 					oX('#login_options').hide();
 				});
-			}
+			} else {
 
-			carbon.subscribe('chrono.mega', function() {
-				// Run controller to check session (also acts as keep-alive) & Check user
-				echo({
-					data: {
-						'target': 'user',
-						'action': 'keepAlive'
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') {
-							atheos.user.logout();
+				carbon.subscribe('chrono.mega', function() {
+					// Run controller to check session (also acts as keep-alive) & Check user
+					echo({
+						data: {
+							'target': 'user',
+							'action': 'keepAlive'
+						},
+						settled: function(status, reply) {
+							if (status !== 'success') {
+								atheos.user.logout();
+							}
 						}
-					}
+					});
 				});
-			});
-
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
