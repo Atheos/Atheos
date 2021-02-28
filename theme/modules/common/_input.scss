@@ -1,0 +1,47 @@
+#dependencies,
+button,
+dropdown,
+input,
+select,
+textarea {
+	width: 100%;
+	margin: 5px 0;
+	padding: 7px 10px;
+	line-height: normal;
+	@include input;
+}
+
+select option {
+	background-color: $inputBackground;
+}
+
+textarea {
+	min-height: 100px;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	outline: none;
+	border-bottom: 2px solid $highlight;
+}
+
+input {
+
+	&.cat1,
+	&.cat2 {
+		background-color: $red;
+	}
+
+	&.cat3 {
+		background-color: $orange;
+	}
+
+	&.cat4 {
+		background-color: $yellow;
+	}
+
+	&.cat5 {
+		background-color: $green;
+	}
+}

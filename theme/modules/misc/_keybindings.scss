@@ -1,0 +1,40 @@
+.settings {
+	.keybindings {
+		td {
+			&:nth-child(odd) {
+				padding-left: 20px;
+				font-weight: bold;
+				text-align: left;
+			}
+
+			&:nth-child(even) {
+				font-family: 'Ubuntu-Fira', monospace;
+			}
+		}
+	}
+
+	i+i {
+		margin-left: 5px;
+	}
+
+	.key,
+	.cmd {
+		color: $background;
+		background-color: $fontColorMajor;
+		text-align: center;
+		font-weight: 900;
+		display: inline-block;
+		text-transform: uppercase;
+	}
+
+	.cmd {
+		padding: 2px;
+		width: 35px;
+		border-radius: 3px;
+	}
+
+	.key {
+		border-radius: 50%;
+		width: 1em;
+	}
+}

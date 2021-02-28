@@ -1,0 +1,106 @@
+/*
+ * Copyright (c) Codiad & Andr3as, distributed
+ * as-is and without warranty under the MIT License.
+ * See http://opensource.org/licenses/MIT for more information. 
+ * This information must remain intact.
+ */
+
+
+
+
+
+
+
+.git_area header input {
+	display: inline;
+}
+
+.git_area {
+	max-height: 45vh;
+	overflow-y: scroll;
+}
+
+.git_area input[type="checkbox"] {
+	margin: auto;
+}
+
+
+.git_area .right {
+	position: relative;
+	left: 5px;
+	top: 15px;
+}
+
+.git_area .modified,
+.git_area .untracked,
+.git_area .deleted {
+	color: red;
+}
+
+.git_area .added,
+.git_area .renamed {
+	color: green;
+}
+
+/* Show commit */
+/* Git diff */
+
+
+/* Git Blame */
+.git_blame_area .content {
+	max-height: 40vh;
+	overflow-y: auto;
+}
+
+.git_blame_area table td:nth-of-type(1) {
+	width: 250px;
+}
+
+.git_blame_area table td:nth-of-type(2) {
+	width: 90px;
+}
+
+.git_blame_area table td:nth-of-type(3) {
+	max-width: 500px;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	vertical-align: middle;
+	white-space: nowrap;
+}
+
+/* Git clone */
+.git_clone_area table td,
+.git_clone_area table th {
+	border: none;
+}
+
+/* Git pull/push */
+.git_push_area table td,
+.git_push_area table th {
+	border: none;
+	padding: 0;
+}
+
+/* Git stats */
+.git-stat {
+	color: rgb(255, 152, 45);
+	color: rgba(255, 152, 45, 0.7);
+}
+
+/* Editor Botom Bar */
+#git-stat {
+	float: left;
+}
+
+
+
+
+#file-manager span.uncommit:before {
+	content: "\25cf";
+	font-size: 1.9em;
+}
+
+#file-manager span.uncommit {
+	float: left;
+	padding-top: 8px;
+}

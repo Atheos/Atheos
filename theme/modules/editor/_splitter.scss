@@ -1,0 +1,14 @@
+.splitter {
+	z-index: 9999;
+	position: absolute;
+	background-color: $mideground;
+	width: 5px;
+}
+
+.h-splitter {
+	cursor: col-resize;
+}
+
+.v-splitter {
+	cursor: row-resize;
+}

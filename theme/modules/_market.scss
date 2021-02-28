@@ -1,0 +1,90 @@
+#market {
+	// padding: 0 5px 5px;
+	width: 960px;
+
+	table th {
+		font-size: 18px;
+		background-color: #333;
+	}
+}
+
+#manual_repo {
+	display: inline-block;
+	width: 80%;
+	margin: 0;
+}
+
+#manual_install {
+	display: inline-block;
+	width: 19%;
+	margin: 0;
+}
+
+#market_table {
+	height: 450px;
+	overflow-y: auto;
+	overflow-x: hidden;
+	// margin-top: 5px;
+
+	tbody {
+		display: block;
+		max-height: 49vh;
+		overflow-y: scroll;
+	}
+
+	thead,
+	tbody tr {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	th[colspan="4"],
+	td[colspan="4"] {
+		padding: 5px 10px;
+		background-color: $inputBackground;
+	}
+
+	th:nth-of-type(1),
+	td:nth-of-type(1) {
+		width: 200px;
+		font-weight: 700;
+	}
+
+	th:nth-of-type(2),
+	td:nth-of-type(2) {
+		width: 500px;
+	}
+
+	th:nth-of-type(3),
+	td:nth-of-type(3) {
+		// width: 300px;
+	}
+
+	th:nth-of-type(4),
+	td:nth-of-type(4) {
+		width: 100px;
+		text-align: center;
+	}
+
+	td:nth-of-type(4) {
+		font-size: 18px;
+
+		a {
+			margin: 0 5px;
+		}
+
+		.fa-check-circle {
+			color: $green;
+		}
+
+		.fa-times-circle {
+			color: $red;
+		}
+
+		.fa-sync-alt,
+		.fa-plus-circle {
+			color: $blue;
+		}
+	}
+}

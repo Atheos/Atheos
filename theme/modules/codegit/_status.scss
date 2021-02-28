@@ -1,0 +1,20 @@
+#codegit_repo_banner {
+	padding: 4px 10px 2px 10px;
+	cursor: pointer;
+}
+
+.repoUnknown {
+	background-color: $maroon;
+}
+
+.repoCommitted {
+	background-color: $green;
+}
+
+.repoUncommitted {
+	background-color: $red;
+}
+
+.repoUntracked {
+	background-color: $blue;
+}

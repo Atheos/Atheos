@@ -1,0 +1,56 @@
+$fontColorMajor: var(--fontColorMajor);
+$fontColorMinor: var(--fontColorMinor);
+$fontColorSmall: var(--fontColorSmall);
+
+$fontSizeH1: 20px;
+$fontSizeH2: 20px;
+$fontSizeH3: 18px;
+$fontSizeH4: 16px;
+$fontSizePr: 14px;
+$fontSizeSm: 12px;
+
+$foreground: var(--foreground);
+$mideground: var(--mideground);
+$background: var(--background);
+$highlight: $shade2;
+
+:root {
+	--foreground: $shade4;
+	--mideground: $shade6;
+	--background: $shade8;
+	--fontColorMajor: $shade0;
+	--fontColorMinor: $shade2;
+	--fontColorSmall: $shade3;
+
+	--borderLight: solid 2px $shade3;
+	--borderHeavy: solid 3px $shade5;
+
+	--colorMajor: $blue;
+	--colorMinor: $indigo;
+	--colorSmall: $navy;
+}
+
+$borderLight: var(--borderLight);
+$borderHeavy: var(--borderHeavy);
+
+$colorMajor: var(--colorMajor);
+$colorMinor: var(--colorMinor);
+$colorSmall: var(--colorSmall);
+
+
+$hoverMajor: $blue;
+$hoverMinor: $highlight;
+$hoverPercent: 30%;
+
+$animationDuration: 0.2s;
+$transitionDuration: 0.2s;
+
+$scrollbarWidth: 10px;
+
+$topBarHeight: 33px;
+$bottomBarHeight: 23px;
+$sidebarHandleWidth: 15px;
+$fileManagerHeight: 280px;
+
+$inputBackground: $shade7;
+$tabListBackground: $blue;

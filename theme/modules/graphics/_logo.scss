@@ -1,0 +1,35 @@
+#logo {
+	position: fixed;
+	top: calc(25% - 200px);
+	left: calc(20% - 140px);
+	opacity: 1;
+	z-index: 1;
+
+	svg {
+		path {
+			animation: float 1s infinite ease-in-out alternate;
+		}
+
+		.delay-1 {
+			animation-delay: 0.1s;
+		}
+
+		.delay-2 {
+			animation-delay: 0.2s;
+		}
+
+		.delay-3 {
+			animation-delay: 0.3s;
+		}
+
+		.delay-4 {
+			animation-delay: 0.4s;
+		}
+	}
+
+	@keyframes float {
+		100% {
+			transform: translateY(8px);
+		}
+	}
+}
