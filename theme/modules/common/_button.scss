@@ -1,0 +1,40 @@
+button {
+	display: inline-block;
+	width: auto;
+	margin: 3px 0;
+	min-width: 80px;
+	color: $background;
+	font-weight: bold;
+	background-color: $fontColorMajor;
+	cursor: pointer;
+
+	&.bottom-left {
+		position: absolute;
+		bottom: 10px;
+		left: 10px;
+	}
+
+	&:disabled {
+		color: $shade2;
+		cursor: unset;
+
+		&:hover {
+			color: $shade2;
+			background-color: $fontColorMajor;
+			border-color: $shade3;
+		}
+	}
+
+	&:hover {
+		background-color: $fontColorMinor;
+		border-color: $shade4;
+	}
+
+	&:focus {
+		outline: none;
+	}
+
+	&+button {
+		margin-left: 6px;
+	}
+}

@@ -76,17 +76,15 @@ class Market {
 	// Build Installed Addon Cache
 	//////////////////////////////////////////////////////////////////////////80
 	public function buildCache($rebuild = false) {
-		global $plugins; global $themes;
+		global $plugins;
 
 		if ($rebuild) {
 			$plugins = Common::readDirectory(PLUGINS);
-			$themes = Common::readDirectory(THEMES);
 		}
 
 		// Scan plugins directory for missing plugins
 		$addons = array(
 			"plugins" => array(),
-			"themes" => array()
 		);
 
 		foreach ($plugins as $plugin) {
@@ -95,15 +93,6 @@ class Market {
 				$data = json_decode($data, true);
 				unset($data["config"]);
 				$addons["plugins"][$data["category"]][$data["name"]] = $data;
-			}
-		}
-
-		foreach ($themes as $theme) {
-			if (is_readable(THEMES . "/$theme/theme.json")) {
-				$data = file_get_contents(THEMES . "/$theme/theme.json");
-				$data = json_decode($data, true);
-				$data["type"] = "theme";
-				$addons["themes"][$data["category"]][$data["name"]] = $data;
 			}
 		}
 

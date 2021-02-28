@@ -174,9 +174,6 @@ define("BASE_PATH", __DIR__);
 // BASE URL TO ATHEOS (without trailing slash)
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
-// THEME : atheos, modern or clear (look at /themes)
-define("THEME", "atheos");
-
 // SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
 define("LIFETIME", false);
 
@@ -203,7 +200,6 @@ define("ANALYTICS", ' . $authorized . ');
 // PATHS
 define("COMPONENTS", BASE_PATH . "/components");
 define("PLUGINS", BASE_PATH . "/plugins");
-define("THEMES", BASE_PATH . "/themes");
 define("DATA", BASE_PATH . "/data");
 define("WORKSPACE", BASE_PATH . "/workspace");
 

@@ -26,13 +26,9 @@ require_once("public/class.sourcemanager.php");
 
 $SourceManager = new SourceManager;
 
-// Read Components, Plugins, Themes
+// Read Components & Plugins
 $components = Common::readDirectory(COMPONENTS);
 $plugins = Common::readDirectory(PLUGINS);
-$themes = Common::readDirectory(THEMES);
-
-// Theme
-$theme = SESSION("theme") ?: THEME;
 
 ?>
 <!doctype html>
@@ -56,8 +52,8 @@ $theme = SESSION("theme") ?: THEME;
 	<?php
 
 	// Load THEME
-	echo("<!-- THEME: $theme -->\n");
-	echo("\t<link rel=\"stylesheet\" href=\"themes/$theme/main.min.css\">\n\n");
+	echo("<!-- THEME -->\n");
+	echo("\t<link rel=\"stylesheet\" href=\"theme/main.min.css\">\n\n");
 
 	// LOAD FONTS
 	$SourceManager->echo("css", "fonts", DEVELOPMENT);

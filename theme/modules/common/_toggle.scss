@@ -1,0 +1,45 @@
+toggle {
+	display: block;
+	overflow: hidden;
+	text-align: center;
+
+	@include input();
+
+	label {
+		padding: 8px 0;
+		width: 50%;
+		float: left;
+		display: inline-block;
+		text-align: center;
+		cursor: pointer;
+		position: relative;
+		z-index: 2;
+		transition: background-color $transitionDuration ease-in-out;
+		font-size: unset;
+
+		&:hover {
+			background-color: lighten($inputBackground, $hoverPercent);
+		}
+
+		// &:not(first-of-type) {
+		// 	margin-left: -2px;
+		// }
+	}
+
+	input {
+		width: 32px;
+		height: 32px;
+		order: 1;
+		z-index: 2;
+		position: absolute;
+		right: 30px;
+		top: 50%;
+		transform: translateY(-50%);
+		cursor: pointer;
+		visibility: hidden;
+
+		&:checked+label {
+			background-color: $colorMajor;
+		}
+	}
+}

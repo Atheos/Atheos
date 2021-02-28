@@ -1,0 +1,82 @@
+#installer {
+	position: absolute;
+	width: 450px;
+	top: 15%;
+	left: 50%;
+	margin-left: -175px;
+	padding: 35px;
+	overflow: auto;
+	z-index: 1;
+
+	h1 {
+		font-size: 24px;
+		margin: 0 0 15px;
+	}
+
+	table {
+		margin: 5px 0;
+		background-color: $background;
+
+		label {
+			margin: 0;
+		}
+
+		td {
+			width: 50%;
+			border: $borderLight;
+			padding: 0;
+
+			&:first-child {
+				padding-left: 8px;
+				font-weight: bold;
+			}
+
+			&:not(:first-child) {
+				text-align: center;
+			}
+
+			toggle,
+			select {
+				border-bottom: none;
+			}
+		}
+
+		select {
+			margin: 0;
+			padding: 7px 3px;
+		}
+	}
+
+	&.errors {
+		label {
+			margin-top: 1rem;
+			margin-bottom: -5px;
+		}
+	}
+}
+
+.install_issues {
+	background: $inputBackground;
+	padding: 10px;
+	margin: 10px 0 5px;
+	font-family: 'Ubuntu-Fira'monospace;
+	overflow: auto;
+
+	p {
+		padding: 0;
+		margin: 0;
+
+		i {
+			margin-right: 3px;
+		}
+	}
+
+	.success {
+		color: green;
+	}
+
+	.error {
+		color: red;
+	}
+
+}
