@@ -1,0 +1,47 @@
+#ace_settingsmenu {
+	border: 1px solid $shade2 !important;
+	color: unset;
+	background-color: $foreground;
+	box-shadow: none;
+	right: 14px;
+	padding: 5px;
+
+	label {
+		font-size: unset;
+	}
+
+	table th,
+	table td {
+		padding: 0 3px;
+		border-color: $shade6;
+	}
+
+	table td[colspan="2"] {
+		text-align: center;
+		padding: 0;
+		border: none;
+	}
+
+	button {
+		margin: 3px 0;
+		background-color: $shade0;
+		box-shadow: none;
+		border: none;
+	}
+
+	button+button,
+	input+input {
+		margin-left: 6px;
+	}
+
+	button[ace_selected_button=true] {
+		background-color: $shade1;
+	}
+
+	input[type="checkbox"] {
+		width: 1.5rem;
+		height: 1.5rem;
+		font-size: 1.5rem;
+		line-height: 1.5rem;
+	}
+}

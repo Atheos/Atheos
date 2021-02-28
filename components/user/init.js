@@ -44,8 +44,6 @@
 
 					// Save Language
 					atheos.storage('language', oX('#language').value());
-					// Save Theme
-					atheos.storage('editor.theme', oX('#theme').value());
 
 					self.authenticate(e.target);
 				});
@@ -60,18 +58,6 @@
 					oX('#remember').prop('checked', true);
 
 					oX('#password').focus();
-				}
-
-
-				// Get Theme
-				var theme = atheos.storage('theme');
-				element = oX('#theme');
-				if (element && element.findAll('option').length > 1) {
-					element.findAll('option').forEach(function(option) {
-						if (option.value() === theme) {
-							option.attr('selected', 'selected');
-						}
-					});
 				}
 
 				// Get Language

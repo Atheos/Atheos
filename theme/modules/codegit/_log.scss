@@ -1,0 +1,42 @@
+#codegit_log {
+	.commit {
+		padding: 8px 5px;
+		border-bottom: $borderLight;
+
+		p {
+			line-height: 18px;
+		}
+	}
+
+	.hash {
+		display: inline;
+		color: $fontColorMinor;
+
+		a,
+		span {
+			font-family: 'Ubuntu-Fira', monospace;
+			// color: $dark-yellow;
+			color: $olive;
+		}
+	}
+
+	.date {
+		color: $fontColorMinor;
+		user-select: none;
+		float: right;
+	}
+
+	.author {
+		display: block;
+		color: $fontColorMinor;
+
+		span {
+			color: $blue;
+		}
+	}
+
+	.message {
+		color: $fontColorMajor;
+		margin: 5px 0;
+	}
+}

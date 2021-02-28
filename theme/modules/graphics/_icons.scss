@@ -1,0 +1,28 @@
+i {
+	// margin-right: 5px;
+	width: 1.25em;
+	text-align: center;
+}
+
+.merged-icon {
+	float: right;
+	position: relative;
+	top: 13px;
+	right: 24px;
+	height: 0;
+	width: 0;
+	cursor: pointer;
+}
+
+a,
+h1,
+h2,
+h3,
+h4,
+hint,
+span,
+label {
+	i {
+		margin-right: 5px;
+	}
+}

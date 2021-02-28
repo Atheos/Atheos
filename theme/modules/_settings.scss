@@ -1,0 +1,34 @@
+.settings {
+	display: flex;
+	border-top: $borderLight;
+
+	table {
+		margin: 0 5px;
+		width: calc(100% - 10px);
+
+		td {
+			border: none;
+			border-bottom: 1px solid #666;
+			padding: 8px 0;
+			position: relative;
+			overflow: unset;
+
+			&:first-child {
+				padding-left: 20px;
+				font-weight: bold;
+			}
+
+			&:not(:first-child) {
+				text-align: center;
+			}
+		}
+
+		select {
+			margin: 0;
+		}
+
+		tr:last-child td {
+			border-top: none;
+		}
+	}
+}

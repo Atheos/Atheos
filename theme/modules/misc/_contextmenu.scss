@@ -1,0 +1,41 @@
+/* CONTEXT MENU */
+
+#contextmenu {
+	display: none;
+	// top: 0;
+	// left: 0;
+	position: fixed;
+	width: 200px;
+	background: #333;
+	z-index: 9999999;
+	border: 3px solid rgba(255, 255, 255, 0.5);
+	box-shadow: 0px 0px 15px 0px rgba(0, 0, 0, .9);
+	overflow-y: auto;
+
+	a {
+		display: block;
+		padding: 5px 5px 7px 5px;
+		margin: 0;
+		user-select: none;
+
+		&:hover {
+			background-color: #4a4a4a;
+		}
+	}
+
+	i {
+		// padding-right: 5px;
+	}
+
+	hr {
+		height: 0;
+		border: none;
+		border-top: 1px solid #666;
+		margin: 3px;
+	}
+
+	.disabled {
+		color: #999;
+		font-style: italic;
+	}
+}

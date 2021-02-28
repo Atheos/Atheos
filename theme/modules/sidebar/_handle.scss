@@ -1,0 +1,99 @@
+.handle {
+	width: $sidebarHandleWidth;
+	height: 100%;
+	z-index: 99999;
+	margin: 0;
+	padding: 0;
+	background: $mideground;
+	cursor: col-resize;
+
+	span {
+		display: block;
+		position: absolute;
+		width: 11px;
+		height: 70px;
+		top: calc(50% - 35px);
+		line-height: 66px;
+		font-size: 20px;
+		text-align: center;
+		letter-spacing: -2px;
+		color: $fontColorMinor;
+	}
+
+	&.unlocked span {
+		width: 30px;
+		background: $mideground;
+		z-index: 10;
+		letter-spacing: 0;
+
+		&::before,
+		&::after {
+			content: '';
+			height: 20px;
+			width: 18px;
+			position: absolute;
+			background-color: $mideground;
+		}
+
+		&::before {
+			top: -6px;
+			border-top: $borderLight;
+		}
+
+		&::after {
+			bottom: -6px;
+			border-bottom: $borderLight;
+		}
+	}
+}
+
+/* Left Sidebar */
+#sb_left .handle {
+	position: absolute;
+	right: 0;
+	border-right:$borderLight;
+
+	&.unlocked span {
+		margin-left: 3px;
+		border-right: $borderLight;
+
+		&::before,
+		&::after {
+			right: -2px;
+			border-right:$borderLight;
+		}
+
+		&::before {
+			transform: skew(0deg, 30deg);
+		}
+
+		&::after {
+			transform: skew(0deg, -30deg);
+		}
+
+	}
+}
+
+#sb_right .handle {
+	border-left: $borderLight;
+
+	&.unlocked span {
+		margin-left: -20px;
+		border-left: $borderLight;
+
+		&::before,
+		&::after {
+			left: -2px;
+			border-left: $borderLight;
+		}
+
+		&::before {
+			transform: skew(0deg, -30deg);
+		}
+
+		&::after {
+			transform: skew(0deg, 30deg);
+		}
+
+	}
+}
