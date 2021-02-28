@@ -57,6 +57,7 @@ class Common {
 		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
 		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
 		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
+		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
