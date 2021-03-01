@@ -62,9 +62,7 @@
 					action: 'list'
 				},
 				settled: function(status, reply) {
-					if (status !== 'success') {
-						return;
-					}
+					if (status !== 'success') return;
 
 					var focused = false;
 					for (var key in reply) {
@@ -72,11 +70,9 @@
 						focused = item.status === 'focus' ? true : focused;
 						atheos.filemanager.openFile(item.path, item.status === 'focus');
 					}
-					if (focused !== true) {
-						var keys = Object.keys(reply);
-						if (keys.length > 0) {
-							atheos.filemanager.openFile(reply[0].path, true);
-						}
+					var keys = Object.keys(reply);
+					if (focused !== true && keys.length > 0) {
+						atheos.filemanager.openFile(reply[0].path, true);
 					}
 
 				}
@@ -273,10 +269,10 @@
 				focus = true;
 			}
 
-			if (self.sessions[path]) {
-				if (focus) self.focus(path);
-				return;
+			if (focus && self.sessions[path]) {
+				return self.focus(path);
 			}
+
 			var ext = pathinfo(path).extension;
 			var mode = atheos.textmode.selectMode(ext);
 
@@ -343,7 +339,6 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Add newly opened file to list
 		//////////////////////////////////////////////////////////////////////80
-
 		add: function(path, session, focus) {
 			if (focus === undefined) {
 				focus = true;
@@ -429,7 +424,6 @@
 				}
 				self.moveTab(self.dropDownMenu, tab, direction);
 			}
-
 			session.listItem.addClass('active');
 		},
 
@@ -452,7 +446,7 @@
 			let session = self.getSession(path);
 			if (isString(session)) return toast('error', session);
 			path = session.path;
-			
+
 			var content = session.getValue();
 			var newContent = content.slice(0);
 
