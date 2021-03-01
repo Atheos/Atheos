@@ -434,8 +434,6 @@
 			data.action = 'save';
 			data.path = path;
 
-			trace(data);
-
 			echo({
 				data: data,
 				settled: function(status, reply) {
