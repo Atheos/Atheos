@@ -306,7 +306,8 @@
 		getSession: function(path) {
 			if (path && !self.sessions[path]) return 'File path not open.';
 			if (!path && !atheos.editor.getActive()) return 'No open files.';
-			return path ? self.sessions[path] : atheos.editor.getActive().getSession();
+			path = path || atheos.editor.getActive().getSession().path;
+			return self.sessions[path];
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -451,7 +452,7 @@
 			let session = self.getSession(path);
 			if (isString(session)) return toast('error', session);
 			path = session.path;
-
+			
 			var content = session.getValue();
 			var newContent = content.slice(0);
 
@@ -459,8 +460,6 @@
 			carbon.publish('active.save', path);
 
 			var handleSuccess = function(modifyTime) {
-				if (typeof session === 'undefined') return;
-
 				session.untainted = newContent;
 				session.serverMTime = modifyTime;
 				session.status = 'current';
