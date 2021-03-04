@@ -1,0 +1,133 @@
+ul.tabList {
+	margin: 0;
+	padding: 10px 0 0 18px;
+	overflow: hidden;
+	list-style-type: none;
+	height: $topBarHeight;
+
+	li {
+		display: block;
+		float: left;
+		padding: 5px 10px 5px;
+		background-color: $colorSmall;
+		margin-right: 28px;
+		z-index: 2;
+		position: relative;
+		cursor: pointer;
+		user-select: none;
+
+		a {
+			display: block;
+			text-align: right;
+			width: 150px;
+			margin-left: -10px;
+			overflow: hidden;
+			direction: rtl;
+			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+			padding-bottom: 1px;
+			cursor: inherit;
+			white-space: nowrap;
+			color: $shade2;
+
+			.subtle {
+				color: $fontColorMinor;
+			}
+
+			&::before {
+				content: '';
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				left: 0;
+				top: 0;
+				background: linear-gradient(to left, transparent 90%, $colorSmall);
+			}
+		}
+
+		.close {
+			display: block;
+			position: absolute;
+			right: -12px;
+			top: 6px;
+			color: $fontColorMinor;
+
+			&:hover {
+				color: $fontColorMajor;
+			}
+		}
+	}
+
+	li::before,
+	li::after {
+		display: block;
+		content: " ";
+		position: absolute;
+		top: 0;
+		height: 100%;
+		width: 44px;
+		background-color: inherit;
+		z-index: -1;
+	}
+
+	li::before {
+		right: -18px;
+		transform: skew(30deg, 0deg);
+		box-shadow: rgba(0, 0, 0, 0.1) 3px 2px 5px, inset rgba(255, 255, 255, 0.09) -1px 0;
+	}
+
+	li::after {
+		left: -10px;
+		transform: skew(-30deg, 0deg);
+		box-shadow: rgba(0, 0, 0, 0.1) -3px 2px 5px, inset rgba(255, 255, 255, 0.09) 1px 0;
+	}
+
+	li:hover {
+		background-color: $colorMinor;
+
+		&::before,
+		&::after {
+			background-color: $colorMinor;
+		}
+
+		a::before {
+			background: linear-gradient(to left, transparent 90%, $colorMinor);
+		}
+	}
+
+	li.active {
+		z-index: 3;
+		background-color: $colorMajor;
+		color: $fontColorMajor;
+
+		&::before,
+		&::after {
+			background-color: $colorMajor;
+			color: $fontColorMajor;
+		}
+
+		a {
+			color: $fontColorMajor;
+
+			.subtle {
+				color: $fontColorMinor;
+			}
+
+			&::before {
+				background: linear-gradient(to left, transparent 90%, #{$colorMajor});
+			}
+		}
+	}
+
+	li.changed {
+		background-color: $green;
+
+		&::before,
+		&::after {
+			background-color: $green;
+		}
+
+		a::before {
+			background: linear-gradient(to left, transparent 90%, #{$green});
+		}
+	}
+}

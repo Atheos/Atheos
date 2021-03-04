@@ -1,0 +1,38 @@
+$shade0: #F5F9F9;
+$shade1: #D5D9DD;
+$shade2: #A5A9AA;
+$shade3: #757577;
+$shade4: #414141;
+$shade5: #353533;
+$shade6: #252525;
+$shade7: #1C1C1E;
+$shade8: #151516;
+$shade9: #010101;
+
+//////////////////////////////////////////////////////////////////////////////80
+//	CSS CLASSES
+//////////////////////////////////////////////////////////////////////////////80
+
+.shade0::before	{ color: $shade0; }
+.shade1::before	{ color: $shade1; }
+.shade2::before	{ color: $shade2; }
+.shade3::before	{ color: $shade3; }
+.shade4::before	{ color: $shade4; }
+.shade5::before	{ color: $shade5; }
+.shade6::before	{ color: $shade6; }
+.shade7::before	{ color: $shade7; }
+.shade8::before	{ color: $shade8; }
+.shade9::before	{ color: $shade9; }
+
+:root {
+	--shade0: $shade0;
+	--shade1: $shade1;
+	--shade2: $shade2;
+	--shade3: $shade3;
+	--shade4: $shade4;
+	--shade5: $shade5;
+	--shade6: $shade6;
+	--shade7: $shade7;
+	--shade8: $shade8;
+	--shade9: $shade9;
+}

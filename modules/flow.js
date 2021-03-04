@@ -1,39 +1,47 @@
 //////////////////////////////////////////////////////////////////////////////80
-// Animation
+// Flow Animations
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Notes:
-// Atheos has a few animations that have either proven insanely difficult in CSS
-// or simply not possible. Creating a single module to allow global access to
-// these animations made the most sense.
-//												- Liam Siira
+// Description: 
+//	Flow contains a few tiny animations that are used throught Atheos that can't
+//	can't be replicated via CSS, by designing as a module, it allows it to be 
+//	used by anything throughout the project.
+//////////////////////////////////////////////////////////////////////////////80
+// Suggestions:
+//	- Add the DragMove logic here to allow further movement
+//////////////////////////////////////////////////////////////////////////////80
+// Usage:
+//	atheos.flow.slide('open', dropDownMenu, 500)
+//	atheos.flow.fade('out', dropDownMenu, 500)
+//
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos,
-		carbon = global.carbon;
-
-	var self = null;
+	let self = false;
 
 	carbon.subscribe('system.loadMinor', () => atheos.flow.init());
 
-
 	atheos.flow = {
 
+		//////////////////////////////////////////////////////////////////////80
+		// Initialize the module
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
+			if (self) return;
 			self = this;
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Slide open and closed animation, think dropdown
+		//////////////////////////////////////////////////////////////////////80
 		slide: function(direction, target, duration = 500) {
-
-			// var ogStyles = target.getAttribute('style');
-
 			//Source: https://w3bits.com/javascript-slidetoggle/
+
 			target.style.overflow = 'hidden';
 			target.style.transitionProperty = 'height, margin, padding';
 			target.style.transitionDuration = duration + 'ms';
@@ -84,19 +92,18 @@
 			}
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Fade animation
+		//////////////////////////////////////////////////////////////////////80
 		fade: function(direction, target, duration = 500) {
-
-			// var ogStyles = target.getAttribute('style');
-
 			//Source: https://w3bits.com/javascript-slidetoggle/
+
 			target.style.transitionProperty = 'opacity';
 			target.style.transitionDuration = duration + 'ms';
 
 			var zeroStyles = function() {
 				target.style.opacity = 0;
 				target.style.removeProperty('display');
-				// target.style.display = '';
-
 			};
 
 			if (direction === 'in') {
@@ -109,17 +116,15 @@
 				}, duration);
 
 			} else if (direction === 'out' || direction === 'remove') {
-				// SlideUp (Close)
 				zeroStyles();
 				window.setTimeout(() => {
-						target.style.display = 'none';
-						if (direction === 'remove') {
-							target.remove();
-						}
-					},
-					duration);
+					target.style.display = 'none';
+					if (direction === 'remove') {
+						target.remove();
+					}
+				}, duration);
 			}
 		}
 	};
 
-})(this);
+})();

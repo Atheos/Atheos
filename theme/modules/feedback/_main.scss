@@ -1,0 +1,39 @@
+#overlay {
+	display: block;
+	position: fixed;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.6);
+	z-index: 99998;
+}
+
+#alert,
+#modal_wrapper {
+	.drag,
+	.close {
+		position: absolute;
+		font-size: $fontSizeH2;
+		padding: 0;
+		color: $fontColorMinor;
+		top: 5px;
+	}
+
+	.drag {
+		right: 28px;
+		cursor: grab;
+
+		&.active {
+			cursor: grabbing;
+		}
+	}
+
+	.close {
+		right: 5px;
+		padding: 0;
+		cursor: pointer;
+	}
+}
+
+@import "alert", "modal", "toast";

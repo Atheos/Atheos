@@ -25,12 +25,11 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "authenticate":
 		if ($username && $password) {
-			$theme = POST("theme");
 			$languages = $i18n->codes();
 			if (!$language || !isset($languages[$language])) $language = "en";
 
 			// theme
-			$User->authenticate($username, $password, $language, $theme);
+			$User->authenticate($username, $password, $language);
 		} elseif (!$username) {
 			Common::send("error", "Missing username.");
 		} else {

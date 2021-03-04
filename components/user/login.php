@@ -36,23 +36,6 @@
 		<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
 
 		<div id="login_options">
-			<label for"theme"><i class="fas fa-images"></i> <?php echo i18n("theme"); ?></label>
-			<select name="theme" id="theme">
-				<?php foreach ($themes as $theme) {
-					if (file_exists(THEMES."/" . $theme . "/theme.json")) {
-						$data = file_get_contents(THEMES."/" . $theme . "/theme.json");
-						$data = json_decode($data, true);
-
-						$option = "<option value=\"$theme\"";
-						$option .= ($theme === THEME) ? " selected>" : ">";
-						$option .= $data["name"] !== "" ? $data["name"] : ucfirst($theme);
-
-						$option .= "</option>" . PHP_EOL;
-
-						echo $option;
-					}
-				} ?>
-			</select>
 			<label for="language"><i class="fas fa-language"></i> <?php echo i18n("language"); ?></label>
 			<select name="language" id="language">
 				<?php

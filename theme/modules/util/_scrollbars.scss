@@ -1,0 +1,43 @@
+::-webkit-scrollbar {
+	width: $scrollbarWidth;
+	height: $scrollbarWidth;
+}
+
+table {
+	::-webkit-scrollbar {
+		display: none;
+	}
+
+	scrollbar-width: none;
+}
+
+::-webkit-scrollbar-track-piece {
+	background-color: transparent;
+}
+
+::-webkit-scrollbar-thumb:vertical {
+	height: 5px;
+	background-color: $shade4;
+}
+
+::-webkit-scrollbar-thumb:vertical:hover {
+	background-color: $shade3;
+}
+
+::-webkit-scrollbar-thumb:horizontal {
+	width: 5px;
+	background-color: $shade4;
+}
+
+::-webkit-scrollbar-thumb:horizontal:hover {
+	background-color: $shade3;
+}
+
+::-webkit-scrollbar-corner {
+	background-color: transparent;
+}
+
+* {
+	scrollbar-width: thin;
+	scrollbar-color: $shade4 transparent;
+}

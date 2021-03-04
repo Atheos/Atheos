@@ -9,38 +9,33 @@
 // The System Module initializes the core Atheos object and puts the engine in
 // motion, calling the initilization of other modules, and publishing the
 // Amplify 'system.load[]' events.
-//
-//												- Liam Siira
+//////////////////////////////////////////////////////////////////////////////80
+// Suggestions:
+//	Better customization of modifer keys
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
-	var running = false;
+(function() {
+	let self = false;
 
-	var atheos = global.atheos = {
-		
+	window.atheos = {
+
 		path: window.location.href,
 		controller: 'controller.php',
 		dialog: 'dialog.php',
 
+		//////////////////////////////////////////////////////////////////////80
+		// Initializes Atheos
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			window.addEventListener('error', atheos.error);
-			if (running) {
-				return;
-			}
+			if (self) return;
+			self = this;
 
-			// global.i18n = atheos.i18n.translate;
 			atheos.i18n.init();
 			atheos.common.init();
 
-			//Synthetic Login Overlay
-			if (document.querySelector('#login')) {
-				global.synthetic.init();
-				atheos.toast.init();
-				atheos.user.init();
-			} else if (document.querySelector('#installer')) {
-				global.synthetic.init();
-				atheos.install.init();
-			} else {
+			// User is logged in
+			if (!(oX('#login') || oX('#installer'))) {
 				// Atheos has three levels of priority loading:
 				//	Critical components should load on major
 				//	Features should load on minor
@@ -51,6 +46,17 @@
 
 				// Settings are initialized last in order to ensure all listeners are attached
 				atheos.settings.init();
+
+			} else {
+				atheos.toast.init();
+				synthetic.init();
+				if (oX('#installer')) {
+					// Atheos hasn't been installed yet
+					atheos.install.init();
+				} else {
+					// Atheos is installed, user is logging in
+					atheos.user.init();
+				}
 			}
 
 			log([
@@ -63,12 +69,10 @@
 			].join('\n'));
 		}
 	};
-	//////////////////////////////////////////////////////////////////////
-	// Init
-	//////////////////////////////////////////////////////////////////////
-	document.addEventListener('DOMContentLoaded', function() {
-		atheos.init();
-		running = true;
-	});
 
-})(this);
+	//////////////////////////////////////////////////////////////////////////80
+	// Document listener
+	//////////////////////////////////////////////////////////////////////////80
+	document.addEventListener('DOMContentLoaded', atheos.init);
+
+})();

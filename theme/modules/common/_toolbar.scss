@@ -1,0 +1,11 @@
+toolbar {
+	display: block;
+	padding: 2px 8px;
+	background-color: $foreground;
+	text-align: right;
+}
+
+#codegit+toolbar,
+.settings+toolbar {
+	border-top: $borderLight;
+}

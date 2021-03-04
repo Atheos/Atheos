@@ -1,0 +1,9 @@
+{
+	"author": ["Atheos"],
+	"description": "The default Atheos theme",
+	"name": "Atheos",
+	"status": "available",
+	"category": "dark",
+	"url": "https://github.com/Atheos/Atheos.git",
+	"version": "4.0.0"
+}

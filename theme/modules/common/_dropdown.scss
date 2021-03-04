@@ -1,0 +1,69 @@
+$color: #3694d7;
+$timing: 0.3s;
+
+dropdown {
+	width: 100%;
+	position: absolute;
+	top: 0;
+	left: 0;
+	max-height: 2em;
+	cursor: pointer;
+	text-align: left;
+	overflow: hidden;
+	outline: none;
+	transition: $timing all ease-in-out;
+	z-index: 99;
+
+	input:focus+label {
+		background: #def;
+	}
+
+	input {
+		width: 1px;
+		height: 1px;
+		display: inline-block;
+		position: absolute;
+		opacity: 0.01;
+	}
+
+	label {
+		height: 2em;
+		line-height: 2em;
+		padding-left: 1em;
+		padding-right: 3em;
+		cursor: pointer;
+		position: relative;
+		transition: $timing color ease-in-out;
+
+		&:nth-child(2) {
+			margin-top: 2em;
+			border-top: 0.06em solid #d9d9d9;
+		}
+	}
+
+	input:checked+label {
+		display: block;
+		position: absolute;
+		top: 0;
+		width: 100%;
+
+		&:nth-child(2) {
+			margin-top: 0;
+			position: relative;
+		}
+	}
+
+	&.expanded {
+		max-height: 15em;
+
+		label {
+			&:hover {
+				color: $color;
+			}
+		}
+
+		input:checked+label {
+			color: $color;
+		}
+	}
+}

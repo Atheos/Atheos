@@ -1,108 +1,100 @@
 //////////////////////////////////////////////////////////////////////////////80
-// User Alerts / Messages
+// Toast Status Messages
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Notes: 
-// Currently, the langauge translations are done on each call to the Toast
-// message, even though I think it would make more sense for Toast to handle
-// the translation. For Future consideration.
+// Description: 
+//	Toast provides the ability to give inactive/passive feedback to the user
+//	utilizing a straightforward and simple call with four status types, and 
+//	short detailed message. Clicking the message will close it instantly.
+//////////////////////////////////////////////////////////////////////////////80
+// Suggestions:
+//	- Language translation isn't handled very well
+//	- Allow user settings of durations per toast type
+//	- Modify all existing calls to utilize simpler calls
+//////////////////////////////////////////////////////////////////////////////80
+// Usage:
+//	- success: Show a success message with a green circle for 3 seconds
+//  - warning: Show a warning message with an orange circle for 5 seconds
+//	- error: Show an error message with a red circle for 10 seconds
+//  - notice: Show a notice message with a blue circle for 3 seconds
 //
-// The toast messages should have settings opts to allow the user to choose 
-// durations, and whether they auto close or not.
+// 	toast('success', 'Everything is going to be okay.');
+// 	toast('warning', 'Something is wrong with the system.');
+// 	toast('notice',  'Nevermind, it's all better now.');
+// 	toast('error',   'I'm afraid, Dave, I can feel it.');
 //
-//												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
-
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
+	let self = false;
 
 	carbon.subscribe('system.loadMinor', () => atheos.toast.init());
 
 	atheos.toast = {
 
-		global: {
-			position: 'bottom right', // top-left, top-center, top-right, middle-left, middle-center, middle-right
-			text: 'Message undefined'
-		},
-		types: {
-			success: {
-				icon: 'check-circle',
-				stayTime: 3000,
-			},
-			error: {
-				icon: 'exclamation-circle',
-				stayTime: 10000,
-			},
-			warning: {
-				icon: 'exclamation-triangle',
-				stayTime: 5000,
-			},
-			notice: {
-				icon: 'info-circle',
-				stayTime: 3000,
-			},
+		container: null,
+
+		stayTimes: {
+			success: 3000,
+			error: 1000,
+			warning: 5000,
+			notice: 3000,
 		},
 
 		init: function() {
+			if (self) return;
 			self = this;
-
 			self.container = oX('toaster');
 
-			fX('toast').on('click', function(e) {
-				var toast = e.target.closest('toast');
+			fX('toast').on('click', (e) => {
+				let toast = e.target.closest('toast');
 				self.hide(toast);
 			});
 		},
 
 		create: function(type, text) {
-			var html = `<toast><i class="${ type } fas fa-circle"></i><p class="message">${ text || global.text }</p></toast>`;
+			var html = `<toast><i class="${ type } fas fa-circle"></i><p class="message">${ text }</p></toast>`;
 
 			let div = document.createElement('div');
 			div.innerHTML = html;
 			return div.firstChild;
 		},
 
-		showToast: function(opts) {
-			opts = extend(self.global, opts);
-			opts.text = opts.raw ? opts.text : i18n(opts.text);
+		showToast: function(type, text, stayTime) {
 
 			// declare variables
-			var toast = self.create(opts.type, opts.text);
+			var toast = self.create(type, text);
 
 			self.container.append(toast);
 
 			setTimeout(function() {
 				toast.classList.add('active');
-				setTimeout(() => self.hide(toast), opts.stayTime);
+				setTimeout(() => self.hide(toast), stayTime);
 			}, 10);
 		},
 
-		show: function(type, text, opts) {
+		show: function(type, text, raw) {
 			if (isObject(type)) {
-				opts = type;
-				type = opts.status;
-			} else {
-				opts = isObject(opts) ? opts : {};
+				text = type.text || type.message;
+				raw = type.raw || false;
+				type = type.status;
 			}
 
 			if (isObject(text)) {
 				text = text.text;
 			}
 
-			if (self.types.hasOwnProperty(type)) {
-				opts = extend(self.types[type], opts);
-				opts.type = type;
-				opts.text = opts.message || opts.text || text;
-				self.showToast(opts);
-			}
+			if (!(type in self.stayTimes)) return;
+
+			text = text || 'Message undefined.';
+			text = raw ? text : i18n(text);
+
+			self.showToast(type, text, self.stayTimes[type]);
 
 		},
 		hide: function(toast) {
@@ -111,6 +103,6 @@
 		}
 	};
 
-	global.toast = atheos.toast.show;
+	window.toast = atheos.toast.show;
 
-})(this);
+})();

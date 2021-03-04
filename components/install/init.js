@@ -5,74 +5,54 @@
 // warranty under the MIT License. See [root]/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos,
-		echo = global.echo;
-
-	var self = null;
+	var self = false;
 
 	atheos.install = {
 
-		form: oX('#install'),
-		controller: 'components/user/controller.php',
-		dialog: 'components/user/dialog.php',
-
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		// Initilization
-		//////////////////////////////////////////////////////////////////
-
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
+			fX('#retest').on('click', () => window.location.reload());
+
+			if (self) return;
 			self = this;
-			if (!self.form) {
-				return;
-			}
-			// document.body.style.overflow = 'auto';
 
-			var timezone = self.getTimeZone();
-			oX('[name=timezone]').findAll('option').forEach(function(option) {
-				if (option.text().indexOf(timezone) > -1) {
-					option.attr('selected', 'selected');
-				}
-			});
+			let form = oX('#install');
+			if (!form) return;
 
-			self.form.on('submit', self.checkForm);
+			let timezone = Intl.DateTimeFormat().resolvedOptions().timeZone,
+				option = oX('select[name="timezone"] option[value="' + timezone + '"]');
+			if (option) option.attr('selected', 'selected');
+
+			form.on('submit', self.checkForm);
 		},
 
 		checkForm: function(e) {
 			e.preventDefault();
 
-			// Check empty fields
-			var emptyFields = self.form.findAll('input').filter((input) => {
-				return (input.value() === '' && input.attr('name') !== 'path');
-			});
+			let data = serialize(e.target);
 
-			if (emptyFields.length > 0) {
-				alert('All fields must be filled out.');
-				return;
-			}
+			let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
+				vPass = data.password === data.validate;
 
-			// Check password
-			var passwordsMatch = oX('input[name="password"]').value() === oX('input[name="confirm"]').value();
-			if (!passwordsMatch) {
-				alert('Passwords do not match.');
-				return;
-			}
+			if (!vUser) return toast('error', 'Username must be an alphanumeric string');
+			if (!vPass) return toast('error', 'Passwords do not match.');
+
+			if (data.projectName.length === 0) return toast('error', 'Missing Project Name.');
+			if (data.projectPath.length === 0) return toast('error', 'Missing Project Path.');
 
 			// Check Path
-			var projectPath = oX('input[name="projectPath"]').value();
-			var absolutePath = projectPath.indexOf('/') === 0 ? true : false;
-
-			if (absolutePath) {
-				var dialog = {
+			if (data.projectPath.indexOf('/') === 0) {
+				let dialog = {
 					banner: 'Do you really want to create project with an absolute path?',
-					data: projectPath,
+					data: data.projectPath,
 					actions: {
-						'Yes': function() {
+						'Yes': function(data) {
 							self.install();
 						},
 						'No': function() {}
@@ -80,22 +60,26 @@
 				};
 				atheos.alert.show(dialog);
 			} else {
-				self.install();
+				self.install(data);
 			}
 		},
 
-		install: function() {
-			var data = serializeForm(self.form.el);
+		//////////////////////////////////////////////////////////////////////80
+		// Post install data
+		//////////////////////////////////////////////////////////////////////80
+		install: function(data) {
 			echo({
 				url: 'components/install/process.php',
 				data,
-				success: function(reply) {
-					if (reply === 'success') {
-						window.location.reload();
+				settled: function(status, reply) {
+					log(status,reply);
+					if (status === 'success') {
+						setTimeout(() => window.location.reload(), 100);
+						toast(status, reply);
 					} else {
 						var dialog = {
 							banner: 'An error occurred:',
-							data: reply,
+							data: reply.text,
 							actions: {
 								'Okay': function() {}
 							}
@@ -105,25 +89,6 @@
 				}
 			});
 		},
-
-		getTimeZone: function() {
-			var num = new Date().getTimezoneOffset();
-			if (num === 0) {
-				return 'GMT';
-			} else {
-				var hours = Math.floor(num / 60);
-				var minutes = Math.floor((num - (hours * 60)));
-
-				if (hours < 10) {
-					hours = '0' + Math.abs(hours);
-				}
-				if (minutes < 10) {
-					minutes = '0' + Math.abs(minutes);
-				}
-
-				return 'GMT' + (num < 0 ? '+' : '-') + hours + ':' + minutes;
-			}
-		}
 	};
 
-})(this);
+})();

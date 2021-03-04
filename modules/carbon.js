@@ -2,19 +2,40 @@
 // Carbon Custom Events
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
-// warranty under the MIT License. See [root]/license.md for more.
-// This information must remain intact.
+//	warranty under the MIT License. See [root]/license.md for more.
+//	This information must remain intact.
+// Copyright (c) 2013 appendTo LLC - https://amplifyjs.com/
 //////////////////////////////////////////////////////////////////////////////80
-// Copyright (c) 2013 appendTo LLC.
-// Source: https://amplifyjs.com/
+// Description: 
+//	Carbon provides methods to facilitate the Publish and Subscribe messaging
+//	pattern in your front-end application. A component can publish events with
+//	arguements that multiple client components can subscribe to; it encourages
+//	loose coupling of components, resulting in less brittle/more reusable code.
+//////////////////////////////////////////////////////////////////////////////80
+// Suggestions:
+//	- Reimplement the ability to pass context
+//////////////////////////////////////////////////////////////////////////////80
+// Usage:
+//	- list: Lists out all currently active subscriptions
+//	- reset: resets carbon, deleting all subscriptions
+//  - sub: subscribes to an event, or multiple comma-delimited events
+//  - pub: publishes an event with arguements
+//  - del: deletes a subscribtion
+//
+// 	carbon.subscribe('system.loadExtra', () => atheos.plugin.init());
+//
+//	carbon.sub('chrono.kilo', function() {
+//		console.log("This will log every 1 second");
+//	}
+//
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
 	var subs = {};
 
-	global.carbon = {
+	window.carbon = {
 		list: () => subs,
 		reset: () => subs = {},
 		pub: function(topic) {
@@ -30,7 +51,6 @@
 			}
 		},
 
-		// Topics need to be comma delimited
 		sub: function(topic, callback) {
 			var topics = topic.split(','),
 				i = topics.length;
@@ -65,4 +85,4 @@
 	carbon.subscribe = carbon.sub;
 	carbon.unsubscribe = carbon.del;
 
-}(this));
+}());

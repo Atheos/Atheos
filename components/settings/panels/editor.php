@@ -48,21 +48,10 @@
 		<td><?php echo i18n("highlightActiveLine"); ?></td>
 		<td>
 			<toggle>
-				<input id="editor_highlightLine_true" data-setting="editor.highlightLine" value="true" name="editor.highlightLine" type="radio" checked />
+				<input id="editor_highlightLine_true" data-setting="editor.highlightActiveLine" value="true" name="editor.highlightActiveLine" type="radio" checked />
 				<label for="editor_highlightLine_true"><?php echo i18n("enabled") ?></label>
-				<input id="editor_highlightLine_false" data-setting="editor.highlightLine" value="false" name="editor.highlightLine" type="radio" />
+				<input id="editor_highlightLine_false" data-setting="editor.highlightActiveLine" value="false" name="editor.highlightActiveLine" type="radio" />
 				<label for="editor_highlightLine_false"><?php echo i18n("disabled"); ?></label>
-			</toggle>
-		</td>
-	</tr>
-	<tr>
-		<td><?php echo i18n("indentGuides"); ?></td>
-		<td>
-			<toggle>
-				<input id="editor_indentGuides_true" data-setting="editor.indentGuides" value="true" name="editor.indentGuides" type="radio" checked />
-				<label for="editor_indentGuides_true"><?php echo i18n("enabled"); ?></label>
-				<input id="editor_indentGuides_false" data-setting="editor.indentGuides" value="false" name="editor.indentGuides" type="radio" />
-				<label for="editor_indentGuides_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
 	</tr>
@@ -70,9 +59,9 @@
 		<td><?php echo i18n("printMarginShow"); ?></td>
 		<td>
 			<toggle>
-				<input id="editor_printMargin_true" data-setting="editor.printMargin" value="true" name="editor.printMargin" type="radio" />
+				<input id="editor_printMargin_true" data-setting="editor.showPrintMargin" value="true" name="editor.showPrintMargin" type="radio" />
 				<label for="editor_printMargin_true"><?php echo i18n("enabled"); ?></label>
-				<input id="editor_printMargin_false" data-setting="editor.printMargin" value="false" name="editor.printMargin" type="radio" checked />
+				<input id="editor_printMargin_false" data-setting="editor.showPrintMargin" value="false" name="editor.showPrintMargin" type="radio" checked />
 				<label for="editor_printMargin_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
@@ -94,16 +83,49 @@
 		</td>
 	</tr>
 	<tr>
+		<td><?php echo i18n("indentGuides"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_indentGuides_true" data-setting="editor.displayIndentGuides" value="true" name="editor.displayIndentGuides" type="radio" checked />
+				<label for="editor_indentGuides_true"><?php echo i18n("enabled"); ?></label>
+				<input id="editor_indentGuides_false" data-setting="editor.displayIndentGuides" value="false" name="editor.displayIndentGuides" type="radio" />
+				<label for="editor_indentGuides_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>
+	<tr>
+		<td><?php echo i18n("foldWidgets"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_showFoldWidgets_true" data-setting="editor.showFoldWidgets" value="true" name="editor.showFoldWidgets" type="radio" />
+				<label for="editor_showFoldWidgets_true"><?php echo i18n("enabled"); ?></label>
+				<input id="editor_showFoldWidgets_false" data-setting="editor.showFoldWidgets" value="false" name="editor.showFoldWidgets" type="radio" checked />
+				<label for="editor_showFoldWidgets_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>	
+	<tr>
 		<td><?php echo i18n("wrap"); ?></td>
 		<td>
 			<toggle>
-				<input id="editor_wrapMode_true" data-setting="editor.wrapMode" value="true" name="editor.wrapMode" type="radio" />
+				<input id="editor_wrapMode_true" data-setting="editor.useWrapMode" value="true" name="editor.useWrapMode" type="radio" />
 				<label for="editor_wrapMode_true"><?php echo i18n("enabled"); ?></label>
-				<input id="editor_wrapMode_false" data-setting="editor.wrapMode" value="false" name="editor.wrapMode" type="radio" checked />
+				<input id="editor_wrapMode_false" data-setting="editor.useWrapMode" value="false" name="editor.useWrapMode" type="radio" checked />
 				<label for="editor_wrapMode_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
 	</tr>
+	<tr>
+		<td><?php echo i18n("tabs_soft"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_softTabs_true" data-setting="editor.useSoftTabs" value="true" name="editor.useSoftTabs" type="radio" />
+				<label for="editor_softTabs_true"><?php echo i18n("enabled"); ?></label>
+				<input id="editor_softTabs_false" data-setting="editor.useSoftTabs" value="false" name="editor.useSoftTabs" type="radio" checked />
+				<label for="editor_softTabs_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>	
 	<tr>
 		<td><?php echo i18n("tabs_size"); ?></td>
 		<td>
@@ -116,17 +138,6 @@
 				<option value="7">7</option>
 				<option value="8">8</option>
 			</select>
-		</td>
-	</tr>
-	<tr>
-		<td><?php echo i18n("tabs_soft"); ?></td>
-		<td>
-			<toggle>
-				<input id="editor_softTabs_true" data-setting="editor.softTabs" value="true" name="editor.softTabs" type="radio" />
-				<label for="editor_softTabs_true"><?php echo i18n("enabled"); ?></label>
-				<input id="editor_softTabs_false" data-setting="editor.softTabs" value="false" name="editor.softTabs" type="radio" checked />
-				<label for="editor_softTabs_false"><?php echo i18n("disabled"); ?></label>
-			</toggle>
 		</td>
 	</tr>
 </table>

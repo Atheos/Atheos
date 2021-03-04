@@ -1,0 +1,74 @@
+/* PROBE */
+
+#probe_results {
+	// display: none;
+	height: 250px;
+	overflow: scroll !important;
+	border: 1px solid #262626;
+	padding: 0;
+	max-width: 800px;
+
+	div {
+		padding: 4px 6px;
+		overflow: hidden;
+
+		strong {
+			font-weight: 700;
+			color: $blue;
+		}
+
+		a {
+			display: block;
+			white-space: nowrap;
+
+			span:nth-child(1) {
+				padding: 4px 6px 3px 6px;
+				color: $teal;
+				display: inline-block;
+			}
+
+			&:hover {
+				background-color: rgb(26, 26, 26);
+			}
+		}
+	}
+}
+
+#probe_processing {
+	display: none;
+}
+
+#probe_table tr td {
+	border: none;
+	padding: 0;
+}
+
+#filter_wrapper {
+	position: absolute;
+	z-index: 9999;
+	top: 0;
+	left: 0;
+	bottom: 0;
+	right: 0;
+	background-color: $foreground;
+	display: none;
+}
+
+#finder-inner-wrapper {
+	left: 0;
+	right: 30px;
+	top: 5px;
+	bottom: 3px;
+	position: absolute;
+}
+
+#filter_input {
+	display: inline-block;
+	width: calc(100% - 65px);
+	margin: 2px 5px;
+}
+
+#filter_strategy {
+	top: 35px;
+	right: 0;
+}

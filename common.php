@@ -57,19 +57,17 @@ class Common {
 		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
 		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
 		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
-		if (!defined("THEMES")) define("THEMES", BASE_PATH . "/themes");
-		if (!defined("THEME")) define("THEME", "atheos");
+		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
-		global $components; global $plugins; global $themes;
-		// Read Components, Plugins, Themes
+		global $components; global $plugins;
+		// Read Components & Plugins
 		$components = Common::readDirectory(COMPONENTS);
 		$plugins = Common::readDirectory(PLUGINS);
-		$themes = Common::readDirectory(THEMES);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
