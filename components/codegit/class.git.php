@@ -44,14 +44,16 @@ class CodeGit {
 
 	function __construct($path = '', $repo = false) {
 		$this->activeUser = SESSION("user");
-		
-		$this->path = $path;
-		$this->repo = $repo ? $repo : $this->findRepo($path);
 
-		if (!is_dir($this->repo)) {
+		$repo = $repo ?: $this->findRepo($path) ?: $path;
+
+		if (!is_dir($repo)) {
 			Common::send("error", i18n("path_missing"));
 		}
-		chdir($this->repo);
+		chdir($repo);
+
+		$this->path = $path;
+		$this->repo = $repo;
 
 		foreach (getConfig() as $name => $value) {
 			$this->execute("git config " . $name . " " . $value);
@@ -59,7 +61,6 @@ class CodeGit {
 	}
 
 	public function findRepo($path) {
-		$path = $this->path;
 		if (!is_dir($path)) {
 			$path = pathinfo($path, PATHINFO_DIRNAME);
 		}
@@ -77,7 +78,7 @@ class CodeGit {
 			return false;
 		}
 	}
-	
+
 	// The new parsing status function
 	private function parseChanges($array) {
 		$added = array();
