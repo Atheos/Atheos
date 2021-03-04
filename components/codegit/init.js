@@ -251,9 +251,10 @@
 						path
 					},
 					settled: function(status, reply) {
-						toast(reply);
+						toast(status, reply);
 						if (status === 'success') {
 							self.addRepoIcon(path);
+							atheos.filemanager.rescan(path);
 							atheos.modal.unload();
 						}
 					}
