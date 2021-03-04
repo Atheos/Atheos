@@ -110,7 +110,6 @@
 
 		publish: function(setting, value) {
 			var boolean = (value === 'true');
-			var int = (!isNaN(parseFloat(value)) && isFinite(value)) ? parseInt(value, 10) : 0;
 
 			if (value === null) {
 				atheos.toast.alert('You Must Choose A Value');
@@ -121,27 +120,38 @@
 				case 'active.loopBehavior':
 					atheos.active.loopBehavior = value;
 					break;
+					
 				case 'editor.theme':
 					atheos.editor.setTheme(value);
 					break;
 				case 'editor.fontSize':
 					atheos.editor.setFontSize(value);
 					break;
-				case 'editor.highlightLine':
-					atheos.editor.setHighlightLine(value);
+				case 'editor.highlightActiveLine':
+					atheos.editor.setHighlightActiveLine(value);
 					break;
-				case 'editor.indentGuides':
-					atheos.editor.setIndentGuides(boolean);
-					break;
-				case 'editor.printMargin':
-					atheos.editor.setPrintMargin(boolean);
+				case 'editor.showPrintMargin':
+					atheos.editor.setShowPrintMargin(value);
 					break;
 				case 'editor.printMarginColumn':
-					atheos.editor.setPrintMarginColumn(int);
+					atheos.editor.setPrintMarginColumn(value);
 					break;
-				case 'editor.wrapMode':
-					atheos.editor.setWrapMode(boolean);
+				case 'editor.displayIndentGuides':
+					atheos.editor.setDisplayIndentGuides(value);
 					break;
+				case 'editor.showFoldWidgets':
+					atheos.editor.setShowFoldWidgets(value);
+					break;
+				case 'editor.useWrapMode':
+					atheos.editor.setUseWrapMode(value);
+					break;
+				case 'editor.useSoftTabs':
+					atheos.editor.setUseSoftTabs(value);
+					break;
+				case 'editor.tabSize':
+					atheos.editor.setTabSize(value);
+					break;
+					
 				case 'filemanager.showHidden':
 					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;
@@ -160,12 +170,6 @@
 				case 'sidebars.rightTrigger':
 					atheos.sidebars.rightTrigger = value;
 					break;
-				case 'editor.softTabs':
-					atheos.editor.setSoftTabs(boolean);
-					break;
-				case 'editor.tabSize':
-					atheos.editor.setTabSize(value);
-					break;
 			}
 		},
 
@@ -176,7 +180,7 @@
 			if (!key || (typeof(value) === 'undefined')) {
 				return;
 			}
-			
+
 			echo({
 				url: atheos.controller,
 				data: {

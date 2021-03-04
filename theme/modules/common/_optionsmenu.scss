@@ -1,0 +1,35 @@
+.options-menu {
+	position: absolute;
+	z-index: 9999;
+	background-color: $background;
+	border: $borderLight;
+
+	td {
+		padding: 0;
+		margin: 0;
+		vertical-align: unset;
+		border: none;
+	}
+
+	li {
+		box-shadow: inset 0 0 0 1px $foreground;
+		padding: 0;
+		color: $fontColorMinor;
+
+		a {
+			display: block;
+			padding: 10px 5px;
+		}
+
+		&.active {
+			font-weight: 700;
+			background: $highlight;
+			color: white;
+		}
+
+		&:hover {
+			background-color: $highlight;
+			color: white;
+		}
+	}
+}

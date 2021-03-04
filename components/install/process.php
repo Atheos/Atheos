@@ -13,100 +13,57 @@
 //////////////////////////////////////////////////////////////////////////////80
 // Paths
 //////////////////////////////////////////////////////////////////////////////80
-$data = $_POST;
-
-$path = $data["path"] ?: false;
-
+require_once("../../common.php");
 $rel = str_replace("/components/install/process.php", "", $_SERVER['REQUEST_URI']);
+$config = BASE_PATH . "/config.php";
 
-$workspace = $path . "/workspace";
-$users = $path . "/data/users.json";
-$projects = $path . "/data/projects.json";
-$analytics = $path . "/data/analytics.db.json";
-
-$config = $path . "/config.php";
-
-//////////////////////////////////////////////////////////////////////////////80
-// Functions
-//////////////////////////////////////////////////////////////////////////////80
-
-function saveFile($file, $data) {
-	$write = fopen($file, "w") or die("Unable to open file:$file");
-	fwrite($write, $data);
-	fclose($write);
-}
-
-function saveJSON($file, $data) {
-	$data = json_encode($data, JSON_PRETTY_PRINT);
-	saveFile($file, $data);
-}
-
-function cleanUsername($username) {
-	return strtolower(preg_replace("#[^A-Za-z0-9\-\_\@\.]#", "", $username));
-}
-
-function isAbsPath($path) {
-	return ($path[0] === "/" || $path[1] === ":") ? true : false;
-}
-
-function cleanPath($path) {
-	// prevent Poison Null Byte injections
-	$path = str_replace(chr(0), "", $path);
-
-	// prevent escaping out of the workspace
-	while (strpos($path, "../") !== false) {
-		$path = str_replace("../", "", $path);
-	}
-
-	return $path;
-}
 
 //////////////////////////////////////////////////////////////////////////////80
 // Verify no overwrites
 //////////////////////////////////////////////////////////////////////////////80
-
-if (!file_exists($users) && !file_exists($projects)) {
-	//////////////////////////////////////////////////////////////////
+if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/data/projects.json")) {
+	
+	//////////////////////////////////////////////////////////////////////////80
 	// Get POST responses
-	//////////////////////////////////////////////////////////////////
-
-	$username = cleanUsername($data["username"]);
-	$password = password_hash($data["password"], PASSWORD_DEFAULT);
-	$projectName = $data["projectName"] ?: false;
-	$projectPath = $data["projectPath"] ?: $projectName;
-	$timezone = $data["timezone"] ?: false;
-	$timezone = preg_replace('/[^a-zA-Z\/_\+]/', "", $timezone);
-	$development = $data["development"] ?: "false";
-	$authorized = $data["authorized"] ?: "undecided";
+	//////////////////////////////////////////////////////////////////////////80
+	$username = POST("username");
+	$password = POST("username");
+	$projectName = POST("projectName") ?: false;
+	$projectPath = POST("projectPath") ?: $projectName;
+	$timezone = POST("timezone") ?: "UTC";
+	$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?: "en";
+	$development = POST("development") ?: "false";
+	$authorized = POST("analytics") ?: "false";
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Create Projects files
+	// Create Projects filesue
 	//////////////////////////////////////////////////////////////////////////80
 
-	$projectPath = cleanPath($projectPath);
+	$password = password_hash($password, PASSWORD_DEFAULT);
+	$projectPath = Common::cleanPath($projectPath);
 
-	if (isAbsPath($projectPath)) {
+	if (Common::isAbsPath($projectPath)) {
 		if (substr($projectPath, -1) === "/") {
 			$projectPath = substr($projectPath, 0, strlen($projectPath)-1);
 		}
 		if (!file_exists($projectPath)) {
 			if (!mkdir($projectPath . "/", 0755, true)) {
-				die("Unable to create Absolute Path");
+				Common::send("error", "Unable to create Absolute Path");
 			}
 		} else {
 			if (!is_writable($projectPath) || !is_readable($projectPath)) {
-				die("No Read/Write Permission");
+				Common::send("error", "No Read/Write Permission");
 			}
 		}
 
 	} else {
 		$projectPath = str_replace(" ", "_", preg_replace('/[^\w\-\.]/', '', $projectPath));
-		mkdir($workspace . "/" . $projectPath);
+		if (!file_exists(WORKSPACE . "/" . $projectPath)) mkdir(WORKSPACE . "/" . $projectPath);
 	}
 
-	$projectData = array($projectPath => $projectName);
+	$projectData = array($projectName => $projectPath);
 
-	saveJSON($projects, $projectData);
+	Common::save("projects.db", $projectData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Users file
@@ -121,7 +78,7 @@ if (!file_exists($users) && !file_exists($projects)) {
 		"userACL" => "full"
 	);
 
-	saveJSON($users, $userData);
+	Common::save("users", $userData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create analytics cache
@@ -136,13 +93,10 @@ if (!file_exists($users) && !file_exists($projects)) {
 		"client_os" => false,
 		"location" => $timezone,
 		"language" => false,
-		"authorized" => $authorized,
 		"plugins" => array()
 	);
 
-	saveJSON($analytics, $analyticsData);
-
-
+	Common::save("analytics.db", $analyticsData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Config
@@ -165,9 +119,6 @@ define("BASE_PATH", __DIR__);
 // BASE URL TO ATHEOS (without trailing slash)
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
-// THEME : atheos, modern or clear (look at /themes)
-define("THEME", "atheos");
-
 // SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
 define("LIFETIME", false);
 
@@ -181,6 +132,9 @@ try {
 // DEVELOPMENT MODE
 define("DEVELOPMENT", ' . $development . ');
 
+// ANONYMOUS ANALYTICS
+define("ANALYTICS", ' . $authorized . ');
+
 // EXTERNAL AUTHENTICATION
 // define("AUTH_PATH", "/path/to/customauth.php");
 
@@ -191,7 +145,6 @@ define("DEVELOPMENT", ' . $development . ');
 // PATHS
 define("COMPONENTS", BASE_PATH . "/components");
 define("PLUGINS", BASE_PATH . "/plugins");
-define("THEMES", BASE_PATH . "/themes");
 define("DATA", BASE_PATH . "/data");
 define("WORKSPACE", BASE_PATH . "/workspace");
 
@@ -200,7 +153,29 @@ define("MARKETURL", "https://www.atheos.io/market/json");
 define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest");
 	';
 
-	saveFile($config, $configData);
+	//////////////////////////////////////////////////////////////////////////80
+	// Save Config
+	//////////////////////////////////////////////////////////////////////////80
+	$write = fopen($config, "w") or Common::send("error", "Unable to save config");
+	fwrite($write, $configData);
+	fclose($write);
 
-	echo("success");
+	//////////////////////////////////////////////////////////////////////////80
+	// Initialize session for auto login
+	//////////////////////////////////////////////////////////////////////////80
+	SESSION("user", $username);
+	SESSION("lang", $language);
+	SESSION("projectPath", $projectPath);
+	SESSION("projectName", $projectName);
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Send data back to client
+	//////////////////////////////////////////////////////////////////////////80
+	$reply = array(
+		"username" => $username,
+		"lastLogin" => date("Y-m-d H:i:s"),
+		"text" => "Installation successful."
+	);
+
+	Common::send("success", $reply);
 }

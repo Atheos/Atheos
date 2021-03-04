@@ -1,0 +1,6 @@
+@mixin input() {
+	background-color: $inputBackground;
+	border: none;
+	border-bottom: $borderLight;
+	color: $fontColorMajor;
+}

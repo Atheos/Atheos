@@ -156,8 +156,6 @@
             for (var i = 0; i < modes.length; i++) {
                 var field = modes[i].el;
 
-                // log(field);
-
                 if (field.name !== 'extension' && field.name !== 'textmode') {
                     continue;
                 }
@@ -171,8 +169,6 @@
                 data: data,
                 settled: function(status, reply) {
                     atheos.toast.show(status, reply.message);
-
-                    log(status, reply);
 
                     if (status !== 'error' && reply.extensions) {
                         self.setEditorTextModes(reply);

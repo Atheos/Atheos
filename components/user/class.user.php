@@ -35,14 +35,13 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	// Authenticate
 	//////////////////////////////////////////////////////////////////////////80
-	public function authenticate($username, $password, $language, $theme) {
+	public function authenticate($username, $password, $language) {
 		if (array_key_exists($username, $this->users)) {
 			$user = $this->users[$username];
 
 			if (password_verify($password, $user["password"])) {
 				SESSION("user", $username);
 				SESSION("lang", $language);
-				SESSION("theme", $theme);
 
 				if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
 					SESSION("projectPath", $user["activePath"]);
@@ -51,7 +50,8 @@ class User {
 
 				$reply = array(
 					"username" => $username,
-					"lastLogin" => $user["lastLogin"]
+					"lastLogin" => $user["lastLogin"],
+					"text" => "Successfully authenticated."
 				);
 
 				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");

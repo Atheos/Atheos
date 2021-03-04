@@ -1,0 +1,112 @@
+#file-manager {
+	width: 100%;
+	height: 100%;
+	float: left;
+	margin: 0;
+	// padding-left: 5px;
+	overflow-y: scroll;
+
+	#project-root+ul {
+		padding-left: 5px;
+	}
+
+	ul {
+		margin: 0;
+		padding: 0;
+		padding-left: 4px;
+		transition: height 500ms ease-in;
+		overflow: hidden;
+	}
+
+	li {
+		display: block;
+		margin: 0;
+		list-style: none;
+	}
+
+	ul ul li {
+		margin-left: 22px;
+		white-space: nowrap;
+	}
+}
+
+
+#file-manager {
+	a {
+		display: inline-block;
+		// position: relative;
+		min-width: 100%;
+		cursor: pointer;
+
+		padding: 2px 5px;
+		padding-left: 0px;
+		z-index: 80;
+		position: relative;
+
+		&:hover,
+		&.context-menu-active {
+			background-color: #333;
+
+			// i.expand {
+			// 	background-color: #333;
+			// }
+		}
+	}
+
+	i {
+		margin: 0 3px;
+		font-size: 18px;
+		display: inline-block;
+		height: 18px;
+		width: 18px;
+		text-align: center;
+		// pointer-events: none;
+
+		// vertical-align: text-bottom;
+
+		&:before {
+			text-align: center;
+			line-height: 18px;
+		}
+
+		&.expand:not(.none) {
+			// position: absolute;
+			// left: -20px;
+			margin-left: -22px;
+			height: auto;
+			width: auto;
+			// top: 0px;
+			// padding: 5px 0px 5px 2px;
+		}
+
+		&.none {
+			display: none;
+		}
+
+
+		&.root {
+			font-size: 22px;
+			margin-left: 3px;
+			width: auto;
+			height: auto;
+		}
+	}
+
+	span {
+		color: white;
+		vertical-align: text-top;
+		// pointer-events: none;
+	}
+}
+
+#file-manager .fa-plus,
+#file-manager .fa-minus {
+	color: gray;
+}
+
+#file-manager .loading {
+	animation-name: spin;
+	animation-duration: 2000ms;
+	animation-iteration-count: infinite;
+	animation-timing-function: linear;
+}

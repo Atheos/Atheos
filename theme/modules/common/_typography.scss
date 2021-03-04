@@ -1,0 +1,69 @@
+/* GLOBALS */
+a,
+a:link,
+a:visited {
+	cursor: pointer;
+}
+
+.hide {
+	display: none;
+}
+
+.clear {
+	clear: both;
+}
+
+.right {
+	text-align: right;
+}
+
+.left {
+	text-align: left;
+}
+
+.center {
+	text-align: center;
+}
+
+.italic {
+	font-style: italic;
+}
+
+.strong {
+	font-weight: bold;
+}
+
+pre {
+	background: $inputBackground;
+	padding: 10px;
+	margin: 5px 0;
+	font-family: 'Ubuntu-Fira', monospace;
+	overflow: auto;
+}
+
+hr {
+	margin: 0;
+}
+
+h1,
+h2,
+h3,
+h4 {
+	text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+}
+
+h1 {
+	font-size: $fontSizeH1;
+}
+
+h2 {
+	font-size: $fontSizeH2;
+}
+
+h3 {
+	font-size: $fontSizeH3;
+}
+
+h4 {
+	font-size: $fontSizeH4;
+}

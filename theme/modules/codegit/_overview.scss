@@ -1,0 +1,52 @@
+#commit_message {
+	display: inline-block;
+	width: calc(100% - 85px);
+}
+
+#codegit_overview {
+	table {
+		width: 100%;
+	}
+
+	tbody {
+		display: block;
+		max-height: 410px;
+		overflow-y: scroll;
+	}
+
+	thead,
+	tbody tr {
+		display: table;
+		width: 100%;
+		table-layout: fixed;
+	}
+
+	// thead {
+	// 	// Account for Scrollbar width
+	// 	overflow-y: scroll;
+	// 	box-shadow: #333 $scrollbarWidth 0px;
+	// 	width: calc(100% - 10px);
+	// }
+
+	table th:nth-of-type(1),
+	table td:nth-of-type(1) {
+		width: 40px;
+	}
+
+	table th:nth-of-type(2),
+	table td:nth-of-type(2) {
+		width: 80px;
+	}
+
+	table th:nth-of-type(3),
+	table td:nth-of-type(3) {
+		// width: 300px;
+	}
+
+	table th:nth-of-type(4),
+	table td:nth-of-type(4) {
+		width: 195px;
+		text-align: center;
+		padding: 0;
+	}
+}

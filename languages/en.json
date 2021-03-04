@@ -359,12 +359,13 @@
 	"close_modal": "Close Modal",
 
 	"installationError": "Installation Error",
-	"existsAndWriteable:": "Please make sure the following exist and are writeable:",
-	"envVariablesSet:": "Please make sure these environmental variables are set:",
+	"existsAndWriteable": "Please make sure the following exist and are writeable:",
+	"envVariablesSet": "Please make sure these environmental variables are set:",
 	"retest": "Re-Test",
 
 	"initialSetup": "Initial Setup",
-	"dependencies": "Dependencies",
+	"developmentMode": "Development Mode",
+	"analyticsEnable": "Anonymous Analytics",
 
 	"connectionError": "Connection Error",
 

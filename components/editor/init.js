@@ -1,16 +1,16 @@
-/*
-	*  Copyright (c) atheos & Kent Safranski (atheos.com), distributed
-	*  as-is and without warranty under the MIT License. See
-	*  [root]/license.txt for more. This information must remain intact.
-	*/
+//////////////////////////////////////////////////////////////////////////////80
+// Editor Init
+//////////////////////////////////////////////////////////////////////////////80
+// Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
+// warranty under the MIT License. See [root]/LICENSE.md for more.
+// This information must remain intact.
+//////////////////////////////////////////////////////////////////////////////80
+// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+//////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 
-
-
-	var ace = global.ace,
-		atheos = global.atheos,
-		storage = atheos.storage;
+	let storage = (k, v) => atheos.storage('editor.' + k, v);
 
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -18,38 +18,39 @@
 	var EditSession = ace.require('ace/edit_session').EditSession;
 	var UndoManager = ace.require('ace/undomanager').UndoManager;
 
-	var self = null;
+	var self = false;
 
 	carbon.subscribe('system.loadMajor', () => atheos.editor.init());
 
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////80
 	//
 	// Editor Component for atheos
 	// ---------------------------
 	// Manage the lifecycle of Editor instances
 	//
-	//////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////80
 
 	atheos.editor = {
 
-		/// Editor instances - One instance corresponds to an editor
-		/// pane in the user interface. Different EditSessions
-		/// (ace/edit_session)
+		// Editor instances - One instance corresponds to an editor
+		// pane in the user interface. Different EditSessions
+		// (ace/edit_session)
 		instances: [],
 
-		/// Currently focussed editor
+		// Currently focused editor
 		activeInstance: null,
 
 		// Settings for Editor instances
 		settings: {
 			theme: 'atheos',
 			fontSize: '13px',
-			printMargin: false,
+			highlightActiveLine: true,
+			showPrintMargin: false,
 			printMarginColumn: 80,
-			highlightLine: true,
-			indentGuides: true,
-			wrapMode: false,
-			softTabs: false,
+			displayIndentGuides: true,
+			showFoldWidgets: true,
+			useWrapMode: false,
+			useSoftTabs: false,
 			tabSize: 4
 		},
 
@@ -58,9 +59,16 @@
 		fileExtensionTextMode: {},
 
 		init: function() {
+			if (self) return;
 			self = this;
 
-			this.cursorTracking();
+			// Retrieve editor settings from localStorage
+			for (let key in self.settings) {
+				let temp = storage(key);
+				if (temp !== null) self.settings[key] = temp;
+			}
+
+			carbon.sub('chrono.byte', self.trackCursor);
 
 			var editor = oX('#editor-region');
 
@@ -89,37 +97,12 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// Retrieve editor settings from localStorage
-		//
-		//////////////////////////////////////////////////////////////////
-		getSettings: function() {
-			var settings = ['theme', 'fontSize', 'tabSize', 'printMargin', 'printMarginColumn', 'highlightLine', 'indentGuides', 'wrapMode', 'softTabs'];
-			settings.forEach(function(key) {
-				var local = storage('editor.' + key);
-				if (local !== null) {
-					self.settings[key] = local;
-				}
-			});
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
+		//////////////////////////////////////////////////////////////////////80		
 		// Apply configuration settings
-		//
-		// Parameters:
-		//   i - {Editor}
-		//
-		/////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80		
 		applySettings: function(instance) {
-			// Check user-specified settings
-			self.getSettings();
-
-			// Apply the current configuration settings:
-			instance.setTheme('ace/theme/' + self.settings.theme);
+			// Apply the basic configuration settings
 			instance.setOptions({
-				// fontFamily: 'VictorMono-Bold',
 				fontFamily: 'Ubuntu-Fira',
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
@@ -127,31 +110,27 @@
 			});
 			instance.setAnimatedScroll(true);
 
+			// Apply the user preferred settings
+			instance.setTheme('ace/theme/' + self.settings.theme);
 			instance.setFontSize(self.settings.fontSize);
+			instance.setHighlightActiveLine(self.settings.highlightActiveLine);
+			instance.setShowPrintMargin(self.settings.showPrintMargin);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
-			instance.setShowPrintMargin(self.settings.printMargin);
-			instance.setHighlightActiveLine(self.settings.highlightLine);
-			instance.setDisplayIndentGuides(self.settings.indentGuides);
-			instance.getSession().setUseWrapMode(self.settings.wrapMode);
-			self.setTabSize(self.settings.tabSize, instance);
-			self.setSoftTabs(self.settings.softTabs, instance);
+			instance.setDisplayIndentGuides(self.settings.displayIndentGuides);
+			instance.setShowFoldWidgets(self.settings.showFoldWidgets);
+			instance.getSession().setUseWrapMode(self.settings.useWrapMode);
+			instance.getSession().setUseSoftTabs(self.settings.useSoftTabs);
+			instance.getSession().setTabSize(self.settings.tabSize);
 		},
 
-
-		beautify: function() {
-			var beautify = ace.require('ace/ext/beautify');
-			var editor = self.activeInstance;
-			beautify.beautify(editor.session);
-		},
-
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Create a new editor instance attached to given session
 		//
 		// Parameters:
 		//   session - {EditSession} Session to be used for new Editor instance
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		addInstance: function(session, where) {
 			// This can be a little confusing to follow, took me a while. First,
 			// keep in mind that Ace objects has their own .el property, which
@@ -166,11 +145,11 @@
 			var childID = null,
 				splitContainer = null;
 
-			if (this.instances.length === 0) {
+			if (self.instances.length === 0) {
 				oX('#root-editor-wrapper').append(editor);
 			} else {
 
-				var firstChild = this.activeInstance.el;
+				var firstChild = self.activeInstance.el;
 
 				childID = (where === 'top' || where === 'left') ? 0 : 1;
 				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
@@ -188,30 +167,27 @@
 
 				splitContainer = new SplitContainer(parent.el, children, type);
 
-				if (this.instances.length > 1) {
-					var pContainer = this.activeInstance.splitContainer;
-					var idx = this.activeInstance.splitID;
+				if (self.instances.length > 1) {
+					var pContainer = self.activeInstance.splitContainer;
+					var idx = self.activeInstance.splitID;
 					pContainer.setChild(idx, splitContainer);
 				}
 			}
 
-			// var i = ace.edit(editor[0]);
 			var instance = ace.edit(editor.el);
-			var resizeEditor = function() {
-				instance.resize();
-			};
+			var resizeEditor = () => instance.resize();
 
 			if (splitContainer) {
 				instance.splitContainer = splitContainer;
 				instance.splitID = childID;
 
-				this.activeInstance.splitContainer = splitContainer;
-				this.activeInstance.splitID = 1 - childID;
+				self.activeInstance.splitContainer = splitContainer;
+				self.activeInstance.splitID = 1 - childID;
 
 				oX(splitContainer.parent).on('h-resize', resizeEditor);
 				oX(splitContainer.parent).on('v-resize', resizeEditor);
 
-				if (this.instances.length === 1) {
+				if (self.instances.length === 1) {
 					var re = function() {
 						self.instances[0].resize();
 					};
@@ -221,27 +197,26 @@
 			}
 
 			instance.el = editor;
-			this.setSession(session, instance);
+			self.setSession(session, instance);
 
-			this.changeListener(instance);
-			// this.cursorTracking(instance);
-			this.bindKeys(instance);
+			// self.changeListener(instance);
+			instance.on('change', () => atheos.active.markChanged(instance.getSession().path));
+			self.bindKeys(instance);
 
-			this.instances.push(instance);
+			self.instances.push(instance);
 
 			instance.on('focus', function() {
-
-				self.focus(instance);
+				self.focus(instance, true);
 			});
 
 			return instance;
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Remove all Editor instances and clean up the DOM
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
 			var editors = oX('#editor-region').findAll('.editor, .editor-wrapper');
 			editors.forEach((editor) => {
@@ -253,12 +228,12 @@
 			self.activeInstance = null;
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Detach EditSession session from all Editor instances replacing
 		// them with replacementSession
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		removeSession: function(session, replacementSession) {
 			for (var k = 0; k < self.instances.length; k++) {
 				if (self.instances[k].getSession().path === session.path) {
@@ -289,23 +264,12 @@
 		//   fn - {Function} callback called with each member as an argument
 		//
 		/////////////////////////////////////////////////////////////////
-		forEach: function(fn) {
+		forEachInstance: function(fn) {
 			for (var k = 0; k < self.instances.length; k++) {
 				fn.call(self, self.instances[k]);
 			}
 		},
 
-		/////////////////////////////////////////////////////////////////
-		//
-		// Get the currently active Editor instance
-		//
-		// In a multi-pane setup this would correspond to the
-		// editor pane user is currently working on.
-		//
-		/////////////////////////////////////////////////////////////////
-		getActive: function() {
-			return self.activeInstance;
-		},
 
 		/////////////////////////////////////////////////////////////////
 		//
@@ -316,14 +280,13 @@
 		//
 		/////////////////////////////////////////////////////////////////
 		setActive: function(instance) {
-			if (instance) {
-				self.activeInstance = instance;
-				var path = instance.getSession().path;
-				path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
+			if (!instance) return;
+			self.activeInstance = instance;
+			var path = instance.getSession().path;
+			path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
-				oX('#current_file').text(path);
-				atheos.textmode.setModeDisplay(instance.getSession());
-			}
+			oX('#current_file').text(path);
+			atheos.textmode.setModeDisplay(instance.getSession());
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -336,10 +299,10 @@
 		//
 		/////////////////////////////////////////////////////////////////
 		setSession: function(session, instance) {
-			instance = instance || this.activeInstance;
-			if (!this.isOpen(session)) {
+			instance = instance || self.activeInstance;
+			if (!self.isOpen(session)) {
 				if (!instance) {
-					instance = this.addInstance(session);
+					instance = self.addInstance(session);
 				} else {
 					instance.setSession(session);
 				}
@@ -351,50 +314,19 @@
 					session.getMode());
 				proxySession.setUndoManager(new UndoManager());
 				proxySession.path = session.path;
-				proxySession.listThumb = session.listThumb;
-				proxySession.tabThumb = session.tabThumb;
+				proxySession.listItem = session.listItem;
+				proxySession.serverMTime = session.serverMTime;
 				if (!instance) {
-					instance = this.addInstance(proxySession);
+					instance = self.addInstance(proxySession);
 				} else {
 					instance.setSession(proxySession);
 				}
 			}
-			this.applySettings(instance);
+			self.applySettings(instance);
 
-			this.setActive(instance);
+			self.setActive(instance);
 		},
 
-		/////////////////////////////////////////////////////////////////
-		//
-		// Set the editor theme
-		//
-		// Parameters:
-		//   t - {String} theme eg. twilight, cobalt etc.
-		//   i - {Editor} Editor instance (If omitted, Defaults to all editors)
-		//
-		// For a list of themes supported by Ace - refer :
-		//   https://github.com/ajaxorg/ace/tree/master/lib/ace/theme
-		//
-		// TODO: Provide support for custom themes
-		//
-		/////////////////////////////////////////////////////////////////
-
-		setTheme: function(t, i) {
-			if (i) {
-				// If a specific instance is specified, change the theme for
-				// this instance
-				i.setTheme('ace/theme/' + t);
-			} else {
-				// Change the theme for the existing editor instances
-				// and make it the default for new instances
-				this.settings.theme = t;
-				for (var k = 0; k < this.instances.length; k++) {
-					this.instances[k].setTheme('ace/theme/' + t);
-				}
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.theme', t);
-		},
 
 		/////////////////////////////////////////////////////////////////
 		//
@@ -407,287 +339,153 @@
 		/////////////////////////////////////////////////////////////////
 
 		setContent: function(c, i) {
-			i = i || this.getActive();
+			i = i || self.getActive();
 			i.getSession().setValue(c);
 		},
 
-		/////////////////////////////////////////////////////////////////
-		//
-		// Set Font Size
-		//
-		// Set the font for all Editor instances and remember
-		// the value for Editor instances to be created in
-		// future
-		//
-		// Parameters:
-		//   s - {Number} font size
-		//   i - {Editor} Editor instance  (If omitted, Defaults to all editors)
-		//
-		/////////////////////////////////////////////////////////////////
-
-		setFontSize: function(s, i) {
-			if (i) {
-				i.setFontSize(s);
-			} else {
-				this.settings.fontSize = s;
-				this.forEach(function(i) {
-					i.setFontSize(s);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.fontSize', s);
-		},
-
 
 		/////////////////////////////////////////////////////////////////
-		//
-		// Enable/disable Highlighting of active line
-		//
-		// Parameters:
-		//   h - {Boolean}
-		//   i - {Editor} Editor instance ( If left out, setting is
-		//                    applied to all editors )
-		//
+		// Set the editor theme
+		// For a list of themes supported by Ace - refer :
+		//   https://github.com/ajaxorg/ace/tree/master/lib/ace/theme
 		/////////////////////////////////////////////////////////////////
-
-		setHighlightLine: function(h, i) {
-			if (i) {
-				i.setHighlightActiveLine(h);
-			} else {
-				this.settings.highlightLine = h;
-				this.forEach(function(i) {
-					i.setHighlightActiveLine(h);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.highlightLine', h);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Show/Hide print margin indicator
-		//
-		// Parameters:
-		//   p - {Number} print margin column
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setPrintMargin: function(p, i) {
-			if (i) {
-				i.setShowPrintMargin(p);
-			} else {
-				this.settings.printMargin = p;
-				this.forEach(function(i) {
-					i.setShowPrintMargin(p);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.printMargin', p);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Set print margin column
-		//
-		// Parameters:
-		//   p - {Number} print margin column
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setPrintMarginColumn: function(p, i) {
-			if (i) {
-				i.setPrintMarginColumn(p);
-			} else {
-				this.settings.printMarginColumn = p;
-				this.forEach(function(i) {
-					i.setPrintMarginColumn(p);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.printMarginColumn', p);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Show/Hide indent guides
-		//
-		// Parameters:
-		//   g - {Boolean}
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setIndentGuides: function(g, i) {
-			if (i) {
-				i.setDisplayIndentGuides(g);
-			} else {
-				this.settings.indentGuides = g;
-				this.forEach(function(i) {
-					i.setDisplayIndentGuides(g);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.indentGuides', g);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Enable/Disable Code Folding
-		//
-		// Parameters:
-		//   f - {Boolean}
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setCodeFolding: function(f, i) {
-			if (i) {
-				i.setFoldStyle(f);
-			} else {
-				this.forEach(function(i) {
-					i.setFoldStyle(f);
-				});
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Enable/Disable Line Wrapping
-		//
-		// Parameters:
-		//   w - {Boolean}
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setWrapMode: function(w, i) {
-			if (i) {
-				i.getSession().setUseWrapMode(w);
-			} else {
-				this.forEach(function(i) {
-					i.getSession().setUseWrapMode(w);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.wrapMode', w);
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// set Tab Size
-		//
-		// Parameters:
-		//   s - size
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setTabSize: function(s, i) {
-			if (i) {
-				i.getSession().setTabSize(parseInt(s, 10));
-			} else {
-				this.forEach(function(i) {
-					i.getSession().setTabSize(parseInt(s, 10));
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.tabSize', s);
-
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Enable or disable Soft Tabs
-		//
-		// Parameters:
-		//   t - true / false
-		//   i - {Editor}  (If omitted, Defaults to all editors)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		setSoftTabs: function(t, i) {
-			if (i) {
-				i.getSession().setUseSoftTabs(t);
-			} else {
-				this.forEach(function(i) {
-					i.getSession().setUseSoftTabs(t);
-				});
-			}
-			// LocalStorage
-			localStorage.setItem('atheos.editor.softTabs', t);
-
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Get content from editor
-		//
-		// Parameters:
-		//   i - {Editor} (Defaults to active editor)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		getContent: function(i) {
-			i = i || this.getActive();
-			if (!i) return;
-			var content = i.getSession().getValue();
-			if (!content) {
-				content = ' ';
-			} // Pass something through
-			return content;
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Resize the editor - Trigger the editor to readjust its layout
-		// esp if the container has been resized manually.
-		//
-		// Parameters:
-		//   i - {Editor} (Defaults to active editor)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		resize: function(i) {
-			i = i || this.getActive();
-			if (!i) return;
-			i.resize();
-		},
-
-		//////////////////////////////////////////////////////////////////
-		//
-		// Mark the instance as changed (in the user interface)
-		// upon change in the document content.
-		//
-		// Parameters:
-		//   i - {Editor}
-		//
-		//////////////////////////////////////////////////////////////////
-
-		changeListener: function(i) {
-			var self = this;
-			i.on('change', function() {
-				atheos.active.markChanged(self.getActive().getSession().path);
+		setTheme: function(val, int) {
+			if (int) return int.setTheme(val);
+			self.forEachInstance(function(int) {
+				int.setTheme(val);
 			});
+			self.settings.fontSize = vals;
+			storage('theme', val);
 		},
 
-		//////////////////////////////////////////////////////////////////
-		//
-		// Get Selected Text
-		//
-		// Parameters:
-		//   i - {Editor} (Defaults to active editor)
-		//
-		//////////////////////////////////////////////////////////////////
-
-		getSelectedText: function(i) {
-			i = i || this.getActive();
-			if (!i) return;
-			return i.getCopyText();
+		/////////////////////////////////////////////////////////////////
+		// Set Font Size
+		/////////////////////////////////////////////////////////////////
+		setFontSize: function(val, int) {
+			if (int) return int.setFontSize(val);
+			self.forEachInstance(function(int) {
+				int.setFontSize(val);
+			});
+			self.settings.fontSize = vals;
+			storage('fontSize', val);
 		},
 
-		//////////////////////////////////////////////////////////////////
+		/////////////////////////////////////////////////////////////////
+		// Enable/disable Highlighting of active line
+		/////////////////////////////////////////////////////////////////
+		setHighlightActiveLine: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setHighlightActiveLine(val);
+			self.forEachInstance(function(int) {
+				int.setHighlightActiveLine(val);
+			});
+			self.settings.highlightActiveLine = val;
+			storage('highlightActiveLine', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide print margin indicator
+		//////////////////////////////////////////////////////////////////////80
+		setShowPrintMargin: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setShowPrintMargin(val);
+			self.forEachInstance(function(int) {
+				int.setShowPrintMargin(val);
+			});
+			self.settings.showPrintMargin = val;
+			storage('showPrintMargin', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Set print margin column
+		//////////////////////////////////////////////////////////////////////80
+		setPrintMarginColumn: function(val, int) {
+			val = parseInt(val, 10);
+			if (int) return int.setPrintMarginColumn(val);
+			self.forEachInstance(function(int) {
+				int.setPrintMarginColumn(val);
+			});
+			self.settings.printMarginColumn = val;
+			storage('printMarginColumn', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide indent guides
+		//////////////////////////////////////////////////////////////////////80
+		setDisplayIndentGuides: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setDisplayIndentGuides(val);
+			self.forEachInstance(function(int) {
+				int.setDisplayIndentGuides(val);
+			});
+			self.settings.displayIndentGuides = val;
+			storage('displayIndentGuides', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Code Folding
+		//////////////////////////////////////////////////////////////////////80
+		setShowFoldWidgets: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setShowFoldWidgets(val);
+			self.forEachInstance(function(int) {
+				int.setShowFoldWidgets(val);
+			});
+			self.settings.showFoldWidgets = val;
+			storage('showFoldWidgets', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Line Wrapping
+		//////////////////////////////////////////////////////////////////////80
+		setUseWrapMode: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.getSession().setUseWrapMode(val);
+			self.forEachInstance(function(int) {
+				int.getSession().setUseWrapMode(val);
+			});
+			self.settings.useWrapMode = val;
+			storage('useWrapMode', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable or disable Soft Tabs
+		//////////////////////////////////////////////////////////////////////80
+		setUseSoftTabs: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.getSession().setUseSoftTabs(val);
+			self.forEachInstance(function(int) {
+				int.getSession().setUseSoftTabs(val);
+			});
+			self.settings.useSoftTabs = val;
+			storage('useSoftTabs', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// set Tab Size
+		//////////////////////////////////////////////////////////////////////80
+		setTabSize: function(val, int) {
+			val = parseInt(val, 10);
+			if (int) return int.getSession().setTabSize(val);
+			self.forEachInstance(function(int) {
+				int.getSession().setTabSize(val);
+			});
+			self.settings.tabSize = val;
+			storage('tabSize', val);
+		},
+
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Built in Beautifer (WIP)
+		//////////////////////////////////////////////////////////////////////80
+		beautify: function() {
+			var beautify = ace.require('ace/ext/beautify');
+			var editor = self.activeInstance;
+			beautify.beautify(editor.session);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Insert text
 		//
@@ -695,15 +493,15 @@
 		//   val - {String} Text to be inserted
 		//   i - {Editor} (Defaults to active editor)
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		insertText: function(val, i) {
-			i = i || this.getActive();
+			i = i || self.getActive();
 			if (!i) return;
 			i.insert(val);
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Move the cursor to a particular line
 		//
@@ -711,62 +509,58 @@
 		//   line - {Number} Line number
 		//   i - {Editor} Editor instance
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		gotoLine: function(line, i) {
-			i = i || this.getActive();
+			i = i || self.getActive();
 			if (!i) return;
 			i.scrollToLine(line, true, true);
 			i.gotoLine(line, 0, true);
 			self.focus();
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Focus an editor
 		//
 		// Parameters:
 		//   i - {Editor} Editor instance (Defaults to current editor)
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		focus: function(instance, dispatched) {
+			instance = instance || self.getActive();
+			if (!instance) return;
 
-		focus: function(i) {
-			i = i || this.getActive();
-			this.setActive(i);
-			if (!i) return;
-			i.focus();
-			atheos.active.focus(i.getSession().path);
-			// this.cursorTracking(i);
+			self.setActive(instance);
+
+			if (!dispatched) instance.focus();
+			atheos.active.focus(instance.getSession().path);
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Setup Cursor Tracking
 		//
 		// Parameters:
 		//   i - {Editor} (Defaults to active editor)
 		//
-		//////////////////////////////////////////////////////////////////
-
-		cursorTracking: function(i) {
-			var col = global.i18n('Col');
-			carbon.subscribe('chrono.kilo', function() {
-				var i = atheos.editor.getActive();
-				if (i) {
-					var pos = i.getCursorPosition();
-					oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${col}: ${pos.column}`);
-				}
-			});
+		//////////////////////////////////////////////////////////////////////80
+		trackCursor: function() {
+			var col = i18n('Col');
+			let i = atheos.editor.getActive();
+			if (!i) return;
+			let pos = i.getCursorPosition();
+			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 		},
 
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		//
 		// Setup Key bindings
 		//
 		// Parameters:
 		//   i - {Editor}
 		//
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 
 		bindKeys: function(instance) {
 			// instance.commands.addCommand({
@@ -802,7 +596,18 @@
 				}
 			});
 
-		}
+		},
+
+		/////////////////////////////////////////////////////////////////
+		// Tiny helper functions
+		/////////////////////////////////////////////////////////////////
+		getActive: () => self.activeInstance,
+		getSession: (i) => (i || self.activeInstance).getSession(),
+		getSelection: (i) => (i || self.activeInstance).getSelection(),
+		getSelectedText: (i) => (i || self.activeInstance).getCopyText(),
+		getSelectionRange: (i) => (i || self.activeInstance).getSelection().getRange(),
+		getDocument: (i) => (i || self.activeInstance).getSession().getDocument(),
+		getContent: (i) => (i || self.activeInstance).getSession().getValue(),
 	};
 
-})(this);
+})();

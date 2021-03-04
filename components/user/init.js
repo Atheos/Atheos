@@ -44,8 +44,6 @@
 
 					// Save Language
 					atheos.storage('language', oX('#language').value());
-					// Save Theme
-					atheos.storage('editor.theme', oX('#theme').value());
 
 					self.authenticate(e.target);
 				});
@@ -60,18 +58,6 @@
 					oX('#remember').prop('checked', true);
 
 					oX('#password').focus();
-				}
-
-
-				// Get Theme
-				var theme = atheos.storage('theme');
-				element = oX('#theme');
-				if (element && element.findAll('option').length > 1) {
-					element.findAll('option').forEach(function(option) {
-						if (option.value() === theme) {
-							option.attr('selected', 'selected');
-						}
-					});
 				}
 
 				// Get Language
@@ -98,23 +84,23 @@
 					oX('#show_login_options').show('inline-block');
 					oX('#login_options').hide();
 				});
-			}
+			} else {
 
-			carbon.subscribe('chrono.mega', function() {
-				// Run controller to check session (also acts as keep-alive) & Check user
-				echo({
-					data: {
-						'target': 'user',
-						'action': 'keepAlive'
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') {
-							atheos.user.logout();
+				carbon.subscribe('chrono.mega', function() {
+					// Run controller to check session (also acts as keep-alive) & Check user
+					echo({
+						data: {
+							'target': 'user',
+							'action': 'keepAlive'
+						},
+						settled: function(status, reply) {
+							if (status !== 'success') {
+								atheos.user.logout();
+							}
 						}
-					}
+					});
 				});
-			});
-
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -133,6 +119,7 @@
 					if (status === 'success') {
 						window.location.reload();
 					}
+					toast(status, reply);
 				}
 			});
 		},
@@ -186,7 +173,7 @@
 
 				let data = serialize(e.target);
 
-				let vUser = /^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username) && data.username.length !== 0,
+				let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
 					vPass = data.password === data.validate;
 
 				if (!vUser) toast('error', 'Username must be an alphanumeric string');

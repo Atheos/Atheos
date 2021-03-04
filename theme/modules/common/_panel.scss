@@ -1,0 +1,20 @@
+panel {
+	padding: 5px;
+	width: calc(100% - 200px);
+	overflow: auto;
+	overflow-y: scroll;
+	height: 500px;
+	position: relative;
+	border-left: $borderLight;
+
+	form {
+		padding: 0;
+	}
+
+	&>label:first-of-type {
+		font-size: $fontSizeH2;
+		padding: 3px 0;
+		margin-bottom: 3px;
+		border-bottom: $borderHeavy;
+	}
+}

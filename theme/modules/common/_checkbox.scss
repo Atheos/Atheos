@@ -1,0 +1,49 @@
+$checkbox-size-md: 1rem;
+$checkbox-size-lg: 1.5rem;
+// $checkbox-size: 2rem;
+
+input[type="checkbox"] {
+	width: $checkbox-size-md;
+	height: $checkbox-size-md;
+	position: relative;
+	font-size: $checkbox-size-md;
+	line-height: $checkbox-size-md;
+	font-family: 'Font Awesome 5 Free';
+	cursor: pointer;
+	color: $shade7;
+
+	&.large {
+		width: $checkbox-size-lg;
+		height: $checkbox-size-lg;
+		font-size: $checkbox-size-lg;
+		line-height: $checkbox-size-lg;
+	}
+
+	&::after {
+		content: "";
+		position: absolute;
+		top: 0;
+		right: 0;
+		bottom: 0;
+		left: 0;
+		color: rgba($background, 0);
+		background-color: $fontColorMajor;
+		box-shadow: inset 0 0 0 1px $background;
+
+		font: {
+			size: 0;
+			weight: bolder;
+		}
+
+		text-align: center;
+		transition: background-color 150ms 0ms ease,
+		color 150ms 50ms ease,
+		font-size 150ms 50ms ease;
+	}
+
+	&:checked::after {
+		content: "\f00d";
+		color: rgba($background, 1);
+		font-size: 1em;
+	}
+}

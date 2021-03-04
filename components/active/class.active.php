@@ -36,8 +36,9 @@ class Active {
 	// Add File
 	//////////////////////////////////////////////////////////////////////////80
 	public function add($path) {
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $path], ["status", "==", "*"]);
 		$value = array("user" => $this->activeUser, "path" => $path, "status" => "active");
-		$this->db->insert($value);
+		$this->db->update($where, $value, true);
 		Common::send("success");
 	}
 
