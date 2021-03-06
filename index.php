@@ -145,6 +145,7 @@ $plugins = Common::readDirectory(PLUGINS);
 	}
 
 	?>
+	<overlay class=""></overlay>
 	<toaster class="bottom right"></toaster>
 </body>
 </html>
