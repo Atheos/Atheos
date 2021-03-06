@@ -97,11 +97,16 @@
 		},
 		unloadAll: function() {
 			atheos.common.hideOverlay();
-			var element = oX('#alert');
-			if (element) {
-				element.empty();
-				element.hide();
+			var i = self.active.length;
+
+			while (--i >= 0) {
+				let el = self.active[i];
+				el.remove();
+				self.active.splice(i, 1);
 			}
 		}
 	};
+
+	// window.alert = atheos.alert.show;
+
 })();
