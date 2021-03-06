@@ -210,6 +210,7 @@
 
 		hideOverlay: function() {
 			self.overlay.removeClass('active');
+			self.overlay.hide();
 		},
 
 		//////////////////////////////////////////////////////////////////////
