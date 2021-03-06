@@ -29,7 +29,7 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct($activeUser) {
 		$this->activeUser = $activeUser;
-		$this->db = Common::getParchment("settings", $activeUser);
+		$this->db = Common::getKeyStore("settings", $activeUser);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

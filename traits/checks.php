@@ -34,7 +34,7 @@ trait Check {
 		$users = Common::load("users");
 		$activeUser = SESSION("user");
 		// $projects = Common::load("projects");
-		$projects = Common::getParchment("projects")->select("*");
+		$projects = Common::getKeyStore("projects")->select("*");
 
 		if (!array_key_exists($activeUser, $users)) return false;
 
