@@ -86,7 +86,7 @@
 				delete data.callback;
 			}
 
-			var overlay = atheos.common.createOverlay('modal', true),
+			var overlay = atheos.common.showOverlay('modal', true),
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
 

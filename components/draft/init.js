@@ -72,8 +72,9 @@
 					if (status !== 'success') return;
 
 					atheos.alert.show({
-						banner: 'Draft of file found!',
-						message: 'Would you like to load the draft file instead?\n' +
+						banner: 'Draft found!',
+						data: path,
+						message: 'Would you like to load the draft file instead?\n\n' +
 							'Either option will delete the draft on the server.',
 						actions: {
 							'Load Draft': function() {
