@@ -33,7 +33,7 @@ trait File {
 	// Reads Cache data using MD5 file names
 	//////////////////////////////////////////////////////////////////////////80
 	public static function loadCache($name, $namespace = "") {
-		$name = md5($name);
+		// $name = md5($name);
 		$content = Common::load($name, $namespace);
 		return $content;
 	}
@@ -72,6 +72,33 @@ trait File {
 	public static function saveCache($name, $data, $namespace = "") {
 		$name = md5($name);
 		$result = Common::save($name, $data, $namespace);
+		return $result ? $name : false;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Delete file within data
+	//////////////////////////////////////////////////////////////////////////80
+	public static function delete($name, $namespace) {
+		$path = DATA . "/" . $namespace . "/" . $name;
+		$path = preg_replace("#/+#", "/", $path);
+		if (is_file($path)) {
+			unlink($path);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Delete Cache data with MD5 file names
+	//////////////////////////////////////////////////////////////////////////80
+	public static function deleteCache($name, $namespace = "") {
+		// $name = md5($name);
+		$result = Common::delete($name, $namespace);
 		return $result;
 	}
+
 }

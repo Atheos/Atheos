@@ -99,14 +99,12 @@ class Draft {
 		}
 
 		$name = Common::saveCache($path . $this->activeUser, $content, "drafts");
-		if ($name) {
-			$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
-			$value = array("user" => $this->activeUser, "path" => $path, "name" => $name, "time" => time());
-			$this->db->update($where, $value, true);
+		if (!$name) Common::send("error", "Unable to save draft.");
 
-			Common::send("success");
-		} else {
-			Common::send("error", "Client does not have access.");
-		}
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+		$value = array("user" => $this->activeUser, "path" => $path, "name" => $name, "time" => time());
+		$this->db->update($where, $value, true);
+
+		Common::send("success");
 	}
 }
