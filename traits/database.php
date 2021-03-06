@@ -49,9 +49,14 @@ class Store {
 	protected function save($shuffle = false) {
 		if ($shuffle) $this->data = array_values($this->data);
 		$data = json_encode($this->data, JSON_PRETTY_PRINT);
-		$write = fopen($this->path, 'w') or die("can't open file: " . $this->path);
-		fwrite($write, $data);
-		fclose($write);
+		$write = fopen($this->path, 'w') or false;
+		if ($write) {
+			fwrite($write, $data);
+			fclose($write);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
@@ -144,7 +149,7 @@ class ObjStore extends Store {
 	public function insert($value = false) {
 		if (!$value) return "missing_parameter";
 		$this->data[] = $value;
-		$this->save(true);
+		return $this->save(true);
 	}
 
 	/* Get the content for the given query. */

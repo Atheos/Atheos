@@ -25,7 +25,7 @@ switch ($action) {
 			<?php
 		} else {
 
-			$map = Common::load("extensions");
+			$map = Common::loadJSON("extensions");
 
 			if (!$map || !is_array($map)) {
 				$map = $TextMode->getDefaultExtensionMap();
