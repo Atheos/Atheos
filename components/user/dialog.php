@@ -143,7 +143,7 @@ switch ($action) {
 
 		// Get project list
 		// $projects = Common::load('projects');
-		$projects = Common::getParchment("projects")->select("*");
+		$projects = Common::getKeyStore("projects")->select("*");
 
 		$users = Common::load("users");
 		$userACL = $users[$username]["userACL"];

@@ -29,7 +29,7 @@ class Draft {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct($activeUser) {
 		$this->activeUser = $activeUser;
-		$this->db = Common::getScroll("drafts");
+		$this->db = Common::getObjStore("drafts");
 		if (!is_dir(DATA . "/drafts")) {
 			mkdir(DATA . "/drafts");
 		}
