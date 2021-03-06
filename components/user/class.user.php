@@ -133,7 +133,7 @@ class User {
 		// Save array back to JSON
 		Common::save("users", $this->users);
 
-		$db = Common::getScroll("active");
+		$db = Common::getObjStore("active");
 		$where = array("user" => $username);
 		$db->delete($where);
 

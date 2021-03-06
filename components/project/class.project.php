@@ -29,7 +29,7 @@ class Project {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
-		$this->db = Common::getParchment("projects");
+		$this->db = Common::getKeyStore("projects");
 
 		$this->activeUser = SESSION("user");
 		$this->userData = Common::load("users")[$this->activeUser];
