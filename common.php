@@ -13,7 +13,7 @@
 require_once("traits/checks.php");
 require_once("traits/database.php");
 require_once("traits/helpers.php");
-require_once("traits/json.php");
+require_once("traits/file.php");
 require_once("traits/path.php");
 require_once("traits/reply.php");
 
@@ -24,7 +24,7 @@ class Common {
 	use Check;
 	use Database;
 	use Helpers;
-	use JSON;
+	use File;
 	use Path;
 	use Reply;
 
