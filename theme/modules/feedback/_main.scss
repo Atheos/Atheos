@@ -1,4 +1,4 @@
-#overlay {
+overlay {
 	display: block;
 	position: fixed;
 	top: 0;
@@ -7,6 +7,11 @@
 	height: 100%;
 	background-color: rgba(0, 0, 0, 0.6);
 	z-index: 99998;
+	opacity: 0;
+	
+	&.active {
+		opacity: 1;
+	}
 }
 
 #alert,

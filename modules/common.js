@@ -33,6 +33,7 @@
 			self.initTogglePassword();
 			self.initPasswordMonitor();
 			self.initCheckMonitors();
+			self.initOverlay();
 		},
 
 
@@ -190,32 +191,25 @@
 			});
 		},
 
-		createOverlay: function(type, hidden) {
-			var overlay = oX('#overlay');
-			if (overlay) {
-				overlay.remove();
-			}
-			overlay = oX('<div id="overlay">');
+		overlay: null,
+		initOverlay: function() {
+			self.overlay = oX('overlay');
+			// overlay.on('click', atheos.alert.unload);
+			// overlay.on('click', atheos.modal.unload);
+		},
 
+		showOverlay: function(type, hidden) {
+			if (!hidden) self.overlay.addClass('active');
 			if (type === 'alert') {
-				overlay.on('click', atheos.alert.unload);
+				self.overlay.on('click', atheos.alert.unloadAll);
 			} else {
-				overlay.on('click', atheos.modal.unload);
+				self.overlay.on('click', atheos.modal.unload);
 			}
-			if (hidden) {
-				overlay.hide();
-			}
-			var toast = oX('#toast_container');
-			if (toast) {
-				toast.before(overlay.el);
-			} else {
-				document.body.appendChild(overlay.el);
-			}
-			return overlay;
+			return self.overlay;
 		},
 
 		hideOverlay: function() {
-			oX('#overlay').hide();
+			self.overlay.removeClass('active');
 		},
 
 		//////////////////////////////////////////////////////////////////////
