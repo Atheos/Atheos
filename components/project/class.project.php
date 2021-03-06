@@ -32,10 +32,10 @@ class Project {
 		$this->db = Common::getKeyStore("projects");
 
 		$this->activeUser = SESSION("user");
-		$this->userData = Common::load("users")[$this->activeUser];
+		$this->userData = Common::loadJSON("users")[$this->activeUser];
 
 		if (file_exists(DATA . "/projects.json")) {
-			$projects = Common::load("projects");
+			$projects = Common::loadJSON("projects");
 
 			// Check if array is Associative or Sequential. Sequential is
 			// the old file format, so it needs to be pivoted.

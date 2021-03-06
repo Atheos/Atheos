@@ -16,7 +16,7 @@ trait Check {
 	// Check if user can configure Atheos
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkAccess($permission = "configure") {
-		$users = Common::load("users");
+		$users = Common::loadJSON("users");
 		$activeUser = SESSION("user");
 
 		if (array_key_exists($activeUser, $users)) {
@@ -31,9 +31,9 @@ trait Check {
 	// Check Path
 	//////////////////////////////////////////////////////////////////////////80
 	public static function checkPath($path) {
-		$users = Common::load("users");
+		$users = Common::loadJSON("users");
 		$activeUser = SESSION("user");
-		// $projects = Common::load("projects");
+		// $projects = Common::loadJSON("projects");
 		$projects = Common::getKeyStore("projects")->select("*");
 
 		if (!array_key_exists($activeUser, $users)) return false;
