@@ -59,7 +59,7 @@
 			};
 
 			// Initialize node listener
-			oX('#file-manager').on('contextmenu', function(e) { // Context Menu
+			fX('#file-manager').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 				menu.html(self.baseMenu);
 				var active = oX('#file-manager a.context-menu-active');
@@ -69,7 +69,7 @@
 				self.adjust(checkAnchor(e.target));
 				self.show(e);
 			});
-			oX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
+			fX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 				self.topBarMenu(checkAnchor(e.target));
 				self.show(e);

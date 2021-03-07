@@ -41,12 +41,12 @@
                 }
             });
 
-            atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode-menu'));
+            atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode_menu'));
 
         },
 
         createModeMenu: function() {
-            var menu = oX('#changemode-menu');
+            var menu = oX('#changemode_menu');
 
             var modeOptions = [];
             var maxOptionsColumn = 15;
@@ -82,7 +82,7 @@
             html += '</tr></table>';
             menu.html(html);
 
-            oX('#changemode-menu').on('click', function(e) {
+            fX('#changemode_menu').on('click', function(e) {
                 e.stopPropagation();
                 var node = oX(e.target);
                 var tagName = e.target.tagName;

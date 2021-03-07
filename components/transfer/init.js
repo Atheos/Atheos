@@ -119,7 +119,7 @@
 				action: 'upload',
 				path: path,
 				callback: function() {
-					oX('#modal_content').on('change', listener);
+					fX('#modal_content').on('change', listener);
 				}
 			});
 		},
