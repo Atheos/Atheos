@@ -99,7 +99,7 @@ $plugins = Common::readDirectory(PLUGINS);
 					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
 					<span id="current_file"></span>
 					<span id="codegit_file_status"></span>
-					<div id="changemode-menu" style="display:none;" class="options-menu"></div>
+					<div id="changemode_menu" style="display:none;" class="options-menu"></div>
 					<ul id="split-options-menu" style="display:none;" class="options-menu">
 						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php echo i18n("split_h"); ?> </a></li>
 						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php echo i18n("split_v"); ?> </a></li>

@@ -97,10 +97,10 @@
 		initDropdown: function() {
 			var close = function() {
 				oX('dropdown.expanded').removeClass('expanded');
-				oX('dropdown', true).off('click');
+				fX('dropdown').off('click');
 			};
 
-			oX('dropdown', true).on('click', function(e) {
+			fX('dropdown').on('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 
@@ -120,7 +120,7 @@
 		// Show/Hide Password Handler
 		//////////////////////////////////////////////////////////////////////80		
 		initTogglePassword: function() {
-			oX('i.togglePassword', true).on('click', function(e) {
+			fX('i.togglePassword').on('click', function(e) {
 				var icon = oX(e.target);
 				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
 				if (!field) {
@@ -167,7 +167,7 @@
 		// Checkbox Group Handler
 		//////////////////////////////////////////////////////////////////////80		
 		initCheckMonitors: function() {
-			oX('input[type="checkbox"][group]', true).on('click', function(e) {
+			fX('input[type="checkbox"][group]').on('click', function(e) {
 				var input = oX(e.target);
 				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
 				var checked = input.prop('checked');

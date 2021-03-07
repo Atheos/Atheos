@@ -58,8 +58,22 @@
 	let list = (s) => cache;
 
 	let off = (types, selector, callback) => {
-		types.split(',').forEach(function(type) {
 
+		if (types === '*' && selector && !callback) {
+			for (var type in cache) {
+				var index = getIndex(cache[type], selector);
+				if (index === -1) continue;
+				cache[type].splice(index, 1);
+				if (cache[type].length === 0) {
+					window.removeEventListener(type, eventHandler, true);
+					delete cache[type];
+				}
+			}
+			return;
+		}
+
+
+		types.split(',').forEach(function(type) {
 			type = type.trim();
 			if (!cache[type]) return;
 

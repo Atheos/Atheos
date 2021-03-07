@@ -56,7 +56,7 @@
 		init: function() {
 			self = this;
 
-			oX('#codegit menu', true).on('click', function(e) {
+			fX('#codegit menu').on('click', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				if (tagName === 'A') {
@@ -64,7 +64,7 @@
 				}
 			});
 
-			oX('#codegit panel', true).on('click', function(e) {
+			fX('#codegit panel').on('click', function(e) {
 				var target = oX(e.target);
 				if (target.tagName === 'BUTTON') {
 					if (target.text() === 'Diff') {
@@ -75,6 +75,11 @@
 						self.undo(self.activeRepo, target.parent('tr').attr('data-file'));
 					}
 				}
+			});
+
+			// Add eventListener to open CodeGit
+			fX('#codegit_repo_banner').on('click', function() {
+				self.showCodeGit();
 			});
 
 			//Check if directories has git repo
@@ -468,11 +473,6 @@
 				oX('#file-manager').before('<div id="codegit_repo_banner">Commit Status: <span id="codegit_repo_status"></span></div>');
 				self.repoBanner = oX('#codegit_repo_banner');
 				self.repoStatus = oX('#codegit_repo_status');
-
-				// Add eventListener to open CodeGit
-				oX('#codegit_repo_banner').on('click', function() {
-					self.showCodeGit();
-				});
 			}
 
 			if (self.showRepoBanner() === false) {

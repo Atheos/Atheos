@@ -22,15 +22,15 @@
 		init: function() {
 			atheos.common.initMenuHandler(oX('#split'), oX('#split-options-menu'));
 
-			oX('#split-vertically').on('click', function(e) {
+			fX('#split-vertically').on('click', function(e) {
 				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'bottom');
 			});
 
-			oX('#split-horizontally').on('click', function(e) {
+			fX('#split-horizontally').on('click', function(e) {
 				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'right');
 			});
 
-			oX('#merge-all').on('click', function(e) {
+			fX('#merge-all').on('click', function(e) {
 				var activeSession = atheos.editor.activeInstance.getSession();
 				atheos.editor.exterminate();
 				atheos.editor.addInstance(activeSession);

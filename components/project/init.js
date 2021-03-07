@@ -32,12 +32,12 @@
 			self.load();
 			self.dock.load();
 
-			oX('#project-atheos', true).on('click', function() {
+			fX('#project-atheos').on('click', function() {
 				self.open('Atheos IDE', '@TH305');
 			});
-			oX('#projects-create', true).on('click', self.create);
-			oX('#projects-manage', true).on('click', self.list);
-			oX('#projects-collapse', true).on('click', function() {
+			fX('#projects-create').on('click', self.create);
+			fX('#projects-manage').on('click', self.list);
+			fX('#projects-collapse').on('click', function() {
 				if (self.sideExpanded) {
 					self.dock.collapse();
 				} else {
@@ -56,7 +56,7 @@
 				}
 			});
 
-			oX('#project_list .content li', true).on('click, dblclick', function(e) {
+			fX('#project_list .content li').on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
 					var node = oX(e.target);
 
@@ -259,7 +259,7 @@
 				listener,
 				callback: function() {
 					// More Selector
-					oX('#show_git_options').on('click', function(e) {
+					fX('#show_git_options').on('click', function(e) {
 						e.preventDefault();
 						oX(e.target).hide();
 						atheos.flow.slide('open', oX('#git_options').el);

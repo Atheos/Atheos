@@ -47,7 +47,7 @@
 
 			atheos.common.initMenuHandler(oX('#tab_dropdown'), self.dropDownMenu, ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
 
-			oX('#tab_close').on('click', function(e) {
+			fX('#tab_close').on('click', function(e) {
 				e.stopPropagation();
 				self.closeAll();
 			});
