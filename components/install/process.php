@@ -27,7 +27,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////////////80
 	$username = POST("username");
-	$password = POST("username");
+	$password = POST("password");
 	$projectName = POST("projectName") ?: false;
 	$projectPath = POST("projectPath") ?: $projectName;
 	$timezone = POST("timezone") ?: "UTC";
