@@ -16,44 +16,55 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
-
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
+	let self = false;
+
+	carbon.subscribe('system.loadMinor', () => atheos.alert.init());
 
 	atheos.alert = {
 
-		create: function(text, type) {
+		active: [],
+
+		init: function() {
+			if (self) return;
+			self = this;
+		},
+
+		create: function() {
 			var element = oX('<div>');
-			element.attr('id', 'alert');
+			element.attr('id', 'alert_' + self.active.length);
 			document.body.appendChild(element.el);
+			element.addClass('alert');
+			self.active.push(element);
 			return element;
 		},
 
 		show: function(options) {
-			if (!options || typeof options !== 'object') {
-				return;
-			}
-			var alert = this;
-			var overlay = atheos.common.createOverlay('alert'),
-				element = oX('#alert') || this.create();
+			if (!options || typeof options !== 'object') return;
+			atheos.common.showOverlay('alert');
 
-			overlay.show();
+			let element = self.create();
+
 			element.show();
 
 			if (options.banner) {
 				element.append(document.createElement('h1'));
 				element.find('h1').text(i18n(options.banner));
 			}
-			if (options.message) {
-				element.append(document.createElement('h2'));
-				element.find('h2').text(i18n(options.message));
-			}
+
 			if (options.data) {
 				element.append(document.createElement('pre'));
 				element.find('pre').text(i18n(options.data));
 			}
+
+			if (options.message) {
+				element.append(document.createElement('h2'));
+				element.find('h2').text(i18n(options.message));
+			}
+
+
 			if (options.actions) {
 				var actions = oX('<div>');
 				actions.addClass('actions');
@@ -65,7 +76,7 @@
 					button.innerText = i18n(key);
 					button.addEventListener('click', function() {
 						callback();
-						alert.unload();
+						self.unload(element);
 					});
 					actions.append(button);
 				}
@@ -77,16 +88,25 @@
 			});
 
 		},
-		unload: function() {
-			var overlay = oX('#overlay');
-			var element = oX('#alert');
-			if (overlay) {
-				overlay.remove();
-			}
-			if (element) {
-				element.empty();
-				element.hide();
+		unload: function(element) {
+			if (!element) return;
+			element.remove();
+			const index = self.active.indexOf(element);
+			if (index > -1) self.active.splice(index, 1);
+			if (self.active.length === 0) atheos.common.hideOverlay();
+		},
+		unloadAll: function() {
+			atheos.common.hideOverlay();
+			var i = self.active.length;
+
+			while (--i >= 0) {
+				let el = self.active[i];
+				el.remove();
+				self.active.splice(i, 1);
 			}
 		}
 	};
-})(this);
+
+	// window.alert = atheos.alert.show;
+
+})();

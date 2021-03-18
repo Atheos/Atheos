@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// Database trait & Scroll class
+// Database trait & ObjStore class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
 // warranty under the MIT License. See [root]/license.md for more.
@@ -11,31 +11,27 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 trait Database {
-	public static function getScroll($table = false, $namespace = "") {
+	public static function getKeyStore($table = false, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
-		$db = new Scroll($table, $path);
+		$db = new KeyStore($table, $path);
 		return $db;
 	}
-
-	public static function getParchment($table = false, $namespace = "") {
+	public static function getObjStore($table = false, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#/+#', '/', $path);
-		$db = new Parchment($table, $path);
+		$db = new ObjStore($table, $path);
 		return $db;
 	}
 }
 
-class Codec {
+class Store {
 
 	protected $path;
 	protected $data;
 
 	function __construct($table = "index", $path) {
-
-		if (!is_dir($path)) {
-			mkdir($path);
-		}
+		if (!is_dir($path)) mkdir($path);
 
 		$path = $path . $table . ".db.json";
 
@@ -51,19 +47,22 @@ class Codec {
 	}
 
 	protected function save($shuffle = false) {
-		// $this->data = array_unique($this->data, SORT_REGULAR);
-
 		if ($shuffle) $this->data = array_values($this->data);
 		$data = json_encode($this->data, JSON_PRETTY_PRINT);
-		$write = fopen($this->path, 'w') or die("can't open file: " . $this->path);
-		fwrite($write, $data);
-		fclose($write);
+		$write = fopen($this->path, 'w') or false;
+		if ($write) {
+			fwrite($write, $data);
+			fclose($write);
+			return true;
+		} else {
+			return false;
+		}
 	}
 
 }
 
 
-class Parchment extends Codec {
+class KeyStore extends Store {
 
 	public function insert($key = false, $value = false) {
 		if (!$key || !$value) return "missing_parameter";
@@ -141,7 +140,7 @@ class Parchment extends Codec {
 	}
 }
 
-class Scroll extends Codec {
+class ObjStore extends Store {
 
 	/* Create a new entry into the data base. */
 
@@ -150,7 +149,7 @@ class Scroll extends Codec {
 	public function insert($value = false) {
 		if (!$value) return "missing_parameter";
 		$this->data[] = $value;
-		$this->save(true);
+		return $this->save(true);
 	}
 
 	/* Get the content for the given query. */

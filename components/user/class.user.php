@@ -28,7 +28,7 @@ class User {
 	// Construct
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct($activeUser) {
-		$this->users = Common::load("users");
+		$this->users = Common::loadJSON("users");
 		$this->activeUser = $activeUser;
 	}
 
@@ -55,7 +55,7 @@ class User {
 				);
 
 				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
-				Common::save("users", $this->users);
+				Common::saveJSON("users", $this->users);
 
 				// Log Action
 				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
@@ -79,7 +79,7 @@ class User {
 		$this->users[$username]["password"] = $password;
 
 		// Save array back to JSON
-		Common::save("users", $this->users);
+		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
 		Common::send("success", "Password changed");
@@ -91,7 +91,7 @@ class User {
 	public function changePermissions($username, $permissions) {
 		$this->users[$username]["permissions"] = $permissions;
 		// Save array back to JSON
-		Common::save("users", $this->users);
+		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
 		Common::send("success", "User permissions updated");
@@ -113,7 +113,7 @@ class User {
 				"userACL" => "full"
 			);
 
-			Common::save("users", $this->users);
+			Common::saveJSON("users", $this->users);
 			// Log
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $username . "}", "access");
 			Common::send("success", array("username" => $username));
@@ -131,9 +131,9 @@ class User {
 		unset($this->users[$username]);
 
 		// Save array back to JSON
-		Common::save("users", $this->users);
+		Common::saveJSON("users", $this->users);
 
-		$db = Common::getScroll("active");
+		$db = Common::getObjStore("active");
 		$where = array("user" => $username);
 		$db->delete($where);
 
@@ -150,7 +150,7 @@ class User {
 		$this->users[$this->activeUser]["activePath"] = $activePath;
 
 		// Save array back to JSON
-		Common::save("users", $this->users);
+		Common::saveJSON("users", $this->users);
 		// Response
 		Common::send("success");
 	}
@@ -165,7 +165,7 @@ class User {
 		}
 		$this->users[$username]["userACL"] = $userACL;
 		// Save array back to JSON
-		Common::save("users", $this->users);
+		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
 		Common::send("success", "User ACL updated");

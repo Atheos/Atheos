@@ -1,4 +1,4 @@
-#alert {
+.alert {
 	display: none;
 	min-height: 50px;
 	min-width: 200px;
@@ -8,7 +8,7 @@
 	background-color: #333;
 	border: 3px solid rgba(255, 255, 255, 0.5);
 	padding: 10px;
-	z-index: 9999999;
+	z-index: 99999;
 
 	h1 {
 		font-size: 18px;

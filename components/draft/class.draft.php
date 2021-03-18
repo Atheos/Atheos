@@ -29,10 +29,7 @@ class Draft {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct($activeUser) {
 		$this->activeUser = $activeUser;
-		$this->db = Common::getScroll("drafts");
-		if (!is_dir(DATA . "/drafts")) {
-			mkdir(DATA . "/drafts");
-		}
+		$this->db = Common::getObjStore("drafts");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -59,11 +56,7 @@ class Draft {
 		}
 
 		$name = $results[0]["name"];
-		$draft = DATA . "/drafts/$name";
-		if (is_file($draft)) {
-			unlink($draft);
-		}
-
+		Common::deleteCache($name, "drafts");
 		$this->db->delete($where);
 		Common::send("success");
 	}
@@ -79,16 +72,15 @@ class Draft {
 		}
 
 		$name = $results[0]["name"];
-		$draft = DATA . "/drafts/$name";
-		
-		if (!is_file($draft)) {
+		$content = Common::loadCache($name, "drafts");
+
+		if (!$content) {
 			$this->db->delete($where);
 			Common::send("error", "Draft file missing.");
 		}
 
-		$output = file_get_contents($draft);
-		unlink($draft);
-		Common::send("success", array("content" => $output));
+		Common::deleteCache($name, "drafts");
+		Common::send("success", array("content" => $content));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -106,24 +98,13 @@ class Draft {
 			$content = ''; // Blank out file
 		}
 
-		$name = md5($path . $this->activeUser);
-		$draft = DATA . "/drafts/$name";
+		$name = Common::saveCache($path . $this->activeUser, $content, "drafts");
+		if (!$name) Common::send("error", "Unable to save draft.");
 
-		if ($file = fopen($draft, 'w')) {
-			if (fwrite($file, $content)) {
+		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+		$value = array("user" => $this->activeUser, "path" => $path, "name" => $name, "time" => time());
+		$this->db->update($where, $value, true);
 
-				$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
-				$value = array("user" => $this->activeUser, "path" => $path, "name" => $name, "time" => time());
-				$this->db->update($where, $value, true);
-
-				Common::send("success");
-			} else {
-				Common::send("error", "Client does not have access.");
-			}
-
-			fclose($file);
-		} else {
-			Common::send("error", "Client does not have access.");
-		}
+		Common::send("success");
 	}
 }
