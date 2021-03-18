@@ -33,6 +33,7 @@
 			self.initTogglePassword();
 			self.initPasswordMonitor();
 			self.initCheckMonitors();
+			self.initOverlay();
 		},
 
 
@@ -96,10 +97,10 @@
 		initDropdown: function() {
 			var close = function() {
 				oX('dropdown.expanded').removeClass('expanded');
-				oX('dropdown', true).off('click');
+				fX('dropdown').off('click');
 			};
 
-			oX('dropdown', true).on('click', function(e) {
+			fX('dropdown').on('click', function(e) {
 				e.preventDefault();
 				e.stopPropagation();
 
@@ -119,7 +120,7 @@
 		// Show/Hide Password Handler
 		//////////////////////////////////////////////////////////////////////80		
 		initTogglePassword: function() {
-			oX('i.togglePassword', true).on('click', function(e) {
+			fX('i.togglePassword').on('click', function(e) {
 				var icon = oX(e.target);
 				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
 				if (!field) {
@@ -166,7 +167,7 @@
 		// Checkbox Group Handler
 		//////////////////////////////////////////////////////////////////////80		
 		initCheckMonitors: function() {
-			oX('input[type="checkbox"][group]', true).on('click', function(e) {
+			fX('input[type="checkbox"][group]').on('click', function(e) {
 				var input = oX(e.target);
 				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
 				var checked = input.prop('checked');
@@ -190,32 +191,26 @@
 			});
 		},
 
-		createOverlay: function(type, hidden) {
-			var overlay = oX('#overlay');
-			if (overlay) {
-				overlay.remove();
-			}
-			overlay = oX('<div id="overlay">');
+		overlay: null,
+		initOverlay: function() {
+			self.overlay = oX('overlay');
+			// overlay.on('click', atheos.alert.unload);
+			// overlay.on('click', atheos.modal.unload);
+		},
 
+		showOverlay: function(type, hidden) {
+			if (!hidden) self.overlay.addClass('active');
 			if (type === 'alert') {
-				overlay.on('click', atheos.alert.unload);
+				self.overlay.on('click', atheos.alert.unloadAll);
 			} else {
-				overlay.on('click', atheos.modal.unload);
+				self.overlay.on('click', atheos.modal.unload);
 			}
-			if (hidden) {
-				overlay.hide();
-			}
-			var toast = oX('#toast_container');
-			if (toast) {
-				toast.before(overlay.el);
-			} else {
-				document.body.appendChild(overlay.el);
-			}
-			return overlay;
+			return self.overlay;
 		},
 
 		hideOverlay: function() {
-			oX('#overlay').hide();
+			self.overlay.removeClass('active');
+			self.overlay.hide();
 		},
 
 		//////////////////////////////////////////////////////////////////////

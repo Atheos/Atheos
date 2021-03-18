@@ -41,32 +41,18 @@
 
 		init: function() {
 			self = this;
+			fX('#modal_wrapper .close').on('click', self.unload);
+			fX('#modal_wrapper .drag').on('mousedown', self.drag);
 		},
 
 		create: function() {
-			var wrapper = oX('<div>'),
-				content = oX('<div>'),
-				drag = oX('<i>'),
-				close = oX('<i>');
 
-			wrapper.attr('id', 'modal_wrapper');
-			content.attr('id', 'modal_content');
+			let html = '<div id="modal_wrapper"><i class="close fas fa-times-circle"></i><i class="drag fas fa-arrows-alt"></i><div id="modal_content"></div></div>';
 
-			close.addClass('close fas fa-times-circle');
-			close.on('click', self.unload);
-
-			drag.addClass('drag fas fa-arrows-alt');
-			drag.on('mousedown', function() {
-				drag.addClass('active');
-				self.drag(wrapper);
-			}, false);
-
-			wrapper.append(close);
-			wrapper.append(drag);
-			wrapper.append(content);
-
+			let div = document.createElement('div');
+			div.innerHTML = html;
+			let wrapper = oX(div.firstChild);
 			document.body.appendChild(wrapper.el);
-
 			return wrapper;
 		},
 
@@ -86,10 +72,9 @@
 				delete data.callback;
 			}
 
-			var overlay = atheos.common.createOverlay('modal', true),
+			var overlay = atheos.common.showOverlay('modal', true),
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#modal_content');
-
 
 			wrapper.css({
 				'top': '15%',
@@ -101,9 +86,6 @@
 			var loadTimeout;
 			if (self.modalVisible) {
 				loadTimeout = setTimeout(self.setLoadingScreen, 1000);
-			}
-			if (content.find('form')) {
-				content.find('form').off('submit');
 			}
 
 			echo({
@@ -118,16 +100,15 @@
 
 					// Fix for Firefox autofocus goofiness
 					var input = wrapper.find('input[autofocus="autofocus"]');
-					if (input) {
-						input.focus();
-					}
-					carbon.publish('modal.loaded');
+					if (input) input.focus();
+
 					if (listener && wrapper.find('form')) {
-						wrapper.find('form').on('submit', listener);
+						fX('#modal_wrapper form').on(submit, listener);
 					}
 					if (callback) {
 						callback(wrapper);
 					}
+					carbon.publish('modal.loaded');
 				}
 			});
 
@@ -151,19 +132,16 @@
 			}
 		},
 
-		unload: function() {
+		unload: function(e) {
+			let modal = oX(e.target.closest('#modal_wrapper'));
 			carbon.publish('modal.unload');
-			carbon.unsubscribe('modal.loaded');
 
 			var form = oX('#modal_content form'),
 				overlay = oX('#overlay'),
 				wrapper = oX('#modal_wrapper'),
 				content = oX('#modal_content');
 
-
-			if (form) {
-				form.off('*');
-			}
+			fX('#modal_wrapper form').off('*');
 			if (overlay) {
 				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
 			}
@@ -205,12 +183,15 @@
 			screen.html(loading);
 		},
 
-		drag: function(wrapper) {
+		drag: function(e) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-			if (!wrapper) {
-				return;
-			}
-			var element = wrapper.el;
+			let element = e.target.closest('#modal_wrapper'),
+				wrapper = oX(element),
+				drag = oX(e.target);
+
+			if (!wrapper) return;
+
+			drag.addClass('active');
 
 			var rect = wrapper.offset(),
 				mouseX = window.event.clientX,
@@ -233,7 +214,7 @@
 				document.removeEventListener('mousemove', moveElement, false);
 				document.removeEventListener('mouseup', removeListeners, false);
 				window.removeEventListener('selectstart', disableSelect);
-				oX('#modal_wrapper .drag').removeClass('active');
+				drag.removeClass('active');
 			}
 
 			// document.onmousemove = _move_elem;

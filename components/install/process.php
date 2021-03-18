@@ -27,7 +27,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////////////80
 	$username = POST("username");
-	$password = POST("username");
+	$password = POST("password");
 	$projectName = POST("projectName") ?: false;
 	$projectPath = POST("projectPath") ?: $projectName;
 	$timezone = POST("timezone") ?: "UTC";
@@ -63,7 +63,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 
 	$projectData = array($projectName => $projectPath);
 
-	Common::save("projects.db", $projectData);
+	Common::saveJSON("projects.db", $projectData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Users file
@@ -78,7 +78,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 		"userACL" => "full"
 	);
 
-	Common::save("users", $userData);
+	Common::saveJSON("users", $userData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create analytics cache
@@ -96,7 +96,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 		"plugins" => array()
 	);
 
-	Common::save("analytics.db", $analyticsData);
+	Common::saveJSON("analytics.db", $analyticsData);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Config
