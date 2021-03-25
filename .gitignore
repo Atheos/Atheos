@@ -1,5 +1,1 @@
-config/key.php
-notes/*
-assets/fonts
-assets/scss_nocturnal
-vendor/*
+config/*
