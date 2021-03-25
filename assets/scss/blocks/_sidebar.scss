@@ -3,7 +3,7 @@ sidebar {
 	top: 0;
 	left: -($sidebarWidth);
 	overflow: hidden;
-	transition: all .3s ease-in;
+	transition: left .3s ease-in;
 	width: $sidebarWidth;
 	flex: 1;
 	z-index: 99;
@@ -39,18 +39,17 @@ sidebar .trigger {
 	}
 
 	name,
-	i {
+	.icon {
 		display: inline-block;
 		vertical-align: middle;
 
 	}
 
-	i {
+	.icon {
 		position: fixed;
-		left: 0;
-		font-size: 25px;
-
-		// top: 2px;
+		left: 1rem;
+		width: 2rem;
+		height: 2rem;
 	}
 
 	a {
