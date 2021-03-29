@@ -16,7 +16,7 @@ class TextMode {
 	// Default Extension Map
 	//////////////////////////////////////////////////////////////////
 	private $defaultExtensionMap = array(
-		'sh' => 'batchfile',
+		'sh' => 'sh',
 		'html' => 'html',
 		'htm' => 'html',
 		'tpl' => 'html',
