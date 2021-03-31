@@ -35,32 +35,32 @@
 		checkForm: function(e) {
 			e.preventDefault();
 
-			let data = serialize(e.target);
+			let fData = serialize(e.target);
 
-			let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
-				vPass = data.password === data.validate;
+			let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(fData.username)) && fData.username.length !== 0,
+				vPass = fData.password === fData.validate;
 
 			if (!vUser) return toast('error', 'Username must be an alphanumeric string');
 			if (!vPass) return toast('error', 'Passwords do not match.');
 
-			if (data.projectName.length === 0) return toast('error', 'Missing Project Name.');
-			if (data.projectPath.length === 0) return toast('error', 'Missing Project Path.');
+			if (fData.projectName.length === 0) return toast('error', 'Missing Project Name.');
+			if (fData.projectPath.length === 0) return toast('error', 'Missing Project Path.');
 
 			// Check Path
-			if (data.projectPath.indexOf('/') === 0) {
+			if (fData.projectPath.indexOf('/') === 0) {
 				let dialog = {
 					banner: 'Do you really want to create project with an absolute path?',
-					data: data.projectPath,
+					data: fData.projectPath,
 					actions: {
-						'Yes': function(data) {
-							self.install();
+						'Yes': function() {
+							self.install(fData);
 						},
 						'No': function() {}
 					}
 				};
 				atheos.alert.show(dialog);
 			} else {
-				self.install(data);
+				self.install(fData);
 			}
 		},
 
