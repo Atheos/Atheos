@@ -31,7 +31,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	$projectName = POST("projectName") ?: false;
 	$projectPath = POST("projectPath") ?: $projectName;
 	$timezone = POST("timezone") ?: "UTC";
-	$language = substr($_SERVER['HTTP_ACCEPT_LANGUAGE'], 0, 2) ?: "en";
+	$language = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?: "en";
 	$development = POST("development") ?: "false";
 	$authorized = POST("analytics") ?: "false";
 
