@@ -48,6 +48,7 @@
 				atheos.settings.init();
 
 			} else {
+				atheos.alert.init();
 				atheos.toast.init();
 				synthetic.init();
 				if (oX('#installer')) {

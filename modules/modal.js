@@ -103,7 +103,7 @@
 					if (input) input.focus();
 
 					if (listener && wrapper.find('form')) {
-						fX('#modal_wrapper form').on(submit, listener);
+						fX('#modal_wrapper form').on('submit', listener);
 					}
 					if (callback) {
 						callback(wrapper);
@@ -133,7 +133,6 @@
 		},
 
 		unload: function(e) {
-			let modal = oX(e.target.closest('#modal_wrapper'));
 			carbon.publish('modal.unload');
 
 			var form = oX('#modal_content form'),
