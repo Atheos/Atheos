@@ -242,7 +242,7 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 						</toggle>
 					</td>
 				</tr>
-				<tr>
+<!--				<tr>
 					<td><?php echo i18n("analyticsEnable"); ?></td>
 					<td>
 						<toggle>
@@ -252,7 +252,7 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 							<label for="analytics_false"><?php echo i18n("disabled"); ?></label>
 						</toggle>
 					</td>
-				</tr>
+				</tr> -->
 				<tr>
 					<td><?php echo i18n("timezone"); ?></td>
 					<td>
