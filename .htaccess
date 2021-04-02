@@ -1,0 +1,8 @@
+RewriteEngine on
+
+# RewriteCond %{REQUEST_FILENAME}/market !-f
+# RewriteCond %{REQUEST_FILENAME} !-d
+# RewriteRule ^(.*)$ /index.php [NC,L,QSA]
+
+RewriteRule ^market/(.*)$ /endpoint.php [NC,L,QSA]
+RewriteRule ^analytics(.*)$ /endpoint.php [NC,L,QSA]

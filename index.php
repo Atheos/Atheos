@@ -235,7 +235,7 @@
 			</p>
 
 			<p>
-				For more information please <strong><a title="installation" href="docs/installation/">read the installation instructions</a></strong> on the Wiki.
+				For more information please <strong><a title="installation" href="https://github.com/Atheos/Atheos/blob/master/docs/installation/index.md">read the installation instructions</a></strong> within source.
 			</p>
 		</section>
 		<section>
