@@ -8,7 +8,7 @@
 // Authors: Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
 	const echo = function(opts) {
@@ -81,6 +81,6 @@
 
 	};
 
-	global.echo = echo;
+	window.echo = echo;
 
 })(this);

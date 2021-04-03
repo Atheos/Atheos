@@ -18,22 +18,17 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
-
-	atheos.common = {
+	const node = {
 
 		init: function() {
-			self = this;
-			self.initDropdown();
-			self.initTogglePassword();
-			self.initPasswordMonitor();
-			self.initCheckMonitors();
-			self.initOverlay();
+			node.initDropdown();
+			node.initTogglePassword();
+			node.initPasswordMonitor();
+			node.initCheckMonitors();
+			node.initOverlay();
 		},
 
 
@@ -193,24 +188,24 @@
 
 		overlay: null,
 		initOverlay: function() {
-			self.overlay = oX('overlay');
+			node.overlay = oX('overlay');
 			// overlay.on('click', atheos.alert.unload);
 			// overlay.on('click', atheos.modal.unload);
 		},
 
 		showOverlay: function(type, hidden) {
-			if (!hidden) self.overlay.addClass('active');
+			if (!hidden) node.overlay.addClass('active');
 			if (type === 'alert') {
-				self.overlay.on('click', atheos.alert.unloadAll);
+				node.overlay.on('click', atheos.alert.unloadAll);
 			} else {
-				self.overlay.on('click', atheos.modal.unload);
+				node.overlay.on('click', atheos.modal.unload);
 			}
-			return self.overlay;
+			return node.overlay;
 		},
 
 		hideOverlay: function() {
-			self.overlay.removeClass('active');
-			self.overlay.hide();
+			node.overlay.removeClass('active');
+			node.overlay.hide();
 		},
 
 		//////////////////////////////////////////////////////////////////////
@@ -228,7 +223,7 @@
 		//////////////////////////////////////////////////////////////////////
 		scriptCache: [],
 		loadScript: function(url, callback) {
-			if (self.scriptCache.includes(url)) {
+			if (node.scriptCache.includes(url)) {
 				//already loaded so just call the callback
 				if (typeof callback === 'function') {
 					callback.call(this);
@@ -247,4 +242,7 @@
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadVital', () => node.init());
+	atheos.common = node;
+
+})();

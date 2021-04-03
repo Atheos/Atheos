@@ -22,18 +22,14 @@
 (function() {
 	'use strict';
 
-	let self = false;
-
-	carbon.subscribe('system.loadMinor', () => atheos.flow.init());
-
-	atheos.flow = {
+	const node = {
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initialize the module
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			if (self) return;
-			self = this;
+			if (node) return;
+			node = this;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -126,5 +122,8 @@
 			}
 		}
 	};
+
+	carbon.subscribe('system.loadMinor', () => node.init());
+	atheos.flow = node;
 
 })();

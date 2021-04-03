@@ -24,10 +24,7 @@
 (function() {
 	'use strict';
 
-	let self = false,
-		bindings = {};
-
-	carbon.subscribe('system.loadMinor', () => atheos.keybind.init());
+	let bindings = {};
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default Bindings
@@ -60,71 +57,68 @@
 	// CTRL+/             | Comment Line                                       |
 	//////////////////////////////////////////////////////////////////////////80
 
-	atheos.keybind = {
+	const node = {
 
 		init: function() {
-			if (self) return;
-			self = this;
-
-			document.addEventListener('keydown', self.handler);
+			document.addEventListener('keydown', node.handler);
 
 			// Close Modals [Esc] ////////////////////////////////////////////80
-			self.bind(27, false, atheos.modal.unload);
+			node.bind(27, false, atheos.modal.unload);
 
 			// Save [CTRL+S] /////////////////////////////////////////////////80
-			self.bind(83, 'ctrl', atheos.active.save);
+			node.bind(83, 'ctrl', atheos.active.save);
 
 			// Open in browser [CTRL+O] //////////////////////////////////////80
-			self.bind(79, 'ctrl', atheos.filemanager.openInBrowser);
+			node.bind(79, 'ctrl', atheos.filemanager.openInBrowser);
 
 			// Open Scout [CTRL+E] ///////////////////////////////////////////80
-			self.bind(69, 'ctrl', atheos.scout.probe);
+			node.bind(69, 'ctrl', atheos.scout.probe);
 
 			// Close [CTRL+Q] ////////////////////////////////////////////////80
-			self.bind(81, 'ctrl', atheos.active.close);
+			node.bind(81, 'ctrl', atheos.active.close);
 
 			// Find [CTRL+F] /////////////////////////////////////////////////80
-			self.bind(70, 'ctrl', function() {
+			node.bind(70, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				editor.execCommand('find');
 			});
 
 			// GotoLine [CTRL+G] /////////////////////////////////////////////80
-			self.bind(71, 'ctrl', function() {
+			node.bind(71, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				editor.execCommand('gotoline');
 			});
 
 			// Replace [CTRL+R] //////////////////////////////////////////////80
-			self.bind(82, 'ctrl', function() {
+			node.bind(82, 'ctrl', function() {
 				let editor = atheos.editor.activeInstance;
 				editor.execCommand('replace');
 			});
 
 			// Active List Previous [CTRL+UP] ////////////////////////////////80
-			self.bind(38, 'ctrl', function() {
+			node.bind(38, 'ctrl', function() {
 				atheos.active.move('up');
 			});
 
 			// Active List Next [CTRL+DOWN] //////////////////////////////////80
-			self.bind(40, 'ctrl', function() {
+			node.bind(40, 'ctrl', function() {
 				atheos.active.move('down');
 			});
 
 			// Merge Editor Vertically [CTRL+M] //////////////////////////////80
-			self.bind(77, 'ctrl', function() {
+			node.bind(77, 'ctrl', function() {
 				let activeSession = atheos.editor.getSession();
 				atheos.editor.exterminate();
 				atheos.editor.addInstance(activeSession);
 			});
 
 			// Split Editor Horizonally [CTRL+;] /////////////////////////////80
-			self.bind(186, 'ctrl', function() {
+			node.bind(186, 'ctrl', function() {
 				atheos.editor.addInstance(atheos.editor.getSession(), 'right');
 			});
 
 			// Split Editor Vertically [CTRL+Shift+;] ////////////////////////80
-			self.bind(186, 'alt', function() {
+			node.bind(186, 'alt', function() {
 				atheos.editor.addInstance(atheos.editor.getSession(), 'bottom');
 			});
 		},
@@ -167,5 +161,8 @@
 			});
 		}
 	};
+
+	carbon.subscribe('system.loadMinor', () => node.init());
+	atheos.keybind = node;
 
 })();
