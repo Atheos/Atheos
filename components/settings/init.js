@@ -11,9 +11,6 @@
 (function(global) {
 	'use strict';
 
-	var atheos = global.atheos,
-		storage = atheos.storage;
-
 	var self = null;
 
 	atheos.settings = {

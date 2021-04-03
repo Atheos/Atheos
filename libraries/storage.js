@@ -15,11 +15,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 
-(function(global) {
+(function() {
 
-	var atheos = global.atheos;
-
-	atheos.storage = function(key, newVal) {
+	window.storage = function(key, newVal) {
 		var oldVal = localStorage.getItem('atheos.' + key);
 
 		if (typeof newVal !== 'undefined') {
@@ -37,4 +35,4 @@
 		}
 	};
 
-}(this));
+}());

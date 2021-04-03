@@ -33,25 +33,25 @@
 
 					if (oX('#remember').prop('checked')) {
 						// Save Username
-						atheos.storage('username', oX('#username').value());
-						atheos.storage('remember', true);
+						storage('username', oX('#username').value());
+						storage('remember', true);
 					} else {
-						atheos.storage('username', false);
-						atheos.storage('remember', false);
+						storage('username', false);
+						storage('remember', false);
 
 						oX('#password').focus();
 					}
 
 					// Save Language
-					atheos.storage('language', oX('#language').value());
+					storage('language', oX('#language').value());
 
 					self.authenticate(e.target);
 				});
 
 				var element;
 
-				var username = atheos.storage('username');
-				var remember = atheos.storage('remember');
+				var username = storage('username');
+				var remember = storage('remember');
 				if (username && remember) {
 					element = oX('#username');
 					oX('#username').value(username);
@@ -61,7 +61,7 @@
 				}
 
 				// Get Language
-				var language = atheos.storage('language');
+				var language = storage('language');
 				element = oX('#language');
 				if (element && element.findAll('option').length > 1) {
 					element.findAll('option').forEach(function(option) {
