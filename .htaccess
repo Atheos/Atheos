@@ -1,6 +1,22 @@
 Options -Indexes
+
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 500 /error.php
+
+RedirectMatch 403 ^/data/*$
+RedirectMatch 403 ^/notes/*$
+RedirectMatch 403 ^/workspace/?$
+
+Order Allow,Deny
+<FilesMatch "^(|controller\.php|dialog\.php|index\.php)$">
+	Allow from all
+</FilesMatch>
+<FilesMatch "^.*\.(webmanifest|htm|ico|jpg|png|txt|xml|js|css|woff|woff2)">
+	Allow from all
+</FilesMatch>
+
 <Files ~ "^.*\.(txt|yml|md|xml|json)">
   Require all denied
 </Files>
 
-RedirectMatch 403 ^/workspace/?$
