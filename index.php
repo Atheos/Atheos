@@ -26,10 +26,6 @@ require_once("public/class.sourcemanager.php");
 
 $SourceManager = new SourceManager;
 
-// Read Components & Plugins
-$components = Common::readDirectory(COMPONENTS);
-$plugins = Common::readDirectory(PLUGINS);
-
 ?>
 <!doctype html>
 <html lang="en">
@@ -53,10 +49,13 @@ $plugins = Common::readDirectory(PLUGINS);
 
 	// Load THEME
 	echo("<!-- THEME -->\n");
-	echo("\t<link rel=\"stylesheet\" href=\"theme/main.min.css\">\n\n");
+	echo("\t<link rel=\"stylesheet\" href=\"theme/main.min.css\">\n");
 
 	// LOAD FONTS
 	$SourceManager->echo("css", "fonts", DEVELOPMENT);
+
+	// LOAD LIBRARIES
+	$SourceManager->echo("js", "libraries", DEVELOPMENT);
 
 	// LOAD MODULES
 	$SourceManager->echo("js", "modules", DEVELOPMENT);

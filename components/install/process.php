@@ -144,6 +144,7 @@ define("ANALYTICS", ' . $authorized . ');
 
 // PATHS
 define("COMPONENTS", BASE_PATH . "/components");
+define("LIBRARIES", BASE_PATH . "/libraries");
 define("PLUGINS", BASE_PATH . "/plugins");
 define("DATA", BASE_PATH . "/data");
 define("WORKSPACE", BASE_PATH . "/workspace");
