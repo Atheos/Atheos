@@ -1,7 +1,5 @@
 *~
 *\#
-*.swp
-.ignore
 config.php
 !*/README.md
 data/*
@@ -9,15 +7,8 @@ data/*
 workspace/*
 plugins/*
 public/*.min.*
-themes/*
-!themes/atheos/
 
 *.disabled*
-js/*.disabled.*
-components/*/*.disabled.*
 
 notes/*
 restore.php
-restore/*
-
-lib/hub-updater
