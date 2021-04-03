@@ -1,10 +1,10 @@
 <?php
 
-require_once "libraries/minify/Minify.php";
-require_once "libraries/minify/CSS.php";
-require_once "libraries/minify/JS.php";
-require_once "libraries/path-converter/ConverterInterface.php";
-require_once "libraries/path-converter/Converter.php";
+require_once "vendor/minify/Minify.php";
+require_once "vendor/minify/CSS.php";
+require_once "vendor/minify/JS.php";
+require_once "vendor/path-converter/ConverterInterface.php";
+require_once "vendor/path-converter/Converter.php";
 
 use MatthiasMullie\Minify;
 
