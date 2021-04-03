@@ -51,6 +51,10 @@ class Filemanager {
 			Common::send("error", "Invalid path.");
 		}
 
+		if (is_dir($path)) {
+			$path = preg_replace("/[\/]+/", "/", "$path/");
+		}
+
 		Common::rDelete($path);
 		Common::send("success");
 	}
@@ -174,7 +178,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function move($path, $dest) {
 		if (file_exists($dest)) Common::send("error", "Target already exists.");
-		
+
 		if (rename($path, $dest)) {
 			Common::send("success", "Target moved.");
 		} else {
