@@ -34,6 +34,7 @@ class SourceManager {
 	);
 
 	private $components = array();
+	private $libraries = array();
 
 	private $pluginsJS = array();
 	private $pluginsCSS = array();
@@ -45,12 +46,18 @@ class SourceManager {
 	);
 
 	function __construct() {
-		global $components; global $plugins;
+		global $components; global $libraries; global $plugins;
 
 		foreach ($components as $component) {
 			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
 				$this->components[] = "components/$component/init.js";
 			}
+		}
+
+		foreach ($libraries as $file) {
+			if ($file === "README.md") continue;
+			if (!file_exists(LIBRARIES . "/" . $file)) continue;
+			$this->libraries[] = "libraries/$file";
 		}
 
 		foreach ($plugins as $plugin) {
@@ -74,6 +81,9 @@ class SourceManager {
 			case "components":
 				$files = $this->components;
 				break;
+			case "libraries":
+				$files = $this->libraries;
+				break;
 			case "plugins":
 				$files = $type === "css" ? $this->pluginsCSS: $this->pluginsJS;
 				break;
@@ -85,7 +95,7 @@ class SourceManager {
 				break;
 		}
 
-		echo "\t<!-- " . strtoupper($dataset) . " -->\n";
+		echo "\n\t<!-- " . strtoupper($dataset) . " -->\n";
 		$minifiedFileName = "public/$dataset.min.$type";
 
 		if ($raw) {
@@ -160,6 +170,6 @@ class SourceManager {
 	}
 
 	function getTag($type = "css", $path) {
-		return $type === "css" ? "\t<link rel=\"stylesheet\" href=\"$path\">\n\n": "\t<script type=\"text/javascript\" src=\"$path\"></script>\n\n";
+		return $type === "css" ? "\t<link rel=\"stylesheet\" href=\"$path\">\n": "\t<script type=\"text/javascript\" src=\"$path\"></script>\n";
 	}
 }
