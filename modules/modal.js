@@ -23,26 +23,17 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos,
-		carbon = global.carbon,
-		echo = global.echo;
-
-	var self = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.modal.init());
-
-	atheos.modal = {
+	const node = {
 
 		modalVisible: false,
 		fadeDuration: 500,
 
 		init: function() {
-			self = this;
-			fX('#modal_wrapper .close').on('click', self.unload);
-			fX('#modal_wrapper .drag').on('mousedown', self.drag);
+			fX('#modal_wrapper .close').on('click', node.unload);
+			fX('#modal_wrapper .drag').on('mousedown', node.drag);
 		},
 
 		create: function() {
@@ -73,7 +64,7 @@
 			}
 
 			var overlay = atheos.common.showOverlay('modal', true),
-				wrapper = oX('#modal_wrapper') || self.create(),
+				wrapper = oX('#modal_wrapper') || node.create(),
 				content = oX('#modal_content');
 
 			wrapper.css({
@@ -84,8 +75,8 @@
 			});
 
 			var loadTimeout;
-			if (self.modalVisible) {
-				loadTimeout = setTimeout(self.setLoadingScreen, 1000);
+			if (node.modalVisible) {
+				loadTimeout = setTimeout(node.setLoadingScreen, 1000);
 			}
 
 			echo({
@@ -112,11 +103,11 @@
 				}
 			});
 
-			if (!self.modalVisible) {
-				atheos.flow.fade('in', wrapper.el, self.fadeDuration);
-				atheos.flow.fade('in', overlay.el, self.fadeDuration);
+			if (!node.modalVisible) {
+				atheos.flow.fade('in', wrapper.el, node.fadeDuration);
+				atheos.flow.fade('in', overlay.el, node.fadeDuration);
 			}
-			self.modalVisible = true;
+			node.modalVisible = true;
 		},
 
 		resize: function() {
@@ -142,18 +133,18 @@
 
 			fX('#modal_wrapper form').off('*');
 			if (overlay) {
-				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
+				atheos.flow.fade('remove', overlay.el, node.fadeDuration);
 			}
 			if (wrapper) {
-				atheos.flow.fade('out', wrapper.el, self.fadeDuration);
+				atheos.flow.fade('out', wrapper.el, node.fadeDuration);
 			}
 
 			if (content) {
 				content.off('*');
-				setTimeout(content.empty, (self.fadeDuration + 100));
+				setTimeout(content.empty, (node.fadeDuration + 100));
 			}
 
-			self.modalVisible = false;
+			node.modalVisible = false;
 			atheos.editor.focus();
 		},
 
@@ -224,4 +215,7 @@
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadMinor', () => node.init());
+	atheos.modal = node;
+
+})();

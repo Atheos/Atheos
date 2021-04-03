@@ -8,14 +8,10 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
+	'use strict';
 
-	var atheos = global.atheos,
-		carbon = global.carbon;
-
-	carbon.subscribe('system.loadExtra', () => atheos.splitview.init());
-
-	atheos.splitview = {
+	const node = {
 
 		splitMenuOpen: false,
 
@@ -38,7 +34,10 @@
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadMinor', () => node.init());
+	atheos.splitview = node;
+
+})();
 
 var separatorWidth = 5;
 
@@ -76,8 +75,8 @@ var separatorWidth = 5;
 //////////////////////////////////////////////////////////////////////////////80
 
 function SplitContainer(parent, children, splitType) {
-		var self = this,
-			Q = self.helper;
+	var self = this,
+		Q = self.helper;
 
 	self.parent = parent;
 	self.splitType = splitType;

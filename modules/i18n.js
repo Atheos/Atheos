@@ -8,14 +8,10 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
-
-	atheos.i18n = {
+	const node = {
 
 		cache: {},
 
@@ -23,9 +19,7 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
-
-			window.i18n = Function.prototype.bind.call(atheos.i18n.translate);
+			window.i18n = Function.prototype.bind.call(node.translate);
 			echo({
 				data: {
 					target: 'i18n',
@@ -33,21 +27,23 @@
 				},
 				settled: function(status, reply) {
 					if (status !== 'success') return;
-					self.cache = reply.cache;
+					node.cache = reply.cache;
 				}
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////
-		// Download Archive
-		//////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
+		// Translate
+		//////////////////////////////////////////////////////////////////////80
 		translate: function(string, args) {
-			if (!self.cache) {
-				return string;
-			}
-			let result = string in self.cache ? self.cache[string] : string;
+			if (!node.cache) return string;
+
+			let result = string in node.cache ? node.cache[string] : string;
 			return args ? result.replace('%s', args) : result;
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadVital', () => node.init());
+	atheos.i18n = node;
+
+})();
