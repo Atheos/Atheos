@@ -19,13 +19,14 @@
 
 	atheos.user = {
 
-		loginForm: oX('#login'),
+		loginForm: null,
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self = this;
+			self.loginForm = oX('#login');
 
 			if (self.loginForm) {
 				fX('#login').on('submit', function(e) {
@@ -85,7 +86,6 @@
 					oX('#login_options').hide();
 				});
 			} else {
-
 				carbon.subscribe('chrono.mega', function() {
 					// Run controller to check session (also acts as keep-alive) & Check user
 					echo({
