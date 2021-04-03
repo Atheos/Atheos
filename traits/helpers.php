@@ -136,7 +136,10 @@ trait Helpers {
 			return;
 		}
 		if (is_dir($target)) {
+
 			$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+			// $files = glob($target . "/*");
+
 
 			foreach ($files as $file) {
 				Common::rDelete($file);
