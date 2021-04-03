@@ -37,7 +37,7 @@
 
 		stayTimes: {
 			success: 3000,
-			error: 1000,
+			error: 10000,
 			warning: 5000,
 			notice: 3000,
 		},
