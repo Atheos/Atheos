@@ -9,7 +9,7 @@
 // Source: https://github.com/cferdinandi/events
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 
 	'use strict';
 
@@ -168,5 +168,5 @@
 		};
 	};
 
-	global.fX = flux;
-})(this);
+	window.fX = flux;
+})();

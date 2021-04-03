@@ -15,7 +15,7 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
-	let self = false;
+	let running = false;
 
 	window.atheos = {
 
@@ -28,28 +28,25 @@
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			window.addEventListener('error', atheos.error);
-			if (self) return;
-			self = this;
+			if (running) return;
+			running = true;
 
-			atheos.i18n.init();
-			atheos.common.init();
+			// Atheos has three levels of priority loading:
+			//	Vital loads no matter what, always first
+			//	Critical components should load on major
+			//	Features should load on minor
+			//	Plugins should load on extra
+			carbon.publish('system.loadVital');
 
 			// User is logged in
 			if (!(oX('#login') || oX('#installer'))) {
-				// Atheos has three levels of priority loading:
-				//	Critical components should load on major
-				//	Features should load on minor
-				//	Plugins should load on extra
 				carbon.publish('system.loadMajor');
 				carbon.publish('system.loadMinor');
 				carbon.publish('system.loadExtra');
-
 				// Settings are initialized last in order to ensure all listeners are attached
 				atheos.settings.init();
 
 			} else {
-				atheos.alert.init();
-				atheos.toast.init();
 				synthetic.init();
 				if (oX('#installer')) {
 					// Atheos hasn't been installed yet
