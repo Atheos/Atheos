@@ -31,10 +31,10 @@
 			self = this;
 
 			carbon.subscribe('settings.loaded, settings.save', function() {
-				self.enabled = atheos.storage('draft.enabled') === false ? false : self.enabled;
-				self.verbose = atheos.storage('draft.verbose') === true ? true : self.verbose;
+				self.enabled = storage('draft.enabled') === false ? false : self.enabled;
+				self.verbose = storage('draft.verbose') === true ? true : self.verbose;
 				
-				let interval = atheos.storage('draft.interval');
+				let interval = storage('draft.interval');
 				interval = isNumber(interval) ? interval : self.interval;
 				if (isFunction(self.throttle)) {
 					carbon.unsubscribe('chrono.kilo', self.throttle);

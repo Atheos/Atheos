@@ -147,7 +147,7 @@
 				callback: function() {
 					var table = oX('#probe_results');
 
-					var lastSearched = JSON.parse(atheos.storage('lastSearched'));
+					var lastSearched = JSON.parse(storage('lastSearched'));
 
 					if (lastSearched) {
 						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
@@ -173,7 +173,7 @@
 				results,
 				// type
 			};
-			atheos.storage('lastSearched', JSON.stringify(lastSearched));
+			storage('lastSearched', JSON.stringify(lastSearched));
 		},
 
 		//////////////////////////////////////////////////////////////////////80

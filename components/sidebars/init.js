@@ -66,21 +66,21 @@
 			carbon.subscribe('settings.loaded', function() {
 
 
-				var sbLeftWidth = atheos.storage('sidebars.sb-left-width'),
-					sbRightWidth = atheos.storage('sidebars.sb-right-width');
+				var sbLeftWidth = storage('sidebars.sb-left-width'),
+					sbRightWidth = storage('sidebars.sb-right-width');
 
 				var handleWidth = oX('.handle').width(),
 					marginL = handleWidth,
 					marginR = handleWidth;
 
-				self.leftTrigger = atheos.storage('sidebars.leftTrigger') || 'hover';
-				self.rightTrigger = atheos.storage('sidebars.rightTrigger') || 'hover';
+				self.leftTrigger = storage('sidebars.leftTrigger') || 'hover';
+				self.rightTrigger = storage('sidebars.rightTrigger') || 'hover';
 
-				if (atheos.storage('sidebars.leftLockedVisible') === false) {
+				if (storage('sidebars.leftLockedVisible') === false) {
 					oX('#sb_left .lock').trigger('click');
 				}
 
-				if (atheos.storage('sidebars.rightLockedVisible') === true) {
+				if (storage('sidebars.rightLockedVisible') === true) {
 					oX('#sb_right .lock').trigger('click');
 				}
 
@@ -133,7 +133,7 @@
 				this.handle = oX('#sb_left .handle');
 				this.icon = oX('#sb_left .lock');
 
-				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
+				this.hoverDuration = storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
 					self.sbLeft.lock();
@@ -226,7 +226,7 @@
 				}
 				self.leftLockedVisible = !(self.leftLockedVisible);
 				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible, true);
-				atheos.storage('sidebars.leftLockedVisible', self.leftLockedVisible);
+				storage('sidebars.leftLockedVisible', self.leftLockedVisible);
 			}
 		},
 		//////////////////////////////////////////////////////////////////////	
@@ -244,7 +244,7 @@
 				this.handle = oX('#sb_right .handle');
 				this.icon = oX('#sb_right .lock');
 
-				this.hoverDuration = atheos.storage('sidebars.hoverDuration') || 300;
+				this.hoverDuration = storage('sidebars.hoverDuration') || 300;
 
 				this.icon.on('click', function(e) {
 					self.sbRight.lock();
@@ -340,7 +340,7 @@
 				}
 				self.rightLockedVisible = !(self.rightLockedVisible);
 				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible, true);
-				atheos.storage('sidebars.rightLockedVisible', self.rightLockedVisible);
+				storage('sidebars.rightLockedVisible', self.rightLockedVisible);
 			}
 		},
 		//////////////////////////////////////////////////////////////////////	
@@ -381,7 +381,7 @@
 					atheos.settings.save('sidebars.sb-' + side + '-width', width);
 				}, 200);
 
-				atheos.storage('sidebars.sb-' + side + '-width', width);
+				storage('sidebars.sb-' + side + '-width', width);
 				self.dragging = false;
 
 				document.removeEventListener('mousemove', moveElement, false);

@@ -42,11 +42,11 @@
 			toggleHidden.on('click', self.toggleHidden);
 
 			carbon.subscribe('settings.loaded', function() {
-				var local = atheos.storage('filemanager.openTrigger');
+				var local = storage('filemanager.openTrigger');
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
-				self.showHidden = atheos.storage('filemanager.showHidden') === false ? false : self.showHidden;
+				self.showHidden = storage('filemanager.showHidden') === false ? false : self.showHidden;
 
 				if (self.showHidden === false) {
 					toggleHidden.switchClass('fa-eye', 'fa-eye-slash');

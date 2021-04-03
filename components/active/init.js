@@ -100,7 +100,7 @@
 			window.onresize = self.updateTabDropdownVisibility;
 
 			carbon.subscribe('settings.loaded', function() {
-				self.loopBehavior = atheos.storage('active.loopBehavior') || self.loopBehavior;
+				self.loopBehavior = storage('active.loopBehavior') || self.loopBehavior;
 
 				// This timeout is an effort to double check the tab visibility
 				// after everything has been loaded. The default route has some 
