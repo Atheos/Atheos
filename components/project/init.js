@@ -50,7 +50,7 @@
 			});
 
 			carbon.subscribe('settings.loaded', function() {
-				var local = atheos.storage('project.openTrigger');
+				var local = storage('project.openTrigger');
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}

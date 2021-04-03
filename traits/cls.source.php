@@ -19,7 +19,6 @@ class SourceManager {
 		"modules/i18n.js",
 		"modules/keybind.js",
 		"modules/modal.js",
-		"modules/storage.js",
 		"modules/splitview.js",
 		"modules/toast.js"
 	);
