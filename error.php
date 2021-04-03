@@ -40,15 +40,15 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
 	<!-- FONTS -->
-	<link rel="stylesheet" href="fonts/file-icons/webfont.min.css">
-	<link rel="stylesheet" href="fonts/fontawesome/webfont.css">
-	<link rel="stylesheet" href="fonts/ubuntu/webfont.css">
+	<link rel="stylesheet" href="/fonts/file-icons/webfont.min.css">
+	<link rel="stylesheet" href="/fonts/fontawesome/webfont.css">
+	<link rel="stylesheet" href="/fonts/ubuntu/webfont.css">
 
 	<!-- FAVICONS -->
 	<?php require_once("templates/favicons.php"); ?>
 
 	<!-- THEME -->
-	<link rel="stylesheet" href="theme/main.min.css">
+	<link rel="stylesheet" href="/theme/main.min.css">
 
 	<style>
 		p {
@@ -73,7 +73,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 	</form>
 
-	<script type="text/javascript" src="libraries/synthetic.js"></script>
+	<script type="text/javascript" src="/libraries/synthetic.js"></script>
 	<script type="text/javascript">
 		document.addEventListener("DOMContentLoaded", function () {
 			synthetic.init();
