@@ -22,7 +22,7 @@ header("Access-Control-Allow-Origin: *");
 
 require_once("common.php");
 
-require_once("public/class.sourcemanager.php");
+require_once("traits/cls.source.php");
 
 $SourceManager = new SourceManager;
 
