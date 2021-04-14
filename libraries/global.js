@@ -79,7 +79,7 @@
 	// Open External Link
 	//////////////////////////////////////////////////////////////////////
 	window.openExternal = function(url) {
-		window.open(addon.url, '_newtab');
+		window.open(url, '_newtab');
 	};
 
 
