@@ -354,7 +354,7 @@
 			self.forEachInstance(function(int) {
 				int.setTheme(val);
 			});
-			self.settings.fontSize = vals;
+			self.settings.fontSize = val;
 			eStorage('theme', val);
 		},
 
@@ -366,7 +366,7 @@
 			self.forEachInstance(function(int) {
 				int.setFontSize(val);
 			});
-			self.settings.fontSize = vals;
+			self.settings.fontSize = val;
 			eStorage('fontSize', val);
 		},
 
