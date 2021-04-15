@@ -24,7 +24,7 @@ From Codiad:
 
 Atheos is expanding on that mentality as much as possible, trying to minimizing it's footprint even further while maximizing functionality and performance. The major goal of Atheos is to provide users with an easy, fast and fully featured Cloud Based IDE without a large server footprint.
 
-For more information on the project please check out **[the documentation](https://www.atheos.io/docs)** or **[our homepage](http://www.atheos.io)**
+For more information on the project please check out **[our homepage](http://www.atheos.io)**
 
 ## Getting Started
 ### Manual Installation

@@ -6,14 +6,14 @@
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
 
 	//////////////////////////////////////////////////////////////////////
 	// Path helper functions
 	//////////////////////////////////////////////////////////////////////
-	global.pathinfo = function(path) {
+	window.pathinfo = function(path) {
 		var index = path.lastIndexOf('/');
 
 		let getBaseName = function(path) {
@@ -43,7 +43,7 @@
 	//////////////////////////////////////////////////////////////////////
 	// Debounce and Throttle
 	//////////////////////////////////////////////////////////////////////
-	global.debounce = function(fn, delay) {
+	window.debounce = function(fn, delay) {
 		// Source: https://remysharp.com/2010/07/21/throttling-function-calls
 		var timer = null;
 		return function() {
@@ -56,7 +56,7 @@
 		};
 	};
 
-	global.throttle = function(fn, threshhold, scope) {
+	window.throttle = function(fn, threshhold, scope) {
 		// Source: https://remysharp.com/2010/07/21/throttling-function-calls
 		threshhold = threshhold || 250;
 		var defer = false;
@@ -78,15 +78,15 @@
 	//////////////////////////////////////////////////////////////////////
 	// Open External Link
 	//////////////////////////////////////////////////////////////////////
-	global.openExternal = function(url) {
-		window.open(addon.url, '_newtab');
+	window.openExternal = function(url) {
+		window.open(url, '_newtab');
 	};
 
 
 	//////////////////////////////////////////////////////////////////////
 	// Extend / Combine JS objects without modifying the source object
 	//////////////////////////////////////////////////////////////////////
-	global.extend = function(obj, src) {
+	window.extend = function(obj, src) {
 		var temp = JSON.parse(JSON.stringify(obj));
 		for (var key in src) {
 			if (src.hasOwnProperty(key)) {
@@ -100,7 +100,7 @@
 	//////////////////////////////////////////////////////////////////////80
 	// SerializeForm
 	//////////////////////////////////////////////////////////////////////80
-	global.serializeForm = function(form) {
+	window.serializeForm = function(form) {
 		var field, l, s = [];
 		var o = {};
 		if (typeof form === 'object' && form.nodeName === 'FORM') {
@@ -135,7 +135,7 @@
 		return o;
 	};
 
-	global.serialize = function(form) {
+	window.serialize = function(form) {
 		const data = new FormData(form);
 		return Object.fromEntries(data.entries());
 	};
@@ -143,18 +143,18 @@
 	//////////////////////////////////////////////////////////////////////////80
 	// Methods for determining whether something is or isn't
 	//////////////////////////////////////////////////////////////////////////80
-	global.isArray = (value) => value && typeof value === 'object' && value.constructor === Array;
-	global.isObject = (value) => value && typeof value === 'object' && value.constructor === Object;
-	global.isRegExp = (value) => value && typeof value === 'object' && value.constructor === RegExp;
-	global.isError = (value) => value instanceof Error && typeof value.message !== 'undefined';
-	global.isString = (value) => typeof value === 'string' || value instanceof String;
-	global.isNumber = (value) => typeof value === 'number' && isFinite(value);
-	global.isUndefined = (value) => typeof value === 'undefined';
-	global.isFunction = (value) => typeof value === 'function';
-	global.isBoolean = (value) => typeof value === 'boolean';
-	global.isSymbol = (value) => typeof value === 'symbol';
-	global.isDate = (value) => value instanceof Date;
-	global.isNull = (value) => value === null;
+	window.isArray = (value) => value && typeof value === 'object' && value.constructor === Array;
+	window.isObject = (value) => value && typeof value === 'object' && value.constructor === Object;
+	window.isRegExp = (value) => value && typeof value === 'object' && value.constructor === RegExp;
+	window.isError = (value) => value instanceof Error && typeof value.message !== 'undefined';
+	window.isString = (value) => typeof value === 'string' || value instanceof String;
+	window.isNumber = (value) => typeof value === 'number' && isFinite(value);
+	window.isUndefined = (value) => typeof value === 'undefined';
+	window.isFunction = (value) => typeof value === 'function';
+	window.isBoolean = (value) => typeof value === 'boolean';
+	window.isSymbol = (value) => typeof value === 'symbol';
+	window.isDate = (value) => value instanceof Date;
+	window.isNull = (value) => value === null;
 
 	//////////////////////////////////////////////////////////////////////
 	// Shorthand for sending to console
@@ -163,4 +163,4 @@
 	window.trace = Function.prototype.bind.call(console.trace, console);
 
 
-})(this);
+})();

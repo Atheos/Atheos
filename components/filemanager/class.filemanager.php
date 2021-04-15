@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once("libraries/differential/diff_match_patch.php");
+require_once("vendor/differential/diff_match_patch.php");
 
 class Filemanager {
 
@@ -49,6 +49,10 @@ class Filemanager {
 	public function delete($path) {
 		if (!file_exists($path)) {
 			Common::send("error", "Invalid path.");
+		}
+
+		if (is_dir($path)) {
+			$path = preg_replace("/[\/]+/", "/", "$path/");
 		}
 
 		Common::rDelete($path);
@@ -174,7 +178,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function move($path, $dest) {
 		if (file_exists($dest)) Common::send("error", "Target already exists.");
-		
+
 		if (rename($path, $dest)) {
 			Common::send("success", "Target moved.");
 		} else {

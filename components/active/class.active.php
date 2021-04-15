@@ -67,11 +67,15 @@ class Active {
 		$where = array(["user", "==", $this->activeUser]);
 		$result = $this->db->select($where);
 
-		$temp = array();
+		$temp = array(
+			"inFocus" => false
+		);
 		foreach ($result as $file) {
 			$path = $file["path"];
 
 			if (file_exists(Common::getWorkspacePath($path))) {
+				if ($file["status"] === "inFocus") $temp["inFocus"] = $path;
+
 				$temp[] = $file;
 			} else {
 
@@ -121,7 +125,7 @@ class Active {
 		$value = array("status" => "active");
 		$this->db->update($where, $value);
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
-		$value = array("status" => "focus");
+		$value = array("status" => "inFocus");
 		$this->db->update($where, $value);
 		Common::send("success");
 	}

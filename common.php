@@ -55,6 +55,7 @@ class Common {
 
 		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
 		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
+		if (!defined("LIBRARIES")) define("LIBRARIES", BASE_PATH . "/libraries");
 		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
 		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
 		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
@@ -64,9 +65,10 @@ class Common {
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
-		global $components; global $plugins;
+		global $components; global $libraries; global $plugins;
 		// Read Components & Plugins
 		$components = Common::readDirectory(COMPONENTS);
+		$libraries = Common::readDirectory(LIBRARIES);
 		$plugins = Common::readDirectory(PLUGINS);
 	}
 

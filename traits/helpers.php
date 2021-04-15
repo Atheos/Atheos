@@ -63,6 +63,7 @@ trait Helpers {
 	public static function readDirectory($foldername) {
 		$tmp = array();
 		$allFiles = scandir($foldername);
+
 		foreach ($allFiles as $fname) {
 			if ($fname === "." || $fname === "..") {
 				continue;
@@ -73,9 +74,9 @@ trait Helpers {
 				continue;
 			}
 
-			if (is_dir($foldername."/".$fname)) {
+			// if (is_dir($foldername."/".$fname)) {
 				$tmp[] = $fname;
-			}
+			// }
 		}
 		return $tmp;
 	}
@@ -136,7 +137,10 @@ trait Helpers {
 			return;
 		}
 		if (is_dir($target)) {
+
 			$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
+			// $files = glob($target . "/*");
+
 
 			foreach ($files as $file) {
 				Common::rDelete($file);

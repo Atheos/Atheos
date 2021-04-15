@@ -1,39 +1,30 @@
 <?php
 
-require_once "libraries/minify/Minify.php";
-require_once "libraries/minify/CSS.php";
-require_once "libraries/minify/JS.php";
-require_once "libraries/path-converter/ConverterInterface.php";
-require_once "libraries/path-converter/Converter.php";
+require_once "vendor/minify/Minify.php";
+require_once "vendor/minify/CSS.php";
+require_once "vendor/minify/JS.php";
+require_once "vendor/path-converter/ConverterInterface.php";
+require_once "vendor/path-converter/Converter.php";
 
 use MatthiasMullie\Minify;
 
 class SourceManager {
 
 	private $modules = array(
-		"modules/carbon.js",
-		"modules/echo.js",
-		"modules/flux.js",
-		"modules/icons.js",
-		"modules/global.js",
-		"modules/onyx.js",
-		"modules/synthetic.js",
-		// Global components need to be above this line.
 		"modules/system.js",
 		"modules/alert.js",
 		"modules/flow.js",
-		"modules/flux.js",
 		"modules/chrono.js",
 		"modules/common.js",
 		"modules/i18n.js",
 		"modules/keybind.js",
 		"modules/modal.js",
-		"modules/storage.js",
 		"modules/splitview.js",
 		"modules/toast.js"
 	);
 
 	private $components = array();
+	private $libraries = array();
 
 	private $pluginsJS = array();
 	private $pluginsCSS = array();
@@ -45,12 +36,18 @@ class SourceManager {
 	);
 
 	function __construct() {
-		global $components; global $plugins;
+		global $components; global $libraries; global $plugins;
 
 		foreach ($components as $component) {
 			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
 				$this->components[] = "components/$component/init.js";
 			}
+		}
+
+		foreach ($libraries as $file) {
+			if ($file === "README.md") continue;
+			if (!file_exists(LIBRARIES . "/" . $file)) continue;
+			$this->libraries[] = "libraries/$file";
 		}
 
 		foreach ($plugins as $plugin) {
@@ -74,6 +71,9 @@ class SourceManager {
 			case "components":
 				$files = $this->components;
 				break;
+			case "libraries":
+				$files = $this->libraries;
+				break;
 			case "plugins":
 				$files = $type === "css" ? $this->pluginsCSS: $this->pluginsJS;
 				break;
@@ -85,7 +85,7 @@ class SourceManager {
 				break;
 		}
 
-		echo "\t<!-- " . strtoupper($dataset) . " -->\n";
+		echo "\n\t<!-- " . strtoupper($dataset) . " -->\n";
 		$minifiedFileName = "public/$dataset.min.$type";
 
 		if ($raw) {
@@ -160,6 +160,6 @@ class SourceManager {
 	}
 
 	function getTag($type = "css", $path) {
-		return $type === "css" ? "\t<link rel=\"stylesheet\" href=\"$path\">\n\n": "\t<script type=\"text/javascript\" src=\"$path\"></script>\n\n";
+		return $type === "css" ? "\t<link rel=\"stylesheet\" href=\"$path\">\n": "\t<script type=\"text/javascript\" src=\"$path\"></script>\n";
 	}
 }

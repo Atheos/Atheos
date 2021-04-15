@@ -64,17 +64,18 @@
 				settled: function(status, reply) {
 					if (status !== 'success') return;
 
-					var focused = false;
-					for (var key in reply) {
-						var item = reply[key];
-						focused = item.status === 'focus' ? true : focused;
-						atheos.filemanager.openFile(item.path, item.status === 'focus');
-					}
-					var keys = Object.keys(reply);
-					if (focused !== true && keys.length > 0) {
-						atheos.filemanager.openFile(reply[0].path, true);
-					}
+					var inFocus = reply.inFocus,
+					key, item;
+					
+					delete reply.inFocus;
+					
+					for (key in reply) {
+						item = reply[key];
 
+						if(!inFocus) item.status = inFocus = 'inFocus';
+
+						atheos.filemanager.openFile(item.path, item.status === 'inFocus');
+					}
 				}
 			});
 
@@ -99,7 +100,7 @@
 			window.onresize = self.updateTabDropdownVisibility;
 
 			carbon.subscribe('settings.loaded', function() {
-				self.loopBehavior = atheos.storage('active.loopBehavior') || self.loopBehavior;
+				self.loopBehavior = storage('active.loopBehavior') || self.loopBehavior;
 
 				// This timeout is an effort to double check the tab visibility
 				// after everything has been loaded. The default route has some 

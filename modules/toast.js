@@ -31,29 +31,23 @@
 (function() {
 	'use strict';
 
-	let self = false;
-
-	carbon.subscribe('system.loadMinor', () => atheos.toast.init());
-
-	atheos.toast = {
+	const node = {
 
 		container: null,
 
 		stayTimes: {
 			success: 3000,
-			error: 1000,
+			error: 10000,
 			warning: 5000,
 			notice: 3000,
 		},
 
 		init: function() {
-			if (self) return;
-			self = this;
-			self.container = oX('toaster');
+			node.container = oX('toaster');
 
 			fX('toast').on('click', (e) => {
 				let toast = e.target.closest('toast');
-				self.hide(toast);
+				node.hide(toast);
 			});
 		},
 
@@ -68,13 +62,13 @@
 		showToast: function(type, text, stayTime) {
 
 			// declare variables
-			var toast = self.create(type, text);
+			var toast = node.create(type, text);
 
-			self.container.append(toast);
+			node.container.append(toast);
 
 			setTimeout(function() {
 				toast.classList.add('active');
-				setTimeout(() => self.hide(toast), stayTime);
+				setTimeout(() => node.hide(toast), stayTime);
 			}, 10);
 		},
 
@@ -89,12 +83,12 @@
 				text = text.text;
 			}
 
-			if (!(type in self.stayTimes)) return;
+			if (!(type in node.stayTimes)) return;
 
 			text = text || 'Message undefined.';
 			text = raw ? text : i18n(text);
 
-			self.showToast(type, text, self.stayTimes[type]);
+			node.showToast(type, text, node.stayTimes[type]);
 
 		},
 		hide: function(toast) {
@@ -103,6 +97,8 @@
 		}
 	};
 
+	carbon.subscribe('system.loadVital', () => node.init());
+	atheos.toast = node;
 	window.toast = atheos.toast.show;
 
 })();

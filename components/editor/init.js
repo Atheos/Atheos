@@ -10,7 +10,7 @@
 
 (function() {
 
-	let storage = (k, v) => atheos.storage('editor.' + k, v);
+	let eStorage = (k, v) => storage('editor.' + k, v);
 
 	// Classes from Ace
 	var VirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -62,9 +62,9 @@
 			if (self) return;
 			self = this;
 
-			// Retrieve editor settings from localStorage
+			// Retrieve editor settings from localeStorage
 			for (let key in self.settings) {
-				let temp = storage(key);
+				let temp = eStorage(key);
 				if (temp !== null) self.settings[key] = temp;
 			}
 
@@ -354,8 +354,8 @@
 			self.forEachInstance(function(int) {
 				int.setTheme(val);
 			});
-			self.settings.fontSize = vals;
-			storage('theme', val);
+			self.settings.fontSize = val;
+			eStorage('theme', val);
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -366,8 +366,8 @@
 			self.forEachInstance(function(int) {
 				int.setFontSize(val);
 			});
-			self.settings.fontSize = vals;
-			storage('fontSize', val);
+			self.settings.fontSize = val;
+			eStorage('fontSize', val);
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -380,7 +380,7 @@
 				int.setHighlightActiveLine(val);
 			});
 			self.settings.highlightActiveLine = val;
-			storage('highlightActiveLine', val);
+			eStorage('highlightActiveLine', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -393,7 +393,7 @@
 				int.setShowPrintMargin(val);
 			});
 			self.settings.showPrintMargin = val;
-			storage('showPrintMargin', val);
+			eStorage('showPrintMargin', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -406,7 +406,7 @@
 				int.setPrintMarginColumn(val);
 			});
 			self.settings.printMarginColumn = val;
-			storage('printMarginColumn', val);
+			eStorage('printMarginColumn', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -419,7 +419,7 @@
 				int.setDisplayIndentGuides(val);
 			});
 			self.settings.displayIndentGuides = val;
-			storage('displayIndentGuides', val);
+			eStorage('displayIndentGuides', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -432,7 +432,7 @@
 				int.setShowFoldWidgets(val);
 			});
 			self.settings.showFoldWidgets = val;
-			storage('showFoldWidgets', val);
+			eStorage('showFoldWidgets', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -445,7 +445,7 @@
 				int.getSession().setUseWrapMode(val);
 			});
 			self.settings.useWrapMode = val;
-			storage('useWrapMode', val);
+			eStorage('useWrapMode', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -458,7 +458,7 @@
 				int.getSession().setUseSoftTabs(val);
 			});
 			self.settings.useSoftTabs = val;
-			storage('useSoftTabs', val);
+			eStorage('useSoftTabs', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -471,7 +471,7 @@
 				int.getSession().setTabSize(val);
 			});
 			self.settings.tabSize = val;
-			storage('tabSize', val);
+			eStorage('tabSize', val);
 		},
 
 

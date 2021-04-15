@@ -487,13 +487,13 @@
 		},
 
 		showRepoBanner: function() {
-			var setting = atheos.storage('codegit.repoBanner');
+			var setting = storage('codegit.repoBanner');
 			setting = setting === 'disabled' ? false : true;
 			return setting;
 		},
 
 		showFileStatus: function() {
-			var setting = atheos.storage('codegit.fileStatus');
+			var setting = storage('codegit.fileStatus');
 			setting = setting === 'disabled' ? false : true;
 			return setting;
 		}

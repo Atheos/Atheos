@@ -42,11 +42,11 @@
 			toggleHidden.on('click', self.toggleHidden);
 
 			carbon.subscribe('settings.loaded', function() {
-				var local = atheos.storage('filemanager.openTrigger');
+				var local = storage('filemanager.openTrigger');
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
-				self.showHidden = atheos.storage('filemanager.showHidden') === false ? false : self.showHidden;
+				self.showHidden = storage('filemanager.showHidden') === false ? false : self.showHidden;
 
 				if (self.showHidden === false) {
 					toggleHidden.switchClass('fa-eye', 'fa-eye-slash');
@@ -135,7 +135,7 @@
 				swap = swap[swap.length - 1];
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
-					if (swap) {
+					if (swap && !target.contains(swap)) {
 						swap.parentNode.insertBefore(target, swap);
 					}
 				}
@@ -169,13 +169,17 @@
 				startMY = e.screenY;
 
 				clone = target.cloneNode(true);
+
+				let UL = clone.querySelector('UL');
+				if (UL) UL.remove();
+
 				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
 				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
 				clone.style.position = 'absolute';
 				clone.style.cursor = 'grabbing';
 
 				dragZone.append(clone);
-				target.style.opacity = 0;
+				target.style.opacity = 0.5;
 
 				xMax = dragZone.offsetWidth - clone.offsetWidth;
 				yMax = dragZone.offsetHeight - clone.offsetHeight;
@@ -251,6 +255,7 @@
 			rescan = rescan || false;
 
 			var node = oX('#file-manager a[data-path="' + CSS.escape(path) + '"]');
+			if (!node) return;
 			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {
