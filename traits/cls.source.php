@@ -38,6 +38,8 @@ class SourceManager {
 	function __construct() {
 		global $components; global $libraries; global $plugins;
 
+		if (!is_dir(BASE_PATH . "/public")) mkdir(BASE_PATH . "/public");
+
 		foreach ($components as $component) {
 			if (file_exists(COMPONENTS . "/" . $component . "/init.js")) {
 				$this->components[] = "components/$component/init.js";
