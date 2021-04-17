@@ -64,38 +64,38 @@
 
 		},
 
+		checkAnchor: function(anchor) {
+			anchor = oX(anchor);
+			//////////////////////////////////////////////////////////////////////80
+			// This tagname business is due to the logical but annoying way
+			// event delegation is handled. I keep trying to avoid organizing
+			// the css in a better way for the file manager, and this is the
+			// result.
+			//////////////////////////////////////////////////////////////////////80
+			let tagName = anchor.tagName;
+			if (tagName === 'UL') {
+				return false;
+			} else if (tagName !== 'A') {
+				if (tagName === 'LI') {
+					anchor = anchor.find('a');
+				} else {
+					anchor = anchor.parent('a');
+				}
+			}
+			return anchor;
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
-
-			var checkAnchor = function(node) {
-				node = oX(node);
-				//////////////////////////////////////////////////////////////////////80
-				// This tagname business is due to the logical but annoying way
-				// event delegation is handled. I keep trying to avoid organizing
-				// the css in a better way for the file manager, and this is the
-				// result.
-				//////////////////////////////////////////////////////////////////////80
-				if (node.tagName === 'UL') {
-					return false;
-				} else if (node.tagName !== 'A') {
-					if (node.tagName === 'LI') {
-						node = node.find('a');
-					} else {
-						node = node.parent('a');
-					}
-				}
-				return node;
-			};
-
 			oX('#file-manager a', true).on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
-					var node = checkAnchor(e.target);
-					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-						self.openDir(node.attr('data-path'));
-					} else if (node.attr('data-type') === 'file') {
-						self.openFile(node.attr('data-path'));
+					var anchor = self.checkAnchor(e.target);
+					if (anchor.attr('data-type') === 'directory' || anchor.attr('data-type') === 'root') {
+						self.openDir(anchor.attr('data-path'));
+					} else if (anchor.attr('data-type') === 'file') {
+						self.openFile(anchor.attr('data-path'));
 					}
 				}
 			});
@@ -364,10 +364,9 @@
 			fileClass = fileClass || 'fa fa-file green';
 
 			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
-			var repoClass = repo ? ' class="repo"' : '';
 
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}"${repoClass}>
+			<a data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
 			${repoIcon}
@@ -381,8 +380,10 @@
 
 		rescanCounter: 0,
 
-		rescan: function(path) {
+		rescan: function(anchor) {
+			let path = isObject(anchor) ? anchor.path : anchor;
 			path = path || oX('#project-root').attr('data-path');
+
 			if (self.rescanCounter === 0) {
 				var list = oX('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
 				var openNodes = list.findAll('a.open');
@@ -494,18 +495,19 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Copy to Clipboard
 		//////////////////////////////////////////////////////////////////////80
-		copy: function(path) {
-			self.clipboard = path;
+		copy: function(anchor) {
+			self.clipboard = anchor.path;
 			toast('success', 'Copied to Clipboard');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Paste
 		//////////////////////////////////////////////////////////////////////80
-		paste: function(path) {
-			var split = pathinfo(self.clipboard);
-			var copy = split.basename;
-			var type = split.type;
+		paste: function(anchor) {
+			let path = anchor.path,
+				split = pathinfo(self.clipboard),
+				copy = split.basename,
+				type = split.type;
 
 			var processPaste = function(path, duplicate) {
 
@@ -562,10 +564,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Duplicate Object
 		//////////////////////////////////////////////////////////////////////80
-		duplicate: function(path) {
-			var split = pathinfo(path);
-			var name = split.basename;
-			var type = split.type;
+		duplicate: function(anchor) {
+			let path = anchor.path,
+				split = pathinfo(path),
+				name = split.basename,
+				type = split.type;
 
 			var listener = function(e) {
 				e.preventDefault();
@@ -608,7 +611,14 @@
 				type: type,
 				listener
 			});
+		},
 
+		createFile: function(anchor) {
+			self.create(anchor.path, 'file');
+		},
+
+		createFolder: function(anchor) {
+			self.create(anchor.path, 'folder');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -716,10 +726,10 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Rename
 		//////////////////////////////////////////////////////////////////////80
-		rename: function(path) {
-			var split = pathinfo(path);
-			var nodeName = split.basename;
-			var type = split.type;
+		rename: function(anchor) {
+			let path = anchor.path,
+				name = anchor.name,
+				type = anchor.type;
 
 			var listener = function(e) {
 				e.preventDefault();
@@ -773,8 +783,8 @@
 			atheos.modal.load(250, {
 				target: 'filemanager',
 				action: 'rename',
-				name: nodeName,
-				type: type,
+				name,
+				type,
 				listener
 			});
 
@@ -796,10 +806,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Delete
 		//////////////////////////////////////////////////////////////////////80
-		delete: function(path) {
+		delete: function(anchor) {
+			let path = anchor.path;
 			atheos.alert.show({
 				message: 'Are you sure you wish to delete the following:',
-				data: pathinfo(path).basename,
+				data: anchor.name,
 				actions: {
 					'Delete': function() {
 						echo({
