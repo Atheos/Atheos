@@ -75,7 +75,7 @@ trait Helpers {
 			}
 
 			// if (is_dir($foldername."/".$fname)) {
-				$tmp[] = $fname;
+			$tmp[] = $fname;
 			// }
 		}
 		return $tmp;
@@ -132,25 +132,27 @@ trait Helpers {
 	}
 
 	public static function rDelete($target) {
+		$status = true;
+		
 		// Unnecessary, but rather be safe that sorry.
-		if ($target === "." || $target === "..") {
-			return;
-		}
+		if ($target === "." || $target === "..") return true;
+		
 		if (is_dir($target)) {
 
 			$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
 			// $files = glob($target . "/*");
 
-
 			foreach ($files as $file) {
-				Common::rDelete($file);
+				$status = Common::rDelete($file) === false ? false : $status;
 			}
 			if (file_exists($target)) {
-				rmdir($target);
+				$status = rmdir($target) === false ? false : $status;
 			}
 		} elseif (is_file($target)) {
-			unlink($target);
+			$status = unlink($target) === false ? false : $status;
 		}
+		
+		return $status;
 	}
 
 
