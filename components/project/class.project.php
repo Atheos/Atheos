@@ -163,6 +163,7 @@ class Project {
 		$reply = array(
 			"name" => $projectName,
 			"path" => $projectPath,
+			"repo" => is_dir($projectPath . "/.git"),
 			"text" => $projectName . " Loaded.",
 			// While I don"t approve of user information being passed through the
 			// project class, it seems significantly more effective to do so as
