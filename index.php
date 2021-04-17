@@ -71,10 +71,9 @@ $SourceManager = new SourceManager;
 		?>
 
 		<div id="workspace">
-			<?php require_once('components/contextmenu/menu.php'); ?>
+			<div id="contextmenu"></div>
 
 			<?php require_once('components/sidebars/sb-left.php'); ?>
-
 
 			<div id="editor-region">
 				<div id="editor-top-bar">
