@@ -16,7 +16,7 @@
 
 (function(global) {
 	'use strict';
-	
+
 	var atheos = global.atheos;
 
 	var self = null;
@@ -35,8 +35,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Download
 		//////////////////////////////////////////////////////////////////////80
-		download: function(path) {
-			var type = pathinfo(path).type;
+		download: function(anchor) {
+			let path = anchor.path,
+				type = pathinfo(path).type;
 			echo({
 				url: atheos.controller,
 				data: {
@@ -58,9 +59,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Upload
 		//////////////////////////////////////////////////////////////////////80
-		upload: function(path) {
+		upload: function(anchor) {
 			// Source: https://codepen.io/PerfectIsShit/pen/zogMXP?editors=1010
 			// Source: http://significanttechno.com/file-upload-progress-bar-using-javascript
+
+			let path = anchor.path;
 
 			var listener = function(e) {
 				e.preventDefault();
