@@ -91,7 +91,7 @@
 						logSpan.find('span').text(reply.lastLogin);
 					}
 
-					self.setRoot(reply.name, reply.path);
+					self.setRoot(reply.name, reply.path, reply.repo);
 
 				}
 			});
@@ -116,7 +116,7 @@
 						return;
 					}
 
-					self.setRoot(reply.name, reply.path);
+					self.setRoot(reply.name, reply.path, reply.repo);
 
 					if (atheos.modal.modalVisible) {
 						atheos.modal.unload();
@@ -134,18 +134,25 @@
 		//////////////////////////////////////////////////////////////////
 		// Set project root in file manager
 		//////////////////////////////////////////////////////////////////		
-		setRoot: function(name, path) {
+		setRoot: function(name, path, repo) {
 			self.current = {
 				name,
 				path
 			};
 			oX('#file-manager').empty();
-			oX('#file-manager').html(`<ul><li>
-									<a id="project-root" data-type="root" data-path="${path}">
-									<i class="root fa fa-folder blue"></i>
-									<span>${name}</span>
-									</a>
-								</li></ul>`);
+
+			let repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
+
+			oX('#file-manager').html(
+				`<ul>
+				<li>
+					<a id="project-root" data-type="root" data-path="${path}">
+						${repoIcon}
+						<i class="root fa fa-folder blue"></i>
+						<span>${name}</span>
+					</a>
+				</li>
+			</ul>`);
 			atheos.filemanager.openDir(path);
 		},
 
@@ -286,7 +293,7 @@
 					oldName,
 					newName
 				};
-				
+
 				echo({
 					url: atheos.controller,
 					data,
