@@ -19,16 +19,16 @@
 (function() {
 	'use strict';
 
-	const node = {
+	const self = {
 
 		active: [],
 
 		create: function() {
 			var element = oX('<div>');
-			element.attr('id', 'alert_' + node.active.length);
+			element.attr('id', 'alert_' + self.active.length);
 			document.body.appendChild(element.el);
 			element.addClass('alert');
-			node.active.push(element);
+			self.active.push(element);
 			return element;
 		},
 
@@ -36,7 +36,7 @@
 			if (!options || typeof options !== 'object') return;
 			atheos.common.showOverlay('alert');
 
-			let element = node.create();
+			let element = self.create();
 
 			element.show();
 
@@ -67,7 +67,7 @@
 					button.innerText = i18n(key);
 					button.addEventListener('click', function() {
 						callback();
-						node.unload(element);
+						self.unload(element);
 					});
 					actions.append(button);
 				}
@@ -82,23 +82,23 @@
 		unload: function(element) {
 			if (!element) return;
 			element.remove();
-			const index = node.active.indexOf(element);
-			if (index > -1) node.active.splice(index, 1);
-			if (node.active.length === 0) atheos.common.hideOverlay();
+			const index = self.active.indexOf(element);
+			if (index > -1) self.active.splice(index, 1);
+			if (self.active.length === 0) atheos.common.hideOverlay();
 		},
 		unloadAll: function() {
 			atheos.common.hideOverlay();
-			var i = node.active.length;
+			var i = self.active.length;
 
 			while (--i >= 0) {
-				let el = node.active[i];
+				let el = self.active[i];
 				el.remove();
-				node.active.splice(i, 1);
+				self.active.splice(i, 1);
 			}
 		}
 	};
 
 	// window.alert = atheos.alert.show;
-	atheos.alert = node;
+	atheos.alert = self;
 
 })();
