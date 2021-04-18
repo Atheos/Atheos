@@ -67,7 +67,7 @@ class KeyStore extends Store {
 	public function insert($key = false, $value = false) {
 		if (!$key || !$value) return "missing_parameter";
 		$this->data[$key] = $value;
-		$this->save();
+		return $this->save();
 	}
 
 	public function select($key = false, $value = false) {
@@ -101,16 +101,16 @@ class KeyStore extends Store {
 				}
 			}
 
-			$this->save();
+			return $this->save();
 		} elseif ($key === "*") {
 			foreach ($this->data as $k => $v) {
 				$this->data[$k] = $value;
 			}
-			$this->save();
+			return $this->save();
 
 		} elseif ($insert || array_key_exists($key, $this->data)) {
 			$this->data[$key] = $value;
-			$this->save();
+			return $this->save();
 		}
 	}
 
@@ -122,7 +122,7 @@ class KeyStore extends Store {
 				if (array_key_exists($k, $this->data)) unset($this->data[$k]);
 			}
 
-			$this->save();
+			return $this->save();
 		} elseif ($key === "*") {
 			if ($value) {
 				$key = array_search($value, $this->data);
@@ -130,10 +130,10 @@ class KeyStore extends Store {
 			} else {
 				$this->data = [];
 			}
-			$this->save();
+			return $this->save();
 		} elseif (array_key_exists($key, $this->data)) {
 			unset($this->data[$key]);
-			$this->save();
+			return $this->save();
 		}
 
 
@@ -211,7 +211,7 @@ class ObjStore extends Store {
 				}
 			}}
 
-		$this->save(true);
+		return $this->save(true);
 	}
 
 	public function delete($where = false) {
@@ -224,6 +224,6 @@ class ObjStore extends Store {
 		}
 
 		$this->data = $temp;
-		$this->save(true);
+		return $this->save(true);
 	}
 }
