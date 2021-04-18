@@ -11,18 +11,15 @@
 (function(global) {
 	'use strict';
 
-	var self = null;
-
-	atheos.settings = {
+	const self = {
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
 			self.load();
 
-			oX('#modal_wrapper .settings', true).on('change', function(e) {
+			fX('#modal_wrapper .settings').on('change', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				var type = target.el.type;
@@ -48,7 +45,7 @@
 				self.publish(key, value);
 			});
 
-			oX('#modal_wrapper .settings menu', true).on('click', function(e) {
+			fX('#modal_wrapper .settings menu').on('click', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				if (tagName === 'A') {
@@ -117,7 +114,7 @@
 				case 'active.loopBehavior':
 					atheos.active.loopBehavior = value;
 					break;
-					
+
 				case 'editor.theme':
 					atheos.editor.setTheme(value);
 					break;
@@ -148,7 +145,7 @@
 				case 'editor.tabSize':
 					atheos.editor.setTabSize(value);
 					break;
-					
+
 				case 'filemanager.showHidden':
 					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;
@@ -257,7 +254,7 @@
 		show: function(dataFile) {
 			atheos.modal.load(800, {
 				target: 'settings',
-				action: 'settings',
+				action: 'openDialog',
 				callback: function() {
 					if (typeof(dataFile) === 'string') {
 						self.showTab(dataFile);
@@ -302,7 +299,8 @@
 				});
 			}
 		}
-
 	};
 
-})(this);
+	atheos.settings = self;
+
+})();
