@@ -212,7 +212,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var repoURL = oX('#modal_content form input[name="clone"]').value();
+				var repoURL = oX('#dialog form input[name="clone"]').value();
 
 				echo({
 					data: {

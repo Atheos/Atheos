@@ -68,7 +68,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 				e.stopPropagation();
-				var input = oX('#modal_content input[type="file"]').el,
+				var input = oX('#dialog input[type="file"]').el,
 					fileCount = input.files.length,
 					uploadName;
 
@@ -122,7 +122,7 @@
 				action: 'upload',
 				path: path,
 				callback: function() {
-					fX('#modal_content').on('change', listener);
+					fX('#dialog').on('change', listener);
 				}
 			});
 		},
