@@ -40,8 +40,12 @@
 			fX('#projects-collapse').on('click', function() {
 				if (self.sideExpanded) {
 					self.dock.collapse();
+					atheos.settings.save('project.dockOpen', false, true);
+					storage('project.dockOpen', false);
 				} else {
 					self.dock.expand();
+					atheos.settings.save('project.dockOpen', true, true);
+					storage('project.dockOpen', true);
 				}
 			});
 
@@ -54,6 +58,11 @@
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
+
+				if (storage('project.dockOpen') === false) {
+					self.dock.collapse();
+				}
+
 			});
 
 			fX('#project_list .content li').on('click, dblclick', function(e) {
@@ -179,6 +188,12 @@
 					},
 					success: function(reply) {
 						oX('#project_list .content').html(reply);
+
+						let projects = oX('#project_list .content').findAll('LI');
+						if (projects.length < 2) {
+							self.dock.collapse();
+						}
+
 					}
 				});
 			},
@@ -189,6 +204,9 @@
 				oX('#sb_left>.content').css('bottom', '');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
+
+
+
 			},
 
 			collapse: function() {
@@ -199,7 +217,6 @@
 				oX('#sb_left>.content').css('bottom', height + 'px');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
-
 			}
 		},
 
@@ -238,10 +255,10 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				projectName = oX('#modal_content form input[name="projectName"]').value();
-				projectPath = oX('#modal_content form input[name="projectPath"]').value();
-				gitRepo = oX('#modal_content form input[name="gitRepo"]').value();
-				gitBranch = oX('#modal_content form input[name="gitBranch"]').value();
+				projectName = oX('#dialog form input[name="projectName"]').value();
+				projectPath = oX('#dialog form input[name="projectPath"]').value();
+				gitRepo = oX('#dialog form input[name="gitRepo"]').value();
+				gitBranch = oX('#dialog form input[name="gitBranch"]').value();
 
 
 				if (projectPath.indexOf('/') === 0) {
@@ -284,7 +301,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var newName = oX('#modal_content form input[name="projectName"]').value();
+				var newName = oX('#dialog form input[name="projectName"]').value();
 
 				var data = {
 					target: 'project',
