@@ -26,19 +26,19 @@
 (function() {
 	'use strict';
 
-	const node = {
+	const self = {
 
 		modalVisible: false,
 		fadeDuration: 500,
 
 		init: function() {
-			fX('#modal_wrapper .close').on('click', node.unload);
-			fX('#modal_wrapper .drag').on('mousedown', node.drag);
+			fX('#modal_wrapper .close').on('click', self.unload);
+			fX('#modal_wrapper .drag').on('mousedown', self.drag);
 		},
 
 		create: function() {
 
-			let html = '<div id="modal_wrapper"><i class="close fas fa-times-circle"></i><i class="drag fas fa-arrows-alt"></i><div id="modal_content"></div></div>';
+			let html = '<div id="modal_wrapper"><i class="close fas fa-times-circle"></i><i class="drag fas fa-arrows-alt"></i><div id="dialog"></div></div>';
 
 			let div = document.createElement('div');
 			div.innerHTML = html;
@@ -64,8 +64,8 @@
 			}
 
 			var overlay = atheos.common.showOverlay('modal', true),
-				wrapper = oX('#modal_wrapper') || node.create(),
-				content = oX('#modal_content');
+				wrapper = oX('#modal_wrapper') || self.create(),
+				content = oX('#dialog');
 
 			wrapper.css({
 				'top': '15%',
@@ -75,8 +75,8 @@
 			});
 
 			var loadTimeout;
-			if (node.modalVisible) {
-				loadTimeout = setTimeout(node.setLoadingScreen, 1000);
+			if (self.modalVisible) {
+				loadTimeout = setTimeout(self.setLoadingScreen, 1000);
 			}
 
 			echo({
@@ -103,11 +103,11 @@
 				}
 			});
 
-			if (!node.modalVisible) {
-				atheos.flow.fade('in', wrapper.el, node.fadeDuration);
-				atheos.flow.fade('in', overlay.el, node.fadeDuration);
+			if (!self.modalVisible) {
+				atheos.flow.fade('in', wrapper.el, self.fadeDuration);
+				atheos.flow.fade('in', overlay.el, self.fadeDuration);
 			}
-			node.modalVisible = true;
+			self.modalVisible = true;
 		},
 
 		resize: function() {
@@ -126,25 +126,25 @@
 		unload: function(e) {
 			carbon.publish('modal.unload');
 
-			var form = oX('#modal_content form'),
+			var form = oX('#dialog form'),
 				overlay = oX('#overlay'),
 				wrapper = oX('#modal_wrapper'),
-				content = oX('#modal_content');
+				content = oX('#dialog');
 
 			fX('#modal_wrapper form').off('*');
 			if (overlay) {
-				atheos.flow.fade('remove', overlay.el, node.fadeDuration);
+				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
 			}
 			if (wrapper) {
-				atheos.flow.fade('out', wrapper.el, node.fadeDuration);
+				atheos.flow.fade('out', wrapper.el, self.fadeDuration);
 			}
 
 			if (content) {
 				content.off('*');
-				setTimeout(content.empty, (node.fadeDuration + 100));
+				setTimeout(content.empty, (self.fadeDuration + 100));
 			}
 
-			node.modalVisible = false;
+			self.modalVisible = false;
 			atheos.editor.focus();
 		},
 
@@ -168,7 +168,7 @@
 
 			loading = `<div class="loader"><h2>${wrapText}</h2><span class="dual-ring"></span></div>`;
 
-			var screen = oX('#modal_content');
+			var screen = oX('#dialog');
 			screen.css('height', screen.height() + 'px');
 			screen.html(loading);
 		},
@@ -215,7 +215,7 @@
 		}
 	};
 
-	carbon.subscribe('system.loadMinor', () => node.init());
-	atheos.modal = node;
+	carbon.subscribe('system.loadMinor', () => self.init());
+	atheos.modal = self;
 
 })();

@@ -26,7 +26,7 @@
 	}
 }
 
-#modal_content>.content {
+#dialog>.content {
 	min-width: 600px;
 	overflow: hidden;
 	overflow-y: scroll;
@@ -34,7 +34,7 @@
 	padding: 5px;
 }
 
-#modal_content #codegit form {
+#dialog #codegit form {
 	background-color: $background;
 
 }
