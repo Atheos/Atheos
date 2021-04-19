@@ -67,6 +67,8 @@
 				wrapper = oX('#modal_wrapper') || self.create(),
 				content = oX('#dialog');
 
+			content.html('');
+
 			wrapper.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
