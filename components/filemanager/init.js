@@ -573,7 +573,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var clone = oX('#modal_content form input[name="clone"]').value();
+				var clone = oX('#dialog form input[name="clone"]').value();
 
 				// Build new path
 				var parent = path.split('/').slice(0, -1).join('/');
@@ -628,7 +628,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var nodeName = oX('#modal_content form input[name="nodeName"]').value();
+				var nodeName = oX('#dialog form input[name="nodeName"]').value();
 				var newPath = path + '/' + nodeName;
 
 				echo({
@@ -733,7 +733,7 @@
 
 			var listener = function(e) {
 				e.preventDefault();
-				var newName = oX('#modal_content form input[name="name"]').value();
+				var newName = oX('#dialog form input[name="name"]').value();
 				// Build new path
 				var arr = path.split('/');
 				var temp = [];

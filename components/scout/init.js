@@ -78,10 +78,10 @@
 
 				oX('#probe_processing').show();
 
-				var query = oX('#modal_content input[name="probe_query"]').value();
-				var extensions = oX('#modal_content input[name="probe_filter"]').value();
+				var query = oX('#dialog input[name="probe_query"]').value();
+				var extensions = oX('#dialog input[name="probe_filter"]').value();
 				var filter = extensions.trim();
-				// var type = oX('#modal_content select[name="probe_type"]').prop('checked');
+				// var type = oX('#dialog select[name="probe_type"]').prop('checked');
 				if (filter !== '') {
 					//season the string to use in find command
 					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
@@ -150,9 +150,9 @@
 					var lastSearched = JSON.parse(storage('lastSearched'));
 
 					if (lastSearched) {
-						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
-						oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
-						// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
+						oX('#dialog input[name="probe_query"]').value(lastSearched.query);
+						oX('#dialog input[name="probe_filter"]').value(lastSearched.extensions);
+						// oX('#dialog input[name="probe_type"]').checked(lastSearched.type);
 						if (lastSearched.results !== '') {
 							table.html(lastSearched.results);
 							atheos.flow.slide('open', table.el);
