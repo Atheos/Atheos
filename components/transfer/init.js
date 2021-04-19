@@ -122,6 +122,7 @@
 				action: 'upload',
 				path: path,
 				callback: function() {
+					fX('#dialog').off('change');
 					fX('#dialog').on('change', listener);
 				}
 			});
