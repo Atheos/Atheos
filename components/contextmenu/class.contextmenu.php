@@ -35,7 +35,7 @@ class ContextMenu {
 			"title" => "filesUpload",
 			"icon" => "fas fa-upload",
 			"type" => "directory",
-			"action" => "atheos.transfer.upload"
+			"action" => "atheos.transfer.openUpload"
 		],
 		[
 			"title" => "hr-directory",			
