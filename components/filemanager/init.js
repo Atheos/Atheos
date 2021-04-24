@@ -639,7 +639,7 @@
 						type: type
 					},
 					settled: function(status, reply) {
-						if (status !== 'success') return;
+						if (status !== 'success') return toast(status, reply);
 						toast('success', 'File Created');
 						atheos.modal.unload();
 						// Add new element to filemanager screen
