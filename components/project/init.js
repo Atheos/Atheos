@@ -110,7 +110,7 @@
 		// Open Project
 		//////////////////////////////////////////////////////////////////
 		open: function(projectName, projectPath) {
-			atheos.scout.hideFilter();
+			atheos.scout.exitFilter();
 			echo({
 				url: atheos.controller,
 				data: {
