@@ -32,13 +32,15 @@ class Filemanager {
 		// $path = strip_tags($path);
 		$path = htmlspecialchars($path);
 
-		if ($type === "directory" && mkdir($path)) {
+		if ($type === "folder" && @mkdir($path)) {
 			Common::send("success");
 		} elseif ($type === "file" && $file = fopen($path, 'w')) {
 			$modifyTime = filemtime($path);
 			fclose($file);
 			Common::send("success", array("modifyTime" => $modifyTime));
 		} else {
+			$error = error_get_last();
+			debug($error);
 			Common::send("error", i18n("path_unableCreate"));
 		}
 	}
