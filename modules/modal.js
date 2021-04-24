@@ -32,13 +32,13 @@
 		fadeDuration: 500,
 
 		init: function() {
-			fX('#modal_wrapper .close').on('click', self.unload);
-			fX('#modal_wrapper .drag').on('mousedown', self.drag);
+			fX('#dialog .close').on('click', self.unload);
+			fX('#dialog .drag').on('mousedown', self.drag);
 		},
 
 		create: function() {
 
-			let html = '<div id="modal_wrapper"><i class="close fas fa-times-circle"></i><i class="drag fas fa-arrows-alt"></i><div id="dialog"></div></div>';
+			let html = '<div id="dialog"><i class="close fas fa-times-circle"></i><i class="drag fas fa-arrows-alt"></i><section id="content"></section></div>';
 
 			let div = document.createElement('div');
 			div.innerHTML = html;
@@ -48,15 +48,11 @@
 		},
 
 		load: function(width, data) {
+			log(data);
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			var listener, callback;
-
-			if (data.listener && isFunction(data.listener)) {
-				listener = data.listener;
-				delete data.listener;
-			}
+			let callback;
 
 			if (data.callback && isFunction(data.callback)) {
 				callback = data.callback;
@@ -64,17 +60,20 @@
 			}
 
 			var overlay = atheos.common.showOverlay('modal', true),
-				wrapper = oX('#modal_wrapper') || self.create(),
-				content = oX('#dialog');
+				dialog = oX('#dialog') || self.create(),
+				content = oX('#content');
 
 			content.html('');
 
-			wrapper.css({
+			dialog.css({
 				'top': '15%',
 				'left': 'calc(50% - ' + (width / 2) + 'px)',
 				'min-width': width + 'px',
 				'height': ''
 			});
+
+			dialog.attr('target', data.target);
+			dialog.attr('action', data.action);
 
 			var loadTimeout;
 			if (self.modalVisible) {
@@ -92,21 +91,18 @@
 					content.css('height', '');
 
 					// Fix for Firefox autofocus goofiness
-					var input = wrapper.find('input[autofocus="autofocus"]');
+					var input = dialog.find('input[autofocus="autofocus"]');
 					if (input) input.focus();
 
-					if (listener && wrapper.find('form')) {
-						fX('#modal_wrapper form').on('submit', listener);
-					}
 					if (callback) {
-						callback(wrapper);
+						callback(dialog);
 					}
-					carbon.publish('modal.loaded');
+					carbon.publish('dialog.loaded');
 				}
 			});
 
 			if (!self.modalVisible) {
-				atheos.flow.fade('in', wrapper.el, self.fadeDuration);
+				atheos.flow.fade('in', dialog.el, self.fadeDuration);
 				atheos.flow.fade('in', overlay.el, self.fadeDuration);
 			}
 			self.modalVisible = true;
@@ -130,10 +126,10 @@
 
 			var form = oX('#dialog form'),
 				overlay = oX('#overlay'),
-				wrapper = oX('#modal_wrapper'),
-				content = oX('#dialog');
+				wrapper = oX('#dialog'),
+				content = oX('#content');
 
-			fX('#modal_wrapper form').off('*');
+			fX('#dialog form').off('*');
 			if (overlay) {
 				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
 			}
