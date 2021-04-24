@@ -17,7 +17,7 @@ overlay {
 }
 
 #alert,
-#modal_wrapper {
+#dialog {
 
 	.drag,
 	.close {
@@ -44,4 +44,4 @@ overlay {
 	}
 }
 
-@import "alert", "modal", "toast";
+@import "alert", "dialog", "toast";
