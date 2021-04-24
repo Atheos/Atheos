@@ -14,29 +14,17 @@
 	// Path helper functions
 	//////////////////////////////////////////////////////////////////////
 	window.pathinfo = function(path) {
-		var index = path.lastIndexOf('/');
-
-		let getBaseName = function(path) {
-			return path.split('/').pop();
-		};
-
-		let getDirectory = function(path) {
-			return path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, '');
-		};
-
-		let getType = function() {
-			var element = document.querySelector('#file-manager a[data-path="' + path + '"]');
-			return element ? element.getAttribute('data-type') : false;
-		};
+		let basename = path.split('/').pop(),
+			fileNode = document.querySelector('#file-manager a[data-path="' + path + '"]');
 
 		return {
 			// discuss at: http://phpjs.org/functions/dirname/
 			directory: path.replace(/\\/g, '/').replace(/\/[^\/]*\/?$/, ''),
-			extension: path.split('.').pop(),
-			fileName: path.substring(index + 1),
+			type: fileNode ? fileNode.getAttribute('data-type') : false,
 			//  discuss at: http://phpjs.org/functions/basename/
-			basename: path.split('/').pop(),
-			type: getType()
+			basename,
+			extension: basename.split('.').pop(),
+			fileName: basename.split('.').slice(0, -1).join('.') || basename,
 		};
 	};
 
