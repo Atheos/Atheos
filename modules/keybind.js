@@ -72,7 +72,7 @@
 			node.bind(79, 'ctrl', atheos.filemanager.openInBrowser);
 
 			// Open Scout [CTRL+E] ///////////////////////////////////////////80
-			node.bind(69, 'ctrl', atheos.scout.probe);
+			node.bind(69, 'ctrl', atheos.scout.openSearch);
 
 			// Close [CTRL+Q] ////////////////////////////////////////////////80
 			node.bind(81, 'ctrl', atheos.active.close);

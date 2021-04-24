@@ -8,7 +8,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
 	const self = {
@@ -17,9 +17,23 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self.load();
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'settings',
+					action: 'load',
+				},
+				settled: function(status, reply) {
+					if (status === 'success') {
+						for (var key in reply) {
+							storage(key, reply[key]);
+						}
+					}
+					carbon.publish('settings.loaded', reply);
+				}
+			});
 
-			fX('#modal_wrapper .settings').on('change', function(e) {
+			fX('#dialog .settings').on('change', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				var type = target.el.type;
@@ -45,33 +59,11 @@
 				self.publish(key, value);
 			});
 
-			fX('#modal_wrapper .settings menu').on('click', function(e) {
+			fX('#dialog .settings menu').on('click', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				if (tagName === 'A') {
 					self.showTab(target);
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Load Settings
-		//////////////////////////////////////////////////////////////////////80
-		load: function() {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'settings',
-					action: 'load',
-				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						delete reply.status;
-						for (var key in reply) {
-							storage(key, reply[key]);
-						}
-					}
-					carbon.publish('settings.loaded', reply);
 				}
 			});
 		},
@@ -183,14 +175,12 @@
 					key,
 					value
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						atheos.toast.show(reply);
-					} else if (!hidden) {
-						reply.text = 'Setting "' + key + '" saved.';
-						// self.displayStatus(reply);
-						atheos.toast.show(reply);
-					}
+				settled: function(status, reply) {
+					if (status !== 'error') toast(status, reply);
+					if (hidden) return;
+					// self.displayStatus(reply);
+					toast(status, 'Setting "' + key + '" saved.');
+
 				}
 			});
 
