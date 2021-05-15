@@ -176,7 +176,7 @@
 					value
 				},
 				settled: function(status, reply) {
-					if (status !== 'error') toast(status, reply);
+					if (status !== 'success') toast(status, reply);
 					if (hidden) return;
 					// self.displayStatus(reply);
 					toast(status, 'Setting "' + key + '" saved.');
