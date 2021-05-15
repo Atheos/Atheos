@@ -52,11 +52,16 @@
 			data = data || {};
 			width = width > 400 ? width : 400;
 
-			let callback;
+			let callback, listener;
 
 			if (data.callback && isFunction(data.callback)) {
 				callback = data.callback;
 				delete data.callback;
+			}
+
+			if (data.listener && isFunction(data.listener)) {
+				listener = data.listener;
+				delete data.listener;
 			}
 
 			var overlay = atheos.common.showOverlay('modal', true),
@@ -93,6 +98,10 @@
 					// Fix for Firefox autofocus goofiness
 					var input = dialog.find('input[autofocus="autofocus"]');
 					if (input) input.focus();
+
+					if (listener && dialog.find('form')) {
+						fX('#dialog form').on('submit', listener);
+					}
 
 					if (callback) {
 						callback(dialog);
