@@ -58,7 +58,7 @@ class ContextMenu {
 		[
 			"title" => "duplicate",
 			"icon" => "fas fa-clone",
-			"action" => "atheos.filemanager.duplicate"
+			"action" => "atheos.filemanager.openDuplicate"
 		],
 		[
 			"title" => "download",
@@ -76,7 +76,7 @@ class ContextMenu {
 			"title" => "rename",
 			"icon" => "fas fa-pencil-alt",
 			"noRoot" => true,
-			"action" => "atheos.filemanager.rename"
+			"action" => "atheos.filemanager.openRename"
 		],
 		[
 			"title" => "delete",
