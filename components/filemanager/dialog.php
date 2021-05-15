@@ -22,7 +22,7 @@ switch ($action) {
 	case "create":
 		?>
 		<label class="title"><i class="fas fa-plus-circle"></i><?php echo i18n("create_type", (ucfirst($type))); ?></label>
-		<form>
+		<form class="pathCreate">
 			<input type="text" name="nodeName" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only">
 			<button class="btn-left"><?php echo i18n("create"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
@@ -36,7 +36,7 @@ switch ($action) {
 	case "duplicate":
 		?>
 		<label class="title"><i class="fa fa-clone"></i> <?php echo i18n("duplicate"); ?> <?php echo i18n((ucfirst($type))); ?></label>
-		<form>
+		<form class="pathDuplicate">
 			<p>
 				<?php echo i18n("duplicate_name"); ?>
 			</p>
@@ -54,7 +54,7 @@ switch ($action) {
 	case "rename":
 		?>
 		<label class="title"><i class="fas fa-pencil-alt"></i> <?php echo i18n("rename_type", ucfirst($type)); ?></label>
-		<form>
+		<form class="fileRename">
 			<input type="text" name="name" autofocus="autofocus" autocomplete="off" pattern="[A-Za-z0-9 \-\._]+" title="Letters, Numbers, Dashes, Underscores, Spaces or Periods Only" value="<?php echo($name); ?>">
 			<button class="btn-left"><?php echo i18n("rename"); ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload(); return false;"><?php echo i18n("cancel"); ?></button>
