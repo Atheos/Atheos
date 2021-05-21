@@ -254,6 +254,7 @@
 		"current": "Your System Is Up To Date."
 	},
 	"install": "Install",
+	"domain": "Custom Domain",
 	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
 	"yourVersion": "Your Version",
 	"latestVersion": "Latest Version",
