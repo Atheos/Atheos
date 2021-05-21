@@ -88,9 +88,6 @@
 			//Repo updates
 			carbon.subscribe('chrono.mega', self.checkRepoStatus);
 
-			//Handle contextmenu
-			carbon.subscribe('contextmenu.show', this.showContextMenu);
-
 			carbon.subscribe('active.focus', function(path) {
 				self.checkFileStatus(path);
 			});
@@ -109,6 +106,26 @@
 			});
 		},
 
+
+		findParentRepo: function(path) {
+			let counter = 0,
+				root = oX('#project-root').attr('data-path'),
+				target;
+
+			while (path !== root) {
+				path = pathinfo(path).directory;
+				target = oX('[data-path="' + path + '"]');
+				if (target && target.hasClass('repo')) {
+					return path;
+				}
+				if (counter >= 10) {
+					break;
+				}
+				counter++;
+			}
+			return false;
+		},
+
 		//Check if directories has git repo
 		showRepoStatus: function() {
 			if (oX('#project-root').hasClass('repo')) {
@@ -125,63 +142,12 @@
 			}
 		},
 
-		showContextMenu: function(obj) {
-			var path = obj.path,
-				root = oX('#project-root').attr('data-path'),
-				html = '';
-
-			var anchor = '<a class="codegit" onclick="atheos.codegit.';
-
-			function findParentRepo(path) {
-				var counter = 0;
-				var target = obj.node;
-
-				while (path !== root) {
-					path = pathinfo(path).directory;
-					target = oX('[data-path="' + path + '"]');
-					if (target && target.hasClass('repo')) {
-						return path;
-					}
-					if (counter >= 10) {
-						break;
-					}
-					counter++;
-				}
-				return false;
-			}
-
-
-			if (obj.type === 'directory') {
-				html += ('<hr class="codegit">');
-
-				if (obj.node.hasClass('repo')) {
-					html += (anchor + 'showCodeGit(\'' + path + '\');">' + self.icon + i18n('codegit_open') + '</a>');
-				} else {
-					html += (anchor + 'gitInit(\'' + path + '\', \'repo\');">' + self.icon + i18n('git_init') + '</a>');
-				}
-				html += (anchor + 'gitClone(\'' + path + '\');">' + self.icon + i18n('git_clone') + '</a>');
-			} else {
-				var repo = findParentRepo(path);
-				if (repo) {
-					html += ('<hr class="codegit">');
-					html += (anchor + 'diff(\'' + repo + '\', \'' + path + '\');">' + self.icon + i18n('git_diff') + '</a>');
-					html += (anchor + 'blame(\'' + repo + '\', \'' + path + '\');">' + self.icon + i18n('git_blame') + '</a>');
-					html += (anchor + 'log(\'' + repo + '\', \'' + path + '\');">' + self.icon + i18n('git_log') + '</a>');
-				}
-			}
-
-			obj.menu.append(html);
-		},
-
-		showCodeGit: function(repo) {
-			repo = repo || oX('#project-root').attr('data-path');
+		showCodeGit: function(anchor) {
+			let repo = anchor ? anchor.path : oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 
-			let node = oX('#file-manager [data-path="' + repo + '"]');
-			if (!node.hasClass('repo')) {
-				toast('notice', i18n('git_error_noRepo'));
-				return;
-			}
+			anchor = oX('#file-manager [data-path="' + repo + '"]');
+			if (!anchor.find('i.repo-icon')) return toast('notice', i18n('git_error_noRepo'));
 
 			atheos.modal.load(800, {
 				target: 'codegit',
@@ -225,35 +191,35 @@
 			});
 		},
 
-		gitInit: function(repo, type) {
+		gitInit: function(anchor) {
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'codegit',
 					action: 'init',
-					type,
-					repo
+					type: 'repo',
+					repo: anchor.path
 				},
 				settled: function(status, reply) {
 					if (status === 'success') {
-						self.addRepoIcon(repo);
+						self.addRepoIcon(anchor.path);
 					}
 				}
 			});
 		},
 
-		gitClone: function(path) {
+		gitClone: function(anchor) {
 			var listener = function(e) {
 				e.preventDefault();
 
-				var repoURL = oX('#modal_content form input[name="clone"]').value();
+				var repoURL = oX('#dialog form input[name="clone"]').value();
 
 				echo({
 					data: {
 						target: 'codegit',
 						action: 'clone',
 						repoURL,
-						path
+						path: anchor.path
 					},
 					settled: function(status, reply) {
 						toast(status, reply);
@@ -268,7 +234,7 @@
 			atheos.modal.load(250, {
 				target: 'codegit',
 				action: 'clone',
-				repo: path,
+				repo: anchor.path,
 				listener
 			});
 
@@ -368,22 +334,37 @@
 			});
 		},
 
-		diff: function(repo, path) {
+		diff: function(anchor) {
+			let {
+				path,
+				inRepo: repo
+			} = anchor;
+
 			if (!path || !repo) return;
 			path = path.replace(repo + '/', '');
 			self.showDialog('diff', repo, path);
 		},
 
-		blame: function(repo, path) {
+		blame: function(anchor) {
+			let {
+				path,
+				inRepo: repo
+			} = anchor;
+
 			if (!path || !repo) return;
 			path = path.replace(repo + '/', '');
 			self.showDialog('blame', repo, path);
 		},
 
-		log: function(repo, path) {
+		log: function(anchor) {
+			let {
+				path,
+				inRepo: repo
+			} = anchor;
+
 			if (!path || !repo) return;
 			path = path.replace(repo + '/', '');
-			this.showDialog('log', repo, path);
+			self.showDialog('log', repo, path);
 		},
 
 		undo: function(repo, file) {

@@ -9,7 +9,7 @@
 
 		<div id="filter_wrapper">
 			<i id="filter_options" class="fas fa-cog"></i>
-			<i id="filter_close" class="fas fa-times-circle"></i>
+			<i id="filter_exit" class="fas fa-times-circle"></i>
 
 			<input id="filter_input" placeholder="<?php echo i18n("filterTree") ?>" type="text">
 
@@ -22,7 +22,7 @@
 
 		<i class="lock fas fa-lock"></i>
 		<i id="fm_toggle_hidden" class="fas fa-eye"></i>
-		<i id="open_probe" class="fas fa-search"></i>
+		<i id="search_open" class="fas fa-search"></i>
 		<i id="filter_open"class="fas fa-filter"></i>
 
 	</div>

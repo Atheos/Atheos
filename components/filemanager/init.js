@@ -14,17 +14,11 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
-	var atheos = global.atheos,
-		carbon = global.carbon,
-		echo = global.echo;
 
-	var self = null;
 
-	carbon.subscribe('system.loadMajor', () => atheos.filemanager.init());
-
-	atheos.filemanager = {
+	const self = {
 
 		clipboard: '',
 
@@ -35,9 +29,8 @@
 		showHidden: true,
 
 		init: function() {
-			self = this;
 			// Initialize node listener
-			this.nodeListener();
+			self.nodeListener();
 			let toggleHidden = oX('#fm_toggle_hidden');
 			toggleHidden.on('click', self.toggleHidden);
 
@@ -53,6 +46,9 @@
 				}
 			});
 
+			fX('#dialog .fileRename').on('submit', self.rename);
+			fX('#dialog .pathCreate').on('submit', self.create);
+			fX('#dialog .pathDuplicate').on('submit', self.duplicate);
 		},
 
 		toggleHidden: function(e) {
@@ -64,38 +60,38 @@
 
 		},
 
+		checkAnchor: function(anchor) {
+			anchor = oX(anchor);
+			//////////////////////////////////////////////////////////////////////80
+			// This tagname business is due to the logical but annoying way
+			// event delegation is handled. I keep trying to avoid organizing
+			// the css in a better way for the file manager, and this is the
+			// result.
+			//////////////////////////////////////////////////////////////////////80
+			let tagName = anchor.tagName;
+			if (tagName === 'UL') {
+				return false;
+			} else if (tagName !== 'A') {
+				if (tagName === 'LI') {
+					anchor = anchor.find('a');
+				} else {
+					anchor = anchor.parent('a');
+				}
+			}
+			return anchor;
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
-
-			var checkAnchor = function(node) {
-				node = oX(node);
-				//////////////////////////////////////////////////////////////////////80
-				// This tagname business is due to the logical but annoying way
-				// event delegation is handled. I keep trying to avoid organizing
-				// the css in a better way for the file manager, and this is the
-				// result.
-				//////////////////////////////////////////////////////////////////////80
-				if (node.tagName === 'UL') {
-					return false;
-				} else if (node.tagName !== 'A') {
-					if (node.tagName === 'LI') {
-						node = node.find('a');
-					} else {
-						node = node.parent('a');
-					}
-				}
-				return node;
-			};
-
 			oX('#file-manager a', true).on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
-					var node = checkAnchor(e.target);
-					if (node.attr('data-type') === 'directory' || node.attr('data-type') === 'root') {
-						self.openDir(node.attr('data-path'));
-					} else if (node.attr('data-type') === 'file') {
-						self.openFile(node.attr('data-path'));
+					var anchor = self.checkAnchor(e.target);
+					if (anchor.attr('data-type') === 'directory' || anchor.attr('data-type') === 'root') {
+						self.openDir(anchor.attr('data-path'));
+					} else if (anchor.attr('data-type') === 'file') {
+						self.openFile(anchor.attr('data-path'));
 					}
 				}
 			});
@@ -364,10 +360,9 @@
 			fileClass = fileClass || 'fa fa-file green';
 
 			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
-			var repoClass = repo ? ' class="repo"' : '';
 
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}"${repoClass}>
+			<a data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
 			${repoIcon}
@@ -381,8 +376,10 @@
 
 		rescanCounter: 0,
 
-		rescan: function(path) {
+		rescan: function(anchor) {
+			let path = isObject(anchor) ? anchor.path : anchor;
 			path = path || oX('#project-root').attr('data-path');
+
 			if (self.rescanCounter === 0) {
 				var list = oX('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
 				var openNodes = list.findAll('a.open');
@@ -494,18 +491,19 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Copy to Clipboard
 		//////////////////////////////////////////////////////////////////////80
-		copy: function(path) {
-			self.clipboard = path;
+		copy: function(anchor) {
+			self.clipboard = anchor.path;
 			toast('success', 'Copied to Clipboard');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Paste
 		//////////////////////////////////////////////////////////////////////80
-		paste: function(path) {
-			var split = pathinfo(self.clipboard);
-			var copy = split.basename;
-			var type = split.type;
+		paste: function(anchor) {
+			let path = anchor.path,
+				split = pathinfo(self.clipboard),
+				copy = split.basename,
+				type = split.type;
 
 			var processPaste = function(path, duplicate) {
 
@@ -559,100 +557,105 @@
 
 		},
 
+
 		//////////////////////////////////////////////////////////////////////80
 		// Duplicate Object
 		//////////////////////////////////////////////////////////////////////80
-		duplicate: function(path) {
-			var split = pathinfo(path);
-			var name = split.basename;
-			var type = split.type;
+		openDuplicate: function(anchor) {
+			let split = pathinfo(anchor.path),
+				name = split.basename,
+				type = split.type;
 
-			var listener = function(e) {
-				e.preventDefault();
-
-				var clone = oX('#modal_content form input[name="clone"]').value();
-
-				// Build new path
-				var parent = path.split('/').slice(0, -1).join('/');
-				var clonePath = parent + '/' + clone;
-
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'duplicate',
-						path: path,
-						dest: clonePath
-					},
-					settled: function(status, reply) {
-						toast(status, reply);
-
-						if (status === 'success') {
-							self.addToFileManager(clonePath, type, parent);
-							atheos.modal.unload();
-							/* Notify listeners. */
-							carbon.publish('filemanager.duplicate', {
-								sourcePath: path,
-								clonePath: clonePath,
-								type: type
-							});
-						}
-					}
-				});
-				atheos.modal.unload();
-			};
+			self.activeAnchor = anchor;
 
 			atheos.modal.load(250, {
 				target: 'filemanager',
 				action: 'duplicate',
-				name: name,
-				type: type,
-				listener
+				name,
+				type
 			});
-
 		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Duplicate Object
+		//////////////////////////////////////////////////////////////////////80
+		duplicate: function(e) {
+			e.preventDefault();
+
+			let path = self.activeAnchor.path,
+				split = pathinfo(path),
+				name = split.basename,
+				type = split.type;
+
+			var clone = oX('#dialog form input[name="clone"]').value();
+
+			// Build new path
+			var parent = path.split('/').slice(0, -1).join('/');
+			var clonePath = parent + '/' + clone;
+
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'duplicate',
+					path: path,
+					dest: clonePath
+				},
+				settled: function(status, reply) {
+					toast(status, reply);
+
+					if (status === 'success') {
+						self.addToFileManager(clonePath, type, parent);
+						atheos.modal.unload();
+						/* Notify listeners. */
+						carbon.publish('filemanager.duplicate', {
+							sourcePath: path,
+							clonePath: clonePath,
+							type: type
+						});
+					}
+				}
+			});
+			atheos.modal.unload();
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Active Anchor for Rename, Duplicate and Create
+		//////////////////////////////////////////////////////////////////////80
+		activeAnchor: {},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Create new node
 		//////////////////////////////////////////////////////////////////////80
-		create: function(path, type) {
-			var listener = function(e) {
-				e.preventDefault();
+		create: function(e) {
+			e.preventDefault();
 
-				var nodeName = oX('#modal_content form input[name="nodeName"]').value();
-				var newPath = path + '/' + nodeName;
+			let name = oX('#dialog form input[name="nodeName"]').value(),
+				path = self.activeAnchor.path + '/' + name,
+				type = self.activeAnchor.type;
 
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'create',
-						path: newPath,
-						type: type
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') return;
-						toast('success', 'File Created');
-						atheos.modal.unload();
-						// Add new element to filemanager screen
-						self.addToFileManager(newPath, type, path);
-						if (type === 'file') {
-							self.openFile(newPath, true);
-						}
-						/* Notify listeners. */
-						carbon.publish('filemanager.onCreate', {
-							createPath: newPath,
-							path: path,
-							nodeName: nodeName,
-							type: type
-						});
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'create',
+					path,
+					type
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return toast(status, reply);
+					toast('success', 'File Created');
+					atheos.modal.unload();
+					// Add new element to filemanager screen
+					self.addToFileManager(path, type, self.activeAnchor.path);
+					if (type === 'file') {
+						self.openFile(path, true);
 					}
-				});
-			};
-
-			atheos.modal.load(250, {
-				target: 'filemanager',
-				action: 'create',
-				type: type,
-				listener
+					/* Notify listeners. */
+					carbon.publish('filemanager.create', {
+						type,
+						path,
+						name
+					});
+				}
 			});
 		},
 
@@ -661,29 +664,31 @@
 		//////////////////////////////////////////////////////////////////////80
 		addToFileManager: function(path, type, parent) {
 			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
-			if (!oX('#file-manager a[data-path="' + path + '"]')) {
-				// Doesn't already exist
-				if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(directory|root)$/)) {
-					// Only append node if parent is open (and a directory)
 
-					var node = self.createDirectoryItem(path, type, 0);
+			// Already exists
+			if (oX('#file-manager a[data-path="' + path + '"]')) return;
 
-					var list = parentNode.siblings('ul')[0];
-					if (list) {
-						// UL exists, other children to play with
-						list.append(node);
-						self.sortNodes(list.el);
-					} else {
-						list = oX('<ul>');
-						list.append(node);
-						parentNode.append(list.el);
-					}
+			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(directory|root)$/)) {
+				// Only append node if parent is open (and a directory)
+
+				var node = self.createDirectoryItem(path, type, 0);
+
+				var list = parentNode.siblings('ul')[0];
+				if (list) {
+					// UL exists, other children to play with
+					list.append(node);
+					self.sortNodes(list.el);
 				} else {
-					if (parentNode.find('.expand')) {
-						parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
-					}
+					list = oX('<ul>');
+					list.append(node);
+					parentNode.append(list.el);
+				}
+			} else {
+				if (parentNode.find('.expand')) {
+					parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
 				}
 			}
+
 		},
 		//////////////////////////////////////////////////////////////////////80
 		// Sort nodes in file tree during node creation
@@ -714,71 +719,96 @@
 
 
 		//////////////////////////////////////////////////////////////////////80
-		// Rename
+		// Open Rename Dialog
 		//////////////////////////////////////////////////////////////////////80
-		rename: function(path) {
-			var split = pathinfo(path);
-			var nodeName = split.basename;
-			var type = split.type;
-
-			var listener = function(e) {
-				e.preventDefault();
-				var newName = oX('#modal_content form input[name="name"]').value();
-				// Build new path
-				var arr = path.split('/');
-				var temp = [];
-				for (var i = 0; i < arr.length - 1; i++) {
-					temp.push(arr[i]);
-				}
-				var newPath = temp.join('/') + '/' + newName;
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'rename',
-						path: path,
-						name: newName
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') return;
-						if (type === 'file') {
-							toast('success', 'File Renamed.');
-						} else {
-							toast('success', 'Folder Renamed.');
-
-						}
-						var node = oX('#file-manager a[data-path="' + path + '"]'),
-							icon = node.find('i:nth-child(2)'),
-							span = node.find('span');
-						// Change pathing and name for node
-						node.attr('data-path', newPath);
-						span.text(newName);
-						if (type === 'file') {
-							// Change icons for file
-							icon.removeClass();
-							var ico = icons.getClassWithColor(newName);
-							if (ico) {
-								icon.addClass(icons.getClassWithColor(newName));
-							}
-						} else {
-							// Change pathing on any sub-files/directories
-							self.repathChildren(path, newPath);
-						}
-						// Change any active files
-						atheos.active.rename(path, newPath);
-					}
-				});
-				atheos.modal.unload();
-			};
-
+		openRename: function(anchor) {
+			self.activeAnchor = anchor;
 			atheos.modal.load(250, {
 				target: 'filemanager',
 				action: 'rename',
-				name: nodeName,
-				type: type,
-				listener
+				name: anchor.name,
+				type: anchor.type
 			});
-
 		},
+
+		createFile: function(anchor) {
+			self.openCreate(anchor, 'file');
+		},
+
+		createFolder: function(anchor) {
+			self.openCreate(anchor, 'folder');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Open Rename Dialog
+		//////////////////////////////////////////////////////////////////////80
+		openCreate: function(anchor, type) {
+			anchor.type = type;
+			self.activeAnchor = anchor;
+			atheos.modal.load(250, {
+				target: 'filemanager',
+				action: 'create',
+				type: type
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Rename
+		//////////////////////////////////////////////////////////////////////80
+		rename: function(e) {
+			e.preventDefault();
+
+			let path = self.activeAnchor.path,
+				name = self.activeAnchor.name,
+				type = self.activeAnchor.type;
+
+			var newName = oX('#dialog form input[name="name"]').value();
+			// Build new path
+			var arr = path.split('/');
+			var temp = [];
+			for (var i = 0; i < arr.length - 1; i++) {
+				temp.push(arr[i]);
+			}
+			var newPath = temp.join('/') + '/' + newName;
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'rename',
+					path: path,
+					name: newName
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return;
+					if (type === 'file') {
+						toast('success', 'File Renamed.');
+					} else {
+						toast('success', 'Folder Renamed.');
+
+					}
+					var node = oX('#file-manager a[data-path="' + path + '"]'),
+						icon = node.find('i:nth-child(2)'),
+						span = node.find('span');
+					// Change pathing and name for node
+					node.attr('data-path', newPath);
+					span.text(newName);
+					if (type === 'file') {
+						// Change icons for file
+						icon.removeClass();
+						var ico = icons.getClassWithColor(newName);
+						if (ico) {
+							icon.addClass(icons.getClassWithColor(newName));
+						}
+					} else {
+						// Change pathing on any sub-files/directories
+						self.repathChildren(path, newPath);
+					}
+					// Change any active files
+					atheos.active.rename(path, newPath);
+				}
+			});
+			atheos.modal.unload();
+		},
+
 
 		repathChildren: function(oldPath, newPath) {
 			var node = oX('#file-manager a[data-path="' + newPath + '"]'),
@@ -796,10 +826,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Delete
 		//////////////////////////////////////////////////////////////////////80
-		delete: function(path) {
+		delete: function(anchor) {
+			let path = anchor.path;
 			atheos.alert.show({
 				message: 'Are you sure you wish to delete the following:',
-				data: pathinfo(path).basename,
+				data: anchor.name,
 				actions: {
 					'Delete': function() {
 						echo({
@@ -824,4 +855,7 @@
 
 	};
 
-})(this);
+	carbon.subscribe('system.loadMajor', () => self.init());
+	atheos.filemanager = self;
+
+})();

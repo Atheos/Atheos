@@ -22,15 +22,7 @@
 (function() {
 	'use strict';
 
-	const node = {
-
-		//////////////////////////////////////////////////////////////////////80
-		// Initialize the module
-		//////////////////////////////////////////////////////////////////////80
-		init: function() {
-			if (node) return;
-			node = this;
-		},
+	const self = {
 
 		//////////////////////////////////////////////////////////////////////80
 		// Slide open and closed animation, think dropdown
@@ -123,7 +115,6 @@
 		}
 	};
 
-	carbon.subscribe('system.loadMinor', () => node.init());
-	atheos.flow = node;
+	atheos.flow = self;
 
 })();

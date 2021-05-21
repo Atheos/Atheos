@@ -31,7 +31,7 @@ $SourceManager = new SourceManager;
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title>Atheos IDE</title>
+	<title><?php if(defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
 	<meta name="author" content="Liam Siira">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
@@ -71,10 +71,9 @@ $SourceManager = new SourceManager;
 		?>
 
 		<div id="workspace">
-			<?php require_once('components/contextmenu/menu.php'); ?>
+			<div id="contextmenu"></div>
 
 			<?php require_once('components/sidebars/sb-left.php'); ?>
-
 
 			<div id="editor-region">
 				<div id="editor-top-bar">

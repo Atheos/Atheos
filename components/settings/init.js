@@ -8,21 +8,32 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var self = null;
-
-	atheos.settings = {
+	const self = {
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
-			self.load();
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'settings',
+					action: 'load',
+				},
+				settled: function(status, reply) {
+					if (status === 'success') {
+						for (var key in reply) {
+							storage(key, reply[key]);
+						}
+					}
+					carbon.publish('settings.loaded', reply);
+				}
+			});
 
-			oX('#modal_wrapper .settings', true).on('change', function(e) {
+			fX('#dialog .settings').on('change', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				var type = target.el.type;
@@ -48,33 +59,11 @@
 				self.publish(key, value);
 			});
 
-			oX('#modal_wrapper .settings menu', true).on('click', function(e) {
+			fX('#dialog .settings menu').on('click', function(e) {
 				var target = oX(e.target);
 				var tagName = target.el.tagName;
 				if (tagName === 'A') {
 					self.showTab(target);
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Load Settings
-		//////////////////////////////////////////////////////////////////////80
-		load: function() {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'settings',
-					action: 'load',
-				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						delete reply.status;
-						for (var key in reply) {
-							storage(key, reply[key]);
-						}
-					}
-					carbon.publish('settings.loaded', reply);
 				}
 			});
 		},
@@ -117,7 +106,7 @@
 				case 'active.loopBehavior':
 					atheos.active.loopBehavior = value;
 					break;
-					
+
 				case 'editor.theme':
 					atheos.editor.setTheme(value);
 					break;
@@ -148,7 +137,7 @@
 				case 'editor.tabSize':
 					atheos.editor.setTabSize(value);
 					break;
-					
+
 				case 'filemanager.showHidden':
 					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;
@@ -186,14 +175,12 @@
 					key,
 					value
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						atheos.toast.show(reply);
-					} else if (!hidden) {
-						reply.text = 'Setting "' + key + '" saved.';
-						// self.displayStatus(reply);
-						atheos.toast.show(reply);
-					}
+				settled: function(status, reply) {
+					if (status !== 'success') toast(status, reply);
+					if (hidden) return;
+					// self.displayStatus(reply);
+					toast(status, 'Setting "' + key + '" saved.');
+
 				}
 			});
 
@@ -257,7 +244,7 @@
 		show: function(dataFile) {
 			atheos.modal.load(800, {
 				target: 'settings',
-				action: 'settings',
+				action: 'openDialog',
 				callback: function() {
 					if (typeof(dataFile) === 'string') {
 						self.showTab(dataFile);
@@ -302,7 +289,8 @@
 				});
 			}
 		}
-
 	};
 
-})(this);
+	atheos.settings = self;
+
+})();

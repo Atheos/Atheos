@@ -44,6 +44,7 @@ trait Path {
 	// Return full workspace path
 	//////////////////////////////////////////////////////////////////////////80
 	public static function getWorkspacePath($path) {
+		$path = Common::cleanPath($path);
 		if (!$path) {
 			return false;
 		}
@@ -51,7 +52,7 @@ trait Path {
 		if (!Common::checkPath($path)) {
 			Common::send("error", "Client does not have access.");
 		}
-		if(Common::isAbsPath($path)) {
+		if (Common::isAbsPath($path)) {
 			return $path;
 		}
 		return WORKSPACE . "/" . $path;

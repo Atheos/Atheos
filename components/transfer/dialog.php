@@ -51,7 +51,7 @@ switch ($action) {
 		}
 		?>
 		<label class="title"><i class="fas fa-upload"></i><?php echo i18n("filesUpload"); ?></label>
-		<form enctype="multipart/form-data">
+		<form class="transfer" enctype="multipart/form-data">
 			<pre><?php echo($path); ?></pre>
 			<label id="upload_wrapper">
 				<?php echo i18n("dragFilesOrClickHereToUpload"); ?>

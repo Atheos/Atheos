@@ -66,25 +66,26 @@ class Project {
 
 		if (!Common::isAbsPath($projectPath)) {
 			$projectPath = $this->sanitizePath($projectPath);
-			mkdir(WORKSPACE . '/' . $projectPath);
+			$projectPath = WORKSPACE . "/" . $projectPath;
+		}
+
+		if (!file_exists($projectPath)) {
+			if (!mkdir($projectPath . "/", 0755, true)) {
+				Common::send("error", i18n("project_unableAbsolute"));
+			}
 		} else {
-			if (!file_exists($projectPath)) {
-				if (!mkdir($projectPath . '/', 0755, true)) {
-					Common::send("error", i18n("project_unableAbsolute"));
-				}
-			} else {
-				if (!is_writable($projectPath) || !is_readable($projectPath)) {
-					Common::send("error", i18n("project_unablePermissions"));
-				}
+			if (!is_writable($projectPath) || !is_readable($projectPath)) {
+				Common::send("error", i18n("project_unablePermissions"));
 			}
 		}
+
 
 		$this->db->insert($projectName, $projectPath);
 
 		// Pull from Git Repo?
 		if ($gitRepo && filter_var($gitRepo, FILTER_VALIDATE_URL) !== false) {
 			$gitBranch = $this->sanitizeGitBranch($gitBranch);
-			$cmd = Common::isAbsPath($projectPath) ? "cd " . escapeshellarg($projectPath) : "cd " . escapeshellarg(WORKSPACE . '/' . $projectPath);
+			$cmd = Common::isAbsPath($projectPath) ? "cd " . escapeshellarg($projectPath) : "cd " . escapeshellarg(WORKSPACE . "/" . $projectPath);
 			$cmd .= " && git init && git remote add origin " . escapeshellarg($gitRepo) . " && git pull origin " . escapeshellarg($gitBranch);
 			Common::executeCommand($cmd);
 		}
@@ -99,15 +100,18 @@ class Project {
 	// Delete Project
 	//////////////////////////////////////////////////////////////////////////80
 	public function delete($projectName, $scope) {
-		$this->db->delete($projectName);
-		
-		if($scope === "hard") {
-			Common::send("success", "Server file deletion not yet implemented.");
+		if ($scope === "hard") {
+			$path = $this->db->select($projectName);
+			if (Common::rDelete($path) !== true) {
+				Common::send("error", "Project could not be deleted.");
+			}
 		}
+
+		$this->db->delete($projectName);
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "projects");
-		Common::send("success", "Project Deleted.");
+		Common::send("success", "Project deleted.");
 	}
 
 	public function list() {
@@ -159,8 +163,9 @@ class Project {
 		$reply = array(
 			"name" => $projectName,
 			"path" => $projectPath,
+			"repo" => is_dir($projectPath . "/.git"),
 			"text" => $projectName . " Loaded.",
-			// While I don't approve of user information being passed through the
+			// While I don"t approve of user information being passed through the
 			// project class, it seems significantly more effective to do so as
 			// opposed to creating an entire process to pass lastLogin data to
 			// the client when I can accomplish it by adding this line here.
@@ -233,7 +238,7 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	public function sanitizePath($projectPath) {
 		$projectPath = str_replace(" ", "_", $projectPath);
-		return preg_replace('/[^\w-]/', '', $projectPath);
+		return preg_replace("/[^\w-]/", "", $projectPath);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

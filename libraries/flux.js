@@ -148,6 +148,11 @@
 		});
 	};
 
+	window.Flux = {
+		list,
+		reset
+	};
+
 	const flux = function(s) {
 		// s  => Selector
 		// t  => EventType
@@ -155,9 +160,7 @@
 		// e  => Event
 		// o  => Options
 
-		if (!s) return;
-
-		return {
+		if (s) return {
 			exists: (s) => exists(s),
 			list: () => list(s),
 			off: (t, fn) => off(t, s, fn),

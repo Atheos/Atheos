@@ -49,7 +49,7 @@
 		// Download Archive
 		//////////////////////////////////////////////////////////////////
 		download: function() {
-			var archive = oX('#modal_content form input[name="archive"]').value();
+			var archive = oX('#dialog form input[name="archive"]').value();
 			oX('#download').attr('src', archive);
 			echo({
 				url: atheos.controller,

@@ -8,16 +8,11 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
 
-	var self = null;
-
-	carbon.subscribe('system.loadExtra', () => atheos.scout.init());
-
-	atheos.scout = {
+	const self = {
 
 		cachedFileTree: null,
 		rootPath: null,
@@ -28,22 +23,14 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
-
-			oX('#open_probe').on('click', function(e) {
-				self.probe();
-			});
-			oX('#filter_open').on('click', function() {
-				self.showFilter();
-			});
-			oX('#filter_close').on('click', function() {
-				self.hideFilter();
-			});
+			oX('#search_open').on('click', self.openSearch);
+			oX('#filter_open').on('click', self.openFilter);
+			oX('#filter_exit').on('click', self.exitFilter);
 
 			atheos.common.initMenuHandler(oX('#filter_options'), oX('#filter_strategy'));
 
 			var strategyMenu = oX('#filter_strategy');
-			strategyMenu.on('click', function(e) {
+			fX('#filter_strategy').on('click', function(e) {
 				var node = oX(e.target);
 				strategyMenu.find('.active').removeClass('active');
 				if (e.target.tagname === 'A') {
@@ -53,7 +40,7 @@
 			});
 
 			var changeTimeout = false;
-			oX('#filter_input').on('change, keydown, paste, input', function() {
+			fX('#filter_input').on('change, keydown, paste, input', function() {
 				if (changeTimeout !== false) {
 					clearTimeout(changeTimeout);
 				}
@@ -62,97 +49,95 @@
 					changeTimeout = false;
 				}, 500);
 			});
+
+
+			fX('#dialog .searchText').on('submit', self.searchText);
+
+		},
+
+		searchText: function(e) {
+			e.preventDefault();
+
+			var table = oX('#probe_results');
+
+			oX('#probe_processing').show();
+
+			var query = oX('#dialog input[name="probe_query"]').value();
+			var extensions = oX('#dialog input[name="probe_filter"]').value();
+			var filter = extensions.trim();
+			// var type = oX('#dialog select[name="probe_type"]').prop('checked');
+			if (filter !== '') {
+				//season the string to use in find command
+				filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
+			}
+
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'scout',
+					action: 'probe',
+					// type,
+					path: atheos.project.current.path,
+					query,
+					filter
+				},
+				settled: function(status, reply) {
+					table.empty();
+					oX('#probe_processing').hide();
+					var results = '';
+					if (status === 'error') {
+						table.append('<p>' + reply.text + '</p>');
+						return;
+					}
+
+					for (var key in reply) {
+
+						var file = reply[key];
+
+						if (key.substr(-1) === '/') {
+							key = key.substr(0, key.substr.length - 1);
+						}
+
+						var node = oX('<div>'),
+							content = '<span><strong>File: </strong>' + key + '</span>';
+
+						node.addClass('file');
+
+						file.forEach(function(result) {
+							// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+							// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
+							content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
+						});
+
+						node.html(content);
+						table.append(node);
+					}
+					results = table.html();
+					atheos.flow.slide('open', table.el);
+
+					self.saveSearchResults(query, extensions, results);
+					atheos.modal.resize();
+
+				}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Probe file contents
 		//////////////////////////////////////////////////////////////////////80
-		probe: function() {
-
-			var path = atheos.project.current.path;
-
-			var listener = function(e) {
-				e.preventDefault();
-
-				var table = oX('#probe_results');
-
-				oX('#probe_processing').show();
-
-				var query = oX('#modal_content input[name="probe_query"]').value();
-				var extensions = oX('#modal_content input[name="probe_filter"]').value();
-				var filter = extensions.trim();
-				// var type = oX('#modal_content select[name="probe_type"]').prop('checked');
-				if (filter !== '') {
-					//season the string to use in find command
-					filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
-				}
-
-				echo({
-					url: atheos.controller,
-					data: {
-						target: 'scout',
-						action: 'probe',
-						// type,
-						path,
-						query,
-						filter
-					},
-					success: function(reply) {
-						table.empty();
-						oX('#probe_processing').hide();
-						var results = '';
-						if (reply.status === 'error') {
-							table.append('<p>' + reply.text + '</p>');
-							return;
-						}
-
-						delete reply.status;
-
-						for (var key in reply) {
-
-							var file = reply[key];
-
-							if (key.substr(-1) === '/') {
-								key = key.substr(0, key.substr.length - 1);
-							}
-
-							var node = oX('<div>'),
-								content = '<span><strong>File: </strong>' + key + '</span>';
-
-							node.addClass('file');
-
-							file.forEach(function(result) {
-								// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-								// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
-								content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
-							});
-
-							node.html(content);
-							table.append(node);
-						}
-						results = table.html();
-						atheos.flow.slide('open', table.el);
-
-						self.saveSearchResults(query, extensions, results);
-						atheos.modal.resize();
-
-					}
-				});
-			};
-
+		openSearch: function() {
 			atheos.modal.load(500, {
 				target: 'scout',
 				action: 'probe',
-				listener,
 				callback: function() {
 					var table = oX('#probe_results');
 
 					var lastSearched = JSON.parse(storage('lastSearched'));
 
 					if (lastSearched) {
-						oX('#modal_content input[name="probe_query"]').value(lastSearched.query);
-						oX('#modal_content input[name="probe_filter"]').value(lastSearched.extensions);
-						// oX('#modal_content input[name="probe_type"]').checked(lastSearched.type);
+						oX('#dialog input[name="probe_query"]').value(lastSearched.query);
+						oX('#dialog input[name="probe_filter"]').value(lastSearched.extensions);
+						// oX('#dialog input[name="probe_type"]').checked(lastSearched.type);
 						if (lastSearched.results !== '') {
 							table.html(lastSearched.results);
 							atheos.flow.slide('open', table.el);
@@ -179,7 +164,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Show Filter
 		//////////////////////////////////////////////////////////////////////80
-		showFilter: function() {
+		openFilter: function() {
 			self.cachedFileTree = oX('#file-manager').html();
 			self.rootPath = oX('#project-root').attr('data-path');
 			self.rootName = oX('#project-root span').text();
@@ -193,7 +178,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Hide Filter
 		//////////////////////////////////////////////////////////////////////80
-		hideFilter: function() {
+		exitFilter: function() {
 			oX('#filter_wrapper').hide();
 
 			if (self.cachedFileTree) {
@@ -339,4 +324,7 @@
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadExtra', () => self.init());
+	atheos.scout = self;
+
+})();

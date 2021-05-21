@@ -14,29 +14,23 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
-	
-	var atheos = global.atheos;
 
-	var self = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.transfer.init());
-
-	atheos.transfer = {
+	const self = {
 
 		//////////////////////////////////////////////////////////////////////80
-		// Init
+		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
+			fX('#dialog .transfer').on('change', self.upload);
 		},
-
 		//////////////////////////////////////////////////////////////////////80
 		// Download
 		//////////////////////////////////////////////////////////////////////80
-		download: function(path) {
-			var type = pathinfo(path).type;
+		download: function(anchor) {
+			let path = anchor.path,
+				type = pathinfo(path).type;
 			echo({
 				url: atheos.controller,
 				data: {
@@ -58,69 +52,73 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Upload
 		//////////////////////////////////////////////////////////////////////80
-		upload: function(path) {
+		uploadPath: false,
+		upload: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+			log('test');
+
+			var input = oX('#dialog input[type="file"]').el,
+				fileCount = input.files.length,
+				uploadName;
+
+			if (fileCount <= 0) return;
+
+
+			uploadName = fileCount >= 1 ? input.files[0].name : 'Batch Upload';
+
+			var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
+			oX('#progress_wrapper').append(progressNode);
+
+			var data = new FormData();
+
+			for (var x = 0; x < fileCount; x++) {
+				data.append('upload[]', input.files[x]);
+			}
+
+			// data.append('upload[]', file);
+			data.append('target', 'transfer');
+			data.append('action', 'upload');
+			data.append('path', self.uploadPath);
+
+			var send = new XMLHttpRequest();
+			send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
+			send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
+			send.open('POST', atheos.controller);
+
+			send.onreadystatechange = function() {
+				if (send.readyState === 4) {
+					var reply = send.responseText;
+					try {
+						reply = JSON.parse(reply);
+					} catch (e) {}
+
+					if (send.status >= 200 && send.status < 300) {
+						self.processUpload(reply, self.uploadPath);
+					} else {
+						self.showProgress(progressNode, uploadName)({
+							type: 'error'
+						});
+					}
+					input.value = '';
+				}
+			};
+			send.send(data);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Upload
+		//////////////////////////////////////////////////////////////////////80
+		openUpload: function(anchor) {
 			// Source: https://codepen.io/PerfectIsShit/pen/zogMXP?editors=1010
 			// Source: http://significanttechno.com/file-upload-progress-bar-using-javascript
 
-			var listener = function(e) {
-				e.preventDefault();
-				e.stopPropagation();
-				var input = oX('#modal_content input[type="file"]').el,
-					fileCount = input.files.length,
-					uploadName;
-
-				if (fileCount <= 0) {
-					return;
-				}
-
-				uploadName = input.files[0].name || 'Batch Upload';
-
-				var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
-				oX('#progress_wrapper').append(progressNode);
-
-				var data = new FormData();
-
-				for (var x = 0; x < fileCount; x++) {
-					data.append('upload[]', input.files[x]);
-				}
-
-				// data.append('upload[]', file);
-				data.append('target', 'transfer');
-				data.append('action', 'upload');
-				data.append('path', path);
-
-				var send = new XMLHttpRequest();
-				send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
-				send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
-				send.open('POST', atheos.controller);
-
-				send.onreadystatechange = function() {
-					if (send.readyState === 4) {
-						var reply = send.responseText;
-						try {
-							reply = JSON.parse(reply);
-						} catch (e) {}
-
-						if (send.status >= 200 && send.status < 300) {
-							self.processUpload(reply, path);
-						} else {
-							self.showProgress(progressNode, uploadName)({
-								type: 'error'
-							});
-						}
-						input.value = '';
-					}
-				};
-				send.send(data);
-			};
+			self.uploadPath = anchor.path;
 
 			atheos.modal.load(400, {
 				target: 'transfer',
 				action: 'upload',
-				path: path,
-				callback: function() {
-					fX('#modal_content').on('change', listener);
-				}
+				path: self.uploadPath
 			});
 		},
 
@@ -186,4 +184,7 @@
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadMinor', () => self.init());
+	atheos.transfer = self;
+
+})();

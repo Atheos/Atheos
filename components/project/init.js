@@ -40,8 +40,12 @@
 			fX('#projects-collapse').on('click', function() {
 				if (self.sideExpanded) {
 					self.dock.collapse();
+					atheos.settings.save('project.dockOpen', false, true);
+					storage('project.dockOpen', false);
 				} else {
 					self.dock.expand();
+					atheos.settings.save('project.dockOpen', true, true);
+					storage('project.dockOpen', true);
 				}
 			});
 
@@ -54,6 +58,11 @@
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
+
+				if (storage('project.dockOpen') === false) {
+					self.dock.collapse();
+				}
+
 			});
 
 			fX('#project_list .content li').on('click, dblclick', function(e) {
@@ -91,7 +100,7 @@
 						logSpan.find('span').text(reply.lastLogin);
 					}
 
-					self.setRoot(reply.name, reply.path);
+					self.setRoot(reply.name, reply.path, reply.repo);
 
 				}
 			});
@@ -101,7 +110,7 @@
 		// Open Project
 		//////////////////////////////////////////////////////////////////
 		open: function(projectName, projectPath) {
-			atheos.scout.hideFilter();
+			atheos.scout.exitFilter();
 			echo({
 				url: atheos.controller,
 				data: {
@@ -116,7 +125,7 @@
 						return;
 					}
 
-					self.setRoot(reply.name, reply.path);
+					self.setRoot(reply.name, reply.path, reply.repo);
 
 					if (atheos.modal.modalVisible) {
 						atheos.modal.unload();
@@ -134,18 +143,25 @@
 		//////////////////////////////////////////////////////////////////
 		// Set project root in file manager
 		//////////////////////////////////////////////////////////////////		
-		setRoot: function(name, path) {
+		setRoot: function(name, path, repo) {
 			self.current = {
 				name,
 				path
 			};
 			oX('#file-manager').empty();
-			oX('#file-manager').html(`<ul><li>
-									<a id="project-root" data-type="root" data-path="${path}">
-									<i class="root fa fa-folder blue"></i>
-									<span>${name}</span>
-									</a>
-								</li></ul>`);
+
+			let repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
+
+			oX('#file-manager').html(
+				`<ul>
+				<li>
+					<a id="project-root" data-type="root" data-path="${path}">
+						${repoIcon}
+						<i class="root fa fa-folder blue"></i>
+						<span>${name}</span>
+					</a>
+				</li>
+			</ul>`);
 			atheos.filemanager.openDir(path);
 		},
 
@@ -172,6 +188,12 @@
 					},
 					success: function(reply) {
 						oX('#project_list .content').html(reply);
+
+						let projects = oX('#project_list .content').findAll('LI');
+						if (projects.length < 2) {
+							self.dock.collapse();
+						}
+
 					}
 				});
 			},
@@ -182,6 +204,9 @@
 				oX('#sb_left>.content').css('bottom', '');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
+
+
+
 			},
 
 			collapse: function() {
@@ -192,7 +217,6 @@
 				oX('#sb_left>.content').css('bottom', height + 'px');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
-
 			}
 		},
 
@@ -231,10 +255,10 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				projectName = oX('#modal_content form input[name="projectName"]').value();
-				projectPath = oX('#modal_content form input[name="projectPath"]').value();
-				gitRepo = oX('#modal_content form input[name="gitRepo"]').value();
-				gitBranch = oX('#modal_content form input[name="gitBranch"]').value();
+				projectName = oX('#dialog form input[name="projectName"]').value();
+				projectPath = oX('#dialog form input[name="projectPath"]').value();
+				gitRepo = oX('#dialog form input[name="gitRepo"]').value();
+				gitBranch = oX('#dialog form input[name="gitBranch"]').value();
 
 
 				if (projectPath.indexOf('/') === 0) {
@@ -277,7 +301,7 @@
 			var listener = function(e) {
 				e.preventDefault();
 
-				var newName = oX('#modal_content form input[name="projectName"]').value();
+				var newName = oX('#dialog form input[name="projectName"]').value();
 
 				var data = {
 					target: 'project',
@@ -286,7 +310,7 @@
 					oldName,
 					newName
 				};
-				
+
 				echo({
 					url: atheos.controller,
 					data,

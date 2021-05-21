@@ -1,4 +1,4 @@
-#modal_wrapper {
+#dialog {
 	position: absolute;
 	top: 15%;
 	left: 50%;
@@ -10,7 +10,7 @@
 	border: $borderHeavy;
 }
 
-#modal_content {
+#content {
 	background-color: $background;
 
 	form {

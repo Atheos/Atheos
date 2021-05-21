@@ -25,7 +25,7 @@ switch ($action) {
 
 		?>
 		<label class="title"><i class="fas fa-search"></i><?php echo i18n("scout_searchFiles"); ?></label>
-		<form>
+		<form class="searchText">
 			<table id="probe_table">
 				<tr>
 					<td width="65%">
@@ -44,7 +44,6 @@ switch ($action) {
 			<toolbar>
 				<button class="btn-left"><?php echo i18n("search"); ?></button>
 			</toolbar>
-
 		</form>
 		<?php
 		break;
