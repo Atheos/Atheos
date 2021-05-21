@@ -30,6 +30,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	$password = POST("password");
 	$projectName = POST("projectName") ?: false;
 	$projectPath = POST("projectPath") ?: $projectName;
+	$domain = POST("domain") ?: false;
 	$timezone = POST("timezone") ?: "UTC";
 	$language = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?: "en";
 	$development = POST("development") ?: "false";
@@ -118,6 +119,9 @@ define("BASE_PATH", __DIR__);
 
 // BASE URL TO ATHEOS (without trailing slash)
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
+
+// Add an install domain to the page title
+define("DOMAIN", ' . $domain . ');
 
 // SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
 define("LIFETIME", false);

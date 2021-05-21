@@ -205,6 +205,9 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 			<label><?php echo i18n("folderNameOrAbsolutePath"); ?></label>
 			<input type="text" name="projectPath">
 
+			<label><?php echo i18n("domain"); ?></label>
+			<input type="text" name="domain">
+
 			<label><?php echo i18n("settings"); ?></label>
 			<table>
 				<tr>
