@@ -13,7 +13,7 @@ trait Initialize {
 			$result = $this->execute("git init");
 		}
 
-		if ($result && $result["status"]) {
+		if ($result) {
 			Common::send("success", i18n("git_init_success"));
 		} else {
 			Common::send("error", i18n("git_init_failed"));
@@ -39,7 +39,7 @@ trait Initialize {
 
 		$result = $this->execute($command);
 
-		if ($result["status"]) {
+		if ($result) {
 			Common::send("success", i18n("git_clone_success"));
 		} else {
 			Common::send("error", i18n("git_clone_failed"));

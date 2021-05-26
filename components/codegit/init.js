@@ -296,9 +296,9 @@
 					action: 'fileStatus',
 					path: path
 				},
-				success: function(reply) {
+				settled: function(status, reply) {
 					var text = '';
-					if (reply.status !== 'error') {
+					if (status !== 'error') {
 						text = `${self.icon}${reply.branch}: +${reply.insertions}, -${reply.deletions}`;
 					}
 					if (self.fileStatus) {
