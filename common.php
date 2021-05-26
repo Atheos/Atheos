@@ -90,21 +90,22 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80////////80
 	public function execute($cmd = false) {
 		$output = false;
-		if (!$cmd) return "No command provided";
+		$code = 0;
+
+		if (!$cmd) return false;
 
 		if (function_exists("system")) {
 			ob_start();
-			system($cmd);
+			system($cmd, $code);
 			$output = ob_get_contents();
 			ob_end_clean();
 		} elseif (function_exists("exec")) {
-			exec($cmd, $output);
+			exec($cmd, $output, $code);
 			$output = implode("\n", $output);
-		} elseif (function_exists("shell_exec")) {
-			$output = shell_exec($cmd);
-		} else {
-			$output = "Command execution not possible on this system";
 		}
+
+		// if($code !== 0) return false;
+
 		return $output;
 	}
 }

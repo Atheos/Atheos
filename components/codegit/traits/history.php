@@ -11,12 +11,12 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result["status"]) {
+		if (!$result) {
 			return "Error loading log";
 		}
 
 		$pivot = array();
-		foreach ($result["data"] as $i => $item) {
+		foreach ($result as $i => $item) {
 			$item = explode('\\|', $item);
 			$pivot[] = array(
 				"hash" => $item[0],
@@ -34,8 +34,8 @@ trait History {
 
 		$result = $this->execute("git status --branch --porcelain");
 
-		if ($result["status"]) {
-			$status = $this->parseChanges($result["data"]);
+		if ($result) {
+			$status = $this->parseChanges($result);
 		} else {
 			return false;
 		}
@@ -98,19 +98,13 @@ trait History {
 
 
 	public function loadBlame($repo, $path) {
-
 		$result = $this->execute("git blame -c --date=format:'%b %d, %Y %H:%M' " . $path);
-
-		if ($result["status"]) {
-			return $result["data"];
-		} else {
-			return false;
-		}
+		return $result;
 	}
 
 	public function checkout($repo, $file) {
 		$result = $this->execute("git checkout -- " . $file);
-		if ($result["status"]) {
+		if ($result) {
 			Common::send("success", i18n("git_undo_success"));
 		} else {
 			Common::send("error", i18n("git_undo_failed"));

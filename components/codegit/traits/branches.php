@@ -9,9 +9,9 @@ trait Branches {
 		$result = $this->execute("git branch");
 		$current = "";
 
-		if ($result["status"]) {
+		if ($result) {
 
-			foreach ($result["data"] as $i => $line) {
+			foreach ($result as $i => $line) {
 				$array[$i] = trim($line);
 				if (strpos($line, "* ") === 0) {
 					$current = substr($line, 2);
@@ -27,8 +27,8 @@ trait Branches {
 		if (!is_dir($this->repo)) return false;
 		chdir($this->repo);
 		$result = $this->execute("git rev-parse --abbrev-ref HEAD");
-		if ($result["status"]) {
-			return $result["data"][0];
+		if ($result) {
+			return $result[0];
 		}
 		return false;
 	}

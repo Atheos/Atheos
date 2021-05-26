@@ -17,22 +17,24 @@
 		</thead>
 		<tbody>
 			<?php
-			foreach ($changes as $key => $array) {
-				if (is_array($array) && count($array) < 1) continue;
-				foreach ($array as $line => $file) {
-					?>
-					<tr data-file="<?php echo $file ?>">
-						<td>
-							<input group="cg_overview" type="checkbox" class="large">
-						</td>
-						<td class="<?php echo $key ?>"><?php echo $key ?></td>
-						<td class="file"><?php echo $file ?></td>
-						<td>
-							<button class="git_diff">Diff</button>
-							<button class="git_undo">Undo</button>
-						</td>
-					</tr>
-					<?php
+			if (is_array($changes)) {
+				foreach ($changes as $key => $array) {
+					if (is_array($array) && count($array) < 1) continue;
+					foreach ($array as $line => $file) {
+						?>
+						<tr data-file="<?php echo $file ?>">
+							<td>
+								<input group="cg_overview" type="checkbox" class="large">
+							</td>
+							<td class="<?php echo $key ?>"><?php echo $key ?></td>
+							<td class="file"><?php echo $file ?></td>
+							<td>
+								<button class="git_diff">Diff</button>
+								<button class="git_undo">Undo</button>
+							</td>
+						</tr>
+						<?php
+					}
 				}
 			} ?>
 		</tbody>
