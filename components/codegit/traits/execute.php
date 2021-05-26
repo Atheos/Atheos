@@ -12,9 +12,6 @@ trait Execute {
 
 		$result = Common::execute($cmd . ' 2>&1');
 		
-		debug($cmd);
-		debug($result);
-
 		if ($result !== false) {
 			return explode("\n", $result);
 		} else {
