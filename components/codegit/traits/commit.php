@@ -10,9 +10,6 @@ trait Commit {
 	public function commit($message, $files) {
 		$files = explode(',', $files);
 
-		debug("add");
-
-
 		foreach ($files as $file) {
 			$result = $this->add($file);
 			debug($result);
@@ -20,7 +17,6 @@ trait Commit {
 				Common::send("error", i18n("git_addFailed", $file));
 			}
 		}
-		debug("commit");
 
 		$result = $this->execute("git commit -m\"" . $message . "\"");
 		if ($result) {
