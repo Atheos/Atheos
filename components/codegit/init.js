@@ -224,8 +224,8 @@
 					settled: function(status, reply) {
 						toast(status, reply);
 						if (status === 'success') {
-							self.addRepoIcon(path);
-							atheos.filemanager.rescan(path);
+							self.addRepoIcon(anchor.path);
+							atheos.filemanager.rescan(anchor.path);
 							atheos.modal.unload();
 						}
 					}
