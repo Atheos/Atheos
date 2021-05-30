@@ -43,10 +43,9 @@ trait Status {
 
 		if (!$result) Common::send("error", i18n("codegit_error_statusFail"));
 
-		if (count($result) > 0) {
+		if (count($result) > 0 && $result[0] !== "") {
 			$stats = explode("\t", $result[0]);
-
-			$additions = $stats[0] ? $stats[1] : 0;
+			$additions = $stats[0] ? $stats[0] : 0;
 			$deletions = $stats[1] ? $stats[1] : 0;
 
 		} else {
