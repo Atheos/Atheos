@@ -8,16 +8,10 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.user.init());
-
-	atheos.user = {
+	const self = {
 
 		loginForm: null,
 
@@ -25,7 +19,6 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
 			self.loginForm = oX('#login');
 
 			if (self.loginForm) {
@@ -49,20 +42,20 @@
 					self.authenticate(e.target);
 				});
 
-				var element;
+				let element;
 
-				var username = storage('username');
-				var remember = storage('remember');
+				let username = storage('username'),
+					remember = storage('remember'),
+					language = storage('language');
+
 				if (username && remember) {
 					element = oX('#username');
 					oX('#username').value(username);
 					oX('#remember').prop('checked', true);
-
 					oX('#password').focus();
 				}
 
 				// Get Language
-				var language = storage('language');
 				element = oX('#language');
 				if (element && element.findAll('option').length > 1) {
 					element.findAll('option').forEach(function(option) {
@@ -85,9 +78,10 @@
 					oX('#show_login_options').show('inline-block');
 					oX('#login_options').hide();
 				});
+
 			} else {
-				carbon.subscribe('chrono.mega', function() {
-					// Run controller to check session (also acts as keep-alive) & Check user
+				// Run controller to check session (also acts as keep-alive) & Check user
+				carbon.subscribe('chrono.tera', function() {
 					echo({
 						data: {
 							'target': 'user',
@@ -101,13 +95,24 @@
 					});
 				});
 			}
+
+
+			//////////////////////////////////////////////////////////////////80
+			// Show/Hide Project List in ACL dialog
+			//////////////////////////////////////////////////////////////////80
+			fX('#aclSelect').on('change', function(e) {
+				let aclSelect = oX(e.target),
+					projectSelect = oX('#projectSelect').el,
+					direction = aclSelect.value() === 'full' ? 'close' : 'open';
+				atheos.flow.slide(direction, projectSelect, 300);
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Authenticate User
 		//////////////////////////////////////////////////////////////////////80
 		authenticate: function(form) {
-			var data = serialize(form);
+			let data = serialize(form);
 			if (data.password === '' || data.username === '') {
 				return toast('notice', 'Username/Password not provided.');
 			}
@@ -128,31 +133,29 @@
 		// Change Password
 		//////////////////////////////////////////////////////////////////////80
 		changePassword: function(username) {
-			var listener = function(e) {
+			let listener = function(e) {
 				e.preventDefault();
 
 				let data = serialize(form.node());
 
 				let vPass = data.password === data.validate;
 
-				if (!vPass) toast('error', 'Passwords do not match.');
+				if (!vPass) return toast('error', 'Passwords do not match.');
 
-				if (vPass) {
-					echo({
-						data: {
-							target: 'user',
-							action: 'changePassword',
-							username: username,
-							password: data.password
-						},
-						settled: function(status, reply) {
-							toast(status, reply);
-							if (status !== 'error') {
-								atheos.modal.unload();
-							}
+				echo({
+					data: {
+						target: 'user',
+						action: 'changePassword',
+						username: username,
+						password: data.password
+					},
+					settled: function(status, reply) {
+						toast(status, reply);
+						if (status !== 'error') {
+							atheos.modal.unload();
 						}
-					});
-				}
+					}
+				});
 			};
 
 			atheos.modal.load(400, {
@@ -168,7 +171,7 @@
 		// Create User
 		//////////////////////////////////////////////////////////////////////80
 		create: function() {
-			var listener = function(e) {
+			let listener = function(e) {
 				e.preventDefault();
 
 				let data = serialize(e.target);
@@ -176,25 +179,23 @@
 				let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
 					vPass = data.password === data.validate;
 
-				if (!vUser) toast('error', 'Username must be an alphanumeric string');
-				if (!vPass) toast('error', 'Passwords do not match.');
+				if (!vUser) return toast('error', 'Username must be an alphanumeric string');
+				if (!vPass) return toast('error', 'Passwords do not match.');
 
-				if (vUser && vPass) {
-					echo({
-						data: {
-							target: 'user',
-							action: 'create',
-							username: data.username,
-							password: data.password
-						},
-						settled: function(status, reply) {
-							toast(status, reply);
-							if (status !== 'error') {
-								self.list();
-							}
+				echo({
+					data: {
+						target: 'user',
+						action: 'create',
+						username: data.username,
+						password: data.password
+					},
+					settled: function(status, reply) {
+						toast(status, reply);
+						if (status !== 'error') {
+							self.list();
 						}
-					});
-				}
+					}
+				});
 			};
 
 			atheos.modal.load(400, {
@@ -208,7 +209,7 @@
 		// Delete User
 		//////////////////////////////////////////////////////////////////////80
 		delete: function(username) {
-			var listener = function(e) {
+			let listener = function(e) {
 				e.preventDefault();
 
 				echo({
@@ -248,7 +249,7 @@
 		// Logout
 		//////////////////////////////////////////////////////////////////////80
 		logout: function() {
-			var postLogout = function() {
+			let postLogout = function() {
 				carbon.publish('user.logout');
 				atheos.settings.save();
 				echo({
@@ -262,15 +263,15 @@
 				});
 			};
 
-			var changedTabs = atheos.active.unsavedChanges();
+			let changedTabs = atheos.active.unsavedChanges();
 			if (changedTabs) {
 				atheos.active.focus(changedTabs[0]);
-				var changes = '';
+				let changes = '';
 				changedTabs.forEach(function(path, i) {
 					changes += pathinfo(path).basename + '\n';
 				});
 
-				var dialog = {
+				let dialog = {
 					banner: 'You have unsaved changes.',
 					data: changes,
 					actions: {
@@ -279,7 +280,7 @@
 							postLogout();
 						},
 						'Discard Changes': function() {
-							for (var path in atheos.active.sessions) {
+							for (let path in atheos.active.sessions) {
 								atheos.active.sessions[path].status = 'current';
 							}
 							postLogout();
@@ -313,10 +314,10 @@
 		// Set Project Access
 		//////////////////////////////////////////////////////////////////////80
 		showUserACL: function(username) {
-			var listener = function(e) {
+			let listener = function(e) {
 				e.preventDefault();
 
-				var data = serializeForm(e.target);
+				let data = serializeForm(e.target);
 				data.target = 'user';
 				data.action = 'updateACL';
 				data.username = username;
@@ -349,20 +350,10 @@
 				username,
 				listener
 			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Show/Hide Project List in ACL dialog
-		//////////////////////////////////////////////////////////////////////80
-		toggleACL: function(e) {
-			var aclSelect = oX('#aclSelect');
-			if (aclSelect) {
-				var projectSelect = oX('#projectSelect').el;
-				var direction = aclSelect.value() === 'full' ? 'close' : 'open';
-				atheos.flow.slide(direction, projectSelect, 300);
-			}
 		}
-
 	};
 
-})(this);
+	carbon.subscribe('system.loadMinor', () => self.init());
+	atheos.user = self;
+
+})();
