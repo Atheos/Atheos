@@ -152,7 +152,7 @@ switch ($action) {
 		?>
 		<label class="title"><i class="fas fa-user-alt"></i><?php echo i18n("editUserACL", ucfirst($username)); ?></label>
 		<form>
-			<select id="aclSelect" name="userACL" onchange="atheos.user.toggleACL()">
+			<select id="aclSelect" name="userACL">
 				<option value="full" <?php if ($userACL === "full") { echo('selected="selected"'); } ?>><?php echo i18n("accessAllProjects"); ?></option>
 				<option value="limited" <?php if ($userACL !== "full") { echo('selected="selected"'); } ?>><?php echo i18n("onlySelectedProjects"); ?></option>
 			</select>
