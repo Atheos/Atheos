@@ -17,7 +17,7 @@ ul {
 	li {
 
 		&:before {
-			color: $primary;
+			color: $colorMajor;
 			content: "\2B22";
 			margin-right: 5px;
 			font-size: 12px;
@@ -27,19 +27,19 @@ ul {
 	}
 }
 
-ul.inline {
-	padding-left: 0;
-	// margin-left: -5px;
+// ul.inline {
+// 	padding-left: 0;
+// 	// margin-left: -5px;
 
-	li {
-		display: inline-block;
-		margin-right: 5px;
-		// padding-left: 5px;
-	}
-}
+// 	li {
+// 		display: inline-block;
+// 		margin-right: 5px;
+// 		// padding-left: 5px;
+// 	}
+// }
 
-ol {
-	li {
-		margin-left: 20px;
-	}
-}
+// ol {
+// 	li {
+// 		margin-left: 20px;
+// 	}
+// }

@@ -1,0 +1,68 @@
+@charset "UTF-8";
+
+:root {
+	--fg: #21212199;
+	--mg: #252525;
+	--bg: #010101;
+	--fcMjr: #F5F9F9;
+	--fcMnr: #A5A9AA;
+	--fcSml: #757577;
+	--bdr: 1px solid #353533;
+	--cMjr: #0074D9;
+	--cMnr: #7FDBFF;
+	--cSml: #001F3F;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: local('Ubuntu'), local('Ubuntu Regular'),
+		local('Ubuntu-Regular'),
+		url('/fonts/ubuntu/Ubuntu-Regular.woff2') format('woff2'),
+		url('/fonts/ubuntu/Ubuntu-Regular.woff') format('woff');
+	font-weight: normal;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: 'Ubuntu';
+	src: local('Ubuntu Bold'),
+		local('Ubuntu-Bold'),
+		url('/fonts/ubuntu/Ubuntu-Bold.woff2') format('woff2'),
+		url('/fonts/ubuntu/Ubuntu-Bold.woff') format('woff');
+	font-weight: 700;
+	font-style: normal;
+	font-display: swap;
+}
+
+html {
+	font-size: 16px;
+	-ms-text-size-adjust: 100%;
+	-webkit-text-size-adjust: 100%;
+}
+
+body {
+	background-color: #000;
+	max-width: 1280px;
+	margin: auto;
+
+	font-family: sans-serif;
+	font-weight: 400;
+	line-height: 1.5;
+	color: #F5F9F9;
+	text-rendering: optimizeLegibility;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+
+	padding: 2px;
+}
+
+@media (min-width: 768px) {
+	body {
+		padding: 15px;
+	}
+}
+
+.ready body {
+	font-family: 'Ubuntu', sans-serif;
+}

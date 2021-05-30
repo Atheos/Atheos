@@ -17,24 +17,20 @@ footer {
 @import 'scss/common/typography';
 
 @import 'scss/custom/brand';
-// @import 'scss/custom/dropdown';
+@import 'scss/custom/card';
 @import 'scss/custom/features';
-// @import 'scss/custom/hidden';
 @import 'scss/custom/logo';
-// @import 'scss/custom/lumin';
 @import 'scss/custom/scrollbars';
 @import 'scss/custom/shadow';
 @import 'scss/custom/synthetic';
 // @import 'scss/custom/visualization';
 
 // @import 'scss/blocks/content';
-@import 'scss/blocks/footer';
+// @import 'scss/blocks/footer';
 @import 'scss/blocks/header';
 @import 'scss/blocks/main';
 @import 'scss/blocks/navbar';
 @import 'scss/blocks/sidebar';
 @import 'scss/blocks/section';
-
-// @import 'scss/markdown';
 
 @import 'scss/utility/reset';

@@ -2,13 +2,13 @@
 	display: none;
 	padding: 8px;
 
-	img {
-		margin: 0 auto;
-	}
-
 	svg {
 		width: 100%;
 		height: 100%;
+	}
+
+	path {
+		animation: float 1s infinite ease-in-out alternate;
 	}
 
 	@media (min-width: $desktop) {

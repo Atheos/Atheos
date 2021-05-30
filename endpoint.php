@@ -2,7 +2,7 @@
 header("Access-Control-Allow-Origin: *");
 header("Content-Type: application/json");
 
-$URI = "$_SERVER[REQUEST_URI]";
+$URI = $_SERVER["REQUEST_URI"];
 
 function SEND($data) {
 	die(json_encode($data, JSON_PRETTY_PRINT));
@@ -16,12 +16,14 @@ if (strpos($URI, "market")) {
 	$json = json_decode(file_get_contents("data/market.json"), true);
 	SEND($json);
 
-} else {
-	http_response_code(202);
-	ERROR("API Endpoint under construction.");
+} elseif (strpos($URI, "analytics")) {
+	// http_response_code(202);
+	// ERROR("API Endpoint under construction.");
 
-
-	if ($_SERVER["REQUEST_METHOD"] !== "POST") ERROR("Invalid reqest method");
+	if ($_SERVER["REQUEST_METHOD"] !== "POST") {
+		http_response_code(400);
+		ERROR("Invalid reqest method");
+	}
 
 	$data = $_POST;
 	$values = [];
@@ -69,4 +71,7 @@ if (strpos($URI, "market")) {
 		"status" => "success",
 		"text" => "Data recieved",
 	));
+} else {
+	http_response_code(404);
+	ERROR("How did you get here?");
 }

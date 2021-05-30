@@ -1,20 +1,12 @@
 /*Source: https://hankchizljaw.com/wrote/a-modern-css-reset/*/
 
 /* Box sizing rules */
-*,
-*::before,
-*::after {
+* {
+// *::before,
+// *::after {
 	box-sizing: border-box;
 	margin: 0;
 	padding: 0;
-}
-
-/* Set core body defaults */
-body {
-	min-height: 100vh;
-	scroll-behavior: smooth;
-	text-rendering: optimizeSpeed;
-	line-height: 1.5;
 }
 
 /* Remove list styles on ul, ol elements with a class attribute */
@@ -24,9 +16,9 @@ ol[class] {
 }
 
 /* A elements that don't have a class get default styles */
-a:not([class]) {
-	text-decoration-skip-ink: auto;
-}
+// a:not([class]) {
+// 	text-decoration-skip-ink: auto;
+// }
 
 /* Make images easier to work with */
 img {
@@ -35,17 +27,9 @@ img {
 }
 
 /* Natural flow and rhythm in articles by default */
-article>*+* {
-	margin-top: 1em;
-}
-
-/* Inherit fonts for inputs and buttons */
-input,
-button,
-textarea,
-select {
-	font: inherit;
-}
+// article>*+* {
+// 	margin-top: 1rem;
+// }
 
 /* Remove all animations and transitions for people that prefer not to see them */
 @media (prefers-reduced-motion: reduce) {

@@ -26,7 +26,7 @@ document.addEventListener("DOMContentLoaded", function() {
 			document.fonts.load('700 1em Ubuntu'),
 			document.fonts.load('500 1em Ubuntu')
 		]).then(function() {
-			document.documentElement.className += 'fonts-loaded';
+			document.documentElement.className += 'ready';
 		});
 	}
 

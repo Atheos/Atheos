@@ -1,3 +1,8 @@
+ErrorDocument 403 /error.php
+ErrorDocument 404 /error.php
+ErrorDocument 500 /error.php
+
+
 RewriteEngine on
 
 # RewriteCond %{REQUEST_FILENAME}/market !-f
@@ -6,3 +11,5 @@ RewriteEngine on
 
 RewriteRule ^market/(.*)$ /endpoint.php [NC,L,QSA]
 RewriteRule ^analytics(.*)$ /endpoint.php [NC,L,QSA]
+
+RedirectMatch 403 ^/data/*$

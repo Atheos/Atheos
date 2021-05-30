@@ -8,7 +8,7 @@ sidebar {
 	flex: 1;
 	z-index: 99;
 	background-color: $foreground;
-	border-right: 1px solid $silver;
+	border-right: $border;
 
 	top: 2px;
 	height: calc(100% - 4px);
@@ -31,7 +31,7 @@ sidebar .trigger {
 	height: 4em;
 	padding: 15px;
 	background-color: $foreground;
-	border-bottom: 1px solid $silver;
+	border-bottom: $border;
 	text-align: center;
 
 	@media (min-width: $desktop) {
@@ -52,14 +52,12 @@ sidebar .trigger {
 		height: 2rem;
 	}
 
-	a {
-		display: inline-block;
-		font-size: 22px;
-		font-weight: bold;
-		color: $white;
-	}
-
-
+	// a {
+	// 	display: inline-block;
+	// 	font-size: 22px;
+	// 	font-weight: bold;
+	// 	color: $fontColorMajor;
+	// }
 }
 
 

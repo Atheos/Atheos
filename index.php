@@ -36,22 +36,9 @@
 	<link rel="preload" as="style" href="assets/style.min.css">
 	<link rel="stylesheet" type="text/css" href="assets/style.min.css" media="screen">
 
-	<!-- Preconnect -->
-	<link rel="preconnect" href="https://api.github.com">
-
-	<!-- Font CSS -->
-	<link rel="stylesheet" media="print" onload="this.media='all'" type="text/css" href="fonts/loader.php">
-
 	<!--Preload Fonts-->
 	<link rel="preload" as="font" href="fonts/ubuntu/Ubuntu-Bold.woff2" type="font/woff2" crossorigin="anonymous">
 	<link rel="preload" as="font" href="fonts/ubuntu/Ubuntu-Regular.woff2" type="font/woff2" crossorigin="anonymous">
-
-	<!-- Fallback for Font CSS -->
-	<noscript>
-		<link rel="preload" as="style" href="fonts/loader.php">
-		<link rel="stylesheet" type="text/css" href="fonts/loader.php">
-	</noscript>
-
 
 	<!-- Favicon -->
 	<link rel="apple-touch-icon" sizes="180x180" href="favicons/apple-touch-icon.png">
@@ -66,48 +53,7 @@
 
 	<!-- Style -->
 	<style type="text/css">
-		html {
-			font-size: 16px;
-			-ms-text-size-adjust: 100%;
-			-webkit-text-size-adjust: 100%;
-		}
-
-		body {
-			background-color: #000;
-			max-width: 1280px;
-			margin: auto;
-
-			font-family: sans-serif;
-			font-weight: 400;
-			line-height: 1.5;
-			color: #F5F9F9;
-			text-rendering: optimizeLegibility;
-			-webkit-font-smoothing: antialiased;
-			-moz-osx-font-smoothing: grayscale;
-
-			padding: 2px;
-		}
-
-@media (min-width: 768px) {
-			body {
-				padding: 15px;
-			}
-		}
-
-		main {
-			/*margin-left: 315px;*/
-			/*margin-top: 0;*/
-		}
-
-		.fonts-loaded body {
-			font-family: 'Ubuntu', sans-serif;
-		}
-
-		.fonts-loaded pre,
-		.fonts-loaded code,
-		.fonts-loaded pre code {
-			font-family: 'Ubuntu-Fira', monospace;
-		}
+	<?php include("assets/embed.css"); ?>
 	</style>
 
 	<!-- Javascript -->
@@ -119,20 +65,20 @@
 	<sidebar>
 		<div class="trigger">
 			<svg class="icon manu" viewBox="0 0 15 15" xmlns="http://www.w3.org/2000/svg"><path d="M15 2H0V1h15v1zm0 4H0V5h15v1zm0 4H0V9h15v1zm0 4H0v-1h15v1z" /></svg>
-			<name>Atheos<small class="version_tag">v.1.0</small></name>
+			<name>Atheos <small class="version_tag">v.1.0</small></name>
 		</div>
 		<header>
 			<a id="logo" title="home" href="https://www.atheos.io">
 				<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="40 147.5 320 387.5" width="320" height="335">
 					<defs>
-						<path id="backdrop" class="delay-0" d="M200.42 460.36L65.67 384.02V231.34L200.42 155l134.75 76.34v152.68l-134.75 76.34z" />
-						<path id="leftWing" class="delay-3" d="M40 400V220l80 40v100l60 35v85L40 400z" />
-						<path id="leftBar" class="delay-3" d="M120 360l-80 40" />
-						<path id="rightWing" class="delay-3" d="M360 400V220l-80 40v100l-60 35v85l140-80z" />
-						<path id="rightBar" class="delay-3" d="M280 360l80 40" />
-						<path id="alpha" class="delay-2" d="M255 355l-55-115-55 115" />
-						<path id="center" class="delay-3" d="M200 490l20-10v-85l60-35V260l-80-50-80 50v100l60 35v85l20 10z" />
-						<clipPath id="i" class="delay-2">
+						<path id="backdrop" class="delay0" d="M200.42 460.36L65.67 384.02V231.34L200.42 155l134.75 76.34v152.68l-134.75 76.34z" />
+						<path id="leftWing" class="delay3" d="M40 400V220l80 40v100l60 35v85L40 400z" />
+						<path id="leftBar" class="delay3" d="M120 360l-80 40" />
+						<path id="rightWing" class="delay3" d="M360 400V220l-80 40v100l-60 35v85l140-80z" />
+						<path id="rightBar" class="delay3" d="M280 360l80 40" />
+						<path id="alpha" class="delay2" d="M255 355l-55-115-55 115" />
+						<path id="center" class="delay3" d="M200 490l20-10v-85l60-35V260l-80-50-80 50v100l60 35v85l20 10z" />
+						<clipPath id="i" class="delay2">
 							<use xlink:href="#alpha" />
 						</clipPath>
 					</defs>
@@ -253,13 +199,6 @@
 			</p>
 		</section>
 	</main>
-
-	<!-- Footer -->
-	<footer>
-		<p>
-			Atheos is maintained by <a title="Github HLSiira" href="https://github.com/HLSiira">Liam Siira</a><br>
-		</p>
-	</footer>
 
 	<!-- Shadow -->
 	<shadow class="fade6"></shadow>

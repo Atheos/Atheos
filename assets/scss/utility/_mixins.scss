@@ -3,7 +3,7 @@
 }
 
 @mixin foreground() {
-	border: 1px solid $smoke;
+	border: $border;
 	backdrop-filter: blur(2px);
 	background-color: #{$foreground}99;
 	// border-left: none;
