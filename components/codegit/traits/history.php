@@ -46,15 +46,15 @@ trait History {
 			$result = $this->untrackedDiff($path);
 
 		} else if (in_array($path, $status['modified'])) {
-			$result = $this->execute('git diff ' . $path)["data"];
+			$result = $this->execute('git diff ' . $path);
 			$result[] = "\n";
 
 		} else if (in_array($path, $status['added'])) {
-			$result = $this->execute('git diff --cached ' . $path)["data"];
+			$result = $this->execute('git diff --cached ' . $path);
 			$result[] = "\n";
 
 		} else if (in_array($path, $status['deleted'])) {
-			$result = $this->execute('git diff -- ' . $path)["data"];
+			$result = $this->execute('git diff -- ' . $path);
 			$result[] = "\n";
 
 		} else {
