@@ -1,9 +1,9 @@
 # Atheos File Manager
 
-## Description:
+## Description
 Controls all actions within the file system as well as rending the sidebar filemanager.
 
-## Methods:
+## Methods
  - **init**: Initializes additional script and event listeners for the filemanager
  - **toggleHidden**: Allows quick toggling of hidden files in the file tree
  - **nodeListener**: Listens for double-click and right-click events performed on objects in the filemanager
@@ -13,7 +13,7 @@ Controls all actions within the file system as well as rending the sidebar filem
  - **createDirectoryItem**: Creates an html element for a directory item, either folder or file
  - **openFile**: Opens a file into the editor display
 
-## Suggestions:
+## Suggestions
  - Sort parent folder on renaming a file
  - DragNDrop is overly complex and hard to read
  - A few of the alert dialog boxes need to be rewritten
