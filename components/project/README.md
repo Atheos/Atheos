@@ -1,11 +1,11 @@
 # Atheos Project Manager
 ## [atheos.project](https://github.com/Atheos/Atheos/blob/master/components/project/init.js)
 
-## Summary:
+## Summary
 
 Projects are the core containers for all files and folders and are created at the root level of the `workspace` directory. The `project` object is used to interact with the projects on the system.
 
-## Methods:
+## Methods
 
 **init**
 
