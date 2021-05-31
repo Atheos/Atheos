@@ -22,7 +22,7 @@ $config = BASE_PATH . "/config.php";
 // Verify no overwrites
 //////////////////////////////////////////////////////////////////////////////80
 if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/data/projects.json")) {
-	
+
 	//////////////////////////////////////////////////////////////////////////80
 	// Get POST responses
 	//////////////////////////////////////////////////////////////////////////80
@@ -34,7 +34,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	$timezone = POST("timezone") ?: "UTC";
 	$language = substr($_SERVER["HTTP_ACCEPT_LANGUAGE"], 0, 2) ?: "en";
 	$development = POST("development") ?: "false";
-	$authorized = "false"; // POST("analytics") ?: "false";
+	$authorized = POST("analytics") ?: "UNKNOWN";
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Projects filesue
@@ -122,7 +122,7 @@ define("BASE_PATH", __DIR__);
 define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
 // Add an install domain to the page title
-define("DOMAIN", ' . $domain . ');
+define("DOMAIN", "' . $domain . '");
 
 // SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
 define("LIFETIME", false);
