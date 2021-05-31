@@ -1,0 +1,11 @@
+.macro-wrapper {
+  max-height: 450px; 
+  width: 100%; 
+  overflow-y: auto; 
+  overflow-x: hidden;
+}
+
+.macro-command {
+  margin:0;
+  display:inline;
+}
