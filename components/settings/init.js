@@ -54,9 +54,13 @@
 					return;
 				}
 
-				storage(key, value);
-				self.save(key, value);
-				self.publish(key, value);
+				if (key === 'analytics.enabled') {
+					atheos.analytics.changeOpt(value);
+				} else {
+					storage(key, value);
+					self.save(key, value);
+					self.publish(key, value);
+				}
 			});
 
 			fX('#dialog .settings menu').on('click', function(e) {
@@ -98,8 +102,7 @@
 			var boolean = (value === 'true');
 
 			if (value === null) {
-				atheos.toast.alert('You Must Choose A Value');
-				return;
+				return toast('alert', 'You Must Choose A Value');
 			}
 
 			switch (setting) {
