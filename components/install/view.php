@@ -221,8 +221,8 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 						</toggle>
 					</td>
 				</tr>
-<!--				<tr>
-					<td><?php echo i18n("analyticsEnable"); ?></td>
+				<tr>
+					<td><?php echo i18n("analytics_enabled"); ?></td>
 					<td>
 						<toggle>
 							<input id="analytics_true" value="true" name="analytics" type="radio" />
@@ -231,7 +231,7 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 							<label for="analytics_false"><?php echo i18n("disabled"); ?></label>
 						</toggle>
 					</td>
-				</tr> -->
+				</tr>
 				<tr>
 					<td><?php echo i18n("timezone"); ?></td>
 					<td>
