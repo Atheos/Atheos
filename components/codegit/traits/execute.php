@@ -10,15 +10,13 @@ trait Execute {
 		$cmd = str_replace("\(", "(", $cmd);
 		$cmd = str_replace("\)", ")", $cmd);
 
-		$result = array();
-
-		exec($cmd . ' 2>&1', $result, $code);
-
-		return array(
-			"status" => $code === 0,
-			"code" => $this->parseCommandCodes($code),
-			"data" => array_filter($result)
-		);
+		$result = Common::execute($cmd . ' 2>&1');
+		
+		if ($result !== false) {
+			return explode("\n", $result);
+		} else {
+			return false;
+		}
 	}
 
 	private function parseCommandCodes($code) {
@@ -31,7 +29,7 @@ trait Execute {
 		// 	7 => "password_required",
 		// 	64 => "error",
 		// );
-		
+
 		// if(in_array($code, $codes)) {
 		// 	return $codes[$code];
 		// } else {

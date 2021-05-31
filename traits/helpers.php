@@ -4,7 +4,7 @@
 // Helper trait
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
-// warranty under the MIT License. See [root]/license.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -12,7 +12,7 @@
 
 trait Helpers {
 
-	function compareVersions($v1, $v2) {
+	public static function compareVersions($v1, $v2) {
 		// Src: https://helloacm.com/the-javascript-function-to-compare-version-number-strings/
 		if (!is_string($v1) || !is_string($v2)) {
 			return false;
@@ -34,6 +34,21 @@ trait Helpers {
 			}
 		}
 		return count($v1) === count($v2) ? 0 : (count($v1) < count($v2) ? -1 : 1);
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// GetBrowserName
+	//////////////////////////////////////////////////////////////////////////80
+	public static function getBrowser() {
+		$userAgent = SERVER("HTTP_USER_AGENT");
+		if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) return 'Opera';
+		elseif (strpos($userAgent, 'Edge')) return 'Edge';
+		elseif (strpos($userAgent, 'Chrome')) return 'Chrome';
+		elseif (strpos($userAgent, 'Safari')) return 'Safari';
+		elseif (strpos($userAgent, 'Firefox')) return 'Firefox';
+		elseif (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) return 'Internet Explorer';
+
+		return 'Other';
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -65,12 +80,11 @@ trait Helpers {
 		$allFiles = scandir($foldername);
 
 		foreach ($allFiles as $fname) {
-			if ($fname === "." || $fname === "..") {
+			if (in_array($fname, [".", "..", "README.md"])) {
 				continue;
 			}
 
-			$length = strlen(".disabled");
-			if (substr($fname, -$length) === ".disabled") {
+			if (substr($fname, -9) === ".disabled") {
 				continue;
 			}
 
@@ -133,10 +147,10 @@ trait Helpers {
 
 	public static function rDelete($target) {
 		$status = true;
-		
+
 		// Unnecessary, but rather be safe that sorry.
 		if ($target === "." || $target === "..") return true;
-		
+
 		if (is_dir($target)) {
 
 			$files = glob($target . "{*,.[!.]*,..?*}", GLOB_BRACE|GLOB_MARK); //GLOB_MARK adds a slash to directories returned
@@ -151,7 +165,7 @@ trait Helpers {
 		} elseif (is_file($target)) {
 			$status = unlink($target) === false ? false : $status;
 		}
-		
+
 		return $status;
 	}
 

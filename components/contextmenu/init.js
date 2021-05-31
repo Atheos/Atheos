@@ -2,7 +2,7 @@
 // Context Menu Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -56,6 +56,7 @@
 				self.showFileMenu(anchor);
 
 				self.show(e);
+				menu.addClass('fm');
 			});
 
 			fX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
@@ -65,10 +66,11 @@
 				self.showTabMenu(anchor);
 
 				self.show(e);
+				menu.addClass('at');
 			});
 
-			// Hide on click
-			fX('#contextmenu').on('click', function(e) {
+			// Hide on click for filemanager
+			fX('#contextmenu.fm').on('click', function(e) {
 				e.preventDefault();
 				let target = oX(e.target),
 					tagName = e.target.tagName;
@@ -206,6 +208,7 @@
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		show: function(e) {
+			menu.removeClass('fm at');
 			var top = e.pageY;
 			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
 			if (top > windowHeight - menu.height()) {

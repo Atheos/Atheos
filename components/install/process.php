@@ -4,7 +4,7 @@
 // Install Process
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -85,15 +85,16 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	// Create analytics cache
 	//////////////////////////////////////////////////////////////////////////80
 	$analyticsData = array(
-		"atheos_uuid" => uniqid(),
-		"atheos_version" => "v4.3.0",
+		"enabled" => $authorized,
+		"uuid" => uniqid(),
+		"version" => "v4.3.0",
 		"first_heard" => date("Y/m/d"),
 		"last_heard" => date("Y/m/d"),
 		"php_version" => phpversion(),
 		"server_os" => $_SERVER["SERVER_SOFTWARE"],
-		"client_os" => false,
-		"location" => $timezone,
-		"language" => false,
+		"client_os" => [Common::getBrowser()],
+		"timezone" => $timezone,
+		"language" => $language,
 		"plugins" => array()
 	);
 
@@ -108,7 +109,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 // Configuration
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -127,17 +128,10 @@ define("DOMAIN", ' . $domain . ');
 define("LIFETIME", false);
 
 // TIMEZONE
-try {
-    date_default_timezone_set("' . $timezone . '");
-} catch (Exception $e) {
-    date_default_timezone_set("UTC");
-}
+define("TIMEZONE", "' . $timezone . '");
 
 // DEVELOPMENT MODE
 define("DEVELOPMENT", ' . $development . ');
-
-// ANONYMOUS ANALYTICS
-define("ANALYTICS", ' . $authorized . ');
 
 // EXTERNAL AUTHENTICATION
 // define("AUTH_PATH", "/path/to/customauth.php");

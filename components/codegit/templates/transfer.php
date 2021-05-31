@@ -16,13 +16,16 @@
 	$icons = "<i class=\"fas fa-pencil-alt\"></i><i class=\"fas fa-trash-alt\"></i>";
 	$buttons = "<button disabled>" . i18n("edit") . "</button><button disabled>" . i18n("delete") . "</button>";
 
+	if (is_array($remotes)) {
+		foreach ($remotes as $i => $item) {
+			$item = preg_replace("(\(fetch\)|\(push\))", "", $item);
+			$value = explode("\t", $item)[0];
+			$remoteOptions[] = "<option value=\"$value\">$item</option>";
 
-	foreach ($remotes as $i => $item) {
-		$item = preg_replace("(\(fetch\)|\(push\))", "", $item);
-		$value = explode("\t", $item)[0];
-		$remoteOptions[] = "<option value=\"$value\">$item</option>";
-
-		$tableTransfer[] = "<tr data-value=\"$value\"><td><input type=\"text\" placeholder=\"$item\"></input></td><td>$buttons</td></tr>";
+			$tableTransfer[] = "<tr data-value=\"$value\"><td><input type=\"text\" placeholder=\"$item\"></input></td><td>$buttons</td></tr>";
+		}
+	} else {
+		$remoteOptions[] = "<option disabled selected>No Remotes</option>";
 	}
 
 	$remoteOptions = array_unique($remoteOptions);
@@ -31,12 +34,16 @@
 	$tableTransfer = array_unique($tableTransfer);
 	$tableTransfer = implode("", $tableTransfer);
 
-	foreach ($branches["branches"] as $i => $item) {
-		if ($item === $branches["current"]) {
-			$brancheOptions .= "<option selected value=\"$item\">$item</option>";
-		} else {
-			$brancheOptions .= "<option value=\"$item\">$item</option>";
+	if (is_array($branches["branches"])) {
+		foreach ($branches["branches"] as $i => $item) {
+			if ($item === $branches["current"]) {
+				$brancheOptions .= "<option selected value=\"$item\">$item</option>";
+			} else {
+				$brancheOptions .= "<option value=\"$item\">$item</option>";
+			}
 		}
+	} else {
+		$brancheOptions = "<option disabled selected>No Branches</option>";
 	}
 
 	?>

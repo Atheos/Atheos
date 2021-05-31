@@ -4,7 +4,7 @@
 // Scout Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -55,7 +55,7 @@ class Scout {
 		}
 
 		$cmd .= " -printf \"%h/%f %y\n\"";
-		$output = shell_exec($cmd);
+		$output = Common::execute($cmd);
 		// $output = array();
 		$output = explode("\n", $output);
 		$results = array();
@@ -107,7 +107,7 @@ class Scout {
 
 		$cmd = "find -L $searchPath -iregex $filter -type f | xargs grep -i -I -n -R -H $query";
 
-		$output = shell_exec($cmd);
+		$output = Common::execute($cmd);
 		$output = explode("\n", $output);
 
 		foreach ($output as $line) {

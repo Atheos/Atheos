@@ -2,7 +2,7 @@
 // Settings Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
-// warranty under the MIT License. See [root]/license.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -54,9 +54,13 @@
 					return;
 				}
 
-				storage(key, value);
-				self.save(key, value);
-				self.publish(key, value);
+				if (key === 'analytics.enabled') {
+					atheos.analytics.changeOpt(value);
+				} else {
+					storage(key, value);
+					self.save(key, value);
+					self.publish(key, value);
+				}
 			});
 
 			fX('#dialog .settings menu').on('click', function(e) {
@@ -98,8 +102,7 @@
 			var boolean = (value === 'true');
 
 			if (value === null) {
-				atheos.toast.alert('You Must Choose A Value');
-				return;
+				return toast('alert', 'You Must Choose A Value');
 			}
 
 			switch (setting) {

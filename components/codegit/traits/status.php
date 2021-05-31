@@ -6,11 +6,7 @@ trait Status {
 	public function repoStatus() {
 		$result = $this->execute("git status --branch --porcelain");
 
-		if (!$result["status"]) {
-			Common::send("error", i18n("codegit_error_statusFail"));
-		} else {
-			$result = $result["data"];
-		}
+		if (!$result) Common::send("error", i18n("codegit_error_statusFail"));
 
 		$result = $this->parseChanges($result);
 		$status = "Unknown";
@@ -40,26 +36,23 @@ trait Status {
 		if (!is_dir($dirname)) {
 			Common::send("error", "Invalid path.");
 		}
+
 		chdir($dirname);
 
 		$result = $this->execute("git diff --numstat " . $filename);
 
-		if (!$result["status"]) {
-			Common::send("error", i18n("codegit_error_statusFail"));
-		} else {
-			$result = $result["data"];
-		}
+		if (!$result) Common::send("error", i18n("codegit_error_statusFail"));
 
-		if (count($result) > 0) {
+		if (count($result) > 0 && $result[0] !== "") {
 			$stats = explode("\t", $result[0]);
-			$additions = $stats[0] ? $stats[1] : 0;
+			$additions = $stats[0] ? $stats[0] : 0;
 			$deletions = $stats[1] ? $stats[1] : 0;
 
 		} else {
 			$result = $this->execute("git status --branch --porcelain");
 
-			if ($result["status"] && !empty($result["data"])) {
-				$status = $this->parseChanges($result["data"]);
+			if ($result && !empty($result)) {
+				$status = $this->parseChanges($result);
 				if (in_array($filename, $status['untracked'])) {
 					$file = file_get_contents($filename);
 					$file = explode("\n", $file);
@@ -77,11 +70,9 @@ trait Status {
 
 	public function branchStatus($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if (!$result["status"]) {
-			return false;
-		}
+		if (!$result) return false;
 
-		preg_match('/(?<=\[).+?(?=\])/', $result["data"][0], $status);
+		preg_match('/(?<=\[).+?(?=\])/', $result[0], $status);
 
 		if (!is_array($status) || empty($status)) {
 			return i18n("git_status_current");
@@ -103,8 +94,8 @@ trait Status {
 
 	public function loadChanges($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if ($result["status"]) {
-			$result = $this->parseChanges($result["data"]);
+		if ($result) {
+			$result = $this->parseChanges($result);
 		} else {
 			$result = i18n("codegit_error_statusFail");
 		}

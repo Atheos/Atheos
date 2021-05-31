@@ -4,7 +4,7 @@
 // Copyright (c) 2014-2016 Daniel Brooker
 // Copyright (c) 2016-2021 John Gardner
 // Distributed as-is and without warranty under the MIT License.
-// See [root]/license.md for more. This information must remain intact.
+// See [root]/docs/LICENSE.md for more. This information must remain intact.
 // Source: https://github.com/file-icons/atom
 //////////////////////////////////////////////////////////////////////////////80
 

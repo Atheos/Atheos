@@ -4,7 +4,7 @@
 // Common
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -59,8 +59,20 @@ class Common {
 		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
 		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
 		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
+		if (!defined("TIMEZONE")) {
+			$date = new DateTime();
+			$timeZone = $date->getTimezone();
+			define("TIMEZONE", $timeZone->getName());
+		}
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
+
+		// TIMEZONE
+		try {
+			date_default_timezone_set(TIMEZONE);
+		} catch (Exception $e) {
+			date_default_timezone_set("UTC");
+		}
 
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
@@ -90,21 +102,22 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80////////80
 	public function execute($cmd = false) {
 		$output = false;
-		if (!$cmd) return "No command provided";
+		$code = 0;
+
+		if (!$cmd) return false;
 
 		if (function_exists("system")) {
 			ob_start();
-			system($cmd);
+			system($cmd, $code);
 			$output = ob_get_contents();
 			ob_end_clean();
 		} elseif (function_exists("exec")) {
-			exec($cmd, $output);
+			exec($cmd, $output, $code);
 			$output = implode("\n", $output);
-		} elseif (function_exists("shell_exec")) {
-			$output = shell_exec($cmd);
-		} else {
-			$output = "Command execution not possible on this system";
 		}
+
+		// if($code !== 0) return false;
+
 		return $output;
 	}
 }

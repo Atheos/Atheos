@@ -4,7 +4,7 @@
 // Settings Dialog
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
-// warranty under the MIT License. See [root]/license.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
@@ -20,7 +20,6 @@ switch ($action) {
 		<label class="title"><i class="fas fa-cog"></i><?php echo i18n("settings"); ?></label>
 
 		<div class="settings">
-			<!--<div class="panels-components">-->
 			<menu>
 				<li>
 					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
@@ -44,6 +43,9 @@ switch ($action) {
 					<li>
 						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
+					<li>
+						<a data-panel="analytics"><i class="fas fa-chart-bar"></i><?php echo i18n("analytics"); ?></a>
+					</li>					
 					<?php
 				}
 				?>

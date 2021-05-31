@@ -1,0 +1,23 @@
+.settings {
+	.analytics {
+		td {
+			&:nth-child(odd) {
+				padding-left: 20px;
+				font-weight: bold;
+				text-align: left;
+			}
+
+			&:nth-child(even) {
+				font-family: 'Ubuntu-Fira', monospace;
+			}
+		}
+
+		p {
+			font: normal 14px 'Ubuntu', sans-serif;
+		}
+
+		label {
+			font: normal 14px 'Ubuntu', sans-serif;
+		}
+	}
+}

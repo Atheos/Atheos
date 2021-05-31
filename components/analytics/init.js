@@ -2,54 +2,67 @@
 // Analytics Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
-// warranty under the MIT License. See [root]/LICENSE.md for more.
+// warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
+// Authors: Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
-
-	carbon.subscribe('system.loadExtra', () => atheos.analytics.init());
-
-	atheos.analytics = {
-
-		endpoint: null,
-		local: null,
+	const self = {
+		home: null,
+		data: null,
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			self = this;
-
 			echo({
 				data: {
 					target: 'analytics',
 					action: 'init'
 				},
 				settled: function(status, reply) {
-					if(status !== 'success') return;
-					self.endpoint = reply.endpoint;
-					self.send(reply.data);
+					if (status === 'notice') {
+						return toast(status, reply);
+					} else if (status === 'success') {
+						self.home = reply.home;
+						self.send(reply.data);
+					}
 				}
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Load Latest from the Repo
+		// Send Analytics to endpoint
 		//////////////////////////////////////////////////////////////////////80
 		send(data) {
 			echo({
-				url: self.endpoint,
+				url: self.home,
 				data
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Opt In or Out of analytics collection
+		//////////////////////////////////////////////////////////////////////80		
+		changeOpt(value) {
+			echo({
+				data: {
+					target: 'analytics',
+					action: 'changeOpt',
+					enabled: value
+				},
+				settled: function(status, reply) {
+					toast(status, reply);
+				}
 			});
 		}
 	};
 
-})(this);
+	carbon.subscribe('system.loadExtra', () => self.init());
+	atheos.analytics = self;
+
+})();
