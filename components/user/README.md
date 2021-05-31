@@ -1,11 +1,11 @@
 # Atheos User Manager
 ## [atheos.user](https://github.com/Atheos/Atheos/blob/master/components/user/init.js)
 
-## Summary:
+## Summary
 
 Controls all actions dealing with system users
 
-## Methods:
+## Methods
 
 **init**
 
