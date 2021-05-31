@@ -2,7 +2,7 @@
 
 The Atheos team built the Atheos IDE as an Open Source web application which is provided by at no cost and intended for use as is. This document is meant to inform users regarding our data collection and use policy.
 
-If you choose to opt into the collection of analytics, then you agree to the collection and use of the information specified in this policy. The Personal Information that I collect is used for providing and improving the Atheos IDE. Your information will not be used by or shared with anyone except as described in this Privacy Policy.
+If you choose to opt into the collection of analytics, then you agree to the collection and use of the information specified in this policy. The information will be used for understanding user needs and improving the Atheos IDE. Your information will not be used by or shared with anyone except as described in this Privacy Policy.
 
 **Information Collection and Use**
 
