@@ -133,7 +133,7 @@ class SourceManager {
 		"// Minification / Creation Time: " . date("Y-m-d H:i:s", time()) . "\n" .
 		"//////////////////////////////////////////////////////////////////////////////80\n" .
 		"// Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without\n" .
-		"// warranty under the MIT License. See [root]/license.md for more.\n" .
+		"// warranty under the MIT License. See [root]/docs/LICENSE.md for more.\n" .
 		"// This information must remain intact.\n" .
 		"//////////////////////////////////////////////////////////////////////////////80\n";
 
