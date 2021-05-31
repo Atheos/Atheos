@@ -89,16 +89,11 @@ class KeyStore extends Store {
 
 	/* Select all entries into the given group. */
 	public function update($key = null, $value = null, $insert = false) {
-		if (empty($key) || empty($value)) return "missing_parameter";
+		if (empty($key) || (!is_array($key) && empty($value))) return "missing_parameter";
 
 		if (is_array($key)) {
-			$count = count($key);
-			if (!is_array($value) || $count !== count($value)) return "invalid_parameter";
-
-			foreach ($this->data as $k => $v) {
-				for ($x = 0; $x < $count; $x++) {
-					if ($insert || $k === $key[$x]) $this->data[$key[$x]] = $value[$x];
-				}
+			foreach ($key as $k => $v) {
+				if ($insert || in_array($k, $this->data)) $this->data[$k] = $v;
 			}
 
 			return $this->save();
