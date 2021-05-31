@@ -52,11 +52,11 @@
 		},
 
 		sub: function(topic, callback) {
-			var topics = topic.split(','),
+			var topics = topic.split(' '),
 				i = topics.length;
 
 			while (--i >= 0) {
-				topic = topics[i].trim();
+				topic = topics[i];
 				(subs[topic] = subs[topic] || []).push(callback);
 
 			}
