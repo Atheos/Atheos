@@ -48,7 +48,7 @@ switch ($action) {
 		if (Common::checkAccess("configure") || $username === SESSION("user")) {
 			$User->changePassword($username, $password);
 		} else {
-			Common::send("error", "User does not have access.");
+			Common::send("warning", "User does not have access.");
 		}
 		break;
 
@@ -57,7 +57,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "create":
 		if (!Common::checkAccess("configure")) {
-			Common::send("error", "User does not have access.");
+			Common::send("warning", "User does not have access.");
 		}
 		if (!$username || !$password) {
 			Common::send("error", "Missing username or password.");
@@ -72,7 +72,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "delete":
 		if (!Common::checkAccess("configure")) {
-			Common::send("error", "User does not have access.");
+			Common::send("warning", "User does not have access.");
 		}
 		if (!$username) {
 			Common::send("error", "Missing username.");
@@ -114,8 +114,11 @@ switch ($action) {
 	// Set Project Access
 	//////////////////////////////////////////////////////////////////////////80
 	case "updateACL":
-		if (!Common::checkAccess("configure")) Common::send("error", "User does not have access.");
-		if (!$username) Common::send("error", "Missing username.");
+		if (!Common::checkAccess("configure")) {
+			Common::send("warning", "User does not have access.");
+		} elseif (!$username) {
+			Common::send("error", "Missing username.");
+		}
 
 		$userACL = POST("userACL");
 		$User->updateACL($username, $userACL);
