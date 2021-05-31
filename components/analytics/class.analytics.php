@@ -16,7 +16,7 @@ class Analytics {
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
 
-	private $endpoint = 'https://www.atheos.io/analytics';
+	private $home = 'https://www.atheos.io/analytics';
 	private $db = null;
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -37,55 +37,86 @@ class Analytics {
 	// Set Initial Version
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
-		global $plugins;
 		$data = $this->db->select("*");
+
 		if (empty($data)) {
-			// TODO, CREATE
-			// $this->create();
-			Common::send("warning", "No data.");
+			$data = $this->create();
+		} else {
+			$data = $this->update($data);
 		}
+		$this->db->update($data, null, true);
 
-		$reply = array("endpoint" => defined("DATAPOINT") ? DATAPOINT : $this->endpoint);
-		$status = "success";
-
-		if (ANALYTICS) {
+		if ($data["enabled"] === true && Common::checkAccess("configure")) {
 			$data["last_heard"] = date("Y/m/d");
 			$data["atheos_version"] = VERSION;
-			$data["php_version"] = phpversion();
-			$data["client_os"] = $this->getBrowserName();
-			$data["language"] = LANGUAGE;
-			$data["plugins"] = $plugins;
-			$reply["data"] = $data;
-		} elseif (!ANALYTICS || !Common::checkAccess("configure")) {
+
+			$reply = array(
+				"home" => defined("DATAPOINT") ? DATAPOINT : $this->home,
+				"data" => $data
+			);
+
+			$status = "success";
+		} elseif ($data["enabled"] === "UNKNOWN" && Common::checkAccess("configure")) {
+			$reply = "Analytic settings require action.";
+			$status = "notice";
+		} else {
 			$reply = "Not authorized.";
 			$status = "warning";
-		} else {
-			$reply = "Requires action.";
-			$status = "notice";			
 		}
 
 		Common::send($status, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Modify analytics data
+	// Create analytics cache
 	//////////////////////////////////////////////////////////////////////////80
-	public function modify($key, $value) {
-		$this->db->update($key, $value);
+	public function update($data = array()) {
+		global $plugins;
+
+		if (!in_array("uuid", $data)) $data["uuid"] = uniqid();
+		if (!in_array("enabled", $data)) $data["enabled"] = "UNKNOWN";
+
+		$data["last_heard"] = date("Y/m/d");
+		$data["php_version"] = phpversion();
+		$data["server_os"] = $_SERVER["SERVER_SOFTWARE"];
+
+		$browser = Common::getBrowser();
+		if (!in_array($browser, $data["client_os"])) {
+			$data["client_os"][] = $browser;
+		}
+
+		$data["timezone"] = TIMEZONE;
+		$data["language"] = LANGUAGE;
+
+		$data["plugins"] = $plugins;
+
+		return $data;
+	}
+
+	public function create() {
+		global $plugins;
+
+		return array(
+			"enabled" => "UNKNOWN",
+			"uuid" => uniqid(),
+			"version" => "v0.0.0",
+			"first_heard" => date("Y/m/d"),
+			"last_heard" => date("Y/m/d"),
+			"php_version" => phpversion(),
+			"server_os" => $_SERVER["SERVER_SOFTWARE"],
+			"client_os" => [Common::getBrowser()],
+			"timezone" => TIMEZONE,
+			"language" => LANGUAGE,
+			"plugins" => $plugins
+		);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// GetBrowserName
+	// Opt In or Out of analytics collection
 	//////////////////////////////////////////////////////////////////////////80
-	public function getBrowserName() {
-		$userAgent = SERVER("HTTP_USER_AGENT");
-		if (strpos($userAgent, 'Opera') || strpos($userAgent, 'OPR/')) return 'Opera';
-		elseif (strpos($userAgent, 'Edge')) return 'Edge';
-		elseif (strpos($userAgent, 'Chrome')) return 'Chrome';
-		elseif (strpos($userAgent, 'Safari')) return 'Safari';
-		elseif (strpos($userAgent, 'Firefox')) return 'Firefox';
-		elseif (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) return 'Internet Explorer';
-
-		return 'Other';
+	public function changeOpt($value) {
+		$status = $this->db->update("enabled", $value) ? "success" : "error";
+		$text = $status === "success" ? "Updated analytics preference." : "Unable to update preference.";
+		Common::send($status, $text);
 	}
 }

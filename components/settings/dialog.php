@@ -20,7 +20,6 @@ switch ($action) {
 		<label class="title"><i class="fas fa-cog"></i><?php echo i18n("settings"); ?></label>
 
 		<div class="settings">
-			<!--<div class="panels-components">-->
 			<menu>
 				<li>
 					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
@@ -44,6 +43,9 @@ switch ($action) {
 					<li>
 						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
+					<li>
+						<a data-panel="analytics"><i class="fas fa-chart-bar"></i><?php echo i18n("analytics"); ?></a>
+					</li>					
 					<?php
 				}
 				?>

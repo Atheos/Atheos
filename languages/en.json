@@ -167,6 +167,20 @@
 	"explore": "Explore",
 	"continue": "Continue",
 
+	"analytics": {
+		"": "Analytics",
+		"enabled": "Anonymous Analytics",
+		"send": "Send Analytics",
+		"policy": "While using the Atheos IDE, we ask to collect the above information. We will not share your data with anyone, this data is to understand user needs and improving Atheos IDE. By opting into our analytics program, you agree to the collection and use of information in accordance with this policy. More information can be found at [root]/docs/PRIVACY.md on the Github Repository."
+	},
+
+	"uuid": "UUID",
+	"version": "Version",
+	"first_heard": "First Heard",
+	"last_heard": "Last Heard",
+	"server_os": "Server",
+	"client_os": "Browser",
+
 	"timezone": "Timezone",
 	"settings": {
 		"": "Settings",
@@ -366,7 +380,6 @@
 
 	"initialSetup": "Initial Setup",
 	"developmentMode": "Development Mode",
-	"analyticsEnable": "Anonymous Analytics",
 
 	"connectionError": "Connection Error",
 
