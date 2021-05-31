@@ -214,9 +214,9 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 					<td><?php echo i18n("developmentMode"); ?></td>
 					<td>
 						<toggle>
-							<input id="development_true" value="true" name="development" type="radio" />
+							<input id="development_true" value="true" name="development" type="radio" checked />
 							<label for="development_true"><?php echo i18n("enabled"); ?></label>
-							<input id="development_false" value="false" name="development" type="radio" checked />
+							<input id="development_false" value="false" name="development" type="radio" />
 							<label for="development_false"><?php echo i18n("disabled"); ?></label>
 						</toggle>
 					</td>
@@ -225,9 +225,9 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 					<td><?php echo i18n("analytics_enabled"); ?></td>
 					<td>
 						<toggle>
-							<input id="analytics_true" value="true" name="analytics" type="radio" />
+							<input id="analytics_true" value="true" name="analytics" type="radio" checked />
 							<label for="analytics_true"><?php echo i18n("enabled"); ?></label>
-							<input id="analytics_false" value="false" name="analytics" type="radio" checked />
+							<input id="analytics_false" value="false" name="analytics" type="radio" />
 							<label for="analytics_false"><?php echo i18n("disabled"); ?></label>
 						</toggle>
 					</td>
