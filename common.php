@@ -59,8 +59,20 @@ class Common {
 		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
 		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
 		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
+		if (!defined("TIMEZONE")) {
+			$date = new DateTime();
+			$timeZone = $date->getTimezone();
+			define("TIMEZONE", $timeZone->getName());
+		}
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
+
+		// TIMEZONE
+		try {
+			date_default_timezone_set(TIMEZONE);
+		} catch (Exception $e) {
+			date_default_timezone_set("UTC");
+		}
 
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
