@@ -137,6 +137,21 @@ define("DEVELOPMENT", ' . $development . ');
 // define("AUTH_PATH", "/path/to/customauth.php");
 
 //////////////////////////////////////////////////////////////////////////////80
+// ** EDIT AT YOUR OWN RISK **
+//////////////////////////////////////////////////////////////////////////////80
+
+// SECURITY HEADERS, SET TO FALSE TO DISABLE ALL
+define ("HEADERS", serialize(array(
+	"Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+	"X-Frame-Options: SAMEORIGIN",
+	"X-XSS-Protection: 1; mode=block",
+	"X-Content-Type-Options: nosniff",
+	"Referrer-Policy: no-referrer",
+	"Feature-Policy: sync-xhr \'self\'",
+	"Access-Control-Allow-Origin: *"
+)));
+
+//////////////////////////////////////////////////////////////////////////////80
 // ** DO NOT EDIT CONFIG BELOW **
 //////////////////////////////////////////////////////////////////////////////80
 
