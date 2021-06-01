@@ -39,6 +39,6 @@ Cache: true
 <section>
 	<h2>Installing with Docker</h2>
 	<p>Once you've installed [Docker](http://docker.com/), you can start *atheos* using [HLSiira's Docker Image](https://hub.docker.com/r/hlsiira/atheos/) image: </p>
-	<pre><code>$ docker run --rm -p 8080:80 - d atheos:latest</code></pre>
+	<pre><code>$ docker run --rm -p 8080:80 -d hlsiira/atheos:latest</code></pre>
 	<p>And open your browser at <code>http://localhost:8080</code>. See that image's README for further details and data persistence.</p>
 </section>

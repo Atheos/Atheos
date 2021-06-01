@@ -32,7 +32,7 @@ $SourceManager = new SourceManager;
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
-	<!-- FAVICONS -->
+  <!-- FAVICONS -->
 	<?php
 	require_once("templates/favicons.php");
 
