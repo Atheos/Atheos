@@ -10,17 +10,13 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-header("Strict-Transport-Security: max-age=31536000; includeSubDomains; preload");
-header("X-Frame-Options: SAMEORIGIN");
-header("X-XSS-Protection: 1; mode=block");
-header("X-Content-Type-Options: nosniff");
-// header("Content-Security-Policy: script-src 'self' blob: 'unsafe-inline'");
-header("Referrer-Policy: no-referrer");
-header("Feature-Policy: sync-xhr 'self'");
-// header("Access-Control-Allow-Origin: https://www.atheos.io");
-header("Access-Control-Allow-Origin: *");
-
 require_once("common.php");
+
+if (defined("HEADERS") && HEADERS) {
+	foreach (unserialize(HEADERS) as $val) {
+		header($val);
+	}
+}
 
 require_once("traits/cls.source.php");
 
@@ -31,11 +27,10 @@ $SourceManager = new SourceManager;
 <html lang="en">
 <head>
 	<meta charset="utf-8">
-	<title><?php if(defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
+	<title><?php if (defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
 	<meta name="author" content="Liam Siira">
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
-
 	<!-- FAVICONS -->
 	<?php
 	require_once("templates/favicons.php");
