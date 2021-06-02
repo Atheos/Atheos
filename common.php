@@ -74,6 +74,16 @@ class Common {
 			date_default_timezone_set("UTC");
 		}
 
+		if(!defined("HEADERS")) define ("HEADERS", serialize(array(
+			"Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+			"X-Frame-Options: SAMEORIGIN",
+			"X-XSS-Protection: 1; mode=block",
+			"X-Content-Type-Options: nosniff",
+			"Referrer-Policy: no-referrer",
+			"Feature-Policy: sync-xhr 'self'",
+			"Access-Control-Allow-Origin: *"
+		)));
+
 		//Check for external authentification
 		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
