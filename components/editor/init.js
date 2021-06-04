@@ -350,11 +350,11 @@
 		//   https://github.com/ajaxorg/ace/tree/master/lib/ace/theme
 		/////////////////////////////////////////////////////////////////
 		setTheme: function(val, int) {
-			if (int) return int.setTheme(val);
+			if (int) return int.setTheme('ace/theme/' + val);
 			self.forEachInstance(function(int) {
-				int.setTheme(val);
+				int.setTheme('ace/theme/' + val);
 			});
-			self.settings.fontSize = val;
+			self.settings.theme = val;
 			eStorage('theme', val);
 		},
 

@@ -31,7 +31,7 @@
 (function() {
 	'use strict';
 
-	const node = {
+	const self = {
 
 		container: null,
 
@@ -43,11 +43,11 @@
 		},
 
 		init: function() {
-			node.container = oX('toaster');
+			self.container = oX('toaster');
 
 			fX('toast').on('click', (e) => {
 				let toast = e.target.closest('toast');
-				node.hide(toast);
+				self.hide(toast);
 			});
 		},
 
@@ -62,13 +62,13 @@
 		showToast: function(type, text, stayTime) {
 
 			// declare variables
-			var toast = node.create(type, text);
+			var toast = self.create(type, text);
 
-			node.container.append(toast);
+			self.container.append(toast);
 
 			setTimeout(function() {
 				toast.classList.add('active');
-				setTimeout(() => node.hide(toast), stayTime);
+				setTimeout(() => self.hide(toast), stayTime);
 			}, 10);
 		},
 
@@ -83,12 +83,12 @@
 				text = text.text;
 			}
 
-			if (!(type in node.stayTimes)) return;
+			if (!(type in self.stayTimes)) return;
 
 			text = text || 'Message undefined.';
 			text = raw ? text : i18n(text);
 
-			node.showToast(type, text, node.stayTimes[type]);
+			self.showToast(type, text, self.stayTimes[type]);
 
 		},
 		hide: function(toast) {
@@ -97,8 +97,8 @@
 		}
 	};
 
-	carbon.subscribe('system.loadVital', () => node.init());
-	atheos.toast = node;
+	carbon.subscribe('system.loadVital', () => self.init());
+	atheos.toast = self;
 	window.toast = atheos.toast.show;
 
 })();

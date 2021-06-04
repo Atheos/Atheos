@@ -115,6 +115,7 @@ class Analytics {
 	// Opt In or Out of analytics collection
 	//////////////////////////////////////////////////////////////////////////80
 	public function changeOpt($value) {
+		$value = $value === "true";
 		$status = $this->db->update("enabled", $value) ? "success" : "error";
 		$text = $status === "success" ? "Updated analytics preference." : "Unable to update preference.";
 		Common::send($status, $text);
