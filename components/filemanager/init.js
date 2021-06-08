@@ -88,7 +88,7 @@
 			oX('#file-manager a', true).on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
 					var anchor = self.checkAnchor(e.target);
-					if (anchor.attr('data-type') === 'directory' || anchor.attr('data-type') === 'root') {
+					if (anchor.attr('data-type') === 'folder' || anchor.attr('data-type') === 'root') {
 						self.openDir(anchor.attr('data-path'));
 					} else if (anchor.attr('data-type') === 'file') {
 						self.openFile(anchor.attr('data-path'));
@@ -343,17 +343,17 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		createDirectoryItem: function(path, type, size, repo) {
-
+			
 			var basename = pathinfo(path).basename;
 
 			if (self.showHidden === false && basename.charAt(0) === '.') {
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
+			var fileClass = type === 'folder' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
-			if (type === 'directory' && (size > 0)) {
+			if (type === 'folder' && (size > 0)) {
 				nodeClass = 'fa fa-plus';
 			}
 
@@ -668,7 +668,7 @@
 			// Already exists
 			if (oX('#file-manager a[data-path="' + path + '"]')) return;
 
-			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(directory|root)$/)) {
+			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
 
 				var node = self.createDirectoryItem(path, type, 0);

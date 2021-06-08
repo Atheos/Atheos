@@ -123,7 +123,7 @@ class Filemanager {
 			}
 
 			if (is_dir($path.'/'.$object)) {
-				$type = "directory";
+				$type = "folder";
 				$size = count(glob($path.'/'.$object.'/*'));
 			} else {
 				$type = "file";
@@ -142,7 +142,7 @@ class Filemanager {
 		$folders = array();
 		$files = array();
 		foreach ($index as $item => $data) {
-			if ($data['type'] == 'directory') {
+			if ($data['type'] == 'folder') {
 
 				$repo = file_exists($data['path'] . "/.git");
 

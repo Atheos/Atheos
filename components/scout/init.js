@@ -254,7 +254,7 @@
 					}
 
 					if (!currentLevel[fragment]) {
-						type = index < (pathArray.length - 1) ? 'directory' : result.type;
+						type = index < (pathArray.length - 1) ? 'folder' : result.type;
 						currentLevel[fragment] = {
 							type: type,
 							children: {}
@@ -291,11 +291,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
 
-			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
+			var fileClass = obj.type === 'folder' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			var isOpen = '';
-			if (obj.type === 'directory' && (obj.children)) {
+			if (obj.type === 'folder' && (obj.children)) {
 				nodeClass = 'fa fa-minus';
 				isOpen = 'class="open"';
 			}
