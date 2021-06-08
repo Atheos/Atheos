@@ -68,7 +68,7 @@
 				dialog = oX('#dialog') || self.create(),
 				content = oX('#content');
 
-			content.html('');
+			if(content) content.html('');
 
 			dialog.css({
 				'top': '15%',
