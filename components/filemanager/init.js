@@ -186,18 +186,20 @@
 			function dragEnd() {
 				document.removeEventListener('mousemove', dragMove);
 				document.removeEventListener('mouseup', dragEnd);
+
 				if (timeout) {
 					return clearTimeout(timeout);
 				}
+
 				target.style.opacity = '';
 				if (clone) clone.remove();
 
 				let parent = target.closest('ul');
 				let folder = parent.previousSibling;
 
+				setTimeout(() => self.sortNodes(parent), 10);
 				if (parent === origin || !folder) return origin.append(target);
 
-				self.sortNodes(parent);
 				self.handleDrop(target, folder);
 			}
 
@@ -221,7 +223,6 @@
 
 			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
 				toast('warning', 'Path already exists.');
-				self.rescan();
 			} else {
 				echo({
 					data: {
@@ -232,8 +233,8 @@
 					},
 					settled: function(status, reply) {
 						if (status !== 'success') {
-							toast('error', reply);
 							self.rescan();
+							toast('error', reply);
 						} else {
 							node.attr('data-path', newPath);
 							atheos.active.rename(oldPath, newPath);
@@ -343,7 +344,7 @@
 		//////////////////////////////////////////////////////////////////////80
 
 		createDirectoryItem: function(path, type, size, repo) {
-			
+
 			var basename = pathinfo(path).basename;
 
 			if (self.showHidden === false && basename.charAt(0) === '.') {
@@ -694,9 +695,9 @@
 		// Sort nodes in file tree during node creation
 		//////////////////////////////////////////////////////////////////////80
 		sortNodes: function(list) {
-			var nodesToSort = list.children;
+			var children = [...list.children];
 
-			nodesToSort = Array.prototype.map.call(nodesToSort, function(node) {
+			children = children.map(function(node) {
 				return {
 					node: node,
 					span: node.querySelector('span').textContent,
@@ -704,15 +705,24 @@
 				};
 			});
 
-			nodesToSort.sort(function(a, b) {
+			// Alpahetical
+			children.sort(function(a, b) {
 				return a.span.localeCompare(b.span);
 			});
 
-			nodesToSort.sort(function(a, b) {
+			children.reverse();
+
+			// By Type
+			children.sort(function(a, b) {
 				return a.type.localeCompare(b.type);
 			});
 
-			nodesToSort.forEach(function(item) {
+			children.reverse();
+
+			// Double reverse is to put folders first, then files, but each
+			// subsection in alphabetical order
+
+			children.forEach(function(item) {
 				list.appendChild(item.node);
 			});
 		},
