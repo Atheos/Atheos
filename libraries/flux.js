@@ -10,7 +10,6 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
-
 	'use strict';
 
 	var cache = {};
@@ -54,7 +53,6 @@
 		});
 	};
 
-	let exists = (s) => document.querySelector(s) ? true : false;
 	let list = (s) => cache;
 
 	let off = (types, selector, callback) => {
@@ -133,11 +131,9 @@
 	let trigger = function(selector, types) {
 		let element = document.querySelector(selector);
 		if (!element) return false;
-		types = types.split(',');
-		types.forEach(function(type) {
+		types.split(',').forEach(function(type) {
 			type = type.trim();
 			if (element && type) {
-
 				var event = new CustomEvent(type, {
 					bubbles: true,
 					cancelable: true
@@ -161,7 +157,6 @@
 		// o  => Options
 
 		if (s) return {
-			exists: (s) => exists(s),
 			list: () => list(s),
 			off: (t, fn) => off(t, s, fn),
 			on: (t, fn) => on(t, s, fn),

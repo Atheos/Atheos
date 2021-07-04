@@ -17,7 +17,6 @@
 (function() {
 	'use strict';
 
-
 	const self = {
 
 		clipboard: '',
@@ -85,7 +84,7 @@
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
-			oX('#file-manager a', true).on('click, dblclick', function(e) {
+			fX('#file-manager a').on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
 					var anchor = self.checkAnchor(e.target);
 					if (anchor.attr('data-type') === 'folder' || anchor.attr('data-type') === 'root') {
@@ -96,7 +95,7 @@
 				}
 			});
 
-			oX('#file-manager').on('mousedown', self.handleDrag);
+			fX('#file-manager').on('mousedown', self.handleDrag);
 
 		},
 

@@ -23,9 +23,9 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			oX('#search_open').on('click', self.openSearch);
-			oX('#filter_open').on('click', self.openFilter);
-			oX('#filter_exit').on('click', self.exitFilter);
+			fX('#search_open').on('click', self.openSearch);
+			fX('#filter_open').on('click', self.openFilter);
+			fX('#filter_exit').on('click', self.exitFilter);
 
 			atheos.common.initMenuHandler(oX('#filter_options'), oX('#filter_strategy'));
 

@@ -78,7 +78,7 @@
 			// are triggered throughout Atheos as needed, and cascade down into 
 			// any split containers. - Liam Siira
 			//////////////////////////////////////////////////////////////////80
-			editor.on('h-resize-root, v-resize-root', function(e) {
+			fX('#EDITOR').on('h-resize-root, v-resize-root', function(e) {
 				var wrapper = oX('#EDITOR .editor-wrapper');
 				if (wrapper) {
 					if (e.type === 'h-resize-root') {
@@ -93,7 +93,7 @@
 			});
 
 			window.addEventListener('resize', function() {
-				editor.trigger('h-resize-root, v-resize-root');
+				fX('#EDITOR').trigger('h-resize-root, v-resize-root');
 			});
 		},
 

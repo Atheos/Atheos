@@ -14,144 +14,10 @@
 // https://github.com/finom/balalaika/blob/master/balalaika.umd.js
 // https://github.com/vladocar/nanoJS/blob/master/src/nanoJS.js
 
-(function(root, factory) {
-	if (typeof define === 'function' && define.amd) {
-		define([], function() {
-			return factory(root);
-		});
-	} else if (typeof exports === 'object') {
-		module.exports = factory(root);
-	} else {
-		let temp = factory(root);
-		root.Onyx = root.oX = temp[0];
-		root.Singularity = root.sY = temp[1];
-	}
-})(typeof global !== 'undefined' ? global : typeof window !== 'undefined' ? window : this, function(window) {
-
+(function() {
 	'use strict';
 
-	var activeEvents = {};
-	let alwaysRun = [
-		'*',
-		'window',
-		'document',
-		'document.documentElement',
-		window,
-		document,
-		document.documentElement
-	];
-
-	var getIndex = function(arr, selector, callback) {
-		for (var i = 0; i < arr.length; i++) {
-			if (arr[i].selector === selector) {
-				if (!callback || arr[i].callback.toString() === callback.toString()) {
-					return i;
-				}
-			}
-		}
-		return -1;
-	};
-
-	var activeMatch = function(target, selector) {
-		if (alwaysRun.includes(selector)) return true;
-		if (typeof selector !== 'string' && selector.contains) {
-			return selector === target || selector.contains(target);
-		}
-		return target.closest(selector);
-	};
-
-	var eventHandler = function(event) {
-		activeEvents[event.type].forEach(function(listener) {
-			if (!activeMatch(event.target, listener.selector)) {
-				return;
-			}
-			listener.callback(event);
-		});
-	};
-
-	let eOn = (types, selector, callback) => {
-		if (!selector || !callback) return;
-
-		types.split(',').forEach(function(type) {
-			type = type.trim();
-			if (!activeEvents[type]) {
-				activeEvents[type] = [];
-				window.addEventListener(type, eventHandler, true);
-			}
-
-			activeEvents[type].push({
-				selector,
-				callback
-			});
-
-		});
-	};
-
-	let eOff = (types, selector, callback) => {
-		if (types === '*' && selector && !callback) {
-			for (var type in activeEvents) {
-				var index = getIndex(activeEvents[type], selector);
-				if (index > -1) {
-					activeEvents[type].splice(index, 1);
-					if (activeEvents[type].length === 0) {
-						delete activeEvents[type];
-					}
-				}
-			}
-		} else {
-			types.split(',').forEach(function(type) {
-				type = type.trim();
-				if (!activeEvents[type]) return;
-
-
-				if (activeEvents[type].length < 2 || !selector) {
-					delete activeEvents[type];
-					window.removeEventListener(type, eventHandler, true);
-					return;
-				}
-
-				var index = getIndex(activeEvents[type], selector, callback);
-				if (index < 0) return;
-				activeEvents[type].splice(index, 1);
-			});
-		}
-	};
-
-	let eOnce = (types, selector, callback) => {
-		eOn(types, selector, function temp(event) {
-			callback(event);
-			eOff(types, selector, temp);
-		});
-	};
-
-	let eList = (s) => {
-		var obj = {};
-		for (var type in activeEvents) {
-			if (activeEvents.hasOwnProperty(type)) obj[type] = activeEvents[type];
-		}
-		return obj;
-	};
-
 	let exists = (s) => document.querySelector(s) ? true : false;
-
-	const singularity = function(s) {
-		// s  => Selector
-		// t  => EventType
-		// fn => Functions
-		// e  => Event
-		// o  => Options
-
-		let api = {
-			on: (t, fn) => eOn(t, s, fn),
-			off: (t, fn) => eOff(t, s, fn),
-			once: (t, fn) => eOnce(t, s, fn),
-			list: () => eList(s),
-			exists: (s) => exists(s),
-			trigger: (e, o) => eTrigger(s, e, o)
-		};
-
-		return api;
-	};
 
 	let alwaysReturn = [
 		window,
@@ -386,18 +252,19 @@
 		});
 	};
 
+	const on = (s, t, fn) => {
+		log(s, t);
+		fX(s).on(t, fn);
+	};
+
 	const onyx = function(selector, eventsOnly) {
 		let element = argToElement(selector);
 		selector = isSelectorValid(selector) ? selector : element;
 
 		let api = {
-			// once: (t, fn) => singularity.once(t, selector, fn),
-			// on: (t, fn) => singularity.on(t, selector, fn),
-			// off: (t, fn) => singularity.off(t, selector, fn)
-
-			on: (t, fn) => singularity(selector).on(t, fn),
-			off: (t, fn) => singularity(selector).off(t, fn),
-			once: (t, fn) => singularity(selector).once(t, fn)
+			on: (t, fn) => on(selector, t, fn),
+			off: (t, fn) => fX(selector).off(t, fn),
+			once: (t, fn) => fX(selector).once(t, fn)
 
 		};
 
@@ -472,6 +339,5 @@
 
 		return api;
 	};
-	return [onyx, singularity];
-
-});
+	window.oX = onyx;
+})();

@@ -150,13 +150,13 @@
 			this.element = oX('#SBLEFT');
 			this.icon = oX('#SBLEFT .lock');
 
-			this.icon.on('click', () => this.lock());
+			fX('#SBLEFT .lock').on('click', () => this.lock());
 
 			fX(this.handle).on('mousedown', () => {
 				self.resize(this.element.el, 'left');
 			});
 
-			fX('#SBLEFT .handle').on('click', () => {
+			fX(this.handle).on('click', () => {
 				if (!self.dragging && this.trigger === 'click') {
 					this.open();
 				}
@@ -249,13 +249,13 @@
 			this.element = oX('#SBRIGHT');
 			this.icon = oX('#SBRIGHT .lock');
 
-			this.icon.on('click', () => this.lock());
+			fX('#SBRIGHT .lock').on('click', () => this.lock());
 
 			fX(this.handle).on('mousedown', () => {
 				self.resize(this.element.el, 'right');
 			});
 
-			fX('#SBRIGHT .handle').on('click', () => {
+			fX(this.handle).on('mousedown', () => {
 				if (!self.dragging && this.trigger === 'click') {
 					this.open();
 				}

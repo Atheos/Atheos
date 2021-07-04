@@ -1,8 +1,33 @@
 @keyframes spin {
-    from {
-        transform:rotate(0deg);
-    }
-    to {
-        transform:rotate(360deg);
-    }
+	from {
+		transform: rotate(0deg);
+	}
+
+	to {
+		transform: rotate(360deg);
+	}
+}
+
+@keyframes shake {
+
+	10%,
+	90% {
+		transform: translate(-1px, 0) rotate(-5deg);
+	}
+
+	20%,
+	80% {
+		transform: translate(1px, 0) rotate(5deg);
+	}
+
+	30%,
+	50%,
+	70% {
+		transform: translate(-2px, 0) rotate(-5deg);
+	}
+
+	40%,
+	60% {
+		transform: translate(2px, 0) rotate(5deg);
+	}
 }
