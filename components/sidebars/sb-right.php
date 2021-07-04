@@ -27,7 +27,7 @@ foreach ($plugins as $plugin) {
 }
 
 ?>
-<div id="sb_right" class="sidebar">
+<div id="SBRIGHT" class="sidebar">
 
 	<div class="handle">
 		<span>|||</span>

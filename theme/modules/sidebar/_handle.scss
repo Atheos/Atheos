@@ -48,13 +48,13 @@
 }
 
 /* Left Sidebar */
-#sb_left .handle {
+#SBLEFT .handle {
 	position: absolute;
 	right: 0;
 	border-right: $borderLight;
 }
 
-#sb_left.unlocked .handle span {
+#SBLEFT.unlocked .handle span {
 	margin-left: 3px;
 	border-right: $borderLight;
 
@@ -74,11 +74,11 @@
 }
 
 
-#sb_right .handle {
+#SBRIGHT .handle {
 	border-left: $borderLight;
 }
 
-#sb_right.unlocked .handle span {
+#SBRIGHT.unlocked .handle span {
 	margin-left: -20px;
 	border-left: $borderLight;
 

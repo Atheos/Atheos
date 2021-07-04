@@ -812,7 +812,7 @@
 			//	to handle all the offsets, so afterwards we add a fixed offset
 			//	just to be sure. 
 
-			var availableWidth = oX('#editor-top-bar').width();
+			var availableWidth = oX('#ACTIVE').width();
 
 			var iconWidths = oX('#tab_dropdown').width() * 2;
 

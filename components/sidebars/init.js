@@ -31,6 +31,7 @@
 	'use strict';
 
 	let editor = null,
+		workspace = null,
 		handleWidth = 0,
 		hoverDuration = 300;
 
@@ -43,6 +44,7 @@
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
 			editor = oX('#EDITOR');
+			workspace = oX('#workspace');
 
 			left.init();
 			right.init();
@@ -56,35 +58,35 @@
 				right.trigger = storage('sidebars.rightTrigger') || 'hover';
 
 				if (storage('sidebars.leftLockedVisible') === false) {
-					fX('#sb_left .lock').trigger('click');
+					fX('#SBLEFT .lock').trigger('click');
 				}
 
 				if (storage('sidebars.rightLockedVisible') === false) {
-					fX('#sb_right .lock').trigger('click');
+					fX('#SBRIGHT .lock').trigger('click');
 				}
 
 				let sbLeftWidth = storage('sidebars.sb-left-width'),
 					sbRightWidth = storage('sidebars.sb-right-width');
 				if (sbLeftWidth !== null) {
 					sbLeftWidth = parseInt(sbLeftWidth, 10);
-					oX('#sb_left').css('width', sbLeftWidth + 'px');
+					oX('#SBLEFT').css('width', sbLeftWidth + 'px');
 				}
 
 				if (sbRightWidth !== null) {
 					sbRightWidth = parseInt(sbRightWidth, 10);
-					oX('#sb_right').css('width', sbRightWidth + 'px');
+					oX('#SBRIGHT').css('width', sbRightWidth + 'px');
 				}
 
 				if (!left.lockedVisible && sbLeftWidth !== null) {
 					left.element.addClass('unlocked');
-					oX('#sb_left').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
-					editor.css('margin-left', handleWidth + 'px');
+					oX('#SBLEFT').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-left', handleWidth + 'px');
 				}
 
 				if (!right.lockedVisible && sbRightWidth !== null) {
 					right.element.addClass('unlocked');
-					editor.css('margin-right', handleWidth + 'px');
-					oX('#sb_right').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
+					oX('#SBRIGHT').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-right', handleWidth + 'px');
 				}
 			});
 		},
@@ -136,7 +138,7 @@
 	//////////////////////////////////////////////////////////////////////	
 	const left = {
 		element: null,
-		handle: '#sb_left .handle',
+		handle: '#SBLEFT .handle',
 		icon: null,
 		timeoutOpen: null,
 		timeoutClose: null,
@@ -145,8 +147,8 @@
 		isOpen: true,
 
 		init: function() {
-			this.element = oX('#sb_left');
-			this.icon = oX('#sb_left .lock');
+			this.element = oX('#SBLEFT');
+			this.icon = oX('#SBLEFT .lock');
 
 			this.icon.on('click', () => this.lock());
 
@@ -154,19 +156,19 @@
 				self.resize(this.element.el, 'left');
 			});
 
-			fX('#sb_left .handle').on('click', () => {
+			fX('#SBLEFT .handle').on('click', () => {
 				if (!self.dragging && this.trigger === 'click') {
 					this.open();
 				}
 			});
 
-			fX('#sb_left').on('mouseover', () => {
+			fX('#SBLEFT').on('mouseover', () => {
 				if (!self.dragging && this.trigger === 'hover') {
 					this.open();
 				}
 			});
 
-			fX('#sb_left').on('mouseout', (event) => {
+			fX('#SBLEFT').on('mouseout', (event) => {
 				// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
 				// In order to achieve MouseLeave with events, I needed to create a method that capture
 				// the mouseout event, and converts it into a mouseleave. This function checks if
@@ -218,11 +220,11 @@
 			if (this.lockedVisible) {
 				this.icon.replaceClass('fa-lock', 'fa-unlock');
 				this.element.addClass('unlocked');
-				editor.css('margin-left', handleWidth + 'px');
+				workspace.css('padding-left', handleWidth + 'px');
 			} else {
 				this.icon.replaceClass('fa-unlock', 'fa-lock');
 				this.element.removeClass('unlocked');
-				editor.css('margin-left', '');
+				workspace.css('padding-left', '');
 			}
 			this.lockedVisible = !(this.lockedVisible);
 			atheos.settings.save('sidebars.leftLockedVisible', this.lockedVisible, true);
@@ -235,7 +237,7 @@
 	//////////////////////////////////////////////////////////////////////	
 	const right = {
 		element: null,
-		handle: '#sb_right .handle',
+		handle: '#SBRIGHT .handle',
 		icon: null,
 		timeoutOpen: null,
 		timeoutClose: null,
@@ -244,8 +246,8 @@
 		isOpen: true,
 
 		init: function() {
-			this.element = oX('#sb_right');
-			this.icon = oX('#sb_right .lock');
+			this.element = oX('#SBRIGHT');
+			this.icon = oX('#SBRIGHT .lock');
 
 			this.icon.on('click', () => this.lock());
 
@@ -253,19 +255,19 @@
 				self.resize(this.element.el, 'right');
 			});
 
-			fX('#sb_right .handle').on('click', () => {
+			fX('#SBRIGHT .handle').on('click', () => {
 				if (!self.dragging && this.trigger === 'click') {
 					this.open();
 				}
 			});
 
-			fX('#sb_right').on('mouseover', () => {
+			fX('#SBRIGHT').on('mouseover', () => {
 				if (!self.dragging && this.trigger === 'hover') {
 					this.open();
 				}
 			});
 
-			fX('#sb_right').on('mouseout', (event) => {
+			fX('#SBRIGHT').on('mouseout', (event) => {
 				// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
 				// In order to achieve MouseLeave with events, I needed to create a method that capture
 				// the mouseout event, and converts it into a mouseleave. This function checks if
@@ -316,11 +318,11 @@
 			if (this.lockedVisible) {
 				this.icon.replaceClass('fa-lock', 'fa-unlock');
 				this.element.addClass('unlocked');
-				editor.css('margin-right', handleWidth + 'px');
+				workspace.css('padding-right', handleWidth + 'px');
 			} else {
 				this.icon.replaceClass('fa-unlock', 'fa-lock');
 				this.element.removeClass('unlocked');
-				editor.css('margin-right', '');
+				workspace.css('padding-right', '');
 			}
 			this.lockedVisible = !(this.lockedVisible);
 			atheos.settings.save('sidebars.rightLockedVisible', this.lockedVisible, true);

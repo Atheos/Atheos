@@ -59,7 +59,7 @@
 				menu.addClass('fm');
 			});
 
-			fX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
+			fX('#ACTIVE').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 
 				var anchor = atheos.filemanager.checkAnchor(e.target);

@@ -45,7 +45,8 @@
 
 #root-editor-wrapper {
 	// Calculated using the height of the top & bottom bars
-	height: calc(100% - (23px + 33px));
+	// height: calc(100% - (23px + 33px));
+	height: 100%;
 	position: relative;
 }
 
