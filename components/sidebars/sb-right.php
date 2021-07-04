@@ -29,12 +29,12 @@ foreach ($plugins as $plugin) {
 ?>
 <div id="sb_right" class="sidebar">
 
-	<div class="handle unlocked">
+	<div class="handle">
 		<span>|||</span>
 	</div>
 
 	<div class="title">
-		<i class="lock fas fa-unlock"></i>
+		<i class="lock fas fa-lock"></i>
 	</div>
 
 	<div class="content">

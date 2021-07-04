@@ -1,10 +1,8 @@
-#editor-region {
+#EDITOR {
 	width: auto;
-	// padding-right:10px;
 	height: 100%;
-	margin-right: 15px;
-	margin-left: 10px;
 	transition: margin $transitionDuration ease-in-out;
+	grid-area: editor;
 }
 
 .editor {
@@ -43,11 +41,6 @@
 
 .ace_error {
 	background-position: 3px 0 !important;
-}
-
-editor-region {
-	margin-left: 300px;
-	position: relative;
 }
 
 #root-editor-wrapper {

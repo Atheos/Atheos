@@ -154,10 +154,10 @@
 					atheos.project.openTrigger = value;
 					break;
 				case 'sidebars.leftTrigger':
-					atheos.sidebars.leftTrigger = value;
+					atheos.sidebars.sbLeft.trigger = value;
 					break;
 				case 'sidebars.rightTrigger':
-					atheos.sidebars.rightTrigger = value;
+					atheos.sidebars.sbRight.trigger = value;
 					break;
 			}
 		},

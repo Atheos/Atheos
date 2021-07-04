@@ -70,7 +70,7 @@ $SourceManager = new SourceManager;
 
 			<?php require_once('components/sidebars/sb-left.php'); ?>
 
-			<div id="editor-region">
+			<div id="EDITOR">
 				<div id="editor-top-bar">
 					<ul id="tab-list-active-files" class="tabList"></ul>
 					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>

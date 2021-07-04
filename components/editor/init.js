@@ -70,7 +70,7 @@
 
 			carbon.sub('chrono.byte', self.trackCursor);
 
-			var editor = oX('#editor-region');
+			var editor = oX('#EDITOR');
 
 			//////////////////////////////////////////////////////////////////80
 			// h-resize & v-resize events are custom events triggered solely for
@@ -79,7 +79,7 @@
 			// any split containers. - Liam Siira
 			//////////////////////////////////////////////////////////////////80
 			editor.on('h-resize-root, v-resize-root', function(e) {
-				var wrapper = oX('#editor-region .editor-wrapper');
+				var wrapper = oX('#EDITOR .editor-wrapper');
 				if (wrapper) {
 					if (e.type === 'h-resize-root') {
 						wrapper.css('width', editor.width());
@@ -218,7 +218,7 @@
 		//
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
-			var editors = oX('#editor-region').findAll('.editor, .editor-wrapper');
+			var editors = oX('#EDITOR').findAll('.editor, .editor-wrapper');
 			editors.forEach((editor) => {
 				editor.remove();
 			});

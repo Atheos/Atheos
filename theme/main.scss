@@ -63,6 +63,15 @@ html {
 	height: 100%;
 	z-index: 1;
 	overflow: hidden;
+
+	display: grid;
+	grid-template-rows: auto 1fr auto;
+	grid-template-columns: auto 1fr auto;
+
+	grid-template-areas:
+		"leftsb active rightsb"
+		"leftsb editor rightsb"
+		"leftsb bottom rightsb";
 }
 
 /* Download iFrame */
