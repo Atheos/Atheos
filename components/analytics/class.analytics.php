@@ -81,7 +81,10 @@ class Analytics {
 		$data["server_os"] = $_SERVER["SERVER_SOFTWARE"];
 
 		$browser = Common::getBrowser();
-		if (!in_array($browser, $data["client_os"])) {
+
+		if (!is_array($data["client_os"])) {
+			$data["client_os"] = [$browser];
+		} elseif (!in_array($browser, $data["client_os"])) {
 			$data["client_os"][] = $browser;
 		}
 

@@ -1,10 +1,8 @@
-#editor-region {
+#EDITOR {
 	width: auto;
-	// padding-right:10px;
 	height: 100%;
-	margin-right: 15px;
-	margin-left: 10px;
 	transition: margin $transitionDuration ease-in-out;
+	grid-area: editor;
 }
 
 .editor {
@@ -45,14 +43,10 @@
 	background-position: 3px 0 !important;
 }
 
-editor-region {
-	margin-left: 300px;
-	position: relative;
-}
-
 #root-editor-wrapper {
 	// Calculated using the height of the top & bottom bars
-	height: calc(100% - (23px + 33px));
+	// height: calc(100% - (23px + 33px));
+	height: 100%;
 	position: relative;
 }
 

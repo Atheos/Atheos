@@ -1,10 +1,11 @@
-#editor-bottom-bar {
+#BOTTOM {
 	position: relative;
 	z-index: 1;
 	height: $bottomBarHeight;
 	padding: 3px 0;
 	background: $foreground;
 	color: $fontColorMinor;
+	grid-area: bottom;
 
 	&>a,
 	&>span {

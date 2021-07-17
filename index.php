@@ -70,31 +70,31 @@ $SourceManager = new SourceManager;
 
 			<?php require_once('components/sidebars/sb-left.php'); ?>
 
-			<div id="editor-region">
-				<div id="editor-top-bar">
-					<ul id="tab-list-active-files" class="tabList"></ul>
-					<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
-					<a id="tab_close" class="fas fa-times-circle"></a>
-					<ul id="dropdown-list-active-files" style="display: none;"></ul>
-				</div>
-
-				<div id="root-editor-wrapper"></div>
-
-				<div id="editor-bottom-bar">
-					<a id="split"><i class="fas fa-columns"></i><?php echo i18n("split"); ?></a>
-					<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
-					<span id="current_file"></span>
-					<span id="codegit_file_status"></span>
-					<div id="changemode_menu" style="display:none;" class="options-menu"></div>
-					<ul id="split-options-menu" style="display:none;" class="options-menu">
-						<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php echo i18n("split_h"); ?> </a></li>
-						<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php echo i18n("split_v"); ?> </a></li>
-						<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php echo i18n("merge_all"); ?> </a></li>
-					</ul>
-					<span id="cursor-position"><?php echo i18n("ln"); ?>: 0 &middot; <?php echo i18n("col"); ?>: 0</span>
-				</div>
-
+			<div id="ACTIVE">
+				<ul id="tab-list-active-files" class="tabList"></ul>
+				<a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
+				<a id="tab_close" class="fas fa-times-circle"></a>
+				<ul id="dropdown-list-active-files" style="display: none;"></ul>
 			</div>
+
+			<div id="EDITOR">
+				<div id="root-editor-wrapper"></div>
+			</div>
+
+			<div id="BOTTOM">
+				<a id="split"><i class="fas fa-columns"></i><?php echo i18n("split"); ?></a>
+				<a id="current_mode"><i class="fas fa-code"></i><span></span></a>
+				<span id="current_file"></span>
+				<span id="codegit_file_status"></span>
+				<div id="changemode_menu" style="display:none;" class="options-menu"></div>
+				<ul id="split-options-menu" style="display:none;" class="options-menu">
+					<li id="split-horizontally"><a><i class="fas fa-arrows-alt-h"></i><?php echo i18n("split_h"); ?> </a></li>
+					<li id="split-vertically"><a><i class="fas fa-arrows-alt-v"></i><?php echo i18n("split_v"); ?> </a></li>
+					<li id="merge-all"><a><i class="fas fa-compress-arrows-alt"></i><?php echo i18n("merge_all"); ?> </a></li>
+				</ul>
+				<span id="cursor-position"><?php echo i18n("ln"); ?>: 0 &middot; <?php echo i18n("col"); ?>: 0</span>
+			</div>
+
 			<?php require_once('components/sidebars/sb-right.php'); ?>
 
 		</div>

@@ -30,7 +30,7 @@
 	}
 }
 
-#sb_right .title {
+#SBRIGHT .title {
 	right: 0;
 	left: $sidebarHandleWidth;
 
@@ -39,7 +39,7 @@
 	}
 }
 
-#sb_left .title {
+#SBLEFT .title {
 	right: $sidebarHandleWidth;
 	left: 0;
 

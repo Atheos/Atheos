@@ -1,8 +1,9 @@
-#editor-top-bar {
+#ACTIVE {
 	width: 100%;
 	background: $foreground;
 	position: relative;
 	transition: border $transitionDuration ease;
+	grid-area: active;
 }
 
 #tab_close,

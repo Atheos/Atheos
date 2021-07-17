@@ -22,24 +22,24 @@ class ContextMenu {
 		[
 			"title" => "fileNew",
 			"icon" => "fas fa-plus-circle",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.filemanager.createFile"
 		],
 		[
 			"title" => "folderNew",
 			"icon" => "fas fa-folder",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.filemanager.createFolder"
 		],
 		[
 			"title" => "filesUpload",
 			"icon" => "fas fa-upload",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.transfer.openUpload"
 		],
 		[
 			"title" => "hr-directory",			
-			"type" => "directory",
+			"type" => "folder",
 		],
 		//////////////////////////////////////////////////////////////////////80
 		// Generic Actions
@@ -52,7 +52,7 @@ class ContextMenu {
 		[
 			"title" => "paste",
 			"icon" => "fas fa-paste",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.filemanager.paste"
 		],
 		[
@@ -89,12 +89,12 @@ class ContextMenu {
 		//////////////////////////////////////////////////////////////////////80
 		[
 			"title" => "hr-folder",
-			"type" => "directory",
+			"type" => "folder",
 		],
 		[
 			"title" => "rescan",
 			"icon" => "fas fa-sync-alt",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.filemanager.rescan"
 		],
 		//////////////////////////////////////////////////////////////////////80
@@ -102,26 +102,26 @@ class ContextMenu {
 		//////////////////////////////////////////////////////////////////////80
 		[
 			"title" => "hr-git-folder",
-			"type" => "directory",
+			"type" => "folder",
 		],
 		[
 			"title" => "codegit_open",
 			"icon" => "fas fa-code-branch",
-			"type" => "directory",
+			"type" => "folder",
 			"isRepo" => true,
 			"action" => "atheos.codegit.showCodeGit"
 		],
 		[
 			"title" => "git_init",
 			"icon" => "fas fa-code-branch",
-			"type" => "directory",
+			"type" => "folder",
 			"isRepo" => false,
 			"action" => "atheos.codegit.gitInit"
 		],
 		[
 			"title" => "git_clone",
 			"icon" => "fas fa-code-branch",
-			"type" => "directory",
+			"type" => "folder",
 			"action" => "atheos.codegit.gitClone"
 		],
 		//////////////////////////////////////////////////////////////////////80

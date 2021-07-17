@@ -1,5 +1,5 @@
 .sidebar {
-	position: fixed;
+	position: relative;
 	top: 0;
 	height: 100%;
 	z-index: 99990;
@@ -10,16 +10,23 @@
 	background-color: $background;
 	transition: right $transitionDuration ease-in-out, left $transitionDuration ease-in-out;
 	white-space: nowrap;
+
+	&.unlocked {
+		grid-area: none;
+		position: fixed;
+	}
 }
 
-#sb_left {
-	width: 300px;
+#SBLEFT {
+	width: 350px;
 	left: 0;
+	grid-area: leftsb;
 }
 
-#sb_right {
-	width: 200px;
-	right: -185px;
+#SBRIGHT {
+	width: 250px;
+	right: 0;
+	grid-area: rightsb;
 
 	.category {
 		font-size: $fontSizeH3;
@@ -40,7 +47,7 @@
 
 		}
 	}
-	
+
 	hr {
 		height: 0;
 		border: none;

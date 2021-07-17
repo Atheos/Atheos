@@ -23,9 +23,9 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			oX('#search_open').on('click', self.openSearch);
-			oX('#filter_open').on('click', self.openFilter);
-			oX('#filter_exit').on('click', self.exitFilter);
+			fX('#search_open').on('click', self.openSearch);
+			fX('#filter_open').on('click', self.openFilter);
+			fX('#filter_exit').on('click', self.exitFilter);
 
 			atheos.common.initMenuHandler(oX('#filter_options'), oX('#filter_strategy'));
 
@@ -254,7 +254,7 @@
 					}
 
 					if (!currentLevel[fragment]) {
-						type = index < (pathArray.length - 1) ? 'directory' : result.type;
+						type = index < (pathArray.length - 1) ? 'folder' : result.type;
 						currentLevel[fragment] = {
 							type: type,
 							children: {}
@@ -291,11 +291,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		createDirectoryItem: function(name, obj) {
 
-			var fileClass = obj.type === 'directory' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
+			var fileClass = obj.type === 'folder' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
 
 			var nodeClass = 'none';
 			var isOpen = '';
-			if (obj.type === 'directory' && (obj.children)) {
+			if (obj.type === 'folder' && (obj.children)) {
 				nodeClass = 'fa fa-minus';
 				isOpen = 'class="open"';
 			}

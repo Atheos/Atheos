@@ -28,6 +28,24 @@
 
 (function() {
 
+	let msReg = /(\d+)([mshd]+)/g,
+		msUnt = {
+			s: 1000,
+			m: 60000,
+			h: 3600000,
+			d: 86400000
+		};
+
+	window.ms = (val) => {
+		let test = [...val.toLowerCase().matchAll(msReg)],
+			ms = 0,
+			unit;
+		for (unit of test) {
+			ms += unit[1] * msUnt[unit[2]];
+		}
+		return ms;
+	};
+
 	window.chrono = {
 		byte: setInterval(() => carbon.pub('chrono.byte'), 100), // 10th of a second
 		kilo: setInterval(() => carbon.pub('chrono.kilo'), 1000), // 1 second

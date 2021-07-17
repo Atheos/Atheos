@@ -200,8 +200,8 @@
 
 			expand: function() {
 				self.sideExpanded = true;
-				oX('#sb_left #project_list').css('height', '');
-				oX('#sb_left>.content').css('bottom', '');
+				oX('#SBLEFT #project_list').css('height', '');
+				oX('#SBLEFT>.content').css('bottom', '');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
 
@@ -211,10 +211,10 @@
 
 			collapse: function() {
 				self.sideExpanded = false;
-				var height = oX('#sb_left #project_list .title').height();
+				var height = oX('#SBLEFT #project_list .title').height();
 
-				oX('#sb_left #project_list').css('height', height + 'px');
-				oX('#sb_left>.content').css('bottom', height + 'px');
+				oX('#SBLEFT #project_list').css('height', height + 'px');
+				oX('#SBLEFT>.content').css('bottom', height + 'px');
 
 				oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
 			}

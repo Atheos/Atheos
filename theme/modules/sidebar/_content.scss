@@ -6,7 +6,7 @@
 	overflow: hidden;
 }
 
-#sb_left {
+#SBLEFT {
 	.content {
 		left: 0;
 		right: $sidebarHandleWidth;
@@ -18,7 +18,7 @@
 	}
 }
 
-#sb_right {
+#SBRIGHT {
 	.content {
 		left: $sidebarHandleWidth;
 		right: 0;

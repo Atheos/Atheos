@@ -27,29 +27,15 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
+	let editor = null,
+		workspace = null,
+		handleWidth = 0,
+		hoverDuration = 300;
 
-	var self = null;
-	var editor = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.sidebars.init());
-
-
-	atheos.sidebars = {
-
-		leftLockedVisible: true,
-		rightLockedVisible: false,
-
-		isLeftSidebarOpen: true,
-		isRightSidebarOpen: false,
-
-		leftTrigger: 'hover',
-		rightTrigger: 'hover',
-
-		hoverDuration: 300,
+	const self = {
 
 		dragging: false,
 
@@ -57,308 +43,66 @@
 		// Sidebar Initialization
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
-			self = this;
-			editor = oX('#editor-region');
+			editor = oX('#EDITOR');
+			workspace = oX('#workspace');
 
-			this.sbLeft.init();
-			this.sbRight.init();
+			left.init();
+			right.init();
 
 			carbon.subscribe('settings.loaded', function() {
 
+				handleWidth = oX('.handle').width();
 
-				var sbLeftWidth = storage('sidebars.sb-left-width'),
-					sbRightWidth = storage('sidebars.sb-right-width');
-
-				var handleWidth = oX('.handle').width(),
-					marginL = handleWidth,
-					marginR = handleWidth;
-
-				self.leftTrigger = storage('sidebars.leftTrigger') || 'hover';
-				self.rightTrigger = storage('sidebars.rightTrigger') || 'hover';
+				hoverDuration = storage('sidebars.hoverDuration') || 300;
+				left.trigger = storage('sidebars.leftTrigger') || 'hover';
+				right.trigger = storage('sidebars.rightTrigger') || 'hover';
 
 				if (storage('sidebars.leftLockedVisible') === false) {
-					oX('#sb_left .lock').trigger('click');
+					fX('#SBLEFT .lock').trigger('click');
 				}
 
-				if (storage('sidebars.rightLockedVisible') === true) {
-					oX('#sb_right .lock').trigger('click');
+				if (storage('sidebars.rightLockedVisible') === false) {
+					fX('#SBRIGHT .lock').trigger('click');
 				}
 
-
-
-
+				let sbLeftWidth = storage('sidebars.sb-left-width'),
+					sbRightWidth = storage('sidebars.sb-right-width');
 				if (sbLeftWidth !== null) {
 					sbLeftWidth = parseInt(sbLeftWidth, 10);
-					oX('#sb_left').css('width', sbLeftWidth + 'px');
+					oX('#SBLEFT').css('width', sbLeftWidth + 'px');
 				}
 
 				if (sbRightWidth !== null) {
 					sbRightWidth = parseInt(sbRightWidth, 10);
-					oX('#sb_right').css('width', sbRightWidth + 'px');
+					oX('#SBRIGHT').css('width', sbRightWidth + 'px');
 				}
 
-				if (self.leftLockedVisible) {
-					marginL = oX('#sb_left').width();
-				} else if (sbLeftWidth !== null) {
-					oX('#sb_left').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
-					self.sbLeft.close();
-
+				if (!left.lockedVisible && sbLeftWidth !== null) {
+					left.element.addClass('unlocked');
+					oX('#SBLEFT').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-left', handleWidth + 'px');
 				}
 
-				if (self.rightLockedVisible) {
-					marginR = oX('#sb_right').width();
-					self.sbRight.open();
-				} else if (sbRightWidth !== null) {
-					oX('#sb_right').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
+				if (!right.lockedVisible && sbRightWidth !== null) {
+					right.element.addClass('unlocked');
+					oX('#SBRIGHT').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-right', handleWidth + 'px');
 				}
-
-				editor.css({
-					'margin-left': marginL + 'px',
-					'margin-right': marginR + 'px',
-				});
 			});
 		},
-		//////////////////////////////////////////////////////////////////////	
-		// Left Sidebar
-		//////////////////////////////////////////////////////////////////////	
-		sbLeft: {
-			sidebar: null,
-			handle: null,
-			icon: null,
-			timeoutOpen: null,
-			timeoutClose: null,
-			hoverDuration: 300,
-			init: function() {
-				this.sidebar = oX('#sb_left');
-				this.handle = oX('#sb_left .handle');
-				this.icon = oX('#sb_left .lock');
 
-				this.hoverDuration = storage('sidebars.hoverDuration') || 300;
-
-				this.icon.on('click', function(e) {
-					self.sbLeft.lock();
-				});
-
-				this.handle.on('mousedown', () => {
-					self.resize(this.sidebar.el, 'left');
-				});
-
-				this.handle.on('click', function() {
-					if (!self.dragging && self.leftTrigger === 'click') {
-						self.sbLeft.open();
-					}
-				});
-
-				this.sidebar.on('mouseover', function() {
-					if (!self.dragging && self.leftTrigger === 'hover') {
-						self.sbLeft.open();
-					}
-				});
-
-				this.sidebar.on('mouseout', function() {
-					// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
-					// In order to achieve MouseLeave with events, I needed to create a method that capture
-					// the mouseout event, and converts it into a mouseleave. This function checks if
-					// elment the mouse moved to is the target element, or a child of; if it is, then the 
-					// mouse did not leave the parent element.
-					// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
-
-					var trigger = self.sbLeft.sidebar.el,
-						destination = event.toElement || event.relatedTarget,
-						mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
-
-					if (!self.dragging && mouseLeft) {
-						self.sbLeft.close();
-					}
-				});
-			},
-			open: function() {
-				var sidebarWidth = this.sidebar.width();
-
-				if (this.timeoutClose) {
-					clearTimeout(this.timeoutClose);
-				}
-				this.timeoutOpen = setTimeout((function() {
-
-					this.sidebar.css('left', '0px');
-					editor.css('margin-left', sidebarWidth + 'px');
-
-					setTimeout(function() {
-						atheos.sidebars.isLeftSidebarOpen = true;
-						atheos.active.updateTabDropdownVisibility();
-						editor.trigger('h-resize-root');
-					}, 300);
-				}).bind(this), this.hoverDuration);
-
-			},
-			close: function() {
-				var sidebarWidth = this.sidebar.width(),
-					sidebarHandleWidth = this.handle.width();
-
-				if (this.timeoutOpen) {
-					clearTimeout(this.timeoutOpen);
-				}
-
-				sidebarWidth = this.sidebar.width();
-
-				this.timeoutClose = setTimeout((function() {
-
-					if (!self.leftLockedVisible) {
-
-						this.sidebar.css('left', (-sidebarWidth + sidebarHandleWidth) + 'px');
-						editor.css('margin-left', '15px');
-
-						setTimeout(function() {
-							atheos.sidebars.isLeftSidebarOpen = false;
-							atheos.active.updateTabDropdownVisibility();
-							editor.trigger('h-resize-root');
-						}, 300);
-					}
-				}).bind(this), this.hoverDuration);
-			},
-			lock: function() {
-				if (self.leftLockedVisible) {
-					this.icon.replaceClass('fa-lock', 'fa-unlock');
-					this.handle.addClass('unlocked');
-				} else {
-					this.icon.replaceClass('fa-unlock', 'fa-lock');
-					this.handle.removeClass('unlocked');
-				}
-				self.leftLockedVisible = !(self.leftLockedVisible);
-				atheos.settings.save('sidebars.leftLockedVisible', self.leftLockedVisible, true);
-				storage('sidebars.leftLockedVisible', self.leftLockedVisible);
-			}
-		},
-		//////////////////////////////////////////////////////////////////////	
-		// Right Sidebar
-		//////////////////////////////////////////////////////////////////////	
-		sbRight: {
-			sidebar: null,
-			handle: null,
-			icon: null,
-			timeoutOpen: null,
-			timeoutClose: null,
-			hoverDuration: 300,
-			init: function() {
-				this.sidebar = oX('#sb_right');
-				this.handle = oX('#sb_right .handle');
-				this.icon = oX('#sb_right .lock');
-
-				this.hoverDuration = storage('sidebars.hoverDuration') || 300;
-
-				this.icon.on('click', function(e) {
-					self.sbRight.lock();
-				});
-
-				this.handle.on('mousedown', () => {
-					self.resize(this.sidebar.el, 'right');
-				});
-
-				this.handle.on('click', function() {
-					if (!self.dragging && self.rightTrigger === 'click') {
-						self.sbRight.open();
-					}
-				});
-
-				this.sidebar.on('mouseover', function() {
-					if (!self.dragging && self.rightTrigger === 'hover') {
-						self.sbRight.open();
-					}
-				});
-
-
-				this.sidebar.on('mouseout', function(e) {
-					// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
-					// In order to achieve MouseLeave with events, I needed to create a method that capture
-					// the mouseout event, and converts it into a mouseleave. This function checks if
-					// elment the mouse moved to is the target element, or a child of; if it is, then the 
-					// mouse did not leave the parent element.
-					// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
-
-					var trigger = self.sbRight.sidebar.el,
-						destination = event.toElement || event.relatedTarget,
-						mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
-
-					if (!self.dragging && mouseLeft) {
-						self.sbRight.close();
-					}
-				});
-			},
-			open: function() {
-				var sidebarWidth = this.sidebar.width();
-
-				if (this.sidebar.data && this.sidebar.data.timeoutClose) {
-					clearTimeout(this.sidebar.data.timeoutClose);
-				}
-
-				if (this.timeoutClose) {
-					clearTimeout(this.timeoutClose);
-				}
-				this.timeoutOpen = setTimeout((function() {
-
-					this.sidebar.css('right', '0px');
-					editor.css('margin-right', sidebarWidth + 'px');
-
-					setTimeout(function() {
-						self.isRightSidebarOpen = true;
-						atheos.active.updateTabDropdownVisibility();
-						editor.trigger('h-resize-root');
-					}, 300);
-
-				}).bind(this), this.hoverDuration);
-			},
-			close: function() {
-				var sidebarWidth = this.sidebar.width(),
-					sidebarHandleWidth = this.handle.width();
-
-				if (this.timeoutOpen) {
-					clearTimeout(this.timeoutOpen);
-				}
-
-				this.timeoutClose = setTimeout((function() {
-					if (!self.rightLockedVisible) {
-						this.sidebar.css('right', -(sidebarWidth - sidebarHandleWidth) + 'px');
-
-						editor.css('margin-right', '15px');
-
-						setTimeout(function() {
-							self.isRightSidebarOpen = false;
-							atheos.active.updateTabDropdownVisibility();
-							editor.trigger('h-resize-root');
-						}, 300);
-					}
-				}).bind(this), this.hoverDuration);
-
-			},
-			lock: function() {
-				if (self.rightLockedVisible) {
-					this.icon.replaceClass('fa-lock', 'fa-unlock');
-					this.handle.addClass('unlocked');
-				} else {
-					this.icon.replaceClass('fa-unlock', 'fa-lock');
-					this.handle.removeClass('unlocked');
-				}
-				self.rightLockedVisible = !(self.rightLockedVisible);
-				atheos.settings.save('sidebars.rightLockedVisible', self.rightLockedVisible, true);
-				storage('sidebars.rightLockedVisible', self.rightLockedVisible);
-			}
-		},
 		//////////////////////////////////////////////////////////////////////	
 		// Sidebar Resize Function
 		//////////////////////////////////////////////////////////////////////	
 		resize: function(sidebar, side) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
 
-			if (sidebar === null) {
-				return;
-			}
+			if (sidebar === null) return;
 
 			var rect = sidebar.getBoundingClientRect(),
 				modalX = rect.left,
-				ed = editor.el,
 				width;
 
-			ed.style.transition = 'none';
 			self.dragging = true;
 
 			var moveElement = function(event) {
@@ -370,14 +114,10 @@
 
 				width = width > 14 ? width + 'px' : '15px';
 				sidebar.style.width = width;
-				ed.style['margin-' + side] = width;
-
 			};
 
 			function removeListeners() {
 				setTimeout(function() {
-					ed.style.transition = '';
-					editor.css('margin-' + side, width);
 					atheos.settings.save('sidebars.sb-' + side + '-width', width);
 				}, 200);
 
@@ -393,4 +133,207 @@
 		}
 	};
 
-})(this);
+	//////////////////////////////////////////////////////////////////////	
+	// Left Sidebar
+	//////////////////////////////////////////////////////////////////////	
+	const left = {
+		element: null,
+		handle: '#SBLEFT .handle',
+		icon: null,
+		timeoutOpen: null,
+		timeoutClose: null,
+		trigger: 'hover',
+		lockedVisible: true,
+		isOpen: true,
+
+		init: function() {
+			this.element = oX('#SBLEFT');
+			this.icon = oX('#SBLEFT .lock');
+
+			fX('#SBLEFT .lock').on('click', () => this.lock());
+
+			fX(this.handle).on('mousedown', () => {
+				self.resize(this.element.el, 'left');
+			});
+
+			fX(this.handle).on('click', () => {
+				if (!self.dragging && this.trigger === 'click') {
+					this.open();
+				}
+			});
+
+			fX('#SBLEFT').on('mouseover', () => {
+				if (!self.dragging && this.trigger === 'hover') {
+					this.open();
+				}
+			});
+
+			fX('#SBLEFT').on('mouseout', (event) => {
+				// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
+				// In order to achieve MouseLeave with events, I needed to create a method that capture
+				// the mouseout event, and converts it into a mouseleave. This function checks if
+				// elment the mouse moved to is the target element, or a child of; if it is, then the 
+				// mouse did not leave the parent element.
+				// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
+
+				var trigger = this.element.el,
+					destination = event.toElement || event.relatedTarget,
+					mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
+
+				if (!self.dragging && mouseLeft) this.close();
+			});
+		},
+		open: function() {
+			var sidebarWidth = this.element.width();
+
+			if (this.timeoutClose) clearTimeout(this.timeoutClose);
+
+			this.timeoutOpen = setTimeout(() => {
+
+				this.element.css('left', '0px');
+
+				setTimeout(() => {
+					this.isOpen = true;
+					atheos.active.updateTabDropdownVisibility();
+					editor.trigger('h-resize-root');
+				}, 300);
+
+			}, hoverDuration);
+
+		},
+		close: function() {
+			var sidebarWidth = this.element.width();
+			if (this.timeoutOpen) clearTimeout(this.timeoutOpen);
+
+			this.timeoutClose = setTimeout(() => {
+				if (this.lockedVisible) return;
+				this.element.css('left', -(sidebarWidth - handleWidth) + 'px');
+
+				setTimeout(() => {
+					this.isOpen = false;
+					atheos.active.updateTabDropdownVisibility();
+					editor.trigger('h-resize-root');
+				}, 300);
+			}, hoverDuration);
+		},
+		lock: function() {
+			if (this.lockedVisible) {
+				this.icon.replaceClass('fa-lock', 'fa-unlock');
+				this.element.addClass('unlocked');
+				workspace.css('padding-left', handleWidth + 'px');
+			} else {
+				this.icon.replaceClass('fa-unlock', 'fa-lock');
+				this.element.removeClass('unlocked');
+				workspace.css('padding-left', '');
+			}
+			this.lockedVisible = !(this.lockedVisible);
+			atheos.settings.save('sidebars.leftLockedVisible', this.lockedVisible, true);
+			storage('sidebars.leftLockedVisible', this.lockedVisible);
+		}
+	};
+
+	//////////////////////////////////////////////////////////////////////	
+	// Right Sidebar
+	//////////////////////////////////////////////////////////////////////	
+	const right = {
+		element: null,
+		handle: '#SBRIGHT .handle',
+		icon: null,
+		timeoutOpen: null,
+		timeoutClose: null,
+		trigger: 'hover',
+		lockedVisible: true,
+		isOpen: true,
+
+		init: function() {
+			this.element = oX('#SBRIGHT');
+			this.icon = oX('#SBRIGHT .lock');
+
+			fX('#SBRIGHT .lock').on('click', () => this.lock());
+
+			fX(this.handle).on('mousedown', () => {
+				self.resize(this.element.el, 'right');
+			});
+
+			fX(this.handle).on('mousedown', () => {
+				if (!self.dragging && this.trigger === 'click') {
+					this.open();
+				}
+			});
+
+			fX('#SBRIGHT').on('mouseover', () => {
+				if (!self.dragging && this.trigger === 'hover') {
+					this.open();
+				}
+			});
+
+			fX('#SBRIGHT').on('mouseout', (event) => {
+				// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
+				// In order to achieve MouseLeave with events, I needed to create a method that capture
+				// the mouseout event, and converts it into a mouseleave. This function checks if
+				// elment the mouse moved to is the target element, or a child of; if it is, then the 
+				// mouse did not leave the parent element.
+				// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
+				var trigger = this.element.el,
+					destination = event.toElement || event.relatedTarget,
+					mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
+
+				if (!self.dragging && mouseLeft) this.close();
+			});
+		},
+		open: function() {
+			var sidebarWidth = this.element.width();
+
+			if (this.timeoutClose) clearTimeout(this.timeoutClose);
+
+			this.timeoutOpen = setTimeout(() => {
+
+				this.element.css('right', '0px');
+
+				setTimeout(() => {
+					this.isOpen = true;
+					atheos.active.updateTabDropdownVisibility();
+					editor.trigger('h-resize-root');
+				}, 300);
+
+			}, hoverDuration);
+		},
+		close: function() {
+			var sidebarWidth = this.element.width();
+			if (this.timeoutOpen) clearTimeout(this.timeoutOpen);
+
+			this.timeoutClose = setTimeout(() => {
+				if (this.lockedVisible) return;
+				this.element.css('right', -(sidebarWidth - handleWidth) + 'px');
+
+				setTimeout(() => {
+					this.isOpen = false;
+					atheos.active.updateTabDropdownVisibility();
+					editor.trigger('h-resize-root');
+				}, 300);
+			}, hoverDuration);
+
+		},
+		lock: function() {
+			if (this.lockedVisible) {
+				this.icon.replaceClass('fa-lock', 'fa-unlock');
+				this.element.addClass('unlocked');
+				workspace.css('padding-right', handleWidth + 'px');
+			} else {
+				this.icon.replaceClass('fa-unlock', 'fa-lock');
+				this.element.removeClass('unlocked');
+				workspace.css('padding-right', '');
+			}
+			this.lockedVisible = !(this.lockedVisible);
+			atheos.settings.save('sidebars.rightLockedVisible', this.lockedVisible, true);
+			storage('sidebars.rightLockedVisible', this.lockedVisible);
+		}
+	};
+
+
+	atheos.sidebars = self;
+	atheos.sidebars.sbLeft = left;
+	atheos.sidebars.sbRight = right;
+	carbon.subscribe('system.loadMinor', () => self.init());
+
+})();

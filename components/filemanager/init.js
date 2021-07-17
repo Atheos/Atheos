@@ -17,13 +17,11 @@
 (function() {
 	'use strict';
 
-
 	const self = {
 
 		clipboard: '',
 
 		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
-		noBrowser: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 
 		openTrigger: 'click',
 		showHidden: true,
@@ -57,7 +55,6 @@
 			self.showHidden = toggle.hasClass('fa-eye') ? true : false;
 			atheos.settings.save('filemanager.showHidden', self.showHidden, true);
 			self.rescan();
-
 		},
 
 		checkAnchor: function(anchor) {
@@ -85,10 +82,10 @@
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
-			oX('#file-manager a', true).on('click, dblclick', function(e) {
+			fX('#file-manager a').on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
 					var anchor = self.checkAnchor(e.target);
-					if (anchor.attr('data-type') === 'directory' || anchor.attr('data-type') === 'root') {
+					if (anchor.attr('data-type') === 'folder' || anchor.attr('data-type') === 'root') {
 						self.openDir(anchor.attr('data-path'));
 					} else if (anchor.attr('data-type') === 'file') {
 						self.openFile(anchor.attr('data-path'));
@@ -96,7 +93,7 @@
 				}
 			});
 
-			oX('#file-manager').on('mousedown', self.handleDrag);
+			fX('#file-manager').on('mousedown', self.handleDrag);
 
 		},
 
@@ -186,18 +183,20 @@
 			function dragEnd() {
 				document.removeEventListener('mousemove', dragMove);
 				document.removeEventListener('mouseup', dragEnd);
+
 				if (timeout) {
 					return clearTimeout(timeout);
 				}
+
 				target.style.opacity = '';
 				if (clone) clone.remove();
 
 				let parent = target.closest('ul');
 				let folder = parent.previousSibling;
 
+				setTimeout(() => self.sortNodes(parent), 10);
 				if (parent === origin || !folder) return origin.append(target);
 
-				self.sortNodes(parent);
 				self.handleDrop(target, folder);
 			}
 
@@ -221,7 +220,6 @@
 
 			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
 				toast('warning', 'Path already exists.');
-				self.rescan();
 			} else {
 				echo({
 					data: {
@@ -232,8 +230,8 @@
 					},
 					settled: function(status, reply) {
 						if (status !== 'success') {
-							toast('error', reply);
 							self.rescan();
+							toast('error', reply);
 						} else {
 							node.attr('data-path', newPath);
 							atheos.active.rename(oldPath, newPath);
@@ -350,10 +348,10 @@
 				return '';
 			}
 
-			var fileClass = type === 'directory' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
+			var fileClass = type === 'folder' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
 
 			var nodeClass = 'none';
-			if (type === 'directory' && (size > 0)) {
+			if (type === 'folder' && (size > 0)) {
 				nodeClass = 'fa fa-plus';
 			}
 
@@ -400,30 +398,19 @@
 
 			var ext = pathinfo(path).extension.toLowerCase();
 
-			if (self.noOpen.indexOf(ext) < 0) {
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'open',
-						path: path
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') return;
-						atheos.active.open(path, reply.content, reply.modifyTime, focus);
-						if (line) setTimeout(atheos.editor.gotoLine(line), 500);
-					}
-				});
-			} else {
-				if (!atheos.common.isAbsPath(path)) {
-					if (self.noBrowser.indexOf(ext) < 0) {
-						self.download(path);
-					} else {
-						self.openInModal(path);
-					}
-				} else {
-					toast('error', 'Unable to open file in Browser');
+			if (self.noOpen.indexOf(ext) > -1) return;
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'open',
+					path: path
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return;
+					atheos.active.open(path, reply.content, reply.modifyTime, focus);
+					if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 				}
-			}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -668,7 +655,7 @@
 			// Already exists
 			if (oX('#file-manager a[data-path="' + path + '"]')) return;
 
-			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(directory|root)$/)) {
+			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
 
 				var node = self.createDirectoryItem(path, type, 0);
@@ -694,9 +681,9 @@
 		// Sort nodes in file tree during node creation
 		//////////////////////////////////////////////////////////////////////80
 		sortNodes: function(list) {
-			var nodesToSort = list.children;
+			var children = [...list.children];
 
-			nodesToSort = Array.prototype.map.call(nodesToSort, function(node) {
+			children = children.map(function(node) {
 				return {
 					node: node,
 					span: node.querySelector('span').textContent,
@@ -704,15 +691,24 @@
 				};
 			});
 
-			nodesToSort.sort(function(a, b) {
+			// Alpahetical
+			children.sort(function(a, b) {
 				return a.span.localeCompare(b.span);
 			});
 
-			nodesToSort.sort(function(a, b) {
+			children.reverse();
+
+			// By Type
+			children.sort(function(a, b) {
 				return a.type.localeCompare(b.type);
 			});
 
-			nodesToSort.forEach(function(item) {
+			children.reverse();
+
+			// Double reverse is to put folders first, then files, but each
+			// subsection in alphabetical order
+
+			children.forEach(function(item) {
 				list.appendChild(item.node);
 			});
 		},

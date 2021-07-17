@@ -48,7 +48,6 @@
 		},
 
 		load: function(width, data) {
-			log(data);
 			data = data || {};
 			width = width > 400 ? width : 400;
 
@@ -68,7 +67,7 @@
 				dialog = oX('#dialog') || self.create(),
 				content = oX('#content');
 
-			content.html('');
+			if(content) content.html('');
 
 			dialog.css({
 				'top': '15%',
@@ -182,7 +181,7 @@
 
 		drag: function(e) {
 			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-			let element = e.target.closest('#modal_wrapper'),
+			let element = e.target.closest('#dialog'),
 				wrapper = oX(element),
 				drag = oX(e.target);
 

@@ -1,4 +1,4 @@
-<div id="sb_left" class="sidebar">
+<div id="SBLEFT" class="sidebar">
 
 	<div class="handle">
 		<span>|||</span>

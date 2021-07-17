@@ -59,7 +59,7 @@
 				menu.addClass('fm');
 			});
 
-			fX('#editor-top-bar').on('contextmenu', function(e) { // Context Menu
+			fX('#ACTIVE').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 
 				var anchor = atheos.filemanager.checkAnchor(e.target);
@@ -137,7 +137,7 @@
 				name = anchor.find('span').html(),
 				isRepo = !isUndefined(anchor.find('i.repo-icon')),
 				inRepo = atheos.codegit.findParentRepo(path),
-				extension = type === 'directory' ? 'directory' : pathinfo(path).extension;
+				extension = type === 'folder' ? 'folder' : pathinfo(path).extension;
 
 			anchor.addClass('context-menu-active');
 
@@ -146,7 +146,7 @@
 				if ('noRoot' in item && type === 'root') continue;
 
 				if ('type' in item && item.type !== type) {
-					if (type !== 'root' || item.type !== 'directory') continue;
+					if (type !== 'root' || item.type !== 'folder') continue;
 				}
 
 				if ('isRepo' in item && item.isRepo !== isRepo) continue;
