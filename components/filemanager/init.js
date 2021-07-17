@@ -22,7 +22,6 @@
 		clipboard: '',
 
 		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
-		noBrowser: ['jpg', 'jpeg', 'png', 'gif', 'bmp'],
 
 		openTrigger: 'click',
 		showHidden: true,
@@ -56,7 +55,6 @@
 			self.showHidden = toggle.hasClass('fa-eye') ? true : false;
 			atheos.settings.save('filemanager.showHidden', self.showHidden, true);
 			self.rescan();
-
 		},
 
 		checkAnchor: function(anchor) {
@@ -400,30 +398,19 @@
 
 			var ext = pathinfo(path).extension.toLowerCase();
 
-			if (self.noOpen.indexOf(ext) < 0) {
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'open',
-						path: path
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') return;
-						atheos.active.open(path, reply.content, reply.modifyTime, focus);
-						if (line) setTimeout(atheos.editor.gotoLine(line), 500);
-					}
-				});
-			} else {
-				if (!atheos.common.isAbsPath(path)) {
-					if (self.noBrowser.indexOf(ext) < 0) {
-						self.download(path);
-					} else {
-						self.openInModal(path);
-					}
-				} else {
-					toast('error', 'Unable to open file in Browser');
+			if (self.noOpen.indexOf(ext) > -1) return;
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'open',
+					path: path
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return;
+					atheos.active.open(path, reply.content, reply.modifyTime, focus);
+					if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 				}
-			}
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
