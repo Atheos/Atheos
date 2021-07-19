@@ -1,103 +1,109 @@
 [{
-    "title": "plugins",
-    "admin": false,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "pluginbar",
-    "admin": false,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "break"
-  },
-  {
-    "title": "administration",
-    "admin": true,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "projects",
-    "admin": true,
-    "icon": "fas fa-archive",
-    "onclick": "atheos.project.list();"
-  },
-  {
-    "title": "users",
-    "admin": true,
-    "icon": "fas fa-users",
-    "onclick": "atheos.user.list();"
-  },
-  {
-    "title": "break"
-  },
-  {
-    "title": "system",
-    "admin": true,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "codegit",
-    "admin": false,
-    "icon": "fas fa-code-branch",
-    "onclick": "atheos.codegit.showCodeGit();"
-  },  
-  {
-    "title": "market",
-    "admin": true,
-    "icon": "fas fa-store",
-    "onclick": "atheos.market.list();"
-  },
-  {
-    "title": "update_check",
-    "admin": true,
-    "icon": "fas fa-sync-alt",
-    "onclick": "atheos.update.check();"
-  },
-  {
-    "title": "break"
-  },
-  {
-    "title": "account",
-    "admin": false,
-    "icon": null,
-    "onclick": null
-  },
-  {
-    "title": "settings",
-    "admin": false,
-    "icon": "fas fa-cogs",
-    "onclick": "atheos.settings.show();"
-  },
-  {
-    "title": "password",
-    "admin": false,
-    "icon": "fas fa-key",
-    "onclick": "atheos.user.changePassword();"
-  },
-  {
-    "title": "break"
-  },
-  {
-    "title": "save_all",
-    "admin": false,
-    "icon": "fa fa-save",
-    "onclick": "atheos.active.saveAll();"
-  },
-  {
-    "title": "help",
-    "admin": false,
-    "icon": "fas fa-question-circle",
-    "onclick": "window.open('https://www.atheos.io/');"
-  },
-  {
-    "title": "logout",
-    "admin": false,
-    "icon": "fas fa-sign-out-alt",
-    "onclick": "atheos.user.logout();"
-  }
+		"title": "plugins",
+		"admin": false,
+		"icon": null,
+		"onclick": null
+	},
+	{
+		"title": "pluginbar",
+		"admin": false,
+		"icon": null,
+		"onclick": null
+	},
+	{
+		"title": "break"
+	},
+	{
+		"title": "administration",
+		"admin": true,
+		"icon": null,
+		"onclick": null
+	},
+	{
+		"title": "projects",
+		"admin": true,
+		"icon": "fas fa-archive",
+		"onclick": "atheos.project.list();"
+	},
+	{
+		"title": "users",
+		"admin": true,
+		"icon": "fas fa-users",
+		"onclick": "atheos.user.list();"
+	},
+	{
+		"title": "break"
+	},
+	{
+		"title": "system",
+		"admin": true,
+		"icon": null,
+		"onclick": null
+	},
+	{
+		"title": "codegit",
+		"admin": false,
+		"icon": "fas fa-code-branch",
+		"onclick": "atheos.codegit.showCodeGit();"
+	},
+	{
+		"title": "macro",
+		"admin": false,
+		"icon": "fas fa-magic",
+		"onclick": "atheos.macro.showMacro();"
+	},
+	{
+		"title": "market",
+		"admin": true,
+		"icon": "fas fa-store",
+		"onclick": "atheos.market.list();"
+	},
+	{
+		"title": "update_check",
+		"admin": true,
+		"icon": "fas fa-sync-alt",
+		"onclick": "atheos.update.check();"
+	},
+	{
+		"title": "break"
+	},
+	{
+		"title": "account",
+		"admin": false,
+		"icon": null,
+		"onclick": null
+	},
+	{
+		"title": "settings",
+		"admin": false,
+		"icon": "fas fa-cogs",
+		"onclick": "atheos.settings.show();"
+	},
+	{
+		"title": "password",
+		"admin": false,
+		"icon": "fas fa-key",
+		"onclick": "atheos.user.changePassword();"
+	},
+	{
+		"title": "break"
+	},
+	{
+		"title": "save_all",
+		"admin": false,
+		"icon": "fa fa-save",
+		"onclick": "atheos.active.saveAll();"
+	},
+	{
+		"title": "help",
+		"admin": false,
+		"icon": "fas fa-question-circle",
+		"onclick": "window.open('https://www.atheos.io/');"
+	},
+	{
+		"title": "logout",
+		"admin": false,
+		"icon": "fas fa-sign-out-alt",
+		"onclick": "atheos.user.logout();"
+	}
 ]

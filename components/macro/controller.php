@@ -25,25 +25,47 @@ switch ($action) {
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Create new macro
+	// Create/Update macro
 	//////////////////////////////////////////////////////////////////////////80
-	case "create":
-		$macro = POST("macro");
-		if ($macro) {
-			$Macro->save($macro);
+	case "save":
+		$uuid = POST("uuid");
+		$title = POST("title");
+		$type = POST("type");
+		$fTypes = POST("fTypes");
+		$command = POST("command");
+		if (!Common::checkAccess("configure")) {
+			Common::send("error", "Account does not have access.");
+		} elseif ($uuid && $title && $type && $fTypes && $command) {
+			$Macro->save($uuid, $title, $type, $fTypes, $command);
 		} else {
-			Common::send("error", "Missing macro.");
+			Common::send("error", "Missing parameter.");
 		}
 		break;
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Delete macro
+	//////////////////////////////////////////////////////////////////////////80
+	case "delete":
+		$uuid = POST("uuid");
+		if (!Common::checkAccess("configure")) {
+			Common::send("error", "Account does not have access.");
+		} elseif ($uuid) {
+			$Macro->delete($uuid);
+		} else {
+			Common::send("error", "Missing parameter.");
+		}
+		break;
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Save User Settings
 	//////////////////////////////////////////////////////////////////////////80
-	case "exec":
-		$key = POST("key");
-		$value = POST("value");
-		if ($key && $value) {
-			$Macro->save($key, $value);
+	case "execute":
+		$uuid = POST("uuid");
+		$path = POST("path");
+		if ($uuid && $path) {
+			$Macro->execute($uuid, $path);
 		} else {
 			Common::send("error", "Missing key or value.");
 		}

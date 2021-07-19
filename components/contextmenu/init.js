@@ -85,7 +85,7 @@
 				}
 
 				if (typeof action === 'function') {
-					action(self.active);
+					action(self.active, target);
 					self.hide();
 				}
 			});
@@ -120,7 +120,7 @@
 
 				html = `<a action="${item.action}">${icon + item.title}</a>\n`;
 			} else {
-				html = `<hr>\n`;
+				html = `<hr id="${item.title}">\n`;
 			}
 			return html;
 		},
@@ -203,7 +203,7 @@
 			carbon.publish('contextmenu.showTabMenu');
 
 		},
-
+		
 		//////////////////////////////////////////////////////////////////////80
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80

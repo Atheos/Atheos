@@ -8,6 +8,7 @@ textarea {
 	margin: 5px 0;
 	padding: 7px 10px;
 	line-height: normal;
+	border-radius: 0;
 	@include input;
 }
 
@@ -19,11 +20,19 @@ textarea {
 	min-height: 100px;
 }
 
-input:focus,
-select:focus,
-textarea:focus {
-	outline: none;
-	border-bottom: 2px solid $highlight;
+input,
+select,
+textarea {
+
+	&:disabled {
+		background-color: $foreground;
+		color: $fontColorMinor;
+	}
+
+	&:focus {
+		outline: none;
+		border-bottom: 2px solid $highlight;
+	}
 }
 
 input {
