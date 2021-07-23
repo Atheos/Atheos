@@ -174,7 +174,7 @@
 
 			loading = `<div class="loader"><h2>${wrapText}</h2><span class="dual-ring"></span></div>`;
 
-			var screen = oX('#dialog');
+			var screen = oX('#content');
 			screen.css('height', screen.height() + 'px');
 			screen.html(loading);
 		},
