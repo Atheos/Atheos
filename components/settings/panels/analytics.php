@@ -1,6 +1,8 @@
 <?php
 
 $data = Common::getKeyStore("analytics")->select("*");
+$enabled = $data["enabled"] === true ? " checked" : "";
+$disabled = $data["enabled"] ? "" : " checked";
 
 
 ?>
@@ -12,9 +14,9 @@ $data = Common::getKeyStore("analytics")->select("*");
 		</td>
 		<td colspan="2">
 			<toggle>
-				<input id="analytics_enabled_true" data-setting="analytics.enabled" value="true" name="analytics.enabled" type="radio" checked />
+				<input id="analytics_enabled_true" data-setting="analytics.enabled" value="true" name="analytics.enabled" type="radio" <?php echo $enabled ?> />
 				<label for="analytics_enabled_true"><?php echo i18n("enabled"); ?></label>
-				<input id="analytics_disabled_false" data-setting="analytics.enabled" value="false" name="analytics.enabled" type="radio" />
+				<input id="analytics_disabled_false" data-setting="analytics.enabled" value="false" name="analytics.enabled" type="radio" <?php echo $disabled ?> />
 				<label for="analytics_disabled_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
