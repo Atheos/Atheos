@@ -18,7 +18,12 @@ trait Commit {
 			}
 		}
 
-		$result = $this->execute("git commit -m\"" . $message . "\"");
+		$confData = file_get_contents(DATA . '/' . SESSION('user') . '/codegit.db.json');
+		$confData = json_decode($confData, TRUE)[0];
+
+		$result = $this->execute("git commit --author=\"{$confData['name']} <{$confData['email']}>\""
+				. " -m\"" . $message . "\"");
+		
 		if ($result) {
 			Common::send("success", i18n("git_commit_success"));
 		} else {
