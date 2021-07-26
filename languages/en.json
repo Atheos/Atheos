@@ -290,6 +290,11 @@
 	},
 	"userList": "User List",
 
+	"folder": {
+		"": "Folder",
+		"invalid": "Invalid Folder"
+	},
+
 	"directory": {
 		"": "Directory",
 		"invalid": "Invalid Directory"
@@ -453,6 +458,16 @@
 
 	"fileManager": "File Manager",
 	"gitRepository": "Git Repository",
+
+	"macro": {
+		"": "Macro Editor",
+		"add": "Add New Macro",
+		"title":"Title",
+		"icon":"FA Icon",
+		"applies":"Applies To",
+		"exts":"File Types",
+		"cmd":"Shell Command"
+	},
 
 	"codegit": {
 		"": "CodeGit",

@@ -89,7 +89,7 @@ class KeyStore extends Store {
 
 	/* Select all entries into the given group. */
 	public function update($key = null, $value = null, $insert = false) {
-		if (empty($key) || (!is_array($key) && empty($value))) return "missing_parameter";
+		if (empty($key) || (!is_array($key) && is_null($value))) return "missing_parameter";
 
 		if (is_array($key)) {
 			foreach ($key as $k => $v) {

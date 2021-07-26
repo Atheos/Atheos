@@ -38,6 +38,7 @@ class Analytics {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$data = $this->db->select("*");
+		debug($data);
 
 		if (empty($data)) {
 			$data = $this->create();
@@ -73,8 +74,8 @@ class Analytics {
 	public function update($data = array()) {
 		global $plugins;
 
-		if (!in_array("uuid", $data)) $data["uuid"] = uniqid();
-		if (!in_array("enabled", $data)) $data["enabled"] = "UNKNOWN";
+		if (!isset($data["uuid"])) $data["uuid"] = uniqid();
+		if (!isset($data["enabled"])) $data["enabled"] = "UNKNOWN";
 
 		$data["last_heard"] = date("Y/m/d");
 		$data["php_version"] = phpversion();

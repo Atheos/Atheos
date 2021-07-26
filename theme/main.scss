@@ -33,7 +33,9 @@
 
 // @import "modules/graphics/icons";
 
-@import "modules/textmode", "modules/market";
+@import "modules/textmode";
+@import "modules/macro";
+@import "modules/market";
 @import "modules/graphics/icons", "modules/graphics/loader", "modules/graphics/logo";
 @import "modules/misc/projects";
 @import "modules/misc/contextmenu", "modules/misc/scout", "modules/misc/uploader";

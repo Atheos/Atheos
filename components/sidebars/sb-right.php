@@ -51,7 +51,7 @@ foreach ($plugins as $plugin) {
 				}
 			} elseif ($data['title'] != 'pluginbar' && $data['onclick'] == '') {
 				if (!$data['admin'] || $access) {
-					echo("<label class=\"category\">" . i18n($data["title"], "return") . "</label>");
+					echo("<label class=\"category\">" . i18n($data["title"]) . "</label>");
 				}
 			} elseif ($data['title'] === 'pluginbar') {
 				if (!$data['admin'] || $access) {
@@ -59,7 +59,7 @@ foreach ($plugins as $plugin) {
 				}
 			} else {
 				if (!$data['admin'] || $access) {
-					echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title'], "return").'</a>');
+					echo('<a onclick="'.$data['onclick'].'"><i class="'.$data['icon'].'"></i>'.i18n($data['title']).'</a>');
 				}
 			}
 		} ?>

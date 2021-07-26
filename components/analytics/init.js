@@ -56,6 +56,7 @@
 					enabled: value
 				},
 				settled: function(status, reply) {
+					// storage('analytics.enabled', value);
 					toast(status, reply);
 				}
 			});

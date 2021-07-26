@@ -9,6 +9,11 @@
 (function() {
 	'use strict';
 
+	const randChar = (a) => (a ^ Math.random() * 16 >> a / 4).toString(16);
+	window.genID = function(p) {
+		let a = ([1e3] + -4e3 + -1e5).replace(/[018]/g, randChar);
+		return p ? p + '-' + a : a;
+	};
 
 	//////////////////////////////////////////////////////////////////////
 	// Path helper functions
