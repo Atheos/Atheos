@@ -156,7 +156,7 @@
 			};
 
 			for (var i = 0; i < modes.length; i++) {
-				var field = modes[i].el;
+				var field = modes[i].element;
 
 				if (field.name !== 'extension' && field.name !== 'textmode') {
 					continue;

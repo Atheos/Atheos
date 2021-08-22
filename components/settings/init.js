@@ -35,8 +35,8 @@
 
 			fX('#dialog .settings').on('change', function(e) {
 				var target = oX(e.target);
-				var tagName = target.el.tagName;
-				var type = target.el.type;
+				var tagName = target.tagName;
+				var type = target.type;
 
 				var key = target.attr('data-setting'),
 					value;
@@ -65,7 +65,7 @@
 
 			fX('#dialog .settings menu').on('click', function(e) {
 				var target = oX(e.target);
-				var tagName = target.el.tagName;
+				var tagName = target.tagName;
 				if (tagName === 'A') {
 					self.showTab(target);
 				}
@@ -203,7 +203,7 @@
 					return;
 				}
 
-				if (child.el.type === 'radio' || child.el.type === 'checkbox') {
+				if (child.type === 'radio' || child.type === 'checkbox') {
 					if (child.value() === value.toString()) {
 						child.prop('checked', true);
 					}

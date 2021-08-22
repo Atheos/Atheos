@@ -83,10 +83,10 @@
 				if (wrapper) {
 					if (e.type === 'h-resize-root') {
 						wrapper.css('width', editor.width());
-						wrapper.trigger('h-resize');
+						fX('#EDITOR .editor-wrapper').trigger('h-resize');
 					} else {
 						wrapper.css('height', editor.height());
-						wrapper.trigger('v-resize');
+						fX('#EDITOR .editor-wrapper').trigger('v-resize');
 					}
 				}
 
@@ -149,14 +149,14 @@
 				oX('#root-editor-wrapper').append(editor);
 			} else {
 
-				var firstChild = self.activeInstance.el;
+				var firstChild = self.activeInstance.element;
 
 				childID = (where === 'top' || where === 'left') ? 0 : 1;
 				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 				var children = [];
 
-				children[childID] = editor.el;
-				children[1 - childID] = firstChild.el;
+				children[childID] = editor.element;
+				children[1 - childID] = firstChild.element;
 
 				var parent = oX('<div class="editor-wrapper">');
 				parent.css('height', firstChild.height());
@@ -165,7 +165,7 @@
 				parent.addClass('editor-wrapper-' + type);
 				firstChild.parent().append(parent);
 
-				splitContainer = new SplitContainer(parent.el, children, type);
+				splitContainer = new SplitContainer(parent.element, children, type);
 
 				if (self.instances.length > 1) {
 					var pContainer = self.activeInstance.splitContainer;
@@ -174,7 +174,7 @@
 				}
 			}
 
-			var instance = ace.edit(editor.el);
+			var instance = ace.edit(editor.element);
 			var resizeEditor = () => instance.resize();
 
 			if (splitContainer) {
@@ -196,7 +196,7 @@
 				}
 			}
 
-			instance.el = editor;
+			instance.element = editor;
 			self.setSession(session, instance);
 
 			// self.changeListener(instance);

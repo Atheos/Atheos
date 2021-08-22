@@ -57,7 +57,7 @@
 
 				// Get Language
 				element = oX('#language');
-				if (element && element.findAll('option').length > 1) {
+				if (element.exists() && element.findAll('option').length > 1) {
 					element.findAll('option').forEach(function(option) {
 						if (option.value() === language) {
 							option.attr('selected', 'selected');
@@ -102,7 +102,7 @@
 			//////////////////////////////////////////////////////////////////80
 			fX('#aclSelect').on('change', function(e) {
 				let aclSelect = oX(e.target),
-					projectSelect = oX('#projectSelect').el,
+					projectSelect = oX('#projectSelect').element,
 					direction = aclSelect.value() === 'full' ? 'close' : 'open';
 				atheos.flow.slide(direction, projectSelect, 300);
 			});

@@ -192,6 +192,7 @@ class Project {
 			Common::send("success", array(
 				"name" => $projectName,
 				"path" => $projectPath,
+				"repo" => is_dir($projectPath . "/.git"),
 				"text" => $projectName . " Loaded."
 			));
 		} else {

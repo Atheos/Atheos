@@ -40,7 +40,7 @@ class Transfer {
 
 		$filename = $pathInfo["basename"];
 
-		if ($type === "directory" || $type === "root") {
+		if ($type === "folder" || $type === "root") {
 			$filename .= "-" . date("Y.m.d");
 			$targetPath = WORKSPACE . "/";
 

@@ -26,7 +26,7 @@
 		create: function() {
 			var element = oX('<div>');
 			element.attr('id', 'alert_' + self.active.length);
-			document.body.appendChild(element.el);
+			document.body.appendChild(element.element);
 			element.addClass('alert');
 			self.active.push(element);
 			return element;

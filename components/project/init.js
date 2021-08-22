@@ -89,11 +89,9 @@
 					target: 'project',
 					action: 'load'
 				},
-				success: function(reply) {
+				settled: function(status, reply) {
 					atheos.toast.show(reply);
-					if (reply.status === 'error') {
-						return;
-					}
+					if (status === 'error') return;
 					var logSpan = oX('#last_login');
 					if (reply.lastLogin && logSpan) {
 						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
@@ -119,11 +117,10 @@
 					projectName,
 					projectPath
 				},
-				success: function(reply) {
+				settled: function(status, reply) {
 					atheos.toast.show(reply);
-					if (reply.status === 'error') {
-						return;
-					}
+					if (status === 'error') return;
+
 
 					self.setRoot(reply.name, reply.path, reply.repo);
 
@@ -144,6 +141,7 @@
 		// Set project root in file manager
 		//////////////////////////////////////////////////////////////////		
 		setRoot: function(name, path, repo) {
+			log(name, path, repo);
 			self.current = {
 				name,
 				path
@@ -286,7 +284,7 @@
 					fX('#show_git_options').on('click', function(e) {
 						e.preventDefault();
 						oX(e.target).hide();
-						atheos.flow.slide('open', oX('#git_options').el);
+						atheos.flow.slide('open', oX('#git_options').element);
 					});
 				}
 			});

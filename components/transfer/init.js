@@ -58,7 +58,7 @@
 			e.stopPropagation();
 			log('test');
 
-			var input = oX('#dialog input[type="file"]').el,
+			var input = oX('#dialog input[type="file"]').element,
 				fileCount = input.files.length,
 				uploadName;
 
@@ -171,7 +171,7 @@
 
 					if (percent === 100) {
 						setTimeout(function() {
-							atheos.flow.slide('remove', node.el, 500);
+							atheos.flow.slide('remove', node.element, 500);
 						}, 3000);
 					}
 

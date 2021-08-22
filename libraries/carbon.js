@@ -80,7 +80,7 @@
 			}
 		}
 	};
-	
+
 	carbon.publish = carbon.pub;
 	carbon.subscribe = carbon.sub;
 	carbon.unsubscribe = carbon.del;

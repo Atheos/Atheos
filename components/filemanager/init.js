@@ -94,7 +94,7 @@
 			});
 
 			fX('#file-manager').on('mousedown', self.handleDrag);
-
+			fX('#file-manager').on('dragstart', blackhole);
 		},
 
 		handleDrag: function(e) {
@@ -106,7 +106,7 @@
 			var target = e.target;
 			var origin, sibling;
 
-			var dragZone = oX('#file-manager').el;
+			var dragZone = oX('#file-manager').element;
 			var clone, startEX, startEY, startMX, startMY, timeout;
 
 			var xMax, yMax;
@@ -218,7 +218,7 @@
 				parPath = dest.attr('data-path'),
 				newPath = parPath + '/' + pathinfo(oldPath).basename;
 
-			if (oX('#file-manager a[data-path="' + newPath + '"]')) {
+			if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
 				toast('warning', 'Path already exists.');
 			} else {
 				echo({
@@ -249,7 +249,7 @@
 			rescan = rescan || false;
 
 			var node = oX('#file-manager a[data-path="' + CSS.escape(path) + '"]');
-			if (!node) return;
+			if (!node.exists()) return;
 			let icon = node.find('.expand');
 
 			if (node.hasClass('open') && !rescan) {
@@ -257,7 +257,7 @@
 
 				var list = node.siblings('ul')[0];
 				if (list) {
-					atheos.flow.slide('close', list.el, slideDuration);
+					atheos.flow.slide('close', list.element, slideDuration);
 					if (icon) {
 						icon.replaceClass('fa-minus', 'fa-plus');
 					}
@@ -267,7 +267,7 @@
 				}
 
 			} else {
-				if (icon) {
+				if (icon.exists()) {
 					icon.addClass('loading');
 				}
 				echo({
@@ -282,7 +282,7 @@
 
 							var files = reply.index;
 							if (files && files.length > 0) {
-								if (icon) {
+								if (icon.exists()) {
 									icon.replaceClass('fa-plus', 'fa-minus');
 								}
 								var display = ' style="display:none;"';
@@ -302,14 +302,14 @@
 
 								appendage += '</ul>';
 
-								if (rescan && node.siblings('ul')[0]) {
+								if (rescan && node.siblings('ul').length > 0) {
 									node.siblings('ul')[0].remove();
 								}
 
 								node.after(appendage);
 								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
-									atheos.flow.slide('open', list.el, slideDuration);
+									atheos.flow.slide('open', list.element, slideDuration);
 								}
 							}
 							carbon.publish('filemanager.openDir', {
@@ -524,7 +524,7 @@
 			} else if (path === self.clipboard) {
 				toast('error', 'Cannot Paste Directory Into Itself');
 
-			} else if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]')) {
+			} else if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]').exists()) {
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
@@ -652,8 +652,10 @@
 		addToFileManager: function(path, type, parent) {
 			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
 
+			log('addToFileManager');
+
 			// Already exists
-			if (oX('#file-manager a[data-path="' + path + '"]')) return;
+			if (oX('#file-manager a[data-path="' + path + '"]').exists()) return;
 
 			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
@@ -664,11 +666,11 @@
 				if (list) {
 					// UL exists, other children to play with
 					list.append(node);
-					self.sortNodes(list.el);
+					self.sortNodes(list.element);
 				} else {
 					list = oX('<ul>');
 					list.append(node);
-					parentNode.append(list.el);
+					parentNode.append(list.element);
 				}
 			} else {
 				if (parentNode.find('.expand')) {
@@ -808,7 +810,7 @@
 
 		repathChildren: function(oldPath, newPath) {
 			var node = oX('#file-manager a[data-path="' + newPath + '"]'),
-				ul = node.el.nextElementSibling;
+				ul = node.element.nextElementSibling;
 
 			if (!ul) return;
 			var children = ul.querySelectorAll('a');

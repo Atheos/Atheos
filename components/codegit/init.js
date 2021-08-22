@@ -58,7 +58,7 @@
 
 			fX('#codegit menu').on('click', function(e) {
 				var target = oX(e.target);
-				var tagName = target.el.tagName;
+				var tagName = target.tagName;
 				if (tagName === 'A') {
 					self.showPanel(target.attr('data-panel'), self.activeRepo);
 				}
@@ -450,7 +450,7 @@
 			self.repoStatus = oX('#codegit_repo_status');
 			self.fileStatus = oX('#codegit_file_status');
 
-			if (!self.repoBanner) {
+			if (!self.repoBanner.exists()) {
 				oX('#file-manager').before('<div id="codegit_repo_banner">Commit Status: <span id="codegit_repo_status"></span></div>');
 				self.repoBanner = oX('#codegit_repo_banner');
 				self.repoStatus = oX('#codegit_repo_status');
