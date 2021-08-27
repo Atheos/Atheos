@@ -43,7 +43,7 @@
 			let div = document.createElement('div');
 			div.innerHTML = html;
 			let wrapper = oX(div.firstChild);
-			document.body.appendChild(wrapper.el);
+			document.body.appendChild(wrapper.element);
 			return wrapper;
 		},
 
@@ -64,10 +64,10 @@
 			}
 
 			var overlay = atheos.common.showOverlay('modal', true),
-				dialog = oX('#dialog') || self.create(),
+				dialog = oX('#dialog').exists() || self.create(),
 				content = oX('#content');
 
-			if(content) content.html('');
+			if (content) content.html('');
 
 			dialog.css({
 				'top': '15%',
@@ -110,8 +110,8 @@
 			});
 
 			if (!self.modalVisible) {
-				atheos.flow.fade('in', dialog.el, self.fadeDuration);
-				atheos.flow.fade('in', overlay.el, self.fadeDuration);
+				atheos.flow.fade('in', dialog.element, self.fadeDuration);
+				atheos.flow.fade('in', overlay.element, self.fadeDuration);
 			}
 			self.modalVisible = true;
 		},
@@ -138,14 +138,14 @@
 				content = oX('#content');
 
 			fX('#dialog form').off('*');
-			if (overlay) {
-				atheos.flow.fade('remove', overlay.el, self.fadeDuration);
+			if (overlay.exists()) {
+				atheos.flow.fade('remove', overlay.element, self.fadeDuration);
 			}
-			if (wrapper) {
-				atheos.flow.fade('out', wrapper.el, self.fadeDuration);
+			if (wrapper.exists()) {
+				atheos.flow.fade('out', wrapper.element, self.fadeDuration);
 			}
 
-			if (content) {
+			if (content.exists()) {
 				content.off('*');
 				setTimeout(content.empty, (self.fadeDuration + 100));
 			}
@@ -189,16 +189,29 @@
 
 			drag.addClass('active');
 
-			var rect = wrapper.offset(),
+			let rect = wrapper.offset(),
 				mouseX = window.event.clientX,
 				mouseY = window.event.clientY,
 				// Stores x & y coordinates of the mouse pointer
 				modalX = rect.left,
 				modalY = rect.top; // Stores top, left values (edge) of the element
 
+			let newX = 0,
+				newY = 0,
+				minY = 1,
+				minX = 1,
+				maxY = document.body.clientHeight - wrapper.height(),
+				maxX = document.body.clientWidth - wrapper.width();
+
+			// log(minY, minX);
+			// log(maxY, maxX);
+			// log(document.body.clientHeight, document.body.clientWidth);
+
 			function moveElement(event) {
-				element.style.left = modalX + event.clientX - mouseX + 'px';
-				element.style.top = modalY + event.clientY - mouseY + 'px';
+				newX = modalX + event.clientX - mouseX;
+				newY = modalY + event.clientY - mouseY;
+				element.style.left = (newX > maxX ? maxX : (newX < minX ? minX : newX)) + 'px';
+				element.style.top = (newY > maxY ? maxY : (newY < minY ? minY : newY)) + 'px';
 			}
 
 			function disableSelect(e) {

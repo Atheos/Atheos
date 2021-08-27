@@ -153,7 +153,7 @@
 			fX('#SBLEFT .lock').on('click', () => this.lock());
 
 			fX(this.handle).on('mousedown', () => {
-				self.resize(this.element.el, 'left');
+				self.resize(this.element.element, 'left');
 			});
 
 			fX(this.handle).on('click', () => {
@@ -176,7 +176,7 @@
 				// mouse did not leave the parent element.
 				// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
 
-				var trigger = this.element.el,
+				var trigger = this.element.element,
 					destination = event.toElement || event.relatedTarget,
 					mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
 
@@ -195,7 +195,7 @@
 				setTimeout(() => {
 					this.isOpen = true;
 					atheos.active.updateTabDropdownVisibility();
-					editor.trigger('h-resize-root');
+					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 
 			}, hoverDuration);
@@ -212,7 +212,7 @@
 				setTimeout(() => {
 					this.isOpen = false;
 					atheos.active.updateTabDropdownVisibility();
-					editor.trigger('h-resize-root');
+					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 			}, hoverDuration);
 		},
@@ -252,7 +252,7 @@
 			fX('#SBRIGHT .lock').on('click', () => this.lock());
 
 			fX(this.handle).on('mousedown', () => {
-				self.resize(this.element.el, 'right');
+				self.resize(this.element.element, 'right');
 			});
 
 			fX(this.handle).on('mousedown', () => {
@@ -274,7 +274,7 @@
 				// elment the mouse moved to is the target element, or a child of; if it is, then the 
 				// mouse did not leave the parent element.
 				// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
-				var trigger = this.element.el,
+				var trigger = this.element.element,
 					destination = event.toElement || event.relatedTarget,
 					mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
 
@@ -293,7 +293,7 @@
 				setTimeout(() => {
 					this.isOpen = true;
 					atheos.active.updateTabDropdownVisibility();
-					editor.trigger('h-resize-root');
+					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 
 			}, hoverDuration);
@@ -309,7 +309,7 @@
 				setTimeout(() => {
 					this.isOpen = false;
 					atheos.active.updateTabDropdownVisibility();
-					editor.trigger('h-resize-root');
+					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 			}, hoverDuration);
 

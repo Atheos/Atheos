@@ -48,7 +48,7 @@
 						// was an inspirational moment and seemed really cool.
 						button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
 					}
-					atheos.flow.slide('close', menu.el);
+					atheos.flow.slide('close', menu.element);
 					window.removeEventListener('click', menu.close);
 					menuOpen = false;
 				}
@@ -71,7 +71,7 @@
 				if (menuOpen) {
 					menu.close();
 				} else {
-					atheos.flow.slide('open', menu.el);
+					atheos.flow.slide('open', menu.element);
 					menuOpen = true;
 					window.addEventListener('click', menu.close);
 				}

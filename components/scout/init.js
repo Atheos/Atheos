@@ -113,7 +113,7 @@
 						table.append(node);
 					}
 					results = table.html();
-					atheos.flow.slide('open', table.el);
+					atheos.flow.slide('open', table.element);
 
 					self.saveSearchResults(query, extensions, results);
 					atheos.modal.resize();
@@ -140,7 +140,7 @@
 						// oX('#dialog input[name="probe_type"]').checked(lastSearched.type);
 						if (lastSearched.results !== '') {
 							table.html(lastSearched.results);
-							atheos.flow.slide('open', table.el);
+							atheos.flow.slide('open', table.element);
 							atheos.modal.resize();
 						}
 					}

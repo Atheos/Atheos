@@ -65,14 +65,14 @@
 					if (status !== 'success') return;
 
 					var inFocus = reply.inFocus,
-					key, item;
-					
+						key, item;
+
 					delete reply.inFocus;
-					
+
 					for (key in reply) {
 						item = reply[key];
 
-						if(!inFocus) item.status = inFocus = 'inFocus';
+						if (!inFocus) item.status = inFocus = 'inFocus';
 
 						atheos.filemanager.openFile(item.path, item.status === 'inFocus');
 					}
@@ -158,15 +158,18 @@
 				}
 			};
 
-			self.tabList.on('click, auxclick', function(e) {
+			fX('#tab-list-active-files').on('click, auxclick', function(e) {
 				activeListener(e);
 			});
 
-			self.dropDownMenu.on('click, auxclick', function(e) {
+			fX('#dropdown-list-active-files').on('click, auxclick', function(e) {
 				activeListener(e);
 			});
 
 			self.tabList.on('mousedown', self.handleDrag);
+
+			self.tabList.on('dragstart', blackhole);
+
 		},
 
 		handleDrag: function(e) {
@@ -178,7 +181,7 @@
 			var target = e.target;
 			var origin, sibling;
 
-			var dragZone = self.tabList.el;
+			var dragZone = self.tabList.element;
 			var clone, startEX, startEY, startMX, startMY, timeout;
 
 			var xMax, yMax;
@@ -413,7 +416,7 @@
 			var session = self.sessions[path];
 			var dropDown = self.dropDownMenu.find('[data-path="' + path + '"]');
 
-			if (dropDown) {
+			if (dropDown.exists()) {
 				var listItem = session.listItem;
 				self.moveTab(self.tabList, listItem, direction);
 
@@ -829,7 +832,7 @@
 
 			while (self.isTabListOverflowed()) {
 				listItem = self.tabList.find('li:last-child');
-				if (listItem) {
+				if (listItem.exists()) {
 					self.moveTab(self.dropDownMenu, listItem);
 				} else {
 					break;
@@ -838,7 +841,7 @@
 
 			while (!self.isTabListOverflowed(true)) {
 				listItem = self.dropDownMenu.find('li:last-child');
-				if (listItem) {
+				if (listItem.exists()) {
 					self.moveTab(self.tabList, listItem);
 				} else {
 					break;
@@ -872,7 +875,6 @@
 				'</a><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
-
 			return item;
 		}
 

@@ -39,7 +39,7 @@
 			carbon.publish('system.loadVital');
 
 			// User is logged in
-			if (!(oX('#login') || oX('#installer'))) {
+			if (!(oX('#login').exists() || oX('#installer').exists())) {
 				carbon.publish('system.loadMajor');
 				carbon.publish('system.loadMinor');
 				carbon.publish('system.loadExtra');
@@ -47,8 +47,8 @@
 				atheos.settings.init();
 
 			} else {
-				synthetic.init();
-				if (oX('#installer')) {
+				Synthetic.init();
+				if (oX('#installer').exists()) {
 					// Atheos hasn't been installed yet
 					atheos.install.init();
 				} else {

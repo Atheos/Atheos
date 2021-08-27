@@ -38,7 +38,6 @@ class Analytics {
 	//////////////////////////////////////////////////////////////////////////80
 	public function init() {
 		$data = $this->db->select("*");
-		debug($data);
 
 		if (empty($data)) {
 			$data = $this->create();
