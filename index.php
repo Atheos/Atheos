@@ -40,16 +40,16 @@ $SourceManager = new SourceManager;
 	echo("\t<link rel=\"stylesheet\" href=\"theme/main.min.css\">\n");
 
 	// LOAD FONTS
-	$SourceManager->echo("css", "fonts", DEVELOPMENT);
+	$SourceManager->linkResource("css", "fonts", DEVELOPMENT);
 
 	// LOAD LIBRARIES
-	$SourceManager->echo("js", "libraries", DEVELOPMENT);
+	$SourceManager->linkResource("js", "libraries", DEVELOPMENT);
 
 	// LOAD MODULES
-	$SourceManager->echo("js", "modules", DEVELOPMENT);
+	$SourceManager->linkResource("js", "modules", DEVELOPMENT);
 
 	// LOAD PLUGINS
-	$SourceManager->echo("css", "plugins", DEVELOPMENT);
+	$SourceManager->linkResource("css", "plugins", DEVELOPMENT);
 
 	?>
 </head>
@@ -110,10 +110,10 @@ $SourceManager = new SourceManager;
 		<?php
 		// LOAD COMPONENTS
 		echo("\n");
-		$SourceManager->echo("js", "components", DEVELOPMENT);
+		$SourceManager->linkResource("js", "components", DEVELOPMENT);
 
 		// LOAD PLUGINS
-		$SourceManager->echo("js", "plugins", DEVELOPMENT);
+		$SourceManager->linkResource("js", "plugins", DEVELOPMENT);
 
 	} else {
 		$path = __DIR__ . "/data/";
