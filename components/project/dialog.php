@@ -17,7 +17,7 @@ $name = POST("name");
 
 $Project = new Project();
 
-$projects = $Project->list();
+$projects = $Project->listProjects();
 
 
 switch ($action) {

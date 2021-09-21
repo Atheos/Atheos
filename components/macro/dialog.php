@@ -14,7 +14,7 @@ require_once('class.macro.php');
 
 $activeUser = SESSION("user");
 $macro = new Macro($activeUser);
-$macrolist = $macro->list();
+$macrolist = $macro->listMacros();
 
 $tbody = "";
 
