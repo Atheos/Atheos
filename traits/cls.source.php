@@ -62,7 +62,7 @@ class SourceManager {
 		}
 	}
 
-	function echo($type = "css", $dataset = [], $raw = false) {
+	function linkResource($type = "css", $dataset = [], $raw = false) {
 
 		$files = array();
 

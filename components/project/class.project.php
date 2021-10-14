@@ -114,7 +114,7 @@ class Project {
 		Common::send("success", "Project deleted.");
 	}
 
-	public function list() {
+	public function listProjects() {
 		$projects = $this->db->select("*");
 		$userACL = $this->userData["userACL"];
 		asort($projects);
