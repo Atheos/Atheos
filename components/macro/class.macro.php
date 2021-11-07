@@ -136,8 +136,14 @@ class Macro {
 		$command = str_replace("%FOLDER%", dirname($path), $command);
 		$command = str_replace("%BASENAME%", basename($path), $command);
 
-		Common::execute($command);
-		Common::send("success", "Macro executed.");
+		$result = Common::execute($command);
+		debug($result);
+		if ($result) {
+			// Common::send("success", ["text" => implode("\n", $result)]);
+			Common::send("success", $result);
+		} else {
+			Common::send("error", $result);
+		}
 	}
 
 }
