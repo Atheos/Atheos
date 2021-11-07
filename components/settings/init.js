@@ -116,6 +116,9 @@
 				case 'editor.fontSize':
 					atheos.editor.setFontSize(value);
 					break;
+				case 'editor.ligatures':
+					atheos.editor.setCodeLigatures(boolean);
+					break;
 				case 'editor.highlightActiveLine':
 					atheos.editor.setHighlightActiveLine(value);
 					break;
@@ -128,6 +131,7 @@
 				case 'editor.displayIndentGuides':
 					atheos.editor.setDisplayIndentGuides(value);
 					break;
+
 				case 'editor.showFoldWidgets':
 					atheos.editor.setShowFoldWidgets(value);
 					break;

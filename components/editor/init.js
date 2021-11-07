@@ -44,6 +44,7 @@
 		settings: {
 			theme: 'atheos',
 			fontSize: '13px',
+			fontFamily: 'Ubuntu-Fira',
 			highlightActiveLine: true,
 			showPrintMargin: false,
 			printMarginColumn: 80,
@@ -103,7 +104,7 @@
 		applySettings: function(instance) {
 			// Apply the basic configuration settings
 			instance.setOptions({
-				fontFamily: 'Ubuntu-Fira',
+				fontFamily: self.settings.fontFamily,
 				enableBasicAutocompletion: true,
 				enableSnippets: true,
 				enableLiveAutocompletion: true
@@ -368,6 +369,23 @@
 			});
 			self.settings.fontSize = val;
 			eStorage('fontSize', val);
+		},
+
+		/////////////////////////////////////////////////////////////////
+		// Set Font Size
+		/////////////////////////////////////////////////////////////////
+		setCodeLigatures: function(val, int) {
+			log(val);
+			val = val ? 'Ubuntu-Fira' : 'Ubuntu-Mono';
+
+			if (int) return int.setOption('fontFamily', val);
+
+
+			self.forEachInstance(function(int) {
+				int.setOption('fontFamily', val);
+			});
+			self.settings.fontFamily = val;
+			eStorage('fontFamily', val);
 		},
 
 		/////////////////////////////////////////////////////////////////

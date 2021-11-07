@@ -146,6 +146,9 @@ class i18n {
 	// Translate
 	//////////////////////////////////////////////////////////////////////////80
 	public function translate($string, $args = NULL) {
+		if(!empty($args) && !is_array($args)) {
+			$args = array($args);
+		}
 		if (array_key_exists($string, $this->cache)) {
 			$result = $this->cache[$string];
 		} else {
