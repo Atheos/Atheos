@@ -54,6 +54,7 @@
 
 	},
 
+	"cut": "Cut",
 	"copy": "Copy",
 	"paste": "Paste",
 	"duplicate": {
@@ -277,12 +278,15 @@
 	"language": "Language",
 	"collapse": "Collapse",
 
+	"enableLigatures": "Enable Code Ligatures",
 	"highlightActiveLine": "Highlight Active Line",
 	"fontSize": "Font Size",
 	"pixel": {
 		"": "%spx",
 		"default": "%spx (default)"
 	},
+	
+	"foldWidgets": "Show Fold Widgets",
 
 	"tabs": {
 		"soft": "Soft Tabs",
