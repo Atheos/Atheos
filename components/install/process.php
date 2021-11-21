@@ -72,6 +72,7 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	$userData = array();
 	$userData[$username] = array(
 		"password" => $password,
+		"resetPassword" => false,
 		"activeProject" => $projectPath,
 		"creationDate" => date("Y-m-d H:i:s"),
 		"lastLogin" => false,
