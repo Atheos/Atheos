@@ -11,9 +11,10 @@ trait Execute {
 		$cmd = str_replace("\)", ")", $cmd);
 
 		$result = Common::execute($cmd . ' 2>&1');
+		$code = $result["code"];
 		
-		if ($result !== false) {
-			return explode("\n", $result);
+		if ($code === 0) {
+			return explode("\n", $result["text"]);
 		} else {
 			return false;
 		}
