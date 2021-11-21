@@ -21,34 +21,47 @@ switch ($action) {
 
 		<div class="settings">
 			<menu>
-				<li>
-					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
-				</li>
-				<li>
-					<a data-panel="system"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
-				</li>
+
+				<?php if (Common::checkAccess("configure")) {
+					?>
+					<li>
+						<a data-panel="analytics"><i class="fas fa-chart-bar"></i><?php echo i18n("analytics"); ?></a>
+					</li>
+					<?php
+				} ?>
+
 				<li>
 					<a data-panel="codegit"><i class="fas fa-code-branch"></i><?php echo i18n("codegit"); ?></a>
 				</li>
+				
 				<li>
 					<a data-panel="draft"><i class="fas fa-save"></i><?php echo i18n("draft"); ?></a>
 				</li>
+				
+				<li>
+					<a data-panel="editor" class="active"><i class="fas fa-home"></i><?php echo i18n("editor"); ?></a>
+				</li>
+				
+				<li>
+					<a data-panel="feedback"><i class="fas fa-comments"></i><?php echo i18n("feedback"); ?></a>
+				</li>
+				
 				<li>
 					<a data-panel="keybindings"><i class="fas fa-keyboard"></i><?php echo i18n("keybindings"); ?></a>
 				</li>
+				
+				<li>
+					<a data-panel="system"><i class="fas fa-sliders-h"></i><?php echo i18n("system"); ?></a>
+				</li>
 
-				<?php
-				if (Common::checkAccess("configure")) {
+
+				<?php if (Common::checkAccess("configure")) {
 					?>
 					<li>
 						<a data-panel="textmode"><i class="fas fa-pencil-alt"></i><?php echo i18n("textmodes"); ?></a>
 					</li>
-					<li>
-						<a data-panel="analytics"><i class="fas fa-chart-bar"></i><?php echo i18n("analytics"); ?></a>
-					</li>					
 					<?php
-				}
-				?>
+				} ?>
 
 				<hr>
 				<?php

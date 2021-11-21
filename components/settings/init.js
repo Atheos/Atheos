@@ -102,7 +102,7 @@
 			var boolean = (value === 'true');
 
 			if (value === null) {
-				return toast('alert', 'You Must Choose A Value');
+				return toast('alert', 'You must choose a value');
 			}
 
 			switch (setting) {
@@ -163,7 +163,25 @@
 				case 'sidebars.rightTrigger':
 					atheos.sidebars.sbRight.trigger = value;
 					break;
+				case 'toast.location':
+					atheos.toast.setLocation(value);
+					break;
+				case 'output.location':
+					atheos.output.setLocation(value);
+					break;
 			}
+
+			value = isNumber(value) ? parseInt(value, 10) : value;
+			if (setting.includes('toast.stay')) {
+				let key = setting.split('.').pop();
+				atheos.toast.stayTimes[key] = value;
+			}
+
+			if (setting.includes('output.stay')) {
+				let key = setting.split('.').pop();
+				atheos.output.stayTimes[key] = value;
+			}
+
 		},
 
 		//////////////////////////////////////////////////////////////////////80

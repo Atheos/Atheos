@@ -35,6 +35,8 @@
 
 		container: null,
 
+		location: 'bottom right',
+
 		stayTimes: {
 			success: 3000,
 			error: 10000,
@@ -45,10 +47,29 @@
 		init: function() {
 			self.container = oX('toaster');
 
+
+			carbon.subscribe('settings.loaded', function() {
+				let local = storage('toast.location');
+				self.location = local !== null ? local : self.location;
+				self.container.addClass(self.location);
+
+				for (let key in self.stayTimes) {
+					local = storage('toast.stay.' + key);
+					self.stayTimes[key] = local !== null ? local : self.stayTimes[key];
+				}
+			});
+
+
 			fX('toast').on('click', (e) => {
 				let toast = e.target.closest('toast');
 				self.hide(toast);
 			});
+		},
+		
+		setLocation: function(value) {
+			self.container.removeClass(self.location);
+			self.location = value;
+			self.container.addClass(self.location);
 		},
 
 		create: function(type, text) {
@@ -64,11 +85,16 @@
 			// declare variables
 			var toast = self.create(type, text);
 
-			self.container.append(toast);
+			if (self.location.includes('bottom')) {
+				self.container.append(toast);
+			} else {
+				self.container.prepend(toast);
+			}
+
 
 			setTimeout(function() {
 				toast.classList.add('active');
-				setTimeout(() => self.hide(toast), stayTime);
+				if (stayTime) setTimeout(() => self.hide(toast), stayTime);
 			}, 10);
 		},
 
