@@ -61,7 +61,7 @@ switch ($action) {
 			</tbody>
 		</table>
 		<button onclick="atheos.macro.addRow();return false;"><?php echo i18n("macro_add"); ?></button>
-		<toolbar>Placeholders are: %PATH%, %FOLDER%, %BASENAME%</toolbar>
+		<toolbar>Placeholders are: %PATH%, %FOLDER%, %BASENAME%, %FILENAME%</toolbar>
 		<?php
 		break;
 

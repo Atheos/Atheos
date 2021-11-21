@@ -1,0 +1,43 @@
+output {
+	min-width: 480px;
+	max-width: 720px;
+	z-index: 99999;
+	position: fixed;
+	text-align: left !important;
+
+	result {
+		background: $background;
+		font-size: 0.9rem;
+		border: $borderLight;
+		display: block;
+		margin: 5px;
+		transition: opacity ease-in-out 300ms;
+		opacity: 0;
+		cursor: pointer;
+
+		&.active {
+			opacity: 1;
+		}
+
+		pre {
+			margin: 0;
+			border-left: 5px solid;
+
+			&.success {
+				border-color: $green;
+			}
+
+			&.notice {
+				border-color: $cyan;
+			}
+
+			&.warning {
+				border-color: $orange;
+			}
+
+			&.error {
+				border-color: $red;
+			}
+		}
+	}
+}

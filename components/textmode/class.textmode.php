@@ -33,6 +33,7 @@ class TextMode {
 		'phtml' => 'php',
 		'twig' => 'twig',
 		'hbs' => 'handlebars',
+		'htaccess' => 'io',
 		'handlebars' => 'handlebars',
 		'json' => 'json',
 		'java' => 'java',

@@ -122,7 +122,7 @@
 				},
 				settled: function(status, reply) {
 					log(status, reply);
-					toast(status, reply);
+					output(status, reply);
 					if (status !== 'success') return;
 				}
 			});

@@ -10,6 +10,12 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
+// error_reporting(E_ALL); // Error/Exception engine, always use E_ALL
+// ini_set('ignore_repeated_errors', TRUE); // always use TRUE
+// ini_set('display_errors', true); // Error/Exception display, use FALSE only in production environment or real server. Use TRUE in development environment
+// ini_set("log_errors", true);
+// ini_set("error_log", "php-error.log");
+
 require_once("traits/checks.php");
 require_once("traits/database.php");
 require_once("traits/helpers.php");
@@ -74,7 +80,7 @@ class Common {
 			date_default_timezone_set("UTC");
 		}
 
-		if(!defined("HEADERS")) define ("HEADERS", serialize(array(
+		if (!defined("HEADERS")) define ("HEADERS", serialize(array(
 			"Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
 			"X-Frame-Options: SAMEORIGIN",
 			"X-XSS-Protection: 1; mode=block",
@@ -111,7 +117,7 @@ class Common {
 	// Execute Command
 	//////////////////////////////////////////////////////////////////////////80////////80
 	public static function execute($cmd = false) {
-		$output = false;
+		$text = false;
 		$code = 0;
 
 		if (!$cmd) return false;
@@ -119,16 +125,19 @@ class Common {
 		if (function_exists("system")) {
 			ob_start();
 			system($cmd, $code);
-			$output = ob_get_contents();
+			$text = ob_get_contents();
 			ob_end_clean();
 		} elseif (function_exists("exec")) {
-			exec($cmd, $output, $code);
-			$output = implode("\n", $output);
+			exec($cmd, $text, $code);
+			$text = implode("\n", $text);
 		}
 
-		// if($code !== 0) return false;
+		// if ($code === 0 && $text === "") return "Executed successfully";
 
-		return $output;
+		return array(
+			"code" => $code,
+			"text" => $text
+		);
 	}
 }
 

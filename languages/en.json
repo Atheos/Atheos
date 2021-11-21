@@ -187,11 +187,45 @@
 		"": "Settings",
 		"autosave": "Settings are automatically saved.",
 		"editor": "Editor Settings",
+		"feedback": "Notification Settings",
 		"draft": "Draft Settings",
 		"system": "System Settings",
 		"codegit": "CodeGit Settings"
 	},
-
+	
+	"feedback": "Notifications",
+	
+	"toast": {
+		"location": "Toast Location:",
+		"stay": {
+			"success": "Toast success stay time:",
+			"notice": "Toast notice stay time:",
+			"warning": "Toast warning stay time:",
+			"error": "Toast error stay time:"
+		}
+	},
+	
+	"output": {
+		"location": "Output Location:",
+		"stay": {
+			"success": "Output success stay time:",
+			"notice": "Output notice stay time:",
+			"warning": "Output warning stay time:",
+			"error": "Output error stay time:"
+		}
+	},
+	
+	"location": {
+		"bl": "Bottom left",
+		"bc": "Bottom center",
+		"br": "Bottom right",
+		"tl": "Top left",
+		"tc": "Top center",
+		"tr": "Top right"
+	},
+	
+	"manual": "Disable autoclose",
+	
 	"draft": {
 		"": "Draft",
 		"enable": "Enable autosaving files in draft",
@@ -446,8 +480,7 @@
 			"plural": "%s Hours"
 		}
 	},
-
-
+	
 	"warning": {
 		"fileOpen": "Warning: File Currently Opened By: %s"
 	},

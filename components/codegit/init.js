@@ -408,16 +408,8 @@
 					remote,
 					branch
 				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						toast('success', i18n('git_' + type + '_success'));
-					}
-
-					var text = oX('#git_transfer_text');
-					if (text && reply.text) {
-						text.text(reply.text);
-					}
-
+				settled: function(status, reply) {
+					output(status, reply);
 				}
 			});
 		},

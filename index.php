@@ -132,6 +132,7 @@ $SourceManager = new SourceManager;
 
 	?>
 	<overlay class=""></overlay>
-	<toaster class="bottom right"></toaster>
+	<toaster></toaster>
+	<output></output>
 </body>
 </html>

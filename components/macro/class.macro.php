@@ -37,7 +37,25 @@ class Macro {
 			"command" => "cd %FOLDER% && php %BASENAME%",
 			"icon" => "fas fa-magic",
 			"owner" => "ATHEOS"
-		]
+		],
+		[
+			"uuid" => "macro-43g6-5fee-1r341",
+			"title" => "Compile",
+			"type" => "file",
+			"fTypes" => ["java"],
+			"command" => "cd %FOLDER% && javac %BASENAME%",
+			"icon" => "fas fa-magic",
+			"owner" => "ATHEOS"
+		],
+		[
+			"uuid" => "macro-asd1-gds3-sdf43",
+			"title" => "Execute",
+			"type" => "file",
+			"fTypes" => ["class"],
+			"command" => "cd %FOLDER% && java %FILENAME%",
+			"icon" => "fas fa-magic",
+			"owner" => "ATHEOS"
+		],
 	);
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -135,14 +153,21 @@ class Macro {
 		$command = str_replace("%PATH%", $path, $command);
 		$command = str_replace("%FOLDER%", dirname($path), $command);
 		$command = str_replace("%BASENAME%", basename($path), $command);
+		$command = str_replace("%FILENAME%", pathinfo($path, PATHINFO_FILENAME), $command);
 
 		$result = Common::execute($command);
-		debug($result);
-		if ($result) {
-			// Common::send("success", ["text" => implode("\n", $result)]);
-			Common::send("success", $result);
+		$text = $result["text"];
+		$code = $result["code"];
+
+		if ($text === "") {
+			$text = $code === 0 ? "Executed Successfully" : "Execution Failure, reason unknown.";
+		}
+
+		if ($code === 0) {
+			// Common::send("success", ["text" => implode("\n", $text)]);
+			Common::send("success", $text);
 		} else {
-			Common::send("error", $result);
+			Common::send("error", $text);
 		}
 	}
 

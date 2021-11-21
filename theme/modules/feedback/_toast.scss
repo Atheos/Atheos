@@ -1,7 +1,7 @@
 toaster {
 	min-width: 200px;
 	max-width: 480px;
-	z-index: 99999;
+	z-index: 99998;
 	position: fixed;
 	text-align: left !important;
 
@@ -26,12 +26,6 @@ toaster {
 			display: inline-block;
 		}
 
-		.close {
-			font-size: 14px;
-			float: right;
-			cursor: pointer;
-		}
-
 		i.success {
 			color: $green;
 		}
@@ -47,26 +41,5 @@ toaster {
 		i.error {
 			color: $red;
 		}
-	}
-
-	&.top {
-		top: 20px;
-	}
-
-	&.bottom {
-		bottom: 30px;
-	}
-
-	&.left {
-		left: 20px;
-	}
-
-	&.center {
-		left: 50%;
-		margin-left: -140px;
-	}
-
-	&.right {
-		right: 20px;
 	}
 }

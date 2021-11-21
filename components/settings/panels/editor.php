@@ -45,6 +45,17 @@
 		</td>
 	</tr>
 	<tr>
+		<td><?php echo i18n("enableLigatures"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_ligatures_true" data-setting="editor.ligatures" value="true" name="editor.ligatures" type="radio" checked />
+				<label for="editor_ligatures_true"><?php echo i18n("enabled") ?></label>
+				<input id="editor_ligatures_false" data-setting="editor.ligatures" value="false" name="editor.ligatures" type="radio" />
+				<label for="editor_ligatures_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>
+	<tr>
 		<td><?php echo i18n("highlightActiveLine"); ?></td>
 		<td>
 			<toggle>
@@ -103,7 +114,7 @@
 				<label for="editor_showFoldWidgets_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
-	</tr>	
+	</tr>
 	<tr>
 		<td><?php echo i18n("wrap"); ?></td>
 		<td>
@@ -125,7 +136,7 @@
 				<label for="editor_softTabs_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
-	</tr>	
+	</tr>
 	<tr>
 		<td><?php echo i18n("tabs_size"); ?></td>
 		<td>

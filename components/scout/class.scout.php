@@ -57,6 +57,9 @@ class Scout {
 		$cmd .= " -printf \"%h/%f %y\n\"";
 		$output = Common::execute($cmd);
 		// $output = array();
+
+		$output = $output["text"];
+
 		$output = explode("\n", $output);
 		$results = array();
 
@@ -108,6 +111,8 @@ class Scout {
 		$cmd = "find -L $searchPath -iregex $filter -type f | xargs grep -i -I -n -R -H $query";
 
 		$output = Common::execute($cmd);
+		$output = $output["text"];
+
 		$output = explode("\n", $output);
 
 		foreach ($output as $line) {
