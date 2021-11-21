@@ -87,7 +87,7 @@ class Project {
 			$gitBranch = $this->sanitizeGitBranch($gitBranch);
 			$cmd = Common::isAbsPath($projectPath) ? "cd " . escapeshellarg($projectPath) : "cd " . escapeshellarg(WORKSPACE . "/" . $projectPath);
 			$cmd .= " && git init && git remote add origin " . escapeshellarg($gitRepo) . " && git pull origin " . escapeshellarg($gitBranch);
-			Common::executeCommand($cmd);
+			Common::execute($cmd);
 		}
 
 		// Log Action
