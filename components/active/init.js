@@ -30,8 +30,8 @@
 	atheos.active = {
 
 
-		tabList: oX('#tab-list-active-files'),
-		dropDownMenu: oX('#dropdown-list-active-files'),
+		tabList: oX('#active_file_tabs'),
+		dropDownMenu: oX('#active_file_dropdown'),
 
 		// Path to EditSession instance mapping
 		sessions: {},
@@ -45,7 +45,7 @@
 			self.updateTabDropdownVisibility();
 			self.initTabListeners();
 
-			atheos.common.initMenuHandler(oX('#tab_dropdown'), self.dropDownMenu, ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
+			atheos.common.initMenuHandler('#tab_dropdown', '#active_file_dropdown', ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
 
 			fX('#tab_close').on('click', function(e) {
 				e.stopPropagation();
@@ -158,17 +158,17 @@
 				}
 			};
 
-			fX('#tab-list-active-files').on('click, auxclick', function(e) {
+			fX('#active_file_tabs').on('click, auxclick', function(e) {
 				activeListener(e);
 			});
 
-			fX('#dropdown-list-active-files').on('click, auxclick', function(e) {
+			fX('#active_file_dropdown').on('click, auxclick', function(e) {
 				activeListener(e);
 			});
 
-			self.tabList.on('mousedown', self.handleDrag);
+			fX('#active_file_tabs').on('mousedown', self.handleDrag);
 
-			self.tabList.on('dragstart', blackhole);
+			fX('#active_file_tabs').on('dragstart', blackhole);
 
 		},
 

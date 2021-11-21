@@ -41,7 +41,7 @@
 				}
 			});
 
-			atheos.common.initMenuHandler(oX('#current_mode'), oX('#changemode_menu'));
+			atheos.common.initMenuHandler('#current_mode', '#changemode_menu');
 
 		},
 

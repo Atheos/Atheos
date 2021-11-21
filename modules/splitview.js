@@ -16,7 +16,7 @@
 		splitMenuOpen: false,
 
 		init: function() {
-			atheos.common.initMenuHandler(oX('#split'), oX('#split-options-menu'));
+			atheos.common.initMenuHandler('#split', '#split_menu');
 
 			fX('#split-vertically').on('click', function(e) {
 				atheos.editor.addInstance(atheos.editor.activeInstance.getSession(), 'bottom');

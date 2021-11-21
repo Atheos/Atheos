@@ -37,8 +37,10 @@
 		//////////////////////////////////////////////////////////////////////80
 		optionMenus: [],
 
-		initMenuHandler: function(button, menu, switchClasses) {
+		initMenuHandler: function(buttonID, menuID, switchClasses) {
 			var menuOpen = false;
+			
+			let menu = oX(menuID);
 
 			menu.close = function() {
 				if (menuOpen) {
@@ -46,7 +48,7 @@
 						// I could have made a nice If statement to switch the appropriate classes
 						// on menu open vs close, however converting the boolean value to a number
 						// was an inspirational moment and seemed really cool.
-						button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+						$(buttonID).replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
 					}
 					atheos.flow.slide('close', menu.element);
 					window.removeEventListener('click', menu.close);
@@ -56,7 +58,7 @@
 
 			this.optionMenus.push(menu);
 
-			button.on('click', (e) => {
+			fX(buttonID).on('click', (e) => {
 				e.stopPropagation();
 
 				// Close other menus
@@ -66,7 +68,7 @@
 					// I could have made a nice If statement to switch the appropriate classes
 					// on menu open vs close, however converting the boolean value to a number
 					// was an inspirational moment and seemed really cool.
-					button.replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
+					$(buttonID).replaceClass(switchClasses[+menuOpen], switchClasses[+!menuOpen]);
 				}
 				if (menuOpen) {
 					menu.close();

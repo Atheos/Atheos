@@ -293,11 +293,11 @@
 	fnc.isOnyx = true;
 
 	fnc.on = function(t, fn) {
-		log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
+		console.log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
 		if (this.element) return this.element.addEventListener(t, fn);
 	};
 	fnc.off = function(t, fn) {
-		log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
+		console.log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
 		if (this.element) return this.element.addEventListener(t, fn);
 	};
 
