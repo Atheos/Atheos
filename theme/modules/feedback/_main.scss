@@ -13,7 +13,6 @@ overlay {
 		display: block;
 		opacity: 1;
 	}
-
 }
 
 #alert,
@@ -44,4 +43,28 @@ overlay {
 	}
 }
 
-@import "alert", "dialog", "toast";
+toast,
+output {
+	&.top {
+		top: 20px;
+	}
+
+	&.bottom {
+		bottom: 30px;
+	}
+
+	&.left {
+		left: 20px;
+	}
+
+	&.center {
+		left: 50%;
+		margin-left: -140px;
+	}
+
+	&.right {
+		right: 20px;
+	}
+}
+
+@import "alert", "dialog", "output", "toast";
