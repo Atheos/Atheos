@@ -39,7 +39,7 @@
 
 		initMenuHandler: function(buttonID, menuID, switchClasses) {
 			var menuOpen = false;
-			
+
 			let menu = oX(menuID);
 
 			menu.close = function() {
@@ -118,11 +118,10 @@
 		//////////////////////////////////////////////////////////////////////80		
 		initTogglePassword: function() {
 			fX('i.togglePassword').on('click', function(e) {
-				var icon = oX(e.target);
+				var icon = $(e.target);
 				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
-				if (!field) {
-					return;
-				}
+				if (!field) return;
+				
 				if (field.prop('type') === 'password') {
 					field.prop('type', 'text');
 				} else {

@@ -146,7 +146,7 @@ class i18n {
 	// Translate
 	//////////////////////////////////////////////////////////////////////////80
 	public function translate($string, $args = NULL) {
-		if(!empty($args) && !is_array($args)) {
+		if (!empty($args) && !is_array($args)) {
 			$args = array($args);
 		}
 		if (array_key_exists($string, $this->cache)) {
@@ -168,6 +168,7 @@ class i18n {
 			Common::log($text, "lang");
 
 		}
+		$result = str_replace("\\", "", $result);
 		return $args ? vsprintf($result, $args) : $result;
 	}
 
