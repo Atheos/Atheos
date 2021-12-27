@@ -81,7 +81,8 @@ class Transfer {
 		}
 		// Handle upload
 		$info = array();
-		while (list($key, $value) = each($_FILES["upload"]["name"])) {
+// 		while (list($key, $value) = each($_FILES["upload"]["name"])) {
+		foreach ($_FILES["upload"]["name"] as $key => $value) {
 			if (!empty($value)) {
 				$filename = $value;
 				$add = $path."/$filename";
