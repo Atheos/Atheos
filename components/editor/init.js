@@ -63,11 +63,13 @@
 			if (self) return;
 			self = this;
 
-			// Retrieve editor settings from localeStorage
-			for (let key in self.settings) {
-				let temp = eStorage(key);
-				if (temp !== null) self.settings[key] = temp;
-			}
+			carbon.subscribe('settings.loaded', function() {
+				// Retrieve editor settings from localeStorage
+				for (let key in self.settings) {
+					let temp = eStorage(key);
+					if (temp !== null) self.settings[key] = temp;
+				}
+			});
 
 			carbon.sub('chrono.byte', self.trackCursor);
 
@@ -90,6 +92,10 @@
 						fX('#EDITOR .editor-wrapper').trigger('v-resize');
 					}
 				}
+
+				self.forEachInstance(function(int) {
+					int.resize();
+				});
 
 			});
 

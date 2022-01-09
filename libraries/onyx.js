@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////80
-// Onyx / Singularity
+// Onyx
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) 2020 Liam Siira (liam@siira.io), distributed as-is and without
 // warranty under the MIT License. See [root]/docs/LICENSE.md for more.
@@ -192,9 +192,9 @@
 			}
 		}
 		if (all) {
-			return matches[0] || false;
-		} else {
 			return matches;
+		} else {
+			return matches[0] || null;
 		}
 	};
 
@@ -293,11 +293,11 @@
 	fnc.isOnyx = true;
 
 	fnc.on = function(t, fn) {
-		log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
+		console.log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
 		if (this.element) return this.element.addEventListener(t, fn);
 	};
 	fnc.off = function(t, fn) {
-		log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
+		console.log(`%cForceEventCapture: ${this.selector}`, 'color:#F42;');
 		if (this.element) return this.element.addEventListener(t, fn);
 	};
 
@@ -381,16 +381,16 @@
 		if (this.element) return init(this.element.querySelector(s));
 	};
 	fnc.findAll = function(s) {
-		if (this.element) return search(this.element, 'find', s);
+		if (this.element) return search(this.element, 'find', s, true);
 	};
 	fnc.sibling = function(s) {
 		if (this.element) return search(this.element, 'siblings', s);
 	};
 	fnc.siblings = function(s) {
-		if (this.element) return search(this.element, 'siblings', s);
+		if (this.element) return search(this.element, 'siblings', s, true);
 	};
 	fnc.children = function(s) {
-		if (this.element) return search(this.element, 'children', s);
+		if (this.element) return search(this.element, 'children', s, true);
 	};
 
 	fnc.prev = function(s) {

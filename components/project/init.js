@@ -141,7 +141,6 @@
 		// Set project root in file manager
 		//////////////////////////////////////////////////////////////////		
 		setRoot: function(name, path, repo) {
-			log(name, path, repo);
 			self.current = {
 				name,
 				path
@@ -158,6 +157,7 @@
 						<i class="root fa fa-folder blue"></i>
 						<span>${name}</span>
 					</a>
+					<ul></ul>
 				</li>
 			</ul>`);
 			atheos.filemanager.openDir(path);

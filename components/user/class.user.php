@@ -36,39 +36,56 @@ class User {
 	// Authenticate
 	//////////////////////////////////////////////////////////////////////////80
 	public function authenticate($username, $password, $language) {
-		if (array_key_exists($username, $this->users)) {
-			$user = $this->users[$username];
-
-			if (password_verify($password, $user["password"])) {
-				SESSION("user", $username);
-				SESSION("lang", $language);
-
-				if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
-					SESSION("projectPath", $user["activePath"]);
-					SESSION("projectName", $user["activeName"]);
-				}
-
-				$reply = array(
-					"username" => $username,
-					"lastLogin" => $user["lastLogin"],
-					"text" => "Successfully authenticated."
-				);
-
-				$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
-				Common::saveJSON("users", $this->users);
-
-				// Log Action
-				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
-				Common::send("success", $reply);
-			} else {
-				// Log Action
-				Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} attempted log in", "access");
-				Common::send("error", "Invalid password.");
-			}
-
-		} else {
+		if (array_key_exists($username, $this->users) === false) {
 			Common::send("error", "Username not found.");
 		}
+
+		$user = $this->users[$username];
+
+		if (password_verify($password, $user["password"])) {
+			$this->buildSession($user, $username, $language);
+
+
+		} elseif ($user["resetPassword"]) {
+			$password = password_hash($password, PASSWORD_DEFAULT);
+			$this->users[$username]["password"] = $password;
+
+			// Save array back to JSON
+			Common::saveJSON("users", $this->users);
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} changed password", "access");
+
+			$this->buildSession($user, $username, $language);
+		} else {
+			// Log Action
+			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} attempted log in", "access");
+			Common::send("error", "Invalid password.");
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Build session post authentication
+	//////////////////////////////////////////////////////////////////////////80
+	public function buildSession($user, $username, $language) {
+		SESSION("user", $username);
+		SESSION("lang", $language);
+
+		if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
+			SESSION("projectPath", $user["activePath"]);
+			SESSION("projectName", $user["activeName"]);
+		}
+
+		$reply = array(
+			"username" => $username,
+			"lastLogin" => $user["lastLogin"],
+			"text" => "Successfully authenticated."
+		);
+
+		$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
+		Common::saveJSON("users", $this->users);
+
+		// Log Action
+		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
+		Common::send("success", $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -106,6 +123,7 @@ class User {
 		if (!array_key_exists($username, $this->users)) {
 			$this->users[$username] = array(
 				"password" => $password,
+				"resetPassword" => false,
 				"creationDate" => date("Y-m-d H:i:s"),
 				"activeProject" => "",
 				"lastLogin" => false,

@@ -27,7 +27,7 @@
 			fX('#filter_open').on('click', self.openFilter);
 			fX('#filter_exit').on('click', self.exitFilter);
 
-			atheos.common.initMenuHandler(oX('#filter_options'), oX('#filter_strategy'));
+			atheos.common.initMenuHandler('#filter_options', '#filter_strategy');
 
 			var strategyMenu = oX('#filter_strategy');
 			fX('#filter_strategy').on('click', function(e) {

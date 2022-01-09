@@ -136,8 +136,7 @@
 			let listener = function(e) {
 				e.preventDefault();
 
-				let data = serialize(form.node());
-
+				let data = serialize(e.target);
 				let vPass = data.password === data.validate;
 
 				if (!vPass) return toast('error', 'Passwords do not match.');
