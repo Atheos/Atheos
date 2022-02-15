@@ -12,22 +12,22 @@ $fontSizeSm: 12px;
 $foreground: var(--foreground);
 $mideground: var(--mideground);
 $background: var(--background);
-$highlight: $shade2;
+$highlight: var(--shade2);
 
 :root {
-	--foreground: $shade4;
-	--mideground: $shade6;
-	--background: $shade8;
-	--fontColorMajor: $shade0;
-	--fontColorMinor: $shade2;
-	--fontColorSmall: $shade3;
+	--foreground: var(--shade4);
+	--mideground: var(--shade6);
+	--background: var(--shade8);
+	--fontColorMajor: var(--shade0);
+	--fontColorMinor: var(--shade2);
+	--fontColorSmall: var(--shade3);
 
-	--borderLight: solid 2px $shade3;
-	--borderHeavy: solid 3px $shade5;
+	--borderLight: solid 2px var(--shade3);
+	--borderHeavy: solid 3px var(--shade5);
 
-	--colorMajor: $blue;
-	--colorMinor: $indigo;
-	--colorSmall: $navy;
+	--colorMajor: var(--blue);
+	--colorMinor: var(--indigo);
+	--colorSmall: var(--navy);
 }
 
 $borderLight: var(--borderLight);
@@ -53,4 +53,6 @@ $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
 $inputBackground: $shade7;
-$tabListBackground: $blue;
+$inputForeground: $shade4;
+
+$tabListBackground: var(--blue);
