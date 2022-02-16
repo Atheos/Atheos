@@ -1,9 +1,9 @@
 @charset "UTF-8";
 
 :root {
-	--fg: #21212199;
+	--fg: #212121;
 	--mg: #252525;
-	--bg: #010101;
+	--bg: #151515;
 	--fcMjr: #F5F9F9;
 	--fcMnr: #A5A9AA;
 	--fcSml: #757577;
@@ -35,26 +35,20 @@
 	font-display: swap;
 }
 
-html {
-	font-size: 16px;
-	-ms-text-size-adjust: 100%;
-	-webkit-text-size-adjust: 100%;
-}
-
 body {
-	background-color: #000;
-	max-width: 1280px;
+	max-width: 960px;
 	margin: auto;
+	background: var(--bg);
+	display: flex;
+	height: 100%;
+	font: 16px/1.2 'Ubuntu', monospace;
 
-	font-family: sans-serif;
-	font-weight: 400;
-	line-height: 1.5;
-	color: #F5F9F9;
+	color: var(--fcMjr);
+	padding: 2px;
+	
 	text-rendering: optimizeLegibility;
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
-
-	padding: 2px;
 }
 
 @media (min-width: 768px) {
@@ -63,6 +57,3 @@ body {
 	}
 }
 
-.ready body {
-	font-family: 'Ubuntu', sans-serif;
-}

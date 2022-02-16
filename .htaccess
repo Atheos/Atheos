@@ -11,5 +11,6 @@ RewriteEngine on
 
 RewriteRule ^market/(.*)$ /endpoint.php [NC,L,QSA]
 RewriteRule ^analytics(.*)$ /endpoint.php [NC,L,QSA]
+RewriteRule ^requestKey(.*)$ /endpoint.php [NC,L,QSA]
 
 RedirectMatch 403 ^/data/*$

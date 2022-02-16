@@ -1,25 +1,37 @@
 h1,
 h2,
 h3,
-h4,
-h5 {
-	@include header();
+h4 {
+	color: var(--cMjr);
+	font-weight: 700;
+	margin: 0.5rem 0 1rem;
+
+	a {
+		border-bottom: 0;
+	}
+
+	@media (min-width: 760px) {
+		vertical-align: middle;
+	}
+
 }
 
 h1 {
-	@include header(1);
+	font-size: 2.0rem;
+	text-align: center;
 }
 
 h2 {
-	@include header(2);
+	font-size: 1.75rem;
 }
 
 h3 {
-	@include header(3);
+	font-size: 1.5rem;
 }
 
-// h4 { @include header(4); }
-// h5 { @include header(5); }
+h4 {
+	font-size: 1.25rem;
+}
 
 p {
 	margin-bottom: 0.5em;
@@ -27,11 +39,6 @@ p {
 	&:last-child {
 		margin-bottom: 0;
 	}
-
-	a {
-		font-weight: normal;
-	}
-
 }
 
 a {
@@ -45,6 +52,7 @@ a {
 
 	&:hover {
 		color: $colorMinor;
+
 		.icon {
 			fill: $colorMinor
 		}
@@ -62,21 +70,6 @@ a {
 .right {
 	text-align: right;
 }
-
-// blockquote {
-// 	margin: 1em 0;
-// 	font-size: 20px;
-
-// 	p {
-// 		margin: 0;
-// 	}
-// }
-
-// em {
-// 	font-size: 12px;
-// 	color: $fontColorSmall;
-// 	font-style: italic;
-// }
 
 small {
 	font-size: 0.8em;

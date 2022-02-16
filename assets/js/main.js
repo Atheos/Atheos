@@ -21,23 +21,6 @@ document.addEventListener("DOMContentLoaded", function() {
 
 	if (typeof Synthetic !== 'undefined') Synthetic.init();
 
-	if ('fonts' in document) {
-		Promise.all([
-			document.fonts.load('700 1em Ubuntu'),
-			document.fonts.load('500 1em Ubuntu')
-		]).then(function() {
-			document.documentElement.className += 'ready';
-		});
-	}
-
-	fetch('https://api.github.com/repos/Atheos/Atheos/tags')
-		.then(response => response.json())
-		.then(data => {
-			for(let tag of $$('.version_tag')) {
-				tag.innerText = data[0].name;
-			}
-		});
-
 	let cp = $('footer small'),
 		yr = new Date().getFullYear(),
 		text = 'Copyright ' + yr + ', Liam Siira';

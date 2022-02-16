@@ -1,36 +1,38 @@
-@import 'scss/utility/colors';
-@import 'scss/utility/mixins';
 @import 'scss/utility/variables';
 @import 'scss/utility/animation';
-
-header,
-footer {
-	margin: $sectionMargin auto;
-
-	@media (min-width: 768px) {}
-}
 
 @import 'scss/common/icons';
 @import 'scss/common/input';
 @import 'scss/common/lists';
-// @import 'scss/common/table';
 @import 'scss/common/typography';
 
-@import 'scss/custom/brand';
-@import 'scss/custom/card';
 @import 'scss/custom/features';
 @import 'scss/custom/logo';
 @import 'scss/custom/scrollbars';
-@import 'scss/custom/shadow';
 @import 'scss/custom/synthetic';
 // @import 'scss/custom/visualization';
 
-// @import 'scss/blocks/content';
-// @import 'scss/blocks/footer';
-@import 'scss/blocks/header';
-@import 'scss/blocks/main';
-@import 'scss/blocks/navbar';
-@import 'scss/blocks/sidebar';
-@import 'scss/blocks/section';
+main {
+	padding: 0.5rem 0.5rem;
+	border: $border;
+	backdrop-filter: blur(2px);
+	background-color: #{$foreground}CC;
+
+
+
+	/* Desktop View */
+	@media (min-width: $desktop) {
+
+		padding: 0.5rem 1rem;
+
+	}
+
+}
+
+section:not(:last-child) {
+	border-bottom: 1px solid var(--cMjr);
+	margin-bottom: 1rem;
+	padding-bottom: 1rem;
+}
 
 @import 'scss/utility/reset';

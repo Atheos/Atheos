@@ -5,10 +5,6 @@ ol {
 	li:not(:last-child) {
 		margin-bottom: 0.5em;
 	}
-
-	li {
-		line-height: 1.6em;
-	}
 }
 
 ul {
@@ -22,24 +18,7 @@ ul {
 			margin-right: 5px;
 			font-size: 12px;
 			vertical-align: text-top;
-			line-height: 16px;
+			line-height: 1.2rem;
 		}
 	}
 }
-
-// ul.inline {
-// 	padding-left: 0;
-// 	// margin-left: -5px;
-
-// 	li {
-// 		display: inline-block;
-// 		margin-right: 5px;
-// 		// padding-left: 5px;
-// 	}
-// }
-
-// ol {
-// 	li {
-// 		margin-left: 20px;
-// 	}
-// }

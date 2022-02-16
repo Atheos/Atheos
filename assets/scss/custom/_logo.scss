@@ -1,6 +1,18 @@
 #logo {
-	display: none;
-	padding: 8px;
+	position: fixed;
+	top: 25%;
+	left: 50%;
+	transform: translate(-50%, -50%);
+	z-index: -1;
+	// opacity: 0.2;
+	width: 85%;
+	max-width: 760px;
+
+	@media (min-width: 768px) {
+		top: 40%;
+		width: 50%;
+
+	}
 
 	svg {
 		width: 100%;
@@ -8,11 +20,19 @@
 	}
 
 	path {
-		animation: float 1s infinite ease-in-out alternate;
+		animation: float 1.5s infinite ease-in-out alternate;
+		fill-opacity: 0;
+		stroke: var(--cMjr);
+		stroke-width: 15;
 	}
 
-	@media (min-width: $desktop) {
-		display: block;
+	#alpha {
+		stroke: #F5F9F9;
 	}
 
+	#backdrop {
+		fill-opacity: 1;
+		fill: #001F3F;
+		stroke: none;
+	}
 }
