@@ -157,14 +157,7 @@
 			<h2>Support the Atheos Project</h2>
 
 			<p>
-				Hey, this is <a href="https://www.siira.io/" rel="noreferrer" title="Developer blog">@HLSiira</a>.
-				<br>
-				If you want to support Codiad, and all the hard work that they did, please donate to them on <a title="codiad" rel="noreferrer" href="https://www.codiad.com">Codiad</a>.
-				I am maintaining my fork of Atheos out of my own personal desire on my own personal time. I am just a dude who likes to program whenever I can as the job that I have has nothing to do with fun.
-				<br>
-				If you want to see Atheos be developed further, don't worry, it most likely will as I love working on it and want to see it succeed. The Codiad folks really created a piece of art.
-				<br>
-				A nice supportive email would do me just fine.
+				Hey, this is <a href="https://www.siira.io/" rel="noreferrer" title="Developer blog">Liam Siira</a>. If you want to see Atheos be developed further, don't worry; Atheos is my main coding environment, and I have no plans on switching. I try to fix bugs and add features as fast as I can, but if you really want to help support this project, I've setup <a href="https://github.com/HLSiira" title="Github Sponsors" rel="noreferrer">Github Sponsors</a>  as well as a <a  href="https://www.buymeacoffee.com/hlsiira" title="BuyMeACoffee" rel="noreferrer">BuyMeACoffee page</a> as a great ways to show your support. I am also a big fan of a reading emails about use cases and seeing Atheos in the real world. Thank you!
 			</p>
 		</section>
 	</main>
