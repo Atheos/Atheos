@@ -38,12 +38,17 @@ class ContextMenu {
 			"action" => "atheos.transfer.openUpload"
 		],
 		[
-			"title" => "hr-directory",			
+			"title" => "hr-directory",
 			"type" => "folder",
 		],
 		//////////////////////////////////////////////////////////////////////80
 		// Generic Actions
 		//////////////////////////////////////////////////////////////////////80
+		// [
+		// 	"title" => "cut",
+		// 	"icon" => "fas fa-cut",
+		// 	"action" => "atheos.filemanager.cut"
+		// ],
 		[
 			"title" => "copy",
 			"icon" => "fas fa-copy",
