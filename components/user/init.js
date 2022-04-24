@@ -21,7 +21,7 @@
 		init: function() {
 			self.loginForm = oX('#login');
 
-			if (self.loginForm) {
+			if (self.loginForm.exists()) {
 				fX('#login').on('submit', function(e) {
 					e.preventDefault();
 
@@ -81,19 +81,9 @@
 
 			} else {
 				// Run controller to check session (also acts as keep-alive) & Check user
-				carbon.subscribe('chrono.tera', function() {
-					echo({
-						data: {
-							'target': 'user',
-							'action': 'keepAlive'
-						},
-						settled: function(status, reply) {
-							if (status !== 'success') {
-								atheos.user.logout();
-							}
-						}
-					});
-				});
+				carbon.subscribe('chrono.giga', self.keepAlive);
+				document.addEventListener("visibilitychange", self.keepAlive, false);
+
 			}
 
 
@@ -105,6 +95,29 @@
 					projectSelect = oX('#projectSelect').element,
 					direction = aclSelect.value() === 'full' ? 'close' : 'open';
 				atheos.flow.slide(direction, projectSelect, 300);
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// KeepAlive
+		//////////////////////////////////////////////////////////////////////80
+		keepAlive: function() {
+			// if (navigator.onLine) {
+			// 	log('online');
+			// } else {
+			// 	log('offline');
+			// }
+			echo({
+				data: {
+					'target': 'user',
+					'action': 'keepAlive'
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') {
+						log('connection lost');
+						atheos.user.logout();
+					}
+				}
 			});
 		},
 

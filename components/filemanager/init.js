@@ -30,7 +30,7 @@
 			// Initialize node listener
 			self.nodeListener();
 			let toggleHidden = oX('#fm_toggle_hidden');
-			toggleHidden.on('click', self.toggleHidden);
+			fX('#fm_toggle_hidden').on('click', self.toggleHidden);
 
 			carbon.subscribe('settings.loaded', function() {
 				var local = storage('filemanager.openTrigger');
@@ -79,6 +79,34 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Open a preview in another window
+		//////////////////////////////////////////////////////////////////////80
+		openInBrowser: function(anchor) {
+			echo({
+				data: {
+					target: 'filemanager',
+					action: 'loadURL',
+					path: anchor.path
+				},
+				settled: function(status, reply) {
+					if (status !== 'success') return toast(status, reply.text);
+
+					window.open(reply.text, '_newtab');
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Open a preview in a modal iFrame
+		//////////////////////////////////////////////////////////////////////80
+		// openInModal: function(path) {
+		// 	atheos.modal.load(250, {
+		// 		action: 'preview',
+		// 		path: path
+		// 	});
+		// },
+
+		//////////////////////////////////////////////////////////////////////80
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
@@ -102,6 +130,7 @@
 			// Made with love by @fitri
 			// & https://github.com/io-developer/js-dragndrop
 			e.stopPropagation();
+			console.clear();
 
 			var target = e.target;
 			var origin, sibling;
@@ -111,10 +140,15 @@
 
 			var xMax, yMax;
 
+			// Move actual/invisible node around / ID target
+
+
+			// Need to be able to drop it into an empty list.
 			function moveTarget(e) {
 				timeout = false;
 
 				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
+				log(swap);
 
 				swap = swap.filter((item) => {
 					var rect = item.getBoundingClientRect();
@@ -134,6 +168,7 @@
 				}
 			}
 
+			// Move clone/ghost element node
 			function dragMove(e) {
 				var x = startEX + e.screenX - startMX,
 					y = startEY + e.screenY - startMY;
@@ -184,15 +219,14 @@
 				document.removeEventListener('mousemove', dragMove);
 				document.removeEventListener('mouseup', dragEnd);
 
-				if (timeout) {
-					return clearTimeout(timeout);
-				}
+				if (timeout && !clone) return clearTimeout(timeout);
 
 				target.style.opacity = '';
 				if (clone) clone.remove();
 
 				let parent = target.closest('ul');
-				let folder = parent.previousSibling;
+				if (!parent) return;
+				let folder = parent.previousElementSibling;
 
 				setTimeout(() => self.sortNodes(parent), 10);
 				if (parent === origin || !folder) return origin.append(target);
@@ -204,7 +238,7 @@
 			if (!target || !dragZone) return;
 
 			origin = target.parentNode;
-			sibling = target.previousSibling;
+			sibling = target.previousElementSibling;
 
 			timeout = setTimeout(dragStart, 250);
 			document.addEventListener('mouseup', dragEnd);
@@ -252,6 +286,7 @@
 			if (!node.exists()) return;
 			let icon = node.find('.expand');
 
+			//Slide open Folder
 			if (node.hasClass('open') && !rescan) {
 				node.removeClass('open');
 
@@ -262,7 +297,7 @@
 						icon.replaceClass('fa-minus', 'fa-plus');
 					}
 					setTimeout(function() {
-						list.remove();
+						list.empty();
 					}, slideDuration);
 				}
 
@@ -285,11 +320,15 @@
 								if (icon.exists()) {
 									icon.replaceClass('fa-plus', 'fa-minus');
 								}
-								var display = ' style="display:none;"';
-								if (rescan) {
-									display = '';
-								}
-								var appendage = '<ul' + display + '>';
+
+								var UL = node.siblings('ul')[0];
+								// if (!UL) {
+								// 	node.after('<ul></ul>');
+								// 	UL = node.siblings('ul')[0];
+								// }
+								if (!rescan) UL.css('display', 'none');
+
+								var appendage = '';
 
 								files.forEach(function(file) {
 									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
@@ -300,13 +339,11 @@
 
 								});
 
-								appendage += '</ul>';
-
 								if (rescan && node.siblings('ul').length > 0) {
-									node.siblings('ul')[0].remove();
+									node.siblings('ul')[0].empty();
 								}
 
-								node.after(appendage);
+								UL.append(appendage);
 								var list = node.siblings('ul')[0];
 								if (!rescan && list) {
 									atheos.flow.slide('open', list.element, slideDuration);
@@ -349,6 +386,7 @@
 			}
 
 			var fileClass = type === 'folder' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
+			var emptyFolder = type === 'folder' ? '<ul></ul>' : '';
 
 			var nodeClass = 'none';
 			if (type === 'folder' && (size > 0)) {
@@ -366,6 +404,7 @@
 			${repoIcon}
 			<span>${basename}</span>
 			</a>
+			${emptyFolder}
 			</li>`;
 		},
 
@@ -476,6 +515,14 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Cut to Cutboard
+		//////////////////////////////////////////////////////////////////////80
+		cut: function(anchor) {
+			self.cutboard = anchor.path;
+			toast('success', 'On Cutting Board');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
 		// Copy to Clipboard
 		//////////////////////////////////////////////////////////////////////80
 		copy: function(anchor) {
@@ -487,15 +534,27 @@
 		// Paste
 		//////////////////////////////////////////////////////////////////////80
 		paste: function(anchor) {
-			let path = anchor.path,
-				split = pathinfo(self.clipboard),
-				copy = split.basename,
-				type = split.type;
+			let parentDest = anchor.path;
 
-			var processPaste = function(path, duplicate) {
+
+			let activePath = self.cutboard ? self.cutboard : self.clipboard;
+
+
+			if (activePath === '') {
+				return toast('error', 'Nothing to Paste');
+			} else if (parentDest === activePath) {
+				return toast('error', 'Cannot paste folder into itself');
+			}
+
+			activePath = pathinfo(activePath);
+
+			let activeBase = activePath.basename,
+				activeType = activePath.type;
+
+			var processPaste = function(parentDest, duplicate) {
 
 				if (duplicate) {
-					copy = 'copy_' + copy;
+					activeBase = 'copy_' + activeBase;
 				}
 
 				echo({
@@ -503,47 +562,42 @@
 						target: 'filemanager',
 						action: 'duplicate',
 						path: self.clipboard,
-						dest: path + '/' + copy
+						dest: parentDest + '/' + activeBase
 					},
 					settled: function(status, reply) {
-						if (status !== 'error') {
-							self.addToFileManager(path + '/' + copy, type, path);
-							/* Notify listeners. */
-							carbon.publish('filemanager.paste', {
-								path: path,
-								dest: copy
-							});
+						if (status === 'error') return;
+						if (self.cutboard !== false) {
+							self.cutboard = false;
+							log(self.cutboard);
 						}
+						self.addToFileManager(parentDest + '/' + activeBase, activeType, parentDest);
+						/* Notify listeners. */
+						carbon.publish('filemanager.paste', {
+							path: parentDest,
+							dest: activeBase
+						});
 					}
 				});
 			};
 
-			if (self.clipboard === '') {
-				toast('error', 'Nothing in Your Clipboard');
-
-			} else if (path === self.clipboard) {
-				toast('error', 'Cannot Paste Directory Into Itself');
-
-			} else if (oX('#file-manager a[data-path="' + path + '/' + copy + '"]').exists()) {
+			if (oX('#file-manager a[data-path="' + parentDest + '/' + activeBase + '"]').exists()) {
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
-					data: `${path}/${copy}`,
+					data: `${parentDest}/${activeBase}`,
 					actions: {
 						'Overwrite': function() {
-							processPaste(path, false);
+							processPaste(parentDest, false);
 						},
 						'Duplicate': function() {
-							processPaste(path, true);
+							processPaste(parentDest, true);
 						}
 					}
 				});
 			} else {
-				processPaste(path, false);
+				processPaste(parentDest, false);
 			}
-
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Duplicate Object
@@ -606,6 +660,62 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Extract Object
+		//////////////////////////////////////////////////////////////////////80		
+		extract: function(anchor) {
+			anchor = extend(anchor, pathinfo(anchor.path));
+
+			let parent = anchor.directory,
+				fileName = anchor.fileName;
+
+
+			var processExtact = function(duplicate) {
+
+				if (duplicate) {
+					fileName = 'copy_' + fileName;
+					anchor.fileName = fileName;
+				}
+
+				anchor.target = 'filemanager';
+				anchor.action = 'extract';
+
+				echo({
+					data: anchor,
+					settled: function(status, reply) {
+						if (status === 'error') return;
+
+						log(parent + '/' + fileName, 'folder', parent);
+
+						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
+						/* Notify listeners. */
+						carbon.publish('filemanager.extract', {
+							path: parent + '/' + fileName,
+							dest: parent
+						});
+					}
+				});
+			};
+
+			if (oX('#file-manager a[data-path="' + parent + '/' + fileName + '"]').exists()) {
+				atheos.alert.show({
+					banner: 'Path already exists!',
+					message: 'Would you like to overwrite or duplicate the file?',
+					data: `${parent}/${fileName}`,
+					actions: {
+						'Overwrite': function() {
+							processExtact(false);
+						},
+						'Duplicate': function() {
+							processExtact(true);
+						}
+					}
+				});
+			} else {
+				processExtact(false);
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
 		// Active Anchor for Rename, Duplicate and Create
 		//////////////////////////////////////////////////////////////////////80
 		activeAnchor: {},
@@ -632,7 +742,7 @@
 					toast('success', 'File Created');
 					atheos.modal.unload();
 					// Add new element to filemanager screen
-					self.addToFileManager(path, type, self.activeAnchor.path);
+					self.addToFileManager(path, type, self.activeAnchor.path, 0);
 					if (type === 'file') {
 						self.openFile(path, true);
 					}
@@ -649,10 +759,8 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
-		addToFileManager: function(path, type, parent) {
+		addToFileManager: function(path, type, parent, size) {
 			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
-
-			log('addToFileManager');
 
 			// Already exists
 			if (oX('#file-manager a[data-path="' + path + '"]').exists()) return;
@@ -660,7 +768,7 @@
 			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
 
-				var node = self.createDirectoryItem(path, type, 0);
+				var node = self.createDirectoryItem(path, type, size);
 
 				var list = parentNode.siblings('ul')[0];
 				if (list) {

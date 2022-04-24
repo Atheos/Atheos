@@ -54,7 +54,7 @@
 		border-left: $borderLight;
 
 		&:hover {
-			background-color: lighten($inputBackground, $hoverPercent);
+			background: $inputForeground;
 		}
 
 		&:last-of-type {
@@ -125,7 +125,7 @@
 		@include input();
 
 		&:hover {
-			background-color: lighten($inputBackground, $hoverPercent);
+			background: $inputForeground;
 		}
 	}
 

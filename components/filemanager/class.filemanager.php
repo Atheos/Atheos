@@ -34,7 +34,7 @@ class Filemanager {
 
 		if ($type === "folder" && @mkdir($path)) {
 			Common::send("success");
-		} elseif ($type === "file" && $file = fopen($path, 'w')) {
+		} elseif ($type === "file" && $file = fopen($path, "w")) {
 			$modifyTime = filemtime($path);
 			fclose($file);
 			Common::send("success", array("modifyTime" => $modifyTime));
@@ -77,11 +77,11 @@ class Filemanager {
 			$dir = opendir($src);
 			@mkdir($dst);
 			while (false !== ($file = readdir($dir))) {
-				if (($file !== '.') && ($file !== '..')) {
-					if (is_dir($src . '/' . $file)) {
-						rCopyDirectory($src . '/' . $file, $dst . '/' . $file);
+				if (($file !== ".") && ($file !== "..")) {
+					if (is_dir($src . "/" . $file)) {
+						rCopyDirectory($src . "/" . $file, $dst . "/" . $file);
 					} else {
-						copy($src . '/' . $file, $dst . '/' . $file);
+						copy($src . "/" . $file, $dst . "/" . $file);
 					}
 				}
 			}
@@ -96,6 +96,112 @@ class Filemanager {
 			Common::send("success", i18n("duplicated_folder"));
 		}
 	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Extract
+	//////////////////////////////////////////////////////////////////////////80
+	public function extract($path, $name) {
+		if (!file_exists($path)) {
+			Common::send("error", "Invalid path.");
+		}
+
+		$info = pathinfo($path);
+
+		$parent = $info["dirname"];
+		$base = $info["basename"];
+		$ext = $info["extension"];
+
+		debug($parent);
+		debug($base);
+		debug($ext);
+
+		$des = $parent."/".$name;
+
+		//////////////////////////////////////////////////////////////////////////80
+
+		if ($ext === "zip") {
+
+			if (!class_exists("ZipArchive")) {
+				Common::send("error", i18n("extract_noZip"));
+			}
+
+			$zip = new ZipArchive;
+			$res = $zip->open($path);
+
+			if (!$res) {
+				Common::send("error", i18n("extract_noOpen"));
+			}
+
+			// extract archive
+			if ($zip->extractTo($des)) {
+				$zip->close();
+				Common::send("success", i18n("extract_success"));
+			} else {
+				Common::send("error", i18n("extract_unable"));
+			}
+
+
+		} elseif ($ext === "tar") {
+
+			if (!class_exists("PharData")) {
+				Common::send("error", i18n("extract_noPhar"));
+			}
+			$tar = new PharData($path);
+
+			if ($tar->extractTo($des)) {
+				Common::send("success", i18n("extract_success"));
+			} else {
+				Common::send("error", i18n("extract_unable"));
+			}
+
+		} elseif ($ext === "gz") {
+
+			if (!class_exists("PharData")) {
+				Common::send("error", i18n("extract_noPhar"));
+			}
+			$gz = new PharData($path);
+
+			if ($gzOpen = $gz->decompress()) {
+
+				$tar = new PharData($gzOpen);
+
+				if ($tar->extractTo($des)) {
+					Common::send("success", i18n("extract_success"));
+				} else {
+					Common::send("error", i18n("extract_unable"));
+				}
+			} else {
+				Common::send("error", i18n("extract_noDecomp"));
+			}
+		} elseif ($ext === "rar") {
+
+			if (!class_exists("rar_open")) {
+				Common::send("error", i18n("extract_noRar"));
+			}
+			$rar = new rar_open;
+			$res = $rar->open($path);
+
+			if (!$res) {
+				Common::send("error", i18n("extract_noOpen"));
+			}
+
+			$entries = rar_list($res);
+			try {
+				foreach ($entries as $entry) {
+					$entry->extract($des);
+				}
+			} catch (Exception $e) {
+				Common::send("error", i18n("extract_unable"));
+			}
+
+			Common::send("success", i18n("extract_success"));
+			$rar->close();
+		} else {
+
+			Common::send("error", i18n("extract_unrecognized"));
+		}
+	}
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Index (Returns list of files and directories)
@@ -122,12 +228,12 @@ class Filemanager {
 				continue;
 			}
 
-			if (is_dir($path.'/'.$object)) {
+			if (is_dir($path."/".$object)) {
 				$type = "folder";
-				$size = count(glob($path.'/'.$object.'/*'));
+				$size = count(glob($path."/".$object."/*"));
 			} else {
 				$type = "file";
-				$size = @filesize($path.'/'.$object);
+				$size = @filesize($path."/".$object);
 			}
 
 
@@ -142,27 +248,27 @@ class Filemanager {
 		$folders = array();
 		$files = array();
 		foreach ($index as $item => $data) {
-			if ($data['type'] == 'folder') {
+			if ($data["type"] == "folder") {
 
-				$repo = file_exists($data['path'] . "/.git");
+				$repo = file_exists($data["path"] . "/.git");
 
 				$folders[] = array(
-					"path" => $data['path'],
-					"type" => $data['type'],
-					"size" => $data['size'],
+					"path" => $data["path"],
+					"type" => $data["type"],
+					"size" => $data["size"],
 					"repo" => $repo
 				);
 			}
-			if ($data['type'] == 'file') {
+			if ($data["type"] == "file") {
 				$files[] = array(
-					"path" => $data['path'],
-					"type" => $data['type'],
-					"size" => $data['size']
+					"path" => $data["path"],
+					"type" => $data["type"],
+					"size" => $data["size"]
 				);
 			}
 		}
 
-		function sorter($a, $b, $key = 'path') {
+		function sorter($a, $b, $key = "path") {
 			return strnatcasecmp($a[$key], $b[$key]);
 			// return strnatcmp($a[$key], $b[$key]);
 		}
@@ -198,18 +304,37 @@ class Filemanager {
 
 		$output = file_get_contents($path);
 
-		if (extension_loaded('mbstring')) {
-			if (!mb_check_encoding($output, 'UTF-8')) {
-				if (mb_check_encoding($output, 'ISO-8859-1')) {
+		if (extension_loaded("mbstring")) {
+			if (!mb_check_encoding($output, "UTF-8")) {
+				if (mb_check_encoding($output, "ISO-8859-1")) {
 					$output = utf8_encode($output);
 				} else {
-					$output = mb_convert_encoding($output, 'UTF-8');
+					$output = mb_convert_encoding($output, "UTF-8");
 				}
 			}
 		}
 
 		$modifyTime = filemtime($path);
 		Common::send("success", array("content" => $output, "modifyTime" => $modifyTime));
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// loadURL for preview / open in browser
+	//////////////////////////////////////////////////////////////////////////80
+	public function loadURL($path) {
+		if (Common::isAbsPath($path) && strpos($path, WORKSPACE) === false) {
+			Common::send("error", i18n("outsideWorkspace"));
+		}
+
+		if (SERVER("HTTPS") !== "off") {
+			$prot = "https://";
+		} else {
+			$prot = "http://";
+		}
+		$domain = SERVER("HTTP_HOST");
+		$url = rtrim($prot . $domain . "/workspace/" . Common::getWorkspacePath($path), "/");
+
+		Common::send("success", $url);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -237,13 +362,13 @@ class Filemanager {
 	public function save($path, $modifyTime, $patch, $content) {
 		// Change content
 		if (!$content && !$patch) {
-			$file = fopen($path, 'w');
+			$file = fopen($path, "w");
 			fclose($file);
 			Common::send("success", array("modifyTime" => filemtime($path)));
 		}
 
-		if ($content === ' ') {
-			$content = ''; // Blank out file
+		if ($content === " ") {
+			$content = ""; // Blank out file
 		}
 		if ($patch && ! $modifyTime) {
 			Common::send("error", "ModifyTime");
@@ -262,7 +387,7 @@ class Filemanager {
 			Common::send("success", array("modifyTime" => $serverModifyTime));
 		}
 		try {
-			$file = fopen($path, 'w');
+			$file = fopen($path, "w");
 
 			if ($file) {
 				if ($patch) {

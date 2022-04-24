@@ -7,7 +7,20 @@
 
 	svg {
 		path {
-			animation: float 1s infinite ease-in-out alternate;
+			animation: float 1.5s infinite ease-in-out alternate;
+			fill-opacity: 0;
+			stroke: $colorMajor;
+			stroke-width: 15;
+		}
+
+		#alpha {
+			stroke: $fontColorMajor;
+		}
+
+		#backdrop {
+			fill-opacity: 1;
+			fill: $background;
+			stroke: none;
 		}
 
 		.delay-1 {
@@ -29,7 +42,7 @@
 
 	@keyframes float {
 		100% {
-			transform: translateY(8px);
+			transform: translateY(10px);
 		}
 	}
 }

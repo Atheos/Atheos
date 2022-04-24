@@ -18,7 +18,7 @@ toggle {
 		font-size: unset;
 
 		&:hover {
-			background-color: lighten($inputBackground, $hoverPercent);
+			background: $inputForeground;
 		}
 
 		// &:not(first-of-type) {

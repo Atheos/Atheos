@@ -48,6 +48,9 @@ trait Path {
 		if (!$path) {
 			return false;
 		}
+		
+		$path = str_replace(WORKSPACE . "/", "", $path);
+
 		//Security check
 		if (!Common::checkPath($path)) {
 			Common::send("error", "Client does not have access.");
@@ -55,7 +58,7 @@ trait Path {
 		if (Common::isAbsPath($path)) {
 			return $path;
 		}
-		return WORKSPACE . "/" . $path;
+		return $path;
 	}
 
 }
