@@ -81,7 +81,7 @@
 
 			} else {
 				// Run controller to check session (also acts as keep-alive) & Check user
-				carbon.subscribe('chrono.giga', self.KeepAlive);
+				carbon.subscribe('chrono.giga', self.keepAlive);
 				document.addEventListener("visibilitychange", self.keepAlive, false);
 
 			}
@@ -102,11 +102,11 @@
 		// KeepAlive
 		//////////////////////////////////////////////////////////////////////80
 		keepAlive: function() {
-			if (navigator.onLine) {
-				log('online');
-			} else {
-				log('offline');
-			}
+			// if (navigator.onLine) {
+			// 	log('online');
+			// } else {
+			// 	log('offline');
+			// }
 			echo({
 				data: {
 					'target': 'user',
