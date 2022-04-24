@@ -57,6 +57,17 @@
 	"cut": "Cut",
 	"copy": "Copy",
 	"paste": "Paste",
+	"extract": {
+		"": "Extract",
+		"success": "Successfully extracted archive.",
+		"unable": "Unable to extract archive.",
+		"noOpen": "Unable to open archive.",
+		"noZip": "PHP ZipArchive not installed or enabled.",
+		"noPhar": "PHP PharData not installed or enabled.",
+		"noRar": "PHP Rar Open not installed or enabled.",
+		"noDecomp": "Unable to decompress gzip archive.",
+		"unrecognized":"Unsupported archive type."
+	},
 	"duplicate": {
 		"": "Duplicate",
 		"name": "Enter new name:",
@@ -192,9 +203,9 @@
 		"system": "System Settings",
 		"codegit": "CodeGit Settings"
 	},
-	
+
 	"feedback": "Notifications",
-	
+
 	"toast": {
 		"location": "Toast Location:",
 		"stay": {
@@ -204,7 +215,7 @@
 			"error": "Toast error stay time:"
 		}
 	},
-	
+
 	"output": {
 		"location": "Output Location:",
 		"stay": {
@@ -214,7 +225,7 @@
 			"error": "Output error stay time:"
 		}
 	},
-	
+
 	"location": {
 		"bl": "Bottom left",
 		"bc": "Bottom center",
@@ -223,9 +234,9 @@
 		"tc": "Top center",
 		"tr": "Top right"
 	},
-	
+
 	"manual": "Disable autoclose",
-	
+
 	"draft": {
 		"": "Draft",
 		"enable": "Enable autosaving files in draft",
@@ -319,7 +330,7 @@
 		"": "%spx",
 		"default": "%spx (default)"
 	},
-	
+
 	"foldWidgets": "Show Fold Widgets",
 
 	"tabs": {
@@ -434,7 +445,6 @@
 			"manually": "Install Manually",
 			"success": "Successfully installed %s"
 		},
-		"unableExtract": "Unable to extract Archive.",
 		"unableDownload": "Unable to download Archive.",
 		"noZip": "Zip Extension not found.",
 		"missingDesc": "Missing Description.",
@@ -480,7 +490,7 @@
 			"plural": "%s Hours"
 		}
 	},
-	
+
 	"warning": {
 		"fileOpen": "Warning: File Currently Opened By: %s"
 	},
@@ -499,11 +509,11 @@
 	"macro": {
 		"": "Macro Editor",
 		"add": "Add New Macro",
-		"title":"Title",
-		"icon":"FA Icon",
-		"applies":"Applies To",
-		"exts":"File Types",
-		"cmd":"Shell Command"
+		"title": "Title",
+		"icon": "FA Icon",
+		"applies": "Applies To",
+		"exts": "File Types",
+		"cmd": "Shell Command"
 	},
 
 	"codegit": {

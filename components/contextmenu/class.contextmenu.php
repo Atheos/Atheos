@@ -70,6 +70,13 @@ class ContextMenu {
 			"icon" => "fas fa-download",
 			"action" => "atheos.transfer.download"
 		],
+		[
+			"title" => "extract",
+			"icon" => "fas fa-file-export",
+			"type" => "file",
+			"fTypes" => ["zip", "tar", "tar.gz"],
+			"action" => "atheos.filemanager.extract"
+		],
 		//////////////////////////////////////////////////////////////////////80
 		// Non-root Actions
 		//////////////////////////////////////////////////////////////////////80

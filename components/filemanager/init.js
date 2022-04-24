@@ -540,7 +540,7 @@
 						if (status === 'error') return;
 						if (self.cutboard !== false) {
 							self.cutboard = false;
-							log(self.curboard);
+							log(self.cutboard);
 						}
 						self.addToFileManager(parentDest + '/' + activeBase, activeType, parentDest);
 						/* Notify listeners. */
@@ -569,9 +569,7 @@
 			} else {
 				processPaste(parentDest, false);
 			}
-
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Duplicate Object
@@ -634,6 +632,62 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Extract Object
+		//////////////////////////////////////////////////////////////////////80		
+		extract: function(anchor) {
+			anchor = extend(anchor, pathinfo(anchor.path));
+
+			let parent = anchor.directory,
+				fileName = anchor.fileName;
+
+
+			var processExtact = function(duplicate) {
+
+				if (duplicate) {
+					fileName = 'copy_' + fileName;
+					anchor.fileName = fileName;
+				}
+
+				anchor.target = 'filemanager';
+				anchor.action = 'extract';
+
+				echo({
+					data: anchor,
+					settled: function(status, reply) {
+						if (status === 'error') return;
+
+						log(parent + '/' + fileName, 'folder', parent);
+
+						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
+						/* Notify listeners. */
+						carbon.publish('filemanager.extract', {
+							path: parent + '/' + fileName,
+							dest: parent
+						});
+					}
+				});
+			};
+
+			if (oX('#file-manager a[data-path="' + parent + '/' + fileName + '"]').exists()) {
+				atheos.alert.show({
+					banner: 'Path already exists!',
+					message: 'Would you like to overwrite or duplicate the file?',
+					data: `${parent}/${fileName}`,
+					actions: {
+						'Overwrite': function() {
+							processExtact(false);
+						},
+						'Duplicate': function() {
+							processExtact(true);
+						}
+					}
+				});
+			} else {
+				processExtact(false);
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
 		// Active Anchor for Rename, Duplicate and Create
 		//////////////////////////////////////////////////////////////////////80
 		activeAnchor: {},
@@ -660,7 +714,7 @@
 					toast('success', 'File Created');
 					atheos.modal.unload();
 					// Add new element to filemanager screen
-					self.addToFileManager(path, type, self.activeAnchor.path);
+					self.addToFileManager(path, type, self.activeAnchor.path, 0);
 					if (type === 'file') {
 						self.openFile(path, true);
 					}
@@ -677,7 +731,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
-		addToFileManager: function(path, type, parent) {
+		addToFileManager: function(path, type, parent, size) {
 			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
 
 			// Already exists
@@ -686,7 +740,7 @@
 			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
 
-				var node = self.createDirectoryItem(path, type, 0);
+				var node = self.createDirectoryItem(path, type, size);
 
 				var list = parentNode.siblings('ul')[0];
 				if (list) {
