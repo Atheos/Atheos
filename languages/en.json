@@ -75,6 +75,7 @@
 		"folder": "Folder Duplicated"
 	},
 	"preview": "Preview",
+	"outsideWorkspace": "File located outside of workspace.",
 	"cancel": "Cancel",
 	"clear": "Clear",
 	"name": "Name",

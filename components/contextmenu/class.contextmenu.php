@@ -77,6 +77,20 @@ class ContextMenu {
 			"fTypes" => ["zip", "tar", "tar.gz"],
 			"action" => "atheos.filemanager.extract"
 		],
+		[
+			"title" => "preview",
+			"icon" => "fas fa-eye",
+			"type" => "file",
+			"fTypes" => ["php", "html"],
+			"action" => "atheos.filemanager.openInBrowser"
+		],
+		// [
+		// 	"title" => "preview",
+		// 	"icon" => "fas fa-eye",
+		// 	"type" => "file",
+		// 	"fTypes" => ["jpg", "png", "svg"],
+		// 	"action" => "atheos.filemanager.openInModal"
+		// ],
 		//////////////////////////////////////////////////////////////////////80
 		// Non-root Actions
 		//////////////////////////////////////////////////////////////////////80

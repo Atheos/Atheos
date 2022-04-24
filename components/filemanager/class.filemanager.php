@@ -319,6 +319,25 @@ class Filemanager {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
+	// loadURL for preview / open in browser
+	//////////////////////////////////////////////////////////////////////////80
+	public function loadURL($path) {
+		if (Common::isAbsPath($path) && strpos($path, WORKSPACE) === false) {
+			Common::send("error", i18n("outsideWorkspace"));
+		}
+
+		if (SERVER("HTTPS") !== "off") {
+			$prot = "https://";
+		} else {
+			$prot = "http://";
+		}
+		$domain = SERVER("HTTP_HOST");
+		$url = rtrim($prot . $domain . "/workspace/" . Common::getWorkspacePath($path), "/");
+
+		Common::send("success", $url);
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
 	// Rename
 	//////////////////////////////////////////////////////////////////////////80
 	public function rename($path, $name) {
