@@ -32,7 +32,7 @@ foreach ($macrolist as $id => $macro) {
 				<input id="typeFolder_' . $id . '" value="folder" name="type' . $id . '" type="radio" ' . $isFolder . '/>
 				<label for="typeFolder_' . $id . '">' . i18n("folder") . '</label>
 				</toggle></td>';
-	$tbody .= '<td><input type="text" name="fTypes" value="' . implode($macro["fTypes"], ", ") . '" ' . $isDisabled . '></input></td>';
+	$tbody .= '<td><input type="text" name="fTypes" value="' . implode(", ", $macro["fTypes"]) . '" ' . $isDisabled . '></input></td>';
 	$tbody .= '<td><input type="text" name="command" value="' . $macro["command"] . '"></input></td>';
 	$tbody .= '<td><a class="fas fa-save"></a><a class="fas fa-times-circle"></a></td>';
 	$tbody .= '</tr>';
