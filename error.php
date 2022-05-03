@@ -60,7 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 </head>
 
 <body>
-	<canvas id="synthetic"></canvas>
+	<canvas id="myth"></canvas>
 	<?php require_once("templates/logo.php"); ?>
 
 	<form id="error">
@@ -73,10 +73,10 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
 
 	</form>
 
-	<script type="text/javascript" src="/libraries/synthetic.js"></script>
+	<script type="text/javascript" src="/libraries/myth.js"></script>
 	<script type="text/javascript">
 		document.addEventListener("DOMContentLoaded", function () {
-			synthetic.init();
+			Myth.init();
 		});
 	</script>
 </body>

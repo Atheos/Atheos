@@ -47,7 +47,7 @@
 				atheos.settings.init();
 
 			} else {
-				Synthetic.init();
+				Myth.init();
 				if (oX('#installer').exists()) {
 					// Atheos hasn't been installed yet
 					atheos.install.init();
