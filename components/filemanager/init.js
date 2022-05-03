@@ -331,7 +331,7 @@
 								var appendage = '';
 
 								files.forEach(function(file) {
-									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
+									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo, file.link);
 
 									if (pathinfo(file.path).basename === '.git') {
 										atheos.codegit.addRepoIcon(path);
@@ -377,7 +377,7 @@
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
 
-		createDirectoryItem: function(path, type, size, repo) {
+		createDirectoryItem: function(path, type, size, repo, link) {
 
 			var basename = pathinfo(path).basename;
 
@@ -398,11 +398,12 @@
 			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
 
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}">
+			<a ${link ? 'title=\"' + link + '\"' : ''} data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
 			${repoIcon}
-			<span>${basename}</span>
+			
+			<span ${link ? 'class=\"aqua\"' : ''}>${basename}</span>
 			</a>
 			${emptyFolder}
 			</li>`;
