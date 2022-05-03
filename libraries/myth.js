@@ -97,7 +97,7 @@
 				for (let i = 0; i < 5000; ++i) {
 					rndColor.push(colors[sRnd(4)]);
 				}
-				localStorage.setItem('Myth', JSON.stringify(rndColor));
+				localStorage.setItem('myth', JSON.stringify(rndColor));
 			}
 			drawMyth();
 		}
