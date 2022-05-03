@@ -17,7 +17,7 @@ if (!file_exists("config.php")) {
 		$instance = shell_exec(escapeshellcmd($command));
 	}
 
-	$instanceurl = "i/$instance/";
+	$instanceurl = "/i/$instance/";
 	echo $instanceurl;
 	?>
 	<!doctype html>
