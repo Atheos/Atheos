@@ -332,10 +332,10 @@ class diff_match_patch {
 	 * @private
 	 */
 	function diff_charsToLines(&$diffs, $lineArray) {
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			$chars = $diffs[$x][1];
 			$text = array ();
-			for ($y = 0; $y < mb_strlen($chars); $y++) {
+			for ($y = 0, $l2 = mb_strlen($chars); $y < $l2; $y++) {
 				$text[$y] = $lineArray[charCodeAt($chars, $y)];
 			}
 			$diffs[$x][1] = implode('',$text);
@@ -1091,7 +1091,7 @@ class diff_match_patch {
 		$chars2 = 0;
 		$last_chars1 = 0;
 		$last_chars2 = 0;
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			if ($diffs[$x][0] !== DIFF_INSERT) { // Equality or deletion.
 				$chars1 += mb_strlen($diffs[$x][1]);
 			}
@@ -1120,7 +1120,7 @@ class diff_match_patch {
 	function diff_prettyHtml($diffs) {
 		$html = array ();
 		$i = 0;
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			$op = $diffs[$x][0]; // Operation (insert, delete, equal)
 			$data = $diffs[$x][1]; // Text of change.
 			$text = preg_replace(array (
@@ -1160,7 +1160,7 @@ class diff_match_patch {
 	 */
 	function diff_text1($diffs) {
 		$text = array ();
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			if ($diffs[$x][0] !== DIFF_INSERT) {
 				$text[$x] = $diffs[$x][1];
 			}
@@ -1175,7 +1175,7 @@ class diff_match_patch {
 	 */
 	function diff_text2($diffs) {
 		$text = array ();
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			if ($diffs[$x][0] !== DIFF_DELETE) {
 				$text[$x] = $diffs[$x][1];
 			}
@@ -1193,7 +1193,7 @@ class diff_match_patch {
 		$levenshtein = 0;
 		$insertions = 0;
 		$deletions = 0;
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			$op = $diffs[$x][0];
 			$data = $diffs[$x][1];
 			switch ($op) {
@@ -1225,7 +1225,7 @@ class diff_match_patch {
 	 */
 	function diff_toDelta($diffs) {
 		$text = array ();
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			switch ($diffs[$x][0]) {
 				case DIFF_INSERT :
 					$text[$x] = '+' .encodeURI($diffs[$x][1]);
@@ -1255,7 +1255,7 @@ class diff_match_patch {
 		$pointer = 0; // Cursor in text1
 		$tokens = preg_split("/\t/", $delta);
 
-		for ($x = 0; $x < count($tokens); $x++) {
+		for ($x = 0, $l = count($tokens); $x < $l; $x++) {
 			// Each token begins with a one character parameter which specifies the
 			// operation of this token (delete, insert, equality).
 			$param = mb_substr($tokens[$x], 1);
@@ -1375,7 +1375,7 @@ class diff_match_patch {
 		$bin_mid = null;
 		$bin_max = mb_strlen($pattern) + mb_strlen($text);
 		$last_rd = null;
-		for ($d = 0; $d < mb_strlen($pattern); $d++) {
+		for ($d = 0, $l = mb_strlen($pattern); $d < $l; $d++) {
 			// Scan for the best match; each iteration allows for one more error.
 			// Run a binary search to determine how far from 'loc' we can stray at this
 			// error level.
@@ -1460,10 +1460,10 @@ class diff_match_patch {
 	 */
 	function match_alphabet($pattern) {
 		$s = array ();
-		for ($i = 0; $i < mb_strlen($pattern); $i++) {
+		for ($i = 0, $l = mb_strlen($pattern); $i < $l; $i++) {
 			$s[ $pattern[$i] ] = 0;
 		}
-		for ($i = 0; $i < mb_strlen($pattern); $i++) {
+		for ($i = 0, $l = mb_strlen($pattern); $i < $l; $i++) {
 			$s[ $pattern[$i] ] |= 1 << (mb_strlen($pattern) - $i - 1);
 		}
 		return $s;
@@ -1583,7 +1583,7 @@ class diff_match_patch {
 		// context info.
 		$prepatch_text = $text1;
 		$postpatch_text = $text1;
-		for ($x = 0; $x < count($diffs); $x++) {
+		for ($x = 0, $l = count($diffs); $x < $l; $x++) {
 			$diff_type = $diffs[$x][0];
 			$diff_text = $diffs[$x][1];
 
@@ -1653,10 +1653,10 @@ class diff_match_patch {
 	function patch_deepCopy($patches) {
 		// Making deep copies is hard in JavaScript.
 		$patchesCopy = array();
-		for ($x = 0; $x < count($patches); $x++) {
+		for ($x = 0, $l = count($patches); $x < $l; $x++) {
 			$patch = $patches[$x];
 			$patchCopy = new patch_obj();
-			for ($y = 0; $y < count($patch->diffs); $y++) {
+			for ($y = 0, $l2 = count($patch->diffs); $y < $l2; $y++) {
 				$patchCopy->diffs[$y] = $patch->diffs[$y]; // ?? . slice();
 			}
 			$patchCopy->start1 = $patch->start1;
@@ -1779,7 +1779,7 @@ class diff_match_patch {
 		}
 
 		// Bump all the patches forward.
-		for ($x = 0; $x < count($patches); $x++) {
+		for ($x = 0, $l = count($patches); $x < $l; $x++) {
 			$patches[$x]->start1 += $paddingLength;
 			$patches[$x]->start2 += $paddingLength;
 		}
@@ -1913,7 +1913,7 @@ class diff_match_patch {
 	 */
 	function patch_toText($patches) {
 		$text = array();
-		for ($x = 0; $x < count($patches) ; $x++) {
+		for ($x = 0, $l = count($patches); $x < $l; $x++) {
 			$text[$x] = $patches[$x];
 		}
 		return implode('',$text);
@@ -2037,7 +2037,7 @@ class patch_obj {
 		$text = array ( '@@ -' . $coords1 . ' +' . $coords2 . " @@\n" );
 
 		// Escape the body of the patch with %xx notation.
-		for ($x = 0; $x < count($this->diffs); $x++) {
+		for ($x = 0, $l = count($this->diffs); $x < $l; $x++) {
 			switch ($this->diffs[$x][0]) {
 				case DIFF_INSERT :
 					$op = '+';
@@ -2068,14 +2068,20 @@ define('Match_MaxBits', PHP_INT_SIZE * 8);
 function charCodeAt($str, $pos) {
 	return mb_ord(mb_substr($str, $pos, 1));
 }
-function mb_ord($v) {
-	$k = mb_convert_encoding($v, 'UCS-2LE', 'UTF-8'); 
-	$k1 = ord(substr($k, 0, 1)); 
-	$k2 = ord(substr($k, 1, 1)); 
-	return $k2 * 256 + $k1; 
+
+if (!function_exists('mb_ord')) {
+	function mb_ord($v) {
+		$k = mb_convert_encoding($v, 'UCS-2LE', 'UTF-8'); 
+		$k1 = ord(substr($k, 0, 1)); 
+		$k2 = ord(substr($k, 1, 1)); 
+		return $k2 * 256 + $k1; 
+	}
 }
-function mb_chr($num){
-	return mb_convert_encoding('&#'.intval($num).';', 'UTF-8', 'HTML-ENTITIES');
+
+if (!function_exists('mb_chr')) {
+	function mb_chr($num){
+		return mb_convert_encoding('&#'.intval($num).';', 'UTF-8', 'HTML-ENTITIES');
+	}
 }
 
 /**
