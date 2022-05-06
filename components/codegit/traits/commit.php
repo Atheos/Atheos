@@ -12,7 +12,6 @@ trait Commit {
 
 		foreach ($files as $file) {
 			$result = $this->add($file);
-			debug($result);
 			if (!$result) {
 				Common::send("error", i18n("git_addFailed", $file));
 			}

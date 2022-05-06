@@ -130,7 +130,6 @@
 			// Made with love by @fitri
 			// & https://github.com/io-developer/js-dragndrop
 			e.stopPropagation();
-			console.clear();
 
 			var target = e.target;
 			var origin, sibling;
@@ -148,7 +147,6 @@
 				timeout = false;
 
 				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
-				log(swap);
 
 				swap = swap.filter((item) => {
 					var rect = item.getBoundingClientRect();
@@ -331,7 +329,7 @@
 								var appendage = '';
 
 								files.forEach(function(file) {
-									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo);
+									appendage += self.createDirectoryItem(file.path, file.type, file.size, file.repo, file.link);
 
 									if (pathinfo(file.path).basename === '.git') {
 										atheos.codegit.addRepoIcon(path);
@@ -377,7 +375,7 @@
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
 
-		createDirectoryItem: function(path, type, size, repo) {
+		createDirectoryItem: function(path, type, size, repo, link) {
 
 			var basename = pathinfo(path).basename;
 
@@ -398,11 +396,12 @@
 			var repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
 
 			return `<li class="draggable">
-			<a data-type="${type}" data-path="${path}">
+			<a ${link ? 'title=\"' + link + '\"' : ''} data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
 			<i class="${fileClass}"></i>
 			${repoIcon}
-			<span>${basename}</span>
+			
+			<span ${link ? 'class=\"aqua\"' : ''}>${basename}</span>
 			</a>
 			${emptyFolder}
 			</li>`;
@@ -568,7 +567,6 @@
 						if (status === 'error') return;
 						if (self.cutboard !== false) {
 							self.cutboard = false;
-							log(self.cutboard);
 						}
 						self.addToFileManager(parentDest + '/' + activeBase, activeType, parentDest);
 						/* Notify listeners. */
@@ -683,8 +681,6 @@
 					data: anchor,
 					settled: function(status, reply) {
 						if (status === 'error') return;
-
-						log(parent + '/' + fileName, 'folder', parent);
 
 						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
 						/* Notify listeners. */

@@ -221,9 +221,6 @@ class TextMode {
 	public function saveExtensionMap($map) {
 		$customMap = array();
 		
-		debug($map);
-		debug(gettype($map));
-
 		$len = count($map["extension"]);
 
 		$extensions = $map["extension"];
@@ -246,8 +243,6 @@ class TextMode {
 			}
 		}
 		
-		debug($customMap);
-
 		Common::saveJSON("extensions", $customMap);
 		Common::send("success", "Textmodes saved.");
 	}

@@ -40,7 +40,6 @@ class Filemanager {
 			Common::send("success", array("modifyTime" => $modifyTime));
 		} else {
 			$error = error_get_last();
-			debug($error);
 			Common::send("error", i18n("path_unableCreate"));
 		}
 	}
@@ -110,10 +109,6 @@ class Filemanager {
 		$parent = $info["dirname"];
 		$base = $info["basename"];
 		$ext = $info["extension"];
-
-		debug($parent);
-		debug($base);
-		debug($ext);
 
 		$des = $parent."/".$name;
 
@@ -248,20 +243,27 @@ class Filemanager {
 		$folders = array();
 		$files = array();
 		foreach ($index as $item => $data) {
-			if ($data["type"] == "folder") {
+			$link = false;
+			if(is_link($data["path"])) {
+				$link = readlink($data["path"]);
+			}
+			
+			if ($data["type"] === "folder") {
 
 				$repo = file_exists($data["path"] . "/.git");
 
 				$folders[] = array(
 					"path" => $data["path"],
+					"link" => $link,
 					"type" => $data["type"],
 					"size" => $data["size"],
 					"repo" => $repo
 				);
 			}
-			if ($data["type"] == "file") {
+			if ($data["type"] === "file") {
 				$files[] = array(
 					"path" => $data["path"],
+					"link" => $link,
 					"type" => $data["type"],
 					"size" => $data["size"]
 				);
@@ -332,7 +334,7 @@ class Filemanager {
 			$prot = "http://";
 		}
 		$domain = SERVER("HTTP_HOST");
-		$url = rtrim($prot . $domain . "/workspace/" . Common::getWorkspacePath($path), "/");
+		$url = rtrim($prot . $domain . "/workspace/" . Common::getRelativePath($path), "/");
 
 		Common::send("success", $url);
 	}

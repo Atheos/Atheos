@@ -1,4 +1,4 @@
-<canvas id="synthetic"></canvas>
+<canvas id="myth"></canvas>
 <?php require_once("templates/logo.php"); ?>
 <script src="components/install/init.js"></script>
 <?php

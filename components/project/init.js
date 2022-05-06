@@ -98,6 +98,10 @@
 						logSpan.find('span').text(reply.lastLogin);
 					}
 
+					if (reply.state) {
+						atheos.filemanager.rescanChildren = reply.state;
+					}
+
 					self.setRoot(reply.name, reply.path, reply.repo);
 
 				}
@@ -120,9 +124,12 @@
 				settled: function(status, reply) {
 					atheos.toast.show(reply);
 					if (status === 'error') return;
+					
+					if(reply.restore) {
+						atheos.filemanager.rescanChildren = reply.state;
+					}
 
-
-					self.setRoot(reply.name, reply.path, reply.repo);
+					self.setRoot(reply.name, reply.path, reply.repo, reply.restore);
 
 					if (atheos.modal.modalVisible) {
 						atheos.modal.unload();
@@ -140,7 +147,7 @@
 		//////////////////////////////////////////////////////////////////
 		// Set project root in file manager
 		//////////////////////////////////////////////////////////////////		
-		setRoot: function(name, path, repo) {
+		setRoot: function(name, path, repo, state) {
 			self.current = {
 				name,
 				path
@@ -160,7 +167,7 @@
 					<ul></ul>
 				</li>
 			</ul>`);
-			atheos.filemanager.openDir(path);
+			atheos.filemanager.openDir(path, state);
 		},
 
 		//////////////////////////////////////////////////////////////////

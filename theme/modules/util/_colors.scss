@@ -1,38 +1,38 @@
 :root {
-	--red   : #FF483A; //#FF453A;
+	--red: #FF483A; //#FF453A;
 	--orange: #F08D24; //#FF9F0A; // #D97000
 	--yellow: #FFD60A; //#E69900;
-	--lime  : #01FF70;
-	--green : #4EBA0A; //#46A609; //#30D158;
-	--olive : #3D9970;
-	--teal  : #008080; //Need to find a better teal
-	--aqua  : #7FDBFF; //#1CC3E8;
-	--cyan  : #1CC3E8; //#80FFF4;
+	--lime: #01FF70;
+	--green: #4EBA0A; //#46A609; //#30D158;
+	--olive: #3D9970;
+	--teal: #008080; //Need to find a better teal
+	--aqua: #7FDBFF; //#1CC3E8;
+	--cyan: #1CC3E8; //#80FFF4;
 	--indigo: #3E5CC6; //#5E5CE6;
-	--blue  : #0074D9; //#0A84FF;
-	--navy  : #001f3f;
+	--blue: #0074D9; //#0A84FF;
+	--navy: #001f3f;
 	--maroon: #85443B;
 	--fushia: #F012BE;
 	--purple: #BF5AF2;
-	--pink  : #FF375F; //#A2777A;
+	--pink: #FF375F; //#A2777A;
 }
 
-$red    : var(--red);
+$red : var(--red);
 $orange : var(--orange);
 $yellow : var(--yellow);
-$lime   : var(--lime);
-$green  : var(--green);
-$olive  : var(--olive);
-$teal   : var(--teal);
-$aqua   : var(--aqua);
-$cyan   : var(--cyan);
+$lime : var(--lime);
+$green : var(--green);
+$olive : var(--olive);
+$teal : var(--teal);
+$aqua : var(--aqua);
+$cyan : var(--cyan);
 $indigo : var(--indigo);
-$blue   : var(--blue);
-$navy   : var(--navy);
+$blue : var(--blue);
+$navy : var(--navy);
 $maroon : var(--maroon);
 $fushia : var(--fushia);
 $purple : var(--purple);
-$pink   : var(--pink);
+$pink : var(--pink);
 
 //////////////////////////////////////////////////////////////////////////////80
 //	CSS CLASSES
@@ -55,3 +55,68 @@ $pink   : var(--pink);
 .purple::before	{ color: $purple; }
 .pink::before	{ color: $pink; }
 
+span {
+	&.red {
+		color: #FF483A;
+	}
+
+	&.orange {
+		color: #F08D24;
+	}
+
+	&.yellow {
+		color: #FFD60A;
+	}
+
+	&.lime {
+		color: #01FF70;
+	}
+
+	&.green {
+		color: #4EBA0A;
+	}
+
+	&.olive {
+		color: #3D9970;
+	}
+
+	&.teal {
+		color: #008080;
+	}
+
+	&.aqua {
+		color: #7FDBFF;
+	}
+
+	&.cyan {
+		color: #1CC3E8;
+	}
+
+	&.indigo {
+		color: #3E5CC6;
+	}
+
+	&.blue {
+		color: #0074D9;
+	}
+
+	&.navy {
+		color: #001f3f;
+	}
+
+	&.maroon {
+		color: #85443B;
+	}
+
+	&.fushia {
+		color: #F012BE;
+	}
+
+	&.purple {
+		color: #BF5AF2;
+	}
+
+	&.pink {
+		color: #FF375F;
+	}
+}

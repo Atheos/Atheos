@@ -16,7 +16,8 @@ trait Path {
 	// Check if Path is absolute
 	//////////////////////////////////////////////////////////////////////////80
 	public static function isAbsPath($path) {
-		return ($path[0] === '/' || $path[1] === ':');
+		if (!$path) return $path;
+		return ($path[0] === "/" || $path[1] === ":");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -25,17 +26,17 @@ trait Path {
 	public static function cleanPath($path) {
 
 		// replace backslash with slash
-		$path = str_replace('\\', '/', $path);
+		$path = str_replace("\\", "/", $path);
 
 		// allow only valid chars in paths$
-		$path = preg_replace('/[^A-Za-z0-9 :\-\._\/]/', '', $path);
+		$path = preg_replace("/[^A-Za-z0-9 :\-\._\/]/", "", $path);
 		// maybe this is not needed anymore
 		// prevent Poison Null Byte injections
-		$path = str_replace(chr(0), '', $path);
+		$path = str_replace(chr(0), "", $path);
 
 		// prevent go out of the workspace
-		while (strpos($path, '../') !== false) {
-			$path = str_replace('../', '', $path);
+		while (strpos($path, "../") !== false) {
+			$path = str_replace("../", "", $path);
 		}
 		return $path;
 	}
@@ -48,8 +49,8 @@ trait Path {
 		if (!$path) {
 			return false;
 		}
-		
-		$path = str_replace(WORKSPACE . "/", "", $path);
+
+		// $path = str_replace(WORKSPACE . "/", "", $path);
 
 		//Security check
 		if (!Common::checkPath($path)) {
@@ -58,6 +59,15 @@ trait Path {
 		if (Common::isAbsPath($path)) {
 			return $path;
 		}
+		return $path;
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Return the path relative to root installation, used during previews
+	//////////////////////////////////////////////////////////////////////////80
+	public static function getRelativePath($path) {
+		// $path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
+		$path = str_replace(WORKSPACE . "/", "", $path);
 		return $path;
 	}
 
