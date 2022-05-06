@@ -334,7 +334,7 @@ class Filemanager {
 			$prot = "http://";
 		}
 		$domain = SERVER("HTTP_HOST");
-		$url = rtrim($prot . $domain . "/workspace/" . Common::getWorkspacePath($path), "/");
+		$url = rtrim($prot . $domain . "/workspace/" . Common::getRelativePath($path), "/");
 
 		Common::send("success", $url);
 	}
