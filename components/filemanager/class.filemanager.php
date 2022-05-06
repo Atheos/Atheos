@@ -40,7 +40,6 @@ class Filemanager {
 			Common::send("success", array("modifyTime" => $modifyTime));
 		} else {
 			$error = error_get_last();
-			debug($error);
 			Common::send("error", i18n("path_unableCreate"));
 		}
 	}
@@ -110,10 +109,6 @@ class Filemanager {
 		$parent = $info["dirname"];
 		$base = $info["basename"];
 		$ext = $info["extension"];
-
-		debug($parent);
-		debug($base);
-		debug($ext);
 
 		$des = $parent."/".$name;
 
