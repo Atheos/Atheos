@@ -73,7 +73,10 @@ class Active {
 		foreach ($result as $file) {
 			$path = $file["path"];
 
-			if (file_exists(Common::getWorkspacePath($path))) {
+			// Ensure path is correct when in workspace
+			$path = Common::getWorkspacePath($path);
+			$path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
+			if (file_exists($path)) {
 				if ($file["status"] === "inFocus") $temp["inFocus"] = $path;
 
 				$temp[] = $file;
