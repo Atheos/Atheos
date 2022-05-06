@@ -130,7 +130,6 @@
 			// Made with love by @fitri
 			// & https://github.com/io-developer/js-dragndrop
 			e.stopPropagation();
-			console.clear();
 
 			var target = e.target;
 			var origin, sibling;
@@ -148,7 +147,6 @@
 				timeout = false;
 
 				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
-				log(swap);
 
 				swap = swap.filter((item) => {
 					var rect = item.getBoundingClientRect();
@@ -569,7 +567,6 @@
 						if (status === 'error') return;
 						if (self.cutboard !== false) {
 							self.cutboard = false;
-							log(self.cutboard);
 						}
 						self.addToFileManager(parentDest + '/' + activeBase, activeType, parentDest);
 						/* Notify listeners. */
@@ -684,8 +681,6 @@
 					data: anchor,
 					settled: function(status, reply) {
 						if (status === 'error') return;
-
-						log(parent + '/' + fileName, 'folder', parent);
 
 						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
 						/* Notify listeners. */

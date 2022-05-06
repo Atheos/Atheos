@@ -16,6 +16,7 @@ trait Path {
 	// Check if Path is absolute
 	//////////////////////////////////////////////////////////////////////////80
 	public static function isAbsPath($path) {
+		if(!$path) return $path;
 		return ($path[0] === '/' || $path[1] === ':');
 	}
 
