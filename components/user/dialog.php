@@ -137,7 +137,7 @@ switch ($action) {
 				<a title="Upload Bulk Accounts">
 					<form class="uploadBulk" enctype="multipart/form-data">
 						<label><i class="fas fa-upload"></i>
-							<input class="hidden" type="file" name="upload[]"  accept=".csv">
+							<input class="hidden" type="file" name="upload[]" accept=".csv">
 						</label>
 					</form>
 				</a>
