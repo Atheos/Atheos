@@ -250,8 +250,11 @@
 		"new": "New Account",
 		"create": "Create Account",
 		"delete": "Delete Account",
-		"confirm": "Confirm Account Deletion"
+		"confirm": "Confirm Account Deletion",
+		"download": "Download Bulk Template",
+		"upload": "Upload Bulk Accounts"
 	},
+	
 	"account:": "Account:",
 
 	"username": {

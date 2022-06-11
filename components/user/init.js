@@ -20,6 +20,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			self.loginForm = oX('#login');
+			fX('#dialog .uploadBulk').on('change', self.uploadBulk);
 
 			if (self.loginForm.exists()) {
 				fX('#login').on('submit', function(e) {
@@ -194,20 +195,7 @@
 				if (!vUser) return toast('error', 'Username must be an alphanumeric string');
 				if (!vPass) return toast('error', 'Passwords do not match.');
 
-				echo({
-					data: {
-						target: 'user',
-						action: 'create',
-						username: data.username,
-						password: data.password
-					},
-					settled: function(status, reply) {
-						toast(status, reply);
-						if (status !== 'error') {
-							self.list();
-						}
-					}
-				});
+				self.createUser(data.username, data.password);
 			};
 
 			atheos.modal.load(400, {
@@ -217,6 +205,91 @@
 			});
 		},
 
+		listTimer: false,
+
+		createUser: function(username, password) {
+
+			echo({
+				data: {
+					target: 'user',
+					action: 'create',
+					username,
+					password
+				},
+				settled: function(status, reply) {
+					toast(status, reply);
+					if (status !== 'error') {
+						if (self.listTimer) {
+							clearTimeout(self.listTimer);
+						}
+						self.listTimer = setTimeout(self.list, 100);
+					}
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Upload bulk template
+		//////////////////////////////////////////////////////////////////////80
+		uploadBulk: function(e) {
+			e.preventDefault();
+			e.stopPropagation();
+
+			if (!window.FileReader) return;
+
+			var input = oX('#dialog input[type="file"]').element,
+				fileCount = input.files.length,
+				uploadName;
+
+			if (fileCount <= 0) return;
+
+			let file = input.files[0];
+
+			var reader = new FileReader();
+			// Handle errors load
+			reader.onload = function(e) {
+				self.processBulk(e.target.result);
+			};
+			reader.onerror = function(e) {
+				toast(400, e.name);
+			};
+
+			// Read file into memory as UTF-8      
+			reader.readAsText(file);
+
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Process Bulk CSV data
+		//////////////////////////////////////////////////////////////////////80
+		processBulk: function(csv) {
+			var lines = csv.split(/\r\n|\n/);
+			if (lines[0].toLowerCase() === 'username,password') {
+				lines.shift();
+			}
+
+			while (lines.length) {
+				let line = lines.shift().split(',');
+				if (line.length !== 2) continue;
+
+				let user = line[0],
+					pass = line[1],
+					vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(user)) && user !== 0;
+
+				if (!vUser) {
+					toast('error', 'Username must be an alphanumeric string');
+					continue;
+				}
+				self.createUser(user, pass);
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Download bulk template
+		//////////////////////////////////////////////////////////////////////80
+		downloadTemplate: function() {
+			oX('#download').attr('src', 'components/user/template.csv');
+		},
 		//////////////////////////////////////////////////////////////////////80
 		// Delete User
 		//////////////////////////////////////////////////////////////////////80
