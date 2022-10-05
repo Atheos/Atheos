@@ -31,13 +31,13 @@ switch ($action) {
 		<label class="title"><i class="fas fa-key"></i><?php echo i18n("password_change"); ?></label>
 		<form>
 			<label for="password"><?php echo i18n("password_new"); ?></label>
-			<input type="password"  id="password" name="password">
+			<input type="password" id="password" name="password">
 			<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
-			
+
 			<label for="validate"><?php echo i18n("password_confirm"); ?></label>
-			<input type="password"  id="validate" name="validate">
+			<input type="password" id="validate" name="validate">
 			<i for="validate" class="fas fa-eye-slash merged-icon togglePassword"></i>
-			
+
 			<button class="btn-left"><?php echo i18n("password_changeUser", ucfirst($username)) ?></button>
 			<button class="btn-right" onclick="atheos.modal.unload();return false;"><?php echo i18n("cancel"); ?></button>
 		</form>
@@ -55,11 +55,11 @@ switch ($action) {
 			<input type="text" name="username" autofocus="autofocus" autocomplete="off">
 
 			<label for="password"><?php echo i18n("password"); ?></label>
-			<input type="password"  id="password" name="password">
+			<input type="password" id="password" name="password">
 			<i for="password" class="fas fa-eye-slash merged-icon togglePassword"></i>
 
 			<label for="validate"><?php echo i18n("password_confirm"); ?></label>
-			<input type="password"  id="validate" name="validate">
+			<input type="password" id="validate" name="validate">
 			<i for="validate" class="fas fa-eye-slash merged-icon togglePassword"></i>
 
 			<button class="btn-left"><?php echo i18n("account_create"); ?></button>
@@ -129,8 +129,19 @@ switch ($action) {
 				}
 				?>
 			</table>
-			<toolbar>
-				<button class="btn-left" onclick="atheos.user.create();"><?php echo i18n("account_new"); ?></button>
+			<toolbar class="user">
+				<a title="Download Bulk Template" onclick="atheos.user.downloadTemplate();">
+					<i class="fas fa-download"></i>
+				</a>
+
+				<a title="Upload Bulk Accounts">
+					<form class="uploadBulk" enctype="multipart/form-data">
+						<label><i class="fas fa-upload"></i>
+							<input class="hidden" type="file" name="upload[]" accept=".csv">
+						</label>
+					</form>
+				</a>
+				<button onclick="atheos.user.create();"><?php echo i18n("account_new"); ?></button>
 			</toolbar>
 			<?php
 		}

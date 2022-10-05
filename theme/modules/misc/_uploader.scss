@@ -1,4 +1,4 @@
-#dialog form[enctype="multipart/form-data"] {
+#dialog form.transfer {
 	padding: 5px 10px 10px;
 }
 
@@ -15,18 +15,6 @@
 
 	&:hover {
 		color: $fontColorMajor;
-	}
-
-	input {
-		cursor: pointer;
-		height: 100%;
-		position: absolute;
-		border: none;
-		padding: 0;
-		margin: 0;
-		right: 0;
-		top: 0;
-		opacity: 0;
 	}
 }
 

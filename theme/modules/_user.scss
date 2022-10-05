@@ -3,3 +3,34 @@
 	margin: 10px 0 5px 0;
 	overflow: auto;
 }
+
+.user {
+	i {
+		font-size: 1.5rem;
+		vertical-align: middle;
+		cursor: pointer;
+
+		&:hover {
+			color: $colorMajor;
+		}
+	}
+}
+
+#content .uploadBulk {
+	padding: 0;
+	display: inline-block;
+	position: relative;
+	background-color: transparent;
+
+	input {
+		height: 100%;
+		position: absolute;
+		pointer-events: none;
+		border: none;
+		padding: 0;
+		margin: 0;
+		right: 0;
+		top: 0;
+		opacity: 0;
+	}
+}
