@@ -17,13 +17,13 @@ trait History {
 
 		$pivot = array();
 		foreach ($result as $i => $item) {
-			$item = explode('\\|', $item);
+			$item = explode('|', $item);
 			$pivot[] = array(
-				"hash" => $item[0],
-				"author" => $item[1],
-				"email" => $item[2],
-				"date" => $item[3],
-				"message" => $item[4]
+				"hash" => $item[0] ?? '',
+				"author" => $item[1] ?? '',
+				"email" => $item[2] ?? '',
+				"date" => $item[3] ?? '',
+				"message" => $item[4] ?? ''
 			);
 		}
 
