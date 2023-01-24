@@ -20,19 +20,19 @@
 
 	"login": {
 		"": "Connexion",
-		"last": "Dernière connexion: %s"
+		"last": "Dernière connexion : %s"
 	},
 	"logout": "Déconnexion",
 	"rememberMe": "Se souvenir de moi",
 
 	"find": "Trouver",
-	"find:": "Trouver:",
+	"find:": "Trouver :",
 
 	"replace": {
 		"": "Remplacer",
 		"all": "Remplacer Tout"
 	},
-	"replace:": "Remplacer:",
+	"replace:": "Remplacer :",
 
 	"gotoLine": "Aller à la ligne",
 
@@ -62,20 +62,20 @@
 		"success": "Extraction de l'archive effectuée.",
 		"unable": "Impossible d'extraire l'archive.",
 		"noOpen": "Impossible d'ouvrir l'archive.",
-		"noZip": "PHP ZipArchive not installed or enabled.",
-		"noPhar": "PHP PharData not installed or enabled.",
-		"noRar": "PHP Rar Open not installed or enabled.",
-		"noDecomp": "Unable to decompress gzip archive.",
-		"unrecognized":"Unsupported archive type."
+		"noZip": "ZipArchive (PHP) n'est pas installé ou activé.",
+		"noPhar": "PharData (PHP) n'est pas installé ou activé.",
+		"noRar": "Rar (PHP) n'est pas installé ou activé.",
+		"noDecomp": "Impossible d'extraire l'archive gzip.",
+		"unrecognized":"Type d'archive non supporté."
 	},
 	"duplicate": {
 		"": "Dupliquer",
-		"name": "Entrer un nouveau nom:",
+		"name": "Entrer un nouveau nom :",
 		"file": "Fichier en double",
 		"folder": "Dossier en double"
 	},
 	"preview": "Prévisualisation",
-	"outsideWorkspace": "File located outside of workspace.",
+	"outsideWorkspace": "Fichier en dehors de l'espace de travail.",
 	"cancel": "Abandonner",
 	"clear": "Effacer",
 	"name": "Nom",
@@ -97,7 +97,7 @@
 	"delete": {
 		"": "Supprimer",
 		"type": "Supprimer %s",
-		"scope": "Delete files on server?"
+		"scope": "Supprimer les fichiers sur le serveur ?"
 	},
 
 	"edit": "Editer",
@@ -115,455 +115,453 @@
 	"close": {
 		"": "Fermer",
 		"all": "Fermer tout",
-		"active": "Close Active File"
+		"active": "Fermer le fichier actif"
 	},
 
-	"closeUnsavedFile": "Close Unsaved File?",
+	"closeUnsavedFile": "Fermer le fichier non sauvegardé ?",
 
-	"save&close": "Save & Close",
-	"discardChanges": "Discard Changes",
+	"save&close": "Sauvegarder & Fermer",
+	"discardChanges": "Annuler les modifications",
 
-	"ln": "Ln",
-	"in": "In:",
-	"all": "All",
+	"ln": "Lig",
+	"in": "Dans:",
+	"all": "Tous",
 	"col": "Col",
-	"help": "Help",
+	"help": "Aide",
 	"mode": "Mode",
 
 
 
-	"more": "More",
-	"less": "Less",
-	"users": "Users",
+	"more": "Plus",
+	"less": "Moins",
+	"users": "Utilisateurs",
 
-	"search": "Search",
+	"search": "Rechercher",
 
-	"filterTree": "Filter Tree",
-	"prefix": "Prefix",
-	"substring": "Substring",
+	"filterTree": "Filtrer l'arborescense",
+	"prefix": "Préfixe",
+	"substring": "Sous-chaîne",
 	"regex": "Regex",
 
 	"scout": {
-		"open": "Open Scout",
-		"query": "Query:",
-		"searching": "Searching...",
-		"searchFiles": "Search Files:",
-		"fileTypes": "space seperated file types",
-		"withinWorkSpace": "Within Workspace"
+		"open": "Ouvrir Scout",
+		"query": "Requête :",
+		"searching": "Recherche...",
+		"searchFiles": "Rechercher des fichiers :",
+		"fileTypes": "Types séparés par des espaces",
+		"withinWorkSpace": "Dans l'espace de travail"
 	},
 
-	"noShell": "Shell_exec() command not enabled",
+	"noShell": "La commande Shell_exec() n'est pas activée",
 
-	"themes": "Themes",
-	"branch": "Branch",
-	"editor": "Editor",
+	"themes": "Thèmes",
+	"branch": "Branche",
+	"editor": "Editeur",
 	"extension": "Extension",
 	"extensions": "Extensions",
-	"textmode": "Textmode",
-	"textmodes": "Textmodes",
-	"saveExtensions": "Save Extensions",
-	"extensionSet": "%s is already set",
+	"textmode": "Mode texte",
+	"textmodes": "Modes texte",
+	"saveExtensions": "Sauvegarder extensions",
+	"extensionSet": "%s est déjà défini",
 
-	"keybindings": "Keybindings",
+	"keybindings": "Raccourcis clavier",
 	"plugins": "Plugins",
-	"system": "System",
+	"system": "Système",
 	"administration": "Administration",
 
 
 	"wrap": {
-		"": "Line Wrap",
-		"on": "Wrap Lines",
-		"off": "No Wrap"
+		"": "Retour à la ligne",
+		"on": "Retour à la ligne activé",
+		"off": "Retour à la ligne désactivé"
 	},
 
-	"confirm": "Confirm",
-	"explore": "Explore",
-	"continue": "Continue",
+	"confirm": "Confirmer",
+	"explore": "Explorer",
+	"continue": "Continuer",
 
 	"analytics": {
-		"": "Analytics",
-		"enabled": "Anonymous Analytics",
-		"send": "Send Analytics",
-		"policy": "While using the Atheos IDE, we ask to collect the above information. We will not share your data with anyone, this data is to understand user needs and improving Atheos IDE. By opting into our analytics program, you agree to the collection and use of information in accordance with this policy. More information can be found at [root]/docs/PRIVACY.md on the Github Repository."
+		"": "Analyses d'usage",
+		"enabled": "Analyses d'usage anonymes",
+		"send": "Envoyer les analyses d'usage",
+		"policy": "Nous collectons les informations ci-dessus lors de l'utilisation de l'IDE Atheos. Nous ne partagerons vos données, elles sont destinées à comprendre les besoins des utilisateurs et à améliorer l'IDE Atheos. En optant pour notre programme d'analyses d'usage, vous acceptez la collecte et l'utilisation des informations conformément à cette politique. Plus d'informations peuvent être trouvées sur [racine]/docs/PRIVACY.md sur le dépôt Github."
 	},
 
 	"uuid": "UUID",
 	"version": "Version",
-	"first_heard": "First Heard",
-	"last_heard": "Last Heard",
-	"server_os": "Server",
-	"client_os": "Browser",
+	"first_heard": "Premier envoi",
+	"last_heard": "Dernier envoi",
+	"server_os": "Serveur",
+	"client_os": "Navigateur",
 
-	"timezone": "Timezone",
+	"timezone": "Fuseau horaire",
 	"settings": {
-		"": "Settings",
-		"autosave": "Settings are automatically saved.",
-		"editor": "Editor Settings",
-		"feedback": "Notification Settings",
-		"draft": "Draft Settings",
-		"system": "System Settings",
-		"codegit": "CodeGit Settings"
+		"": "Paramètres",
+		"autosave": "Les paramètres sont sauvegardés automatiquement.",
+		"editor": "Paramètres de l'éditeur",
+		"feedback": "Paramètres de notification",
+		"draft": "Paramètres de brouillon",
+		"system": "Paramètres système",
+		"codegit": "Paramètres CodeGit"
 	},
 
 	"feedback": "Notifications",
 
 	"toast": {
-		"location": "Toast Location:",
+		"location": "Emplacement des bulles d'infos :",
 		"stay": {
-			"success": "Toast success stay time:",
-			"notice": "Toast notice stay time:",
-			"warning": "Toast warning stay time:",
-			"error": "Toast error stay time:"
+			"success": "Temps d'affichage des messages de réussite :",
+			"notice": "Temps d'affichage des messages d'information :",
+			"warning": "Temps d'affichage des messages d'attention :",
+			"error": "Temps d'affichage des messages d'échec :"
 		}
 	},
 
 	"output": {
-		"location": "Output Location:",
+		"location": "Emplacement des messages :",
 		"stay": {
-			"success": "Output success stay time:",
-			"notice": "Output notice stay time:",
-			"warning": "Output warning stay time:",
-			"error": "Output error stay time:"
+			"success": "Temps d'affichage des messages de réussite :",
+			"notice": "Temps d'affichage des messages d'information :",
+			"warning": "Temps d'affichage des messages d'attention :",
+			"error": "Temps d'affichage des messages d'échec :"
 		}
 	},
 
 	"location": {
-		"bl": "Bottom left",
-		"bc": "Bottom center",
-		"br": "Bottom right",
-		"tl": "Top left",
-		"tc": "Top center",
-		"tr": "Top right"
+		"bl": "En bas à gauche",
+		"bc": "En bas au centre",
+		"br": "En bas à droite",
+		"tl": "En haut à gauche",
+		"tc": "En haut au centre",
+		"tr": "En haut à droite"
 	},
 
-	"manual": "Disable autoclose",
+	"manual": "Désactiver la fermeture automatique",
 
 	"draft": {
-		"": "Draft",
-		"enable": "Enable autosaving files in draft",
-		"interval": "Draft saving interval",
-		"verbose": "Verbose autosaving"
+		"": "Brouillon",
+		"enable": "Activer la sauvegarde automatique sur brouillon",
+		"interval": "Intervalle entre les sauvegardes automatiques",
+		"verbose": "Informer de la sauvegarde automatique"
 	},
 
 	"account": {
-		"": "Account",
-		"new": "New Account",
-		"create": "Create Account",
-		"delete": "Delete Account",
-		"confirm": "Confirm Account Deletion",
-		"download": "Download Bulk Template",
-		"upload": "Upload Bulk Accounts"
+		"": "Compte utilisateur",
+		"new": "Nouveau compte utilisateur",
+		"create": "Créer le compte utilisateur",
+		"delete": "Supprimer le compte utilisateur",
+		"confirm": "Confirmer la suppression du compte utilisateur",
+		"download": "Télécharger le modèle d'insertion en masse",
+		"upload": "Téléverser un fichier de comptes utilisateur en masse"
 	},
 	
-	"account:": "Account:",
+	"account:": "Compte utilisateur :",
 
 	"username": {
-		"": "Username",
-		"new": "New Username",
-		"create": "Create Username"
+		"": "Utilisateur",
+		"new": "Nouvel utilisateur",
+		"create": "Créer un utilisateur"
 	},
-	"username:": "Username:",
+	"username:": "Utilisateur :",
 
 
 	"password": {
-		"": "Password",
-		"new": "New Password",
-		"change": "Change Password",
-		"changeUser": "Change %s's Password",
-		"confirm": "Confirm Password"
+		"": "Mot de passe",
+		"new": "Nouveau mot de passe",
+		"change": "Changer le mot de passe",
+		"changeUser": "Changer le mot de passe de %s",
+		"confirm": "Confirmer le mot de passe"
 	},
-	"password:": "Password:",
+	"password:": "Mot de passe :",
 
 	"project": {
-		"": "Project",
-		"current": "Current Project",
-		"noActive": "No Active Projects",
-		"create": "Create Project",
+		"": "Projet",
+		"current": "Projet courant",
+		"noActive": "Pas de projet courant",
+		"create": "Créer un projet",
 		"exists": {
-			"path": "Project path already exists.",
-			"name": "Project name already exists."
+			"path": "Le répertoire du projet existe déjà.",
+			"name": "Le nom du projet existe déjà."
 		},
-		"unableCreate": "Cannot create path.",
-		"unableAbsolute": "Unable to create absolute path.",
-		"unablePermissions": "No Read/Write Permission.",
+		"unableCreate": "Impossible de créer le répertoire.",
+		"unableAbsolute": "Impossible de créer le répertoire absolu.",
+		"unablePermissions": "Aucune permission en lecture/écriture.",
 
-		"new": "New Project",
-		"list": "Project List",
+		"new": "Nouveau projet",
+		"list": "Liste des projets",
 
-		"name": "Project Name",
-		"rename": "Rename Project",
+		"name": "Nom du projet",
+		"rename": "Renommer le projet",
 		"unableRename": "Cannot rename path.",
-		"delete": "Delete Project",
-		"confirm": "Confirm Project Deletion",
-		"loaded": "%s Loaded",
-		"missing": "Project not found",
-		"gitnote": "This will only work if your Git Repo does not require Interactive Authentication and your Server has Git installed."
+		"delete": "Suppresion du projet",
+		"confirm": "Confirmez la suppression du projet",
+		"loaded": "%s est chargé",
+		"missing": "Projet non trouvé",
+		"gitnote": "Cela ne fonctionnera que si votre dépot Git ne nécessite pas d'authentification et si Git est installé sur votre serveur."
 	},
 
-	"project:": "Project:",
-	"projects": "Projects",
-	"projects:": "Projects:",
+	"project:": "Projet :",
+	"projects": "Projets",
+	"projects:": "Projets :",
 
-	"editUserACL": "Edit %s's ACL",
+	"editUserACL": "Editer la liste de contrôle d'accès de %s",
 
-	"workspaceProjects": "Workspace Projects",
+	"workspaceProjects": "Espace de travail des projets",
 
-	"accessAllProjects": "Access ALL Projects",
-	"onlySelectedProjects": "Only Selected Projects",
+	"accessAllProjects": "Accéder à TOUS les projets",
+	"onlySelectedProjects": "Uniquement les projets sélectionnés",
 
 	"update": {
-		"": "Update",
-		"check": "Update Check",
-		"changes": "Changes on Atheos:",
-		"current": "Your System Is Up To Date."
+		"": "Mise à jour",
+		"check": "Vérification des mises à jour",
+		"changes": "Evolution sur Atheos :",
+		"current": "Votre système est à jour."
 	},
-	"install": "Install",
-	"domain": "Custom Domain",
-	"nightly": "Note: Your installation is a nightly build. Atheos might be unstable.",
-	"yourVersion": "Your Version",
-	"latestVersion": "Latest Version",
-	"downloadAtheos": "Download Atheos",
+	"install": "Installer",
+	"domain": "Domaine personnalisé",
+	"nightly": "Note : Votre installation est une 'nightly build'. Atheos pourrait être instable.",
+	"yourVersion": "Votre version",
+	"latestVersion": "Dernière version",
+	"downloadAtheos": "Télécharger Atheos",
 
-	"language": "Language",
+	"language": "Langue",
 	"collapse": "Collapse",
 
-	"enableLigatures": "Enable Code Ligatures",
-	"highlightActiveLine": "Highlight Active Line",
-	"fontSize": "Font Size",
+	"enableLigatures": "Activer les ligatures de code",
+	"highlightActiveLine": "Mettre la ligne active en surbrillance",
+	"fontSize": "Taille de fonte",
 	"pixel": {
 		"": "%spx",
-		"default": "%spx (default)"
+		"default": "%spx (défaut)"
 	},
 
-	"foldWidgets": "Show Fold Widgets",
+	"foldWidgets": "Outil de pliage / dépliage du code ?",
 
 	"tabs": {
-		"soft": "Soft Tabs",
-		"size": "Tab Size"
+		"soft": "Espaces en tabulations ?",
+		"size": "Taille de la tabulation"
 	},
-	"userList": "User List",
+	"userList": "Liste des utilisateurs",
 
 	"folder": {
-		"": "Folder",
-		"invalid": "Invalid Folder"
+		"": "Dossier",
+		"invalid": "Dossier invalide"
 	},
 
 	"directory": {
-		"": "Directory",
-		"invalid": "Invalid Directory"
+		"": "Répertoire",
+		"invalid": "Répertoire invalide"
 	},
 
 	"file": {
-		"": "File",
-		"new": "New File",
-		"type": "File Type:",
-		"saved": "File saved"
+		"": "Fichier",
+		"new": "Nouveau fichier",
+		"type": "Type de fichier :",
+		"saved": "Fichier sauvegardé"
 	},
 
-	"fileNew": "New File",
-	"fileType": "File Type:",
-	"fileSaved": "File saved",
+	"fileNew": "Nouveau fichier",
+	"fileType": "Type de fichier :",
+	"fileSaved": "Fichier sauvegardé",
+	"fileUpload": "Fichier téléchargé",
+	"filesUpload": "Fichiers téléchargés",
 
-	"fileUpload": "Upload File",
-	"filesUpload": "Upload Files",
-
-	"folderNew": "New Folder",
+	"folderNew": "Nouveau dossier",
 
 	"path": {
-		"": "Path",
-		"missing": "Path doesn't exist.",
-		"exists": "Path already exists.",
-		"unableCreate": "Cannot create path.",
-		"unableRename": "Cannot rename path."
+		"": "Répertoire",
+		"missing": "Le répertoire n'existe pas.",
+		"exists": "Le répertoire existe déjà.",
+		"unableCreate": "Impossible de créer le répertoire.",
+		"unableRename": "Impossible de renommer le répertoire."
 	},
 
 	"restricted": {
-		"": "Restricted",
-		"userList": "Not authorized to edit UserList",
-		"updates": "You can not check for updates",
-		"marketplace": "You can not access the Marketplace",
+		"": "Restrictions",
+		"userList": "Vous n'êtes pas autorisé à éditer la liste des utilisateurs",
+		"updates": "Vous n'êtes pas autorisé à vérifier si Atheos est à jour",
+		"marketplace": "Vous n'êtes pas autorisé à accéder à la place de marché",
 		"textmodes": "You can not access the Textmodes"
 	},
 
-	"unauthorized": "You are not Authorized to %s",
-	"wrapLines": "Wrap Lines",
+	"unauthorized": "Vous n'êtes pas autorisé à %s",
+	"wrapLines": "Retours à la ligne",
 
-	"printMarginShow": "Print Margin",
-	"printMarginColumn": "Print Margin Column",
+	"printMarginShow": "Marge",
+	"printMarginColumn": "Marge de colonne",
 
-	"theme": "Theme",
+	"theme": "Thème",
 	"hover": {
-		"": "Hover",
-		"duration": "Sidebar Hover Duration"
+		"": "Survol",
+		"duration": "Durée de survol des panneaux"
 	},
 	"click": {
-		"": "Click",
-		"single": "Single Click",
+		"": "Cliquer",
+		"single": "Simple Click",
 		"double": "Double Click"
 	},
 
 	"loop": {
-		"behavior": "Active File Loop Behavior",
-		"onlyActive": "Loop only active tabs",
-		"incDropdown": "Include dropdown menu"
+		"behavior": "Boucle sur les fichiers actifs",
+		"onlyActive": "Boucle uniquement sur les onglets",
+		"incDropdown": "Inclure les menus contextuels"
 	},
 
-	"showHidden": "Show Hidden Files",
+	"showHidden": "Montrer les fichiers cachés",
 
 	"trigger": {
-		"fileManager": "Filemanager Trigger",
-		"projectDock": "ProjectDock Trigger",
-		"rightSidebar": "Right Sidebar Trigger",
-		"leftSidebar": "Left Sidebar Trigger"
+		"fileManager": "Déclencheur du gestionnaire de fichier",
+		"projectDock": "Déclencheur du dock projet",
+		"rightSidebar": "Déclencheur du panneau droit",
+		"leftSidebar": "Déclencheur du panneau gauche"
 	},
 
 	"contextMenu": {
-		"delay": "Context Menu Close Delay"
+		"delay": "Délai de fermeture du menu contextuel"
 	},
 
+	"newExtension": "Nouvelle extension",
+	"fileExtension": "Extension de fichier",
+	"defaultTextmode": "Mode texte par défaut",
+	"indentGuides": "Guide d'indentation",
+	"inlinePreview": "Prévisualisation en ligne",
 
-	"newExtension": "New Extension",
-	"fileExtension": "File Extension",
-	"defaultTextmode": "Default Textmode",
-	"indentGuides": "Indent Guides",
-	"inlinePreview": "Inline Preview",
+	"close_uploader": "Fermer la fenêtre de téléchargement",
+	"close_modal": "Fermer une fenêtre modale",
 
-	"close_uploader": "Close Uploader",
-	"close_modal": "Close Modal",
+	"installationError": "Erreur d'installation",
+	"existsAndWriteable": "Assurez-vous que les éléments suivants existent et sont autorisés pour l'écriture :",
+	"envVariablesSet": "Assurez-vous que ces variables d'environnement sont définies :",
+	"retest": "Tester à nouveau",
 
-	"installationError": "Installation Error",
-	"existsAndWriteable": "Please make sure the following exist and are writeable:",
-	"envVariablesSet": "Please make sure these environmental variables are set:",
-	"retest": "Re-Test",
+	"initialSetup": "Paramétrage initial",
+	"developmentMode": "Mode développement",
 
-	"initialSetup": "Initial Setup",
-	"developmentMode": "Development Mode",
-
-	"connectionError": "Connection Error",
+	"connectionError": "Erreur de connexion",
 
 	"market": {
-		"": "Marketplace",
-		"atheos": "Atheos Marketplace",
+		"": "Place de marché",
+		"atheos": "Place de marché Atheos",
 		"install": {
-			"gitRepo": "... from Git Repo",
-			"manually": "Install Manually",
-			"success": "Successfully installed %s"
+			"gitRepo": "...depuis un dépot Git",
+			"manually": "Installer manuellement",
+			"success": "%s installé avec succès"
 		},
-		"unableDownload": "Unable to download Archive.",
-		"noZip": "Zip Extension not found.",
-		"missingDesc": "Missing Description.",
-		"missingAuth": "Unknown"
+		"unableDownload": "Impossible de télécharger l'archive.",
+		"noZip": "L'extension zip n'est pas trouvée.",
+		"missingDesc": "Il manque la description.",
+		"missingAuth": "Inconnu"
 	},
-	"complete": "Complete!",
-	"installed": "Installed",
-	"available": "Available",
-	"coming": "Coming Soon",
-	"reloadAtheos": "Reload Atheos",
+	"complete": "Terminé !",
+	"installed": "Installé",
+	"available": "Disponible",
+	"coming": "Bientôt disponible",
+	"reloadAtheos": "Rechargement d'Atheos",
 
 	"split": {
-		"": "Split",
-		"h": "Split Horizontally",
-		"v": "Split Vertically",
+		"": "Partager",
+		"h": "Partager horizontalement",
+		"v": "Partager verticalement",
 		"editor": {
-			"h": "Split Editor Horizontally",
-			"v": "Split Editor Vertically"
+			"h": "Partager l'éditeur horizontalement",
+			"v": "Partager l'éditeur verticalement"
 		}
 	},
 	"merge": {
-		"": "Merge",
-		"all": "Merge all",
-		"editor": "Merged Editor Panes"
+		"": "Assembler",
+		"all": "Tout assembler",
+		"editor": "Volets de l'éditeur de Merge"
 	},
 
 
 	"time": {
 		"ms": {
-			"": "%sms",
-			"default": "%sms (default)"
+			"": "%s ms",
+			"default": "%s ms (par défaut)"
 		},
 		"second": {
-			"single": "%s Second",
-			"plural": "%s Seconds"
+			"single": "%s Seconde",
+			"plural": "%s Secondes"
 		},
 		"minute": {
 			"single": "%s Minute",
 			"plural": "%s Minutes"
 		},
 		"hour": {
-			"single": "%s Hour",
-			"plural": "%s Hours"
+			"single": "%s Heure",
+			"plural": "%s Heures"
 		}
 	},
 
 	"warning": {
-		"fileOpen": "Warning: File Currently Opened By: %s"
+		"fileOpen": "Attention : Le fichier est actuellement ouvert par %s"
 	},
 
 
-	"NothingInYourClipboard": "Nothing in Your Clipboard",
-	"folderNameOrAbsolutePath": "Folder Name Or Absolute Path",
+	"NothingInYourClipboard": "Rien dans votre presse-papiers",
+	"folderNameOrAbsolutePath": "Nom du dossier ou chemin absolu",
 
-	"noOpenFilesOrSelect": "No Open Files or Selected Text",
+	"noOpenFilesOrSelect": "Aucun fichier ouvert ou texte sélectionné",
 
-	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
+	"dragFilesOrClickHereToUpload": "Faites glisser des fichiers ou cliquez ici pour télécharger",
 
-	"fileManager": "File Manager",
-	"gitRepository": "Git Repository",
+	"fileManager": "Gestionnaire de fichier",
+	"gitRepository": "Dépôt git",
 
 	"macro": {
-		"": "Macro Editor",
-		"add": "Add New Macro",
-		"title": "Title",
-		"icon": "FA Icon",
-		"applies": "Applies To",
-		"exts": "File Types",
-		"cmd": "Shell Command"
+		"": "Editeur Macro",
+		"add": "Ajouter une nouvelle macro",
+		"title": "Titre",
+		"icon": "FA Icône",
+		"applies": "S'applique à",
+		"exts": "Types de fichier",
+		"cmd": "Commande shell"
 	},
 
 	"codegit": {
 		"": "CodeGit",
-		"open": "Open CodeGit",
-		"banner": "Banner above FileManager",
-		"status": "File Status in BottomBar",
-		"unknown": "Unknown",
-		"untracked": "Untracked",
-		"uncommitted": "Uncommitted",
-		"committed": "Committed",
+		"open": "Ouvrir CodeGit",
+		"banner": "Bannière au-dessus du gestionnaire de fichier",
+		"status": "Statut du fichier dans la barre d'état",
+		"unknown": "Inconnu",
+		"untracked": "Non suivi",
+		"uncommitted": "Non committé",
+		"committed": "Committé",
 		"error": {
-			"statusFail": "Unable to load Repository status"
+			"statusFail": "Impossible de charger le statut du dépôt"
 		},
-		"diff": "Diff Viewer",
-		"blame": "Blame Viewer",
-		"log": "Log Viewer"
+		"diff": "Visionneur de Diff",
+		"blame": "Visionneur de Blame",
+		"log": "Visionneur de Log"
 	},
 
 	"git": {
 		"error": {
-			"noRepo": "Git repo not found."
+			"noRepo": "Dépôt git non trouvé."
 		},
 		"init": {
 			"": "Git Init",
-			"success": "Initialized empty Git repository.",
-			"failed": "Failed to initialize repository."
+			"success": "Dépôt Git initialisé.",
+			"failed": "L'initialisation du dépôt a échoué."
 		},
 		"clone": {
 			"": "Git Clone",
-			"success": "Successfully cloned repository.",
-			"failed": "Failed to clone repository."
+			"success": "Clonage du dépôt ok.",
+			"failed": "Clonage du dépôt en erreur."
 		},
 		"repoURL": {
-			"": "Github Repository URL:",
-			"invalid": "Invalid Repository URL"
+			"": "URL du dépôt Github :",
+			"invalid": "URL de dépôt invalide"
 		},
 		"status": {
-			"current": "Branch is up to date",
+			"current": "La branche est à jour",
 			"ahead": {
-				"single": "Ahead %s Commit",
-				"plural": "Ahead %s Commits"
+				"single": "Devant %s Commit",
+				"plural": "Devant %s Commits"
 			},
 			"behind": {
-				"single": "Behind %s Commit",
-				"plural": "Behind %s Commits"
+				"single": "Derrière %s Commit",
+				"plural": "Derrière %s Commits"
 			}
 		},
 		"diff": "Git Diff",
@@ -571,50 +569,50 @@
 		"log": "Git Log",
 		"undo": {
 			"": "Git Undo",
-			"file": "Undo changes on %s?",
-			"success": "Changes reverted.",
-			"failed": "Unable to revert changes."
+			"file": "Annuler les changements sur %s ?",
+			"success": "Les changements ont été annulés.",
+			"failed": "Impossible d'annuler les changements."
 		},
 		"pull": {
 			"": "Pull",
-			"success": "Repo pull successful.",
-			"failed": "Repo pull failed."
+			"success": "Pull ok.",
+			"failed": "Pull en erreur."
 		},
 		"push": {
 			"": "Push",
-			"success": "Repo push successful.",
-			"failed": "Repo push failed."
+			"success": "Push ok.",
+			"failed": "Push en erreur."
 		},
 		"fetch": {
 			"": "Fetch",
-			"success": "Repo fetch successful.",
-			"failed": "Repo fetch failed."
+			"success": "Fetch ok.",
+			"failed": "Fetch en erreur."
 		},
 		"remote": {
-			"new": "New Remote"
+			"new": "Nouveau site distant"
 		},
 		"branch": {
-			"new": "New Branch"
+			"new": "Nouvelle branche"
 		},
 		"transfer": {
-			"": "Git Transfer",
-			"edit": "Edit Transfer Options"
+			"": "Transfert Git",
+			"edit": "Editer les options de transfert"
 		},
-		"addFailed": "Failed to add %s",
+		"addFailed": "L'ajout de %s a échoué",
 		"commit": {
-			"success": "Changes commited.",
-			"failed": "Changes could not be committed."
+			"success": "Le commit a fonctionné.",
+			"failed": "Le commit a échoué."
 		},
 		"settings": {
-			"local": "Git Settings for %s",
-			"global": "Global Git Settings",
+			"local": "Paramètres Git pour %s",
+			"global": "Paramètres Git globaux",
 			"save": {
-				"success": "Settings saved.",
-				"failed": "Unabled to save settings."
+				"success": "Paramètres sauvegardés.",
+				"failed": "Impossible de sauvegarder les paramètres."
 			},
 			"apply": {
-				"success": "Settings Applied.",
-				"failed": "Unabled to apply settings."
+				"success": "Paramètres appliqués.",
+				"failed": "Impossible d'appliquer les paramètres."
 			}
 		}
 	},
@@ -623,6 +621,5 @@
 	"log": "Trace",
 	"transfer": "Transférer",
 	"configure": "Configurer"
-
 
 }
