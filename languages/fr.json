@@ -1,155 +1,625 @@
 {
-   "Note: This will only work if your Git repo DOES NOT require interactive authentication and your server has git installed." : "Nota: Cela fonctionnera seulement si votre dépôt Git NE REQUIERT PAS d'authentification interactive et que votre serveur a git d'installé.",
-   "Would you like to overwrite or duplicate the following:" : "Voulez-vous remplacer ou dupliquer :",
-   "Prefix"                                              : "Préfixe",
-   "Copy"                                                : "Copier",
-   "Substring"                                           : "Chaîne",
-   "Collapse"                                            : "Replier",
-   "Regular Expression"                                  : "Expression régulière",
-   "Search File Contents"                                : "Rechercher dans les fichiers",
-   "Inline Preview"                                      : "Aperçu",
-   "Upload Files"                                        : "Transférer des fichiers",
-   "Search Files:"                                       : "Rechercher des fichiers :",
-   "In:"                                                 : "Dans :",
-   "Username"                                            : "Nom d'utilisateur",
-   "Create Account"                                      : "Créer un compte",
-   "Workspace Projects"                                  : "Les projets de l'espace de travail",
-   "Search"                                              : "Rechercher",
-   "Workspace Projects"                                  : "Les projets de l'espace de travail",
-   "Name:"                                               : "Nom : ",
-   "Confirm Project Deletion"                            : "Confirmer la suppression de projet",
-   "Last update was done by "                            : "Dernière mise à jour réalisée par ",
-   "Project Access For "                                 : "Accès au(x) projet(s) pour ",
-   "Account:"                                            : "Compte :",
-   "Drag Files Or Click Here To Upload"                  : "Ddéposez vos fichiers ou cliquez ici pour les transférer",
-   "Complete!"                                           : "Transfert terminé !",
-   "File"                                                : "le fichier",
-   "Directory"                                           : "le dossier",
-   "Close Uploader"                                      : "Fermer la fenêtre de transfert",
-   "Plugin List"                                         : "Liste des plugins",
-   "Plugin Name"                                         : "Nom du plugin",
-   "Version"                                             : "Version",
-   "Author"                                              : "Auteur",
-   "Active"                                              : "Activé",
-   "Reload Codiad"                                       : "Recharger Codiad",
-   "Plugin Update Check"                                 : "Vérifications MàJ des plugins",
-   "Your Version"                                        : "Votre version",
-   "Latest Version"                                      : "Dernière version",
-   "Open"                                                : "Ouvrir",
-   "Project Name"                                        : "Nom du projet",
-   "Path"                                                : "Répertoire",
-   "New Project"                                         : "Nouveau projet",
-   "Folder Name or Absolute Path"                        : "Nom du dossier ou répertoire absolu",
-   "Git Repository"                                      : "Dépôt Git",
-   "Branch"                                              : "Branche",
-   "...from Git Repo"                                    : "…depuis un dépôt Git",
-   "Create Project"                                      : "Créer un projet",
-   "Delete Project Files"                                : "Supprimer les fichiers du projet",
-   "Follow Symbolic Links "                              : "Suivre les liens symboliques",
-   "You can not check for updates"                       : "Vous ne pouvez pas vérifier les MàJ",
-   "Congratulation, Your System Is Up To Date."          : "Félicitations, votre système est à jour.",
-   "Download Codiad"                                     : "Télécharger Codiad",
-   "Changes On Codiad"                                   : "Changements sur Codiad",
-   "User List"                                           : "Liste des utilisateurs",
-   "New Account"                                         : "Nouvel utilisateur",
-   "Access All Projects"                                 : "Accéder à tous les projets",
-   "Only Selected Projects"                              : "Accéder seulement aux projets sélectionnés",
-   "Confirm"                                             : "Confirmer",
-   "Confirm User Deletion"                               : "Confirmer la suppression de l'utilisateur",
-   "Account: "                                           : "Compte : ",
-   "New Password"                                        : "Nouveau mot de passe",
-   "Confirm Password"                                    : "Confirmer le mot de passe",
-   "Change"                                              : "Modifier le mot de passe de ",
-   "&apos;s Password"                                    : "",
-   "Overwrite Original"                                  : "Remplacer l'original",
-   "Create Duplicate"                                    : "Créer une copie",
-   "Create"                                              : "Créer",
-   "Continue"                                            : "Continuer",
-   "Current Project"                                     : "Projet actuel",
-   "Search Files"                                        : "Rechercher des fichiers",
-   "Are You Sure You Wish To Delete The Following:"      : "Voulez-vous vraiment effacer l'élément suivant :",
-   "Name"                                                : "",
-   "Edit File Extensions"                                : "Modifier les extensions de fichiers",
-   "Extension"                                           : "Extension",
-   "New Extension"                                       : "Nouvelle Extension",
-   "Save Scheme"                                         : "Enregistrer l'extension",
-   "Mode"                                                : "Mode",
-   "New File"                                            : "Nouveau fichier",
-   "New Folder"                                          : "Nouveau dossier",
-   "Upload Files"                                        : "Transférer",
-   "Paste"                                               : "Coller",
-   "Rename"                                              : "Renommer",
-   "Rename Project"                                      : "Renommer le projet",
-   "Delete"                                              : "Supprimer",
-   "Download"                                            : "Télécharger",
-   "Rescan"                                              : "Actualiser",
-   "No Results Returned"                                 : "Aucun résultat retourné",
-   "Directory not found."                                : "Le dossier n'a pu être trouvé",
-   "Wrong data send"                                     : "Les données envoyées sont mauvaises",
-   "Could not pack the folder, zip-extension missing"    : "La ompression du dossier a échoué, l'extension zip est manquante",
-   "Project List"                                        : "Liste des projets",
-   "Save"                                                : "Enregistrer",
-   "Save All"                                            : "Enregistrer tout",
-   "Tab Size"                                            : "Largeur des tabulations",
-   "Soft Tabs"                                           : "Tabulations souples",
-   "Update Check"                                        : "Vérifier MàJ",
-   "Color Tool"                                          : "Sélection de couleur",
-   "Terminal"                                            : "Terminal",
-   "Projects"                                            : "Projets",
-   "Users"                                               : "Utilisateurs",
-   "Settings"                                            : "Paramètres",
-   "Password"                                            : "Mot de passe",
-   "Logout"                                              : "Déconnexion",
-   "Split"                                               : "Fractionner",
-   "Editor Settings"                                     : "Paramètres de l'éditeur",
-   "System Settings"                                     : "Paramètres du system",
-   "Theme"                                               : "Thème",
-   "Font Size"                                           : "Taille de la police",
-   "Highlight Active Line"                               : "Surligner la ligne active",
-   "Indent Guides"                                       : "Repères d'indentation",
-   "On"                                                  : "Activé",
-   "Off"                                                 : "Désactivé",
-   "Print Margin"                                        : "Marge d'impression",
-   "Show"                                                : "Afficher", 
-   "Hide"                                                : "Masquer",
-   "No Wrap"                                             : "Pas de retour automatique à la ligne",  
-   "Wrap Lines"                                          : "Retour automatique à la ligne",
-   "Right Sidebar Trigger"                               : "Commande du panneau latéral droit",
-   "Hover"                                               : "Survol",
-   "Click"                                               : "Clic",
-   "Close"                                               : "Fermer",
-   "On"                                                  : "Activé",
-   "Off"                                                 : "Désactivé",
-   "Yes"                                                 : "Oui",
-   "No"                                                  : "Non",
-   "Split Horizontally"                                  : "Fractionner horizontalement",
-   "Split Vertically"                                    : "Fractionner verticalement",
-   "Merge All"                                           : "Fusionner tout",
-   "Explore"                                             : "Explorer",
-   "File extensions are saved successfully."             : "Les extensions de fichier ont bien été enregistrées",
-   "You Must Choose A Value"                             : "Vous devez choisir une valeur",
-   "Warning: File Currently Opened By: "                 : "Attention, Le fichier est actuellement ouvert par : ",
-   "Close Unsaved File?"                                 : "Fermer le fichier non enregistré ?",
-   "Save & Close"                                        : "Enregistrer et fermer",
-   "Discard Changes"                                     : "Annuler les modifications",
-   "Cancel"                                              : "Annuler",
-   "Recovered unsaved content for: "                     : "Un contenu non enregistré a été récupéré pour : ",
-   "You have unsaved files."                             : "Vous avez des fichiers non enregistrés.",
-   "No Open Files to save"                               : "Aucun fichier ouvert à enregistrer.",
-   "No Open Files or Selected Text"                      : "Aucun fichier ouvert ou texte sélectionné",
-   "No suggestion selected. Might be a bug."             : "Aucune suggestion sélectionnée. Il s'agit peut-être d'un bug.",
-   "More than one suggestions selected. Might be a bug." : "Plusieurs suggestions sélectionnées. Il s'agit peut-être d'un bug",
-   "Insert HEX"                                          : "Insérer au format HEX",
-   "Insert RGB"                                          : "Insérer au format RGB",
-   "Find:"                                               : "Rechercher :",
-   "Replace:"                                            : "Remplacer :",
-   "Find"                                                : "Rechercher",
-   "Replace"                                             : "Remplacer",
-   "Replace ALL"                                         : "Remplacer tout",
-   "Project Loaded"                                      : "Projet chargé",
-   "File saved"                                          : "Fichier enregistré",
-   "Copied to Clipboard"                                 : "Copié vers le presse-papiers",
-   "Nothing in Your Clipboard"                           : "Presse-papiers vide",
-   "Cannot Paste Directory Into Itself"                  : "Les dossiers source et destination sont identiques",
-   "File could not be saved"                             : "Le fichier n'a pas pu être enregistré"
+
+	"deny": "Non",
+	"affirm": "Oui",
+
+	"enabled": "Activé",
+	"disabled": "Désactivé",
+
+	"on": "Activé",
+	"off": "Désactivé",
+
+	"true": "Vrai",
+	"false": "Faux",
+
+	"passed": "SUCCES",
+	"failed": "ECHEC",
+
+	"show": "Montrer",
+	"hide": "Cacher",
+
+	"login": {
+		"": "Connexion",
+		"last": "Dernière connexion : %s"
+	},
+	"logout": "Déconnexion",
+	"rememberMe": "Se souvenir de moi",
+
+	"find": "Trouver",
+	"find:": "Trouver :",
+
+	"replace": {
+		"": "Remplacer",
+		"all": "Remplacer Tout"
+	},
+	"replace:": "Remplacer :",
+
+	"gotoLine": "Aller à la ligne",
+
+	"moveLine": {
+		"up": "Déplacer la ligne vers le haut",
+		"down": "Déplacer la ligne vers le bas"
+	},
+
+	"cycleActive": {
+		"next": "Vers le fichier suivant",
+		"prev": "Vers le fichier précédent"
+	},
+
+	"key": {
+		"alt": "Alt",
+		"esc": "Esc",
+		"ctrl": "Ctrl",
+		"shift": "Shift"
+
+	},
+
+	"cut": "Couper",
+	"copy": "Copier",
+	"paste": "Coller",
+	"extract": {
+		"": "Extraire",
+		"success": "Extraction de l'archive effectuée.",
+		"unable": "Impossible d'extraire l'archive.",
+		"noOpen": "Impossible d'ouvrir l'archive.",
+		"noZip": "ZipArchive (PHP) n'est pas installé ou activé.",
+		"noPhar": "PharData (PHP) n'est pas installé ou activé.",
+		"noRar": "Rar (PHP) n'est pas installé ou activé.",
+		"noDecomp": "Impossible d'extraire l'archive gzip.",
+		"unrecognized":"Type d'archive non supporté."
+	},
+	"duplicate": {
+		"": "Dupliquer",
+		"name": "Entrer un nouveau nom :",
+		"file": "Fichier en double",
+		"folder": "Dossier en double"
+	},
+	"preview": "Prévisualisation",
+	"outsideWorkspace": "Fichier en dehors de l'espace de travail.",
+	"cancel": "Abandonner",
+	"clear": "Effacer",
+	"name": "Nom",
+	"description": "Description",
+	"author": "Auteur",
+	"actions": "Actions",
+
+	"email": "Email",
+	"create": {
+		"": "Créer",
+		"type": "Créer %s"
+	},
+
+	"rename": {
+		"": "Renommer",
+		"type": "Renommer %s"
+	},
+
+	"delete": {
+		"": "Supprimer",
+		"type": "Supprimer %s",
+		"scope": "Supprimer les fichiers sur le serveur ?"
+	},
+
+	"edit": "Editer",
+
+	"rescan": "Refaire le scan",
+
+	"download": "Télécharger",
+
+	"save": {
+		"": "Sauvegarder",
+		"all": "Sauvegarder tout",
+		"active": "Sauvegarder le fichier actif"
+	},
+	"open": "Ouvrir",
+	"close": {
+		"": "Fermer",
+		"all": "Fermer tout",
+		"active": "Fermer le fichier actif"
+	},
+
+	"closeUnsavedFile": "Fermer le fichier non sauvegardé ?",
+
+	"save&close": "Sauvegarder & Fermer",
+	"discardChanges": "Annuler les modifications",
+
+	"ln": "Lig",
+	"in": "Dans:",
+	"all": "Tous",
+	"col": "Col",
+	"help": "Aide",
+	"mode": "Mode",
+
+
+
+	"more": "Plus",
+	"less": "Moins",
+	"users": "Utilisateurs",
+
+	"search": "Rechercher",
+
+	"filterTree": "Filtrer l'arborescense",
+	"prefix": "Préfixe",
+	"substring": "Sous-chaîne",
+	"regex": "Regex",
+
+	"scout": {
+		"open": "Ouvrir Scout",
+		"query": "Requête :",
+		"searching": "Recherche...",
+		"searchFiles": "Rechercher des fichiers :",
+		"fileTypes": "Types séparés par des espaces",
+		"withinWorkSpace": "Dans l'espace de travail"
+	},
+
+	"noShell": "La commande Shell_exec() n'est pas activée",
+
+	"themes": "Thèmes",
+	"branch": "Branche",
+	"editor": "Editeur",
+	"extension": "Extension",
+	"extensions": "Extensions",
+	"textmode": "Mode texte",
+	"textmodes": "Modes texte",
+	"saveExtensions": "Sauvegarder extensions",
+	"extensionSet": "%s est déjà défini",
+
+	"keybindings": "Raccourcis clavier",
+	"plugins": "Plugins",
+	"system": "Système",
+	"administration": "Administration",
+
+
+	"wrap": {
+		"": "Retour à la ligne",
+		"on": "Retour à la ligne activé",
+		"off": "Retour à la ligne désactivé"
+	},
+
+	"confirm": "Confirmer",
+	"explore": "Explorer",
+	"continue": "Continuer",
+
+	"analytics": {
+		"": "Analyses d'usage",
+		"enabled": "Analyses d'usage anonymes",
+		"send": "Envoyer les analyses d'usage",
+		"policy": "Nous collectons les informations ci-dessus lors de l'utilisation de l'IDE Atheos. Nous ne partagerons vos données, elles sont destinées à comprendre les besoins des utilisateurs et à améliorer l'IDE Atheos. En optant pour notre programme d'analyses d'usage, vous acceptez la collecte et l'utilisation des informations conformément à cette politique. Plus d'informations peuvent être trouvées sur [racine]/docs/PRIVACY.md sur le dépôt Github."
+	},
+
+	"uuid": "UUID",
+	"version": "Version",
+	"first_heard": "Premier envoi",
+	"last_heard": "Dernier envoi",
+	"server_os": "Serveur",
+	"client_os": "Navigateur",
+
+	"timezone": "Fuseau horaire",
+	"settings": {
+		"": "Paramètres",
+		"autosave": "Les paramètres sont sauvegardés automatiquement.",
+		"editor": "Paramètres de l'éditeur",
+		"feedback": "Paramètres de notification",
+		"draft": "Paramètres de brouillon",
+		"system": "Paramètres système",
+		"codegit": "Paramètres CodeGit"
+	},
+
+	"feedback": "Notifications",
+
+	"toast": {
+		"location": "Emplacement des bulles d'infos :",
+		"stay": {
+			"success": "Temps d'affichage des messages de réussite :",
+			"notice": "Temps d'affichage des messages d'information :",
+			"warning": "Temps d'affichage des messages d'attention :",
+			"error": "Temps d'affichage des messages d'échec :"
+		}
+	},
+
+	"output": {
+		"location": "Emplacement des messages :",
+		"stay": {
+			"success": "Temps d'affichage des messages de réussite :",
+			"notice": "Temps d'affichage des messages d'information :",
+			"warning": "Temps d'affichage des messages d'attention :",
+			"error": "Temps d'affichage des messages d'échec :"
+		}
+	},
+
+	"location": {
+		"bl": "En bas à gauche",
+		"bc": "En bas au centre",
+		"br": "En bas à droite",
+		"tl": "En haut à gauche",
+		"tc": "En haut au centre",
+		"tr": "En haut à droite"
+	},
+
+	"manual": "Désactiver la fermeture automatique",
+
+	"draft": {
+		"": "Brouillon",
+		"enable": "Activer la sauvegarde automatique sur brouillon",
+		"interval": "Intervalle entre les sauvegardes automatiques",
+		"verbose": "Informer de la sauvegarde automatique"
+	},
+
+	"account": {
+		"": "Compte utilisateur",
+		"new": "Nouveau compte utilisateur",
+		"create": "Créer le compte utilisateur",
+		"delete": "Supprimer le compte utilisateur",
+		"confirm": "Confirmer la suppression du compte utilisateur",
+		"download": "Télécharger le modèle d'insertion en masse",
+		"upload": "Téléverser un fichier de comptes utilisateur en masse"
+	},
+	
+	"account:": "Compte utilisateur :",
+
+	"username": {
+		"": "Utilisateur",
+		"new": "Nouvel utilisateur",
+		"create": "Créer un utilisateur"
+	},
+	"username:": "Utilisateur :",
+
+
+	"password": {
+		"": "Mot de passe",
+		"new": "Nouveau mot de passe",
+		"change": "Changer le mot de passe",
+		"changeUser": "Changer le mot de passe de %s",
+		"confirm": "Confirmer le mot de passe"
+	},
+	"password:": "Mot de passe :",
+
+	"project": {
+		"": "Projet",
+		"current": "Projet courant",
+		"noActive": "Pas de projet courant",
+		"create": "Créer un projet",
+		"exists": {
+			"path": "Le répertoire du projet existe déjà.",
+			"name": "Le nom du projet existe déjà."
+		},
+		"unableCreate": "Impossible de créer le répertoire.",
+		"unableAbsolute": "Impossible de créer le répertoire absolu.",
+		"unablePermissions": "Aucune permission en lecture/écriture.",
+
+		"new": "Nouveau projet",
+		"list": "Liste des projets",
+
+		"name": "Nom du projet",
+		"rename": "Renommer le projet",
+		"unableRename": "Cannot rename path.",
+		"delete": "Suppresion du projet",
+		"confirm": "Confirmez la suppression du projet",
+		"loaded": "%s est chargé",
+		"missing": "Projet non trouvé",
+		"gitnote": "Cela ne fonctionnera que si votre dépot Git ne nécessite pas d'authentification et si Git est installé sur votre serveur."
+	},
+
+	"project:": "Projet :",
+	"projects": "Projets",
+	"projects:": "Projets :",
+
+	"editUserACL": "Editer la liste de contrôle d'accès de %s",
+
+	"workspaceProjects": "Espace de travail des projets",
+
+	"accessAllProjects": "Accéder à TOUS les projets",
+	"onlySelectedProjects": "Uniquement les projets sélectionnés",
+
+	"update": {
+		"": "Mise à jour",
+		"check": "Vérification des mises à jour",
+		"changes": "Evolution sur Atheos :",
+		"current": "Votre système est à jour."
+	},
+	"install": "Installer",
+	"domain": "Domaine personnalisé",
+	"nightly": "Note : Votre installation est une 'nightly build'. Atheos pourrait être instable.",
+	"yourVersion": "Votre version",
+	"latestVersion": "Dernière version",
+	"downloadAtheos": "Télécharger Atheos",
+
+	"language": "Langue",
+	"collapse": "Collapse",
+
+	"enableLigatures": "Activer les ligatures de code",
+	"highlightActiveLine": "Mettre la ligne active en surbrillance",
+	"fontSize": "Taille de fonte",
+	"pixel": {
+		"": "%spx",
+		"default": "%spx (défaut)"
+	},
+
+	"foldWidgets": "Outil de pliage / dépliage du code ?",
+
+	"tabs": {
+		"soft": "Espaces en tabulations ?",
+		"size": "Taille de la tabulation"
+	},
+	"userList": "Liste des utilisateurs",
+
+	"folder": {
+		"": "Dossier",
+		"invalid": "Dossier invalide"
+	},
+
+	"directory": {
+		"": "Répertoire",
+		"invalid": "Répertoire invalide"
+	},
+
+	"file": {
+		"": "Fichier",
+		"new": "Nouveau fichier",
+		"type": "Type de fichier :",
+		"saved": "Fichier sauvegardé"
+	},
+
+	"fileNew": "Nouveau fichier",
+	"fileType": "Type de fichier :",
+	"fileSaved": "Fichier sauvegardé",
+	"fileUpload": "Fichier téléchargé",
+	"filesUpload": "Fichiers téléchargés",
+
+	"folderNew": "Nouveau dossier",
+
+	"path": {
+		"": "Répertoire",
+		"missing": "Le répertoire n'existe pas.",
+		"exists": "Le répertoire existe déjà.",
+		"unableCreate": "Impossible de créer le répertoire.",
+		"unableRename": "Impossible de renommer le répertoire."
+	},
+
+	"restricted": {
+		"": "Restrictions",
+		"userList": "Vous n'êtes pas autorisé à éditer la liste des utilisateurs",
+		"updates": "Vous n'êtes pas autorisé à vérifier si Atheos est à jour",
+		"marketplace": "Vous n'êtes pas autorisé à accéder à la place de marché",
+		"textmodes": "You can not access the Textmodes"
+	},
+
+	"unauthorized": "Vous n'êtes pas autorisé à %s",
+	"wrapLines": "Retours à la ligne",
+
+	"printMarginShow": "Marge",
+	"printMarginColumn": "Marge de colonne",
+
+	"theme": "Thème",
+	"hover": {
+		"": "Survol",
+		"duration": "Durée de survol des panneaux"
+	},
+	"click": {
+		"": "Cliquer",
+		"single": "Simple Click",
+		"double": "Double Click"
+	},
+
+	"loop": {
+		"behavior": "Boucle sur les fichiers actifs",
+		"onlyActive": "Boucle uniquement sur les onglets",
+		"incDropdown": "Inclure les menus contextuels"
+	},
+
+	"showHidden": "Montrer les fichiers cachés",
+
+	"trigger": {
+		"fileManager": "Déclencheur du gestionnaire de fichier",
+		"projectDock": "Déclencheur du dock projet",
+		"rightSidebar": "Déclencheur du panneau droit",
+		"leftSidebar": "Déclencheur du panneau gauche"
+	},
+
+	"contextMenu": {
+		"delay": "Délai de fermeture du menu contextuel"
+	},
+
+	"newExtension": "Nouvelle extension",
+	"fileExtension": "Extension de fichier",
+	"defaultTextmode": "Mode texte par défaut",
+	"indentGuides": "Guide d'indentation",
+	"inlinePreview": "Prévisualisation en ligne",
+
+	"close_uploader": "Fermer la fenêtre de téléchargement",
+	"close_modal": "Fermer une fenêtre modale",
+
+	"installationError": "Erreur d'installation",
+	"existsAndWriteable": "Assurez-vous que les éléments suivants existent et sont autorisés pour l'écriture :",
+	"envVariablesSet": "Assurez-vous que ces variables d'environnement sont définies :",
+	"retest": "Tester à nouveau",
+
+	"initialSetup": "Paramétrage initial",
+	"developmentMode": "Mode développement",
+
+	"connectionError": "Erreur de connexion",
+
+	"market": {
+		"": "Place de marché",
+		"atheos": "Place de marché Atheos",
+		"install": {
+			"gitRepo": "...depuis un dépot Git",
+			"manually": "Installer manuellement",
+			"success": "%s installé avec succès"
+		},
+		"unableDownload": "Impossible de télécharger l'archive.",
+		"noZip": "L'extension zip n'est pas trouvée.",
+		"missingDesc": "Il manque la description.",
+		"missingAuth": "Inconnu"
+	},
+	"complete": "Terminé !",
+	"installed": "Installé",
+	"available": "Disponible",
+	"coming": "Bientôt disponible",
+	"reloadAtheos": "Rechargement d'Atheos",
+
+	"split": {
+		"": "Partager",
+		"h": "Partager horizontalement",
+		"v": "Partager verticalement",
+		"editor": {
+			"h": "Partager l'éditeur horizontalement",
+			"v": "Partager l'éditeur verticalement"
+		}
+	},
+	"merge": {
+		"": "Assembler",
+		"all": "Tout assembler",
+		"editor": "Volets de l'éditeur de Merge"
+	},
+
+
+	"time": {
+		"ms": {
+			"": "%s ms",
+			"default": "%s ms (par défaut)"
+		},
+		"second": {
+			"single": "%s Seconde",
+			"plural": "%s Secondes"
+		},
+		"minute": {
+			"single": "%s Minute",
+			"plural": "%s Minutes"
+		},
+		"hour": {
+			"single": "%s Heure",
+			"plural": "%s Heures"
+		}
+	},
+
+	"warning": {
+		"fileOpen": "Attention : Le fichier est actuellement ouvert par %s"
+	},
+
+
+	"NothingInYourClipboard": "Rien dans votre presse-papiers",
+	"folderNameOrAbsolutePath": "Nom du dossier ou chemin absolu",
+
+	"noOpenFilesOrSelect": "Aucun fichier ouvert ou texte sélectionné",
+
+	"dragFilesOrClickHereToUpload": "Faites glisser des fichiers ou cliquez ici pour télécharger",
+
+	"fileManager": "Gestionnaire de fichier",
+	"gitRepository": "Dépôt git",
+
+	"macro": {
+		"": "Editeur Macro",
+		"add": "Ajouter une nouvelle macro",
+		"title": "Titre",
+		"icon": "FA Icône",
+		"applies": "S'applique à",
+		"exts": "Types de fichier",
+		"cmd": "Commande shell"
+	},
+
+	"codegit": {
+		"": "CodeGit",
+		"open": "Ouvrir CodeGit",
+		"banner": "Bannière au-dessus du gestionnaire de fichier",
+		"status": "Statut du fichier dans la barre d'état",
+		"unknown": "Inconnu",
+		"untracked": "Non suivi",
+		"uncommitted": "Non committé",
+		"committed": "Committé",
+		"error": {
+			"statusFail": "Impossible de charger le statut du dépôt"
+		},
+		"diff": "Visionneur de Diff",
+		"blame": "Visionneur de Blame",
+		"log": "Visionneur de Log"
+	},
+
+	"git": {
+		"error": {
+			"noRepo": "Dépôt git non trouvé."
+		},
+		"init": {
+			"": "Git Init",
+			"success": "Dépôt Git initialisé.",
+			"failed": "L'initialisation du dépôt a échoué."
+		},
+		"clone": {
+			"": "Git Clone",
+			"success": "Clonage du dépôt ok.",
+			"failed": "Clonage du dépôt en erreur."
+		},
+		"repoURL": {
+			"": "URL du dépôt Github :",
+			"invalid": "URL de dépôt invalide"
+		},
+		"status": {
+			"current": "La branche est à jour",
+			"ahead": {
+				"single": "Devant %s Commit",
+				"plural": "Devant %s Commits"
+			},
+			"behind": {
+				"single": "Derrière %s Commit",
+				"plural": "Derrière %s Commits"
+			}
+		},
+		"diff": "Git Diff",
+		"blame": "Git Blame",
+		"log": "Git Log",
+		"undo": {
+			"": "Git Undo",
+			"file": "Annuler les changements sur %s ?",
+			"success": "Les changements ont été annulés.",
+			"failed": "Impossible d'annuler les changements."
+		},
+		"pull": {
+			"": "Pull",
+			"success": "Pull ok.",
+			"failed": "Pull en erreur."
+		},
+		"push": {
+			"": "Push",
+			"success": "Push ok.",
+			"failed": "Push en erreur."
+		},
+		"fetch": {
+			"": "Fetch",
+			"success": "Fetch ok.",
+			"failed": "Fetch en erreur."
+		},
+		"remote": {
+			"new": "Nouveau site distant"
+		},
+		"branch": {
+			"new": "Nouvelle branche"
+		},
+		"transfer": {
+			"": "Transfert Git",
+			"edit": "Editer les options de transfert"
+		},
+		"addFailed": "L'ajout de %s a échoué",
+		"commit": {
+			"success": "Le commit a fonctionné.",
+			"failed": "Le commit a échoué."
+		},
+		"settings": {
+			"local": "Paramètres Git pour %s",
+			"global": "Paramètres Git globaux",
+			"save": {
+				"success": "Paramètres sauvegardés.",
+				"failed": "Impossible de sauvegarder les paramètres."
+			},
+			"apply": {
+				"success": "Paramètres appliqués.",
+				"failed": "Impossible d'appliquer les paramètres."
+			}
+		}
+	},
+
+	"overview": "Prévisualisation",
+	"log": "Trace",
+	"transfer": "Transférer",
+	"configure": "Configurer"
+
 }
