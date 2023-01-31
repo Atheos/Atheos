@@ -16,6 +16,7 @@ trait Execute {
 		if ($code === 0) {
 			return explode("\n", $result["text"]);
 		} else {
+			Common::log('Git error for ' . $cmd . ' : ' . print_r($result,true), "git");
 			return false;
 		}
 	}

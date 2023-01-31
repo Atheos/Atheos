@@ -31,7 +31,7 @@ switch ($action) {
 		if ($path) {
 			$CodeGit->fileStatus($path);
 		} else {
-			Common::send("error", "Missing path.");
+			Common::send("error", i18n("git_error_noPath"));
 		}
 		break;
 
@@ -42,7 +42,18 @@ switch ($action) {
 		if ($repo && $files && $message) {
 			$CodeGit->commit($message, $files);
 		} else {
-			Common::send("error", "Missing repo, file or message.");
+			Common::send("error", i18n("git_error_noRepoFileMsg"));
+		}
+		break;
+		
+	// Adds and commits with message (optional) on last commit point (amend)
+	case 'amend':
+		$message = POST('message');
+		$files = POST('files');
+		if ($repo && $files) {
+			$CodeGit->amend($message, $files);
+		} else {
+			Common::send("error", i18n("git_error_noRepoFile"));
 		}
 		break;
 
@@ -51,7 +62,7 @@ switch ($action) {
 		if ($path && $repoURL) {
 			$CodeGit->cloneRepo($path, $repoURL);
 		} else {
-			Common::send("error", "Missing path or URL.");
+			Common::send("error", i18n("git_error_noPathUrl"));
 		}
 		break;
 
@@ -73,7 +84,7 @@ switch ($action) {
 					break;
 			}
 		} else {
-			Common::send("error", "Missing type, repo, remote, or branch.");
+			Common::send("error", i18n("git_error_noTypeRepoRemoteBranch"));
 		}
 		break;
 
@@ -83,7 +94,7 @@ switch ($action) {
 		if ($repo && $type) {
 			$CodeGit->init($repo, $type);
 		} else {
-			Common::send("error", "Missing repo or type.");
+			Common::send("error", i18n("git_error_noRepoType"));
 		}
 		break;
 
@@ -92,7 +103,7 @@ switch ($action) {
 		if ($repo && $file) {
 			$CodeGit->checkout($repo, $file);
 		} else {
-			Common::send("error", "Missing repo or file.");
+			Common::send("error", i18n("git_error_noRepoFile"));
 		}
 		break;
 
@@ -113,6 +124,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send("error", i18n("git_error_invalidAction"));
 		break;
 }

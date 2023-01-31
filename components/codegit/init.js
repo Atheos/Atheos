@@ -67,11 +67,11 @@
 			fX('#codegit panel').on('click', function(e) {
 				var target = oX(e.target);
 				if (target.tagName === 'BUTTON') {
-					if (target.text() === 'Diff') {
+					if (target.attr('data-button') === 'diff') {
 						self.showPanel('diff', self.activeRepo, {
 							files: [target.parent('tr').attr('data-file')]
 						});
-					} else if (target.text() === 'Undo') {
+					} else if (target.attr('data-button') === 'undo') {
 						self.undo(self.activeRepo, target.parent('tr').attr('data-file'));
 					}
 				}
@@ -248,12 +248,12 @@
 			}
 		},
 
-		commit: function() {
+		commit: function(amend) {
 			var message = oX('#commit_message');
 			var repo = self.activeRepo;
 
 			var data = {
-				action: 'commit',
+				action: amend?'amend':'commit',
 				target: 'codegit',
 				files: [],
 				message: message.value(),
@@ -443,7 +443,7 @@
 			self.fileStatus = oX('#codegit_file_status');
 
 			if (!self.repoBanner.exists()) {
-				oX('#file-manager').before('<div id="codegit_repo_banner">Commit Status: <span id="codegit_repo_status"></span></div>');
+				oX('#file-manager').before('<div id="codegit_repo_banner">' + i18n("git_status") + ' <span id="codegit_repo_status"></span></div>');
 				self.repoBanner = oX('#codegit_repo_banner');
 				self.repoStatus = oX('#codegit_repo_status');
 			}

@@ -80,7 +80,7 @@ trait Status {
 
 
 		$int = (int)preg_replace("/(ahead|behind)/", "", $status[0]);
-		$count = $int === 1 ? "plural" : "single";
+		$count = $int === 1 ? "single" : "plural";
 
 		if (strpos($status[0], "ahead") !== false) {
 			$status = i18n("git_status_ahead_$count", $int);
