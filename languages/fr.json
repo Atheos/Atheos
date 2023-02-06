@@ -537,7 +537,14 @@
 
 	"git": {
 		"error": {
-			"noRepo": "Dépôt git non trouvé."
+			"noRepo": "Dépôt git non trouvé.",
+			"noPath": "Répertoire manquant.",
+			"noRepoFileMsg": "Dépôt, fichier ou message manquant.",
+			"noRepoFile": "Dépôt ou fichier manquant.",
+			"noPathUrl": "Répertoire ou URL manquant.",
+			"noTypeRepoRemoteBranch": "Type, dépôt, site distant ou branche manquant.",
+			"noRepoType": "Dépôt ou type manquant.",
+			"invalidAction": "Action invalide."
 		},
 		"init": {
 			"": "Git Init",
@@ -554,6 +561,7 @@
 			"invalid": "URL de dépôt invalide"
 		},
 		"status": {
+			"": "Statut Git :",
 			"current": "La branche est à jour",
 			"ahead": {
 				"single": "Devant %s Commit",
@@ -600,8 +608,15 @@
 		},
 		"addFailed": "L'ajout de %s a échoué",
 		"commit": {
+			"": "Commit",
+			"message": "Message commit (facultatif pour un Amend)",
 			"success": "Le commit a fonctionné.",
 			"failed": "Le commit a échoué."
+		},
+		"amend": {
+			"": "Amend",
+			"success": "Le commit (option amend) a fonctionné.",
+			"failed": "Le commit (option amend) a échoué."
 		},
 		"settings": {
 			"local": "Paramètres Git pour %s",
@@ -613,6 +628,15 @@
 			"apply": {
 				"success": "Paramètres appliqués.",
 				"failed": "Impossible d'appliquer les paramètres."
+			}
+		},
+		"objects": {
+			"status": "Statut",
+			"file": "Fichier",
+			"actions": {
+				"": "Actions",
+				"diff": "Différence",
+				"undo": "Défaire"
 			}
 		}
 	},
