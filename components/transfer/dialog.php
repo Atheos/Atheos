@@ -12,21 +12,25 @@
 
 $path = POST("path");
 
-function return_bytes($val) {
-	$val = trim($val);
-	$last = strtolower($val[strlen($val)-1]);
-	switch ($last) {
-		case 'g':
-			$val *= 1024;
-			break;
-		case 'm':
-			$val *= 1024;
-			break;
-		case 'k':
-			$val *= 1024;
-			break;
-	}
-	return $val;
+function return_bytes(string $size) {
+    $size = trim($size);
+    preg_match('/([0-9]+)[\s]*([a-zA-Z]+)/', $size, $matches);
+
+    $value = (isset($matches[1])) ? $matches[1] : 0;
+    $metric = (isset($matches[2])) ? strtolower($matches[2]) : 'b';
+
+    switch ($metric) {
+    case 'b' : return (int)$value;
+    case 'k' :
+    case 'kb' : return (int)$value * 1024;
+    case 'm' :
+    case 'mb' : return (int)$value * (1024 ** 2);
+    case 'g' :
+    case 'gb' : return (int)$value * (1024 ** 3);
+    case 't' :
+    case 'tb' : return (int)$value * (1024 ** 4);
+    default : return 0;
+    };
 }
 
 function max_file_upload_in_bytes() {
@@ -55,7 +59,7 @@ switch ($action) {
 			<pre><?php echo($path); ?></pre>
 			<label id="upload_wrapper">
 				<?php echo i18n("dragFilesOrClickHereToUpload"); ?>
-				<input type=“hidden” name=“MAX_FILE_SIZE” value=“<?php echo max_file_upload_in_bytes(); ?>”>
+				<input type="hidden" name="MAX_FILE_SIZE" value="<?php echo max_file_upload_in_bytes(); ?>">
 				<input class="hidden" type="file" name="upload[]" multiple>
 			</label>
 			<div id="progress_wrapper">
