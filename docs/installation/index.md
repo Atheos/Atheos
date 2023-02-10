@@ -7,10 +7,10 @@ Cache: true
 <section>
 	<h1>Installing Atheos</h1>
 	<ul>
-		<li><a href="/docs/installation/apache2">Configuration example on Apache</a></li>
-		<li><a href="/docs/installation/nginx">Configuration example on Nginx</a></li>
-		<li><a href="/docs/installation/centos">Quick Installation on CentOS</a></li>
-		<li><a href="/docs/installation/ubuntu">Quick Installation on Ubuntu</a></li>
+		<li><a href="/docs/installation/apache2.md">Configuration example on Apache</a></li>
+		<li><a href="/docs/installation/nginx.md">Configuration example on Nginx</a></li>
+		<li><a href="/docs/installation/centos.md">Quick Installation on CentOS</a></li>
+		<li><a href="/docs/installation/ubuntu.md">Quick Installation on Ubuntu</a></li>
 	</ul>
 </section>
 <section>
