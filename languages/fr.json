@@ -363,8 +363,8 @@
 	"fileNew": "Nouveau fichier",
 	"fileType": "Type de fichier :",
 	"fileSaved": "Fichier sauvegardé",
-	"fileUpload": "Fichier téléchargé",
-	"filesUpload": "Fichiers téléchargés",
+	"fileUpload": "Fichier téléversé",
+	"filesUpload": "Fichiers téléversés",
 
 	"folderNew": "Nouveau dossier",
 
@@ -503,7 +503,7 @@
 
 	"noOpenFilesOrSelect": "Aucun fichier ouvert ou texte sélectionné",
 
-	"dragFilesOrClickHereToUpload": "Faites glisser des fichiers ou cliquez ici pour télécharger",
+	"dragFilesOrClickHereToUpload": "Faites glisser des fichiers ou cliquez ici pour téléverser",
 
 	"fileManager": "Gestionnaire de fichier",
 	"gitRepository": "Dépôt git",
