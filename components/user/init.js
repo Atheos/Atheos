@@ -272,16 +272,22 @@
 
 			while (lines.length) {
 				let line = lines.shift().split(',');
-				if (line.length !== 2) continue;
+				if (line.length <= 2) continue;
 
 				let user = line[0],
 					pass = line[1],
 					vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(user)) && user !== 0;
 
 				if (!vUser) {
-					toast('error', 'Username must be an alphanumeric string');
+					toast('error', `Username "${user}" must be an alphanumeric string`);
 					continue;
 				}
+
+				if (line.length > 2) {
+					let projects = line.slice(2, line.length + 1);
+					log(projects);
+				}
+				continue;
 				self.createUser(user, pass);
 			}
 		},
