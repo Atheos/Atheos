@@ -105,7 +105,7 @@ trait Status {
 
 	public function loadChanges($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if ($result["code"] !== 0) {
+		if ($result["code"] === 0) {
 			$result = $this->parseChanges($result["text"]);
 		} else {
 			$result = i18n("codegit_error_statusFail");
