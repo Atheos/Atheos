@@ -6,9 +6,11 @@ trait Status {
 	public function repoStatus() {
 		$result = $this->execute("git status --branch --porcelain");
 
-		if (!$result) Common::send("error", i18n("codegit_error_statusFail"));
+		if ($result["code"] !== 0) {
+			Common::send($result);
+		}
 
-		$result = $this->parseChanges($result);
+		$result = $this->parseChanges($result["text"]);
 		$status = "Unknown";
 
 		if (!empty($result["added"]) ||
@@ -41,7 +43,11 @@ trait Status {
 
 		$result = $this->execute("git diff --numstat " . $filename);
 
-		if (!$result) Common::send("error", i18n("codegit_error_statusFail"));
+		if ($result["code"] !== 0) {
+			Common::send($result);
+		} else {
+			$result = $result["text"];
+		}
 
 		if (count($result) > 0 && $result[0] !== "") {
 			$stats = explode("\t", $result[0]);
@@ -51,8 +57,10 @@ trait Status {
 		} else {
 			$result = $this->execute("git status --branch --porcelain");
 
-			if ($result && !empty($result)) {
-				$status = $this->parseChanges($result);
+			if ($result["code"] === 0 && !empty($result["text"])) {
+
+				$status = $this->parseChanges($result["text"]);
+
 				if (in_array($filename, $status['untracked'])) {
 					$file = file_get_contents($filename);
 					$file = explode("\n", $file);
@@ -70,7 +78,10 @@ trait Status {
 
 	public function branchStatus($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if (!$result) return false;
+		if ($result["code"] !== 0) return false;
+		$result = $result["text"];
+
+		debug($result);
 
 		preg_match('/(?<=\[).+?(?=\])/', $result[0], $status);
 
@@ -94,8 +105,8 @@ trait Status {
 
 	public function loadChanges($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if ($result) {
-			$result = $this->parseChanges($result);
+		if ($result["code"] !== 0) {
+			$result = $this->parseChanges($result["text"]);
 		} else {
 			$result = i18n("codegit_error_statusFail");
 		}
