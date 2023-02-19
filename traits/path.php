@@ -56,10 +56,12 @@ trait Path {
 		if (!Common::checkPath($path)) {
 			Common::send("error", "Client does not have access.");
 		}
+
 		if (Common::isAbsPath($path)) {
 			return $path;
+		} else {
+			return WORKSPACE . "/" . $path;
 		}
-		return $path;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

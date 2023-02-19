@@ -34,11 +34,8 @@ trait History {
 
 		$result = $this->execute("git status --branch --porcelain");
 
-		if ($result) {
-			$status = $this->parseChanges($result);
-		} else {
-			return false;
-		}
+		if ($result["code"] !== 0) return false;
+		$status = $this->parseChanges($result["text"]);
 
 		$result = array();
 
@@ -46,15 +43,15 @@ trait History {
 			$result = $this->untrackedDiff($path);
 
 		} else if (in_array($path, $status['modified'])) {
-			$result = $this->execute('git diff ' . $path);
+			$result = $this->execute('git diff ' . $path)["text"];
 			$result[] = "\n";
 
 		} else if (in_array($path, $status['added'])) {
-			$result = $this->execute('git diff --cached ' . $path);
+			$result = $this->execute('git diff --cached ' . $path)["text"];
 			$result[] = "\n";
 
 		} else if (in_array($path, $status['deleted'])) {
-			$result = $this->execute('git diff -- ' . $path);
+			$result = $this->execute('git diff -- ' . $path)["text"];
 			$result[] = "\n";
 
 		} else {
