@@ -26,7 +26,7 @@ include_once "traits/transfer.php";
 
 class CodeGit {
 
-	use Commit; // commit, add, showCommit
+	use Commit; // commit, add, showCommit, amend
 	use Branches; // getBranches, getCurrentBranch
 	use Execute; // execute, parseCommandCodes
 	use History; // loadLog, diff, blame

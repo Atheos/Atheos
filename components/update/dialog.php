@@ -31,7 +31,7 @@ switch ($action) {
 		} else {
 			$latest = $Update->latest;
 
-			$body = preg_replace("/\*\*/i", "", $latest["body"]);
+			$body = preg_replace("/\*\*/i", "", $latest["body"] ?? '');
 			$body = str_replace("Changes:", "", $body);
 
 			?>

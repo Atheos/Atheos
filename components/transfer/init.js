@@ -24,6 +24,85 @@
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			fX('#dialog .transfer').on('change', self.upload);
+			fX('#upload_wrapper').on('drop', self.drop);
+			fX('#upload_wrapper').on('dragover', self.dragover);
+			fX('#upload_wrapper').on('dragleave', self.dragleave);
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Drop
+		//////////////////////////////////////////////////////////////////////80
+		drop: function(e) {
+            e.preventDefault();
+            oX('#upload_wrapper').css('color','var(--fontColorMinor)');
+            
+            var input = oX('#dialog input[type="file"]').element,
+                files = [],
+                uploadName;
+            
+			if (e.dataTransfer.items) {
+                [...e.dataTransfer.items].forEach((item, i) => {
+                    if (item.kind === 'file') {
+                        files.push(item.getAsFile());
+                    }
+                });
+			} else {
+                files = [...e.dataTransfer.files];
+            }
+            
+            if (files.length <= 0) return;
+
+			uploadName = (files.length > 1) ? 'Batch Upload' : files[0].name;
+
+			var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
+			oX('#progress_wrapper').append(progressNode);
+
+			var data = new FormData();
+
+			for (var x = 0; x < files.length; x++) {
+				data.append('upload[]', files[x]);
+			}
+
+			data.append('target', 'transfer');
+			data.append('action', 'upload');
+			data.append('path', self.uploadPath);
+
+			var send = new XMLHttpRequest();
+			send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
+			send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
+			send.open('POST', atheos.controller);
+
+			send.onreadystatechange = function() {
+				if (send.readyState === 4) {
+					var reply = send.responseText;
+					try {
+						reply = JSON.parse(reply);
+					} catch (e) {}
+
+					if (send.status >= 200 && send.status < 300) {
+						self.processUpload(reply, self.uploadPath);
+					} else {
+						self.showProgress(progressNode, uploadName)({
+							type: 'error'
+						});
+					}
+					input.value = '';
+				}
+			};
+			send.send(data);
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Drag over
+		//////////////////////////////////////////////////////////////////////80
+		dragover: function(e) {
+			e.preventDefault();
+			oX('#upload_wrapper').css('color','var(--fontColorMajor)');
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Drag leave
+		//////////////////////////////////////////////////////////////////////80
+		dragleave: function(e) {
+			e.preventDefault();
+			oX('#upload_wrapper').css('color','var(--fontColorMinor)');
 		},
 		//////////////////////////////////////////////////////////////////////80
 		// Download
@@ -56,7 +135,6 @@
 		upload: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
-			log('test');
 
 			var input = oX('#dialog input[type="file"]').element,
 				fileCount = input.files.length,
@@ -64,8 +142,7 @@
 
 			if (fileCount <= 0) return;
 
-
-			uploadName = fileCount >= 1 ? input.files[0].name : 'Batch Upload';
+			uploadName = (fileCount > 1) ? 'Batch Upload' : input.files[0].name;
 
 			var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
 			oX('#progress_wrapper').append(progressNode);
