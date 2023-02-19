@@ -32,24 +32,24 @@
 		// Drop
 		//////////////////////////////////////////////////////////////////////80
 		drop: function(e) {
-            e.preventDefault();
-            oX('#upload_wrapper').css('color','var(--fontColorMinor)');
-            
-            var input = oX('#dialog input[type="file"]').element,
-                files = [],
-                uploadName;
-            
+			e.preventDefault();
+			oX('#upload_wrapper').css('color', 'var(--fontColorMinor)');
+
+			var input = oX('#dialog input[type="file"]').element,
+				files = [],
+				uploadName;
+
 			if (e.dataTransfer.items) {
-                [...e.dataTransfer.items].forEach((item, i) => {
-                    if (item.kind === 'file') {
-                        files.push(item.getAsFile());
-                    }
-                });
+				[...e.dataTransfer.items].forEach((item, i) => {
+					if (item.kind === 'file') {
+						files.push(item.getAsFile());
+					}
+				});
 			} else {
-                files = [...e.dataTransfer.files];
-            }
-            
-            if (files.length <= 0) return;
+				files = [...e.dataTransfer.files];
+			}
+
+			if (files.length <= 0) return;
 
 			uploadName = (files.length > 1) ? 'Batch Upload' : files[0].name;
 
@@ -90,20 +90,23 @@
 			};
 			send.send(data);
 		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Drag over
 		//////////////////////////////////////////////////////////////////////80
 		dragover: function(e) {
 			e.preventDefault();
-			oX('#upload_wrapper').css('color','var(--fontColorMajor)');
+			oX('#upload_wrapper').css('color', 'var(--fontColorMajor)');
 		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Drag leave
 		//////////////////////////////////////////////////////////////////////80
 		dragleave: function(e) {
 			e.preventDefault();
-			oX('#upload_wrapper').css('color','var(--fontColorMinor)');
+			oX('#upload_wrapper').css('color', 'var(--fontColorMinor)');
 		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Download
 		//////////////////////////////////////////////////////////////////////80
