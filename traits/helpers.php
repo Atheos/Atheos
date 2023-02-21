@@ -100,7 +100,7 @@ trait Helpers {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function log($text, $name = "global") {
 		$path = DATA . "/log/";
-		$path = preg_replace("#/+#", "/", $path);
+		$path = preg_replace("#\/+#", "/", $path);
 
 		if (!is_dir($path)) mkdir($path);
 

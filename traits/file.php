@@ -17,7 +17,7 @@ trait File {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function load($name, $namespace) {
 		$path = DATA . "/" . $namespace . "/" . $name;
-		$path = preg_replace("#/+#", "/", $path);
+		$path = preg_replace("#\/+#", "/", $path);
 		return is_readable($path) ? file_get_contents($path) : false;
 	}
 
@@ -43,7 +43,7 @@ trait File {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function save($name, $content, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
-		$path = preg_replace("#/+#", "/", $path);
+		$path = preg_replace("#\/+#", "/", $path);
 
 		if (!is_dir($path)) mkdir($path);
 
@@ -81,7 +81,7 @@ trait File {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function delete($name, $namespace) {
 		$path = DATA . "/" . $namespace . "/" . $name;
-		$path = preg_replace("#/+#", "/", $path);
+		$path = preg_replace("#\/+#", "/", $path);
 		if (is_file($path)) {
 			unlink($path);
 			return true;
