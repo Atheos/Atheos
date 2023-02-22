@@ -151,10 +151,10 @@
 
 			oX('#file-manager').html(
 				`<ul>
-				<li>
+				<li class="draggable">
 					<a id="project-root" data-type="root" data-path="${path}">
 						${repoIcon}
-						<i class="root fa fa-folder blue"></i>
+						<i class="root fa fa-folder blue" data-type="root"></i>
 						<span>${name}</span>
 					</a>
 					<ul></ul>
