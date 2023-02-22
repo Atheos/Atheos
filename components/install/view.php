@@ -108,10 +108,10 @@ $location = array(
 
 $path = str_replace("/index.php", "", $_SERVER['SCRIPT_FILENAME']);
 
-$workspace = is_writable(WORKSPACE);
-$data = is_writable(DATA);
-$plugins = is_writable($path . "/plugins");
-$workspace = is_writable($path . "/workspace");
+// If constants in config.php defined, use them, otherwise fall back to default folder locations 
+$workspace = is_writable(defined('WORKSPACE') ? WORKSPACE : $path . "/workspace");
+$data = is_writable(defined('DATA') ? DATA : $path . "/data");
+$plugins = is_writable(defined('PLUGINS') ? PLUGINS : $path . "/plugins");
 
 $conf = $path . '/config.php';
 
