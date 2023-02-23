@@ -11,12 +11,12 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result) {
-			return "Error loading log";
+		if ($result['code']!==0) {
+			return false;
 		}
 
 		$pivot = array();
-		foreach ($result as $i => $item) {
+		foreach ($result['text'] as $i => $item) {
 			$item = explode('|', $item);
 			$pivot[] = array(
 				"hash" => $item[0] ?? '',
