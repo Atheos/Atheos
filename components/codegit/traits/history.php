@@ -83,7 +83,7 @@ trait History {
 				}
 			}
 		} else {
-			$temp = $this->execute('cat ' . $path)["data"];
+			$temp = $this->execute('cat ' . $path)["text"];
 			array_push($result, "diff --git a/". $path . " b/" . $path);
 			foreach ($temp as $i => $line) {
 				array_push($result, "+" . $line);
