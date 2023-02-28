@@ -11,7 +11,9 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result) {
+		if ($result["code"] === 0) {
+		    $result = $result["text"];
+		} else {
 			return "Error loading log";
 		}
 
