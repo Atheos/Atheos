@@ -11,6 +11,8 @@ trait Execute {
 		$cmd = str_replace("\)", ")", $cmd);
 		$result = Common::execute($cmd . ' 2>&1');
 		$code = $result["code"];
+		
+		debug($cmd);
 
 		$result = $this->parseReturn($result);
 		return $result;

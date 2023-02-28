@@ -161,11 +161,11 @@
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
 					if (swap && !target.contains(swap)) {
-						dragZone.querySelectorAll("i[data-type='folder']").forEach(function(i_node) {i_node.classList.replace('fa-download','fa-folder');});
-					    	swap.parentNode.insertBefore(target, swap.nextSibling);
-					    	if (swap.querySelectorAll("a[data-type='folder']").length>0) {
-					        	swap.querySelector("i[data-type='folder']").classList.replace('fa-folder','fa-download');
-					    	}
+						dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
+						swap.parentNode.insertBefore(target, swap.nextSibling);
+						if (swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length>0) {
+							swap.querySelector('i[data-type="folder"],i[data-type="root"]').classList.replace('fa-folder','fa-download');
+						}
 					}
 				}
 			}
@@ -227,17 +227,15 @@
 				if (clone) clone.remove();
 
 				var parentUl = target.closest('ul');
-				var parentFolder = target.previousSibling.querySelector("a[data-type='folder']");
+				var parentFolder = target.previousSibling.querySelector('a[data-type="folder"],a[data-type="root"]');
 				var folder;
 				if (!parentFolder) {
 					if (!parentUl) return;
 					folder = parentUl.previousElementSibling;
-					setTimeout(() => self.sortNodes(parentUl), 10);
 					if (parentUl === origin || !folder) return origin.append(target);
 				} else {
-					dragZone.querySelectorAll("i[data-type='folder']").forEach(function(i_node) {i_node.classList.replace('fa-download','fa-folder');});
+					dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
 					folder = target.previousSibling.querySelector('a');
-					setTimeout(() => self.sortNodes(parentUl), 10);
 				}
 				self.handleDrop(target, folder);
 			}
@@ -260,27 +258,35 @@
 				parPath = dest.attr('data-path'),
 				newPath = parPath + '/' + pathinfo(oldPath).basename;
 
-			if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
-				toast('warning', 'File or path already exists.');
-				self.rescan();
-			} else {
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'move',
-						path: oldPath,
-						dest: newPath
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') {
-							toast('error', reply);
-						} else {
-							node.attr('data-path', newPath);
-							atheos.active.rename(oldPath, newPath);
+			if (oldPath !== newPath) {
+				if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
+					toast('warning', 'File or path already exists.');
+					node.remove();
+					self.rescan();
+				} else {
+					echo({
+						data: {
+							target: 'filemanager',
+							action: 'move',
+							path: oldPath,
+							dest: newPath
+						},
+						settled: function(status, reply) {
+							if (status !== 'success') {
+								toast('error', reply);
+							} else {
+								//node.attr('data-path', newPath);
+								atheos.active.rename(oldPath, newPath);
+							}
+							node.remove();
+							self.rescan();
+							self.sortNodes(dest.element.parentElement.closest('ul'));
 						}
-						self.rescan();
-					}
-				});
+					});
+				}
+			} else {
+				node.remove();
+				self.rescan();
 			}
 		},
 
@@ -803,8 +809,8 @@
 			children = children.map(function(node) {
 				return {
 					node: node,
-					span: node.querySelector('span').textContent,
-					type: node.querySelector('a').getAttribute('data-type')
+					span: (node.querySelector('span'))?node.querySelector('span').textContent:'',
+					type: (node.querySelector('a'))?node.querySelector('a').getAttribute('data-type'):''
 				};
 			});
 
