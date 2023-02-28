@@ -13,10 +13,10 @@ trait Initialize {
 			$result = $this->execute("git init");
 		}
 
-		if ($result) {
+		if ($result["code"] === 0) {
 			Common::send("success", i18n("git_init_success"));
 		} else {
-			Common::send("error", i18n("git_init_failed"));
+		    Common::send("error", i18n("git_init_failed") . "\n\n" . implode("\n", $result["text"] ?? []));
 		}
 	}
 
@@ -39,10 +39,10 @@ trait Initialize {
 
 		$result = $this->execute($command);
 
-		if ($result) {
+		if ($result["code"] === 0) {
 			Common::send("success", i18n("git_clone_success"));
 		} else {
-			Common::send("error", i18n("git_clone_failed"));
+		    Common::send("error", i18n("git_clone_failed") . "\n\n" . implode("\n", $result["text"] ?? []));
 		}
 	}
 }

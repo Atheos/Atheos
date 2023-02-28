@@ -11,8 +11,10 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if ($result['code']!==0) {
-			return false;
+		if ($result["code"] === 0) {
+		    $result = $result["text"];
+		} else {
+			return "Error loading log";
 		}
 
 		$pivot = array();
