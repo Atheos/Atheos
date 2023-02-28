@@ -11,12 +11,12 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if (!$result) {
-			return "Error loading log";
+		if ($result['code']!==0) {
+			return false;
 		}
 
 		$pivot = array();
-		foreach ($result as $i => $item) {
+		foreach ($result['text'] as $i => $item) {
 			$item = explode('|', $item);
 			$pivot[] = array(
 				"hash" => $item[0] ?? '',
@@ -83,7 +83,7 @@ trait History {
 				}
 			}
 		} else {
-			$temp = $this->execute('cat ' . $path)["data"];
+			$temp = $this->execute('cat ' . $path)["text"];
 			array_push($result, "diff --git a/". $path . " b/" . $path);
 			foreach ($temp as $i => $line) {
 				array_push($result, "+" . $line);
