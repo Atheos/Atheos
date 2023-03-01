@@ -232,10 +232,10 @@
 					branch = oX('#dialog form input[name="gitBranch"]').value();
 
 
-				if (projectPath.indexOf('/') === 0) {
+				if (path.indexOf('/') === 0) {
 					atheos.alert.show({
 						banner: 'Do you really want to create a project with an absolute path?',
-						data: projectPath,
+						data: path,
 						actions: {
 							'Yes': function() {
 								self.createProject(name, path, repo, branch);
