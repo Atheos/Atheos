@@ -108,10 +108,10 @@ $location = array(
 
 $path = str_replace("/index.php", "", $_SERVER['SCRIPT_FILENAME']);
 
-$workspace = is_writable($path . "/workspace");
-$data = is_writable($path . "/data");
-$plugins = is_writable($path . "/plugins");
-$workspace = is_writable($path . "/workspace");
+// If constants in config.php defined, use them, otherwise fall back to default folder locations 
+$workspace = is_writable(defined('WORKSPACE') ? WORKSPACE : $path . "/workspace");
+$data = is_writable(defined('DATA') ? DATA : $path . "/data");
+$plugins = is_writable(defined('PLUGINS') ? PLUGINS : $path . "/plugins");
 
 $conf = $path . '/config.php';
 
@@ -132,7 +132,7 @@ foreach ($deps as $dep => $v) {
 
 if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register || $newrelic) {
 	$passed = "<span class=\"success\">" . i18n("passed") . "</span>";
-	$failed = "<span class=\"error\">" . i18n("failed") . "</span>";
+	$error = "<span class=\"error\">" . i18n("failed") . "</span>";
 
 	?>
 	<div id="installer" class="errors">

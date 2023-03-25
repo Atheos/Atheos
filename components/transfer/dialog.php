@@ -15,22 +15,23 @@ $path = POST("path");
 
 function return_bytes(string $size) {
     $size = trim($size);
+    $matches = [];
     preg_match('/([0-9]+)[\s]*([a-zA-Z]+)/', $size, $matches);
 
     $value = (isset($matches[1])) ? $matches[1] : 0;
     $metric = (isset($matches[2])) ? strtolower($matches[2]) : 'b';
 
     switch ($metric) {
-    case 'b' : return (int)$value;
-    case 'k' :
-    case 'kb' : return (int)$value * 1024;
-    case 'm' :
-    case 'mb' : return (int)$value * (1024 ** 2);
-    case 'g' :
-    case 'gb' : return (int)$value * (1024 ** 3);
-    case 't' :
-    case 'tb' : return (int)$value * (1024 ** 4);
-    default : return 0;
+        case 'b' : return (int)$value;
+        case 'k' :
+        case 'kb' : return (int)$value * 1024;
+        case 'm' :
+        case 'mb' : return (int)$value * (1024 ** 2);
+        case 'g' :
+        case 'gb' : return (int)$value * (1024 ** 3);
+        case 't' :
+        case 'tb' : return (int)$value * (1024 ** 4);
+        default : return 0;
     };
 }
 
