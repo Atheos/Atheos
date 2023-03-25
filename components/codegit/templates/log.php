@@ -1,8 +1,7 @@
 <label class="title"><i class="fas fa-history"></i><?php echo i18n("codegit_log"); ?></label>
 <ul id="codegit_log" class="content">
 <?php
-	$repo = Common::getWorkspacePath($repo);
-	$log = $CodeGit->loadLog($repo, $path);
+	$log = $CodeGit->loadLog($path);
 
 	// $url = $CodeGit->repoURL . "/commit/";
 	// onclick="window.open('<?php echo $url . $item["hash"]

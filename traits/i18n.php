@@ -87,7 +87,7 @@ class i18n {
 		// search for language file
 		$this->appliedLang = NULL;
 
-		foreach ($this->userLangs as $priority => $langcode) {
+		foreach ($this->userLangs as $langcode) {
 			if (file_exists($this->getLangFileName($langcode))) {
 				$this->appliedLang = $langcode;
 				break;

@@ -189,8 +189,6 @@ trait Helpers {
 	// @author umbalaconmeogia at NOSPAM dot gmail dot com
 	// @link http://www.php.net/manual/de/class.ziparchive.php#110719*
 	public static function zip($orig, $dest) {
-		$info = pathInfo($orig);
-
 		$archive = new ZipArchive();
 		$archive->open($dest, ZIPARCHIVE::CREATE);
 

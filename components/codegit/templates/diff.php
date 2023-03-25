@@ -1,5 +1,4 @@
 <?php
-$repo = Common::getWorkspacePath($repo);
 $files = POST('files');
 
 if ($files) {
@@ -11,7 +10,7 @@ if ($files) {
 
 $diffs = array();
 foreach ($files as $i => $file) {
-	$diffs[] = $CodeGit->loadDiff($repo, $file);
+	$diffs[] = $CodeGit->loadDiff($file);
 }
 
 echo "<div id=\"codegit_diff\" class=\"content\">";

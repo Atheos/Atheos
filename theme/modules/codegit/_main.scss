@@ -36,7 +36,6 @@
 
 #dialog #codegit form {
 	background-color: $background;
-
 }
 
 #codegit {
@@ -44,7 +43,4 @@
 	border-top: $borderLight;
 }
 
-
-
-
-@import "status", "blame", "diff", "overview", "log", "todo", "transfer";
+@import "status", "blame", "diff", "overview", "log", "todo";
