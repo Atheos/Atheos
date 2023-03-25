@@ -39,7 +39,7 @@ class Filemanager {
 			fclose($file);
 			Common::send("success", array("modifyTime" => $modifyTime));
 		} else {
-			$error = error_get_last();
+			// $error = error_get_last();
 			Common::send("error", i18n("path_unableCreate"));
 		}
 	}
@@ -107,7 +107,7 @@ class Filemanager {
 		$info = pathinfo($path);
 
 		$parent = $info["dirname"];
-		$base = $info["basename"];
+		// $base = $info["basename"];
 		$ext = $info["extension"];
 
 		$des = $parent."/".$name;

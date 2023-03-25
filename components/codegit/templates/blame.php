@@ -1,5 +1,4 @@
 <?php
-$repo = Common::getWorkspacePath($repo);
 $files = POST('files');
 if ($files) {
 	$files = explode(',', $files);
@@ -10,7 +9,7 @@ if ($files) {
 
 $blames = array();
 foreach ($files as $i => $file) {
-	$blames[] = $CodeGit->loadBlame($repo, $file);
+	$blames[] = $CodeGit->loadBlame($file);
 }
 
 echo "<div id=\"codegit_blame\" class=\"content\">";

@@ -253,7 +253,7 @@
 			var repo = self.activeRepo;
 
 			var data = {
-				action: amend?'amend':'commit',
+				action: amend ? 'amend' : 'commit',
 				target: 'codegit',
 				files: [],
 				message: message.value(),
@@ -318,8 +318,8 @@
 					action: 'repoStatus',
 					repo
 				},
-				success: function(reply) {
-					var status = 'Unknown';
+				settled: function(status, reply) {
+					status = 'Unknown';
 					if (reply.status !== 'error') {
 						status = reply.text;
 					}

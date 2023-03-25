@@ -161,7 +161,11 @@
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
 					if (swap && !target.contains(swap)) {
-						swap.parentNode.insertBefore(target, swap);
+						dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
+						swap.parentNode.insertBefore(target, swap.nextSibling);
+						if (swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length>0) {
+							swap.querySelector('i[data-type="folder"],i[data-type="root"]').classList.replace('fa-folder','fa-download');
+						}
 					}
 				}
 			}
@@ -222,13 +226,17 @@
 				target.style.opacity = '';
 				if (clone) clone.remove();
 
-				let parent = target.closest('ul');
-				if (!parent) return;
-				let folder = parent.previousElementSibling;
-
-				setTimeout(() => self.sortNodes(parent), 10);
-				if (parent === origin || !folder) return origin.append(target);
-
+				var parentUl = target.closest('ul');
+				var parentFolder = target.previousSibling.querySelector('a[data-type="folder"],a[data-type="root"]');
+				var folder;
+				if (!parentFolder) {
+					if (!parentUl) return;
+					folder = parentUl.previousElementSibling;
+					if (parentUl === origin || !folder) return origin.append(target);
+				} else {
+					dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
+					folder = target.previousSibling.querySelector('a');
+				}
 				self.handleDrop(target, folder);
 			}
 
@@ -250,26 +258,35 @@
 				parPath = dest.attr('data-path'),
 				newPath = parPath + '/' + pathinfo(oldPath).basename;
 
-			if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
-				toast('warning', 'Path already exists.');
-			} else {
-				echo({
-					data: {
-						target: 'filemanager',
-						action: 'move',
-						path: oldPath,
-						dest: newPath
-					},
-					settled: function(status, reply) {
-						if (status !== 'success') {
+			if (oldPath !== newPath) {
+				if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
+					toast('warning', 'File or path already exists.');
+					node.remove();
+					self.rescan();
+				} else {
+					echo({
+						data: {
+							target: 'filemanager',
+							action: 'move',
+							path: oldPath,
+							dest: newPath
+						},
+						settled: function(status, reply) {
+							if (status !== 'success') {
+								toast('error', reply);
+							} else {
+								//node.attr('data-path', newPath);
+								atheos.active.rename(oldPath, newPath);
+							}
+							node.remove();
 							self.rescan();
-							toast('error', reply);
-						} else {
-							node.attr('data-path', newPath);
-							atheos.active.rename(oldPath, newPath);
+							self.sortNodes(dest.element.parentElement.closest('ul'));
 						}
-					}
-				});
+					});
+				}
+			} else {
+				node.remove();
+				self.rescan();
 			}
 		},
 
@@ -398,7 +415,7 @@
 			return `<li class="draggable">
 			<a ${link ? 'title=\"' + link + '\"' : ''} data-type="${type}" data-path="${path}">
 			<i class="expand ${nodeClass}"></i>
-			<i class="${fileClass}"></i>
+			<i class="${fileClass}" data-type="${type}"></i>
 			${repoIcon}
 			
 			<span ${link ? 'class=\"aqua\"' : ''}>${basename}</span>
@@ -792,8 +809,8 @@
 			children = children.map(function(node) {
 				return {
 					node: node,
-					span: node.querySelector('span').textContent,
-					type: node.querySelector('a').getAttribute('data-type')
+					span: (node.querySelector('span'))?node.querySelector('span').textContent:'',
+					type: (node.querySelector('a'))?node.querySelector('a').getAttribute('data-type'):''
 				};
 			});
 

@@ -206,7 +206,7 @@ class Project {
 	//////////////////////////////////////////////////////////////////////////80
 	private function pivotProjects($projects) {
 		$revisedArray = array();
-		foreach ($projects as $project => $data) {
+		foreach ($projects as $data) {
 			if (isset($data["path"])) {
 				$revisedArray[$data["path"]] = $data["name"];
 			}

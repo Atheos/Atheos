@@ -101,7 +101,7 @@ switch ($action) {
 	case 'checkout':
 		$file = POST("file");
 		if ($repo && $file) {
-			$CodeGit->checkout($repo, $file);
+			$CodeGit->checkout($file);
 		} else {
 			Common::send("error", i18n("git_error_noRepoFile"));
 		}

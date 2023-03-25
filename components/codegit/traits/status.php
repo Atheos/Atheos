@@ -7,7 +7,10 @@ trait Status {
 		$result = $this->execute("git status --branch --porcelain");
 
 		if ($result["code"] !== 0) {
-			Common::send($result);
+			if (is_array($result["text"])) {
+				$result["text"] = $result["text"][0];
+			}
+			Common::send($result["status"], $result);
 		}
 
 		$result = $this->parseChanges($result["text"]);
@@ -81,8 +84,6 @@ trait Status {
 		if ($result["code"] !== 0) return false;
 		$result = $result["text"];
 
-		debug($result);
-
 		preg_match('/(?<=\[).+?(?=\])/', $result[0], $status);
 
 		if (!is_array($status) || empty($status)) {
@@ -105,7 +106,7 @@ trait Status {
 
 	public function loadChanges($repo) {
 		$result = $this->execute("git status --branch --porcelain");
-		if ($result["code"] !== 0) {
+		if ($result["code"] === 0) {
 			$result = $this->parseChanges($result["text"]);
 		} else {
 			$result = i18n("codegit_error_statusFail");

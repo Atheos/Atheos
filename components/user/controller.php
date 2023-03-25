@@ -51,7 +51,6 @@ switch ($action) {
 			$username = SESSION("user");
 			$User->changePassword($username, $password);
 		} else {
-			debug("$username");
 			Common::send("warning", "User does not have access.");
 		}
 		break;

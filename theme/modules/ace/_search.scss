@@ -51,6 +51,7 @@
 		vertical-align: middle;
 
 		@include input();
+
 		border-left: $borderLight;
 
 		&:hover {

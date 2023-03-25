@@ -151,10 +151,10 @@
 
 			oX('#file-manager').html(
 				`<ul>
-				<li>
+				<li class="draggable">
 					<a id="project-root" data-type="root" data-path="${path}">
 						${repoIcon}
-						<i class="root fa fa-folder blue"></i>
+						<i class="root fa fa-folder blue" data-type="root"></i>
 						<span>${name}</span>
 					</a>
 					<ul></ul>
@@ -232,10 +232,10 @@
 					branch = oX('#dialog form input[name="gitBranch"]').value();
 
 
-				if (projectPath.indexOf('/') === 0) {
+				if (path.indexOf('/') === 0) {
 					atheos.alert.show({
 						banner: 'Do you really want to create a project with an absolute path?',
-						data: projectPath,
+						data: path,
 						actions: {
 							'Yes': function() {
 								self.createProject(name, path, repo, branch);

@@ -117,7 +117,7 @@ class SourceManager {
 		echo($this->getTag($type, $minifiedFileName));
 	}
 
-	function loadAndMinify($type = "css", $minifiedFileName, $files) {
+	function loadAndMinify($type, $minifiedFileName, $files) {
 		if ($type === "css") {
 			$this->loadAndMinifyCSS($minifiedFileName, $files);
 		} else {
@@ -162,7 +162,7 @@ class SourceManager {
 		$minifier->minify($minifiedFileName);
 	}
 
-	function getTag($type = "css", $path) {
+	function getTag($type, $path) {
 		return $type === "css" ? "\t<link rel=\"stylesheet\" href=\"$path\">\n": "\t<script type=\"text/javascript\" src=\"$path\"></script>\n";
 	}
 }

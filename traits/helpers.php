@@ -100,7 +100,7 @@ trait Helpers {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function log($text, $name = "global") {
 		$path = DATA . "/log/";
-		$path = preg_replace("#/+#", "/", $path);
+		$path = preg_replace("#\/+#", "/", $path);
 
 		if (!is_dir($path)) mkdir($path);
 
@@ -189,8 +189,6 @@ trait Helpers {
 	// @author umbalaconmeogia at NOSPAM dot gmail dot com
 	// @link http://www.php.net/manual/de/class.ziparchive.php#110719*
 	public static function zip($orig, $dest) {
-		$info = pathInfo($orig);
-
 		$archive = new ZipArchive();
 		$archive->open($dest, ZIPARCHIVE::CREATE);
 
