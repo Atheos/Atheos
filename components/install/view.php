@@ -106,19 +106,19 @@ $location = array(
 	"Pacific/Kiritimati" => "(GMT+14:00) Kiritimati",
 );
 
-$path = str_replace("/index.php", "", $_SERVER['SCRIPT_FILENAME']);
+$path = str_replace("/index.php", "", $_SERVER["SCRIPT_FILENAME"]);
 
 // If constants in config.php defined, use them, otherwise fall back to default folder locations 
-$workspace = is_writable(defined('WORKSPACE') ? WORKSPACE : $path . "/workspace");
-$data = is_writable(defined('DATA') ? DATA : $path . "/data");
-$plugins = is_writable(defined('PLUGINS') ? PLUGINS : $path . "/plugins");
+$workspace = is_writable(defined("WORKSPACE") ? WORKSPACE : $path . "/workspace");
+$data = is_writable(defined("DATA") ? DATA : $path . "/data");
+$plugins = is_writable(defined("PLUGINS") ? PLUGINS : $path . "/plugins");
 
-$conf = $path . '/config.php';
+$conf = $path . "/config.php";
 
 $config = is_writable(file_exists($conf) ? $conf : $path);
 
-$register = ini_get('register_globals') === 1;
-$newrelic = ini_get('newrelic.enabled') === 1;
+$register = ini_get("register_globals") === 1;
+$newrelic = ini_get("newrelic.enabled") === 1;
 
 $deps = array(
 	"ZIP" => extension_loaded("zip"),
@@ -132,7 +132,7 @@ foreach ($deps as $dep => $v) {
 
 if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register || $newrelic) {
 	$passed = "<span class=\"success\">" . i18n("passed") . "</span>";
-	$error = "<span class=\"error\">" . i18n("failed") . "</span>";
+	$failed = "<span class=\"error\">" . i18n("failed") . "</span>";
 
 	?>
 	<div id="installer" class="errors">
@@ -152,16 +152,16 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 		<label><?php echo i18n("existsAndWriteable"); ?></label>
 		<div class="install_issues">
 			<p>
-				<?php echo $config ? $passed : $error; ?>: [SYSTEM]/config.php
+				<?php echo $config ? $passed : $failed; ?>: [SYSTEM]/config.php
 			</p>
 			<p>
-				<?php echo $workspace ? $passed : $error; ?>: [SYSTEM]/workspace
+				<?php echo $workspace ? $passed : $failed; ?>: [SYSTEM]/workspace
 			</p>
 			<p>
-				<?php echo $plugins ? $passed : $error; ?>: [SYSTEM]/plugins
+				<?php echo $plugins ? $passed : $failed; ?>: [SYSTEM]/plugins
 			</p>
 			<p>
-				<?php echo $data ? $passed : $error; ?>: [SYSTEM]/data
+				<?php echo $data ? $passed : $failed; ?>: [SYSTEM]/data
 			</p>
 		</div>
 
@@ -237,9 +237,9 @@ if ($missingDep || !$config || !$workspace || !$plugins || !$data || $register |
 					<td>
 						<select name="timezone">
 							<?php
-							$timezones = '';
+							$timezones = "";
 							foreach ($location as $key => $city) {
-								$timezones .= '<option value="' . $key . '">' . $city . '</option>';
+								$timezones .= "<option value=\"" . $key . "\">" . $city . "</option>";
 							}
 							echo($timezones);
 							?>
