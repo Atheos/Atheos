@@ -84,8 +84,6 @@ trait Status {
 		if ($result["code"] !== 0) return false;
 		$result = $result["text"];
 
-		debug($result);
-
 		preg_match('/(?<=\[).+?(?=\])/', $result[0], $status);
 
 		if (!is_array($status) || empty($status)) {

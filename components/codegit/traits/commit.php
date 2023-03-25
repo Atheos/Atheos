@@ -23,7 +23,6 @@ trait Commit {
 		$result = $this->execute("git commit --author=\"{$confData['name']} <{$confData['email']}>\""
 				. " -m\"" . $message . "\"");
 		
-		debug($result);
 		if ($result["code"] === 0) {
 			Common::send("success", i18n("git_commit_success"));
 		} else {
