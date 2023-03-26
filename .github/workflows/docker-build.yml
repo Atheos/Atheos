@@ -1,6 +1,8 @@
 #Run on new commit
 on:
   push:
+    branches:
+    - main
 #Naming
 name: Build Docker Image
 run-name: Building Docker Image from commit ${{ github.sha }}
