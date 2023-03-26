@@ -1,12 +1,14 @@
+# Run on push to main
 on:
   push:
     branches:
       - main
     paths-ignore:
       - '.version'
+# Naming
+name: Increment Version Number
 jobs:
-  test:
-    name: Increment Version Number
+  increment:
     runs-on: ubuntu-latest
     steps:
       - name: Check out source code
