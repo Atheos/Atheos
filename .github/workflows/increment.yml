@@ -1,0 +1,24 @@
+on:
+  push:
+    branches:
+      - main
+    paths-ignore:
+      - 'data/.version'
+jobs:
+  test:
+    name: Increment Version Number
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out source code
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.ref }}
+          token: ${{ secrets.YOUR_PERSONAL_ACCESS_TOKEN }}
+      - name: Increment version automatically
+        uses: yoichiro/gh-action-increment-value@main
+        with:
+          target_directory: 'data'
+          target_file: '.version'
+          prefix: 'version":'
+          suffix: '}'
+          commit_message: 'Increment the build number to '
