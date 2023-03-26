@@ -4,6 +4,7 @@ config.php
 !*/README.md
 data/*
 !data/.htaccess
+!data/.version
 workspace/*
 plugins/*
 public/*.min.*

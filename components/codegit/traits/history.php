@@ -11,22 +11,24 @@ trait History {
 		}
 
 		$result = $this->execute($cmd);
-		if ($result["code"] === 0) {
-			$pivot = array();
-			foreach ($result["text"] as $item) {
-				$item = explode('|', $item);
-				$pivot[] = array(
-					"hash" => $item[0] ?? '',
-					"author" => $item[1] ?? '',
-					"email" => $item[2] ?? '',
-					"date" => $item[3] ?? '',
-					"message" => $item[4] ?? ''
-				);
-			}
-			return $pivot;
-		} else {
+		if ($result["code"] !== 0) {
 			return "Error loading log";
+
 		}
+		
+		$pivot = array();
+		foreach ($result["text"] as $item) {
+			$item = str_replace ("\\", "", $item);
+			$item = explode('|', $item);
+			$pivot[] = array(
+				"hash" => $item[0] ?? '',
+				"author" => $item[1] ?? '',
+				"email" => $item[2] ?? '',
+				"date" => $item[3] ?? '',
+				"message" => $item[4] ?? ''
+			);
+		}
+		return $pivot;
 	}
 
 	public function loadDiff($path) {
