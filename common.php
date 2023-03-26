@@ -51,8 +51,6 @@ class Common {
 	public static function initialize() {
 		$path = __DIR__;
 
-		define("VERSION", "v5.0.0");
-
 		if (file_exists($path."/config.php")) require_once($path."/config.php");
 
 		if (defined("LIFETIME") && LIFETIME !== false) {

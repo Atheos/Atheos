@@ -85,10 +85,12 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 	//////////////////////////////////////////////////////////////////////////80
 	// Create analytics cache
 	//////////////////////////////////////////////////////////////////////////80
+	$version = Common::version();
 	$analyticsData = array(
 		"enabled" => $authorized,
 		"uuid" => uniqid(),
-		"version" => "v4.3.0",
+		"iVersion" => $version,
+		"rVersion" => $version,
 		"first_heard" => date("Y/m/d"),
 		"last_heard" => date("Y/m/d"),
 		"php_version" => phpversion(),
@@ -96,6 +98,8 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 		"client_os" => [Common::getBrowser()],
 		"timezone" => $timezone,
 		"language" => $language,
+    	"sessions"=> 0,
+    	"totalUsage"=> "PT0S",
 		"plugins" => array()
 	);
 

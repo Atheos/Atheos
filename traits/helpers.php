@@ -12,6 +12,17 @@
 
 trait Helpers {
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Load version number from file
+	//////////////////////////////////////////////////////////////////////////80
+	public static function version() {
+		$version = is_readable(".version") ? file_get_contents(".version") : "NaN";
+		if ($version !== "NaN") {
+			$version = json_decode($version, true);
+		}
+		return $version["version"];
+	}
+
 	public static function compareVersions($v1, $v2) {
 		// Src: https://helloacm.com/the-javascript-function-to-compare-version-number-strings/
 		if (!is_string($v1) || !is_string($v2)) {
@@ -65,10 +76,17 @@ trait Helpers {
 			$val = $_SERVER[$key];
 		} elseif ($type === "SESSION" && array_key_exists($key, $_SESSION)) {
 			$val = $_SESSION[$key];
-		} elseif ($type === "POST" && array_key_exists($key, $_POST)) {
-			$val = $_POST[$key];
+		} elseif ($type === "POST") {
+			if (array_key_exists($key, $_POST)) {
+				$val = $_POST[$key];
+			} else {
+				// Special clause for the sendBeacon from analytics
+				$request = json_decode(file_get_contents("php://input"), true);
+				if (!empty($request) && array_key_exists($key, $request)) {
+					$val = $request[$key];
+				}
+			}
 		}
-
 		return $val;
 	}
 

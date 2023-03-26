@@ -191,6 +191,8 @@
 	"version": "Version",
 	"first_heard": "First Heard",
 	"last_heard": "Last Heard",
+	"totalSessions": "Total Sessions",
+	"totalUsage": "Total Usage",
 	"server_os": "Server",
 	"client_os": "Browser",
 
