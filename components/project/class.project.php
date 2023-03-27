@@ -37,12 +37,6 @@ class Project {
 		if (file_exists(DATA . "/projects.json")) {
 			$projects = Common::loadJSON("projects");
 
-			// Check if array is Associative or Sequential. Sequential is
-			// the old file format, so it needs to be pivoted.
-			if (array_keys($projects) === range(0, count($projects) - 1)) {
-				$projects = $this->pivotProjects($projects);
-			}
-
 			foreach ($projects as $projectPath => $projectName) {
 				$this->db->update($projectName, $projectPath, true);
 			}
@@ -198,20 +192,6 @@ class Project {
 		} else {
 			Common::send("error", i18n("project_missing"));
 		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Pivot the Projects from the old file format to the new file format
-	// ALERT: Pivot functions will be removed on 01/01/2022
-	//////////////////////////////////////////////////////////////////////////80
-	private function pivotProjects($projects) {
-		$revisedArray = array();
-		foreach ($projects as $data) {
-			if (isset($data["path"])) {
-				$revisedArray[$data["path"]] = $data["name"];
-			}
-		}
-		return $revisedArray;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
