@@ -4,7 +4,7 @@
 trait Settings {
 
 	public function settings($repo, $data = false) {
-		$db = Common::getObjStore("codegit", $this->activeUser);
+		$db = Common::getObjStore("codegit", "users/" . $this->activeUser);
 		$activeUser = SESSION("user");
 
 		$results = $db->select("*");

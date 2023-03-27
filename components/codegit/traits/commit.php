@@ -8,7 +8,7 @@ trait Commit {
 	}
 
 	public function commit($message, $files) {
-		$files = explode(',', $files);
+		$files = explode(",", $files);
 		
 		foreach ($files as $file) {
 			$result = $this->add($file);
@@ -17,10 +17,10 @@ trait Commit {
 			}
 		}
 
-		$confData = file_get_contents(DATA . '/' . SESSION('user') . '/codegit.db.json');
+		$confData = file_get_contents(DATA . "/users/" . SESSION("user") . "/codegit.db.json");
 		$confData = json_decode($confData, TRUE)[0];
 
-		$result = $this->execute("git commit --author=\"{$confData['name']} <{$confData['email']}>\""
+		$result = $this->execute("git commit --author=\"{$confData["name"]} <{$confData["email"]}>\""
 				. " -m\"" . $message . "\"");
 		
 		if ($result["code"] === 0) {
@@ -31,7 +31,7 @@ trait Commit {
 	}
 	
 	public function amend($message, $files) {
-		$files = explode(',', $files);
+		$files = explode(",", $files);
 
 		foreach ($files as $file) {
 			$result = $this->add($file);
@@ -40,13 +40,13 @@ trait Commit {
 			}
 		}
 
-		$confData = file_get_contents(DATA . '/' . SESSION('user') . '/codegit.db.json');
+		$confData = file_get_contents(DATA . "/users/" . SESSION("user") . "/codegit.db.json");
 		$confData = json_decode($confData, TRUE)[0];
 
-		if ($message!=='') {
-		    $result = $this->execute("git commit --amend --author=\"{$confData['name']} <{$confData['email']}>\"" . " -m\"" . $message . "\"");
+		if ($message!=="") {
+		    $result = $this->execute("git commit --amend --author=\"{$confData["name"]} <{$confData["email"]}>\"" . " -m\"" . $message . "\"");
 		} else {
-		    $result = $this->execute("git commit --amend --no-edit --author=\"{$confData['name']} <{$confData['email']}>\"");
+		    $result = $this->execute("git commit --amend --no-edit --author=\"{$confData["name"]} <{$confData["email"]}>\"");
 		}
 		
 		if ($result["code"] === 0) {

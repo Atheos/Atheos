@@ -36,6 +36,9 @@ class User {
 	// Authenticate
 	//////////////////////////////////////////////////////////////////////////80
 	public function authenticate($username, $password, $language) {
+		// Check for old folder storage location
+		$this->pivotFolder();
+
 		if (array_key_exists($username, $this->users) === false) {
 			Common::send("error", "Username not found.");
 		}
@@ -197,6 +200,21 @@ class User {
 			Common::send("success");
 		} else {
 			Common::send("error", "Invalid account.");
+		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Pivot user settings to subdirectory
+	// REMOVE ON MARCH 2025
+	//////////////////////////////////////////////////////////////////////////80
+	public function pivotFolder() {
+		if (!is_dir(DATA . "/users")) mkdir(DATA . "/users");
+
+		foreach ($this->users as $username => $data) {
+			if (is_dir(DATA . "/" . $username)) {
+				rename(DATA . "/$username", DATA . "/users/" . $username);
+			}
+
 		}
 	}
 }
