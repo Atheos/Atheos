@@ -63,34 +63,6 @@ trait Helpers {
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Read Post/Get/Server/Session Data
-	//////////////////////////////////////////////////////////////////////////80
-	public static function data($type = false, $key = false, $val = null) {
-		if (!$type || !$key) return $val;
-
-		if (!empty($val) && $type === "SESSION") {
-			$_SESSION[$key] = $val;
-		}
-
-		if ($type === "SERVER" && array_key_exists($key, $_SERVER)) {
-			$val = $_SERVER[$key];
-		} elseif ($type === "SESSION" && array_key_exists($key, $_SESSION)) {
-			$val = $_SESSION[$key];
-		} elseif ($type === "POST") {
-			if (array_key_exists($key, $_POST)) {
-				$val = $_POST[$key];
-			} else {
-				// Special clause for the sendBeacon from analytics
-				$request = json_decode(file_get_contents("php://input"), true);
-				if (!empty($request) && array_key_exists($key, $request)) {
-					$val = $request[$key];
-				}
-			}
-		}
-		return $val;
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
 	// Read Content of directory
 	//////////////////////////////////////////////////////////////////////////80
 	public static function readDirectory($foldername) {
