@@ -39,9 +39,9 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send("notice", "No drafts.");
+			Common::send(104, "No drafts.");
 		} else {
-			Common::send("success", $results[0]);
+			Common::send(200, $results[0]);
 		}
 	}
 
@@ -52,13 +52,13 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send("warning", "No drafts.");
+			Common::send(104, "No drafts.");
 		}
 
 		$name = $results[0]["name"];
 		Common::deleteCache($name, "drafts");
 		$this->db->delete($where);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -68,7 +68,7 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send("warning", "No drafts.");
+			Common::send(104, "No drafts.");
 		}
 
 		$name = $results[0]["name"];
@@ -76,11 +76,11 @@ class Draft {
 
 		if (!$content) {
 			$this->db->delete($where);
-			Common::send("error", "Draft file missing.");
+			Common::send(404, "Draft file missing.");
 		}
 
 		Common::deleteCache($name, "drafts");
-		Common::send("success", array("content" => $content));
+		Common::send(200, array("content" => $content));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -91,7 +91,7 @@ class Draft {
 		if (!$content) {
 			$file = fopen($path, 'w');
 			fclose($file);
-			Common::send("success");
+			Common::send(200);
 		}
 
 		if ($content === ' ') {
@@ -99,12 +99,12 @@ class Draft {
 		}
 
 		$name = Common::saveCache($path . $this->activeUser, $content, "drafts");
-		if (!$name) Common::send("error", "Unable to save draft.");
+		if (!$name) Common::send(500, "Unable to save draft.");
 
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$value = array("user" => $this->activeUser, "path" => $path, "name" => $name, "time" => time());
 		$this->db->update($where, $value, true);
 
-		Common::send("success");
+		Common::send(200);
 	}
 }

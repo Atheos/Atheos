@@ -5,82 +5,96 @@
 // warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
-// Authors: Atheos Team, @hlsiira
+// Notes:
+// Echo was built specifically for Atheos and as such may not be suitable for
+// other uses, but Echo is incredibly versitile and configurable. I suggest
+// looking at older versions of this file, or grabbing the original source that
+// I used as a starter if you're looking to use this elsewhere.
+// Source: https://github.com/WeideMo/miniAjax
+//												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
 	'use strict';
 
-	const echo = function(opts) {
-		opts = opts || {};
-		opts.url = opts.url || atheos.controller;
+	let headers = {},
+		globalDest = false;
 
-		opts.type = opts.type || ((opts.data) ? 'POST' : 'GET');
+	function echo(opt) {
+		if (!opt || !globalDest) return;
+		if (!opt.url) opt.url = globalDest;
 
-		// const serialize = obj => Object.keys(obj).map(key => encodeURIComponent(key) + '=' + encodeURIComponent(obj[key])).join('&');
+		opt.type = opt.type || ((opt.data) ? 'POST' : 'GET');
 
-		var data = [];
-		if (opts.data && typeof opts.data === 'object') {
-			for (var name in opts.data) {
-				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opts.data[name]));
+		var xhr = new XMLHttpRequest(),
+			data = opt.data ? [] : null;
+			
+		if (opt.data && typeof opt.data === 'object') {
+			for (var name in opt.data) {
+				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opt.data[name]));
 			}
+			if (opt.rnd) data.push(("v=" + Math.random()).replace(".", ""));
 			data = data.join('&');
-		} else {
-			data = null;
 		}
 
-		var xhr = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-
-		if (opts.timeout) {
-			xhr.timeout = opts.timeout;
-			xhr.ontimeout = opts.failure;
+		if (opt.settled && typeof opt.settled === 'function') {
+			opt.success = opt.settled;
+			opt.failure = opt.settled;
 		}
 
-		xhr.onload = function() {
+		if (opt.timeout) {
+			xhr.timeout = opt.timeout;
+			xhr.ontimeout = opt.failure;
+		}
+
+		xhr.onreadystatechange = function() {
+			if (xhr.readyState !== 4) return; // not complete
+
+			// Try to parse JSON data
 			var data = xhr.responseText;
 			try {
 				data = JSON.parse(data);
-				if (typeof(data.debug) !== 'undefined') {
+
+				if ("debug" in data) {
 					console.log(data.debug);
 					delete data.debug;
 				}
 			} catch (e) {}
 
-			if (opts.settled && typeof opts.settled === 'function') {
+			let status = xhr.status;
+			if (isObject(data)) {
+				status = data.status;
+				delete data.status;
+			}
 
-				let status = 'success';
-				if (isObject(data)) {
-					status = data.status;
-					delete data.status;
+			// Call the relevant callback function
+			if (xhr.status >= 200 && xhr.status < 300) {
+				if (opt.success) {
+					opt.success(data, status);
 				}
-
-
-				opts.settled(status, data);
-			} else if (xhr.status >= 200 && xhr.status < 300) {
-				if (opts.success && typeof opts.success === 'function') {
-					opts.success(data, xhr.status);
-				}
-			} else {
-				if (opts.failure && typeof opts.failure === 'function') {
-					opts.failure(data, xhr.status);
-				}
+			} else if (opt.failure) {
+				opt.failure(data, status);
 			}
 		};
 
-		if (opts.type === 'GET') {
+		if (opt.type === 'GET') {
 			data = data ? '?' + data : '';
-			xhr.open('GET', opts.url + data, true);
-			xhr.send(null);
-		} else if (opts.type === 'POST') {
-			xhr.open('POST', opts.url, true);
+			xhr.open('GET', opt.url + data, true);
+		} else if (opt.type === 'POST') {
+			xhr.open('POST', opt.url, true);
 			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-			xhr.send(data);
 		}
 
-		return xhr;
+		for (const s in headers) {
+			xhr.setRequestHeader(s, headers[s]);
+		}
 
-	};
+		xhr.send(data);
+		return xhr;
+	}
+
+	echo.setHeaders = (opt) => headers = opt;
+	echo.setGlobalDest = (url) => globalDest = url;
 
 	window.echo = echo;
-
-})(this);
+})();

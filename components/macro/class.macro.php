@@ -93,9 +93,9 @@ class Macro {
 	//////////////////////////////////////////////////////////////////////////80
 	public function load() {
 		if (!empty($this->macros)) {
-			Common::send("success", $this->macros);
+			Common::send(200, $this->macros);
 		} else {
-			Common::send("error", "No macros found.");
+			Common::send(404, "No macros found.");
 		}
 	}
 
@@ -116,9 +116,9 @@ class Macro {
 		);
 
 		if ($this->db->update($where, $value, true)) {
-			Common::send("success", "Macro saved.");
+			Common::send(200, "Macro saved.");
 		} else {
-			Common::send("error", "Could not save.");
+			Common::send(507, "Could not save.");
 		}
 	}
 
@@ -129,9 +129,9 @@ class Macro {
 		$where = array(["uuid", "==", $uuid]);
 
 		if ($this->db->delete($where)) {
-			Common::send("success", "Macro deleted.");
+			Common::send(200, "Macro deleted.");
 		} else {
-			Common::send("error", "Could not delete.");
+			Common::send(507, "Could not delete.");
 		}
 	}
 
@@ -144,7 +144,7 @@ class Macro {
 		$macro = $this->db->select($where);
 
 		if (empty($macro)) {
-			Common::send("error", "Macro not found.");
+			Common::send(404, "Macro not found.");
 		}
 
 		$macro = $macro[0];
@@ -165,9 +165,9 @@ class Macro {
 
 		if ($code === 0) {
 			// Common::send("success", ["text" => implode("\n", $text)]);
-			Common::send("success", $text);
+			Common::send(200, $text);
 		} else {
-			Common::send("error", $text);
+			Common::send(500, $text);
 		}
 	}
 

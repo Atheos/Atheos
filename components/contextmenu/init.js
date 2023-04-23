@@ -35,8 +35,8 @@
 					target: 'contextmenu',
 					action: 'loadMenus'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					// self.createFileMenu(reply.fileMenu);
 					self.fileMenu = reply.fileMenu;
 					self.tabMenu = reply.tabMenu;

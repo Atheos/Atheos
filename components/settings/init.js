@@ -23,7 +23,7 @@
 					target: 'settings',
 					action: 'load',
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					if (status === 'success') {
 						for (var key in reply) {
 							storage(key, reply[key]);
@@ -200,8 +200,8 @@
 					key,
 					value
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') toast(status, reply);
+				settled: function(reply, status) {
+					if (status !== 200) toast(status, reply);
 					if (hidden) return;
 					// self.displayStatus(reply);
 					toast(status, 'Setting "' + key + '" saved.');
@@ -243,9 +243,9 @@
 					key,
 					value
 				},
-				success: function(reply) {
-					if (reply.status === 'error') {
-						atheos.toast.show(reply);
+				settled: function(reply, status) {
+					if (status !== 200) {
+						atheos.toast.show(status, reply);
 					} else if (!hidden) {
 						reply.text = 'Setting "' + key + '" saved.';
 						self.displayStatus(reply);

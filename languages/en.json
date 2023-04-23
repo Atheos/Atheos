@@ -66,7 +66,7 @@
 		"noPhar": "PHP PharData not installed or enabled.",
 		"noRar": "PHP Rar Open not installed or enabled.",
 		"noDecomp": "Unable to decompress gzip archive.",
-		"unrecognized":"Unsupported archive type."
+		"unrecognized": "Unsupported archive type."
 	},
 	"duplicate": {
 		"": "Duplicate",
@@ -256,7 +256,7 @@
 		"download": "Download Bulk Template",
 		"upload": "Upload Bulk Accounts"
 	},
-	
+
 	"account:": "Account:",
 
 	"username": {
@@ -374,6 +374,7 @@
 	"path": {
 		"": "Path",
 		"missing": "Path doesn't exist.",
+		"invalid": "Path isn't valid..",
 		"exists": "Path already exists.",
 		"unableCreate": "Cannot create path.",
 		"unableRename": "Cannot rename path."
@@ -599,6 +600,11 @@
 			"": "Fetch",
 			"success": "Repo fetch successful.",
 			"failed": "Repo fetch failed."
+		},
+		"checkout": {
+			"": "Checkout",
+			"success": "Checkout successful.",
+			"failed": "Checkout failed."
 		},
 		"remote": {
 			"new": "New Remote"

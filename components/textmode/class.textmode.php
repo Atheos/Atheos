@@ -233,18 +233,18 @@ class TextMode {
 			if ($mode === '' || $ext === '') continue;
 
 			if (!$this->validMode($mode) || !$this->validateExtension($ext)) {
-				Common::send("error", "Invalid mode or extension.");
+				Common::send(418, "Invalid mode or extension.");
 			}
 
 			if (isset($customMap[$ext])) {
-				Common::send("error", i18n("extensionSet"));
+				Common::send(409, i18n("extensionSet"));
 			} else {
 				$customMap[$ext] = $mode;
 			}
 		}
 		
 		Common::saveJSON("extensions", $customMap);
-		Common::send("success", "Textmodes saved.");
+		Common::send(200, "Textmodes saved.");
 	}
 
 	//////////////////////////////////////////////////////////////////
@@ -265,7 +265,7 @@ class TextMode {
 				$validMap[$extension] = $mode;
 			}
 		}
-		Common::send("success", array('extensionMap' => $validMap, 'modes' => $this->availableModes));
+		Common::send(200, array('extensionMap' => $validMap, 'modes' => $this->availableModes));
 	}
 
 	//////////////////////////////////////////////////////////////////

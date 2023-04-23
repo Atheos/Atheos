@@ -34,8 +34,8 @@
 					target: 'market',
 					action: 'init'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 					self.market = reply.market;
 					if (reply.request) {
@@ -112,7 +112,7 @@
 					type,
 					category
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					atheos.toast.show(status, reply);
 					atheos.market.list();
 				}
@@ -133,7 +133,7 @@
 					name,
 					type
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					atheos.toast.show(status, reply);
 					atheos.market.list();
 				}
@@ -154,7 +154,7 @@
 					type,
 					category
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					atheos.toast.show(reply);
 					atheos.market.list();
 

@@ -61,8 +61,8 @@
 					target: 'active',
 					action: 'list'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 					var inFocus = reply.inFocus,
 						key, item;
@@ -332,8 +332,8 @@
 					action: 'check',
 					path: path
 				},
-				settled: function(status, reply) {
-					if (status === 'warning') {
+				settled: function(reply, status) {
+					if (status === 151) {
 						toast(status, reply);
 					}
 				}
@@ -635,8 +635,8 @@
 					action: 'open',
 					path: path
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return toast('error', 'Unable to reload file.');
+				settled: function(reply, status) {
+					if (status !== 200) return toast('error', 'Unable to reload file.');
 					session.serverMTime = reply.modifyTime;
 					session.untainted = reply.content;
 					session.setValue(reply.content);
@@ -731,8 +731,8 @@
 					path: oldPath,
 					newPath: newPath
 				},
-				settled: function(status) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					carbon.publish('active.onRename', {
 						'oldPath': oldPath,
 						'newPath': newPath

@@ -29,9 +29,9 @@ switch ($action) {
     //////////////////////////////////////////////////////////////////////////80
     case "create":
         if (!Common::checkAccess("configure")) {
-            Common::send("error", "User does not have access.");
+            Common::send(403, "User does not have access.");
         } elseif (!$projectName) {
-            Common::send("error", "Missing project name.");
+            Common::send(417, "Missing project name.");
         } else {
             $projectPath = $projectPath ? $projectPath : $projectName;
             $Project->create($projectName, $projectPath, $gitRepo, $gitBranch);
@@ -44,9 +44,9 @@ switch ($action) {
     //////////////////////////////////////////////////////////////////////////80
     case "current":
         if ($activeName) {
-            Common::send("success", array("name" => $activeName, "path" => $activePath));
+            Common::send(200, array("name" => $activeName, "path" => $activePath));
         } else {
-            Common::send("error", i18n("project_noActive"));
+            Common::send(404, i18n("project_noActive"));
         }
         break;
 
@@ -55,9 +55,9 @@ switch ($action) {
     //////////////////////////////////////////////////////////////////////////80
     case "delete":
         if (!Common::checkAccess("configure")) {
-            Common::send("error", "User does not have access.");
+            Common::send(403, "User does not have access.");
         } elseif (!$projectName) {
-            Common::send("error", "Missing project name.");
+            Common::send(417, "Missing project name.");
         } else {
             $scope = POST("scope");
             $Project->delete($projectName, $scope);
@@ -82,9 +82,9 @@ switch ($action) {
         }
 
         if (!Common::checkPath($projectPath)) {
-            Common::send("error", "User does not have access.");
+            Common::send(403, "User does not have access.");
         } elseif (!$projectName || !$projectPath) {
-            Common::send("error", "Missing project name or path.");
+            Common::send(417, "Missing project name or path.");
         } else {
             $Project->open($projectName, $projectPath);
         }
@@ -99,9 +99,9 @@ switch ($action) {
         $newName = POST("newName");
 
         if (!Common::checkAccess("configure")) {
-            Common::send("error", "User does not have access.");
+            Common::send(403, "User does not have access.");
         } elseif (!$projectName || !$projectPath) {
-            Common::send("error", "Missing project path or name.");
+            Common::send(417, "Missing project path or name.");
         } else {
             $Project->rename($oldName, $newName, $projectPath);
         }
@@ -109,6 +109,6 @@ switch ($action) {
         break;
 
     default:
-        Common::send("error", "Invalid action.");
+        Common::send(416, "Invalid action.");
         break;
 }

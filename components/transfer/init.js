@@ -121,8 +121,8 @@
 					path,
 					type
 				},
-				settled: function(status, reply) {
-					if (status === 'success') {
+				settled: function(reply, status) {
+					if (status === 200) {
 						oX('#download').attr('src', 'components/transfer/download.php?filename=' + encodeURIComponent(reply.download));
 					} else {
 						atheos.toast.show('error', reply.text);

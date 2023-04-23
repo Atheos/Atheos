@@ -31,6 +31,20 @@
 (function() {
 	'use strict';
 
+	const parseCode = function(code) {
+		if(isString(code)) return code;
+		if (code > 150) {
+			return "notice";
+		} else if (code < 200) {
+			return "warning";
+		} else if (code < 300) {
+			return "success";
+		} else if (code > 399 && code < 599) {
+			return 'error';
+		}
+		return 'unknown';
+	};
+
 	const self = {
 
 		container: null,
@@ -65,7 +79,7 @@
 				self.hide(toast);
 			});
 		},
-		
+
 		setLocation: function(value) {
 			self.container.removeClass(self.location);
 			self.location = value;
@@ -108,6 +122,8 @@
 			if (isObject(text)) {
 				text = text.text;
 			}
+			
+			type = parseCode(type);
 
 			if (!(type in self.stayTimes)) return;
 

@@ -68,8 +68,8 @@
 					action: 'check',
 					path: path
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 					atheos.alert.show({
 						banner: 'Draft found!',
@@ -111,8 +111,8 @@
 					action: 'open',
 					path: path
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					session.setValue(reply.content, 1);
 				}
 			});
@@ -130,8 +130,8 @@
 					path: session.path,
 					content
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 
 					let index = self.saving.indexOf(session.path);

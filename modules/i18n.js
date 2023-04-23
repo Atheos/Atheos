@@ -25,8 +25,8 @@
 					target: 'i18n',
 					action: 'init'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					node.cache = reply.cache;
 				}
 			});

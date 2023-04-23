@@ -40,7 +40,7 @@ class User {
 		$this->pivotFolder();
 
 		if (array_key_exists($username, $this->users) === false) {
-			Common::send("error", "Username not found.");
+			Common::send(404, "Username not found.");
 		}
 
 		$user = $this->users[$username];
@@ -61,7 +61,7 @@ class User {
 		} else {
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} attempted log in", "access");
-			Common::send("error", "Invalid password.");
+			Common::send(451, "Invalid password.");
 		}
 	}
 
@@ -88,7 +88,7 @@ class User {
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
-		Common::send("success", $reply);
+		Common::send(200, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -102,7 +102,7 @@ class User {
 		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
-		Common::send("success", "Password changed");
+		Common::send(200, "Password changed");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -114,7 +114,7 @@ class User {
 		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
-		Common::send("success", "User permissions updated");
+		Common::send(200, "User permissions updated");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -137,10 +137,10 @@ class User {
 			Common::saveJSON("users", $this->users);
 			// Log
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $username . "}", "access");
-			Common::send("success", array("username" => $username));
+			Common::send(200, array("username" => $username));
 
 		} else {
-			Common::send("error", "That username is already taken.");
+			Common::send(409, "That username is already taken.");
 		}
 	}
 
@@ -160,7 +160,7 @@ class User {
 
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
-		Common::send("success", "Account Deleted.");
+		Common::send(200, "Account Deleted.");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -173,7 +173,7 @@ class User {
 		// Save array back to JSON
 		Common::saveJSON("users", $this->users);
 		// Response
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -189,7 +189,7 @@ class User {
 		Common::saveJSON("users", $this->users);
 		// Log
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
-		Common::send("success", "User ACL updated");
+		Common::send(200, "User ACL updated");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -197,9 +197,9 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function verify($username) {
 		if (array_key_exists($username, $this->users)) {
-			Common::send("success");
+			Common::send(204);
 		} else {
-			Common::send("error", "Invalid account.");
+			Common::send(404, "Invalid account.");
 		}
 	}
 

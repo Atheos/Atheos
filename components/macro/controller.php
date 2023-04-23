@@ -34,11 +34,11 @@ switch ($action) {
 		$fTypes = POST("fTypes");
 		$command = POST("command");
 		if (!Common::checkAccess("configure")) {
-			Common::send("error", "Account does not have access.");
+			Common::send(403, "Account does not have access.");
 		} elseif ($uuid && $title && $type && $fTypes && $command) {
 			$Macro->save($uuid, $title, $type, $fTypes, $command);
 		} else {
-			Common::send("error", "Missing parameter.");
+			Common::send(417, "Missing parameter.");
 		}
 		break;
 
@@ -49,11 +49,11 @@ switch ($action) {
 	case "delete":
 		$uuid = POST("uuid");
 		if (!Common::checkAccess("configure")) {
-			Common::send("error", "Account does not have access.");
+			Common::send(403, "Account does not have access.");
 		} elseif ($uuid) {
 			$Macro->delete($uuid);
 		} else {
-			Common::send("error", "Missing parameter.");
+			Common::send(417, "Missing parameter.");
 		}
 		break;
 
@@ -67,7 +67,7 @@ switch ($action) {
 		if ($uuid && $path) {
 			$Macro->execute($uuid, $path);
 		} else {
-			Common::send("error", "Missing key or value.");
+			Common::send(417, "Missing key or value.");
 		}
 		break;
 
@@ -75,6 +75,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

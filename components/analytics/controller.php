@@ -31,7 +31,7 @@ switch ($action) {
 			$value = POST("enabled");
 			$Analytics->changeOpt($value);
 		} else {
-			Common::send("warning", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		}
 		break;
 
@@ -47,6 +47,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

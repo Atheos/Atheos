@@ -23,17 +23,17 @@ class Transfer {
 	//////////////////////////////////////////////////////////////////////////80
 	public function download($path = false, $type = false) {
 		if (!$path || !file_exists($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 		if (preg_match("#^[\\\/]?$#i", trim($path)) || preg_match("#[\:*?\"<>\|]#i", $path) || substr_count($path, "./") > 0) {
 			//  Attempting to download all Projects	  or illegal characters in filepaths
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		if (!$type) {
-			Common::send("error", "Missing type.");
+			Common::send(417, "Missing type.");
 		} elseif (($type === "directory" && !is_dir($path)) || ($type === "file" && !is_file($path))) {
-			Common::send("error", "Invalid type.");
+			Common::send(418, "Invalid type.");
 		}
 
 		$pathInfo = pathinfo($path);
@@ -60,14 +60,14 @@ class Transfer {
 				$downloadFile = $targetPath . $filename;
 				Common::zip($path, $downloadFile);
 			} else {
-				Common::send("error", "Could not zip folder, zip-extension missing");
+				Common::send(501, "Could not zip folder, zip-extension missing");
 
 			}
 		} elseif ($type === "file") {
 			$downloadFile = WORKSPACE . "/" . $filename;
 			copy($path, WORKSPACE . "/" . $filename);
 		}
-		Common::send("success", array("download" => $downloadFile));
+		Common::send(200, array("download" => $downloadFile));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -77,7 +77,7 @@ class Transfer {
 
 		// Check that the path exists and is a directory
 		if (!file_exists($path) || is_file($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 		// Handle upload
 		$info = array();
@@ -98,6 +98,6 @@ class Transfer {
 				}
 			}
 		}
-		Common::send("success", array("data" => $info));
+		Common::send(200, array("data" => $info));
 	}
 }

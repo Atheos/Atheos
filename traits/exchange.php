@@ -14,17 +14,27 @@ trait Exchange {
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Format and send JSON responses
+	// 100 <-> 149: Notices
+	//							103: Action required	104: Notice/no content
+	// 150 <-> 199: Warning
+	// 151: In Use
+	//
+	// 200 <-> 299: Successes
 	// 200: Success
 	// 201: Created				202: Accepted			204: No Content
 	//
+	// 400 <-> 499: Client errors
 	// 400: Bad Request
-	// 401: Unauthorized		403: Forbidden			404: Not Found
+	// 401: Client Unauthorized	403: User Forbidden		404: Not Found
 	// 409: Conflict/Duplicate
+	// 415: Missing Action		416: Invalid action
 	// 417: Missing Data		418: Invalid Data		419: Outdated Data
 	// 422: Non-Compliant		423: Locked				451: Security Violation
 	//
+	// 500 <-> 599: Server errors
 	// 500: Internal Error
-	// 501: Not Implemented		503: Maintenance        507: Unable to write DB
+	// 501: Not Implemented		503: Maintenance        
+	// 506: Unable to write file507: Unable to write DB
 	//////////////////////////////////////////////////////////////////////////80
 	// $status should only be: "success" || "error" || "warning" || "notice"
 	//////////////////////////////////////////////////////////////////////////80

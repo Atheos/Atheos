@@ -49,11 +49,11 @@ if (!file_exists(BASE_PATH . "/data/users.json") && !file_exists(BASE_PATH . "/d
 		}
 		if (!file_exists($projectPath)) {
 			if (!mkdir($projectPath . "/", 0755, true)) {
-				Common::send("error", "Unable to create Absolute Path");
+				Common::send(500, "Unable to create Absolute Path");
 			}
 		} else {
 			if (!is_writable($projectPath) || !is_readable($projectPath)) {
-				Common::send("error", "No Read/Write Permission");
+				Common::send(506, "No Read/Write Permission");
 			}
 		}
 
@@ -175,7 +175,7 @@ define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest"
 	//////////////////////////////////////////////////////////////////////////80
 	// Save Config
 	//////////////////////////////////////////////////////////////////////////80
-	$write = fopen($config, "w") or Common::send("error", "Unable to save config");
+	$write = fopen($config, "w") or Common::send(506, "Unable to save config");
 	fwrite($write, $configData);
 	fclose($write);
 
@@ -196,5 +196,5 @@ define("GITHUBAPI", "https://api.github.com/repos/Atheos/Atheos/releases/latest"
 		"text" => "Installation successful."
 	);
 
-	Common::send("success", $reply);
+	Common::send(200, $reply);
 }

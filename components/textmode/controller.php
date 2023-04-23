@@ -23,12 +23,12 @@ switch ($action) {
 			$map = json_decode(POST('map'), true);
 
 			if (!is_array($map)) {
-				Common::send("error", "Invalid map type.");
+				Common::send(418, "Invalid map type.");
 			}
 
 			$TextMode->saveExtensionMap($map);
 		} else {
-			Common::send("error", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		}
 		break;
 
@@ -39,6 +39,6 @@ switch ($action) {
 		$TextMode->loadExtensionMap();
 		break;
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

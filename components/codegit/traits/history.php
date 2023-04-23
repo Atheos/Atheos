@@ -103,9 +103,9 @@ trait History {
 	public function checkout($file) {
 		$result = $this->execute("git checkout -- " . $file);
 		if ($result["code"] === 0) {
-			Common::send("success", i18n("git_undo_success"));
+			Common::send(200, i18n("git_checkout_success"));
 		} else {
-			Common::send("error", i18n("git_undo_failed"));
+			Common::send(500, i18n("git_checkout_failed"));
 		}
 	}
 }

@@ -59,7 +59,7 @@ class Market {
 			"request" => $request
 		);
 
-		Common::send("success", $reply);
+		Common::send(200, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -69,7 +69,7 @@ class Market {
 		$cache = json_decode($cache);
 		$this->cMarket = $cache;
 		Common::saveJSON("market", $cache, "cache");
-		Common::send("success");
+		Common::send(200, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -145,10 +145,10 @@ class Market {
 				if ($zip->extractTo(BASE_PATH.'/'.$type) === true) {
 					$zip->close();
 				} else {
-					Common::send("error", i18n("market_unableExtract"));
+					Common::send(500, i18n("market_unableExtract"));
 				}
 			} else {
-				Common::send("error", i18n("market_noZip"));
+				Common::send(501, i18n("market_noZip"));
 			}
 
 			unlink(BASE_PATH.'/'.$type.'/'.$name.'.zip');
@@ -161,9 +161,9 @@ class Market {
 			// Log Action
 			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} installed plugin {$name}", "market");
 			$this->buildCache(true);
-			Common::send("success", i18n("market_install_success", $name));
+			Common::send(200, i18n("market_install_success", $name));
 		} else {
-			Common::send("error", i18n("market_unableDownload"));
+			Common::send(500, i18n("market_unableDownload"));
 		}
 	}
 
@@ -180,7 +180,7 @@ class Market {
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
-		Common::send("success", "Plugin successfully removed.");
+		Common::send(200, "Plugin successfully removed.");
 
 	}
 

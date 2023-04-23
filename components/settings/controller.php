@@ -34,7 +34,7 @@ switch ($action) {
 		if ($key && $value) {
 			$Settings->save($key, $value);
 		} else {
-			Common::send("error", "Missing key or value.");
+			Common::send(417, "Missing key or value.");
 		}
 		break;
 
@@ -42,6 +42,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

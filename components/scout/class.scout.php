@@ -23,7 +23,7 @@ class Scout {
 	//////////////////////////////////////////////////////////////////////////80
 	public function __construct() {
 		if (!function_exists('shell_exec')) {
-			Common::send("error", i18n("noShell"));
+			Common::send(501, i18n("noShell"));
 		}
 	}
 
@@ -79,9 +79,9 @@ class Scout {
 		}
 
 		if (count($results) > 0) {
-			Common::send("success", $results);
+			Common::send(200, $results);
 		} else {
-			Common::send("error", "No results found.");
+			Common::send(404, "No results found.");
 		}
 	}
 
@@ -131,9 +131,9 @@ class Scout {
 			}
 		}
 		if (count($results) > 0) {
-			Common::send("success", $results);
+			Common::send(200, $results);
 		} else {
-			Common::send("error", "No results found.");
+			Common::send(404, "No results found.");
 		}
 
 	}

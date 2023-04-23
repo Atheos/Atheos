@@ -38,9 +38,9 @@ class Settings {
 	public function load() {
 		$settings = $this->db->select("*");
 		if (!empty($settings)) {
-			Common::send("success", $settings);
+			Common::send(200, $settings);
 		} else {
-			Common::send("error", "Settings for user not found.");
+			Common::send(404, "Settings for user not found.");
 		}
 	}
 
@@ -49,6 +49,6 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	public function save($key, $value) {
 		$this->db->update($key, $value, true);
-		Common::send("success");
+		Common::send(200);
 	}
 }

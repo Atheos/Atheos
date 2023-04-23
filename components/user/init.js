@@ -113,8 +113,8 @@
 					'target': 'user',
 					'action': 'keepAlive'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') {
+				settled: function(reply, status) {
+					if (status !== 204) {
 						log('connection lost');
 						atheos.user.logout();
 					}
@@ -134,11 +134,11 @@
 			data.action = 'authenticate';
 			echo({
 				data: data,
-				settled: function(status, reply) {
-					if (status === 'success') {
+				settled: function(reply, status) {
+					toast(status, reply);
+					if (status === 200) {
 						window.location.reload();
 					}
-					toast(status, reply);
 				}
 			});
 		},
@@ -164,9 +164,9 @@
 						username,
 						password: data.password
 					},
-					settled: function(status, reply) {
+					settled: function(reply, status) {
 						toast(status, reply);
-						if (status !== 'error') {
+						if (status === 200) {
 							atheos.modal.unload();
 						}
 					}
@@ -218,9 +218,9 @@
 					username,
 					password
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					toast(status, reply);
-					if (status !== 'error') {
+					if (status === 200) {
 						if (self.listTimer) {
 							clearTimeout(self.listTimer);
 						}
@@ -311,7 +311,7 @@
 						action: 'delete',
 						username: username
 					},
-					settled: function(status, reply) {
+					settled: function(reply, status) {
 						toast(status, reply);
 						if (status !== 'error') {
 							self.list();
@@ -427,9 +427,9 @@
 				} else {
 					echo({
 						data: data,
-						settled: function(status, reply) {
+						settled: function(reply, status) {
 							toast(status, reply);
-							if (status !== 'error') {
+							if (status === 200) {
 								atheos.modal.unload();
 							}
 						}

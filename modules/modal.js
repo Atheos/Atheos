@@ -87,8 +87,8 @@
 			echo({
 				url: data.url || atheos.dialog,
 				data: data,
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 					clearTimeout(loadTimeout);
 					content.html(reply);

@@ -88,8 +88,8 @@
 					action: 'loadURL',
 					path: anchor.path
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return toast(status, reply.text);
+				settled: function(reply, status) {
+					if (status !== 200) return toast(status, reply.text);
 
 					window.open(reply.text, '_newtab');
 				}
@@ -161,10 +161,12 @@
 				if (dragZone.contains(swap)) {
 					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
 					if (swap && !target.contains(swap)) {
-						dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
+						dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {
+							iNode.classList.replace('fa-download', 'fa-folder');
+						});
 						swap.parentNode.insertBefore(target, swap.nextSibling);
-						if (swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length>0) {
-							swap.querySelector('i[data-type="folder"],i[data-type="root"]').classList.replace('fa-folder','fa-download');
+						if (swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length > 0) {
+							swap.querySelector('i[data-type="folder"],i[data-type="root"]').classList.replace('fa-folder', 'fa-download');
 						}
 					}
 				}
@@ -234,7 +236,9 @@
 					folder = parentUl.previousElementSibling;
 					if (parentUl === origin || !folder) return origin.append(target);
 				} else {
-					dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {iNode.classList.replace('fa-download','fa-folder');});
+					dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {
+						iNode.classList.replace('fa-download', 'fa-folder');
+					});
 					folder = target.previousSibling.querySelector('a');
 				}
 				self.handleDrop(target, folder);
@@ -271,8 +275,8 @@
 							path: oldPath,
 							dest: newPath
 						},
-						settled: function(status, reply) {
-							if (status !== 'success') {
+						settled: function(reply, status) {
+							if (status !== 200) {
 								toast('error', reply);
 							} else {
 								//node.attr('data-path', newPath);
@@ -326,8 +330,8 @@
 						action: 'index',
 						path
 					},
-					settled: function(status, reply) {
-						if (status !== 'error') {
+					settled: function(reply, status) {
+						if (status === 200) {
 							/* Notify listener */
 
 							var files = reply.index;
@@ -460,8 +464,8 @@
 					action: 'open',
 					path: path
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					atheos.active.open(path, reply.content, reply.modifyTime, focus);
 					if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 				}
@@ -480,8 +484,8 @@
 
 			echo({
 				data: data,
-				settled: function(status, reply) {
-					if (status === 'success') {
+				settled: function(reply, status) {
+					if (status === 200) {
 						toast('success', 'File saved');
 						if (typeof callback === 'function') {
 							callback.call(self, reply.modifyTime);
@@ -580,8 +584,8 @@
 						path: self.clipboard,
 						dest: parentDest + '/' + activeBase
 					},
-					settled: function(status, reply) {
-						if (status === 'error') return;
+					settled: function(reply, status) {
+						if (status !== 200) return;
 						if (self.cutboard !== false) {
 							self.cutboard = false;
 						}
@@ -656,19 +660,18 @@
 					path: path,
 					dest: clonePath
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					toast(status, reply);
+					if (status !== 200) return;
 
-					if (status === 'success') {
-						self.addToFileManager(clonePath, type, parent);
-						atheos.modal.unload();
-						/* Notify listeners. */
-						carbon.publish('filemanager.duplicate', {
-							sourcePath: path,
-							clonePath: clonePath,
-							type: type
-						});
-					}
+					self.addToFileManager(clonePath, type, parent);
+					atheos.modal.unload();
+					/* Notify listeners. */
+					carbon.publish('filemanager.duplicate', {
+						sourcePath: path,
+						clonePath: clonePath,
+						type: type
+					});
 				}
 			});
 			atheos.modal.unload();
@@ -696,8 +699,8 @@
 
 				echo({
 					data: anchor,
-					settled: function(status, reply) {
-						if (status === 'error') return;
+					settled: function(reply, status) {
+						if (status !== 200) return;
 
 						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
 						/* Notify listeners. */
@@ -750,8 +753,8 @@
 					path,
 					type
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return toast(status, reply);
+				settled: function(reply, status) {
+					if (status !== 200) return toast(status, reply);
 					toast('success', 'File Created');
 					atheos.modal.unload();
 					// Add new element to filemanager screen
@@ -809,8 +812,8 @@
 			children = children.map(function(node) {
 				return {
 					node: node,
-					span: (node.querySelector('span'))?node.querySelector('span').textContent:'',
-					type: (node.querySelector('a'))?node.querySelector('a').getAttribute('data-type'):''
+					span: (node.querySelector('span')) ? node.querySelector('span').textContent : '',
+					type: (node.querySelector('a')) ? node.querySelector('a').getAttribute('data-type') : ''
 				};
 			});
 
@@ -896,8 +899,8 @@
 					path: path,
 					name: newName
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					if (type === 'file') {
 						toast('success', 'File Renamed.');
 					} else {
@@ -958,8 +961,8 @@
 								action: 'delete',
 								path
 							},
-							settled: function(status, reply) {
-								if (status !== 'success') return;
+							settled: function(reply, status) {
+								if (status !== 200) return;
 								var node = oX('#file-manager a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files

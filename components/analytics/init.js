@@ -25,10 +25,10 @@
 					target: 'analytics',
 					action: 'init'
 				},
-				settled: function(status, reply) {
-					if (status === 'notice') {
+				settled: function(reply, status) {
+					if (status === 103) {
 						return toast(status, reply);
-					} else if (status === 'success') {
+					} else if (status === 200) {
 						self.home = reply.home;
 						self.send(reply.data);
 					}
@@ -73,7 +73,7 @@
 					action: 'changeOpt',
 					enabled: value
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					// storage('analytics.enabled', value);
 					toast(status, reply);
 				}

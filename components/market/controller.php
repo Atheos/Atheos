@@ -13,7 +13,7 @@
 require_once('class.market.php');
 
 if (!Common::checkAccess("configure")) {
-	Common::send("error", "User does not have access.");
+	Common::send(403, "User does not have access.");
 }
 
 $type = POST("type");
@@ -63,6 +63,6 @@ switch ($action) {
 		break;
 
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

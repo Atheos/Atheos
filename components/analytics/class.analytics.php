@@ -75,10 +75,10 @@ class Analytics {
 			$status = "success";
 		} elseif ($data["enabled"] === "UNKNOWN" && Common::checkAccess("configure")) {
 			$reply = "Analytic settings require action.";
-			$status = "notice";
+			$status = 103;
 		} else {
 			$reply = "Not authorized.";
-			$status = "warning";
+			$status = 403;
 		}
 
 		Common::send($status, $reply);
@@ -137,7 +137,7 @@ class Analytics {
 	//////////////////////////////////////////////////////////////////////////80
 	public function changeOpt($value) {
 		$value = $value === "true";
-		$status = $this->db->update("enabled", $value) ? "success" : "error";
+		$status = $this->db->update("enabled", $value) ? 200 : 507;
 		$text = $status === "success" ? "Updated analytics preference." : "Unable to update preference.";
 		Common::send($status, $text);
 	}
@@ -161,7 +161,7 @@ class Analytics {
 		debug($duration);
 		$this->db->update("totalUsage", $duration, true);
 		$this->db->update("sessions", $sessions + 1, true);
-		Common::send("success");
+		Common::send(200);
 	}
 }
 
