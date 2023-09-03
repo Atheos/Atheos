@@ -69,7 +69,7 @@ class Market {
 		$cache = json_decode($cache);
 		$this->cMarket = $cache;
 		Common::saveJSON("market", $cache, "cache");
-		Common::send(200, $reply);
+		Common::send(200, "Market Saved");
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
