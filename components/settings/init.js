@@ -131,9 +131,20 @@
 				case 'editor.displayIndentGuides':
 					atheos.editor.setDisplayIndentGuides(value);
 					break;
-
 				case 'editor.showFoldWidgets':
 					atheos.editor.setShowFoldWidgets(value);
+					break;
+				case 'editor.enableAutoClose':
+					atheos.editor.setAutoClose(value);
+					break;
+				case 'editor.enableBasicAutocomplete':
+					atheos.editor.setBasicAutocomplete(value);
+					break;
+				case 'editor.enableLiveAutocomplete':
+					atheos.editor.setLiveAutocomplete(value);
+					break;
+				case 'editor.enableSnippets':
+					atheos.editor.setSnippets(value);
 					break;
 				case 'editor.useWrapMode':
 					atheos.editor.setUseWrapMode(value);

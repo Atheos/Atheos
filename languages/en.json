@@ -156,7 +156,11 @@
 
 	"themes": "Themes",
 	"branch": "Branch",
-	"editor": "Editor",
+	"editor": {
+		"": "Editor",
+		"behavior": "Editor Behavior",
+		"style": "Editor Style"
+	},
 	"extension": "Extension",
 	"extensions": "Extensions",
 	"textmode": "Textmode",
@@ -168,6 +172,14 @@
 	"plugins": "Plugins",
 	"system": "System",
 	"administration": "Administration",
+
+	"autoPairComplete": "Auto Pair Completion",
+	"autocomplete": {
+		"": "Autocompletion",
+		"basic": "Basic Autocompletion",
+		"live": "Live Autocompletion"
+	},
+	"snippets": "Enable Snippets",
 
 
 	"wrap": {
