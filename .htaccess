@@ -1,5 +1,6 @@
 Options -Indexes
 
+RedirectMatch 403 ^/components/*.php$
 ErrorDocument 403 /error.php
 ErrorDocument 404 /error.php
 ErrorDocument 500 /error.php
@@ -8,6 +9,17 @@ RedirectMatch 403 ^/data/*$
 RedirectMatch 403 ^/notes/*$
 RedirectMatch 403 ^/workspace/?$
 
+#Order Allow,Deny
+#<FilesMatch "^(|gateway\.php|index\.php|index\.html)$">
+#  Allow from all
+#</FilesMatch>
+
 <Files ~ "^.*\.(txt|yml|md|xml|json)">
   Require all denied
+</Files>
+
+# Deny access to .htaccess
+<Files .htaccess>
+Order allow,deny
+Deny from all
 </Files>

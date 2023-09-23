@@ -3,6 +3,11 @@
 Mainly for use by @hlsiira, this file also serves as transparency for anyone who
 is curious, or looking for a place to help with the project.
 
+## InProgress
+- [ ] Codegit is acting funny on a new install, lots of issues and needs investigating.
+- [ ] Most messages aren't making their way to the output, message undefined a lot.
+- 
+
 ## Global:
 - [ ] Condense element IDs for easier changeability. Current CSS files have them scattered.
 - [ ] Integrate complex return codes.
@@ -85,6 +90,7 @@ is curious, or looking for a place to help with the project.
 
 ### Codegit
 - [ ] trait/execute: $result needs to be either imploded or exploded into an array
+- [ ] When adding changes to a commit, the backend should try to add or remove them live. Commit should be one action, and the message should be cached for you to come back to.
 - [ ] Updating Codegit to use more well-rounded execute function
 	- [ ] Update files to match new return
 		- [?] Branches
@@ -136,8 +142,6 @@ is curious, or looking for a place to help with the project.
 
 ## i18n Language Review
 - [ ] Actively maintain i18n. Allow plugins to include language files.
-
-## InProgress
 
 ## Plugin Ideas
 - [ ] ToDo Plugin: Set a time and a description and the toast will pop up to notify you, or even just a rolling list of things to do with a project 

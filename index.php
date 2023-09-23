@@ -116,8 +116,8 @@ $SourceManager = new SourceManager;
 		$SourceManager->linkResource("js", "plugins", DEVELOPMENT);
 
 	} else {
-	    // If constant DATA defined in config.php, use it. Otherwise fall back to default folder location
-	    $path = defined("DATA") ? DATA . "/" : __DIR__ . "/data/";
+		// If constant DATA defined in config.php, use it. Otherwise fall back to default folder location
+		$path = defined("DATA") ? DATA . "/" : __DIR__ . "/data/";
 
 		$users = file_exists($path . "users.json");
 		$projects = file_exists($path . "projects.json");
