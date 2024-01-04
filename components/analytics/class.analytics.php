@@ -138,7 +138,7 @@ class Analytics {
 	public function changeOpt($value) {
 		$value = $value === "true";
 		$status = $this->db->update("enabled", $value) ? 200 : 507;
-		$text = $status === "success" ? "Updated analytics preference." : "Unable to update preference.";
+		$text = $status === 200 ? "Updated analytics preference." : "Unable to update preference.";
 		Common::send($status, $text);
 	}
 
