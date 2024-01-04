@@ -90,6 +90,12 @@
 				}
 			});
 
+			// Hide on click for active tabs
+			fX('#contextmenu.at').on('click', function(e) {
+				e.preventDefault();
+				self.hide();
+			});
+
 			// Keep the contextmenu open if the mouse only leaves for a second
 			let hideTimeOut = false;
 			fX('#contextmenu').on('mouseout, mouseover', function(e) {
@@ -184,7 +190,7 @@
 				type = anchor.attr('data-type'),
 				name = anchor.find('span').html();
 
-			var html = '<a id="reload_file"><i class="fas fa-sync-alt"></i>Reload</a><a id="reset_file"><i class="fas fa-sync-alt"></i>Reset</a>';
+			var html = '<a id="auxSaveFile"><i class="fas fa-save"></i>Save</a><a id="auxReloadFile"><i class="fas fa-sync-alt"></i>Reload</a><a id="auxResetFile"><i class="fas fa-sync-alt"></i>Reset</a>';
 
 			self.active = {
 				path,
@@ -203,7 +209,7 @@
 			carbon.publish('contextmenu.showTabMenu');
 
 		},
-		
+
 		//////////////////////////////////////////////////////////////////////80
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80

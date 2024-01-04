@@ -10,7 +10,7 @@ ul.tabList {
 		float: left;
 		padding: 5px 10px 5px;
 		background-color: $colorSmall;
-		margin-right: 28px;
+		margin-right: 42px;
 		z-index: 2;
 		position: relative;
 		cursor: pointer;
@@ -19,7 +19,7 @@ ul.tabList {
 		a {
 			display: block;
 			text-align: right;
-			width: 150px;
+			width: 136px;
 			margin-left: -10px;
 			overflow: hidden;
 			direction: rtl;
@@ -44,16 +44,24 @@ ul.tabList {
 			}
 		}
 
+		.save,
 		.close {
 			display: block;
 			position: absolute;
-			right: -12px;
 			top: 6px;
 			color: $fontColorMinor;
 
 			&:hover {
 				color: $fontColorMajor;
 			}
+		}
+
+		.save {
+			right: -10px;
+		}
+
+		.close {
+			right: -28px;
 		}
 	}
 
@@ -70,7 +78,7 @@ ul.tabList {
 	}
 
 	li::before {
-		right: -18px;
+		right: -36px;
 		transform: skew(30deg, 0deg);
 		box-shadow: rgba(0, 0, 0, 0.1) 3px 2px 5px, inset rgba(255, 255, 255, 0.09) -1px 0;
 	}

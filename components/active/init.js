@@ -52,8 +52,9 @@
 				self.closeAll();
 			});
 
-			fX('#reload_file').on('click', () => self.reload());
-			fX('#reset_file').on('click', () => self.reset());
+			fX('#auxSaveFile').on('click', () => self.save());
+			fX('#auxReloadFile').on('click', () => self.reload());
+			fX('#auxResetFile').on('click', () => self.reset());
 
 			echo({
 				url: atheos.controller,
@@ -133,28 +134,31 @@
 				var tagName = e.target.tagName;
 				var node = oX(e.target);
 
-				if (tagName === 'UL') {
-					return;
-				}
-				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
-					node = node.parent('LI');
-				}
+				if (tagName === 'UL') return;
 
 				var path = node.attr('data-path');
+				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
+					path = node.parent('LI').attr('data-path');
+				}
 
-				//LeftClick = Open
+				// LeftClick = Switch focus to file
 				if (e.which === 1 && tagName !== 'I') {
 					self.focus(path);
 
-					//MiddleClick = Close
-				} else if (e.which === 2 || tagName === 'I') {
-					var activePath = self.getPath();
+					// Save file
+				} else if (tagName === 'I') {
+					if (node.hasClass('save')) {
+						self.save(path);
 
-					self.close(path);
-					if (activePath !== null && activePath !== path) {
-						self.focus(activePath);
+						//MiddleClick = Close
+					} else if (e.which === 2 || node.hasClass('close')) {
+						var activePath = self.getPath();
+						self.close(path);
+						if (activePath !== null && activePath !== path) {
+							self.focus(activePath);
+						}
+						self.updateTabDropdownVisibility();
 					}
-					self.updateTabDropdownVisibility();
 				}
 			};
 
@@ -447,6 +451,10 @@
 		// be worshipped.
 		//////////////////////////////////////////////////////////////////////80
 		save: function(path) {
+			if (!path && atheos.contextmenu.active) {
+				path = atheos.contextmenu.active.path;
+			}
+
 			let session = self.getSession(path);
 			if (isString(session)) return toast('error', session);
 			path = session.path;
@@ -872,7 +880,7 @@
 			// end of the file name and subsequently needs to be removed first.
 			var item = '<li class="draggable" data-path="' + path + '"><a title="' + path.replace(/^\/+/g, '') + '"><span class="subtle">' +
 				info.directory.replace(/^\/+/g, '') + '/</span>' + info.basename +
-				'</a><i class="close fas fa-times-circle"></i></li>';
+				'</a><i class="save fas fa-save"></i><i class="close fas fa-times-circle"></i></li>';
 
 			item = oX(item);
 			return item;
