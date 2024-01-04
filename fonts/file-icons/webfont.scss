@@ -45,8 +45,8 @@
   FontAwesome
   http://fortawesome.github.io/Font-Awesome/cheatsheet
 /*============================================================================*/
-@mixin fas-icon { font-family: 'Font Awesome 5 Free'; font-weight: 900; font-size: 13px; }
-@mixin fab-icon { font-family: 'Font Awesome 5 Brands'; font-weight: 400; font-size: 13px; }
+@mixin fas-icon { font-family: 'Font Awesome 6 Free'; font-weight: 900; font-size: 13px; }
+@mixin fab-icon { font-family: 'Font Awesome 6 Brands'; font-weight: 400; font-size: 13px; }
 
 .anchor-icon:before       { @include fas-icon; content: "\f13d"; font-size: 16px; top: 1px; }
 .android-icon:before      { @include fab-icon; content: "\f17b"; font-size: 16px; top: 1px; }

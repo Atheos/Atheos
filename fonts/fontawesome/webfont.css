@@ -7931,22 +7931,22 @@ readers do not read off random characters that represent icons */
 .fa-solid {
   font-weight: 900; }
 @font-face {
-  font-family: 'Font Awesome 5 Brands';
+  font-family: 'Font Awesome 6 Brands';
   font-display: swap;
   font-weight: 400;
-  src: local('Font Awesome 5 Brands'), url("fa-brands-900.woff2") format("woff2"); }
+  src: local('Font Awesome 6 Brands'), url("fa-brands-400.woff2") format("woff2"); }
 
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Free';
   font-display: swap;
   font-weight: 900;
-  src: local('Font Awesome 5 Free'), url("fa-solid-900.woff2") format("woff2"); }
+  src: local('Font Awesome 6 Free'), url("fa-solid-900.woff2") format("woff2"); }
 
 @font-face {
-  font-family: 'Font Awesome 5 Free';
+  font-family: 'Font Awesome 6 Free';
   font-display: swap;
   font-weight: 400;
-  src: local('Font Awesome 5 Free'), url("fa-regular-400.woff2") format("woff2"); }
+  src: local('Font Awesome 6 Free'), url("fa-regular-400.woff2") format("woff2"); }
 
 @font-face {
   font-family: 'FontAwesome';
