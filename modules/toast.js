@@ -33,7 +33,7 @@
 
 	const parseCode = function(code) {
 		if(isString(code)) return code;
-		if (code > 150) {
+		if (code < 150) {
 			return "notice";
 		} else if (code < 200) {
 			return "warning";

@@ -201,7 +201,7 @@
 					repo: anchor.path
 				},
 				success: function(reply) {
-						self.addRepoIcon(anchor.path);
+					self.addRepoIcon(anchor.path);
 				}
 			});
 		},
