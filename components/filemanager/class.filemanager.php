@@ -26,21 +26,21 @@ class Filemanager {
 	public function create($path, $type) {
 
 		if (file_exists($path)) {
-			Common::send("error", i18n("path_exists"));
+			Common::send(409, i18n("path_exists"));
 		}
 
 		// $path = strip_tags($path);
 		$path = htmlspecialchars($path);
 
 		if ($type === "folder" && @mkdir($path)) {
-			Common::send("success");
+			Common::send(200);
 		} elseif ($type === "file" && $file = fopen($path, "w")) {
 			$modifyTime = filemtime($path);
 			fclose($file);
-			Common::send("success", array("modifyTime" => $modifyTime));
+			Common::send(200, array("modifyTime" => $modifyTime));
 		} else {
 			// $error = error_get_last();
-			Common::send("error", i18n("path_unableCreate"));
+			Common::send(506, i18n("path_unableCreate"));
 		}
 	}
 
@@ -49,7 +49,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function delete($path) {
 		if (!file_exists($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		if (is_dir($path)) {
@@ -57,7 +57,7 @@ class Filemanager {
 		}
 
 		Common::rDelete($path);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -65,11 +65,11 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function duplicate($path, $dest) {
 		if (!file_exists($path) || !$dest) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		if (file_exists($dest)) {
-			Common::send("error", "Duplicate path.");
+			Common::send(409, "Duplicate path.");
 		}
 
 		function rCopyDirectory($src, $dst) {
@@ -89,10 +89,10 @@ class Filemanager {
 
 		if (is_file($path)) {
 			copy($path, $dest);
-			Common::send("success", i18n("duplicated_file"));
+			Common::send(200, i18n("duplicated_file"));
 		} else {
 			rCopyDirectory($path, $dest);
-			Common::send("success", i18n("duplicated_folder"));
+			Common::send(200, i18n("duplicated_folder"));
 		}
 	}
 
@@ -101,7 +101,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function extract($path, $name) {
 		if (!file_exists($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		$info = pathinfo($path);
@@ -117,42 +117,42 @@ class Filemanager {
 		if ($ext === "zip") {
 
 			if (!class_exists("ZipArchive")) {
-				Common::send("error", i18n("extract_noZip"));
+				Common::send(501, i18n("extract_noZip"));
 			}
 
 			$zip = new ZipArchive;
 			$res = $zip->open($path);
 
 			if (!$res) {
-				Common::send("error", i18n("extract_noOpen"));
+				Common::send(500, i18n("extract_noOpen"));
 			}
 
 			// extract archive
 			if ($zip->extractTo($des)) {
 				$zip->close();
-				Common::send("success", i18n("extract_success"));
+				Common::send(200, i18n("extract_success"));
 			} else {
-				Common::send("error", i18n("extract_unable"));
+				Common::send(506, i18n("extract_unable"));
 			}
 
 
 		} elseif ($ext === "tar") {
 
 			if (!class_exists("PharData")) {
-				Common::send("error", i18n("extract_noPhar"));
+				Common::send(501, i18n("extract_noPhar"));
 			}
 			$tar = new PharData($path);
 
 			if ($tar->extractTo($des)) {
-				Common::send("success", i18n("extract_success"));
+				Common::send(200, i18n("extract_success"));
 			} else {
-				Common::send("error", i18n("extract_unable"));
+				Common::send(500, i18n("extract_unable"));
 			}
 
 		} elseif ($ext === "gz") {
 
 			if (!class_exists("PharData")) {
-				Common::send("error", i18n("extract_noPhar"));
+				Common::send(501, i18n("extract_noPhar"));
 			}
 			$gz = new PharData($path);
 
@@ -161,23 +161,23 @@ class Filemanager {
 				$tar = new PharData($gzOpen);
 
 				if ($tar->extractTo($des)) {
-					Common::send("success", i18n("extract_success"));
+					Common::send(200, i18n("extract_success"));
 				} else {
-					Common::send("error", i18n("extract_unable"));
+					Common::send(506, i18n("extract_unable"));
 				}
 			} else {
-				Common::send("error", i18n("extract_noDecomp"));
+				Common::send(500, i18n("extract_noDecomp"));
 			}
 		} elseif ($ext === "rar") {
 
 			if (!class_exists("rar_open")) {
-				Common::send("error", i18n("extract_noRar"));
+				Common::send(501, i18n("extract_noRar"));
 			}
 			$rar = new rar_open;
 			$res = $rar->open($path);
 
 			if (!$res) {
-				Common::send("error", i18n("extract_noOpen"));
+				Common::send(500, i18n("extract_noOpen"));
 			}
 
 			$entries = rar_list($res);
@@ -186,14 +186,14 @@ class Filemanager {
 					$entry->extract($des);
 				}
 			} catch (Exception $e) {
-				Common::send("error", i18n("extract_unable"));
+				Common::send(500, i18n("extract_unable"));
 			}
 
-			Common::send("success", i18n("extract_success"));
+			Common::send(200, i18n("extract_success"));
 			$rar->close();
 		} else {
 
-			Common::send("error", i18n("extract_unrecognized"));
+			Common::send(501, i18n("extract_unrecognized"));
 		}
 	}
 
@@ -208,11 +208,11 @@ class Filemanager {
 		$path = Common::isAbsPath($path) ? $path : WORKSPACE . "/" . $path;
 
 		if (!file_exists($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		if (!is_dir($path) || !($handle = opendir($path))) {
-			Common::send("error", "Unreadable path.");
+			Common::send(500, "Unreadable path.");
 		}
 
 		$index = array();
@@ -280,19 +280,19 @@ class Filemanager {
 
 		$output = array_merge($folders, $files);
 
-		Common::send("success", array("index" => $output));
+		Common::send(200, array("index" => $output));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Move
 	//////////////////////////////////////////////////////////////////////////80
 	public function move($path, $dest) {
-		if (file_exists($dest)) Common::send("error", "Target already exists.");
+		if (file_exists($dest)) Common::send(409, "Target already exists.");
 
 		if (rename($path, $dest)) {
-			Common::send("success", "Target moved.");
+			Common::send(200, "Target moved.");
 		} else {
-			Common::send("error", "Failed to move target.");
+			Common::send(506, "Failed to move target.");
 		}
 	}
 
@@ -301,7 +301,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function open($path) {
 		if (!$path || !is_file($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		$output = file_get_contents($path);
@@ -317,7 +317,7 @@ class Filemanager {
 		}
 
 		$modifyTime = filemtime($path);
-		Common::send("success", array("content" => $output, "modifyTime" => $modifyTime));
+		Common::send(200, array("content" => $output, "modifyTime" => $modifyTime));
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -325,7 +325,7 @@ class Filemanager {
 	//////////////////////////////////////////////////////////////////////////80
 	public function loadURL($path) {
 		if (Common::isAbsPath($path) && strpos($path, WORKSPACE) === false) {
-			Common::send("error", i18n("outsideWorkspace"));
+			Common::send(451, i18n("outsideWorkspace"));
 		}
 
 		if (SERVER("HTTPS") !== "off") {
@@ -337,7 +337,7 @@ class Filemanager {
 		$page = pathinfo(SERVER("REQUEST_URI"), PATHINFO_DIRNAME);
 		$url = rtrim($prot . $domain . $page . "/workspace/" . Common::getRelativePath($path), "/");
 		$url = str_replace("//workspace", "/workspace", $url);
-		Common::send("success", $url);
+		Common::send(200, $url);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -351,11 +351,11 @@ class Filemanager {
 		$newPath = htmlspecialchars($newPath);
 
 		if (file_exists($newPath)) {
-			Common::send("success", i18n("path_exists"));
+			Common::send(200, i18n("path_exists"));
 		} elseif (rename($path, $newPath)) {
-			Common::send("success");
+			Common::send(200);
 		} else {
-			Common::send("success", i18n("path_unableRename"));
+			Common::send(200, i18n("path_unableRename"));
 		}
 	}
 
@@ -367,27 +367,27 @@ class Filemanager {
 		if (!$content && !$patch) {
 			$file = fopen($path, "w");
 			fclose($file);
-			Common::send("success", array("modifyTime" => filemtime($path)));
+			Common::send(200, array("modifyTime" => filemtime($path)));
 		}
 
 		if ($content === " ") {
 			$content = ""; // Blank out file
 		}
 		if ($patch && ! $modifyTime) {
-			Common::send("error", "ModifyTime");
+			Common::send(419, "ModifyTime");
 		}
 		if (!is_file($path)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, "Invalid path.");
 		}
 
 		$serverModifyTime = filemtime($path);
 		$fileContents = file_get_contents($path);
 
 		if ($patch && $serverModifyTime !== (int)$modifyTime) {
-			Common::send("warning", "out of sync");
+			Common::send(159, "out of sync");
 		} elseif (strlen(trim($patch)) === 0 && !$content) {
 			// Do nothing if the patch is empty and there is no content
-			Common::send("success", array("modifyTime" => $serverModifyTime));
+			Common::send(200, array("modifyTime" => $serverModifyTime));
 		}
 		try {
 			$file = fopen($path, "w");
@@ -404,17 +404,17 @@ class Filemanager {
 					// returned instead of new modification time after editing
 					// the file.
 					clearstatcache();
-					Common::send("success", array("modifyTime" => filemtime($path)));
+					Common::send(200, array("modifyTime" => filemtime($path)));
 				} else {
-					Common::send("error", "Client does not have access.");
+					Common::send(506, "Client does not have access.");
 				}
 
 				fclose($file);
 			} else {
-				Common::send("error", "Client does not have access.");
+				Common::send(506, "Client does not have access.");
 			}
 		}catch(Exception $e) {
-			Common::send("error", "Client does not have access.");
+			Common::send(506, "Client does not have access.");
 		}
 
 	}

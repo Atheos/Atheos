@@ -32,7 +32,7 @@ $disabled = $data["enabled"] ? "" : " checked";
 			<?php echo i18n("version"); ?>
 		</td>
 		<td>
-			<?php echo($data["version"]); ?>
+			<?php echo("v" . Common::version()); ?>
 		</td>
 	</tr>
 	<tr>
@@ -47,6 +47,20 @@ $disabled = $data["enabled"] ? "" : " checked";
 		</td>
 		<td>
 			<?php echo($data["last_heard"]); ?>
+		</td>
+	</tr>
+		<tr>
+		<td>
+			<?php echo i18n("totalSessions"); ?>
+		</td>
+		<td>
+			<?php echo($data["sessions"]); ?>
+		</td>
+		<td>
+			<?php echo i18n("totalUsage"); ?>
+		</td>
+		<td>
+			<?php echo($data["totalUsage"]); ?>
 		</td>
 	</tr>
 	<tr>

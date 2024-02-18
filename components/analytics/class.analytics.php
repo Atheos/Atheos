@@ -46,9 +46,26 @@ class Analytics {
 		}
 		$this->db->update($data, null, true);
 
+		//////////////////////////////////////////////////////////////////////80
+		// Pivot analytics DB to new structure
+		// REMOVE ON MARCH 2025
+		if (array_key_exists("version", $data)) {
+			$iVersion = str_replace("v", "", $data["version"]);
+			$iVersion = (int)str_replace(".", "", $iVersion);
+
+			// Transfer from "version" to "iVersion" as Installed Version
+			$this->db->insert("iVersion", $iVersion);
+			$data["iVersion"] = $iVersion;
+
+			// Delete standalone version key
+			$this->db->delete("version");
+			unset($data["version"]);
+		}
+		//////////////////////////////////////////////////////////////////////80
+
 		if ($data["enabled"] === true && Common::checkAccess("configure")) {
 			$data["last_heard"] = date("Y/m/d");
-			$data["atheos_version"] = VERSION;
+			$data["rVersion"] = Common::version();
 
 			$reply = array(
 				"home" => defined("DATAPOINT") ? DATAPOINT : $this->home,
@@ -58,10 +75,10 @@ class Analytics {
 			$status = "success";
 		} elseif ($data["enabled"] === "UNKNOWN" && Common::checkAccess("configure")) {
 			$reply = "Analytic settings require action.";
-			$status = "notice";
+			$status = 103;
 		} else {
 			$reply = "Not authorized.";
-			$status = "warning";
+			$status = 403;
 		}
 
 		Common::send($status, $reply);
@@ -102,7 +119,8 @@ class Analytics {
 		return array(
 			"enabled" => "UNKNOWN",
 			"uuid" => uniqid(),
-			"version" => "v0.0.0",
+			"iVersion" => "unk",
+			"rVersion" => Common::version(),
 			"first_heard" => date("Y/m/d"),
 			"last_heard" => date("Y/m/d"),
 			"php_version" => phpversion(),
@@ -119,8 +137,89 @@ class Analytics {
 	//////////////////////////////////////////////////////////////////////////80
 	public function changeOpt($value) {
 		$value = $value === "true";
-		$status = $this->db->update("enabled", $value) ? "success" : "error";
-		$text = $status === "success" ? "Updated analytics preference." : "Unable to update preference.";
+		$status = $this->db->update("enabled", $value) ? 200 : 507;
+		$text = $status === 200 ? "Updated analytics preference." : "Unable to update preference.";
 		Common::send($status, $text);
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Save session duration
+	//////////////////////////////////////////////////////////////////////////80
+	public function saveDuration($duration) {
+		$usage = $this->db->select("totalUsage");
+		$sessions = $this->db->select("sessions");
+
+		if (empty($usage)) $usage = "PT0S";
+		if (empty($sessions)) $sessions = 0;
+
+		$usage = new DateInterval($usage);
+
+		$totalSeconds = $usage->s + ($usage->i * 60) + ($usage->h * 3600) + ($usage->d * 86400);
+		$totalSeconds = $totalSeconds + $duration;
+
+		$duration = Duration::stringify($totalSeconds);
+		debug($duration);
+		$this->db->update("totalUsage", $duration, true);
+		$this->db->update("sessions", $sessions + 1, true);
+		Common::send(200);
+	}
+}
+
+
+class Duration {
+
+	// Source-ish: https://github.com/nicolas-van/simple-duration
+	// This was the worst thing I've ever made, completely unnecessary
+
+	// Overall, I was frustrated that you can't add DateIntervals together, nor
+	// can you have them print out easily in a format that they can consume.
+	// Creating this took an insane number of hours due to the absolutely
+	// miserable way of storing everything as dates, with timezones somehow
+	// breaking things in between.
+
+	const s = 1;
+	const i = self::s * 60;
+	const h = self::i * 60;
+	const d = self::h * 24;
+	const m = self::d * 30.437;
+	const y = self::m * 12;
+
+	public static function stringify ($nbr) {
+
+		$timeunits = [
+			["unit" => 'Y',
+				"amount" => self::y],
+			["unit" => 'M',
+				"amount" => self::m],
+			["unit" => 'D',
+				"amount" => self::d],
+			["unit" => 'T',
+				"amount" => 1],
+			["unit" => 'H',
+				"amount" => self::h],
+			["unit" => 'M',
+				"amount" => self::i],
+			["unit" => 'S',
+				"amount" => self::s],
+		];
+
+		$str = "";
+		$nbr = abs($nbr);
+
+		foreach ($timeunits as $el) {
+			if ($el["unit"] === "T") {
+				$str .= "T";
+				continue;
+			}
+
+			$tmp = floor($nbr / $el["amount"]);
+			$nbr -= $tmp * $el["amount"];
+
+			if ($tmp > 0) {
+				$str .= $tmp . $el["unit"];
+			}
+
+		}
+		return strlen($str) > 0 ? "P" . trim($str) : "PT0S";
 	}
 }

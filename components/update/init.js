@@ -33,8 +33,8 @@
 					target: 'update',
 					action: 'init'
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 
 					self.github = reply.github;
 
@@ -77,8 +77,8 @@
 		loadLatest() {
 			echo({
 				url: self.github,
-				settled: function(status, reply) {
-					if (status === 'success') self.saveCache(reply);
+				settled: function(reply, status) {
+					if (status === 200) self.saveCache(reply);
 				}
 			});
 		},

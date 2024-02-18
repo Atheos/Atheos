@@ -71,9 +71,8 @@
 			echo({
 				url: 'components/install/process.php',
 				data,
-				settled: function(status, reply) {
-					log(status,reply);
-					if (status === 'success') {
+				settled: function(reply, status) {
+					if (status === 200) {
 						setTimeout(() => window.location.reload(), 100);
 						toast(status, reply);
 					} else {

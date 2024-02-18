@@ -48,7 +48,7 @@ class CodeGit {
 		$repo = $repo ?: $this->findRepo($path) ?: $path;
 
 		if (!is_dir($repo)) {
-			Common::send("error", i18n("path_missing"));
+			Common::send(417, i18n("path_missing"));
 		}
 		chdir($repo);
 

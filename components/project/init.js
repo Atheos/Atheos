@@ -82,9 +82,9 @@
 					target: 'project',
 					action: 'load'
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					atheos.toast.show(reply);
-					if (status === 'error') return;
+					if (status !== 200) return;
 					var logSpan = oX('#last_login');
 					if (reply.lastLogin && logSpan) {
 						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
@@ -114,9 +114,9 @@
 					projectName,
 					projectPath
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					atheos.toast.show(reply);
-					if (status === 'error') return;
+					if (status !== 200) return;
 
 					if (reply.restore) {
 						atheos.filemanager.rescanChildren = reply.state;
@@ -280,13 +280,12 @@
 				url: atheos.controller,
 				data,
 				success: function(reply) {
-					if (reply.status !== 'error') {
-						self.open(reply.name, reply.path);
-						self.dock.load();
-						/* Notify listeners. */
-						delete data.action;
-						carbon.publish('project.create', data);
-					}
+					if (status !== 200) return;
+					self.open(reply.name, reply.path);
+					self.dock.load();
+					/* Notify listeners. */
+					delete data.action;
+					carbon.publish('project.create', data);
 				}
 			});
 		},
@@ -312,15 +311,14 @@
 				echo({
 					url: atheos.controller,
 					data,
-					settled: function(status, reply) {
-						if (status !== 'error') {
-							atheos.toast.show('success', 'Project renamed');
-							self.dock.load();
-							atheos.modal.unload();
-							/* Notify listeners. */
-							delete data.action;
-							carbon.publish('project.rename', data);
-						}
+					settled: function(reply, status) {
+						if (status !== 200) return;
+						atheos.toast.show('success', 'Project renamed');
+						self.dock.load();
+						atheos.modal.unload();
+						/* Notify listeners. */
+						delete data.action;
+						carbon.publish('project.rename', data);
 					}
 				});
 			};
@@ -351,8 +349,8 @@
 						projectPath,
 						projectName
 					},
-					settled: function(status, reply) {
-						if (status === 'success') {
+					settled: function(reply, status) {
+					if (status !== 200) return;
 							atheos.toast.show('success', reply.text);
 
 							self.list();
@@ -369,8 +367,6 @@
 								'name': projectName
 							});
 						}
-
-					}
 				});
 			};
 
@@ -395,7 +391,7 @@
 					action: 'current'
 				},
 				success: function(data) {
-					if (data.status === 'success') {
+					if (data.status === 200) {
 						self.current.path = data.path;
 					}
 				}

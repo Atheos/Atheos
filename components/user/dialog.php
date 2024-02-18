@@ -24,7 +24,7 @@ switch ($action) {
 		}
 
 		if (!Common::checkAccess("configure") && $username !== $activeUser) {
-			Common::send("error", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		}
 
 		?>
@@ -192,6 +192,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(415, "Invalid action.");
 		break;
 }

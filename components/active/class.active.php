@@ -39,7 +39,7 @@ class Active {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path], ["status", "==", "*"]);
 		$value = array("user" => $this->activeUser, "path" => $path, "status" => "active");
 		$this->db->update($where, $value, true);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -54,9 +54,9 @@ class Active {
 			foreach ($result as $item) {
 				if ($item["user"] !== $this->activeUser) $activeUsers[] = $item["user"];
 			}
-			Common::send("warning", i18n("warning_fileOpen", implode(", ", $activeUsers)));
+			Common::send(151, i18n("warning_fileOpen", implode(", ", $activeUsers)));
 		} else {
-			Common::send("success");
+		Common::send(200);
 		}
 	}
 
@@ -86,7 +86,7 @@ class Active {
 			}
 		}
 
-		Common::send("success", $temp);
+		Common::send(200, $temp);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -96,7 +96,7 @@ class Active {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $oldPath]);
 		$value = array("path" => $newPath);
 		$this->db->update($where, $value);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -105,7 +105,7 @@ class Active {
 	public function remove($path) {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$this->db->delete($where);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -114,7 +114,7 @@ class Active {
 	public function removeAll() {
 		$where = array(["user", "==", $this->activeUser]);
 		$this->db->delete($where);
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -128,6 +128,6 @@ class Active {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$value = array("status" => "inFocus");
 		$this->db->update($where, $value);
-		Common::send("success");
+		Common::send(200);
 	}
 }

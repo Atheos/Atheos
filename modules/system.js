@@ -30,6 +30,8 @@
 			window.addEventListener('error', atheos.error);
 			if (running) return;
 			running = true;
+			
+			echo.setGlobalDest(atheos.controller);
 
 			// Atheos has three levels of priority loading:
 			//	Vital loads no matter what, always first

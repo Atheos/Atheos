@@ -120,10 +120,9 @@
 					uuid: macro.uuid,
 					path
 				},
-				settled: function(status, reply) {
-					log(status, reply);
+				settled: function(reply, status) {
 					output(status, reply);
-					if (status !== 'success') return;
+					// if (status !== 'success') return;
 				}
 			});
 		},
@@ -149,7 +148,7 @@
 
 			echo({
 				data: macro,
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					toast(status, reply);
 					if (status !== 'success') return;
 
@@ -177,9 +176,9 @@
 					action: 'delete',
 					uuid,
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					toast(status, reply);
-					if (status !== 'success') return;
+					if (status !== 200) return;
 					let index = self.findMacro(uuid),
 						row = oX('#' + uuid);
 					if (index) delete self.macros[index];
@@ -208,8 +207,8 @@
 					target: 'macro',
 					action: 'load',
 				},
-				settled: function(status, reply) {
-					if (status !== 'success') return;
+				settled: function(reply, status) {
+					if (status !== 200) return;
 					self.macros = reply;
 				}
 			});

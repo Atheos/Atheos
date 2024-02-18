@@ -31,14 +31,22 @@ switch ($action) {
 			$value = POST("enabled");
 			$Analytics->changeOpt($value);
 		} else {
-			Common::send("warning", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		}
+		break;
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Save session duration
+	//////////////////////////////////////////////////////////////////////////80
+	case "saveDuration":
+		$duration = POST("duration");
+		$Analytics->saveDuration($duration);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

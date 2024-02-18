@@ -31,7 +31,7 @@ switch ($action) {
 		if ($path) {
 			$CodeGit->fileStatus($path);
 		} else {
-			Common::send("error", i18n("git_error_noPath"));
+			Common::send(417, i18n("git_error_noPath"));
 		}
 		break;
 
@@ -42,7 +42,7 @@ switch ($action) {
 		if ($repo && $files && $message) {
 			$CodeGit->commit($message, $files);
 		} else {
-			Common::send("error", i18n("git_error_noRepoFileMsg"));
+			Common::send(417, i18n("git_error_noRepoFileMsg"));
 		}
 		break;
 		
@@ -53,7 +53,7 @@ switch ($action) {
 		if ($repo && $files) {
 			$CodeGit->amend($message, $files);
 		} else {
-			Common::send("error", i18n("git_error_noRepoFile"));
+			Common::send(417, i18n("git_error_noRepoFile"));
 		}
 		break;
 
@@ -62,7 +62,7 @@ switch ($action) {
 		if ($path && $repoURL) {
 			$CodeGit->cloneRepo($path, $repoURL);
 		} else {
-			Common::send("error", i18n("git_error_noPathUrl"));
+			Common::send(417, i18n("git_error_noPathUrl"));
 		}
 		break;
 
@@ -84,7 +84,7 @@ switch ($action) {
 					break;
 			}
 		} else {
-			Common::send("error", i18n("git_error_noTypeRepoRemoteBranch"));
+			Common::send(417, i18n("git_error_noTypeRepoRemoteBranch"));
 		}
 		break;
 
@@ -94,7 +94,7 @@ switch ($action) {
 		if ($repo && $type) {
 			$CodeGit->init($repo, $type);
 		} else {
-			Common::send("error", i18n("git_error_noRepoType"));
+			Common::send(417, i18n("git_error_noRepoType"));
 		}
 		break;
 
@@ -103,7 +103,7 @@ switch ($action) {
 		if ($repo && $file) {
 			$CodeGit->checkout($file);
 		} else {
-			Common::send("error", i18n("git_error_noRepoFile"));
+			Common::send(417, i18n("git_error_noRepoFile"));
 		}
 		break;
 
@@ -116,7 +116,7 @@ switch ($action) {
 
 		$result = $CodeGit->settings($repo, $settings);
 
-		Common::send("success", $result);
+		Common::send(200, $result);
 
 		break;
 
@@ -124,6 +124,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", i18n("git_error_invalidAction"));
+		Common::send(417, i18n("git_error_invalidAction"));
 		break;
 }

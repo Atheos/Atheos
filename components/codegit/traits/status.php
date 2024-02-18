@@ -10,7 +10,7 @@ trait Status {
 			if (is_array($result["text"])) {
 				$result["text"] = $result["text"][0];
 			}
-			Common::send($result["status"], $result);
+			Common::send(200, $result);
 		}
 
 		$result = $this->parseChanges($result["text"]);
@@ -27,19 +27,19 @@ trait Status {
 			$status = 'Committed';
 		}
 
-		Common::send("success", $status);
+		Common::send(200, $status);
 	}
 
 	public function fileStatus($path) {
 		if (!file_exists($path)) {
-			Common::send("error", i18n("path_missing"));
+			Common::send(417, i18n("path_missing"));
 		}
 
 		$dirname = dirname($path);
 		$filename = basename($path);
 
 		if (!is_dir($dirname)) {
-			Common::send("error", "Invalid path.");
+			Common::send(418, i18n("path_invalid"));
 		}
 
 		chdir($dirname);
@@ -47,7 +47,7 @@ trait Status {
 		$result = $this->execute("git diff --numstat " . $filename);
 
 		if ($result["code"] !== 0) {
-			Common::send($result);
+			Common::send(200, $result);
 		} else {
 			$result = $result["text"];
 		}
@@ -76,7 +76,7 @@ trait Status {
 			$deletions = 0;
 		}
 		$result = array("branch" => $this->getCurrentBranch(), "insertions" => $additions, "deletions" => $deletions);
-		Common::send("success", $result);
+		Common::send(200, $result);
 	}
 
 	public function branchStatus($repo) {

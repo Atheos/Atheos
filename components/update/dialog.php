@@ -42,7 +42,7 @@ switch ($action) {
 				<input type="hidden" name="remoteversion" value="">
 				<br>
 				<table>
-					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo ucfirst(VERSION); ?></td></tr>
+					<tr><td width="40%"><?php echo i18n("yourVersion"); ?></td><td><?php echo("v" . Common::version()); ?></td></tr>
 					<tr><td width="40%"><?php echo i18n("latestVersion"); ?></td><td><?php echo $latest["tag_name"]; ?></td></tr>
 				</table>
 				<br>
@@ -64,7 +64,7 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 
 }

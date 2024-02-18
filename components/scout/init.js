@@ -81,11 +81,11 @@
 					query,
 					filter
 				},
-				settled: function(status, reply) {
+				settled: function(reply, status) {
 					table.empty();
 					oX('#probe_processing').hide();
 					var results = '';
-					if (status === 'error') {
+					if (status === 404) {
 						table.append('<p>' + reply.text + '</p>');
 						return;
 					}
@@ -211,7 +211,7 @@
 					strategy: self.strategy
 				},
 				success: function(reply) {
-					if (reply.status === 'success') {
+					if (reply.status === 200) {
 						delete reply.status;
 
 						var domTree = self.createHierarchy(reply);

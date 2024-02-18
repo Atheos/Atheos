@@ -31,9 +31,8 @@
 					target: 'textmode',
 					action: 'loadExtensionMap'
 				},
-				success: function(reply) {
-					if (reply.status === 'success') {
-						delete reply.status;
+				settled: function(reply, status) {
+					if (status === 200) {
 						self.extensionMap = reply.extensionMap;
 						self.availableModes = reply.modes;
 						self.createModeMenu();
@@ -169,10 +168,10 @@
 			echo({
 				url: atheos.controller,
 				data: data,
-				settled: function(status, reply) {
-					atheos.toast.show(status, reply.message);
+				settled: function(reply, status) {
+					toast(status, reply.message);
 
-					if (status !== 'error' && reply.extensions) {
+					if (status === 200 && reply.extensions) {
 						self.setEditorTextModes(reply);
 					}
 				}

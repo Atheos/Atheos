@@ -31,9 +31,9 @@ switch ($action) {
 			// theme
 			$User->authenticate($username, $password, $language);
 		} elseif (!$username) {
-			Common::send("error", "Missing username.");
+			Common::send(417, "Missing username.");
 		} else {
-			Common::send("error", "Missing password.");
+			Common::send(417, "Missing password.");
 		}
 		break;
 
@@ -42,7 +42,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "changePassword":
 		if (!$username || !$password) {
-			Common::send("error", "Missing username or password.");
+			Common::send(417, "Missing username or password.");
 		}
 
 		if (Common::checkAccess("configure")) {
@@ -51,7 +51,7 @@ switch ($action) {
 			$username = SESSION("user");
 			$User->changePassword($username, $password);
 		} else {
-			Common::send("warning", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		}
 		break;
 
@@ -63,7 +63,7 @@ switch ($action) {
 			Common::send("warning", "User does not have access.");
 		}
 		if (!$username || !$password) {
-			Common::send("error", "Missing username or password.");
+			Common::send(417, "Missing username or password.");
 		}
 
 		$User->create($username, $password);
@@ -78,7 +78,7 @@ switch ($action) {
 			Common::send("warning", "User does not have access.");
 		}
 		if (!$username) {
-			Common::send("error", "Missing username.");
+			Common::send(417, "Missing username.");
 		}
 		$User->delete($username);
 
@@ -108,7 +108,7 @@ switch ($action) {
 		$activePath = POST("path");
 
 		if (!$activeName || !$activePath) {
-			Common::send("error", "Missing name or path.");
+			Common::send(417, "Missing name or path.");
 		}
 		$User->saveActiveProject($activeName, $activePath);
 		break;
@@ -118,9 +118,9 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "updateACL":
 		if (!Common::checkAccess("configure")) {
-			Common::send("warning", "User does not have access.");
+			Common::send(403, "User does not have access.");
 		} elseif (!$username) {
-			Common::send("error", "Missing username.");
+			Common::send(417, "Missing username.");
 		}
 
 		$userACL = POST("userACL");
@@ -132,6 +132,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

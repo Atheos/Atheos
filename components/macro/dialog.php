@@ -10,7 +10,7 @@
 // Authors: Codiad Team, @daeks, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('class.macro.php');
+require_once("class.macro.php");
 
 $activeUser = SESSION("user");
 $macro = new Macro($activeUser);
@@ -69,6 +69,6 @@ switch ($action) {
 	// Default: Invalid Action
 	//////////////////////////////////////////////////////////////////////////80
 	default:
-		Common::send("error", "Invalid action.");
+		Common::send(416, "Invalid action.");
 		break;
 }

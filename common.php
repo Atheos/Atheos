@@ -21,7 +21,7 @@ require_once("traits/database.php");
 require_once("traits/helpers.php");
 require_once("traits/file.php");
 require_once("traits/path.php");
-require_once("traits/reply.php");
+require_once("traits/exchange.php");
 
 require_once("traits/i18n.php");
 
@@ -32,7 +32,7 @@ class Common {
 	use Helpers;
 	use File;
 	use Path;
-	use Reply;
+	use Exchange;
 
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
@@ -50,8 +50,6 @@ class Common {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function initialize() {
 		$path = __DIR__;
-
-		define("VERSION", "v5.0.0");
 
 		if (file_exists($path."/config.php")) require_once($path."/config.php");
 
@@ -113,9 +111,9 @@ class Common {
 		$i18n->init();
 	}
 
-	//////////////////////////////////////////////////////////////////////////80////////80
+	//////////////////////////////////////////////////////////////////////////80
 	// Execute Command
-	//////////////////////////////////////////////////////////////////////////80////////80
+	//////////////////////////////////////////////////////////////////////////80
 	public static function execute($cmd = false) {
 		$text = false;
 		$code = 0;

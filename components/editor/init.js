@@ -46,6 +46,10 @@
 			fontSize: '13px',
 			fontFamily: 'Ubuntu-Fira',
 			highlightActiveLine: true,
+			enableAutoClose: true,
+			enableBasicAutocompletion: true,
+			enableLiveAutocompletion: true,
+			enableSnippets: true,
 			showPrintMargin: false,
 			printMarginColumn: 80,
 			displayIndentGuides: true,
@@ -111,15 +115,16 @@
 			// Apply the basic configuration settings
 			instance.setOptions({
 				fontFamily: self.settings.fontFamily,
-				enableBasicAutocompletion: true,
-				enableSnippets: true,
-				enableLiveAutocompletion: true
+				enableBasicAutocompletion: self.settings.enableBasicAutocompletion,
+				enableLiveAutocompletion: self.settings.enableLiveAutocompletion,
+				enableSnippets: self.settings.enableSnippets
 			});
 			instance.setAnimatedScroll(true);
 
 			// Apply the user preferred settings
 			instance.setTheme('ace/theme/' + self.settings.theme);
 			instance.setFontSize(self.settings.fontSize);
+			instance.setBehavioursEnabled(self.settings.enableAutoClose);
 			instance.setHighlightActiveLine(self.settings.highlightActiveLine);
 			instance.setShowPrintMargin(self.settings.showPrintMargin);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
@@ -457,6 +462,61 @@
 			});
 			self.settings.showFoldWidgets = val;
 			eStorage('showFoldWidgets', val);
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Special Tag Autoclosing, such as html brackets
+		//////////////////////////////////////////////////////////////////////80
+		setAutoClose: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setBehavioursEnabled(val);
+			self.forEachInstance(function(int) {
+				int.setBehavioursEnabled(val);
+			});
+			self.settings.enableAutoClose = val;
+			eStorage('enableAutoClose', val);
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Basic Autocomplete
+		//////////////////////////////////////////////////////////////////////80
+		setBasicAutocomplete: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setOption('enableBasicAutocompletion', val);
+			self.forEachInstance(function(int) {
+				int.setOption('enableBasicAutocompletion', val);
+			});
+			self.settings.enableBasicAutocompletion = val;
+			eStorage('enableBasicAutocompletion', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Live Autocomplete
+		//////////////////////////////////////////////////////////////////////80
+		setLiveAutocomplete: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setOption('enableLiveAutocompletion', val);
+			self.forEachInstance(function(int) {
+				int.setOption('enableLiveAutocompletion', val);
+			});
+			self.settings.enableLiveAutocompletion = val;
+			eStorage('enableLiveAutocompletion', val);
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Enable/Disable Snippets
+		//////////////////////////////////////////////////////////////////////80
+		setSnippets: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setOption('enableSnippets', val);
+			self.forEachInstance(function(int) {
+				int.setOption('enableSnippets', val);
+			});
+			self.settings.enableSnippets = val;
+			eStorage('enableSnippets', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80

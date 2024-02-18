@@ -37,12 +37,6 @@ class Project {
 		if (file_exists(DATA . "/projects.json")) {
 			$projects = Common::loadJSON("projects");
 
-			// Check if array is Associative or Sequential. Sequential is
-			// the old file format, so it needs to be pivoted.
-			if (array_keys($projects) === range(0, count($projects) - 1)) {
-				$projects = $this->pivotProjects($projects);
-			}
-
 			foreach ($projects as $projectPath => $projectName) {
 				$this->db->update($projectName, $projectPath, true);
 			}
@@ -61,7 +55,7 @@ class Project {
 
 		$results = $this->db->select($projectName);
 		if (!empty($results)) {
-			Common::send("error", i18n("project_exists_name"));
+			Common::send(409, i18n("project_exists_name"));
 		}
 
 		if (!Common::isAbsPath($projectPath)) {
@@ -71,11 +65,11 @@ class Project {
 
 		if (!file_exists($projectPath)) {
 			if (!mkdir($projectPath . "/", 0755, true)) {
-				Common::send("error", i18n("project_unableAbsolute"));
+				Common::send(506, i18n("project_unableAbsolute"));
 			}
 		} else {
 			if (!is_writable($projectPath) || !is_readable($projectPath)) {
-				Common::send("error", i18n("project_unablePermissions"));
+				Common::send(506, i18n("project_unablePermissions"));
 			}
 		}
 
@@ -92,7 +86,7 @@ class Project {
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "projects");
-		Common::send("success", array("name" => $projectName, "path" => $projectPath));
+		Common::send(200, array("name" => $projectName, "path" => $projectPath));
 
 	}
 
@@ -103,7 +97,7 @@ class Project {
 		if ($scope === "hard") {
 			$path = $this->db->select($projectName);
 			if (Common::rDelete($path) !== true) {
-				Common::send("error", "Project could not be deleted.");
+				Common::send(500, "Project could not be deleted.");
 			}
 		}
 
@@ -111,7 +105,7 @@ class Project {
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "projects");
-		Common::send("success", "Project deleted.");
+		Common::send(200, "Project deleted.");
 	}
 
 	public function listProjects() {
@@ -173,7 +167,7 @@ class Project {
 			"lastLogin" => $this->userData["lastLogin"]
 		);
 
-		Common::send("success", $reply);
+		Common::send(200, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -189,29 +183,15 @@ class Project {
 			SESSION("projectName", $projectName);
 			SESSION("projectPath", $projectPath);
 
-			Common::send("success", array(
+			Common::send(200, array(
 				"name" => $projectName,
 				"path" => $projectPath,
 				"repo" => is_dir($projectPath . "/.git"),
 				"text" => $projectName . " Loaded."
 			));
 		} else {
-			Common::send("error", i18n("project_missing"));
+			Common::send(404, i18n("project_missing"));
 		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Pivot the Projects from the old file format to the new file format
-	// ALERT: Pivot functions will be removed on 01/01/2022
-	//////////////////////////////////////////////////////////////////////////80
-	private function pivotProjects($projects) {
-		$revisedArray = array();
-		foreach ($projects as $data) {
-			if (isset($data["path"])) {
-				$revisedArray[$data["path"]] = $data["name"];
-			}
-		}
-		return $revisedArray;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -221,7 +201,7 @@ class Project {
 		$newName = htmlspecialchars($newName);
 
 		if (!empty($this->db->select($newName))) {
-			Common::send("error", i18n("project_exists_name"));
+			Common::send(409, i18n("project_exists_name"));
 		}
 
 		$projectPath = $this->db->select($oldName);
@@ -231,7 +211,7 @@ class Project {
 
 		// Log Action
 		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$oldName} to {$newName}", "projects");
-		Common::send("success");
+		Common::send(200);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

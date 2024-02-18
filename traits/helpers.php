@@ -12,6 +12,17 @@
 
 trait Helpers {
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Load version number from file
+	//////////////////////////////////////////////////////////////////////////80
+	public static function version() {
+		$version = is_readable(".version") ? file_get_contents(".version") : "NaN";
+		if ($version !== "NaN") {
+			$version = json_decode($version, true);
+		}
+		return $version["version"];
+	}
+
 	public static function compareVersions($v1, $v2) {
 		// Src: https://helloacm.com/the-javascript-function-to-compare-version-number-strings/
 		if (!is_string($v1) || !is_string($v2)) {
@@ -49,27 +60,6 @@ trait Helpers {
 		elseif (strpos($userAgent, 'MSIE') || strpos($userAgent, 'Trident/7')) return 'Internet Explorer';
 
 		return 'Other';
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Read Post/Get/Server/Session Data
-	//////////////////////////////////////////////////////////////////////////80
-	public static function data($type = false, $key = false, $val = null) {
-		if (!$type || !$key) return $val;
-
-		if (!empty($val) && $type === "SESSION") {
-			$_SESSION[$key] = $val;
-		}
-
-		if ($type === "SERVER" && array_key_exists($key, $_SERVER)) {
-			$val = $_SERVER[$key];
-		} elseif ($type === "SESSION" && array_key_exists($key, $_SESSION)) {
-			$val = $_SESSION[$key];
-		} elseif ($type === "POST" && array_key_exists($key, $_POST)) {
-			$val = $_POST[$key];
-		}
-
-		return $val;
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

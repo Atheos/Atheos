@@ -15,7 +15,8 @@ class Update {
 	//////////////////////////////////////////////////////////////////////////80
 	// PROPERTIES
 	//////////////////////////////////////////////////////////////////////////80
-	private $github = "https://api.github.com/repos/Atheos/Atheos/releases/latest";
+	// private $github = "https://api.github.com/repos/Atheos/Atheos/releases/latest";
+	private $github = "https://raw.githubusercontent.com/Atheos/Atheos/main/.version";
 	public $latest = array();
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -50,7 +51,7 @@ class Update {
 			"request" => $request
 		);
 
-		Common::send("success", $reply);
+		Common::send(200, $reply);
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -59,6 +60,6 @@ class Update {
 	public function saveCache($cache) {
 		$cache = json_decode($cache);
 		Common::saveJSON("update", $cache, "cache");
-		Common::send("success");
+		Common::send(200);
 	}
 }
