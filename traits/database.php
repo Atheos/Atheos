@@ -11,13 +11,13 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 trait Database {
-	public static function getKeyStore($table = false, $namespace = "") {
+	public static function getKeyStore($table, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#\/+#', '/', $path);
 		$db = new KeyStore($table, $path);
 		return $db;
 	}
-	public static function getObjStore($table = false, $namespace = "") {
+	public static function getObjStore($table, $namespace = "") {
 		$path = DATA . "/" . $namespace . "/";
 		$path = preg_replace('#\/+#', '/', $path);
 		$db = new ObjStore($table, $path);
