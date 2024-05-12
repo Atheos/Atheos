@@ -131,6 +131,9 @@
 				case 'editor.displayIndentGuides':
 					atheos.editor.setDisplayIndentGuides(value);
 					break;
+				case 'editor.showInvisibles':
+					atheos.editor.setShowInvisibles(value);
+					break;
 				case 'editor.showFoldWidgets':
 					atheos.editor.setShowFoldWidgets(value);
 					break;
@@ -155,7 +158,6 @@
 				case 'editor.tabSize':
 					atheos.editor.setTabSize(value);
 					break;
-
 				case 'filemanager.showHidden':
 					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;

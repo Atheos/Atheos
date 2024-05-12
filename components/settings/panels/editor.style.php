@@ -105,6 +105,17 @@
 		</td>
 	</tr>
 	<tr>
+		<td><?php echo i18n("showInvisibles"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_showInvisibles_true" data-setting="editor.showInvisibles" value="true" name="editor.showInvisibles" type="radio" />
+				<label for="editor_showInvisibles_true"><?php echo i18n("enabled"); ?></label>
+				<input id="editor_showInvisibles_false" data-setting="editor.showInvisibles" value="false" name="editor.showInvisibles" type="radio" checked/>
+				<label for="editor_showInvisibles_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>	
+	<tr>
 		<td><?php echo i18n("foldWidgets"); ?></td>
 		<td>
 			<toggle>

@@ -54,6 +54,7 @@
 			printMarginColumn: 80,
 			displayIndentGuides: true,
 			showFoldWidgets: true,
+			showInvisibles: false,
 			useWrapMode: false,
 			useSoftTabs: false,
 			tabSize: 4
@@ -129,6 +130,7 @@
 			instance.setShowPrintMargin(self.settings.showPrintMargin);
 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
 			instance.setDisplayIndentGuides(self.settings.displayIndentGuides);
+			instance.setShowInvisibles(self.settings.showInvisibles);
 			instance.setShowFoldWidgets(self.settings.showFoldWidgets);
 			instance.getSession().setUseWrapMode(self.settings.useWrapMode);
 			instance.getSession().setUseSoftTabs(self.settings.useSoftTabs);
@@ -423,6 +425,19 @@
 			});
 			self.settings.showPrintMargin = val;
 			eStorage('showPrintMargin', val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Set show invisibles
+		//////////////////////////////////////////////////////////////////////80
+		setShowInvisibles: function(val, int) {
+			val = (val == 'true');
+			if (int) return int.setShowInvisibles(val);
+			self.forEachInstance(function(int) {
+				int.setShowInvisibles(val);
+			});
+			self.settings.showInvisibles = val;
+			eStorage('showInvisibles', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80

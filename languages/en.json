@@ -349,6 +349,7 @@
 		"default": "%spx (default)"
 	},
 
+	"showInvisibles": "Show Invisibles",
 	"foldWidgets": "Show Fold Widgets",
 
 	"tabs": {

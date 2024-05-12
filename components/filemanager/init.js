@@ -403,6 +403,10 @@
 			if (self.showHidden === false && basename.charAt(0) === '.') {
 				return '';
 			}
+			
+			if (self.showHidden === false && basename === '__pycache__') {
+				return '';
+			}
 
 			var fileClass = type === 'folder' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
 			var emptyFolder = type === 'folder' ? '<ul></ul>' : '';
