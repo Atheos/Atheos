@@ -403,7 +403,7 @@
 			if (self.showHidden === false && basename.charAt(0) === '.') {
 				return '';
 			}
-			
+
 			if (self.showHidden === false && basename === '__pycache__') {
 				return '';
 			}
@@ -866,7 +866,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Open Rename Dialog
+		// Open Create Dialog
 		//////////////////////////////////////////////////////////////////////80
 		openCreate: function(anchor, type) {
 			anchor.type = type;
@@ -920,10 +920,9 @@
 					if (type === 'file') {
 						// Change icons for file
 						icon.removeClass();
-						var ico = icons.getClassWithColor(newName);
-						if (ico) {
-							icon.addClass(icons.getClassWithColor(newName));
-						}
+						var fileClass = icons.getClassWithColor(newName) || 'fa fa-file green';
+						icon.addClass(fileClass);
+
 					} else {
 						// Change pathing on any sub-files/directories
 						self.repathChildren(path, newPath);
