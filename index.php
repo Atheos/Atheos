@@ -101,7 +101,40 @@ $SourceManager = new SourceManager;
 
 
 		<iframe id="download" title="download"></iframe>
+	
+                <!-- Context Menu Fix -->
+		<script>
+		  document.addEventListener('DOMContentLoaded', () => {
+                    let touchTimer;
 
+                    document.addEventListener('touchstart', (e) => {
+                      touchTimer = setTimeout(() => {
+                        showContextMenu(e);
+                      }, 500); // miliseconds of pressing and holding before pulling up context menu
+                    });
+
+                    document.addEventListener('touchend', (e) => {
+                      clearTimeout(touchTimer);
+                    });
+
+                    function showContextMenu(e) {
+                      const touch = e.changedTouches[0];
+                      const contextMenuEvent = new MouseEvent('contextmenu', {
+                        bubbles: true,
+                        cancelable: true,
+                        view: window,
+                        clientX: touch.clientX,
+                        clientY: touch.clientY
+                      });
+
+                      touch.target.dispatchEvent(contextMenuEvent);
+		    }
+                  });
+		  document.addEventListener("contextmenu", function(event) {
+                    event.preventDefault();
+                  });
+                </script>
+	
 		<!-- ACE -->
 		<script src="components/editor/ace-editor/ace.js"></script>
 		<script src="components/editor/ace-editor/ext-language_tools.js"></script>
