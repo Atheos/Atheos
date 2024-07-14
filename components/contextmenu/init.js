@@ -14,6 +14,36 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
+let touchTimer;
+
+document.addEventListener('touchstart', (e) => {
+  touchTimer = setTimeout(() => {
+    showContextMenu(e);
+  }, 500); // milliseconds of pressing and holding before pulling up context menu
+});
+
+document.addEventListener('touchend', (e) => {
+  clearTimeout(touchTimer);
+});
+
+function showContextMenu(e) {
+  e.preventDefault();
+
+  const touch = e.changedTouches[0];
+  const contextMenuEvent = new MouseEvent('contextmenu', {
+    bubbles: true,
+    cancelable: true,
+    view: window,
+    clientX: touch.clientX,
+    clientY: touch.clientY
+  });
+
+  touch.target.dispatchEvent(contextMenuEvent);
+}
+
+document.addEventListener("contextmenu", function(event) {
+  event.preventDefault();
+});
 
 (function() {
 	'use strict';
