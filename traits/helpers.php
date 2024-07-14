@@ -18,9 +18,9 @@ trait Helpers {
 	public static function version() {
 		$version = is_readable(".version") ? file_get_contents(".version") : "NaN";
 		if ($version !== "NaN") {
-			$version = json_decode($version, true);
+			$version = json_decode($version, true)["version"];
 		}
-		return $version["version"];
+		return $version;
 	}
 
 	public static function compareVersions($v1, $v2) {
