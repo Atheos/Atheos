@@ -24,6 +24,9 @@ trait Path {
 	// Clean a path
 	//////////////////////////////////////////////////////////////////////////80
 	public static function cleanPath($path) {
+		if (empty($path)) {
+			$path = '';
+		}
 
 		// replace backslash with slash
 		$path = str_replace("\\", "/", $path);
