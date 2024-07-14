@@ -48,7 +48,7 @@
 		loadMarket: function() {
 			echo({
 				url: self.market,
-				settled: function(success, reply) {
+				settled: function(reply, status) {
 					self.saveCache(reply);
 				}
 			});

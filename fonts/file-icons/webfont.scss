@@ -75,6 +75,7 @@
 .sun-icon:before          { @include fas-icon; content: "\f185"; font-size: 14px; @include thicken; }
 .toc-icon:before          { @include fas-icon; content: "\f03a"; font-size: 15px; top: 2px; } // Maybe
 .wechat-icon:before       { @include fab-icon; content: "\f1d7"; font-size: 16px; top: 2px; }
+.pdf-icon:before          { @include fas-icon; content: "\f1c1"; top: 2px; }
 
 
 
