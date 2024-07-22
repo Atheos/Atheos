@@ -56,6 +56,8 @@ class Common {
 		if (defined("LIFETIME") && LIFETIME !== false) {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
+		
+		define("WEBROOT", "/var/www/html/");
 
 		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
 		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");

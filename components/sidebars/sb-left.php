@@ -48,6 +48,7 @@
 				if (DEVELOPMENT) {
 					?>
 					<i id="project-atheos" class="fas fa-code"></i>
+					<i id="project-webRoot" class="fas fa-home"></i>
 					<?php
 
 				}

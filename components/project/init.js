@@ -28,6 +28,9 @@
 			fX('#project-atheos').on('click', function() {
 				self.open('Atheos IDE', '@TH305');
 			});
+			fX('#project-webRoot').on('click', function() {
+				self.open('Web Root', 'W3BR00T');
+			});
 			fX('#projects-create').on('click', self.create);
 			fX('#projects-manage').on('click', self.list);
 			fX('#projects-collapse').on('click', function() {
