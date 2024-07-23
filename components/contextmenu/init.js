@@ -14,37 +14,6 @@
 // cached.
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
-let touchTimer;
-
-document.addEventListener('touchstart', (e) => {
-  touchTimer = setTimeout(() => {
-    showContextMenu(e);
-  }, 500); // milliseconds of pressing and holding before pulling up context menu
-});
-
-document.addEventListener('touchend', (e) => {
-  clearTimeout(touchTimer);
-});
-
-function showContextMenu(e) {
-  e.preventDefault();
-
-  const touch = e.changedTouches[0];
-  const contextMenuEvent = new MouseEvent('contextmenu', {
-    bubbles: true,
-    cancelable: true,
-    view: window,
-    clientX: touch.clientX,
-    clientY: touch.clientY
-  });
-
-  touch.target.dispatchEvent(contextMenuEvent);
-}
-
-document.addEventListener("contextmenu", function(event) {
-  event.preventDefault();
-});
-
 (function() {
 	'use strict';
 
@@ -88,6 +57,8 @@ document.addEventListener("contextmenu", function(event) {
 				self.show(e);
 				menu.addClass('fm');
 			});
+
+			self.initTouchEvents();
 
 			fX('#ACTIVE').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
@@ -270,6 +241,38 @@ document.addEventListener("contextmenu", function(event) {
 			menu.hide();
 			self.active = false;
 			carbon.publish('contextmenu.hide');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Initialize touch events
+		//////////////////////////////////////////////////////////////////////80
+		initTouchEvents: function() {
+			let touchTimer;
+
+			function showContextMenu(e) {
+				e.preventDefault();
+
+				const touch = e.changedTouches[0];
+				const contextMenuEvent = new MouseEvent('contextmenu', {
+					bubbles: true,
+					cancelable: true,
+					view: window,
+					clientX: touch.clientX,
+					clientY: touch.clientY
+				});
+
+				touch.target.dispatchEvent(contextMenuEvent);
+			}
+
+			document.addEventListener('touchstart', (e) => {
+				touchTimer = setTimeout(() => {
+					showContextMenu(e);
+				}, 500); // milliseconds before opening context menu
+			});
+
+			document.addEventListener('touchend', (e) => {
+				clearTimeout(touchTimer);
+			});
 		}
 	};
 
