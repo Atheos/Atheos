@@ -29,4 +29,89 @@
 	right: 35px;
 }
 
+ul.tabList {
+	li {
+		position: relative;
+		cursor: pointer;
+		user-select: none;
+		display: block;
+		background-color: $colorSmall;
+		padding: 5px;
+
+		a {
+			display: block;
+			text-align: right;
+			direction: rtl;
+			color: $shade1;
+			white-space: nowrap;
+			text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.6);
+			overflow: hidden;
+
+			&::before {
+				content: '';
+				width: 100%;
+				height: 100%;
+				position: absolute;
+				top: 0;
+				left: 0;
+				background: linear-gradient(to left, transparent 90%, $colorSmall);
+			}
+
+			.subtle {
+				color: $fontColorMinor;
+				// Required to fix the leading slash being moved to the end
+				direction: ltr;
+				// Embed the ltr direction for the span
+				unicode-bidi: embed;
+			}
+		}
+
+		.save,
+		.close {
+			position: absolute;
+			top: 6px;
+			background: inherit;
+			width: 20px;
+			color: $fontColorMinor;
+			opacity: 0;
+
+			&:hover {
+				color: $fontColorMajor;
+			}
+		}
+
+		.save {
+			// right: -10px;
+			right: 22px;
+		}
+
+		.close {
+			// right: -28px;
+			right: 2px;
+		}
+
+		&:hover {
+			background-color: $colorMinor;
+
+			a::before {
+				background: linear-gradient(to left, transparent 90%, #{$colorMinor});
+			}
+
+			.save,
+			.close {
+				opacity: 1;
+			}
+		}
+
+	}
+
+	li.changed {
+		background-color: $green !important;
+
+		a::before {
+			background: linear-gradient(to left, transparent 90%, $green) !important;
+		}
+	}
+}
+
 @import "dropdown", "tabs";
