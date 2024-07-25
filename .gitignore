@@ -5,6 +5,7 @@ config.php
 data/*
 !data/.htaccess
 !data/.version
+components/editor/ace-editor.back
 workspace/*
 plugins/*
 public/*.min.*
