@@ -12,8 +12,9 @@
 	font-size: 25px;
 	color: $fontColorMinor;
 	background-color: $inputBackground;
+	cursor: pointer;
 
-	&:hover {
+	&.hover {
 		color: $fontColorMajor;
 	}
 }
