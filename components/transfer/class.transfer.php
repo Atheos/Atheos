@@ -85,6 +85,9 @@ class Transfer {
         foreach ($_FILES["upload"]["name"] as $key => $filename) {
             if (empty($filename)) continue;
             $filepath = $path."/$filename";
+
+            $filepath = Common::getWorkspacePath($filepath);
+
             $text = "";
             $size = "";
 
