@@ -36,13 +36,10 @@ trait Path {
 
         // prevent go out of the workspace
         // Normalize the path to remove .. and extra slashes
-        $path = realpath($path);
-
-        if ($path === false) {
-            while (strpos($path, "../") !== false) {
-                $path = str_replace("../", "", $path);
-            }
+        while (strpos($path, "../") !== false) {
+            $path = str_replace("../", "", $path);
         }
+
         // allow only valid chars in paths$
         // $path = preg_replace("/[^A-Za-z0-9 :\-\._\+\/]/", "", $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:]/u', '', $path);
@@ -66,7 +63,7 @@ trait Path {
 
         //Security check
         if (!Common::checkPath($path)) {
-            Common::send("error", "Client does not have access.");
+            Common::send(506, "Client does not have access.");
         }
 
         if (Common::isAbsPath($path)) {
