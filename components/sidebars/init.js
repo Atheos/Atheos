@@ -168,7 +168,7 @@
 				}
 			});
 
-			fX('#SBLEFT').on('mouseout', (event) => {
+			fX('#SBLEFT').on('mouseout', (e) => {
 				// Events is designed around event bubbling. Some events, like MouseLeave, don't bubble.
 				// In order to achieve MouseLeave with events, I needed to create a method that capture
 				// the mouseout event, and converts it into a mouseleave. This function checks if
@@ -177,7 +177,7 @@
 				// InspiredBy: http://jsfiddle.net/amasad/TH9Hv/8/
 
 				var trigger = this.element.element,
-					destination = event.toElement || event.relatedTarget,
+					destination = e.toElement || e.relatedTarget,
 					mouseLeft = (destination === trigger) ? true : !trigger.contains(destination);
 
 				if (!self.dragging && mouseLeft) this.close();
