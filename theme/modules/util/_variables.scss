@@ -30,6 +30,25 @@ $highlight: var(--shade2);
 	--colorSmall: var(--navy);
 }
 
+
+html.blue {
+	--colorMajor: var(--blue);
+	--colorMinor: var(--indigo);
+	--colorSmall: var(--navy);
+}
+
+html.green {
+	--colorMajor: var(--olive);
+	--colorMinor: var(--green);
+	--colorSmall: var(--teal);
+}
+
+html.red {
+	--colorMajor: var(--red);
+	--colorMinor: var(--pink);
+	--colorSmall: var(--maroon);
+}
+
 $borderLight: var(--borderLight);
 $borderHeavy: var(--borderHeavy);
 
@@ -37,7 +56,7 @@ $colorMajor: var(--colorMajor);
 $colorMinor: var(--colorMinor);
 $colorSmall: var(--colorSmall);
 
-$hoverMajor: $blue;
+$hoverMajor: $colorMajor;
 $hoverMinor: $highlight;
 $hoverPercent: 30%;
 

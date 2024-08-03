@@ -24,7 +24,7 @@ $SourceManager = new SourceManager;
 
 ?>
 <!doctype html>
-<html lang="en">
+<html lang="en" class="<?php if (defined("THEME") && THEME) echo(THEME) ?>">
 <head>
 	<meta charset="utf-8">
 	<title><?php if (defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
