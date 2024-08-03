@@ -131,7 +131,7 @@
 			if (oX('#project-root').hasClass('repo')) {
 				self.addStatusElements();
 				self.checkRepoStatus();
-
+				self.isRepo = true;
 			} else {
 				if (self.repoBanner) {
 					self.repoBanner.hide();
@@ -139,6 +139,7 @@
 				if (self.fileStatus) {
 					self.fileStatus.hide();
 				}
+				self.isRepo = false;
 			}
 		},
 
@@ -308,6 +309,10 @@
 
 		checkRepoStatus: function() {
 			var repo = atheos.project.current.path;
+
+			if (!self.isRepo) {
+				return;
+			}
 
 			echo({
 				url: atheos.controller,
