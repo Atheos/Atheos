@@ -315,7 +315,7 @@
 			echo({
 				url: atheos.controller,
 				data,
-				success: function(reply) {
+				success: function(reply, status) {
 					if (status !== 200) return;
 					self.open(reply.name, reply.path);
 					self.dock.load();
