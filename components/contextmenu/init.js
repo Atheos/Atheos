@@ -68,8 +68,8 @@ document.addEventListener("contextmenu", function(event) {
 				settled: function(reply, status) {
 					if (status !== 200) return;
 					// self.createFileMenu(reply.fileMenu);
-					self.fileMenu = reply.fileMenu != undefined ? reply.fileMenu : {};
-					self.tabMenu = reply.tabMenu != undefined ? reply.fileMenu : {};
+					self.fileMenu = (typeof reply.fileMenu !== 'undefined') ? reply.fileMenu : {};
+					self.tabMenu = (typeof reply.tabMenu !== 'undefined') ? reply.fileMenu : {};
 
 					carbon.publish('contextmenu.requestItems');
 				}
