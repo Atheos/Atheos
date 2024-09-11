@@ -62,6 +62,10 @@
 		initiateWorker: function() {
 			if (typeof Worker !== 'undefined' && Worker !== null) {
 				self.worker = new Worker('components/worker/worker.js');
+				self.worker.onerror = (ev) => {
+					// This should reveal a bug when `/vendor` folder was not provided
+					output('error', 'Error with worker:' + ev.message);
+				};
 				return !!self.worker;
 			}
 		},
