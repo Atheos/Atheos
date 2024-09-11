@@ -369,6 +369,8 @@ class Filemanager {
 			fclose($file);
 			Common::send(200, array("modifyTime" => filemtime($path)));
 		}
+		if ($content === NULL) $content = '';
+		if ($patch === NULL) $patch = '';
 
 		if ($content === " ") {
 			$content = ""; // Blank out file
