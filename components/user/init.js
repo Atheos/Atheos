@@ -83,7 +83,7 @@
 			} else {
 				// Run controller to check session (also acts as keep-alive) & Check user
 				carbon.subscribe('chrono.giga', self.keepAlive);
-				document.addEventListener("visibilitychange", self.keepAlive, false);
+				document.addEventListener('visibilitychange', self.keepAlive, false);
 
 			}
 
@@ -154,7 +154,7 @@
 				let vPass = data.password === data.validate;
 
 				if (!vPass) return toast('error', 'Passwords do not match.');
-				username = username || "S3LF";
+				username = username || 'S3LF';
 
 
 				echo({

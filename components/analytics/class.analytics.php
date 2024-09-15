@@ -95,7 +95,7 @@ class Analytics {
 
 		$data["last_heard"] = date("Y/m/d");
 		$data["php_version"] = phpversion();
-		$data["server_os"] = $_SERVER["SERVER_SOFTWARE"];
+		$data["server_os"] = SERVER("SERVER_SOFTWARE");
 
 		$browser = Common::getBrowser();
 
@@ -124,7 +124,7 @@ class Analytics {
 			"first_heard" => date("Y/m/d"),
 			"last_heard" => date("Y/m/d"),
 			"php_version" => phpversion(),
-			"server_os" => $_SERVER["SERVER_SOFTWARE"],
+			"server_os" => SERVER("SERVER_SOFTWARE"),
 			"client_os" => [Common::getBrowser()],
 			"timezone" => TIMEZONE,
 			"language" => LANGUAGE,

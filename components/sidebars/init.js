@@ -35,104 +35,6 @@
 		handleWidth = 0,
 		hoverDuration = 300;
 
-	const self = {
-
-		dragging: false,
-
-		//////////////////////////////////////////////////////////////////////	
-		// Sidebar Initialization
-		//////////////////////////////////////////////////////////////////////	
-		init: function() {
-			editor = oX('#EDITOR');
-			workspace = oX('#workspace');
-
-			left.init();
-			right.init();
-
-			carbon.subscribe('settings.loaded', function() {
-
-				handleWidth = oX('.handle').width();
-
-				hoverDuration = storage('sidebars.hoverDuration') || 300;
-				left.trigger = storage('sidebars.leftTrigger') || 'hover';
-				right.trigger = storage('sidebars.rightTrigger') || 'hover';
-
-				if (storage('sidebars.leftLockedVisible') === false) {
-					fX('#SBLEFT .lock').trigger('click');
-				}
-
-				if (storage('sidebars.rightLockedVisible') === false) {
-					fX('#SBRIGHT .lock').trigger('click');
-				}
-
-				let sbLeftWidth = storage('sidebars.sb-left-width'),
-					sbRightWidth = storage('sidebars.sb-right-width');
-				if (sbLeftWidth !== null) {
-					sbLeftWidth = parseInt(sbLeftWidth, 10);
-					oX('#SBLEFT').css('width', sbLeftWidth + 'px');
-				}
-
-				if (sbRightWidth !== null) {
-					sbRightWidth = parseInt(sbRightWidth, 10);
-					oX('#SBRIGHT').css('width', sbRightWidth + 'px');
-				}
-
-				if (!left.lockedVisible && sbLeftWidth !== null) {
-					left.element.addClass('unlocked');
-					oX('#SBLEFT').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
-					workspace.css('padding-left', handleWidth + 'px');
-				}
-
-				if (!right.lockedVisible && sbRightWidth !== null) {
-					right.element.addClass('unlocked');
-					oX('#SBRIGHT').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
-					workspace.css('padding-right', handleWidth + 'px');
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////	
-		// Sidebar Resize Function
-		//////////////////////////////////////////////////////////////////////	
-		resize: function(sidebar, side) {
-			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
-
-			if (sidebar === null) return;
-
-			var rect = sidebar.getBoundingClientRect(),
-				modalX = rect.left,
-				width;
-
-			self.dragging = true;
-
-			var moveElement = function(event) {
-				if (side === 'left') {
-					width = (modalX + event.clientX + 10);
-				} else {
-					width = (window.innerWidth - event.clientX + 10);
-				}
-
-				width = width > 14 ? width + 'px' : '15px';
-				sidebar.style.width = width;
-			};
-
-			function removeListeners() {
-				setTimeout(function() {
-					atheos.settings.save('sidebars.sb-' + side + '-width', width);
-				}, 200);
-
-				storage('sidebars.sb-' + side + '-width', width);
-				self.dragging = false;
-
-				document.removeEventListener('mousemove', moveElement, false);
-				document.removeEventListener('mouseup', removeListeners, false);
-			}
-
-			document.addEventListener('mousemove', moveElement, false);
-			document.addEventListener('mouseup', removeListeners, false);
-		}
-	};
-
 	//////////////////////////////////////////////////////////////////////	
 	// Left Sidebar
 	//////////////////////////////////////////////////////////////////////	
@@ -330,6 +232,106 @@
 		}
 	};
 
+	//////////////////////////////////////////////////////////////////////	
+	// Main Sidebar
+	//////////////////////////////////////////////////////////////////////	
+	const self = {
+
+		dragging: false,
+
+		//////////////////////////////////////////////////////////////////////	
+		// Sidebar Initialization
+		//////////////////////////////////////////////////////////////////////	
+		init: function() {
+			editor = oX('#EDITOR');
+			workspace = oX('#workspace');
+
+			left.init();
+			right.init();
+
+			carbon.subscribe('settings.loaded', function() {
+
+				handleWidth = oX('.handle').width();
+
+				hoverDuration = storage('sidebars.hoverDuration') || 300;
+				left.trigger = storage('sidebars.leftTrigger') || 'hover';
+				right.trigger = storage('sidebars.rightTrigger') || 'hover';
+
+				if (storage('sidebars.leftLockedVisible') === false) {
+					fX('#SBLEFT .lock').trigger('click');
+				}
+
+				if (storage('sidebars.rightLockedVisible') === false) {
+					fX('#SBRIGHT .lock').trigger('click');
+				}
+
+				let sbLeftWidth = storage('sidebars.sb-left-width'),
+					sbRightWidth = storage('sidebars.sb-right-width');
+				if (sbLeftWidth !== null) {
+					sbLeftWidth = parseInt(sbLeftWidth, 10);
+					oX('#SBLEFT').css('width', sbLeftWidth + 'px');
+				}
+
+				if (sbRightWidth !== null) {
+					sbRightWidth = parseInt(sbRightWidth, 10);
+					oX('#SBRIGHT').css('width', sbRightWidth + 'px');
+				}
+
+				if (!left.lockedVisible && sbLeftWidth !== null) {
+					left.element.addClass('unlocked');
+					oX('#SBLEFT').css('left', ((sbLeftWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-left', handleWidth + 'px');
+				}
+
+				if (!right.lockedVisible && sbRightWidth !== null) {
+					right.element.addClass('unlocked');
+					oX('#SBRIGHT').css('right', ((sbRightWidth - handleWidth) * -1) + 'px');
+					workspace.css('padding-right', handleWidth + 'px');
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////	
+		// Sidebar Resize Function
+		//////////////////////////////////////////////////////////////////////	
+		resize: function(sidebar, side) {
+			//References: http://jsfiddle.net/8wtq17L8/ & https://jsfiddle.net/tovic/Xcb8d/
+
+			if (sidebar === null) return;
+
+			var rect = sidebar.getBoundingClientRect(),
+				modalX = rect.left,
+				width;
+
+			self.dragging = true;
+
+			var moveElement = function(event) {
+				if (side === 'left') {
+					width = (modalX + event.clientX + 10);
+				} else {
+					width = (window.innerWidth - event.clientX + 10);
+				}
+
+				width = width > 14 ? width + 'px' : '15px';
+				sidebar.style.width = width;
+			};
+
+			function removeListeners() {
+				setTimeout(function() {
+					atheos.settings.save('sidebars.sb-' + side + '-width', width);
+				}, 200);
+
+				storage('sidebars.sb-' + side + '-width', width);
+				self.dragging = false;
+
+				document.removeEventListener('mousemove', moveElement, false);
+				document.removeEventListener('mouseup', removeListeners, false);
+			}
+
+			document.addEventListener('mousemove', moveElement, false);
+			document.addEventListener('mouseup', removeListeners, false);
+		}
+	};
 
 	atheos.sidebars = self;
 	atheos.sidebars.sbLeft = left;

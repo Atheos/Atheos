@@ -13,8 +13,8 @@
 	'use strict';
 
 	let rndColor = [],
-		darkColors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
-		lightColors = ["#F0F0F0", "#F9F9F9", "#FBFBFB", "#FDFDFD"],
+		darkColors = ['#0F0F0F', '#090909', '#0B0B0B', '#0D0D0D'],
+		lightColors = ['#F0F0F0', '#F9F9F9', '#FBFBFB', '#FDFDFD'],
 		seed = 5309,
 		canvas;
 
@@ -23,6 +23,39 @@
 		seed = (seed * 9301 + 49297) % 233280;
 		//Uses a faster method of flooring the decimal to an integer
 		return (seed / 233280 * max) << 0;
+	}
+
+	function draw(ctx, x, y, hex) {
+		ctx.beginPath();
+		ctx.moveTo(x + hex.radius, y);
+		ctx.lineTo(x + hex.rWidth, y + hex.height);
+		ctx.lineTo(x + hex.rWidth, y + hex.height + hex.sideLength);
+		ctx.lineTo(x + hex.radius, y + hex.rHeight);
+		ctx.lineTo(x, y + hex.sideLength + hex.height);
+		ctx.lineTo(x, y + hex.height);
+		ctx.closePath();
+		ctx.globalAlpha = 1;
+		ctx.fill();
+		ctx.globalAlpha = 0.2;
+		ctx.stroke();
+	}
+
+	function drawBoard(ctx, width, height, hex) {
+		let x,
+			y,
+			i = 0;
+
+		for (x = 0; x < width; ++x) {
+			for (y = 0; y < height; ++y) {
+				ctx.fillStyle = rndColor[(++i) % rndColor.length];
+				draw(
+					ctx,
+					(x * 1.02) * hex.rWidth + ((y % 2) * hex.radius),
+					(y * 1.02) * (hex.sideLength + hex.height),
+					hex
+				);
+			}
+		}
 	}
 
 	function drawMyth() {
@@ -50,40 +83,6 @@
 			drawBoard(ctx, bWidth, bHeight, hex);
 		}
 	}
-
-	function drawBoard(ctx, width, height, hex) {
-		let x,
-			y,
-			i = 0;
-
-		for (x = 0; x < width; ++x) {
-			for (y = 0; y < height; ++y) {
-				ctx.fillStyle = rndColor[(++i) % rndColor.length];
-				draw(
-					ctx,
-					(x * 1.02) * hex.rWidth + ((y % 2) * hex.radius),
-					(y * 1.02) * (hex.sideLength + hex.height),
-					hex
-				);
-			}
-		}
-	}
-
-	function draw(ctx, x, y, hex) {
-		ctx.beginPath();
-		ctx.moveTo(x + hex.radius, y);
-		ctx.lineTo(x + hex.rWidth, y + hex.height);
-		ctx.lineTo(x + hex.rWidth, y + hex.height + hex.sideLength);
-		ctx.lineTo(x + hex.radius, y + hex.rHeight);
-		ctx.lineTo(x, y + hex.sideLength + hex.height);
-		ctx.lineTo(x, y + hex.height);
-		ctx.closePath();
-		ctx.globalAlpha = 1;
-		ctx.fill();
-		ctx.globalAlpha = 0.2;
-		ctx.stroke();
-	}
-
 
 	window.Myth = {
 		init: function() {

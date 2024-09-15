@@ -155,7 +155,9 @@
 						try {
 							reply = JSON.parse(reply);
 							self.processUpload(reply);
-						} catch (e) {}
+						} catch (e) {
+						    output('error', e);
+						}
 					} else {
 						progress({
 							type: 'error'
