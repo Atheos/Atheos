@@ -1,20 +1,46 @@
 :root {
+
+	--pink: #FF4347; //#A2777A;
 	--red: #FF483A; //#FF453A;
+	--maroon: #4F2710; //#85443B;
+
 	--orange: #F08D24; //#FF9F0A; // #D97000
 	--yellow: #FFD60A; //#E69900;
+
 	--lime: #01FF70;
+
+	--jade: #2BAF4A;
 	--green: #4EBA0A; //#46A609; //#30D158;
-	--olive: #1DBB40; //#3D9970;
-	--teal: #003f1f; // #008080; //Need to find a better teal
+	--zucchini: #003f1f;
+
+	--teal: #008080; // #008080; //Need to find a better teal
 	--aqua: #7FDBFF; //#1CC3E8;
 	--cyan: #1CC3E8; //#80FFF4;
 	--indigo: #3E5CC6; //#5E5CE6;
 	--blue: #0074D9; //#0A84FF;
-	--navy: #001f3f;
-	--maroon: #3f1f00; //#85443B;
+	--navy: #002F6F;
+
 	--fushia: #F012BE;
 	--purple: #BF5AF2;
-	--pink: #FF375F; //#A2777A;
+}
+
+html.light {
+	--red: #CC3A2F;
+
+	--orange: #C0701C;
+	--yellow: #CCAC08;
+
+	--lime: #00CC5C;
+
+	--green: #3A8C07;
+
+	--aqua: #5FC0E0;
+	--cyan: #149BC2;
+	--indigo: #2E47A3;
+	--blue: #005FB0;
+	--navy: #002F6F;
+	--fushia: #C00F98;
+	--purple: #9845C2;
 }
 
 $red : var(--red);
@@ -22,7 +48,6 @@ $orange : var(--orange);
 $yellow : var(--yellow);
 $lime : var(--lime);
 $green : var(--green);
-$olive : var(--olive);
 $teal : var(--teal);
 $aqua : var(--aqua);
 $cyan : var(--cyan);
@@ -38,22 +63,65 @@ $pink : var(--pink);
 //	CSS CLASSES
 //////////////////////////////////////////////////////////////////////////////80
 
-.red::before	{ color: $red; }
-.orange::before	{ color: $orange; }
-.yellow::before	{ color: $yellow; }
-.lime::before	{ color: $lime; }
-.green::before	{ color: $green; }
-.olive::before	{ color: $olive; }
-.teal::before	{ color: $teal; }
-.aqua::before	{ color: $aqua; }
-.cyan::before	{ color: $cyan; }
-.indigo::before	{ color: $indigo; }
-.blue::before	{ color: $blue; }
-.navy::before	{ color: $navy; }
-.maroon::before	{ color: $maroon; }
-.fushia::before	{ color: $fushia; }
-.purple::before	{ color: $purple; }
-.pink::before	{ color: $pink; }
+.red::before {
+	color: $red;
+}
+
+.orange::before {
+	color: $orange;
+}
+
+.yellow::before {
+	color: $yellow;
+}
+
+.lime::before {
+	color: $lime;
+}
+
+.green::before {
+	color: $green;
+}
+
+.teal::before {
+	color: $teal;
+}
+
+.aqua::before {
+	color: $aqua;
+}
+
+.cyan::before {
+	color: $cyan;
+}
+
+.indigo::before {
+	color: $indigo;
+}
+
+.blue::before {
+	color: $blue;
+}
+
+.navy::before {
+	color: $navy;
+}
+
+.maroon::before {
+	color: $maroon;
+}
+
+.fushia::before {
+	color: $fushia;
+}
+
+.purple::before {
+	color: $purple;
+}
+
+.pink::before {
+	color: $pink;
+}
 
 span {
 	&.red {
@@ -74,10 +142,6 @@ span {
 
 	&.green {
 		color: #4EBA0A;
-	}
-
-	&.olive {
-		color: #3D9970;
 	}
 
 	&.teal {

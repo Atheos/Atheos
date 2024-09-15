@@ -15,38 +15,50 @@ $background: var(--background);
 $highlight: var(--shade2);
 
 :root {
-	--foreground: var(--shade4);
-	--mideground: var(--shade6);
-	--background: var(--shade8);
+	--borderLight: solid 2px var(--shade3);
+	--borderHeavy: solid 3px var(--shade5);
+
+	--hoverMajor: var(--colorMinor);
+	--hoverMinor: var(--shade5);
+	--colorContrast: var(--orange);
+}
+
+html.dark {
 	--fontColorMajor: var(--shade0);
 	--fontColorMinor: var(--shade2);
 	--fontColorSmall: var(--shade3);
 
-	--borderLight: solid 2px var(--shade3);
-	--borderHeavy: solid 3px var(--shade5);
-
-	--colorMajor: var(--blue);
-	--colorMinor: var(--indigo);
-	--colorSmall: var(--navy);
+	--foreground: var(--shade4);
+	--mideground: var(--shade6);
+	--background: var(--shade8);
 }
 
+html.light {
+	--fontColorMajor: var(--shade0);
+	--fontColorMinor: var(--shade3);
+	--fontColorSmall: var(--shade5);
 
-html.blue {
-	--colorMajor: var(--blue);
-	--colorMinor: var(--indigo);
-	--colorSmall: var(--navy);
-}
-
-html.green {
-	--colorMajor: var(--olive);
-	--colorMinor: var(--green);
-	--colorSmall: var(--teal);
+	--foreground: var(--shade7);
+	--mideground: var(--shade8);
+	--background: var(--shade9);
 }
 
 html.red {
 	--colorMajor: var(--red);
 	--colorMinor: var(--pink);
 	--colorSmall: var(--maroon);
+}
+
+html.green {
+	--colorMajor: var(--green);
+	--colorMinor: var(--jade);
+	--colorSmall: var(--zucchini);
+}
+
+html.blue {
+	--colorMajor: var(--blue);
+	--colorMinor: var(--indigo);
+	--colorSmall: var(--navy);
 }
 
 $borderLight: var(--borderLight);
@@ -71,6 +83,3 @@ $sidebarHandleWidth: 15px;
 $fileManagerHeight: 280px;
 
 $inputBackground: $shade7;
-$inputForeground: $shade4;
-
-$tabListBackground: var(--blue);

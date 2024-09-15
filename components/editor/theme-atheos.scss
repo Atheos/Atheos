@@ -1,68 +1,47 @@
-$red: var(--red);
-$orange: var(--orange);
-$yellow:var(--yellow);
-$green: var(--green);
-$cyan: var(--cyan);
-$blue: var(--blue);
-$purple: var(--purple);
-$pink: var(--pink);
-
-$raven: var(--raven);
-$metal: var(--metal);
-$teal: var(--teal);
-$olive: var(--olive);
-
-$background: var(--background);
-$foreground: var(--foreground);
-
-$fontColorMajor: var(--fontColorMajor);
-$fontColorMinor: var(--fontColorMinor);
-$fontColorSmall:var(--fontColorSmall);
-
 .ace-atheos .ace_gutter {
-	background: $background; //background
-	color: $fontColorMinor;
-	border-right: 1px solid $foreground;
+	background: var(--background); //background
+	color: var(--fontColorMinor);
+	border-right: 1px solid var(--foreground);
 }
 
 .ace-atheos .ace_gutter-cell.ace_warning {
 	background-image: none;
-	background: $orange; //yellow
+	background: var(--orange); //yellow
 	border-left: none;
 	padding-left: 0;
-	color: $background;
+	color: var(--background);
 }
 
 .ace-atheos .ace_gutter-cell.ace_error {
 	background-position: -6px center;
 	background-image: none;
-	background: $red; //red
+	background: var(--red); //red
 	border-left: none;
 	padding-left: 0;
-	color: $background;
+	color: var(--background);
 
 }
 
 .ace-atheos .ace_print-margin {
 	width: 1px;
-	background: $raven;
+	background: var(--raven);
 }
 
 .ace-atheos {
-	background-color: $background;
-	color: $fontColorMajor;
+	background-color: var(--background);
+	color: var(--fontColorMajor);
 }
 
 .ace-atheos .ace_cursor {
-	color: $cyan;
+	color: var(--cyan);
 }
 
 .ace-atheos .ace_marker-layer .ace_selection {
-	background: $blue;
+	background: var(--blue);
 }
 
 .ace-atheos.ace_multiselect .ace_selection.ace_start {
-	box-shadow: 0 0 3px 0 $background;
+	box-shadow: 0 0 3px 0 var(--background);
 }
 
 .ace-atheos .ace_marker-layer .ace_step {
@@ -71,7 +50,7 @@ $fontColorSmall:var(--fontColorSmall);
 
 .ace-atheos .ace_marker-layer .ace_bracket {
 	margin: -1px 0 0 -1px;
-	border: 1px solid $fontColorMinor;
+	border: 1px solid var(--fontColorMinor);
 }
 
 .ace-atheos .ace_marker-layer .ace_active-line {
@@ -83,66 +62,66 @@ $fontColorSmall:var(--fontColorSmall);
 }
 
 .ace-atheos .ace_marker-layer .ace_selected-word {
-	border: 1px solid $blue;
+	border: 1px solid var(--blue);
 }
 
 .ace-atheos .ace_invisible {
-	color: $fontColorSmall;
+	color: var(--fontColorSmall);
 }
 
 .ace-atheos .ace_keyword,
 .ace-atheos .ace_meta,
 .ace-atheos .ace_support.ace_constant.ace_property-value {
-	color: $orange;
+	color: var(--orange);
 }
 
 .ace-atheos .ace_keyword.ace_operator {
-	color: $orange;
+	color: var(--orange);
 }
 
 .ace-atheos .ace_keyword.ace_other.ace_unit {
-	color: $green;
+	color: var(--green);
 }
 
 .ace-atheos .ace_constant.ace_language {
-	color: $olive;
+	color: var(--jade);
 }
 
 .ace-atheos .ace_constant.ace_numeric {
-	color: $green;
+	color: var(--green);
 }
 
 .ace-atheos .ace_constant.ace_character.ace_entity {
-	color: $purple;
+	color: var(--purple);
 }
 
 .ace-atheos .ace_invalid {
-	color: $fontColorMajor;
-	background-color: $red;
+	color: var(--fontColorMajor;
+	background-color: var(--red);
 }
 
 .ace-atheos .ace_fold {
-	background-color: $orange;
-	border-color: $fontColorSmall;
+	background-color: var(--orange);
+	border-color: var(--fontColorSmall;
 }
 
 .ace-atheos .ace_storage,
 .ace-atheos .ace_support,
 .ace-ambiance .ace_type {
-	color: $red;
+	color: var(--red);
 }
 
 .ace-atheos .ace_string {
-	color: $cyan;
+	color: var(--cyan);
 }
 
 .ace-atheos .ace_constant,
 .ace-atheos .ace_variable {
-	color: $fontColorMajor;
+	color: var(--fontColorMajor);
 }
 
 .ace-atheos .ace_comment {
-	color: $fontColorMinor;
+	color: var(--fontColorMinor;
 }
 
 .ace-atheos .ace_fold-widget.ace_start:after {
@@ -159,11 +138,11 @@ $fontColorSmall:var(--fontColorSmall);
 
 .ace-atheos .ace_entity.ace_name.ace_tag,
 .ace-atheos .ace_entity.ace_other.ace_attribute-name {
-	color: $metal;
+	color: var(--metal);
 }
 
 .ace-atheos .ace_indent-guide {
 	border-right:
-		1px dotted $foreground;
+		1px dotted var(--foreground);
 	margin-right: -1px;
 }

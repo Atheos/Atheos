@@ -71,6 +71,7 @@ class Common {
 			define("TIMEZONE", $timeZone->getName());
 		}
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
+		if (!defined("THEME")) define("THEME", "dark blue");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
 		// TIMEZONE

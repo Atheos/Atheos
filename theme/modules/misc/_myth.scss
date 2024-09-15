@@ -7,7 +7,7 @@
 	min-height: 120vh;
 	min-width: 120vw;
 	background-color: #000;
-	background: linear-gradient(-45deg, #000 45%,  #{$colorMajor} 50%, #000 55%);
+	background: linear-gradient(-45deg, var(--background) 45%,  var(--colorMajor) 50%, var(--background) 55%);
 	background-size: 600% 600%;
 	animation: gradient 16s linear infinite;
 }

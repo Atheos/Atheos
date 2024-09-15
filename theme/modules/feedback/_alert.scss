@@ -5,7 +5,7 @@
 	position: absolute;
 	top: 10%;
 	left: calc(50% - 200px);
-	background-color: #333;
+	background: var(--mideground);
 	border: 3px solid rgba(255, 255, 255, 0.5);
 	padding: 10px;
 	z-index: 99999;

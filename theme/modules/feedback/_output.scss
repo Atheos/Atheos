@@ -6,7 +6,7 @@ output {
 	text-align: left !important;
 
 	result {
-		background: $background;
+		background: var(--mideground);
 		font-size: 0.9rem;
 		border: $borderLight;
 		display: block;

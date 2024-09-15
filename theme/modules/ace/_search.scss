@@ -55,7 +55,7 @@
 		border-left: $borderLight;
 
 		&:hover {
-			background: $inputForeground;
+			background: var(--hoverMajor);
 		}
 
 		&:last-of-type {
@@ -126,7 +126,7 @@
 		@include input();
 
 		&:hover {
-			background: $inputForeground;
+			background: var(--hoverMajor);
 		}
 	}
 

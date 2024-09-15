@@ -106,10 +106,45 @@ ul.tabList {
 	}
 
 	li.changed {
-		background-color: $green !important;
+		background-color: var(--colorContrast) !important;
 
 		a::before {
-			background: linear-gradient(to left, transparent 90%, $green) !important;
+			background: linear-gradient(to left, transparent 90%, var(--colorContrast)) !important;
+		}
+	}
+}
+
+html.light ul.tabList {
+	li {
+		a {
+			color: var(--shade7);
+
+			.subtle {
+				color: var(--shade6);
+			}
+		}
+	}
+
+	.save,
+	.close {
+		color: var(--shade6);
+
+		&:hover {
+			color: var(--shade9);
+		}
+	}
+
+}
+
+html.light #active_file_tabs {
+	li.active {
+		a {
+			color: var(--shade9);
+
+
+			.subtle {
+				color: var(--shade6);
+			}
 		}
 	}
 }

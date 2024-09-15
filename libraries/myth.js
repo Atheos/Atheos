@@ -13,7 +13,8 @@
 	'use strict';
 
 	let rndColor = [],
-		colors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
+		darkColors = ["#0F0F0F", "#090909", "#0B0B0B", "#0D0D0D"],
+		lightColors = ["#F0F0F0", "#F9F9F9", "#FBFBFB", "#FDFDFD"],
 		seed = 5309,
 		canvas;
 
@@ -94,6 +95,12 @@
 				rndColor = JSON.parse(rndColor);
 			} else {
 				rndColor = [];
+
+				let colors = darkColors;
+				let theme = document.querySelector('html').classList;
+				if (theme.contains('light')) {
+					colors = lightColors;
+				}
 				for (let i = 0; i < 5000; ++i) {
 					rndColor.push(colors[sRnd(4)]);
 				}

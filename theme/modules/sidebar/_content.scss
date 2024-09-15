@@ -3,7 +3,7 @@
 	top: $topBarHeight;
 	// min-width: 185px;
 	width: calc(100% - #{$sidebarHandleWidth});
-	overflow: hidden;
+	overflow-y: auto;
 }
 
 #SBLEFT {
