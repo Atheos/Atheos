@@ -287,7 +287,12 @@
 		send(data) {
 			echo({
 				url: self.home,
-				data
+				data,
+				settled: function(reply, status) {
+					if (status === 418) {
+					    self.update('uuid', reply.key);
+					}				    
+				}
 			});
 		},
 
@@ -300,24 +305,28 @@
 				action: 'saveDuration',
 				duration: TimeMe.getTimeOnPage()
 			};
-			// echo({
-			// 	data
-			// });
 			navigator.sendBeacon('/controller.php', JSON.stringify(data));
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Opt In or Out of analytics collection
 		//////////////////////////////////////////////////////////////////////80		
-		changeOpt(value) {
+		changeOpt(val) {
+		    self.update('enabled',val);
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Update a key/value on the server
+		//////////////////////////////////////////////////////////////////////80		
+		update(key, val) {
 			echo({
 				data: {
 					target: 'analytics',
-					action: 'changeOpt',
-					enabled: value
+					action: 'update',
+					key,
+					val
 				},
 				settled: function(reply, status) {
-					storage('analytics.enabled', value);
+					storage('analytics.' + key, val);
 					toast(status, reply);
 				}
 			});
