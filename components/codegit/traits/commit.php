@@ -8,6 +8,15 @@ trait Commit {
 	}
 
 	public function commit($message, $files) {
+		$confData = file_get_contents(DATA . "/users/" . SESSION("user") . "/codegit.db.json");
+		$confData = json_decode($confData, TRUE)[0];
+
+		if (!$confData["name"] || !$confData["email"])
+		{
+			Common::send(500, i18n("git_error_emailRequired"));
+			return;
+		}
+
 		$files = explode(",", $files);
 		
 		foreach ($files as $file) {
@@ -16,9 +25,6 @@ trait Commit {
 			    Common::send(500, i18n("git_addFailed", $file) . "\n\n" . implode("\n", $result["text"] ?? []));
 			}
 		}
-
-		$confData = file_get_contents(DATA . "/users/" . SESSION("user") . "/codegit.db.json");
-		$confData = json_decode($confData, TRUE)[0];
 
 		$result = $this->execute("git commit --author=\"{$confData["name"]} <{$confData["email"]}>\""
 				. " -m\"" . $message . "\"");

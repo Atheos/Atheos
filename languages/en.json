@@ -555,6 +555,7 @@
 
 	"git": {
 		"error": {
+			"emailRequired": "You have to provide username and email",
 			"noRepo": "Git repo not found.",
 			"noPath": "Missing path.",
 			"noRepoFileMsg": "Missing repo, file or message.",
