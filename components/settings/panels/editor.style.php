@@ -67,6 +67,17 @@
 		</td>
 	</tr>
 	<tr>
+		<td><?php echo i18n("wrap"); ?></td>
+		<td>
+			<toggle>
+				<input id="editor_lineWrap_true" data-setting="editor.useWrapMode" value="true" name="editor.useWrapMode" type="radio" />
+				<label for="editor_lineWrap_true"><?php echo i18n("enabled"); ?></label>
+				<input id="editor_lineWrap_false" data-setting="editor.useWrapMode" value="false" name="editor.useWrapMode" type="radio" checked />
+				<label for="editor_lineWrap_false"><?php echo i18n("disabled"); ?></label>
+			</toggle>
+		</td>
+	</tr>
+	<tr>
 		<td><?php echo i18n("printMarginShow"); ?></td>
 		<td>
 			<toggle>
