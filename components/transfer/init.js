@@ -77,7 +77,7 @@
 				},
 				settled: function(reply, status) {
 					if (status === 200) {
-						oX('#download').attr('src', 'components/transfer/download.php?filename=' + encodeURIComponent(reply.download));
+						oX('#download').attr('src', 'components/transfer/download.php?path=' + encodeURIComponent(reply.download));
 					} else {
 						atheos.toast.show('error', reply.text);
 					}
