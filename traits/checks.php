@@ -33,22 +33,25 @@ trait Check {
 	public static function checkPath($path) {
 		$users = Common::loadJSON("users");
 		$activeUser = SESSION("user");
-		// $projects = Common::loadJSON("projects");
 		$projects = Common::getKeyStore("projects")->select("*");
 
 		if (!array_key_exists($activeUser, $users)) return false;
 
+		// Allow configuration and web root access if user has configure privileges
+		if (Common::checkAccess("configure")) {
+			if (strpos($path, BASE_PATH) === 0 || strpos($path, WEBROOT) === 0) {
+				return true;
+			}
+		}
+
 		$userACL = $users[$activeUser]["userACL"];
+		foreach ($projects as $projectName => $projectPath) {
+			if ($userACL !== "full" and !in_array($projectPath, $userACL)) {
+				continue;
+			}
 
-		if ($userACL === "full") {
-			return true;
-		} else {
-			foreach ($projects as $projectName => $projectPath) {
-				if (!in_array($projectPath, $userACL)) continue;
-
-				if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
-					return true;
-				}
+			if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
+				return true;
 			}
 		}
 		return false;

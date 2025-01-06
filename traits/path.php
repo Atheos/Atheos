@@ -24,9 +24,7 @@ trait Path {
     // Clean a path
     //////////////////////////////////////////////////////////////////////////80
     public static function cleanPath($path) {
-        if (empty($path)) {
-            $path = '';
-        }
+        if (empty($path)) return "";
 
         // replace backslash with slash
         $path = str_replace("\\", "/", $path);
@@ -34,8 +32,7 @@ trait Path {
         // prevent Poison Null Byte injections
         $path = str_replace(chr(0), "", $path);
 
-        // prevent go out of the workspace
-        // Normalize the path to remove .. and extra slashes
+        // Prevent path traversal, normalize the path to remove .. and extra slashes
         while (strpos($path, "../") !== false) {
             $path = str_replace("../", "", $path);
         }
@@ -45,6 +42,10 @@ trait Path {
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:]/u', '', $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)]/u', '', $path);
         $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)\[\]\{\}~!@#$%&\'\+=]/u', '', $path);
+
+        // Normalize the path using realpath to resolve ".." and extra slashes
+        $normalizedPath = realpath($path);
+        // if (!$normalizedPath) return "";
 
         return $path;
     }
