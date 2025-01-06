@@ -19,6 +19,7 @@ trait Settings {
 				}
 			}
 
+			// FIXME: could be a race between different users
 			if (isset($settings["local"])) {
 				$this->execute("git config user.name '" . $settings["local"]["name"] . "'");
 				$this->execute("git config user.email '" . $settings["local"]["email"] . "'");

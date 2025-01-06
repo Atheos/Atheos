@@ -155,7 +155,7 @@ class i18n {
 			$result = $string;
 
 			$time = date("Y-m-d H:i:s");
-			$trace = debug_backtrace(null, 5);
+			$trace = debug_backtrace(0, 5);
 
 			$line = $trace[1]['line'];
 			$file = $trace[1]['file'];
