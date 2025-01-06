@@ -81,5 +81,4 @@ trait Path {
         $path = str_replace(WORKSPACE . "/", "", $path);
         return $path;
     }
-
 }
