@@ -88,7 +88,7 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 }
 
 .ace-atheos .ace_constant.ace_language {
-	color: var(--olive);
+	color: var(--jade);
 }
 
 .ace-atheos .ace_constant.ace_numeric {

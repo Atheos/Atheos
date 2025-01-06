@@ -18,7 +18,7 @@ trait File {
 	public static function load($name, $namespace) {
 		$path = DATA . "/" . $namespace . "/" . $name;
 		$path = preg_replace("#\/+#", "/", $path);
-		return is_readable($path) ? file_get_contents($path) : false;
+		return is_readable($path) ? file_get_contents($path) : [];
 	}
 
 	//////////////////////////////////////////////////////////////////////////80
@@ -26,7 +26,7 @@ trait File {
 	//////////////////////////////////////////////////////////////////////////80
 	public static function loadJSON($name, $namespace = "") {
 		$json = Common::load($name . ".json", $namespace);
-		return $json ? json_decode($json, true) : false;
+		return $json ? json_decode($json, true) : [];
 	}
 
 	//////////////////////////////////////////////////////////////////////////80

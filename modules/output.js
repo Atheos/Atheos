@@ -34,11 +34,11 @@
 	const parseCode = function(code) {
 		if(isString(code)) return code;
 		if (code < 150) {
-			return "notice";
+			return 'notice';
 		} else if (code < 200) {
-			return "warning";
+			return 'warning';
 		} else if (code < 300) {
-			return "success";
+			return 'success';
 		} else if (code > 399 && code < 599) {
 			return 'error';
 		}

@@ -78,6 +78,14 @@
 		window.open(url, '_newtab');
 	};
 
+	//////////////////////////////////////////////////////////////////////////80
+	// Test if mouse event left target element, used in hover events
+	//////////////////////////////////////////////////////////////////////////80
+	window.mouseLeft = function(selector, event) {
+		let target = document.querySelector(selector);
+		var destination = event.toElement || event.relatedTarget;
+		return (destination === target) ? true : !target.contains(destination);
+	};
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Extend / Combine JS objects without modifying the source object

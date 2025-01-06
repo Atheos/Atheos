@@ -21,12 +21,10 @@
 		table-layout: fixed;
 	}
 
-	// thead {
+	thead {
 	// 	// Account for Scrollbar width
-	// 	overflow-y: scroll;
-	// 	box-shadow: #333 $scrollbarWidth 0px;
-	// 	width: calc(100% - 10px);
-	// }
+		width: calc(100% - 10px);
+	}
 
 	table th:nth-of-type(1),
 	table td:nth-of-type(1) {

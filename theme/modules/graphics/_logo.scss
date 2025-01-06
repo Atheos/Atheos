@@ -14,12 +14,13 @@
 		}
 
 		#alpha {
-			stroke: $fontColorMajor;
+			stroke: #F5F9F9;
 		}
 
 		#backdrop {
 			fill-opacity: 1;
-			fill: $background;
+// 			fill: $background;
+			fill: $colorSmall;
 			stroke: none;
 		}
 

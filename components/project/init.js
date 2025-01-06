@@ -11,11 +11,21 @@
 (function() {
 	'use strict';
 
+	let hoverDuration = 300;
+
+	let toggle = oX('#PDTOGGLE'),
+// 		open = 'fa-chevron-circle-up',
+// 		close = 'fa-chevron-circle-down';
+		lock = 'fa-lock',
+		unlock = 'fa-unlock';
+
 	const self = {
 
 		//projectmanager
-		sideExpanded: true,
 		openTrigger: 'click',
+		openOnHover: true,
+		timeoutOpen: null,
+		timeoutClose: null,
 		current: {
 			name: '',
 			path: ''
@@ -28,23 +38,55 @@
 			fX('#project-atheos').on('click', function() {
 				self.open('Atheos IDE', '@TH305');
 			});
+			fX('#project-webRoot').on('click', function() {
+				self.open('Web Root', 'W3BR00T');
+			});
 			fX('#projects-create').on('click', self.create);
 			fX('#projects-manage').on('click', self.list);
-			fX('#projects-collapse').on('click', function() {
-				if (self.sideExpanded) {
+
+			fX('#PDTOGGLE').on('click', function() {
+				if (self.dock.lockedOpen) {
 					self.dock.collapse();
-					atheos.settings.save('project.dockOpen', false, true);
-					storage('project.dockOpen', false);
+					self.dock.lockedOpen = false;
+					self.dock.setIcon(unlock);
+					atheos.settings.save('project.lockedOpen', false, true);
+					storage('project.lockedOpen', false);
 				} else {
 					self.dock.expand();
-					atheos.settings.save('project.dockOpen', true, true);
-					storage('project.dockOpen', true);
+					self.dock.lockedOpen = true;
+					self.dock.setIcon(lock);
+					atheos.settings.save('project.lockedOpen', true, true);
+					storage('project.lockedOpen', true);
 				}
 			});
 
-			carbon.subscribe('chrono.mega', function() {
-				self.getCurrent();
+			fX('#project_list').on('mouseover', function() {
+				if (!self.openOnHover) return;
+				if (self.timeoutClose) clearTimeout(self.timeoutClose);
+
+				if (!self.dock.lockedOpen) {
+					self.timeoutOpen = setTimeout(() => {
+						self.dock.expand();
+					}, hoverDuration);
+				}
 			});
+			fX('#project_list').on('mouseout', function(e) {
+				if (!self.openOnHover) return;
+				if (self.timeoutOpen) clearTimeout(self.timeoutOpen);
+
+				let left = mouseLeft('#project_list', e);
+
+				if (left && !self.dock.lockedOpen) {
+					self.timeoutClose = setTimeout(() => {
+
+						self.dock.collapse();
+					}, hoverDuration);
+				}
+			});
+
+			// 			carbon.subscribe('chrono.mega', function() {
+			// 				self.getCurrent();
+			// 			});
 
 			carbon.subscribe('settings.loaded', function() {
 				var local = storage('project.openTrigger');
@@ -52,10 +94,14 @@
 					self.openTrigger = local;
 				}
 
-				if (storage('project.dockOpen') === false) {
+				if (storage('project.lockedOpen') === false) {
+					self.dock.lockedOpen = false;
 					self.dock.collapse();
+					self.dock.setIcon(unlock);
 				}
-
+				if (storage('project.openOnHover') === false) {
+					self.openOnHover = false;
+				}
 			});
 
 			fX('#project_list .content li').on('click, dblclick', function(e) {
@@ -154,7 +200,7 @@
 				<li class="draggable">
 					<a id="project-root" data-type="root" data-path="${path}">
 						${repoIcon}
-						<i class="root fa fa-folder blue" data-type="root"></i>
+						<i class="root fa fa-folder" data-type="root"></i>
 						<span>${name}</span>
 					</a>
 					<ul></ul>
@@ -177,6 +223,7 @@
 		// Load and list projects in the sidebar.
 		//////////////////////////////////////////////////////////////////
 		dock: {
+			lockedOpen: true,
 			load: function() {
 				echo({
 					url: atheos.dialog,
@@ -186,35 +233,24 @@
 					},
 					success: function(reply) {
 						oX('#project_list .content').html(reply);
-
 						let projects = oX('#project_list .content').findAll('LI');
-						if (projects.length < 2) {
-							self.dock.collapse();
-						}
-
 					}
 				});
 			},
 
 			expand: function() {
-				self.sideExpanded = true;
 				oX('#SBLEFT #project_list').css('height', '');
 				oX('#SBLEFT>.content').css('bottom', '');
-
-				oX('#projects-collapse').replaceClass('fa-chevron-circle-up', 'fa-chevron-circle-down');
-
-
-
 			},
 
 			collapse: function() {
-				self.sideExpanded = false;
 				var height = oX('#SBLEFT #project_list .title').height();
-
 				oX('#SBLEFT #project_list').css('height', height + 'px');
 				oX('#SBLEFT>.content').css('bottom', height + 'px');
-
-				oX('#projects-collapse').replaceClass('fa-chevron-circle-down', 'fa-chevron-circle-up');
+			},
+			setIcon: function(icon) {
+				toggle.removeClass();
+				toggle.addClass('fas ' + icon);
 			}
 		},
 
@@ -279,7 +315,7 @@
 			echo({
 				url: atheos.controller,
 				data,
-				success: function(reply) {
+				success: function(reply, status) {
 					if (status !== 200) return;
 					self.open(reply.name, reply.path);
 					self.dock.load();
@@ -350,23 +386,23 @@
 						projectName
 					},
 					settled: function(reply, status) {
-					if (status !== 200) return;
-							atheos.toast.show('success', reply.text);
+						if (status !== 200) return;
+						atheos.toast.show('success', reply.text);
 
-							self.list();
-							self.dock.load();
+						self.list();
+						self.dock.load();
 
-							for (var path in atheos.active.sessions) {
-								if (path.indexOf(projectPath) === 0) {
-									atheos.active.remove(path);
-								}
+						for (var path in atheos.active.sessions) {
+							if (path.indexOf(projectPath) === 0) {
+								atheos.active.remove(path);
 							}
-
-							carbon.publish('project.delete', {
-								'path': projectPath,
-								'name': projectName
-							});
 						}
+
+						carbon.publish('project.delete', {
+							'path': projectPath,
+							'name': projectName
+						});
+					}
 				});
 			};
 

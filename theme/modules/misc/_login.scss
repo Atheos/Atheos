@@ -10,8 +10,8 @@
 	fieldset {
 		width: 384px;
 
-		border: 1px solid $colorMajor;
-		background-color: $background;
+		border: 3px solid $colorMajor;
+		background: $background;
 		margin: auto;
 		// margin-top: 15px;
 		// width: 310px;
@@ -62,7 +62,7 @@
 	position: absolute;
 	bottom: 2px;
 	right: 3px;
-	color: $blue;
+	color: $colorMajor;
 	font-weight: bold;
 	text-decoration: none;
 }

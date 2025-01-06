@@ -128,6 +128,7 @@ define("BASE_URL", "' . $_SERVER["HTTP_HOST"] . $rel . '");
 
 // Add an install domain to the page title
 define("DOMAIN", "' . $domain . '");
+define("THEME", "dark blue");
 
 // SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)
 define("LIFETIME", false);

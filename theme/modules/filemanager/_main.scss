@@ -34,7 +34,6 @@
 #file-manager {
 	a {
 		display: inline-block;
-		// position: relative;
 		min-width: 100%;
 		cursor: pointer;
 
@@ -45,11 +44,7 @@
 
 		&:hover,
 		&.context-menu-active {
-			background-color: #333;
-
-			// i.expand {
-			// 	background-color: #333;
-			// }
+			background: var(--hoverMinor);
 		}
 	}
 
@@ -97,6 +92,10 @@
 		vertical-align: text-top;
 		// pointer-events: none;
 	}
+}
+
+#file-manager .fa-folder {
+	color: $colorMajor;
 }
 
 #file-manager .fa-plus,

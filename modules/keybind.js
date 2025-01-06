@@ -105,7 +105,7 @@
 				atheos.active.move('down');
 			});
 
-			// Merge Editor Vertically [CTRL+M] //////////////////////////////80
+			// Merge All Editors [CTRL+M] //////////////////////////////80
 			node.bind(77, 'ctrl', function() {
 				let activeSession = atheos.editor.getSession();
 				atheos.editor.exterminate();

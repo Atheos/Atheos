@@ -37,7 +37,7 @@
 
 		<div class="title">
 			<h2><?php echo i18n("projects"); ?></h2>
-			<i id="projects-collapse" class="fas fa-chevron-circle-down"></i>
+			<i id="PDTOGGLE" class="fas fa-lock"></i>
 			<?php if (Common::checkAccess("configure")) {
 				?>
 				<i id="projects-manage" class="fas fa-archive"></i>
@@ -48,6 +48,7 @@
 				if (DEVELOPMENT) {
 					?>
 					<i id="project-atheos" class="fas fa-code"></i>
+					<i id="project-webRoot" class="fas fa-home"></i>
 					<?php
 
 				}

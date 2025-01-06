@@ -56,6 +56,8 @@ class Common {
 		if (defined("LIFETIME") && LIFETIME !== false) {
 			ini_set("session.cookie_lifetime", LIFETIME);
 		}
+		
+		define("WEBROOT", "/var/www/html/");
 
 		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
 		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
@@ -69,6 +71,7 @@ class Common {
 			define("TIMEZONE", $timeZone->getName());
 		}
 		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
+		if (!defined("THEME")) define("THEME", "dark blue");
 		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
 		// TIMEZONE

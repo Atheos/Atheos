@@ -6,7 +6,7 @@ toaster {
 	text-align: left !important;
 
 	toast {
-		background: $background;
+		background: var(--mideground);
 		padding: 5px;
 		font-size: 0.9rem;
 		border: $borderLight;

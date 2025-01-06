@@ -79,6 +79,9 @@ switch ($action) {
         if ($projectPath === "@TH305" && Common::checkAccess("configure")) {
             $projectName = "Atheos IDE";
             $projectPath = BASE_PATH;
+        } elseif ($projectPath === "W3BR00T" && Common::checkAccess("configure")) {
+            $projectName = "Web Root";
+            $projectPath = WEBROOT;
         }
 
         if (!Common::checkPath($projectPath)) {

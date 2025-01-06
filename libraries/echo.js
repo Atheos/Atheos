@@ -33,7 +33,7 @@
 			for (var name in opt.data) {
 				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opt.data[name]));
 			}
-			if (opt.rnd) data.push(("v=" + Math.random()).replace(".", ""));
+			if (opt.rnd) data.push(('v=' + Math.random()).replace('.', ''));
 			data = data.join('&');
 		}
 
@@ -55,7 +55,7 @@
 			try {
 				data = JSON.parse(data);
 
-				if ("debug" in data) {
+				if ('debug' in data) {
 					console.log(data.debug);
 					delete data.debug;
 				}

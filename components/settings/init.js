@@ -23,11 +23,9 @@
 					target: 'settings',
 					action: 'load',
 				},
-				settled: function(reply, status) {
-					if (status === 'success') {
-						for (var key in reply) {
-							storage(key, reply[key]);
-						}
+				success: function(reply, status) {
+					for (var key in reply) {
+						storage(key, reply[key]);
 					}
 					carbon.publish('settings.loaded', reply);
 				}

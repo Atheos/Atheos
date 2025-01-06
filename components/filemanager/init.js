@@ -82,11 +82,13 @@
 		// Open a preview in another window
 		//////////////////////////////////////////////////////////////////////80
 		openInBrowser: function(anchor) {
+			let path = anchor ? anchor.path : atheos.active.getPath();
+
 			echo({
 				data: {
 					target: 'filemanager',
 					action: 'loadURL',
-					path: anchor.path
+					path: path
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return toast(status, reply.text);
@@ -408,7 +410,7 @@
 				return '';
 			}
 
-			var fileClass = type === 'folder' ? 'fa fa-folder blue' : icons.getClassWithColor(basename);
+			var fileClass = type === 'folder' ? 'fa fa-folder' : icons.getClassWithColor(basename);
 			var emptyFolder = type === 'folder' ? '<ul></ul>' : '';
 
 			var nodeClass = 'none';

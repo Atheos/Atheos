@@ -17,94 +17,48 @@
 (function() {
 	'use strict';
 
+	function formatBytes(bytes, decimals = 1) {
+		// Source: https://stackoverflow.com/a/18650828
+		if (bytes === 0) {
+			return '0B';
+		}
+
+		const k = 1024;
+		const dm = decimals < 0 ? 0 : decimals;
+		const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
+
+		const i = Math.floor(Math.log(bytes) / Math.log(k));
+
+		return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
+	}
+
 	const self = {
+		uploadPath: false,
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			fX('#dialog .transfer').on('change', self.upload);
-			fX('#upload_wrapper').on('drop', self.drop);
-			fX('#upload_wrapper').on('dragover', self.dragover);
-			fX('#upload_wrapper').on('dragleave', self.dragleave);
-		},
-		//////////////////////////////////////////////////////////////////////80
-		// Drop
-		//////////////////////////////////////////////////////////////////////80
-		drop: function(e) {
-			e.preventDefault();
-			oX('#upload_wrapper').css('color', 'var(--fontColorMinor)');
-
-			var input = oX('#dialog input[type="file"]').element,
-				files = [],
-				uploadName;
-
-			if (e.dataTransfer.items) {
-				[...e.dataTransfer.items].forEach((item, i) => {
-					if (item.kind === 'file') {
-						files.push(item.getAsFile());
-					}
-				});
-			} else {
-				files = [...e.dataTransfer.files];
-			}
-
-			if (files.length <= 0) return;
-
-			uploadName = (files.length > 1) ? 'Batch Upload' : files[0].name;
-
-			var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
-			oX('#progress_wrapper').append(progressNode);
-
-			var data = new FormData();
-
-			for (var x = 0; x < files.length; x++) {
-				data.append('upload[]', files[x]);
-			}
-
-			data.append('target', 'transfer');
-			data.append('action', 'upload');
-			data.append('path', self.uploadPath);
-
-			var send = new XMLHttpRequest();
-			send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
-			send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
-			send.open('POST', atheos.controller);
-
-			send.onreadystatechange = function() {
-				if (send.readyState === 4) {
-					var reply = send.responseText;
-					try {
-						reply = JSON.parse(reply);
-					} catch (e) {}
-
-					if (send.status >= 200 && send.status < 300) {
-						self.processUpload(reply, self.uploadPath);
-					} else {
-						self.showProgress(progressNode, uploadName)({
-							type: 'error'
-						});
-					}
-					input.value = '';
-				}
-			};
-			send.send(data);
+			fX('#upload_wrapper').on('drop', self.upload);
+			fX('#upload_wrapper').on('dragover, mouseover', self.dragover);
+			fX('#upload_wrapper').on('dragleave, mouseout', self.dragleave);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Drag over
+		// Open upload dialog
 		//////////////////////////////////////////////////////////////////////80
-		dragover: function(e) {
-			e.preventDefault();
-			oX('#upload_wrapper').css('color', 'var(--fontColorMajor)');
-		},
+		openUpload: function(anchor) {
+			// Source: https://codepen.io/PerfectIsShit/pen/zogMXP?editors=1010
+			// Source: http://significanttechno.com/file-upload-progress-bar-using-javascript
 
-		//////////////////////////////////////////////////////////////////////80
-		// Drag leave
-		//////////////////////////////////////////////////////////////////////80
-		dragleave: function(e) {
-			e.preventDefault();
-			oX('#upload_wrapper').css('color', 'var(--fontColorMinor)');
+			self.uploadPath = anchor.path;
+
+			atheos.modal.load(400, {
+				target: 'transfer',
+				action: 'upload',
+				path: self.uploadPath
+			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -132,114 +86,114 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Upload
+		// Drag over
 		//////////////////////////////////////////////////////////////////////80
-		uploadPath: false,
+		dragover: function(e) {
+			event.preventDefault();
+			oX('#upload_wrapper').addClass('hover');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Drag leave
+		//////////////////////////////////////////////////////////////////////80
+		dragleave: function(e) {
+			oX('#upload_wrapper').removeClass('hover');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Upload data
+		//////////////////////////////////////////////////////////////////////80
 		upload: function(e) {
 			e.preventDefault();
 			e.stopPropagation();
 
 			var input = oX('#dialog input[type="file"]').element,
-				fileCount = input.files.length,
-				uploadName;
+				files = [];
 
-			if (fileCount <= 0) return;
-
-			uploadName = (fileCount > 1) ? 'Batch Upload' : input.files[0].name;
-
-			var progressNode = oX('<div class="upload-progress"><div></div><span></span></div>');
-			oX('#progress_wrapper').append(progressNode);
-
-			var data = new FormData();
-
-			for (var x = 0; x < fileCount; x++) {
-				data.append('upload[]', input.files[x]);
+			if (e.dataTransfer.items) {
+				[...e.dataTransfer.items].forEach((item, i) => {
+					if (item.kind === 'file') {
+						files.push(item.getAsFile());
+					}
+				});
+			} else {
+				files = [...e.dataTransfer.files];
 			}
 
-			// data.append('upload[]', file);
+			let fileCount = files.length;
+			if (fileCount <= 0) return;
+
+			for (var x = 0; x < fileCount; x++) {
+				self.uploadFile(files[x]);
+			}
+			input.value = '';
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Upload file
+		//////////////////////////////////////////////////////////////////////80
+		uploadFile: function(file) {
+
+			let progress = self.showProgress(file.name),
+				data = new FormData();
+
+			data.append('upload[]', file);
 			data.append('target', 'transfer');
 			data.append('action', 'upload');
 			data.append('path', self.uploadPath);
 
 			var send = new XMLHttpRequest();
-			send.upload.addEventListener('progress', self.showProgress(progressNode, uploadName), false);
-			send.addEventListener('error', self.showProgress(progressNode, uploadName), false);
+			send.upload.addEventListener('progress', progress, false);
+			send.addEventListener('error', progress, false);
 			send.open('POST', atheos.controller);
 
 			send.onreadystatechange = function() {
 				if (send.readyState === 4) {
-					var reply = send.responseText;
-					try {
-						reply = JSON.parse(reply);
-					} catch (e) {}
 
 					if (send.status >= 200 && send.status < 300) {
-						self.processUpload(reply, self.uploadPath);
+						var reply = send.responseText;
+						try {
+							reply = JSON.parse(reply);
+							self.processUpload(reply);
+						} catch (e) {
+						    output('error', e);
+						}
 					} else {
-						self.showProgress(progressNode, uploadName)({
+						progress({
 							type: 'error'
 						});
 					}
-					input.value = '';
 				}
 			};
 			send.send(data);
-		},
 
-		//////////////////////////////////////////////////////////////////////80
-		// Upload
-		//////////////////////////////////////////////////////////////////////80
-		openUpload: function(anchor) {
-			// Source: https://codepen.io/PerfectIsShit/pen/zogMXP?editors=1010
-			// Source: http://significanttechno.com/file-upload-progress-bar-using-javascript
-
-			self.uploadPath = anchor.path;
-
-			atheos.modal.load(400, {
-				target: 'transfer',
-				action: 'upload',
-				path: self.uploadPath
-			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Process Upload
 		//////////////////////////////////////////////////////////////////////80
-		processUpload: function(reply, path) {
-			if (reply.status !== 'success') {
-				atheos.toast.show('error', reply.text);
+		processUpload: function(reply) {
+			if (reply.status !== 200) {
+				return toast(reply);
 			}
-			reply.data.forEach(function(file) {
-				atheos.filemanager.addToFileManager(path + '/' + file.name, 'file', path);
-				carbon.publish('filemanager.upload', {
-					name: file.name,
-					path: path
-				});
+
+			atheos.filemanager.addToFileManager(reply.filepath, 'file', reply.parent);
+			carbon.publish('filemanager.upload', {
+				name: reply.filename,
+				path: reply.filepath,
+				parent: reply.parent
 			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Show Progress
 		//////////////////////////////////////////////////////////////////////80
-		showProgress: function(node, name) {
+		showProgress: function(name) {
 			// Loading event doesn't send the total, so grab it from the progress
 			// event and save it for later.
 			var total;
-
-			function formatBytes(bytes, decimals = 1) {
-				// Source: https://stackoverflow.com/a/18650828
-				if (bytes === 0) {
-					return '0B';
-				}
-
-				const k = 1024;
-				const dm = decimals < 0 ? 0 : decimals;
-				const sizes = ['B', 'KB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'];
-
-				const i = Math.floor(Math.log(bytes) / Math.log(k));
-
-				return parseFloat((bytes / Math.pow(k, i)).toFixed(dm)) + sizes[i];
-			}
+			let node = oX('<div class="upload-progress"><div></div><span></span></div>');
+			oX('#progress_wrapper').append(node);
 
 			return function(event) {
 				if (event.type === 'progress') {

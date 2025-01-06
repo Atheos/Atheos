@@ -18,7 +18,7 @@ toggle {
 		font-size: unset;
 
 		&:hover {
-			background: $inputForeground;
+			background: var(--hoverMajor);
 		}
 
 		// &:not(first-of-type) {

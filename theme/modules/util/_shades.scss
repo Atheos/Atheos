@@ -4,11 +4,24 @@
 	--shade2: #A5A9AA;
 	--shade3: #757577;
 	--shade4: #414141;
-	--shade5: #353533;
+	--shade5: #3A3A3A;
 	--shade6: #252525;
 	--shade7: #1C1C1E;
 	--shade8: #151516;
 	--shade9: #010101;
+}
+
+html.light {
+		--shade0: #010101;
+		--shade1: #151516;
+		--shade2: #252525;
+		--shade3: #3A3A3A;
+		--shade4: #414141;
+		--shade5: #858587;
+		--shade6: #A5A9AA;
+		--shade7: #D5D5DD;
+		--shade8: #E4E4E9;
+		--shade9: #F5F5F9;
 }
 
 $shade0: var(--shade0);
