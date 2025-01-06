@@ -17,11 +17,18 @@ require_once("../../common.php");
 //////////////////////////////////////////////////////////////////////////////80
 Common::checkSession();
 
-$filename = isset($_GET["filename"]) ? $_GET["filename"] : false;
-$basename = basename($filename);
-Common::cleanPath($filename);
+$path = isset($_GET["path"]) ? $_GET["path"] : false;
+$basename = basename($path);
+$path = Common::getWorkspacePath($path);
 
-if(strpos($filename, WORKSPACE) !== 0) die;
+//////////////////////////////////////////////////////////////////////////////80
+// Security Check
+//////////////////////////////////////////////////////////////////////////////80
+if (!Common::checkPath($path)) {
+	Common::send(403, "User does not have access.");
+}
+
+if(strpos($path, WORKSPACE) !== 0) die;
 
 header("Pragma: public");
 header("Expires: 0");
@@ -31,7 +38,7 @@ header("Content-Description: File Transfer");
 header("Content-Type: application/octet-stream");
 header("Content-Disposition: attachment; filename=\"$basename\"");
 header("Content-Transfer-Encoding: binary");
-header("Content-Length: " . filesize($filename));
+header("Content-Length: " . filesize($path));
 
 if (ob_get_contents()) {
 	ob_end_clean();
@@ -39,6 +46,6 @@ if (ob_get_contents()) {
 
 flush();
 
-readfile($filename);
+readfile($path);
 // Remove temp file
-unlink($filename);
+unlink($path);
