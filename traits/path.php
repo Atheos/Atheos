@@ -64,7 +64,7 @@ trait Path {
 
         //Security check
         if (!Common::checkPath($path)) {
-            Common::send(506, "Client does not have access.");
+            Common::send(403, "Client does not have access.");
         }
 
         if (Common::isAbsPath($path)) {
