@@ -3,9 +3,13 @@ name: "CodeQL"
 on:
   push:
     branches: [master, ]
+    paths-ignore:
+      - 'components/editor/ace-editor/**'
   pull_request:
     # The branches below must be a subset of the branches above
     branches: [master]
+    paths-ignore:
+      - 'components/editor/ace-editor/**'    
   schedule:
     - cron: '0 17 * * 4'
 
