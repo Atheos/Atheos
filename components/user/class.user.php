@@ -96,6 +96,11 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function changePassword($username, $password) {
 		$password = password_hash($password, PASSWORD_DEFAULT);
+
+		if (array_key_exists($username, $this->users) === false) {
+			Common::send(404, "Username not found.");
+		}
+
 		$this->users[$username]["password"] = $password;
 
 		// Save array back to JSON

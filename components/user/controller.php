@@ -45,10 +45,10 @@ switch ($action) {
 			Common::send(417, "Missing username or password.");
 		}
 
-		if (Common::checkAccess("configure")) {
-			$User->changePassword($username, $password);
-		} elseif ($username === "s3lf") {
+		if ($username === "s3lf") {
 			$username = SESSION("user");
+			$User->changePassword($username, $password);
+		} elseif (Common::checkAccess("configure")) {
 			$User->changePassword($username, $password);
 		} else {
 			Common::send(403, "User does not have access.");
