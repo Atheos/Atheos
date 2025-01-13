@@ -156,6 +156,9 @@
 				case 'editor.tabSize':
 					atheos.editor.setTabSize(value);
 					break;
+				case 'editor.keyboardHandler':
+					atheos.editor.setKeyboard(value);
+					break;
 				case 'filemanager.showHidden':
 					if (atheos.filemanager.showHidden !== boolean) {
 						atheos.filemanager.showHidden = boolean;

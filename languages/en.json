@@ -356,6 +356,13 @@
 		"soft": "Soft Tabs",
 		"size": "Tab Size"
 	},
+	"keyboardHandler": "Keyboard Handler",
+	"keyboard": {
+		"default": "Default",
+		"vim": "Vim",
+		"emacs": "Emacs",
+		"sublime": "Sublime"
+	},
 	"userList": "User List",
 
 	"folder": {

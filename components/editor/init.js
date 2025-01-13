@@ -57,7 +57,8 @@
 			showInvisibles: false,
 			useWrapMode: false,
 			useSoftTabs: false,
-			tabSize: 4
+			tabSize: 4,
+			keyboardHandler: "default"
 		},
 
 		rootContainer: null,
@@ -135,6 +136,12 @@
 			instance.getSession().setUseWrapMode(self.settings.useWrapMode);
 			instance.getSession().setUseSoftTabs(self.settings.useSoftTabs);
 			instance.getSession().setTabSize(self.settings.tabSize);
+
+			if (self.settings.keyboardHandler === 'default') {
+				instance.setKeyboardHandler(null);
+			} else {
+				instance.setKeyboardHandler("ace/keyboard/" + self.settings.keyboardHandler);
+			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -573,6 +580,18 @@
 			eStorage('tabSize', val);
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// set Tab Size
+		//////////////////////////////////////////////////////////////////////80
+		setKeyboard: function(val, int) {
+			val = val === 'default' ? null : "ace/keyboard/" + val;
+			if (int) return int.setKeyboardHandler(val)
+			self.forEachInstance(function(int) {
+				int.setKeyboardHandler(val)
+			});
+			self.settings.keyboardHandler = val;
+			eStorage('keyboardHandler', val);
+		},
 
 
 		//////////////////////////////////////////////////////////////////////80
