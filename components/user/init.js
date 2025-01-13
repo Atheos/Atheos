@@ -154,14 +154,12 @@
 				let vPass = data.password === data.validate;
 
 				if (!vPass) return toast('error', 'Passwords do not match.');
-				username = username || 'S3LF';
-
 
 				echo({
 					data: {
 						target: 'user',
 						action: 'changePassword',
-						username,
+						username: username || 's3lf',
 						password: data.password
 					},
 					settled: function(reply, status) {
