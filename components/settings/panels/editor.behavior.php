@@ -2,6 +2,17 @@
 
 <table>
     <tr>
+        <td><?php echo i18n("keyboardHandler"); ?></td>
+        <td>
+            <select class="setting" data-setting="editor.keyboardHandler">
+                <option value="default" selected><?php echo i18n("keyboard_default"); ?></option>
+                <option value="vim"><?php echo i18n("keyboard_vim"); ?></option>
+                <option value="emacs"><?php echo i18n("keyboard_emacs"); ?></option>
+                <option value="sublime"><?php echo i18n("keyboard_sublime"); ?></option>
+            </select>
+        </td>
+    </tr>    	
+    <tr>
         <td><?php echo i18n("autoPairComplete"); ?></td>
         <td>
             <toggle>
