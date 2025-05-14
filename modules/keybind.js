@@ -83,7 +83,7 @@
 				atheos.active.save();
 				atheos.active.close();
 			},
-		    default: [83, 'ctrl'],			// Ctrl+S
+		    // default: [83, 'ctrl'],			// Ctrl+S
 		    emacs  : [],     
 		    sublime: [],     
 		    vimEx : ['wq']     
