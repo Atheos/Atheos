@@ -37,6 +37,7 @@ class TextMode {
 		'handlebars' => 'handlebars',
 		'json' => 'json',
 		'java' => 'java',
+		'sty' => 'latex',
 		'xml' => 'xml',
 		'sql' => 'sql',
 		'md' => 'markdown',
