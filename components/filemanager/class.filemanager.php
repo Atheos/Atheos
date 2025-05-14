@@ -243,17 +243,15 @@ class Filemanager {
         $folders = array();
         $files = array();
         foreach ($index as $item => $data) {
-            $link = false;
-            if (is_link($data["path"])) {
-                $link = readlink($data["path"]);
-            }
+        	$nodePath = $data["path"];
+            $link = is_link($nodePath) ? readlink($nodePath) : false;
 
             if ($data["type"] === "folder") {
 
-                $repo = file_exists($data["path"] . "/.git");
+                $repo = file_exists($nodePath . "/.git");
 
                 $folders[] = array(
-                    "path" => $data["path"],
+                    "path" => $nodePath,
                     "link" => $link,
                     "type" => $data["type"],
                     "size" => $data["size"],
@@ -262,7 +260,7 @@ class Filemanager {
             }
             if ($data["type"] === "file") {
                 $files[] = array(
-                    "path" => $data["path"],
+                    "path" => $nodePath,
                     "link" => $link,
                     "type" => $data["type"],
                     "size" => $data["size"]
