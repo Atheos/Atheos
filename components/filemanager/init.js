@@ -395,20 +395,23 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Check if file/folder should be hidden
+		//////////////////////////////////////////////////////////////////////80
+		isHidden: function(basename) {
+			if(self.showHidden) return false;
+			if (basename.charAt(0) === '.' || basename == '__pycache__') {
+				return true;
+			}
+			return false;
+		},
+			
+		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
-
 		createDirectoryItem: function(path, type, size, repo, link) {
 
 			var basename = pathinfo(path).basename;
-
-			if (self.showHidden === false && basename.charAt(0) === '.') {
-				return '';
-			}
-
-			if (self.showHidden === false && basename === '__pycache__') {
-				return '';
-			}
+			if (self.isHidden(basename)) return '';
 
 			var fileClass = type === 'folder' ? 'fa fa-folder' : icons.getClassWithColor(basename);
 			var emptyFolder = type === 'folder' ? '<ul></ul>' : '';
@@ -807,7 +810,6 @@
 					parentNode.find('.expand').replaceClass('none', 'fa fa-plus');
 				}
 			}
-
 		},
 		//////////////////////////////////////////////////////////////////////80
 		// Sort nodes in file tree during node creation
@@ -839,7 +841,6 @@
 
 			// Double reverse is to put folders first, then files, but each
 			// subsection in alphabetical order
-
 			children.forEach(function(item) {
 				list.appendChild(item.node);
 			});
