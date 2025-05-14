@@ -193,6 +193,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		filterTree: function() {
 			var input = oX('#filter_input').value();
+			var projectRoot = oX('#project-root').siblings('ul')[0];
 
 			input = input.replace(/^\s+|\s+$/g, '');
 
@@ -206,121 +207,75 @@
 				data: {
 					target: 'scout',
 					action: 'filter',
-					filter: input,
+					keyword: input,
 					path: self.rootPath,
 					strategy: self.strategy
 				},
-				success: function(reply) {
-					if (reply.status === 200) {
-						delete reply.status;
-
-						var domTree = self.createHierarchy(reply);
-						oX('#project-root').siblings('ul')[0].html(domTree);
+				settled: function(reply, status) {
+					if (status === 200) {
+						projectRoot.html('');
+						self.createHierarchy(reply);
 					} else {
 						var notice = '<ul><li><a><i class="fas fa-info-circle medium-blue"></i><span>No Results.</span></a></li</ul>';
-						oX('#project-root').siblings('ul')[0].html(notice);
+						projectRoot.html(notice);
 					}
 				}
 			});
 
 		},
 
+
 		//////////////////////////////////////////////////////////////////////80
 		// Create Hierarchry Representing Filtered Tree
 		//////////////////////////////////////////////////////////////////////80
-		createHierarchy: function(data) {
-			var tree = {},
-				pathArray = [],
-				currentLevel = {},
-				key;
-
-			for (key in data) {
-
-				var result = data[key],
-					path = result.path,
-					type = result.type;
-
-				currentLevel = tree;
-
-				if (atheos.common.isAbsPath(path)) {
-					pathArray = path.replace(this.rootPath, this.rootName).split('/');
-				} else {
-					pathArray = path.split('/');
-				}
-
-				pathArray.forEach(function(fragment, index) {
-					if (fragment === '') {
-						return;
-					}
-
-					if (!currentLevel[fragment]) {
-						type = index < (pathArray.length - 1) ? 'folder' : result.type;
-						currentLevel[fragment] = {
-							type: type,
-							children: {}
-						};
-						if (type === 'file') {
-							currentLevel[fragment].path = path;
-						} else {
-							if (atheos.common.isAbsPath(path)) {
-								currentLevel[fragment].path = pathArray.slice(0, index + 1).join('/').replace(this.rootName, this.rootPath);
-							} else {
-								currentLevel[fragment].path = pathArray.slice(0, index + 1).join('/');
-							}
-						}
-					}
-					currentLevel = currentLevel[fragment].children;
-				});
+		createHierarchy: function(searchResults) {
+			searchResults = Object.values(searchResults);
+			// Sort folders first, then alphabetically
+			searchResults.sort((a, b) => {
+				if (a.relativePath === b.relativePath) return 0;
+				if (a.type !== b.type) return a.type === 'folder' ? -1 : 1;
+				return a.relativePath.localeCompare(b.relativePath);
+			});
+			log(searchResults);
+			for (const node of searchResults) {
+				self.addToFileManager(node.fullPath, node.type, node.repo, node.link);
 			}
-
-			var domTree = '<ul>';
-			for (key in tree) {
-				var obj = tree[key];
-				domTree += this.createDirectoryItem(`${self.rootPath}/${obj.path}`, obj.type, obj.size);
-			}
-
-			for (key in tree) {
-				domTree += this.createDirectoryItem(key, tree[key]);
-			}
-			domTree += '</ul>';
-			return domTree;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Create Filtered Directory Item
+		// Create Hierarchry Representing Filtered Tree
 		//////////////////////////////////////////////////////////////////////80
-		createDirectoryItem: function(name, obj) {
+		addToFileManager: function(path, type, isRepo, isLink) {
+			// Already exists
+			if (oX('#file-manager a[data-path="' + path + '"]').exists()) return;
 
-			var fileClass = obj.type === 'folder' ? 'fa fa-folder medium-blue' : icons.getClassWithColor(name);
+			let parentPath = pathinfo(path).directory,
+				size = 0;
 
-			var nodeClass = 'none';
-			var isOpen = '';
-			if (obj.type === 'folder' && (obj.children)) {
-				nodeClass = 'fa fa-minus';
-				isOpen = 'class="open"';
+			// Check if parent exists, create it if it doesnt, and open it:
+			var parentNode = oX('#file-manager a[data-path="' + parentPath + '"]');
+			if (!parentNode.exists()) {
+				parentNode = self.addToFileManager(parentPath, 'folder');
+				if (!parentNode) return false; // Return false for hidden parent folders
 			}
+			parentNode.addClass('open');
+			parentNode.find('.expand').replaceClass('none', 'fa fa-minus');
 
-			fileClass = fileClass || 'fa fa-file medium-green';
-
-			var node = '<li>';
-
-			node += `<a data-type="${obj.type}" data-path="${self.rootPath}/${obj.path}" ${isOpen}>
-						<i class="expand ${nodeClass}"></i>
-						<i class="${fileClass}"></i>
-						<span>${name}</span>
-					</a>`;
-
-			if (obj.children) {
-				node += '<ul>';
-				for (var key in obj.children) {
-					node += this.createDirectoryItem(key, obj.children[key]);
-				}
-				node += '</ul>';
-
+			var nodeHTML = atheos.filemanager.createDirectoryItem(path, type, size, isRepo, isLink);
+			if (nodeHTML == '') return false; // Return false for hidden files / parent folders
+			var list = parentNode.siblings('ul')[0];
+			if (list) {
+				// UL exists, other children to play with
+				list.append(nodeHTML);
+				atheos.filemanager.sortNodes(list.element);
+			} else {
+				list = oX('<ul>');
+				list.append(nodeHTML);
+				parentNode.append(list.element);
 			}
-			node += '</li>';
-
-			return node;
+			
+			// Return an onyx link for recursive creation of parent directories
+			return oX('#file-manager a[data-path="' + path + '"]');
 		}
 	};
 
