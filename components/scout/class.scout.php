@@ -30,15 +30,10 @@ class Scout {
 	//////////////////////////////////////////////////////////////////////////80
 	// Filter File Tree
 	//////////////////////////////////////////////////////////////////////////80
-	public function filter() {
-		$path = POST("path");
-		$path = Common::getWorkspacePath($path);
-		$strategy = POST("strategy");
-		$filter = POST("filter");
+	public function filter($projectPath, $keyword, $strategy) {
+		chdir($projectPath);
 
-
-		chdir($path);
-		$query = str_replace('"', '', $filter);
+		$query = str_replace('"', '', $keyword);
 		$cmd = 'find -L ';
 
 		switch ($strategy) {
@@ -56,7 +51,6 @@ class Scout {
 
 		$cmd .= " -printf \"%h/%f %y\n\"";
 		$output = Common::execute($cmd);
-		// $output = array();
 
 		$output = $output["text"];
 
@@ -65,16 +59,25 @@ class Scout {
 
 		foreach ($output as $i => $line) {
 			$line = explode(" ", $line);
-			$fname = trim($line[0]);
-			if ($line[1] == 'f') {
-				$ftype = 'file';
-			} else {
-				$ftype = 'directory';
-			}
-			if (strlen($fname) != 0) {
-				$fname = substr($fname, 2);
-				$f = array('path' => $fname, 'type' => $ftype);
-				array_push($results, $f);
+			if (count($line) < 2) continue;
+
+			$subPath = trim($line[0]);
+			$fullPath = $projectPath . "/" . $subPath;
+			$fullPath = str_replace('/./', '/', $fullPath);
+			$type = $line[1] == "f" ? "file" : "folder";
+			$link = is_link($fullPath) ? readlink($fullPath) : false;
+			$repo = $type == "folder" ? file_exists($fullPath . "/.git") : false;
+
+			if (strlen($subPath) != 0) {
+				$subPath = substr($subPath, 2);
+				$results[] = array(
+                    "relativePath" => $subPath,
+                    "fullPath" => $fullPath,
+                    "link" => $link,
+                    "type" => $type,
+                    // "size" => $data["size"],
+                    "repo" => $repo
+                );
 			}
 		}
 
