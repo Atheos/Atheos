@@ -75,6 +75,7 @@
 					let temp = eStorage(key);
 					if (temp !== null) self.settings[key] = temp;
 				}
+				atheos.keybind.setKeybindings(self.settings.keyboardHandler);
 			});
 
 			carbon.sub('chrono.byte', self.trackCursor);
@@ -581,7 +582,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// set Tab Size
+		// set keyboard handler
 		//////////////////////////////////////////////////////////////////////80
 		setKeyboard: function(val, int) {
 			val = val === 'default' ? null : "ace/keyboard/" + val;
@@ -591,6 +592,7 @@
 			});
 			self.settings.keyboardHandler = val;
 			eStorage('keyboardHandler', val);
+			atheos.keybind.setKeybindings(val);
 		},
 
 
