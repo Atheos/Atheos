@@ -20,6 +20,7 @@ require_once("common.php");
 
 $action = POST("action");
 $target = POST("target");
+$target = Common::cleanPath($target);
 
 //////////////////////////////////////////////////////////////////////////////80
 // Verify Session or Key
@@ -36,6 +37,8 @@ if ($target === "i18n" && $action === "init") {
 	$cache = array("cache" => $i18n->getCache());
 	Common::send(200, $cache);
 }
+
+$componentPath = Common::cleanPath("components/$target/controller.php");
 
 if (file_exists("components/$target/controller.php")) {
 	require("components/$target/controller.php");
