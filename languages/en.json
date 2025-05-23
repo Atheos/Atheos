@@ -410,6 +410,7 @@
 
 	"unauthorized": "You are not Authorized to %s",
 	"wrapLines": "Wrap Lines",
+	"overscroll": "Overscroll",
 
 	"printMarginShow": "Print Margin",
 	"printMarginColumn": "Print Margin Column",
