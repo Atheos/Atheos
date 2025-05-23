@@ -188,8 +188,8 @@
 	const self = {
 
 		setKeybindings: function(mode) {
-			log('activating keybinding');
-			if (mode == "default") {
+			log('activating keybinding:' + mode);
+			if (mode == null) {
 				self.activateDefaultKeybindings();
 			} else if (mode == "vim") {
 				self.activateVimKeybindings();
