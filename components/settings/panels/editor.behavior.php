@@ -6,9 +6,9 @@
         <td>
             <select class="setting" data-setting="editor.keyboardHandler">
                 <option value="default" selected><?php echo i18n("keyboard_default"); ?></option>
-                <option value="vim"><?php echo i18n("keyboard_vim"); ?></option>
-                <option value="emacs"><?php echo i18n("keyboard_emacs"); ?></option>
-                <option value="sublime"><?php echo i18n("keyboard_sublime"); ?></option>
+                <option value="ace/keyboard/vim"><?php echo i18n("keyboard_vim"); ?></option>
+                <option value="ace/keyboard/emacs"><?php echo i18n("keyboard_emacs"); ?></option>
+                <option value="ace/keyboard/sublime"><?php echo i18n("keyboard_sublime"); ?></option>
             </select>
         </td>
     </tr>    	
@@ -16,9 +16,9 @@
         <td><?php echo i18n("autoPairComplete"); ?></td>
         <td>
             <toggle>
-                <input id="editor_pairComplete_true" data-setting="editor.enableAutoClose" value="true" name="editor.enableAutoClose" type="radio" checked>
+                <input id="editor_pairComplete_true" data-setting="editor.behavioursEnabled" value="true" name="editor.behavioursEnabled" type="radio" checked>
                 <label for="editor_pairComplete_true"><?php echo i18n("enabled"); ?></label>
-                <input id="editor_pairComplete_false" data-setting="editor.enableAutoClose" value="false" name="editor.enableAutoClose" type="radio">
+                <input id="editor_pairComplete_false" data-setting="editor.behavioursEnabled" value="false" name="editor.behavioursEnabled" type="radio">
                 <label for="editor_pairComplete_false"><?php echo i18n("disabled"); ?></label>
             </toggle>
         </td>

@@ -14,14 +14,9 @@
 					$value = str_replace("theme-", "", str_replace(".js", "", $name));
 					$name = ucwords(str_replace("_", " ", $value));
 
-					if ($name === "Atheos") {
-						echo('<option selected value="' . $value . '">' . $name .'</option>' . PHP_EOL);
+					$selected = $name === "Atheos" ? "selected " : "";
+					echo("<option $selected value=\"ace/theme/$value\">$name</option>" . PHP_EOL);
 						// echo("<input type=\"radio\" name=\"theme\" value=\"$value\" checked=\"checked\" id=\"theme_$value\"><label for=\"theme_$value\">$name</label>");
-
-					} else {
-						echo('<option value="' . $value . '">' . $name .'</option>' . PHP_EOL);
-						// echo("<input type=\"radio\" name=\"theme\" value=\"$value\" id=\"theme_$value\"><label for=\"theme_$value\">$name</label>");
-					}
 				}
 				?>
 			</select>
@@ -70,9 +65,9 @@
 		<td><?php echo i18n("wrap"); ?></td>
 		<td>
 			<toggle>
-				<input id="editor_lineWrap_true" data-setting="editor.useWrapMode" value="true" name="editor.useWrapMode" type="radio" />
+				<input id="editor_lineWrap_true" data-setting="editor.wrap" value="true" name="editor.wrap" type="radio" />
 				<label for="editor_lineWrap_true"><?php echo i18n("enabled"); ?></label>
-				<input id="editor_lineWrap_false" data-setting="editor.useWrapMode" value="false" name="editor.useWrapMode" type="radio" checked />
+				<input id="editor_lineWrap_false" data-setting="editor.wrap" value="false" name="editor.wrap" type="radio" checked />
 				<label for="editor_lineWrap_false"><?php echo i18n("disabled"); ?></label>
 			</toggle>
 		</td>
@@ -101,6 +96,16 @@
 				<option value="110">110</option>
 				<option value="115">115</option>
 				<option value="120">120</option>
+			</select>
+		</td>
+	</tr>
+	<tr>
+		<td><?php echo i18n("overscroll"); ?></td>
+		<td>
+			<select class="setting" data-setting="editor.scrollPastEnd">
+				<option value="0">None</option>
+				<option value="0.5" selected>Half</option>
+				<option value="1">Full</option>
 			</select>
 		</td>
 	</tr>

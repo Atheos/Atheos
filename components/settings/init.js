@@ -97,94 +97,52 @@
 		},
 
 		publish: function(setting, value) {
-			var boolean = (value === 'true');
+			value = value === 'true' ? true : value === 'false' ? false : value;
+			// 			var int = parseInt(val, 10);
 
 			if (value === null) {
 				return toast('alert', 'You must choose a value');
 			}
 
-			switch (setting) {
-				case 'active.loopBehavior':
-					atheos.active.loopBehavior = value;
-					break;
+			if (setting == 'editor.ligatures') {
+				atheos.editor.setCodeLigatures(value);
+			} else if (setting == 'editor.keyboardHandler') {
+				atheos.editor.setKeyboard(value);
 
-				case 'editor.theme':
-					atheos.editor.setTheme(value);
-					break;
-				case 'editor.fontSize':
-					atheos.editor.setFontSize(value);
-					break;
-				case 'editor.ligatures':
-					atheos.editor.setCodeLigatures(boolean);
-					break;
-				case 'editor.highlightActiveLine':
-					atheos.editor.setHighlightActiveLine(value);
-					break;
-				case 'editor.showPrintMargin':
-					atheos.editor.setShowPrintMargin(value);
-					break;
-				case 'editor.printMarginColumn':
-					atheos.editor.setPrintMarginColumn(value);
-					break;
-				case 'editor.displayIndentGuides':
-					atheos.editor.setDisplayIndentGuides(value);
-					break;
-				case 'editor.showInvisibles':
-					atheos.editor.setShowInvisibles(value);
-					break;
-				case 'editor.showFoldWidgets':
-					atheos.editor.setShowFoldWidgets(value);
-					break;
-				case 'editor.enableAutoClose':
-					atheos.editor.setAutoClose(value);
-					break;
-				case 'editor.enableBasicAutocomplete':
-					atheos.editor.setBasicAutocomplete(value);
-					break;
-				case 'editor.enableLiveAutocomplete':
-					atheos.editor.setLiveAutocomplete(value);
-					break;
-				case 'editor.enableSnippets':
-					atheos.editor.setSnippets(value);
-					break;
-				case 'editor.useWrapMode':
-					atheos.editor.setUseWrapMode(value);
-					break;
-				case 'editor.useSoftTabs':
-					atheos.editor.setUseSoftTabs(value);
-					break;
-				case 'editor.tabSize':
-					atheos.editor.setTabSize(value);
-					break;
-				case 'editor.keyboardHandler':
-					atheos.editor.setKeyboard(value);
-					break;
-				case 'filemanager.showHidden':
-					if (atheos.filemanager.showHidden !== boolean) {
-						atheos.filemanager.showHidden = boolean;
-						atheos.filemanager.rescan();
-					}
-					break;
-				case 'filemanager.openTrigger':
-					atheos.filemanager.openTrigger = value;
-					break;
-				case 'project.openTrigger':
-					atheos.project.openTrigger = value;
-					break;
-				case 'sidebars.leftTrigger':
-					atheos.sidebars.sbLeft.trigger = value;
-					break;
-				case 'sidebars.rightTrigger':
-					atheos.sidebars.sbRight.trigger = value;
-					break;
-				case 'toast.location':
-					atheos.toast.setLocation(value);
-					break;
-				case 'output.location':
-					atheos.output.setLocation(value);
-					break;
+			} else if (setting.startsWith('editor.')) {
+				let option = setting.replace('editor.', '');
+				atheos.editor.setOption(option, value);
+			} else {
+				switch (setting) {
+					case 'active.loopBehavior':
+						atheos.active.loopBehavior = value;
+						break;
+					case 'filemanager.showHidden':
+						if (atheos.filemanager.showHidden !== value) {
+							atheos.filemanager.showHidden = value;
+							atheos.filemanager.rescan();
+						}
+						break;
+					case 'filemanager.openTrigger':
+						atheos.filemanager.openTrigger = value;
+						break;
+					case 'project.openTrigger':
+						atheos.project.openTrigger = value;
+						break;
+					case 'sidebars.leftTrigger':
+						atheos.sidebars.sbLeft.trigger = value;
+						break;
+					case 'sidebars.rightTrigger':
+						atheos.sidebars.sbRight.trigger = value;
+						break;
+					case 'toast.location':
+						atheos.toast.setLocation(value);
+						break;
+					case 'output.location':
+						atheos.output.setLocation(value);
+						break;
+				}
 			}
-
 			value = isNumber(value) ? parseInt(value, 10) : value;
 			if (setting.includes('toast.stay')) {
 				let key = setting.split('.').pop();

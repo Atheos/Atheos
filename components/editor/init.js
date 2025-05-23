@@ -42,23 +42,24 @@
 
 		// Settings for Editor instances
 		settings: {
-			theme: 'atheos',
+			theme: 'ace/theme/atheos',
 			fontSize: '13px',
 			fontFamily: 'Ubuntu-Fira',
 			highlightActiveLine: true,
-			enableAutoClose: true,
+			behavioursEnabled: true, // Autopair, such as adding closing brakets
 			enableBasicAutocompletion: true,
 			enableLiveAutocompletion: true,
 			enableSnippets: true,
 			showPrintMargin: false,
 			printMarginColumn: 80,
+			scrollPastEnd: 0.5,
 			displayIndentGuides: true,
 			showFoldWidgets: true,
 			showInvisibles: false,
-			useWrapMode: false,
+			wrap: false, // Enable / disable line wrap
 			useSoftTabs: false,
 			tabSize: 4,
-			keyboardHandler: "default"
+			keyboardHandler: null
 		},
 
 		rootContainer: null,
@@ -116,33 +117,33 @@
 		//////////////////////////////////////////////////////////////////////80		
 		applySettings: function(instance) {
 			// Apply the basic configuration settings
-			instance.setOptions({
-				fontFamily: self.settings.fontFamily,
-				enableBasicAutocompletion: self.settings.enableBasicAutocompletion,
-				enableLiveAutocompletion: self.settings.enableLiveAutocompletion,
-				enableSnippets: self.settings.enableSnippets
-			});
+			// 			instance.setOptions({
+			// 				fontFamily: self.settings.fontFamily,
+			// 				enableBasicAutocompletion: self.settings.enableBasicAutocompletion,
+			// 				enableLiveAutocompletion: self.settings.enableLiveAutocompletion,
+			// 				enableSnippets: self.settings.enableSnippets,
+			// 				scrollPastEnd: self.settings.overscroll
+			// 			});
+			instance.setOptions(self.settings);
 			instance.setAnimatedScroll(true);
 
 			// Apply the user preferred settings
-			instance.setTheme('ace/theme/' + self.settings.theme);
-			instance.setFontSize(self.settings.fontSize);
-			instance.setBehavioursEnabled(self.settings.enableAutoClose);
-			instance.setHighlightActiveLine(self.settings.highlightActiveLine);
-			instance.setShowPrintMargin(self.settings.showPrintMargin);
-			instance.setPrintMarginColumn(self.settings.printMarginColumn);
-			instance.setDisplayIndentGuides(self.settings.displayIndentGuides);
-			instance.setShowInvisibles(self.settings.showInvisibles);
-			instance.setShowFoldWidgets(self.settings.showFoldWidgets);
-			instance.getSession().setUseWrapMode(self.settings.useWrapMode);
-			instance.getSession().setUseSoftTabs(self.settings.useSoftTabs);
-			instance.getSession().setTabSize(self.settings.tabSize);
+// 			instance.setFontSize(self.settings.fontSize);
+// 			instance.setBehavioursEnabled(self.settings.enableAutoClose);
+// 			instance.setHighlightActiveLine(self.settings.highlightActiveLine);
+// 			instance.setShowPrintMargin(self.settings.showPrintMargin);
+// 			instance.setPrintMarginColumn(self.settings.printMarginColumn);
+// 			instance.setDisplayIndentGuides(self.settings.displayIndentGuides);
+// 			instance.setShowInvisibles(self.settings.showInvisibles);
+// 			instance.setShowFoldWidgets(self.settings.showFoldWidgets);
+// 			instance.getSession().setUseSoftTabs(self.settings.useSoftTabs);
+// 			instance.getSession().setTabSize(self.settings.tabSize);
 
-			if (self.settings.keyboardHandler === 'default') {
-				instance.setKeyboardHandler(null);
-			} else {
-				instance.setKeyboardHandler("ace/keyboard/" + self.settings.keyboardHandler);
-			}
+// 			if (self.settings.keyboardHandler === 'default') {
+// 				instance.setKeyboardHandler(null);
+// 			} else {
+// 				instance.setKeyboardHandler("ace/keyboard/" + self.settings.keyboardHandler);
+// 			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -366,219 +367,21 @@
 		},
 
 
-		/////////////////////////////////////////////////////////////////
-		// Set the editor theme
-		// For a list of themes supported by Ace - refer :
-		//   https://github.com/ajaxorg/ace/tree/master/lib/ace/theme
-		/////////////////////////////////////////////////////////////////
-		setTheme: function(val, int) {
-			if (int) return int.setTheme('ace/theme/' + val);
-			self.forEachInstance(function(int) {
-				int.setTheme('ace/theme/' + val);
+		setOption: function(opt, val, inst) {
+			if (inst) return inst.setOption(opt, val);
+			self.forEachInstance(function(inst) {
+				inst.setOption(opt, val);
 			});
-			self.settings.theme = val;
-			eStorage('theme', val);
-		},
-
-		/////////////////////////////////////////////////////////////////
-		// Set Font Size
-		/////////////////////////////////////////////////////////////////
-		setFontSize: function(val, int) {
-			if (int) return int.setFontSize(val);
-			self.forEachInstance(function(int) {
-				int.setFontSize(val);
-			});
-			self.settings.fontSize = val;
-			eStorage('fontSize', val);
+			self.settings[opt] = val;
+			eStorage(opt, val);
 		},
 
 		/////////////////////////////////////////////////////////////////
 		// Set Font Size
 		/////////////////////////////////////////////////////////////////
 		setCodeLigatures: function(val, int) {
-			log(val);
 			val = val ? 'Ubuntu-Fira' : 'Ubuntu-Mono';
-
-			if (int) return int.setOption('fontFamily', val);
-
-
-			self.forEachInstance(function(int) {
-				int.setOption('fontFamily', val);
-			});
-			self.settings.fontFamily = val;
-			eStorage('fontFamily', val);
-		},
-
-		/////////////////////////////////////////////////////////////////
-		// Enable/disable Highlighting of active line
-		/////////////////////////////////////////////////////////////////
-		setHighlightActiveLine: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setHighlightActiveLine(val);
-			self.forEachInstance(function(int) {
-				int.setHighlightActiveLine(val);
-			});
-			self.settings.highlightActiveLine = val;
-			eStorage('highlightActiveLine', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Show/Hide print margin indicator
-		//////////////////////////////////////////////////////////////////////80
-		setShowPrintMargin: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setShowPrintMargin(val);
-			self.forEachInstance(function(int) {
-				int.setShowPrintMargin(val);
-			});
-			self.settings.showPrintMargin = val;
-			eStorage('showPrintMargin', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Set show invisibles
-		//////////////////////////////////////////////////////////////////////80
-		setShowInvisibles: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setShowInvisibles(val);
-			self.forEachInstance(function(int) {
-				int.setShowInvisibles(val);
-			});
-			self.settings.showInvisibles = val;
-			eStorage('showInvisibles', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Set print margin column
-		//////////////////////////////////////////////////////////////////////80
-		setPrintMarginColumn: function(val, int) {
-			val = parseInt(val, 10);
-			if (int) return int.setPrintMarginColumn(val);
-			self.forEachInstance(function(int) {
-				int.setPrintMarginColumn(val);
-			});
-			self.settings.printMarginColumn = val;
-			eStorage('printMarginColumn', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Show/Hide indent guides
-		//////////////////////////////////////////////////////////////////////80
-		setDisplayIndentGuides: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setDisplayIndentGuides(val);
-			self.forEachInstance(function(int) {
-				int.setDisplayIndentGuides(val);
-			});
-			self.settings.displayIndentGuides = val;
-			eStorage('displayIndentGuides', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Code Folding
-		//////////////////////////////////////////////////////////////////////80
-		setShowFoldWidgets: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setShowFoldWidgets(val);
-			self.forEachInstance(function(int) {
-				int.setShowFoldWidgets(val);
-			});
-			self.settings.showFoldWidgets = val;
-			eStorage('showFoldWidgets', val);
-		},
-
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Special Tag Autoclosing, such as html brackets
-		//////////////////////////////////////////////////////////////////////80
-		setAutoClose: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setBehavioursEnabled(val);
-			self.forEachInstance(function(int) {
-				int.setBehavioursEnabled(val);
-			});
-			self.settings.enableAutoClose = val;
-			eStorage('enableAutoClose', val);
-		},
-
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Basic Autocomplete
-		//////////////////////////////////////////////////////////////////////80
-		setBasicAutocomplete: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setOption('enableBasicAutocompletion', val);
-			self.forEachInstance(function(int) {
-				int.setOption('enableBasicAutocompletion', val);
-			});
-			self.settings.enableBasicAutocompletion = val;
-			eStorage('enableBasicAutocompletion', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Live Autocomplete
-		//////////////////////////////////////////////////////////////////////80
-		setLiveAutocomplete: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setOption('enableLiveAutocompletion', val);
-			self.forEachInstance(function(int) {
-				int.setOption('enableLiveAutocompletion', val);
-			});
-			self.settings.enableLiveAutocompletion = val;
-			eStorage('enableLiveAutocompletion', val);
-		},
-
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Snippets
-		//////////////////////////////////////////////////////////////////////80
-		setSnippets: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.setOption('enableSnippets', val);
-			self.forEachInstance(function(int) {
-				int.setOption('enableSnippets', val);
-			});
-			self.settings.enableSnippets = val;
-			eStorage('enableSnippets', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable/Disable Line Wrapping
-		//////////////////////////////////////////////////////////////////////80
-		setUseWrapMode: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.getSession().setUseWrapMode(val);
-			self.forEachInstance(function(int) {
-				int.getSession().setUseWrapMode(val);
-			});
-			self.settings.useWrapMode = val;
-			eStorage('useWrapMode', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Enable or disable Soft Tabs
-		//////////////////////////////////////////////////////////////////////80
-		setUseSoftTabs: function(val, int) {
-			val = (val == 'true');
-			if (int) return int.getSession().setUseSoftTabs(val);
-			self.forEachInstance(function(int) {
-				int.getSession().setUseSoftTabs(val);
-			});
-			self.settings.useSoftTabs = val;
-			eStorage('useSoftTabs', val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// set Tab Size
-		//////////////////////////////////////////////////////////////////////80
-		setTabSize: function(val, int) {
-			val = parseInt(val, 10);
-			if (int) return int.getSession().setTabSize(val);
-			self.forEachInstance(function(int) {
-				int.getSession().setTabSize(val);
-			});
-			self.settings.tabSize = val;
-			eStorage('tabSize', val);
+			self.setOption('fontFamily', val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -586,12 +389,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		setKeyboard: function(val, int) {
 			val = val === 'default' ? null : "ace/keyboard/" + val;
-			if (int) return int.setKeyboardHandler(val)
-			self.forEachInstance(function(int) {
-				int.setKeyboardHandler(val)
-			});
-			self.settings.keyboardHandler = val;
-			eStorage('keyboardHandler', val);
+			self.setOption('keyboardHandler', val);
 			atheos.keybind.setKeybindings(val);
 		},
 
