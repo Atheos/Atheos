@@ -55,9 +55,7 @@
 				if (key === 'analytics.enabled') {
 					atheos.analytics.changeOpt(value);
 				} else {
-					storage(key, value);
 					self.save(key, value);
-					self.publish(key, value);
 				}
 			});
 
@@ -70,39 +68,40 @@
 			});
 		},
 
-		//////////////////////////////////////////////////////////////////////80
-		// Load Settings of Specific Tab
-		//////////////////////////////////////////////////////////////////////80
-		loadTabValues: function() {
-			var children = oX('.settings panel').findAll('[data-setting]');
-			children.forEach(function(child) {
-				var key = oX(child).attr('data-setting'),
-					type = child.type,
-					value = storage(key);
 
-				if (value === null) {
-					return;
-				}
+		//////////////////////////////////////////////////////////////////////80
+		// Save Settings
+		//////////////////////////////////////////////////////////////////////80
+		save: function(key, value, hidden) {
+			if (!key || (typeof(value) === 'undefined')) {
+				return;
+			}
 
-				if (type === 'radio') {
-					if (child.value() === value.toString()) {
-						child.prop('checked', true);
-					}
-				} else if (type === 'checkbox') {
-					child.prop('checked', value);
-				} else {
-					child.value(value);
+			value = value === 'true' ? true : value === 'false' ? false : value;
+
+
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'settings',
+					action: 'save',
+					key,
+					value
+				},
+				settled: function(reply, status) {
+					if (!hidden) toast(status, reply);
+					if (status !== 200) return;
+					storage(key, value);
+					self.publish(key, value, hidden);
+				// 	toast(status, 'Setting "' + key + '" saved.');
+				// 	reply.text = 'Setting "' + key + '" saved.';
+				// 	self.displayStatus(reply);
 				}
 			});
+
 		},
 
-		publish: function(setting, value) {
-			value = value === 'true' ? true : value === 'false' ? false : value;
-			// 			var int = parseInt(val, 10);
-
-			if (value === null) {
-				return toast('alert', 'You must choose a value');
-			}
+		publish: function(setting, value, hidden) {
 
 			if (setting == 'editor.ligatures') {
 				atheos.editor.setCodeLigatures(value);
@@ -154,78 +153,7 @@
 				atheos.output.stayTimes[key] = value;
 			}
 
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Save Settings
-		//////////////////////////////////////////////////////////////////////80
-		save: function(key, value, hidden) {
-			if (!key || (typeof(value) === 'undefined')) {
-				return;
-			}
-
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'settings',
-					action: 'save',
-					key,
-					value
-				},
-				settled: function(reply, status) {
-					if (status !== 200) toast(status, reply);
-					if (hidden) return;
-					// self.displayStatus(reply);
-					toast(status, 'Setting "' + key + '" saved.');
-
-				}
-			});
-
-			carbon.publish('settings.save');
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Save Settings
-		//////////////////////////////////////////////////////////////////////80
-		saveAll: function(key, value, hidden) {
-			var children = oX('.settings panel').findAll('[data-setting]');
-			children.forEach(function(child) {
-				var key = oX(child).attr('data-setting'),
-					value = storage(key);
-
-				if (value === null) {
-					return;
-				}
-
-				if (child.type === 'radio' || child.type === 'checkbox') {
-					if (child.value() === value.toString()) {
-						child.prop('checked', true);
-					}
-				} else {
-					child.value(value);
-
-				}
-			});
-
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'settings',
-					action: 'save',
-					key,
-					value
-				},
-				settled: function(reply, status) {
-					if (status !== 200) {
-						atheos.toast.show(status, reply);
-					} else if (!hidden) {
-						reply.text = 'Setting "' + key + '" saved.';
-						self.displayStatus(reply);
-					}
-				}
-			});
-
-			carbon.publish('settings.save');
+			carbon.publish('settings.saved');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -285,6 +213,32 @@
 					}
 				});
 			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Load Settings of Specific Tab
+		//////////////////////////////////////////////////////////////////////80
+		loadTabValues: function() {
+			var children = oX('.settings panel').findAll('[data-setting]');
+			children.forEach(function(child) {
+				var key = oX(child).attr('data-setting'),
+					type = child.type,
+					value = storage(key);
+
+				if (value === null) {
+					return;
+				}
+
+				if (type === 'radio') {
+					if (child.value() === value.toString()) {
+						child.prop('checked', true);
+					}
+				} else if (type === 'checkbox') {
+					child.prop('checked', value);
+				} else {
+					child.value(value);
+				}
+			});
 		}
 	};
 
