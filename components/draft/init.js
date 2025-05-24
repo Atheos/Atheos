@@ -30,7 +30,7 @@
 		init: function() {
 			self = this;
 
-			carbon.subscribe('settings.loaded, settings.save', function() {
+			carbon.subscribe('settings.loaded, settings.saved', function() {
 				self.enabled = storage('draft.enabled') === false ? false : self.enabled;
 				self.verbose = storage('draft.verbose') === true ? true : self.verbose;
 				

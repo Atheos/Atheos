@@ -49,6 +49,6 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	public function save($key, $value) {
 		$this->db->update($key, $value, true);
-		Common::send(200);
+		Common::send(200, "Setting $key saved.");
 	}
 }
