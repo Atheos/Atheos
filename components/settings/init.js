@@ -17,20 +17,6 @@
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'settings',
-					action: 'load',
-				},
-				success: function(reply, status) {
-					for (var key in reply) {
-						storage(key, reply[key]);
-					}
-					carbon.publish('settings.loaded', reply);
-				}
-			});
-
 			fX('#dialog .settings').on('change', function(e) {
 				var target = oX(e.target);
 				var tagName = target.tagName;
@@ -68,6 +54,13 @@
 			});
 		},
 
+		processSettings: function(settings) {
+			for (var key in settings) {
+				storage(key, settings[key]);
+			}
+			carbon.publish('settings.loaded', settings);
+		},
+
 
 		//////////////////////////////////////////////////////////////////////80
 		// Save Settings
@@ -93,9 +86,9 @@
 					if (status !== 200) return;
 					storage(key, value);
 					self.publish(key, value, hidden);
-				// 	toast(status, 'Setting "' + key + '" saved.');
-				// 	reply.text = 'Setting "' + key + '" saved.';
-				// 	self.displayStatus(reply);
+					// 	toast(status, 'Setting "' + key + '" saved.');
+					// 	reply.text = 'Setting "' + key + '" saved.';
+					// 	self.displayStatus(reply);
 				}
 			});
 
@@ -113,17 +106,17 @@
 				atheos.editor.setOption(option, value);
 			} else {
 				switch (setting) {
-					case 'active.loopBehavior':
-						atheos.active.loopBehavior = value;
+					case 'editor.loopBehavior':
+						atheos.editor.loopBehavior = value;
 						break;
-					case 'filemanager.showHidden':
-						if (atheos.filemanager.showHidden !== value) {
-							atheos.filemanager.showHidden = value;
-							atheos.filemanager.rescan();
+					case 'filetree.showHidden':
+						if (atheos.filetree.showHidden !== value) {
+							atheos.filetree.showHidden = value;
+							atheos.filetree.rescan();
 						}
 						break;
-					case 'filemanager.openTrigger':
-						atheos.filemanager.openTrigger = value;
+					case 'filetree.openTrigger':
+						atheos.filetree.openTrigger = value;
 						break;
 					case 'project.openTrigger':
 						atheos.project.openTrigger = value;

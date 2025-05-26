@@ -435,7 +435,7 @@
 	"showHidden": "Show Hidden Files",
 
 	"trigger": {
-		"fileManager": "Filemanager Trigger",
+		"filetree": "Filetree Trigger",
 		"projectDock": "ProjectDock Trigger",
 		"rightSidebar": "Right Sidebar Trigger",
 		"leftSidebar": "Left Sidebar Trigger"
@@ -531,7 +531,7 @@
 
 	"dragFilesOrClickHereToUpload": "Drag Files Or Click Here To Upload",
 
-	"fileManager": "File Manager",
+	"filetree": "File Tree",
 	"gitRepository": "Git Repository",
 
 	"macro": {
@@ -547,7 +547,7 @@
 	"codegit": {
 		"": "CodeGit",
 		"open": "Open CodeGit",
-		"banner": "Banner above FileManager",
+		"banner": "Banner above File Tree",
 		"status": "File Status in BottomBar",
 		"unknown": "Unknown",
 		"untracked": "Untracked",

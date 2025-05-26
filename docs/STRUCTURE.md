@@ -65,7 +65,7 @@ System data is stored in JSON formatted PHP files which are read and written to 
 Workspace
 ---------
 
-The `workspace` directory houses all projects and their files. The `filemanager` component acts upon these files via pathing to the root of the project.
+The `workspace` directory houses all projects and their files. The `filetree` component acts upon these files via pathing to the root of the project.
 
 Plugins
 -------

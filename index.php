@@ -82,7 +82,7 @@ $SourceManager = new SourceManager;
             </div>
 
             <div id="EDITOR">
-                <div id="root-editor-wrapper"></div>
+                <!--<div id="ROOTEDITORWRAPPER"></div>-->
             </div>
 
             <div id="BOTTOM">

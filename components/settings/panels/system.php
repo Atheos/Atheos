@@ -26,21 +26,21 @@
 		<td><?php echo i18n("showHidden"); ?></td>
 		<td>
 			<toggle>
-				<input id="filemanager_showHidden_true" data-setting="filemanager.showHidden" value="true" name="filemanager.showHidden" type="radio" checked />
-				<label for="filemanager_showHidden_true"><?php echo i18n("true"); ?></label>
-				<input id="filemanager_showHidden_false" data-setting="filemanager.showHidden" value="false" name="filemanager.showHidden" type="radio" />
-				<label for="filemanager_showHidden_false"><?php echo i18n("false"); ?></label>
+				<input id="filetree_showHidden_true" data-setting="filetree.showHidden" value="true" name="filetree.showHidden" type="radio" checked />
+				<label for="filetree_showHidden_true"><?php echo i18n("true"); ?></label>
+				<input id="filetree_showHidden_false" data-setting="filetree.showHidden" value="false" name="filetree.showHidden" type="radio" />
+				<label for="filetree_showHidden_false"><?php echo i18n("false"); ?></label>
 			</toggle>
 		</td>
 	</tr>
 	<tr>
-		<td><?php echo i18n("trigger_fileManager"); ?></td>
+		<td><?php echo i18n("trigger_filetree"); ?></td>
 		<td>
 			<toggle>
-				<input id="filemanager_openTrigger_click" data-setting="filemanager.openTrigger" value="click" name="filemanager.openTrigger" type="radio" checked />
-				<label for="filemanager_openTrigger_click"><?php echo i18n("click_single"); ?></label>
-				<input id="filemanager_openTrigger_dblclick" data-setting="filemanager.openTrigger" value="dblclick" name="filemanager.openTrigger" type="radio" />
-				<label for="filemanager_openTrigger_dblclick"><?php echo i18n("click_double"); ?></label>
+				<input id="filetree_openTrigger_click" data-setting="filetree.openTrigger" value="click" name="filetree.openTrigger" type="radio" checked />
+				<label for="filetree_openTrigger_click"><?php echo i18n("click_single"); ?></label>
+				<input id="filetree_openTrigger_dblclick" data-setting="filetree.openTrigger" value="dblclick" name="filetree.openTrigger" type="radio" />
+				<label for="filetree_openTrigger_dblclick"><?php echo i18n("click_double"); ?></label>
 			</toggle>
 		</td>
 	</tr>

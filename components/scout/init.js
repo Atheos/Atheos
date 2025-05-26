@@ -77,7 +77,7 @@
 					target: 'scout',
 					action: 'probe',
 					// type,
-					path: atheos.project.current.path,
+					path: atheos.current.projectPath,
 					query,
 					filter
 				},
@@ -106,7 +106,7 @@
 						file.forEach(function(result) {
 							// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 							// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
-							content += `<a class="result" onclick="atheos.filemanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
+							content += `<a class="result" onclick="atheos.sessionmanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
 						});
 
 						node.html(content);
@@ -165,7 +165,7 @@
 		// Show Filter
 		//////////////////////////////////////////////////////////////////////80
 		openFilter: function() {
-			self.cachedFileTree = oX('#file-manager').html();
+			self.cachedFileTree = oX('#FILETREE').html();
 			self.rootPath = oX('#project-root').attr('data-path');
 			self.rootName = oX('#project-root span').text();
 
@@ -182,7 +182,7 @@
 			oX('#filter_wrapper').hide();
 
 			if (self.cachedFileTree) {
-				oX('#file-manager').html(self.cachedFileTree);
+				oX('#FILETREE').html(self.cachedFileTree);
 				self.cachedFileTree = null;
 			}
 			oX('#filter_input').empty();
@@ -238,36 +238,36 @@
 			});
 			log(searchResults);
 			for (const node of searchResults) {
-				self.addToFileManager(node.fullPath, node.type, node.repo, node.link);
+				self.addToFileTree(node.fullPath, node.type, node.repo, node.link);
 			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Create Hierarchry Representing Filtered Tree
 		//////////////////////////////////////////////////////////////////////80
-		addToFileManager: function(path, type, isRepo, isLink) {
+		addToFileTree: function(path, type, isRepo, isLink) {
 			// Already exists
-			if (oX('#file-manager a[data-path="' + path + '"]').exists()) return;
+			if (oX('#FILETREE a[data-path="' + path + '"]').exists()) return;
 
 			let parentPath = pathinfo(path).directory,
 				size = 0;
 
 			// Check if parent exists, create it if it doesnt, and open it:
-			var parentNode = oX('#file-manager a[data-path="' + parentPath + '"]');
+			var parentNode = oX('#FILETREE a[data-path="' + parentPath + '"]');
 			if (!parentNode.exists()) {
-				parentNode = self.addToFileManager(parentPath, 'folder');
+				parentNode = self.addToFileTree(parentPath, 'folder');
 				if (!parentNode) return false; // Return false for hidden parent folders
 			}
 			parentNode.addClass('open');
 			parentNode.find('.expand').replaceClass('none', 'fa fa-minus');
 
-			var nodeHTML = atheos.filemanager.createDirectoryItem(path, type, size, isRepo, isLink);
+			var nodeHTML = atheos.fileTree.createDirectoryItem(path, type, size, isRepo, isLink);
 			if (nodeHTML == '') return false; // Return false for hidden files / parent folders
 			var list = parentNode.siblings('ul')[0];
 			if (list) {
 				// UL exists, other children to play with
 				list.append(nodeHTML);
-				atheos.filemanager.sortNodes(list.element);
+				atheos.fileTree.sortNodes(list.element);
 			} else {
 				list = oX('<ul>');
 				list.append(nodeHTML);
@@ -275,7 +275,7 @@
 			}
 			
 			// Return an onyx link for recursive creation of parent directories
-			return oX('#file-manager a[data-path="' + path + '"]');
+			return oX('#FILETREE a[data-path="' + path + '"]');
 		}
 	};
 

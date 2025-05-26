@@ -5,7 +5,7 @@
 	</div>
 
 	<div class="title">
-		<h2> <?php echo i18n("fileManager"); ?> </h2>
+		<h2> <?php echo i18n("filetree"); ?> </h2>
 
 		<div id="filter_wrapper">
 			<i id="filter_options" class="fas fa-cog"></i>
@@ -29,7 +29,7 @@
 
 	<div class="content">
 
-		<div id="file-manager"></div>
+		<div id="FILETREE"></div>
 
 	</div>
 

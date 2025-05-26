@@ -1,9 +1,9 @@
 /* Fix for the file manager bottom most file being hidden underneath the project list. */
-#codegit_repo_banner[style*='display: block']+#file-manager {
+#codegit_repo_banner[style*='display: block']+#FILETREE {
 	height: calc(100% - 22px);
 }
 
-#file-manager .repo-icon {
+#FILETREE .repo-icon {
 	font-size: 10px;
 	line-height: 20px;
 	position: absolute;

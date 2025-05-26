@@ -2,6 +2,10 @@
 	padding: 0;
 	box-shadow: none;
 	margin: 35px auto;
+	
+	.ace_gotoLine {
+	width: 150px !important; /* or whatever you want */
+}
 
 	.ace_editor {
 		position: relative !important;

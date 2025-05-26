@@ -1,7 +1,7 @@
 <?php
 
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager Class
+// File Tree Class
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/docs/LICENSE.md for more.
@@ -12,7 +12,7 @@
 
 require_once("vendor/differential/diff_match_patch.php");
 
-class Filemanager {
+class FileTree {
 
     //////////////////////////////////////////////////////////////////////////80
     // METHODS
@@ -243,7 +243,7 @@ class Filemanager {
         $folders = array();
         $files = array();
         foreach ($index as $item => $data) {
-        	$nodePath = $data["path"];
+            $nodePath = $data["path"];
             $link = is_link($nodePath) ? readlink($nodePath) : false;
 
             if ($data["type"] === "folder") {
@@ -294,29 +294,7 @@ class Filemanager {
         }
     }
 
-    //////////////////////////////////////////////////////////////////////////80
-    // Open (Returns the contents of a file)
-    //////////////////////////////////////////////////////////////////////////80
-    public function open($path) {
-        if (!$path || !is_file($path)) {
-            Common::send(418, "Invalid path.");
-        }
 
-        $output = file_get_contents($path);
-
-        if (extension_loaded("mbstring")) {
-            if (!mb_check_encoding($output, "UTF-8")) {
-                if (mb_check_encoding($output, "ISO-8859-1")) {
-                    $output = utf8_encode($output);
-                } else {
-                    $output = mb_convert_encoding($output, "UTF-8");
-                }
-            }
-        }
-
-        $modifyTime = filemtime($path);
-        Common::send(200, array("content" => $output, "modifyTime" => $modifyTime));
-    }
 
     //////////////////////////////////////////////////////////////////////////80
     // loadURL for preview / open in browser
@@ -355,65 +333,5 @@ class Filemanager {
         } else {
             Common::send(200, i18n("path_unableRename"));
         }
-    }
-
-    //////////////////////////////////////////////////////////////////////////80
-    // Save (Modifies a file name/contents or directory name)
-    //////////////////////////////////////////////////////////////////////////80
-    public function save($path, $modifyTime, $patch, $content) {
-        // Change content
-        if (!$content && !$patch) {
-            $file = fopen($path, "w");
-            fclose($file);
-            Common::send(200, array("modifyTime" => filemtime($path)));
-        }
-
-        if ($content === " ") {
-            $content = ""; // Blank out file
-        }
-        if ($patch && ! $modifyTime) {
-            Common::send(419, "ModifyTime");
-        }
-        if (!is_file($path)) {
-            Common::send(418, "Invalid path.");
-        }
-
-        $serverModifyTime = filemtime($path);
-        $fileContents = file_get_contents($path);
-
-        if ($patch && $serverModifyTime !== (int)$modifyTime) {
-            Common::send(159, "out of sync");
-        } elseif (strlen(trim($patch)) === 0 && !$content) {
-            // Do nothing if the patch is empty and there is no content
-            Common::send(200, array("modifyTime" => $serverModifyTime));
-        }
-        try {
-            $file = fopen($path, "w");
-
-            if ($file) {
-                if ($patch) {
-                    $dmp = new diff_match_patch();
-                    $patch = $dmp->patch_apply($dmp->patch_fromText($patch), $fileContents);
-                    $content = $patch[0];
-                }
-
-                if (fwrite($file, $content)) {
-                    // Unless stat cache is cleared the pre-cached modifyTime will be
-                    // returned instead of new modification time after editing
-                    // the file.
-                    clearstatcache();
-                    Common::send(200, array("modifyTime" => filemtime($path)));
-                } else {
-                    Common::send(506, "Client does not have access.");
-                }
-
-                fclose($file);
-            } else {
-                Common::send(506, "Client does not have access.");
-            }
-        }catch(Exception $e) {
-            Common::send(506, "Client does not have access.");
-        }
-
     }
 }

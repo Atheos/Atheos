@@ -1,4 +1,4 @@
-#file-manager {
+#FILETREE {
 	width: 100%;
 	height: 100%;
 	float: left;
@@ -31,7 +31,7 @@
 }
 
 
-#file-manager {
+#FILETREE {
 	a {
 		display: inline-block;
 		min-width: 100%;
@@ -94,16 +94,16 @@
 	}
 }
 
-#file-manager .fa-folder {
+#FILETREE .fa-folder {
 	color: $colorMajor;
 }
 
-#file-manager .fa-plus,
-#file-manager .fa-minus {
+#FILETREE .fa-plus,
+#FILETREE .fa-minus {
 	color: gray;
 }
 
-#file-manager .loading {
+#FILETREE .loading {
 	animation-name: spin;
 	animation-duration: 2000ms;
 	animation-iteration-count: infinite;

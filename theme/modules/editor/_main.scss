@@ -16,7 +16,7 @@
 }
 
 .ace_editor {
-	position: absolute !important;
+// 	position: absolute !important;
 }
 
 .ace_content {
@@ -43,31 +43,51 @@
 	background-position: 3px 0 !important;
 }
 
-#root-editor-wrapper {
+#ROOTEDITORWRAPPER {
 	// Calculated using the height of the top & bottom bars
 	// height: calc(100% - (23px + 33px));
+	display: flex;
 	height: 100%;
 	position: relative;
 }
 
-.editor-wrapper {
-	position: absolute;
+#EDITOR,
+.editorWindow {
+	display: flex;
+// 	width: 100%;
+// 	height: 100%;
+	
+	&.horizontal {
+	    	flex-direction: row;
+
+	}
+	&.vertical {
+	    	flex-direction: column;
+
+	}
 }
 
-.editor-wrapper-horizontal>.editor {
-	top: 0;
+.editorWindow,
+.editorPane {
+	flex: 1 1 auto;
+	overflow: hidden;
+	position: relative;
 }
 
-.editor-wrapper-horizontal>.editor-wrapper {
-	top: 0;
-}
+// .editor-wrapper-horizontal>.editor {
+// 	top: 0;
+// }
 
-.editor-wrapper-vertical>.editor {
-	left: 0;
-}
+// .editor-wrapper-horizontal>.editor-wrapper {
+// 	top: 0;
+// }
 
-.editor-wrapper-vertical>.editor-wrapper {
-	left: 0;
-}
+// .editor-wrapper-vertical>.editor {
+// 	left: 0;
+// }
+
+// .editor-wrapper-vertical>.editor-wrapper {
+// 	left: 0;
+// }
 
 @import "bottom_bar", "splitter";

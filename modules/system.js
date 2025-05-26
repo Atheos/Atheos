@@ -19,9 +19,16 @@
 
 	window.atheos = {
 
-		path: window.location.href,
+		baseUrl: window.location.href,
 		controller: 'controller.php',
 		dialog: 'dialog.php',
+		
+		current: {
+			projectName: '',
+			projectPath: '',
+			focusedEditor: '',
+			focusedSession: ''
+		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initializes Atheos
@@ -30,7 +37,7 @@
 			window.addEventListener('error', atheos.error);
 			if (running) return;
 			running = true;
-			
+
 			echo.setGlobalDest(atheos.controller);
 
 			// Atheos has three levels of priority loading:
@@ -42,11 +49,8 @@
 
 			// User is logged in
 			if (!(oX('#login').exists() || oX('#installer').exists())) {
-				carbon.publish('system.loadMajor');
-				carbon.publish('system.loadMinor');
-				carbon.publish('system.loadExtra');
-				// Settings are initialized last in order to ensure all listeners are attached
-				atheos.settings.init();
+				atheos.restoreState();
+
 
 			} else {
 				Myth.init();
@@ -67,6 +71,44 @@
 				'\\____|__  /__| |___|  /\\___  >____/____  >',
 				'        \\/          \\/     \\/          \\/ '
 			].join('\n'));
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Loads users last state in a single request
+		//////////////////////////////////////////////////////////////////////80
+		restoreState: function() {
+					carbon.publish('system.loadMajor');
+					carbon.publish('system.loadMinor');
+					carbon.publish('system.loadExtra');		    
+		    
+			echo({
+				data: {
+					target: 'core',
+					action: 'loadState'
+				},
+				settled: function(reply, status) {
+					// 	atheos.toast.show(reply);
+					if (status !== 200) return;
+					var logSpan = oX('#last_login');
+					if (reply.lastLogin && logSpan) {
+						logSpan.find('span').text(reply.lastLogin);
+					}
+
+					if (reply.state) {
+						atheos.filetree.rescanChildren = reply.state;
+					}
+					atheos.current.projectPath = reply.projectPath;
+					atheos.current.projectName = reply.projectName;
+					atheos.current.projectIsRepo = reply.projectIsRepo;
+					
+					atheos.settings.processSettings(reply.settings);
+
+					
+					atheos.filetree.setRoot();
+					atheos.sessionmanager.openFiles(reply.openFiles);
+
+				}
+			});
 		}
 	};
 

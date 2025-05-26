@@ -83,7 +83,7 @@
 			});
 
 			//Check if directories has git repo
-			carbon.subscribe('filemanager.openDir', self.showRepoStatus);
+			carbon.subscribe('filetree.openFolder', self.showRepoStatus);
 
 			//Repo updates
 			carbon.subscribe('chrono.mega', self.checkRepoStatus);
@@ -147,7 +147,7 @@
 			let repo = anchor ? anchor.path : oX('#project-root').attr('data-path');
 			self.activeRepo = repo;
 
-			anchor = oX('#file-manager [data-path="' + repo + '"]');
+			anchor = oX('#FILETREE [data-path="' + repo + '"]');
 			if (!anchor.find('i.repo-icon')) return toast('notice', i18n('git_error_noRepo'));
 
 			atheos.modal.load(800, {
@@ -224,7 +224,7 @@
 						toast(status, reply);
 						if (status === 200) {
 							self.addRepoIcon(anchor.path);
-							atheos.filemanager.rescan(anchor.path);
+							atheos.filetree.rescan(anchor.path);
 							atheos.modal.unload();
 						}
 					}
@@ -240,7 +240,7 @@
 		},
 
 		addRepoIcon: function(path) {
-			var node = oX('#file-manager a[data-path="' + path + '"]');
+			var node = oX('#FILETREE a[data-path="' + path + '"]');
 			node.addClass('repo');
 			if (!node.find('i.repo-icon')) {
 				node.append('<i class="repo-icon fas fa-code-branch"></i>');
@@ -286,7 +286,7 @@
 
 
 		checkFileStatus: function(path) {
-			path = path || atheos.active.getPath();
+			path = path || atheos.inFocusPath;
 
 			echo({
 				url: atheos.controller,
@@ -308,7 +308,7 @@
 		},
 
 		checkRepoStatus: function() {
-			var repo = atheos.project.current.path;
+			var repo = atheos.current.projectPath;
 
 			if (!self.isRepo) {
 				return;
@@ -446,7 +446,7 @@
 			self.fileStatus = oX('#codegit_file_status');
 
 			if (!self.repoBanner.exists()) {
-				oX('#file-manager').before('<div id="codegit_repo_banner">' + i18n("git_status") + ' <span id="codegit_repo_status"></span></div>');
+				oX('#FILETREE').before('<div id="codegit_repo_banner">' + i18n("git_status") + ' <span id="codegit_repo_status"></span></div>');
 				self.repoBanner = oX('#codegit_repo_banner');
 				self.repoStatus = oX('#codegit_repo_status');
 			}
