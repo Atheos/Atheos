@@ -27,147 +27,214 @@ require_once("traits/i18n.php");
 
 class Common {
 
-	use Check;
-	use Database;
-	use Helpers;
-	use File;
-	use Path;
-	use Exchange;
+    use Check;
+    use Database;
+    use Helpers;
+    use File;
+    use Path;
+    use Exchange;
 
-	//////////////////////////////////////////////////////////////////////////80
-	// PROPERTIES
-	//////////////////////////////////////////////////////////////////////////80
-	public static $debugStack = array();
+    //////////////////////////////////////////////////////////////////////////80
+    // PROPERTIES
+    //////////////////////////////////////////////////////////////////////////80
+    public static $debugStack = array();
 
-	//////////////////////////////////////////////////////////////////////////80
-	// METHODS
-	//////////////////////////////////////////////////////////////////////////80
+    //////////////////////////////////////////////////////////////////////////80
+    // METHODS
+    //////////////////////////////////////////////////////////////////////////80
 
-	// -----------------------------||----------------------------- //
+    // -----------------------------||----------------------------- //
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Construct
-	//////////////////////////////////////////////////////////////////////////80
-	public static function initialize() {
-		$path = __DIR__;
+    //////////////////////////////////////////////////////////////////////////80
+    // Construct
+    //////////////////////////////////////////////////////////////////////////80
+    public static function initialize() {
+        $path = __DIR__;
 
-		if (file_exists($path."/config.php")) require_once($path."/config.php");
+        if (file_exists($path."/config.php")) require_once($path."/config.php");
 
-		if (defined("LIFETIME") && LIFETIME !== false) {
-			ini_set("session.cookie_lifetime", LIFETIME);
-		}
-		
-		define("WEBROOT", "/var/www/html/");
+        if (defined("LIFETIME") && LIFETIME !== false) {
+            ini_set("session.cookie_lifetime", LIFETIME);
+        }
 
-		if (!defined("BASE_PATH")) define("BASE_PATH", $path);
-		if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
-		if (!defined("LIBRARIES")) define("LIBRARIES", BASE_PATH . "/libraries");
-		if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
-		if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
-		if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
-		if (!defined("TIMEZONE")) {
-			$date = new DateTime();
-			$timeZone = $date->getTimezone();
-			define("TIMEZONE", $timeZone->getName());
-		}
-		if (!defined("LANGUAGE")) define("LANGUAGE", "en");
-		if (!defined("THEME")) define("THEME", "dark blue");
-		if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
+        define("WEBROOT", "/var/www/html/");
 
-		// TIMEZONE
-		try {
-			date_default_timezone_set(TIMEZONE);
-		} catch (Exception $e) {
-			date_default_timezone_set("UTC");
-		}
+        if (!defined("BASE_PATH")) define("BASE_PATH", $path);
+        if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
+        if (!defined("LIBRARIES")) define("LIBRARIES", BASE_PATH . "/libraries");
+        if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
+        if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
+        if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
+        if (!defined("TIMEZONE")) {
+            $date = new DateTime();
+            $timeZone = $date->getTimezone();
+            define("TIMEZONE", $timeZone->getName());
+        }
+        if (!defined("LANGUAGE")) define("LANGUAGE", "en");
+        if (!defined("THEME")) define("THEME", "dark blue");
+        if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
 
-		if (!defined("HEADERS")) define ("HEADERS", serialize(array(
-			"Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
-			"X-Frame-Options: SAMEORIGIN",
-			"X-XSS-Protection: 1; mode=block",
-			"X-Content-Type-Options: nosniff",
-			"Referrer-Policy: no-referrer",
-			"Feature-Policy: sync-xhr 'self'",
-			"Access-Control-Allow-Origin: *"
-		)));
+        // TIMEZONE
+        try {
+            date_default_timezone_set(TIMEZONE);
+        } catch (Exception $e) {
+            date_default_timezone_set("UTC");
+        }
 
-		//Check for external authentification
-		if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
+        if (!defined("HEADERS")) define ("HEADERS", serialize(array(
+            "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
+            "X-Frame-Options: SAMEORIGIN",
+            "X-XSS-Protection: 1; mode=block",
+            "X-Content-Type-Options: nosniff",
+            "Referrer-Policy: no-referrer",
+            "Feature-Policy: sync-xhr 'self'",
+            "Access-Control-Allow-Origin: *"
+        )));
 
-		global $components; global $libraries; global $plugins;
-		// Read Components & Plugins
-		$components = Common::readDirectory(COMPONENTS);
-		$libraries = Common::readDirectory(LIBRARIES);
-		$plugins = Common::readDirectory(PLUGINS);
-	}
+        //Check for external authentification
+        if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// SESSION
-	//////////////////////////////////////////////////////////////////////////80
-	public static function startSession() {
-		session_name(md5(BASE_PATH));
-		session_start();
+        global $components; global $libraries; global $plugins;
+        // Read Components & Plugins
+        $components = Common::readDirectory(COMPONENTS);
+        $libraries = Common::readDirectory(LIBRARIES);
+        $plugins = Common::readDirectory(PLUGINS);
+    }
 
-		// Set up language translation
-		global $i18n;
-		$i18n = new i18n(LANGUAGE);
-		$i18n->init();
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // SESSION
+    //////////////////////////////////////////////////////////////////////////80
+    public static function startSession() {
+        session_name(md5(BASE_PATH));
+        session_start();
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Execute Command
-	//////////////////////////////////////////////////////////////////////////80
-	public static function execute($cmd = false) {
-		$text = false;
-		$code = 0;
+        // Set up language translation
+        global $i18n;
+        $i18n = new i18n(LANGUAGE);
+        $i18n->init();
+    }
 
-		if (!$cmd) return false;
+    //////////////////////////////////////////////////////////////////////////80
+    // Load users last state
+    //////////////////////////////////////////////////////////////////////////80
+    public static function loadState() {
+        $activeUser = SESSION("user");
 
-		if (function_exists("system")) {
-			ob_start();
-			system($cmd, $code);
-			$text = ob_get_contents();
-			ob_end_clean();
-		} elseif (function_exists("exec")) {
-			exec($cmd, $text, $code);
-			$text = implode("\n", $text);
-		}
 
-		// if ($code === 0 && $text === "") return "Executed successfully";
+        $userData = Common::loadJSON("users")[$activeUser];
 
-		return array(
-			"code" => $code,
-			"text" => $text
-		);
-	}
+
+        $activeProjectName = SESSION("projectName");
+        $activeProjectPath = SESSION("projectPath");
+        if ($activeProjectName && $activeProjectPath) {
+            // Load currently active project in session, pulled from cache data in user class
+            $projectName = $activeProjectName;
+            $projectPath = $activeProjectPath;
+        } else {
+            // Load default/first project
+            $projects_db = Common::getKeyStore("projects");
+
+            $projectList = $projects_db->select("*");
+
+            if ($userData["userACL"] !== "full") {
+                $projectPath = reset($userData["userACL"]);
+            } else {
+                $projectPath = reset($projectList);
+            }
+            $projectName = array_search($projectPath, $projectList);
+
+            // Set Session Project
+            SESSION("projectPath", $projectPath);
+            SESSION("projectName", $projectName);
+        }
+
+
+        $openFiles_db = Common::getObjStore("activeFiles");
+        $result = $openFiles_db->select(array(["user", "==", $activeUser]));
+
+        $openFiles = array();
+        foreach ($result as $file) {
+            $path = $file["path"];
+
+            // Ensure path is correct when in workspace
+            if (file_exists(Common::getWorkspacePath($path))) {
+                $openFiles[] = $file;
+            } else {
+
+                // Invalid file path
+                $where = array(["user", "==", $activeUser], ["path", "==", $path]);
+                $openFiles_db->delete($where);
+            }
+        }
+
+        $settings_db = Common::getKeyStore("settings", "users/" . $activeUser);
+        $settings = $settings_db->select("*");
+
+        return array(
+            "userLastLogin" => $userData["lastLogin"],
+            "projectName" => $projectName,
+            "projectPath" => $projectPath,
+            "projectIsRepo" => is_dir($projectPath . "/.git"),
+            "openFiles" => $openFiles,
+            "settings" => $settings,
+            "text" => $projectName . " Loaded.",
+        );
+    }
+
+    //////////////////////////////////////////////////////////////////////////80
+    // Execute Command
+    //////////////////////////////////////////////////////////////////////////80
+    public static function execute($cmd = false) {
+        $text = false;
+        $code = 0;
+
+        if (!$cmd) return false;
+
+        if (function_exists("system")) {
+            ob_start();
+            system($cmd, $code);
+            $text = ob_get_contents();
+            ob_end_clean();
+        } elseif (function_exists("exec")) {
+            exec($cmd, $text, $code);
+            $text = implode("\n", $text);
+        }
+
+        // if ($code === 0 && $text === "") return "Executed successfully";
+
+        return array(
+            "code" => $code,
+            "text" => $text
+        );
+    }
 }
 
 Common::initialize();
 Common::startSession();
 
 function i18n($string, $args = false) {
-	global $i18n;
-	return $i18n->translate($string, $args);
+    global $i18n;
+    return $i18n->translate($string, $args);
 }
 
 function debug($val) {
-	Common::$debugStack[] = $val;
+    Common::$debugStack[] = $val;
 }
 
 function SERVER($key, $val = null) {
-	return Common::data("SERVER", $key, $val);
+    return Common::data("SERVER", $key, $val);
 }
 
 function SESSION($key, $val = null) {
-	return Common::data("SESSION", $key, $val);
+    return Common::data("SESSION", $key, $val);
 }
 
 function POST($key, $val = null) {
-	$val = Common::data("POST", $key, $val);
-	if ($key === "username") {
-		$val = strtolower(preg_replace("#[^A-Za-z0-9\-\_\@\.]#", "", $val));
-	}
-	return $val;
+    $val = Common::data("POST", $key, $val);
+    if ($key === "username") {
+        $val = strtolower(preg_replace("#[^A-Za-z0-9\-\_\@\.]#", "", $val));
+    }
+    return $val;
 }
 
 

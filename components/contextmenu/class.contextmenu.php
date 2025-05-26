@@ -23,13 +23,13 @@ class ContextMenu {
 			"title" => "fileNew",
 			"icon" => "fas fa-plus-circle",
 			"type" => "folder",
-			"action" => "atheos.filemanager.createFile"
+			"action" => "atheos.filetree.createFile"
 		],
 		[
 			"title" => "folderNew",
 			"icon" => "fas fa-folder",
 			"type" => "folder",
-			"action" => "atheos.filemanager.createFolder"
+			"action" => "atheos.filetree.createFolder"
 		],
 		[
 			"title" => "filesUpload",
@@ -47,23 +47,23 @@ class ContextMenu {
 		// [
 		// 	"title" => "cut",
 		// 	"icon" => "fas fa-cut",
-		// 	"action" => "atheos.filemanager.cut"
+		// 	"action" => "atheos.filetree.cut"
 		// ],
 		[
 			"title" => "copy",
 			"icon" => "fas fa-copy",
-			"action" => "atheos.filemanager.copy"
+			"action" => "atheos.filetree.copy"
 		],
 		[
 			"title" => "paste",
 			"icon" => "fas fa-paste",
 			"type" => "folder",
-			"action" => "atheos.filemanager.paste"
+			"action" => "atheos.filetree.paste"
 		],
 		[
 			"title" => "duplicate",
 			"icon" => "fas fa-clone",
-			"action" => "atheos.filemanager.openDuplicate"
+			"action" => "atheos.filetree.openDuplicate"
 		],
 		[
 			"title" => "download",
@@ -75,21 +75,21 @@ class ContextMenu {
 			"icon" => "fas fa-file-export",
 			"type" => "file",
 			"fTypes" => ["zip", "tar", "tar.gz"],
-			"action" => "atheos.filemanager.extract"
+			"action" => "atheos.filetree.extract"
 		],
 		[
 			"title" => "preview",
 			"icon" => "fas fa-eye",
 			"type" => "file",
 			"fTypes" => ["php", "html"],
-			"action" => "atheos.filemanager.openInBrowser"
+			"action" => "atheos.filetree.openInBrowser"
 		],
 		// [
 		// 	"title" => "preview",
 		// 	"icon" => "fas fa-eye",
 		// 	"type" => "file",
 		// 	"fTypes" => ["jpg", "png", "svg"],
-		// 	"action" => "atheos.filemanager.openInModal"
+		// 	"action" => "atheos.filetree.openInModal"
 		// ],
 		//////////////////////////////////////////////////////////////////////80
 		// Non-root Actions
@@ -102,13 +102,13 @@ class ContextMenu {
 			"title" => "rename",
 			"icon" => "fas fa-pencil-alt",
 			"noRoot" => true,
-			"action" => "atheos.filemanager.openRename"
+			"action" => "atheos.filetree.openRename"
 		],
 		[
 			"title" => "delete",
 			"icon" => "fas fa-trash-alt",
 			"noRoot" => true,
-			"action" => "atheos.filemanager.delete"
+			"action" => "atheos.filetree.delete"
 		],
 		//////////////////////////////////////////////////////////////////////80
 		// Folder Actions
@@ -121,7 +121,7 @@ class ContextMenu {
 			"title" => "rescan",
 			"icon" => "fas fa-sync-alt",
 			"type" => "folder",
-			"action" => "atheos.filemanager.rescan"
+			"action" => "atheos.filetree.rescan"
 		],
 		//////////////////////////////////////////////////////////////////////80
 		// Git Folder Actions

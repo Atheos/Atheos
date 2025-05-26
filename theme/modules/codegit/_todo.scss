@@ -89,12 +89,12 @@
 
 
 
-#file-manager span.uncommit:before {
+#FILETREE span.uncommit:before {
 	content: "\25cf";
 	font-size: 1.9em;
 }
 
-#file-manager span.uncommit {
+#FILETREE span.uncommit {
 	float: left;
 	padding-top: 8px;
 }

@@ -21,14 +21,14 @@
 (function() {
 	'use strict';
 
-	const node = {
+	const self = {
 
 		init: function() {
-			node.initDropdown();
-			node.initTogglePassword();
-			node.initPasswordMonitor();
-			node.initCheckMonitors();
-			node.initOverlay();
+			self.initDropdown();
+			self.initTogglePassword();
+			self.initPasswordMonitor();
+			self.initCheckMonitors();
+			self.initOverlay();
 		},
 
 
@@ -189,24 +189,24 @@
 
 		overlay: null,
 		initOverlay: function() {
-			node.overlay = oX('overlay');
+			self.overlay = oX('overlay');
 			// overlay.on('click', atheos.alert.unload);
 			// overlay.on('click', atheos.modal.unload);
 		},
 
 		showOverlay: function(type, hidden) {
-			if (!hidden) node.overlay.addClass('active');
+			if (!hidden) self.overlay.addClass('active');
 			if (type === 'alert') {
-				node.overlay.on('click', atheos.alert.unloadAll);
+				self.overlay.on('click', atheos.alert.unloadAll);
 			} else {
-				node.overlay.on('click', atheos.modal.unload);
+				self.overlay.on('click', atheos.modal.unload);
 			}
-			return node.overlay;
+			return self.overlay;
 		},
 
 		hideOverlay: function() {
-			node.overlay.removeClass('active');
-			node.overlay.hide();
+			self.overlay.removeClass('active');
+			self.overlay.hide();
 		},
 
 		//////////////////////////////////////////////////////////////////////
@@ -220,26 +220,38 @@
 
 		//////////////////////////////////////////////////////////////////////
 		// Load Script: Used to add new JS to the page.
-		//  Notes: could probably be optimized to cache the scripts nodeArray
 		//////////////////////////////////////////////////////////////////////
-		scriptCache: [],
+		scriptCache: {},
 		loadScript: function(url, callback) {
-			if (node.scriptCache.includes(url)) {
-				//already loaded so just call the callback
-				return (isFunction(callback)) ? callback.call(this) : null;
+		    // If script is already loaded, callback instantly
+			if (self.scriptCache[url] === 'loaded') {
+				if (isFunction(callback)) callback.call(this);
+				return;
 			}
 
-			node.scriptCache.push(url);
+			if (self.scriptCache[url] === 'loading') {
+				document.addEventListener(`script:${url}`, () => {
+					if (isFunction(callback)) callback.call(this);
+				}, {
+					once: true
+				});
+				return;
+			}
+
+			self.scriptCache[url] = 'loading';
 
 			const script = document.createElement('script');
 			script.type = 'text/javascript';
 			script.src = url;
 
 			script.onload = () => {
+				self.scriptCache[url] = 'loaded';
+				document.dispatchEvent(new Event(`script:${url}`));
 				if (isFunction(callback)) callback.call(this);
 			};
 
 			script.onerror = () => {
+				delete self.scriptCache[url];
 				console.error(`Failed to load script: ${url}`);
 			};
 
@@ -247,7 +259,7 @@
 		}
 	};
 
-	carbon.subscribe('system.loadVital', () => node.init());
-	atheos.common = node;
+	carbon.subscribe('system.loadVital', () => self.init());
+	atheos.common = self;
 
 })();

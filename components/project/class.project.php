@@ -123,54 +123,6 @@ class Project {
     }
 
     //////////////////////////////////////////////////////////////////////////80
-    // Load Active Project, or Default
-    //////////////////////////////////////////////////////////////////////////80
-    public function load($activeName, $activePath) {
-        if ($activeName && $activePath) {
-            // Load currently active project in session, pulled from cache data in user class
-            $projectName = $activeName;
-            $projectPath = $activePath;
-        } else {
-            // Load default/first project
-
-            $projects = $this->db->select("*");
-
-            if ($this->userData["userACL"] !== "full") {
-                $projectPath = reset($this->userData["userACL"]);
-            } else {
-                $projectPath = reset($projects);
-            }
-            $projectName = array_search($projectPath, $projects);
-
-            // Set Session Project
-            SESSION("projectPath", $projectPath);
-            SESSION("projectName", $projectName);
-
-        }
-
-        if (is_null($projectName) && $projectPath === BASE_PATH) {
-            $projectName = "Atheos IDE";
-        }
-
-
-
-        $reply = array(
-            "name" => $projectName,
-            "path" => $projectPath,
-            "repo" => is_dir($projectPath . "/.git"),
-            "text" => $projectName . " Loaded.",
-            // While I don"t approve of user information being passed through the
-            // project class, it seems significantly more effective to do so as
-            // opposed to creating an entire process to pass lastLogin data to
-            // the client when I can accomplish it by adding this line here.
-            //			- Liam Siira
-            "lastLogin" => $this->userData["lastLogin"]
-        );
-
-        Common::send(200, $reply);
-    }
-
-    //////////////////////////////////////////////////////////////////////////80
     // Open Project
     //////////////////////////////////////////////////////////////////////////80
     public function open($projectName, $projectPath) {

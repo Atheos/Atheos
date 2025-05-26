@@ -38,6 +38,12 @@ if ($target === "i18n" && $action === "init") {
 	Common::send(200, $cache);
 }
 
+if ($target === "core" && $action === "loadState") {
+    $state = Common::loadState();
+	Common::send(200, $state);
+}
+
+
 $componentPath = Common::cleanPath("components/$target/controller.php");
 
 if (file_exists("components/$target/controller.php")) {

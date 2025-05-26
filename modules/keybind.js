@@ -51,7 +51,7 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 // Open in browser [CTRL+O] //////////////////////////////////////80
-// self.bind(79, 'ctrl', atheos.filemanager.openInBrowser);
+// self.bind(79, 'ctrl', atheos.filetree.openInBrowser);
 
 (function() {
 	'use strict';
@@ -59,143 +59,171 @@
 	const keymaps = {
 		closeModal: {
 			fn: () => atheos.modal.unload(),
-		    default: [27],					// Esc
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+			default: 'Esc', // Esc
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
 		saveFile: {
-			fn: () => atheos.active.save(),
-		    default: [83, 'ctrl'],			// Ctrl+S
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['write', 'w']     
+			fn: () => atheos.sessionmanager.save(),
+			default: 'Ctrl-S', // Ctrl+S
+			emacs: [],
+			sublime: [],
+			vimEx: ['write', 'w']
 		},
 		saveAllFiles: {
-			fn: () => atheos.active.saveAll(),
-		    default: [83, 'ctrl shift'],			// Ctrl+Shift+S
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['wa']     
+			fn: () => atheos.sessionmanager.saveAll(),
+			default: 'Ctrl-Shift-S', // Ctrl+Shift+S
+			emacs: [],
+			sublime: [],
+			vimEx: ['wa']
 		},
 		saveCloseFile: {
 			fn: () => {
-				atheos.active.save();
-				atheos.active.close();
+				atheos.sessionmanager.save();
+				atheos.sessionmanager.close();
 			},
-		    // default: [83, 'ctrl'],			// Ctrl+S
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['wq']     
+			// default: [83, 'ctrl'],			// Ctrl+S
+			emacs: [],
+			sublime: [],
+			vimEx: ['wq']
 		},
 		closeFile: {
-			fn: () => atheos.active.close(),
-		    default: [81, 'ctrl'],			// Ctrl+Q
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['close', 'clo']     
+			fn: () => atheos.sessionmanager.close(),
+			default: 'Ctrl-Q', // Ctrl+Q
+			emacs: [],
+			sublime: [],
+			vimEx: ['close', 'clo']
 		},
 		openScout: {
 			fn: () => atheos.scout.openSearch(),
-		    default: [69, 'ctrl'],			// Ctrl+E
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+			default: 'Ctrl-E', // Ctrl+E
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
 		findText: {
 			fn: () => {
-				let editor = atheos.editor.activeInstance;
-				editor.execCommand('find');				
+				let editor = atheos.inFocusEditor;
+				editor.execCommand('find');
 			},
-		    default: [70, 'ctrl'],			// Ctrl+F
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+			default: 'Ctrl-F', // Ctrl+F
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
 		gotoLine: {
 			fn: () => {
-				let editor = atheos.editor.activeInstance;
-				editor.execCommand('gotoline');		
+				let editor = atheos.inFocusEditor;
+				editor.execCommand('gotoline');
 			},
-		    default: [71, 'ctrl'],			// Ctrl+G
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+			default: 'Ctrl-G', // Ctrl+G
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
 		replaceText: {
 			fn: () => {
-				let editor = atheos.editor.activeInstance;
+				let editor = atheos.inFocusEditor;
 				editor.execCommand('replace');
 			},
-		    default: [82, 'ctrl'],			// Ctrl+R
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+			default: 'Ctrl-R', // Ctrl+R
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
-		switchActiveLeft: {
-			fn: () => atheos.active.move('up'),
-		    default: [30, 'ctrl'],			// Ctrl+UP
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+		cycleFocusUp: {
+			fn: () => atheos.editor.cycleFocus('up'),
+			default: 'Ctrl-Up', // Ctrl+UP
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
-		switchActiveRight: {
-			fn: () => atheos.active.move('down'),
-		    default: [40, 'ctrl'],			// Ctrl+DOWN
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
-		},
-		mergeAllEditors: {
-			fn: () => {
-				let activeSession = atheos.editor.getSession();
-				atheos.editor.exterminate();
-				atheos.editor.addInstance(activeSession);			
-			},
-		    default: [77, 'ctrl'],			// Ctrl+M
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : []     
+		cycleFocusDown: {
+			fn: () => atheos.editor.cycleFocus('down'),
+			default: 'Ctrl-Down', // Ctrl+DOWN
+			emacs: [],
+			sublime: [],
+			vimEx: []
 		},
 		splitEditorHorizontally: {
-			fn: () => atheos.editor.addInstance(atheos.editor.getSession(), 'right'),
-		    default: [186, 'ctrl'],			// Ctrl+;
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['sp']     
+			fn: () => atheos.editor.addEditorPane(atheos.inFocusFile, 'right'),
+			default: 'Ctrl-;', // Ctrl+;
+			emacs: [],
+			sublime: [],
+			vimEx: ['sp']
 		},
 		splitEditorVertically: {
-			fn: () => atheos.editor.addInstance(atheos.editor.getSession(), 'bottom'),
-		    default: [186, 'alt'],			// Alt+;
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['vs']     
-		},		
+			fn: () => atheos.editor.addEditorPane(atheos.inFocusFile, 'bottom'),
+			default: 'Alt+;', // Alt+;
+			emacs: [],
+			sublime: [],
+			vimEx: ['vs']
+		},
+
+		mergeEditorWindow: {
+			fn: () => atheos.editor.mergeEditorWindow(atheos.inFocusPane),
+			default: 'Ctrl-M', // Ctrl+M
+			emacs: [],
+			sublime: [],
+			vimEx: []
+		},
+
+		mergeAllEditorWindows: {
+			fn: () => {
+				let activeFile = atheos.inFocusFile;
+				atheos.editor.exterminate();
+				atheos.editor.addEditorPane(activeFile);
+			},
+			default: 'Ctrl-Shift-M', // Ctrl+M
+			emacs: [],
+			sublime: [],
+			vimEx: []
+		},
 		testKeybinding: {
 			fn: (cm, input) => {
 				log(input.args);
 			},
-		    default: [],			// Alt+;
-		    emacs  : [],     
-		    sublime: [],     
-		    vimEx : ['log']     
-			
+			default: null, // Alt+;
+			emacs: [],
+			sublime: [],
+			vimEx: ['log']
+
 		}
 	};
 
 	let activeBindings = {};
 
+	let activeMode = 'default';
+
 	const self = {
 
-		setKeybindings: function(mode) {
-			log('activating keybinding:' + mode);
-			if (mode == null) {
-				self.activateDefaultKeybindings();
-			} else if (mode == "vim") {
+		setKeyboard: function(mode) {
+			mode = mode == null ? 'default' : mode;
+			atheos.editor.forEachAceEditor(function(aceEditor) {
+				aceEditor.commands.commands = {};
+				if (mode == 'default') {
+					self.setDefaultKeybindings(aceEditor);
+				}
+			});
+
+			if (mode == "vim") {
 				self.activateVimKeybindings();
 			}
 		},
-		
+
+		addCustomCommands: function(aceEditor) {
+			if (activeMode === 'default') {
+				self.addDefaultKeybindings(aceEditor);
+			}
+
+
+		},
+
+		add: function(name, binding) {
+			keymaps[name] = binding;
+		},
+
 		//////////////////////////////////////////////////////////////////////80
 		// Key Rebind
 		//////////////////////////////////////////////////////////////////////80
@@ -204,33 +232,25 @@
 			bindings[newKey] = bindings[oldKey];
 		},
 
-		//////////////////////////////////////////////////////////////////////80
-		// Event Handler
-		//////////////////////////////////////////////////////////////////////80
-		defaultHandler: function(e) {
-			if (!(e.keyCode in activeBindings)) return;
-			activeBindings[e.keyCode].forEach(function(bind) {
-				if (bind.cmd.includes('alt') !== e.altKey) return;
-				if (bind.cmd.includes('ctrl') !== (e.ctrlKey || e.metaKey)) return;
-				if (bind.cmd.includes('shift') !== e.shiftKey) return;
-				e.preventDefault();
-				e.stopPropagation();
-				bind.callback.apply(this, bind.args);
-			});
-		},
+		addDefaultKeybindings: function(aceEditor) {
 
-		activateDefaultKeybindings: function() {
-			activeBindings = {};
-			document.addEventListener('keydown', self.defaultHandler);
-			Object.values(keymaps).forEach((binding) => {
+			Object.entries(keymaps).forEach(([name, binding]) => {
 				if (!binding.default) return;
+				const winKey = binding.default; // e.g., 'Ctrl-S'
+				// Translate key for Mac
+				let macKey = winKey.replace(/Ctrl/g, 'Command').replace(/Alt/g, 'Option');
 				let key = binding.default[0];
-				let data = {
-					args: binding.args || [],
-					cmd: binding.default.length > 1 ? binding.default[1].split(' ') : [],
-					callback: binding.fn
-				};					
-				(activeBindings[key] = activeBindings[key] || []).push(data);
+				aceEditor.commands.addCommand({
+					name: name,
+					bindKey: {
+						win: winKey,
+						mac: macKey
+					},
+					// exec: binding.fn,
+					// exec: () => binding.fn(),
+					exec: () => binding.fn.call(null),
+					readOnly: true
+				});
 			});
 		},
 

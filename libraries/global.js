@@ -23,7 +23,7 @@
 	//////////////////////////////////////////////////////////////////////////80
 	window.pathinfo = function(path) {
 		let basename = path.split('/').pop(),
-			fileNode = document.querySelector('#file-manager a[data-path="' + path + '"]');
+			fileNode = document.querySelector('#FILETREE a[data-path="' + path + '"]');
 
 		return {
 			// discuss at: http://phpjs.org/functions/dirname/
@@ -164,6 +164,7 @@
 	// Shorthand for sending to console
 	//////////////////////////////////////////////////////////////////////////80
 	window.log = Function.prototype.bind.call(console.log, console);
+	window.error = Function.prototype.bind.call(console.error, console);
 	window.trace = Function.prototype.bind.call(console.trace, console);
 
 	//////////////////////////////////////////////////////////////////////////80

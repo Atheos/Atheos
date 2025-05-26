@@ -354,9 +354,9 @@
 				});
 			};
 
-			let changedTabs = atheos.active.unsavedChanges();
+			let changedTabs = atheos.sessionmanager.unsavedChanges();
 			if (changedTabs) {
-				atheos.active.focus(changedTabs[0]);
+				atheos.sessionmanager.focus(changedTabs[0]);
 				let changes = '';
 				changedTabs.forEach(function(path, i) {
 					changes += pathinfo(path).basename + '\n';
@@ -367,12 +367,12 @@
 					data: changes,
 					actions: {
 						'Save All & Close': function() {
-							atheos.active.saveAll();
+							atheos.sessionmanager.saveAll();
 							postLogout();
 						},
 						'Discard Changes': function() {
-							for (let path in atheos.active.sessions) {
-								atheos.active.sessions[path].status = 'current';
+							for (let path in atheos.sessionmanager.sessions) {
+								atheos.sessionmanager.sessions[path].status = 'current';
 							}
 							postLogout();
 						},

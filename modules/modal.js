@@ -151,7 +151,7 @@
 			}
 
 			self.modalVisible = false;
-			atheos.editor.focus();
+// 			atheos.editor.setFocus();
 		},
 
 		setLoadingScreen: function(text) {

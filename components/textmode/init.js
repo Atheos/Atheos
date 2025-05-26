@@ -90,7 +90,7 @@
 				}
 
 				var newMode = 'ace/mode/' + node.text();
-				var activeSession = atheos.editor.activeInstance.getSession();
+				var activeSession = atheos.editor.focusedEditorPane.getSession();
 
 				// handle async mode change
 				var fn = function() {

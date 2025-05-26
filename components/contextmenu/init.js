@@ -8,7 +8,7 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 // Notes: 
-// The context menu should become an object stored within the filemanager, and
+// The context menu should become an object stored within the filetree, and
 // constructed based on the fules specified therein. The OBJ is created, and then
 // added to by each plugin based on it's requirements. The OBJ could even be 
 // cached.
@@ -45,13 +45,13 @@
 			});
 
 			// Initialize self listener
-			fX('#file-manager').on('contextmenu', function(e) { // Context Menu
+			fX('#FILETREE').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 
-				var active = oX('#file-manager a.context-menu-active');
+				var active = oX('#FILETREE a.context-menu-active');
 				if (active) active.removeClass('context-menu-active');
 
-				var anchor = atheos.filemanager.checkAnchor(e.target);
+				var anchor = atheos.filetree.checkAnchor(e.target);
 				self.showFileMenu(anchor);
 
 				self.show(e);
@@ -63,14 +63,14 @@
 			fX('#ACTIVE').on('contextmenu', function(e) { // Context Menu
 				e.preventDefault();
 
-				var anchor = atheos.filemanager.checkAnchor(e.target);
+				var anchor = atheos.filetree.checkAnchor(e.target);
 				self.showTabMenu(anchor);
 
 				self.show(e);
 				menu.addClass('at');
 			});
 
-			// Hide on click for filemanager
+			// Hide on click for filetree
 			fX('#contextmenu.fm').on('click', function(e) {
 				e.preventDefault();
 				let target = oX(e.target),
@@ -166,7 +166,7 @@
 			menu.html(html);
 
 			// Show faded 'paste' if nothing in clipboard
-			if (type !== 'file' && atheos.filemanager.clipboard === '') {
+			if (type !== 'file' && atheos.filetree.clipboard === '') {
 				oX('#contextmenu i.fa-paste').parent().hide();
 			}
 

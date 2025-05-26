@@ -1,12 +1,14 @@
-# Atheos File Manager
+# Atheos File Tree
 
 ## Description
-Controls all actions within the file system as well as rending the sidebar filemanager.
+The File Tree is the sidebar interface for a project’s folder structure that provides users the ability to interact with the directory similar to common to most folder explorers, supporting actions like creating, opening, renaming, and deletiing.
+
+It does NOT handle file content directly, instead it relies on the Session Manager to load and save file content to/from the server.
 
 ## Methods
- - **init**: Initializes additional script and event listeners for the filemanager
+ - **init**: Initializes additional script and event listeners for the filetree
  - **toggleHidden**: Allows quick toggling of hidden files in the file tree
- - **nodeListener**: Listens for double-click and right-click events performed on objects in the filemanager
+ - **nodeListener**: Listens for double-click and right-click events performed on objects in the filetree
  - **handleDrag**: Event handler for dragging items around within the file tree
  - **handleDrop**: Event handler for dropping/moving items within the file tree
  - **openDir**: Indexes a folder path into file tree. Rescan (T/F) is optional parameter, see `rescan` below

@@ -20,7 +20,6 @@ class SourceManager {
 		"modules/keybind.js",
 		"modules/modal.js",
 		"modules/output.js",
-		"modules/splitview.js",
 		"modules/toast.js"
 	);
 

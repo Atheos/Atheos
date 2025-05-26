@@ -1,17 +1,11 @@
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager Init
+// File Tree Component
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/docs/LICENSE.md for more.
 // This information must remain intact.
 //////////////////////////////////////////////////////////////////////////////80
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
-//////////////////////////////////////////////////////////////////////////////80
-// Notes:
-// Goodness this file is very complex; it's going to take a very long time
-// to really get a grasp of what's going on in this file and how to
-// refactor it.
-//												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
@@ -21,11 +15,12 @@
 
 		clipboard: '',
 
-		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
-
 		openTrigger: 'click',
 		showHidden: true,
 
+		//////////////////////////////////////////////////////////////////////80
+		// Initialize file tree
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			// Initialize node listener
 			self.nodeListener();
@@ -33,11 +28,11 @@
 			fX('#fm_toggle_hidden').on('click', self.toggleHidden);
 
 			carbon.subscribe('settings.loaded', function() {
-				var local = storage('filemanager.openTrigger');
+				var local = storage('filetree.openTrigger');
 				if (local === 'click' || local === 'dblclick') {
 					self.openTrigger = local;
 				}
-				self.showHidden = storage('filemanager.showHidden') === false ? false : self.showHidden;
+				self.showHidden = storage('filetree.showHidden') === false ? false : self.showHidden;
 
 				if (self.showHidden === false) {
 					toggleHidden.switchClass('fa-eye', 'fa-eye-slash');
@@ -49,11 +44,39 @@
 			fX('#dialog .pathDuplicate').on('submit', self.duplicate);
 		},
 
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Set file tree root
+		//////////////////////////////////////////////////////////////////////80		
+		setRoot: function(state) {
+			oX('#FILETREE').empty();
+			
+			let name = atheos.current.projectName,
+			 path = atheos.current.projectPath,
+			 isRepo = atheos.current.projectIsRepo;
+
+			let repoIcon = isRepo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
+
+			oX('#FILETREE').html(
+				`<ul>
+				<li class="draggable">
+					<a id="project-root" data-type="root" data-path="${path}">
+						${repoIcon}
+						<i class="root fa fa-folder" data-type="root"></i>
+						<span>${name}</span>
+					</a>
+					<ul></ul>
+				</li>
+			</ul>`);
+			atheos.filetree.openFolder(path, state);
+		},
+
 		toggleHidden: function(e) {
 			let toggle = oX('#fm_toggle_hidden');
 			toggle.switchClass('fa-eye', 'fa-eye-slash');
 			self.showHidden = toggle.hasClass('fa-eye') ? true : false;
-			atheos.settings.save('filemanager.showHidden', self.showHidden, true);
+			atheos.settings.save('filetree.showHidden', self.showHidden, true);
 			self.rescan();
 		},
 
@@ -82,11 +105,11 @@
 		// Open a preview in another window
 		//////////////////////////////////////////////////////////////////////80
 		openInBrowser: function(anchor) {
-			let path = anchor ? anchor.path : atheos.active.getPath();
+			let path = anchor ? anchor.path : atheos.inFocusPath;
 
 			echo({
 				data: {
-					target: 'filemanager',
+					target: 'filetree',
 					action: 'loadURL',
 					path: path
 				},
@@ -112,19 +135,19 @@
 		// Listen for click events on nodes
 		//////////////////////////////////////////////////////////////////////80
 		nodeListener: function() {
-			fX('#file-manager a').on('click, dblclick', function(e) {
+			fX('#FILETREE a').on('click, dblclick', function(e) {
 				if (self.openTrigger === e.type) {
 					var anchor = self.checkAnchor(e.target);
 					if (anchor.attr('data-type') === 'folder' || anchor.attr('data-type') === 'root') {
-						self.openDir(anchor.attr('data-path'));
+						self.openFolder(anchor.attr('data-path'));
 					} else if (anchor.attr('data-type') === 'file') {
-						self.openFile(anchor.attr('data-path'));
+						atheos.sessionmanager.openFile(anchor.attr('data-path'));
 					}
 				}
 			});
 
-			fX('#file-manager').on('mousedown', self.handleDrag);
-			fX('#file-manager').on('dragstart', blackhole);
+			fX('#FILETREE').on('mousedown', self.handleDrag);
+			fX('#FILETREE').on('dragstart', blackhole);
 		},
 
 		handleDrag: function(e) {
@@ -136,7 +159,7 @@
 			var target = e.target;
 			var origin, sibling;
 
-			var dragZone = oX('#file-manager').element;
+			var dragZone = oX('#FILETREE').element;
 			var clone, startEX, startEY, startMX, startMY, timeout;
 
 			var xMax, yMax;
@@ -265,14 +288,14 @@
 				newPath = parPath + '/' + pathinfo(oldPath).basename;
 
 			if (oldPath !== newPath) {
-				if (oX('#file-manager a[data-path="' + newPath + '"]').exists()) {
+				if (oX('#FILETREE a[data-path="' + newPath + '"]').exists()) {
 					toast('warning', 'File or path already exists.');
 					node.remove();
 					self.rescan();
 				} else {
 					echo({
 						data: {
-							target: 'filemanager',
+							target: 'filetree',
 							action: 'move',
 							path: oldPath,
 							dest: newPath
@@ -282,7 +305,7 @@
 								toast('error', reply);
 							} else {
 								//node.attr('data-path', newPath);
-								atheos.active.rename(oldPath, newPath);
+								atheos.sessionmanager.rename(oldPath, newPath);
 							}
 							node.remove();
 							self.rescan();
@@ -299,11 +322,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Loop out all files and folders in directory path
 		//////////////////////////////////////////////////////////////////////80
-		openDir: function(path, rescan) {
+		openFolder: function(path, rescan) {
 			var slideDuration = 200;
 			rescan = rescan || false;
 
-			var node = oX('#file-manager a[data-path="' + CSS.escape(path) + '"]');
+			var node = oX('#FILETREE a[data-path="' + CSS.escape(path) + '"]');
 			if (!node.exists()) return;
 			let icon = node.find('.expand');
 
@@ -328,7 +351,7 @@
 				}
 				echo({
 					data: {
-						target: 'filemanager',
+						target: 'filetree',
 						action: 'index',
 						path
 					},
@@ -370,7 +393,7 @@
 									atheos.flow.slide('open', list.element, slideDuration);
 								}
 							}
-							carbon.publish('filemanager.openDir', {
+							carbon.publish('filetree.openFolder', {
 								files: files,
 								node: node,
 								path: path
@@ -398,13 +421,13 @@
 		// Check if file/folder should be hidden
 		//////////////////////////////////////////////////////////////////////80
 		isHidden: function(basename) {
-			if(self.showHidden) return false;
+			if (self.showHidden) return false;
 			if (basename.charAt(0) === '.' || basename == '__pycache__') {
 				return true;
 			}
 			return false;
 		},
-			
+
 		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
@@ -447,100 +470,14 @@
 			path = path || oX('#project-root').attr('data-path');
 
 			if (self.rescanCounter === 0) {
-				var list = oX('#file-manager a[data-path="' + path + '"]').siblings('ul')[0];
+				var list = oX('#FILETREE a[data-path="' + path + '"]').siblings('ul')[0];
 				var openNodes = list.findAll('a.open');
 
 				for (var i = 0; i < openNodes.length; i++) {
 					self.rescanChildren.push(openNodes[i].attr('data-path'));
 				}
 			}
-			self.openDir(path, true);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Open File
-		//////////////////////////////////////////////////////////////////////80
-
-		openFile: function(path, focus, line) {
-			focus = typeof(focus) !== 'undefined' ? focus : true;
-
-			var ext = pathinfo(path).extension.toLowerCase();
-
-			if (self.noOpen.indexOf(ext) > -1) return;
-			echo({
-				data: {
-					target: 'filemanager',
-					action: 'open',
-					path: path
-				},
-				settled: function(reply, status) {
-					if (status !== 200) return;
-					atheos.active.open(path, reply.content, reply.modifyTime, focus);
-					if (line) setTimeout(atheos.editor.gotoLine(line), 500);
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Save file
-		// I'm pretty sure the save methods on this are magic and should
-		// be worshipped.
-		//////////////////////////////////////////////////////////////////////80
-		saveModifications: function(path, data, callback) {
-			data.target = 'filemanager';
-			data.action = 'save';
-			data.path = path;
-
-			echo({
-				data: data,
-				settled: function(reply, status) {
-					if (status === 200) {
-						toast('success', 'File saved');
-						if (typeof callback === 'function') {
-							callback.call(self, reply.modifyTime);
-						}
-					} else if (reply.text === 'out of sync') {
-						atheos.alert.show({
-							banner: 'File changed on server!',
-							message: 'Would you like to load the updated file?\n' +
-								'Pressing no will cause your changes to override the\n' +
-								'server\'s copy upon next save.',
-							actions: {
-								'Reload File': function() {
-									atheos.active.remove(path);
-									self.openFile(path);
-								},
-								'Save Anyway': function() {
-									var session = atheos.editor.getActive().getSession();
-									session.serverMTime = null;
-									session.untainted = null;
-									atheos.active.save();
-								}
-							}
-						});
-					} else {
-						toast('error', 'File could not be saved');
-					}
-				}
-			});
-		},
-
-		saveFile: function(path, content, callback) {
-			self.saveModifications(path, {
-					content
-				},
-				callback);
-		},
-
-		savePatch: function(path, patch, callback, modifyTime) {
-			if (patch.length > 0) {
-				self.saveModifications(path, {
-					patch,
-					modifyTime
-				}, callback);
-			} else if (typeof callback === 'function') {
-				callback.call(self, modifyTime);
-			}
+			self.openFolder(path, true);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -588,7 +525,7 @@
 
 				echo({
 					data: {
-						target: 'filemanager',
+						target: 'filetree',
 						action: 'duplicate',
 						path: self.clipboard,
 						dest: parentDest + '/' + activeBase
@@ -598,9 +535,9 @@
 						if (self.cutboard !== false) {
 							self.cutboard = false;
 						}
-						self.addToFileManager(parentDest + '/' + activeBase, activeType, parentDest);
+						self.addToFileTree(parentDest + '/' + activeBase, activeType, parentDest);
 						/* Notify listeners. */
-						carbon.publish('filemanager.paste', {
+						carbon.publish('filetree.paste', {
 							path: parentDest,
 							dest: activeBase
 						});
@@ -608,7 +545,7 @@
 				});
 			};
 
-			if (oX('#file-manager a[data-path="' + parentDest + '/' + activeBase + '"]').exists()) {
+			if (oX('#FILETREE a[data-path="' + parentDest + '/' + activeBase + '"]').exists()) {
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
@@ -638,7 +575,7 @@
 			self.activeAnchor = anchor;
 
 			atheos.modal.load(250, {
-				target: 'filemanager',
+				target: 'filetree',
 				action: 'duplicate',
 				name,
 				type
@@ -664,7 +601,7 @@
 
 			echo({
 				data: {
-					target: 'filemanager',
+					target: 'filetree',
 					action: 'duplicate',
 					path: path,
 					dest: clonePath
@@ -673,10 +610,10 @@
 					toast(status, reply);
 					if (status !== 200) return;
 
-					self.addToFileManager(clonePath, type, parent);
+					self.addToFileTree(clonePath, type, parent);
 					atheos.modal.unload();
 					/* Notify listeners. */
-					carbon.publish('filemanager.duplicate', {
+					carbon.publish('filetree.duplicate', {
 						sourcePath: path,
 						clonePath: clonePath,
 						type: type
@@ -703,7 +640,7 @@
 					anchor.fileName = fileName;
 				}
 
-				anchor.target = 'filemanager';
+				anchor.target = 'filetree';
 				anchor.action = 'extract';
 
 				echo({
@@ -711,9 +648,9 @@
 					settled: function(reply, status) {
 						if (status !== 200) return;
 
-						self.addToFileManager(parent + '/' + fileName, 'folder', parent, 1);
+						self.addToFileTree(parent + '/' + fileName, 'folder', parent, 1);
 						/* Notify listeners. */
-						carbon.publish('filemanager.extract', {
+						carbon.publish('filetree.extract', {
 							path: parent + '/' + fileName,
 							dest: parent
 						});
@@ -721,7 +658,7 @@
 				});
 			};
 
-			if (oX('#file-manager a[data-path="' + parent + '/' + fileName + '"]').exists()) {
+			if (oX('#FILETREE a[data-path="' + parent + '/' + fileName + '"]').exists()) {
 				atheos.alert.show({
 					banner: 'Path already exists!',
 					message: 'Would you like to overwrite or duplicate the file?',
@@ -757,7 +694,7 @@
 
 			echo({
 				data: {
-					target: 'filemanager',
+					target: 'filetree',
 					action: 'create',
 					path,
 					type
@@ -766,13 +703,13 @@
 					if (status !== 200) return toast(status, reply);
 					toast('success', 'File Created');
 					atheos.modal.unload();
-					// Add new element to filemanager screen
-					self.addToFileManager(path, type, self.activeAnchor.path, 0);
+					// Add new element to file tree
+					self.addToFileTree(path, type, self.activeAnchor.path, 0);
 					if (type === 'file') {
 						self.openFile(path, true);
 					}
 					/* Notify listeners. */
-					carbon.publish('filemanager.create', {
+					carbon.publish('filetree.create', {
 						type,
 						path,
 						name
@@ -784,11 +721,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Create node in file tree
 		//////////////////////////////////////////////////////////////////////80
-		addToFileManager: function(path, type, parent, size) {
-			var parentNode = oX('#file-manager a[data-path="' + parent + '"]');
+		addToFileTree: function(path, type, parent, size) {
+			var parentNode = oX('#FILETREE a[data-path="' + parent + '"]');
 
 			// Already exists
-			if (oX('#file-manager a[data-path="' + path + '"]').exists()) return;
+			if (oX('#FILETREE a[data-path="' + path + '"]').exists()) return;
 
 			if (parentNode.hasClass('open') && parentNode.attr('data-type').match(/^(folder|root)$/)) {
 				// Only append node if parent is open (and a directory)
@@ -853,7 +790,7 @@
 		openRename: function(anchor) {
 			self.activeAnchor = anchor;
 			atheos.modal.load(250, {
-				target: 'filemanager',
+				target: 'filetree',
 				action: 'rename',
 				name: anchor.name,
 				type: anchor.type
@@ -875,7 +812,7 @@
 			anchor.type = type;
 			self.activeAnchor = anchor;
 			atheos.modal.load(250, {
-				target: 'filemanager',
+				target: 'filetree',
 				action: 'create',
 				type: type
 			});
@@ -901,7 +838,7 @@
 			var newPath = temp.join('/') + '/' + newName;
 			echo({
 				data: {
-					target: 'filemanager',
+					target: 'filetree',
 					action: 'rename',
 					path: path,
 					name: newName
@@ -914,7 +851,7 @@
 						toast('success', 'Folder Renamed.');
 
 					}
-					var node = oX('#file-manager a[data-path="' + path + '"]'),
+					var node = oX('#FILETREE a[data-path="' + path + '"]'),
 						icon = node.find('i:nth-child(2)'),
 						span = node.find('span');
 					// Change pathing and name for node
@@ -931,7 +868,7 @@
 						self.repathChildren(path, newPath);
 					}
 					// Change any active files
-					atheos.active.rename(path, newPath);
+					atheos.sessionmanager.rename(path, newPath);
 				}
 			});
 			atheos.modal.unload();
@@ -939,7 +876,7 @@
 
 
 		repathChildren: function(oldPath, newPath) {
-			var node = oX('#file-manager a[data-path="' + newPath + '"]'),
+			var node = oX('#FILETREE a[data-path="' + newPath + '"]'),
 				ul = node.element.nextElementSibling;
 
 			if (!ul) return;
@@ -963,16 +900,16 @@
 					'Delete': function() {
 						echo({
 							data: {
-								target: 'filemanager',
+								target: 'filetree',
 								action: 'delete',
 								path
 							},
 							settled: function(reply, status) {
 								if (status !== 200) return;
-								var node = oX('#file-manager a[data-path="' + path + '"]');
+								var node = oX('#FILETREE a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files
-								atheos.active.remove(path);
+								atheos.sessionmanager.remove(path);
 							}
 						});
 					},
@@ -984,6 +921,6 @@
 	};
 
 	carbon.subscribe('system.loadMajor', () => self.init());
-	atheos.filemanager = self;
+	atheos.filetree = self;
 
 })();

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////80
-// FileManager Init
+// Transfer Init
 //////////////////////////////////////////////////////////////////////////////80
 // Copyright (c) Atheos & Liam Siira (Atheos.io), distributed as-is and without
 // warranty under the MIT License. See [root]/docs/LICENSE.md for more.
@@ -183,8 +183,8 @@
 				return toast(reply);
 			}
 
-			atheos.filemanager.addToFileManager(reply.filepath, 'file', reply.parent);
-			carbon.publish('filemanager.upload', {
+			atheos.filetree.addToFileTree(reply.filepath, 'file', reply.parent);
+			carbon.publish('filetree.upload', {
 				name: reply.filename,
 				path: reply.filepath,
 				parent: reply.parent

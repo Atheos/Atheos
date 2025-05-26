@@ -429,9 +429,12 @@
 	};
 
 	fnc.replaceWith = function(newElement) {
+	    if (newElement instanceof Onyx) {
+			newElement = newElement.element;
+		}
 		if (this.element) {
 			this.element.replaceWith(newElement);
-			this.element = newElement;
+// 			this.element = newElement;
 			return true;
 		}
 	};

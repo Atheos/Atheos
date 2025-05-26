@@ -14,8 +14,8 @@
 	let hoverDuration = 300;
 
 	let toggle = oX('#PDTOGGLE'),
-// 		open = 'fa-chevron-circle-up',
-// 		close = 'fa-chevron-circle-down';
+		// 		open = 'fa-chevron-circle-up',
+		// 		close = 'fa-chevron-circle-down';
 		lock = 'fa-lock',
 		unlock = 'fa-unlock';
 
@@ -26,13 +26,9 @@
 		openOnHover: true,
 		timeoutOpen: null,
 		timeoutClose: null,
-		current: {
-			name: '',
-			path: ''
-		},
+
 
 		init: function() {
-			self.load();
 			self.dock.load();
 
 			fX('#project-atheos').on('click', function() {
@@ -119,35 +115,6 @@
 		},
 
 		//////////////////////////////////////////////////////////////////
-		// Get Current Project
-		//////////////////////////////////////////////////////////////////
-		load: function() {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'project',
-					action: 'load'
-				},
-				settled: function(reply, status) {
-					atheos.toast.show(reply);
-					if (status !== 200) return;
-					var logSpan = oX('#last_login');
-					if (reply.lastLogin && logSpan) {
-						// logSpan.find('span').text(i18n('login_last', reply.lastLogin));
-						logSpan.find('span').text(reply.lastLogin);
-					}
-
-					if (reply.state) {
-						atheos.filemanager.rescanChildren = reply.state;
-					}
-
-					self.setRoot(reply.name, reply.path, reply.repo);
-
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////
 		// Open Project
 		//////////////////////////////////////////////////////////////////
 		open: function(projectName, projectPath) {
@@ -165,10 +132,14 @@
 					if (status !== 200) return;
 
 					if (reply.restore) {
-						atheos.filemanager.rescanChildren = reply.state;
+						atheos.filetree.rescanChildren = reply.state;
 					}
 
-					self.setRoot(reply.name, reply.path, reply.repo, reply.restore);
+					atheos.current.projectIsRepo = reply.repo;
+					atheos.current.projectPath = reply.path;
+					atheos.current.projectName = reply.name;
+
+					atheos.filetree.setRoot(reply.restore);
 
 					if (atheos.modal.modalVisible) {
 						atheos.modal.unload();
@@ -181,32 +152,6 @@
 
 				}
 			});
-		},
-
-		//////////////////////////////////////////////////////////////////
-		// Set project root in file manager
-		//////////////////////////////////////////////////////////////////		
-		setRoot: function(name, path, repo, state) {
-			self.current = {
-				name,
-				path
-			};
-			oX('#file-manager').empty();
-
-			let repoIcon = repo ? '<i class="repo-icon fas fa-code-branch"></i>' : '';
-
-			oX('#file-manager').html(
-				`<ul>
-				<li class="draggable">
-					<a id="project-root" data-type="root" data-path="${path}">
-						${repoIcon}
-						<i class="root fa fa-folder" data-type="root"></i>
-						<span>${name}</span>
-					</a>
-					<ul></ul>
-				</li>
-			</ul>`);
-			atheos.filemanager.openDir(path, state);
 		},
 
 		//////////////////////////////////////////////////////////////////
@@ -392,9 +337,9 @@
 						self.list();
 						self.dock.load();
 
-						for (var path in atheos.active.sessions) {
+						for (var path in atheos.sessionmanager.sessions) {
 							if (path.indexOf(projectPath) === 0) {
-								atheos.active.remove(path);
+								atheos.sessionmanager.remove(path);
 							}
 						}
 
