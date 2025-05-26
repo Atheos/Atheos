@@ -121,7 +121,7 @@
 				var icon = $(e.target);
 				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
 				if (!field) return;
-				
+
 				if (field.prop('type') === 'password') {
 					field.prop('type', 'text');
 				} else {
@@ -226,20 +226,24 @@
 		loadScript: function(url, callback) {
 			if (node.scriptCache.includes(url)) {
 				//already loaded so just call the callback
-				if (typeof callback === 'function') {
-					callback.call(this);
-				}
-			} else {
-				node.scriptCache.push(url);
-
-				var script = document.createElement('script');
-				script.type = 'text/javascript';
-				script.src = url;
-				document.getElementsByTagName('head')[0].appendChild(script);
-				if (typeof callback === 'function') {
-					callback.call(this);
-				}
+				return (isFunction(callback)) ? callback.call(this) : null;
 			}
+
+			node.scriptCache.push(url);
+
+			const script = document.createElement('script');
+			script.type = 'text/javascript';
+			script.src = url;
+
+			script.onload = () => {
+				if (isFunction(callback)) callback.call(this);
+			};
+
+			script.onerror = () => {
+				console.error(`Failed to load script: ${url}`);
+			};
+
+			document.head.appendChild(script);
 		}
 	};
 
