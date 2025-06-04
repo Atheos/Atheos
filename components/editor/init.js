@@ -14,6 +14,7 @@
 	const inFocus = {
 		file: null,
 		editorPane: null,
+		aceEditor: null
 	};
 
 	Object.defineProperties(atheos, {
@@ -26,11 +27,8 @@
 		inFocusSession: {
 			get: () => inFocus.file ? inFocus.file.aceSession : null
 		},
-		inFocusPane: {
-			get: () => inFocus.editorPane
-		},
 		inFocusEditor: {
-			get: () => inFocus.editorPane ? inFocus.editorPane.aceEditor : null
+			get: () => inFocus.aceEditor
 		}
 	});
 
@@ -150,8 +148,8 @@
 					}
 				}
 
-				self.forEachInstance(function(int) {
-					int.aceEditor.resize();
+				self.forEachAceEditor(function(int) {
+					int.resize();
 				});
 
 			});
@@ -227,125 +225,104 @@
 			// helper that has zero error checking in order to be as fast as
 			// possible.
 
-			var xEditorPane = oX('<div class="editorPane"></div>');
+			var xElement = oX('<div class="editorPane"></div>');
 
 			var childID = null,
 				splitContainer = null;
 
-			// If no editor panes exist, we append directly to the root wrapper.
-			log('hello');
 			if (self.editorPanes.length === 0) {
-				//   var xEditorWindow = oX('<div class="editorWindow"></div>');
-				log('hello');
-				oX('#EDITOR').append(xEditorPane);
-				// editorWindow.append(xEditorPane);
+				// If no editor panes exist, we append directly to the root wrapper.
+				oX('#EDITOR').append(xElement);
 
-				// Otherwise, we try to split the view into two editorPanes
 			} else {
+				// Otherwise, we try to split the view into two editorPanes
 
-				var xFirstChild = atheos.inFocusPane.xEditorPane;
+				var xFirstChild = atheos.inFocusEditor.xElement;
 
 				childID = (where === 'top' || where === 'left') ? 0 : 1;
 				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 				var children = [];
 
-				children[childID] = xEditorPane.element;
+				children[childID] = xElement.element;
 				children[1 - childID] = xFirstChild.element;
 
 				var parent = oX('<div class="editorWindow">');
 				var splitter = oX('<div class="splitter">');
-				// parent.css('height', xFirstChild.height());
-				// parent.css('width', xFirstChild.width());
 
 				parent.addClass(type);
 				splitter.addClass(type);
 
-				// xFirstChild.parent().append(parent);
 				xFirstChild.replaceWith(parent);
 
 				parent.append(children[0]);
 				parent.append(splitter);
 				parent.append(children[1]);
-
-				// splitContainer = new SplitContainer(parent.element, children, type);
-
-				// if (self.editorPanes.length > 1) {
-				// 	var pContainer = atheos.inFocusEditor.splitContainer;
-				// 	var idx = atheos.inFocusEditor.splitID;
-				// 	pContainer.setChild(idx, splitContainer);
-				// }
 			}
 
-			var aceEditor = new AceEditorInstance(new AceVirtualRenderer(xEditorPane.element));
-
-			let editorPane = {
-				aceEditor
-			};
-
+			let aceEditor = new AceEditorInstance(new AceVirtualRenderer(xElement.element));
 
 			var resizeEditor = () => aceEditor.resize();
 
-			if (splitContainer) {
-				editorPane.splitContainer = splitContainer;
-				editorPane.splitID = childID;
+			// 			if (splitContainer) {
+			// 				editorPane.splitContainer = splitContainer;
+			// 				editorPane.splitID = childID;
 
-				atheos.inFocusEditor.splitContainer = splitContainer;
-				atheos.inFocusEditor.splitID = 1 - childID;
+			// 				atheos.inFocusEditor.splitContainer = splitContainer;
+			// 				atheos.inFocusEditor.splitID = 1 - childID;
 
-				oX(splitContainer.parent).on('h-resize', resizeEditor);
-				oX(splitContainer.parent).on('v-resize', resizeEditor);
+			// 				oX(splitContainer.parent).on('h-resize', resizeEditor);
+			// 				oX(splitContainer.parent).on('v-resize', resizeEditor);
 
-				if (self.editorPanes.length === 1) {
-					var re = function() {
-						self.editorPanes[0].aceEditor.resize();
-					};
-					oX(splitContainer.parent).on('h-resize', re);
-					oX(splitContainer.parent).on('v-resize', re);
-				}
-			}
+			// 				if (self.editorPanes.length === 1) {
+			// 					var re = function() {
+			// 						self.editorPanes[0].aceEditor.resize();
+			// 					};
+			// 					oX(splitContainer.parent).on('h-resize', re);
+			// 					oX(splitContainer.parent).on('v-resize', re);
+			// 				}
+			// 			}
 
-			editorPane.xEditorPane = xEditorPane;
-			editorPane.element = xEditorPane.element;
+			aceEditor.xElement = xElement;
+			aceEditor.element = xElement.element;
 			// self.changeListener(instance);
-			aceEditor.on('change', () => self.markChanged(editorPane.path));
+			aceEditor.on('change', () => self.markChanged(aceEditor.path));
 			// 			self.bindKeys(editorPane);
 
 
 			aceEditor.on('focus', function() {
-			    self.trackCursor();
-				self.updateEditorFocus(editorPane, true);
+				self.trackCursor();
+				self.updateEditorFocus(aceEditor, true);
 			});
 
 			atheos.keybind.addCustomCommands(aceEditor);
 
-			self.editorPanes.push(editorPane);
-			return editorPane;
+			self.editorPanes.push(aceEditor);
+			return aceEditor;
 		},
 
 
 		//////////////////////////////////////////////////////////////////////80
 		// Attachs a file editing session to an editing pane instance. 
-		//
 		//////////////////////////////////////////////////////////////////////80
-		attachSession: function(file, editorPane) {
+		attachFileToEditor: function(file, aceEditor) {
 			// If no pane is provided, use the one currently in focus,
-			editorPane = editorPane || atheos.inFocusPane;
+			aceEditor = aceEditor || atheos.inFocusEditor;
 
 			// First check if the file session is already attached to an editing pane
 			// If it's not, then simply attach the session directly.
 			// If it is open, THEN we create a proxy session for it. We use proxy sesssions 
 			// so that each pane can have its own cursor and scroll position.
 			// By 
-			if (!editorPane) {
-				editorPane = self.createEditorPane();
+			if (!aceEditor) {
+				aceEditor = self.createEditorPane();
 			}
 
-			if (editorPane.path) {
-				const oldSession = editorPane.aceEditor.getSession();
-				let oldFile = self.getFile(editorPane.path);
+			if (aceEditor.path) {
+				const oldSession = aceEditor.getSession();
+				let oldFile = self.getFile(aceEditor.path);
 				if (oldFile) {
 					let state = {
-						element: editorPane.element,
+						element: aceEditor.element,
 						time: Date.now(),
 						cursor: oldSession.getSelection().getCursor(),
 						scrollTop: oldSession.getScrollTop(),
@@ -359,16 +336,16 @@
 
 			proxySession.setUndoManager(file.aceSession.getUndoManager());
 			proxySession.path = file.path;
-			editorPane.aceEditor.setSession(proxySession);
+			aceEditor.setSession(proxySession);
 
 			// Apply the user preferred settings
-			editorPane.aceEditor.setOptions(self.settings);
-			editorPane.aceEditor.setAnimatedScroll(true);
+			aceEditor.setOptions(self.settings);
+			aceEditor.setAnimatedScroll(true);
 
-			editorPane.path = file.path;
+			aceEditor.path = file.path;
 
 			if (file.states.length) {
-				let lastState = file.states.find(state => state.element === editorPane.element);
+				let lastState = file.states.find(state => state.element === aceEditor.element);
 				if (lastState) {
 					proxySession.getSelection().moveCursorToPosition(lastState.cursor);
 					proxySession.getSelection().clearSelection();
@@ -377,25 +354,25 @@
 				}
 			}
 
-			editorPane.aceEditor.focus();
+			aceEditor.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Creates a new edit pane
 		//////////////////////////////////////////////////////////////////////80
 		addEditorPane: function(file, where) {
-			let editorPane = self.createEditorPane(where);
-			self.attachSession(file, editorPane);
+			let aceEditor = self.createEditorPane(where);
+			self.attachFileToEditor(file, aceEditor);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Merge the current editorPanes by moving the inFocusPane
+		// Merge the current editorPanes by moving the inFocusEditor
 		//////////////////////////////////////////////////////////////////////80
 		mergeEditorWindow: function() {
-			const editorPane = atheos.inFocusPane;
-			if (!editorPane) return;
+			const aceEditor = atheos.inFocusEditor;
+			if (!aceEditor) return;
 
-			let xEditorPane = editorPane.xEditorPane;
+			let xEditorPane = aceEditor.xElement;
 
 			const xEditorWindow = xEditorPane.parent(),
 				xSibling = xEditorPane.sibling('.editorPane');
@@ -405,7 +382,7 @@
 			const index = self.editorPanes.findIndex(p => p.element === xSibling.element);
 
 			if (index !== -1) {
-				self.editorPanes[index].aceEditor.destroy();
+				self.editorPanes[index].destroy();
 				self.editorPanes.splice(index, 1);
 			}
 
@@ -413,7 +390,7 @@
 			xEditorWindow.replaceWith(xEditorPane);
 			xEditorWindow.remove();
 			xEditorPane.css('flex', null);
-			atheos.inFocusEditor.focus();
+			aceEditor.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -439,11 +416,7 @@
 		//
 		//////////////////////////////////////////////////////////////////////80
 		removeSession: function(path, newPath) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				if (self.editorPanes[k].path === newPath) {
-					self.attachSession(editorPanes[k], newPath);
-				}
-			}
+
 			// 			if (oX('#current_file').text() === session.path) {
 			// 				oX('#current_file').text(replacementSession.path);
 			// 			}
@@ -468,26 +441,11 @@
 		//   fn - {Function} callback called with each member as an argument
 		//
 		/////////////////////////////////////////////////////////////////
-		forEachInstance: function(fn) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				fn.call(self, self.editorPanes[k]);
-			}
-		},
-
-
-
-		forEachPane: function(fn) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				fn.call(self, self.editorPanes[k]);
-			}
-		},
-
 		forEachAceEditor: function(fn) {
 			for (var k = 0; k < self.editorPanes.length; k++) {
-				fn.call(self, self.editorPanes[k].aceEditor);
+				fn.call(self, self.editorPanes[k]);
 			}
 		},
-
 
 		/////////////////////////////////////////////////////////////////
 		//
@@ -497,28 +455,28 @@
 		//   i - {Editor}
 		//
 		/////////////////////////////////////////////////////////////////
-		updateEditorFocus: function(editorPane) {
-			editorPane = editorPane || self.inFocusPane;
-			if (!editorPane) return;
+		updateEditorFocus: function(aceEditor) {
+			aceEditor = aceEditor || self.inFocusEditor;
+			if (!aceEditor) return;
 
-			var path = editorPane.path;
+			var path = aceEditor.path;
 			let file = self.getFile(path);
 			self.highlightEntry(path);
 
 			inFocus.file = file;
-			inFocus.editorPane = editorPane;
+			inFocus.aceEditor = aceEditor;
 
 			path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
 			oX('#current_file').text(path);
-			atheos.textmode.setModeDisplay(editorPane.aceEditor.getSession());
+			atheos.textmode.setModeDisplay(aceEditor.getSession());
 		},
 
 
 
 		setOption: function(opt, val, aceEditor) {
 			if (aceEditor) return aceEditor.setOption(opt, val);
-			self.forEachInstance(function(aceEditor) {
+			self.forEachAceEditor(function(aceEditor) {
 				aceEditor.setOption(opt, val);
 			});
 			self.settings[opt] = val;
@@ -746,6 +704,21 @@
 		// Move Up or down (Key Combo)
 		//////////////////////////////////////////////////////////////////////80
 		cycleFocus: function(direction) {
+			var nextPath = self.getNextFileTab(direction);
+			if (nextPath) {
+				self.attachFileToEditor(self.activeFiles[nextPath]);
+				if (self.loopBehavior === 'loopBoth') {
+					self.highlightEntry(nextPath, direction);
+				} else {
+					self.highlightEntry(nextPath);
+				}
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Find next file tab
+		//////////////////////////////////////////////////////////////////////80
+		getNextFileTab: function(direction) {
 
 			var activeTabs = self.tabList.findAll('li');
 			if (self.loopBehavior === 'loopBoth') {
@@ -772,15 +745,7 @@
 				currentTab = (currentTab + 1) % activeTabs.length;
 				newTabElement = activeTabs[currentTab];
 			}
-
-			if (newTabElement) {
-				self.focusOn(newTabElement.attr('data-path'));
-				if (self.loopBehavior === 'loopBoth') {
-					self.highlightEntry(path, direction);
-				} else {
-					self.highlightEntry(path);
-				}
-			}
+			return newTabElement.attr('data-path')
 		},
 
 		highlightEntry: function(path, direction) {
@@ -1031,15 +996,6 @@
 			return file;
 		},
 
-		getFile: function(path) {
-			return (path && !self.activeFiles[path]) ? 'File path not open.' : self.activeFiles[path];
-		},
-
-		getSession: function(path) {
-			let file = self.getFile(path);
-			return isString(file) ? false : file.aceSession;
-		},
-
 		//////////////////////////////////////////////////////////////////////80
 		// Check if opened by another user
 		//////////////////////////////////////////////////////////////////////80
@@ -1064,7 +1020,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
 			if (path !== atheos.inFocusPath) {
-				atheos.editor.attachSession(self.activeFiles[path]);
+				atheos.editor.attachFileToEditor(self.activeFiles[path]);
 				if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 			}
 			/* Check for users registered on the file. */
@@ -1277,25 +1233,30 @@
 		},
 
 		remove: function(path) {
+			log(path);
 			if (!(path in self.activeFiles)) {
 				return;
 			}
 			var file = self.activeFiles[path];
 
-			file.fileTab.remove();
-			atheos.editor.updateTabDropdownVisibility();
 
 			/* Select all the tab tumbs except the one which is to be removed. */
 			var tabs = atheos.editor.tabList.findAll('li');
 
 			if (tabs.length === 0) {
 				atheos.editor.exterminate();
-			} else if (path === atheos.inFocusPath) {
-
-				var nextFilePath = tabs[0].attr('data-path');
-				// var nextFile = self.activeFiles[nextFilePath];
-				atheos.editor.removeSession(path, nextFilePath);
 			}
+			var nextFilePath = self.getNextFileTab('up');
+			atheos.editor.removeSession(path, nextFilePath);
+
+			self.forEachAceEditor(function(aceEditor) {
+				if (aceEditor.path === path) {
+					self.attachFileToEditor(self.activeFiles[nextFilePath], aceEditor);
+				}
+			});
+
+			file.fileTab.remove();
+			atheos.editor.updateTabDropdownVisibility();
 			delete self.activeFiles[path];
 
 			echo({
@@ -1332,7 +1293,7 @@
 				path = atheos.contextmenu.active.path;
 			}
 
-			let session = self.getSession(path);
+			let session = self.getAceSession(path);
 			if (isString(session)) return toast('error', session);
 			path = session.path;
 
@@ -1361,14 +1322,14 @@
 				path = atheos.contextmenu.active.path;
 			}
 
-			let session = self.getSession(path);
-			if (isString(session)) return toast('error', session);
-			path = session.path;
+			let file = self.getFile(path);
+			if (isString(file)) return toast('error', file);
 
+			let session = self.getAceSession(file.path);
 			session.setValue(session.originalContent);
-			session.status = 'current';
-			if (session.fileTab) {
-				session.fileTab.removeClass('changed');
+			file.status = 'current';
+			if (file.fileTab) {
+				file.fileTab.removeClass('changed');
 			}
 			toast('success', 'File reset from cache.');
 		},
@@ -1451,22 +1412,26 @@
 		/////////////////////////////////////////////////////////////////
 		// Tiny helper functions
 		/////////////////////////////////////////////////////////////////
-		getPane: function(key) {
+		getFile: function(path) {
+			return (path && !self.activeFiles[path]) ? 'File path not open.' : self.activeFiles[path];
+		},
+
+		getAceSession: function(path) {
+			let file = self.getFile(path);
+			return isString(file) ? false : file.aceSession;
+		},
+		getAceEditor: function(key) {
 			let index;
 
 			if (isString(key)) {
+				// If search key is a string, assume its a path
 				index = self.editorPanes.findIndex(p => p.path === key);
 			} else if (isElement(key)) {
 				index = self.editorPanes.findIndex(p => p.element === key);
 			}
 
 			return index >= 0 ? self.editorPanes[index] : null;
-		},
-
-		getEditor: function(key) {
-			let editorPane = self.getPane(key);
-			return editorPane ? editorPane.aceEditor: null;
-		},
+		}
 
 	};
 
