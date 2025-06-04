@@ -73,15 +73,16 @@ class Project {
             }
         }
 
-
         $this->db->insert($projectName, $projectPath);
 
         // Pull from Git Repo?
         if ($gitRepo && filter_var($gitRepo, FILTER_VALIDATE_URL) !== false) {
             $gitBranch = $this->sanitizeGitBranch($gitBranch);
-            $cmd = Common::isAbsPath($projectPath) ? "cd " . escapeshellarg($projectPath) : "cd " . escapeshellarg(WORKSPACE . "/" . $projectPath);
-            $cmd .= " && git init && git remote add origin " . escapeshellarg($gitRepo) . " && git pull origin " . escapeshellarg($gitBranch);
-            Common::execute($cmd);
+            $projectPath = Common::getWorkspacePath($projectPath);
+            chdir($projectPath);
+            Common::raw_execute("git init");
+            $template = "git init && git remote add origin ? && git pull origin ?";
+            Common::safe_execute($template, $gitRepo, $gitBranch);
         }
 
         // Log Action

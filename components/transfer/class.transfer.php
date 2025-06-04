@@ -51,8 +51,8 @@ class Transfer {
                 # Execute the tar command and save file
                 $filename .= ".tar.gz";
                 $downloadFile = $targetPath.$filename;
-                $cmd = "tar -pczf ". escapeshellarg($downloadFile) . " -C " . escapeshellarg($pathInfo["dirname"]) . " " . escapeshellarg($pathInfo["basename"]);
-                Common::execute($cmd);
+                $cmd = "tar -pczf ? -C ? ?";
+                Common::safe_execute($cmd, $downloadFile, $pathInfo["dirname"], $pathInfo["basename"]);
             } elseif (extension_loaded("zip")) {
                 //Check if zip-Extension is availiable
 

@@ -11,8 +11,8 @@
 
 require_once("class.git.php");
 
-$repo = POST('repo');
-$path = POST('path');
+$repo = POST("repo");
+$path = POST("path");
 
 $repo = Common::getWorkspacePath($repo);
 $path = Common::getWorkspacePath($path);
@@ -22,108 +22,98 @@ $CodeGit = new CodeGit($path, $repo);
 
 switch ($action) {
 
-	// Check status of overall repo, mostly used for the banner
-	case 'repoStatus':
-		$CodeGit->repoStatus();
-		break;
+    // Check status of overall repo, mostly used for the banner
+    case "repoStatus":
+        $CodeGit->repoStatus();
+        break;
 
-	case 'fileStatus':
-		if ($path) {
-			$CodeGit->fileStatus($path);
-		} else {
-			Common::send(417, i18n("git_error_noPath"));
-		}
-		break;
+    case "fileStatus":
+        if ($path) {
+            $CodeGit->fileStatus($path);
+        } else {
+            Common::send(417, i18n("git_error_noPath"));
+        }
+        break;
 
-	// Adds and commits with message
-	case 'commit':
-		$message = POST('message');
-		$files = POST('files');
-		if ($repo && $files && $message) {
-			$CodeGit->commit($message, $files);
-		} else {
-			Common::send(417, i18n("git_error_noRepoFileMsg"));
-		}
-		break;
-		
-	// Adds and commits with message (optional) on last commit point (amend)
-	case 'amend':
-		$message = POST('message');
-		$files = POST('files');
-		if ($repo && $files) {
-			$CodeGit->amend($message, $files);
-		} else {
-			Common::send(417, i18n("git_error_noRepoFile"));
-		}
-		break;
+    // Adds and commits with message
+    case "commit":
+        $message = POST("message");
+        $files = POST("files");
+        if ($repo && $files && $message) {
+            $CodeGit->commit($message, $files);
+        } else {
+            Common::send(417, i18n("git_error_noRepoFileMsg"));
+        }
+        break;
 
-	case 'clone':
-		$repoURL = POST('repoURL');
-		if ($path && $repoURL) {
-			$CodeGit->cloneRepo($path, $repoURL);
-		} else {
-			Common::send(417, i18n("git_error_noPathUrl"));
-		}
-		break;
+    // Adds and commits with message (optional) on last commit point (amend)
+    case "amend":
+        $message = POST("message");
+        $files = POST("files");
+        if ($repo && $files) {
+            $CodeGit->amend($message, $files);
+        } else {
+            Common::send(417, i18n("git_error_noRepoFile"));
+        }
+        break;
 
-	case 'transfer':
-		$type = POST('type');
-		$remote = POST('remote');
-		$branch = POST('branch');
+    case "clone":
+        $repoURL = POST("repoURL");
+        if ($path && $repoURL) {
+            $CodeGit->cloneRepo($path, $repoURL);
+        } else {
+            Common::send(417, i18n("git_error_noPathUrl"));
+        }
+        break;
 
-		if ($type && $repo && $remote && $branch) {
-			switch ($type) {
-				case 'pull':
-					$CodeGit->pull($remote, $branch);
-					break;
-				case 'push':
-					$CodeGit->push($remote, $branch);
-					break;
-				case 'fetch':
-					$CodeGit->fetch($remote, $branch);
-					break;
-			}
-		} else {
-			Common::send(417, i18n("git_error_noTypeRepoRemoteBranch"));
-		}
-		break;
+    case "transfer":
+        $type = POST("type");
+        $remote = POST("remote");
+        $branch = POST("branch");
 
-	case 'init':
-		$type = POST('type');
+        if ($type && $repo && $remote && $branch) {
+            $CodeGit->transfer($type, $remote, $branch);
+        } else {
+            Common::send(417, i18n("git_error_noTypeRepoRemoteBranch"));
+        }
+        break;
 
-		if ($repo && $type) {
-			$CodeGit->init($repo, $type);
-		} else {
-			Common::send(417, i18n("git_error_noRepoType"));
-		}
-		break;
+    case "init":
+        $type = POST("type");
 
-	case 'checkout':
-		$file = POST("file");
-		if ($repo && $file) {
-			$CodeGit->checkout($file);
-		} else {
-			Common::send(417, i18n("git_error_noRepoFile"));
-		}
-		break;
+        if ($repo && $type) {
+            $CodeGit->init($repo, $type);
+        } else {
+            Common::send(417, i18n("git_error_noRepoType"));
+        }
+        break;
 
-	case 'configure':
-		$settings = array(
-			"type" => POST("type"),
-			"name" => POST("name"),
-			"email" => POST("email")
-		);
+    case "checkout":
+        $file = POST("file");
+        if ($repo && $file) {
+            $CodeGit->checkout($file);
+        } else {
+            Common::send(417, i18n("git_error_noRepoFile"));
+        }
+        break;
 
-		$result = $CodeGit->settings($repo, $settings);
+    case "configure":
+        $settings = array(
+            "type" => POST("type"),
+            "name" => POST("name"),
+            "email" => POST("email")
+        );
 
-		Common::send(200, $result);
+        $result = $CodeGit->settings($repo, $settings);
 
-		break;
+        Common::send(200, $result);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Default: Invalid Action
-	//////////////////////////////////////////////////////////////////////////80
-	default:
-		Common::send(417, i18n("git_error_invalidAction"));
-		break;
+        break;
+
+    //////////////////////////////////////////////////////////////////////////80
+    // Default: Invalid Action
+    //////////////////////////////////////////////////////////////////////////80
+    default:
+        Common::send(417, i18n("git_error_invalidAction"));
+        break;
 }

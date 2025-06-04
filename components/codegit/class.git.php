@@ -56,7 +56,7 @@ class CodeGit {
 		$this->repo = $repo;
 
 		foreach (getConfig() as $name => $value) {
-			$this->execute("git config " . $name . " " . $value);
+		    Common::safe_execute("git config -- ? ?", $name, $value);
 		}
 	}
 

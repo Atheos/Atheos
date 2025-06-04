@@ -4,28 +4,25 @@
 trait History {
 
 	public function loadLog($path) {
+		$cmd = "git log --relative-date --pretty=format:\"%%H|%%an|%%ae|%%ar|%%s\" -500";
+		
+		if ($path) $cmd .= " ?";
 
-		$cmd = "git log --relative-date --pretty=format:\"%H|%an|%ae|%ar|%s\" -500";
-		if ($path) {
-			$cmd .= " -- " . $path;
-		}
-
-		$result = $this->execute($cmd);
+		$result = Common::safe_execute($cmd, $path);
 		if ($result["code"] !== 0) {
 			return "Error loading log";
-
 		}
-		
+
 		$pivot = array();
-		foreach ($result["text"] as $item) {
+		foreach ($result["output"] as $item) {
 			$item = str_replace ("\\", "", $item);
-			$item = explode('|', $item);
+			$item = explode("|", $item);
 			$pivot[] = array(
-				"hash" => $item[0] ?? '',
-				"author" => $item[1] ?? '',
-				"email" => $item[2] ?? '',
-				"date" => $item[3] ?? '',
-				"message" => $item[4] ?? ''
+				"hash" => $item[0] ?? "",
+				"author" => $item[1] ?? "",
+				"email" => $item[2] ?? "",
+				"date" => $item[3] ?? "",
+				"message" => $item[4] ?? ""
 			);
 		}
 		return $pivot;
@@ -33,46 +30,46 @@ trait History {
 
 	public function loadDiff($path) {
 
-		$result = $this->execute("git status --branch --porcelain");
-
+		$result = Common::safe_execute("git status --branch --porcelain");
 		if ($result["code"] !== 0) return false;
-		$status = $this->parseChanges($result["text"]);
+		$status = $this->parseChanges($result["output"]);
 
 		$result = array();
 
-		if (in_array($path, $status['untracked'])) {
+		if (in_array($path, $status["untracked"])) {
 			$result = $this->untrackedDiff($path);
 
-		} else if (in_array($path, $status['modified'])) {
-			$result = $this->execute('git diff ' . $path)["text"];
-			$result[] = "\n";
+		} else if (in_array($path, $status["modified"])) {
+			$result = Common::safe_execute("git diff -- ?", $path);
 
-		} else if (in_array($path, $status['added'])) {
-			$result = $this->execute('git diff --cached ' . $path)["text"];
-			$result[] = "\n";
+		} else if (in_array($path, $status["added"])) {
+			$result = Common::safe_execute("git diff --cached -- ?", $path);
 
-		} else if (in_array($path, $status['deleted'])) {
-			$result = $this->execute('git diff -- ' . $path)["text"];
-			$result[] = "\n";
+		} else if (in_array($path, $status["deleted"])) {
+			$result = Common::safe_execute("git diff -- ?", $path);
 
 		} else {
 			// Come back to
 			return false;
 		}
 
-		foreach ($result as $i => $line) {
+		if ($result["code"] !== 0) return false;
+		$output = $result["output"];
+		$output[] = "\n";
+
+		foreach ($output as $i => $line) {
 			$line = str_replace ("\t", "    ", $line);
-			$result[$i] = htmlentities($line);
+			$output[$i] = htmlentities($line);
 		}
 
-		return $result;
+		return $output;
 	}
 
 	private function untrackedDiff($path) {
 		$result = array();
 		if (is_dir($path)) {
 			foreach (scandir($path) as $file) {
-				if ($file == '.' || $file == '..') {
+				if ($file == "." || $file == "..") {
 					continue;
 				}
 				if (ereg("/$", $path) === false) {
@@ -84,7 +81,7 @@ trait History {
 				}
 			}
 		} else {
-			$temp = $this->execute('cat ' . $path)["text"];
+			$temp = Common::safe_execute("cat ?", $path)["output"];
 			array_push($result, "diff --git a/". $path . " b/" . $path);
 			foreach ($temp as $line) {
 				array_push($result, "+" . $line);
@@ -96,12 +93,12 @@ trait History {
 
 
 	public function loadBlame($path) {
-		$result = $this->execute("git blame -c --date=format:'%b %d, %Y %H:%M' " . $path);
-		return $result["text"];
+		$result = Common::safe_execute("git blame -c --date=format:'%%b %%d, %%Y %%H:%%M' -- ?", $path);
+		return $result["output"];
 	}
 
 	public function checkout($file) {
-		$result = $this->execute("git checkout -- " . $file);
+		$result = Common::safe_execute("git checkout -- ?", $file);
 		if ($result["code"] === 0) {
 			Common::send(200, i18n("git_checkout_success"));
 		} else {

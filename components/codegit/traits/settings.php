@@ -21,11 +21,11 @@ trait Settings {
 
 			// FIXME: could be a race between different users
 			if (isset($settings["local"])) {
-				$this->execute("git config user.name '" . $settings["local"]["name"] . "'");
-				$this->execute("git config user.email '" . $settings["local"]["email"] . "'");
+				Common::safe_execute("git config user.name '?'", $settings["local"]["name"]);
+				Common::safe_execute("git config user.email '?'", $settings["local"]["email"]);
 			} elseif (isset($settings["global"])) {
-				$this->execute("git config user.name '" . $settings["global"]["name"] . "'");
-				$this->execute("git config user.email '" . $settings["global"]["email"] . "'");
+				Common::safe_execute("git config user.name '?'", $settings["global"]["name"]);
+				Common::safe_execute("git config user.email '?'", $settings["global"]["email"]);
 			}
 		}
 
@@ -41,8 +41,8 @@ trait Settings {
 				$where = array(["path", "==", $type]);
 				$db->delete($where);
 				
-				$this->execute("git config --unset user.name");
-				$this->execute("git config --unset user.email");
+				Common::safe_execute("git config --unset user.name");
+				Common::safe_execute("git config --unset user.email");
 			} else {
 				$type = $type === "local" ? $repo : "global";
 

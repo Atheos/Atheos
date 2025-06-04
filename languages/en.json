@@ -569,6 +569,7 @@
 			"noRepoFileMsg": "Missing repo, file or message.",
 			"noRepoFile": "Missing repo or file.",
 			"noPathUrl": "Missing path or URL.",
+			"invalidTransferType": "Invalid git transfer type.",
 			"noTypeRepoRemoteBranch": "Missing type, repo, remote or branch.",
 			"noRepoType": "Missing repo or type.",
 			"invalidAction": "Invalid action."
