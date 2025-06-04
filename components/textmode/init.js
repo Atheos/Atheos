@@ -90,16 +90,16 @@
 				}
 
 				var newMode = 'ace/mode/' + node.text();
-				var activeSession = atheos.editor.focusedEditorPane.getSession();
+				var inFocusSession = atheos.inFocusSession;
 
 				// handle async mode change
 				var fn = function() {
-					self.setModeDisplay(activeSession);
-					activeSession.removeListener('changeMode', fn);
+					self.setModeDisplay(inFocusSession);
+					inFocusSession.removeListener('changeMode', fn);
 				};
-				activeSession.on('changeMode', fn);
+				inFocusSession.on('changeMode', fn);
 
-				activeSession.setMode(newMode);
+				inFocusSession.setMode(newMode);
 			});
 		},
 
