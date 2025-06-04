@@ -1,15 +1,21 @@
 # Upcoming changes, features, or fixes for Atheos
 ================================================================================
-Mainly for use by @hlsiira, this file also serves as transparency for anyone who
-is curious, or looking for a place to help with the project.
+Mainly for use by @hlsiira, this file also serves as transparency for anyone
+curious or looking for a place to help with the project.
+- [FEAT]    A planned feature or idea for later down the road.
+- [BUG]     Unexpected behavior, crashes, logic errors.
+- [DEBT]    Messy code, shortcuts, lack of structure.
+- [IMPR]    An improvement that doesn't necessarily impact the UX.
+- [DOCS]    An area needing documentation written or update.
 
 ## InProgress
 - [ ] Codegit is acting funny on a new install, lots of issues and needs investigating.
 - [ ] Most messages aren't making their way to the output, message undefined a lot.
-- 
+
+## Standardization
+- [ ] [DEBT] Rename all Element IDs to use UPPERCASE & no spaces/dashes/underscores; keep simple.
 
 ## Global:
-- [ ] Condense element IDs for easier changeability. Current CSS files have them scattered.
 - [ ] Integrate complex return codes.
 - [ ] Use JWTs for distributed installs.
 - [ ] Consider integrating collaboration into the project.
@@ -44,18 +50,12 @@ is curious, or looking for a place to help with the project.
 - [ ] Remove project basepaths from File Paths while displaying, so not everything is displayed.
 
 ## Atheos Website:
-- [ ] Complete Atheos Documentation site.
-- [ ] Implement a contact form.
+- [ ] [DOCS] Complete Atheos Documentation site.
+- [ ] [FEAT] Implement a contact form.
 
 ## Security:
 - [ ] Integrate JWT token, allow an enterprise to set up distributed installs
 - [ ] Detect unsecured connection attempts, such as non-https using secureJS
-
-## Pull into Project:
-- [Spacing in CSS](https://ishadeed.com/article/spacing-in-css/)
-- [Peekobot Repo](https://github.com/peekobot/peekobot)
-- [Gitpushub Repo](https://github.com/miconda/gitpushub)
-- [Simple PHP Logger](https://github.com/advename/Simple-PHP-Logger)
 
 ## Components
 - [ ] Fix file preview system 
@@ -63,32 +63,10 @@ is curious, or looking for a place to help with the project.
 - [ ] They need to be listener on instead of listener once I think from now on. 
 - [ ] Modal can handle objects now and post to load dialogs, dialogs need to be caught up on new standards. 
 
-### Active
-- [ ] Add Tab Color Customizer / Selection by Extension 
+### Component: Active
+- [ ] [FEAT] Add Tab Color Customizer / Selection by Extension 
 
-### User
-- [ ] Login and Installation Screens should be overlays 
-- [ ] There is no brute force protection as far as I can tell 
-- [ ] The admin should be able to set a temp password field for users in order to login and change their own passwords 
-
-### Update
-- [ ] Rebuild update check with new versioning system 
-- [ ] All alerts need to move to new object key pair system, get rid of unnecessary positive negative system. 
-- [ ] Modal needs to be unloaded on every successful interaction. 
-### Marketplace
-- [ ] The marketplace needs a review: There isn't a search feature, nor ratings. Might be worth adding a whole separate site for it and be done with it. 
-### Installation
-- [ ] During install, an option to set the mode to single user mode with no username required upon login would be nice 
-- [ ] During install, you should be able to add a function send an alert email if certain conditions are met, like a brute force attempt 
-
-### Settings
-- [ ] Develop a custom KeyBinding menu in the settings window.
-- [ ] Add an option to disable all animations, including the background.
-- [ ] Option to disable the username box, such as on a single-user install
-- [ ] Allow users to enable/disable plugins in settings.
-- [ ] Reclassify the alert, Modal, and Toast for multiple window support.
-
-### Codegit
+### Component: Codegit
 - [ ] trait/execute: $result needs to be either imploded or exploded into an array
 - [ ] When adding changes to a commit, the backend should try to add or remove them live. Commit should be one action, and the message should be cached for you to come back to.
 - [ ] Updating Codegit to use more well-rounded execute function
@@ -103,10 +81,48 @@ is curious, or looking for a place to help with the project.
 		- [?] Status
 		- [?] Transfer
 
-### Project Management
-- [ ] Add the ability to show/hide projects in the sidebar
-- [ ] Show/hide projects in the project sidebar on a per user basis 
+### Component: Installation
+- [ ] During install, an option to set the mode to single user mode with no username required upon login would be nice 
+- [ ] During install, you should be able to add a function send an alert email if certain conditions are met, like a brute force attempt 
+
+### Component: Marketplace
+- [ ] The marketplace needs a review: There isn't a search feature, nor ratings. Might be worth adding a whole separate site for it and be done with it. 
+
+
+### Component: Settings
+- [ ] Develop a custom KeyBinding menu in the settings window.
+- [ ] Add an option to disable all animations, including the background.
+- [ ] Option to disable the username box, such as on a single-user install
+- [ ] Allow users to enable/disable plugins in settings.
+- [ ] Reclassify the alert, Modal, and Toast for multiple window support.
+
+
+
+
+
+
+
+### Component: Project
+- [ ] [FEAT] Add the ability to show/hide projects in the sidebar
+- [ ] [FEAT] Show/hide projects in the project sidebar on a per user basis
+- [ ] [FEAT] Cached project states, allowing someone to quickly switch projects, mainly file explorer. 
 - [ ] loadChanges in traits/status won't render anything when viewing overlay if the status fails.
+- [ ] [DEBT] Check on project creation from repo logic; lots has changed in underlying code.
+
+### Component: Transfer
+- [ ] [DEBT] The download format isn't customizable from either tar or zip; L50 on class.
+- [ ] [FEAT] Implement drag/drop for file upload straight onto the filetree?
+
+### Component: Update
+- [ ] [DEBT] Rebuild update check with new versioning system 
+- [ ] All alerts need to move to new object key pair system, get rid of unnecessary positive negative system. 
+- [ ] [BUG] Modal needs to be unloaded on every successful interaction. 
+
+### Component: User
+- [ ] [FEAT] Login and Installation Screens should be overlays 
+- [ ] There is no brute force protection as far as I can tell 
+- [ ] The admin should be able to set a temp password field for users in order to login and change their own passwords 
+
 
 ## Rewrite data exchange to use HTTP status codes
 - [ ] Don't forget to update plugins
@@ -137,12 +153,20 @@ is curious, or looking for a place to help with the project.
 ## Maybe One Day
 - [ ] Remove FontAwesome in favor of SVGs, either TinyIcons or something. 
 - [ ] SVN Support, similar to Git but not as common 
-- [ ] Cached project states, allowing someone to quickly switch projects, mainly file explorer. 
 - [ ] Implement a .matches parameter, something like passing a function, in the contextmenu/filemanager to allow plugins to search based on their own parameters 
 
 ## i18n Language Review
 - [ ] Actively maintain i18n. Allow plugins to include language files.
 
-## Plugin Ideas
+## Ideas / Inspiration
+
+### Plugin Ideas
 - [ ] ToDo Plugin: Set a time and a description and the toast will pop up to notify you, or even just a rolling list of things to do with a project 
 - [ ] Disable / Enable plugins by adding a file inside the plugin folder called enable/disable. 
+
+
+### Pull into Project:
+- [Spacing in CSS](https://ishadeed.com/article/spacing-in-css/)
+- [Peekobot Repo](https://github.com/peekobot/peekobot)
+- [Gitpushub Repo](https://github.com/miconda/gitpushub)
+- [Simple PHP Logger](https://github.com/advename/Simple-PHP-Logger)
