@@ -10,17 +10,17 @@ trait Initialize {
 		$result = false;
 
 		if ($type === "repo") {
-			$result = $this->execute("git init");
+			$result = Common::safe_execute("git init");
 		}
 
 		if ($result["code"] === 0) {
 			Common::send(200, i18n("git_init_success"));
 		} else {
-		    Common::send(500, i18n("git_init_failed") . "\n\n" . implode("\n", $result["text"] ?? []));
+		    Common::send(500, i18n("git_init_failed") . "\n\n" . implode("\n", $result["output"] ?? []));
 		}
 	}
 
-	public function cloneRepo($path, $repoURL, $init_submodules = false) {
+	public function cloneRepo($path, $repoURL, $subModules = false) {
 		if (!is_dir($path)) {
 			Common::send(418, i18n("path_missing"));
 		}
@@ -30,19 +30,14 @@ trait Initialize {
 		if (!preg_match($pattern, $repoURL)) {
 			Common::send(418, i18n("git_repoURL_invalid"));
 		}
-
-		$command = "git clone $repoURL";
-
-		if ($init_submodules == "true") {
-			$command = $command . " --recursive";
-		}
-
-		$result = $this->execute($command);
+		
+		$subModules = $subModules ? "--recursive " : "";
+		$result = Common::safe_execute("git clone $subModules-- ?", $repoURL);
 
 		if ($result["code"] === 0) {
 			Common::send(200, i18n("git_clone_success"));
 		} else {
-		    Common::send(500, i18n("git_clone_failed") . "\n\n" . implode("\n", $result["text"] ?? []));
+		    Common::send(500, i18n("git_clone_failed") . "\n\n" . implode("\n", $result["output"] ?? []));
 		}
 	}
 }

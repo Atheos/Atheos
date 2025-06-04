@@ -155,7 +155,7 @@ class Macro {
 		$command = str_replace("%BASENAME%", basename($path), $command);
 		$command = str_replace("%FILENAME%", pathinfo($path, PATHINFO_FILENAME), $command);
 
-		$result = Common::execute($command);
+		$result = Common::raw_execute($command);
 		$text = $result["text"];
 		$code = $result["code"];
 

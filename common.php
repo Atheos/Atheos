@@ -11,8 +11,8 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 // error_reporting(E_ALL); // Error/Exception engine, always use E_ALL
-// ini_set('ignore_repeated_errors', TRUE); // always use TRUE
-// ini_set('display_errors', true); // Error/Exception display, use FALSE only in production environment or real server. Use TRUE in development environment
+// ini_set("ignore_repeated_errors", TRUE); // always use TRUE
+// ini_set("display_errors", true); // Error/Exception display, use FALSE only in production environment or real server. Use TRUE in development environment
 // ini_set("log_errors", true);
 // ini_set("error_log", "php-error.log");
 
@@ -182,30 +182,44 @@ class Common {
     }
 
     //////////////////////////////////////////////////////////////////////////80
-    // Execute Command
+    // Safe Execution Command
     //////////////////////////////////////////////////////////////////////////80
-    public static function execute($cmd = false) {
-        $text = false;
-        $code = 0;
+    public static function safe_execute($cmd, ...$args) {
+        if (count($args) > 0) {
+            // Sanitize every single argument.
+            $safe_args = array_map("escapeshellarg", $args);
+            // Replace placeholders in template with the sanitized arguments.
+            $cmd = vsprintf(str_replace("?", "%s", $cmd), $safe_args);
+        } else {
+            $cmd = str_replace("?", "", $cmd);
+            $cmd = str_replace("%%", "%", $cmd);
+        }
+        return Common::raw_execute($cmd);
+    }
 
-        if (!$cmd) return false;
+    //////////////////////////////////////////////////////////////////////////80
+    // Raw Execution Command; call directly only when absolutely necessary.
+    //////////////////////////////////////////////////////////////////////////80
+    public static function raw_execute($cmd = null) {
+        $result = [
+            "code" => 417,
+            "output" => ["common_missing_command"]
+        ];
+
+        if (!$cmd) return $result;
+        $output = null;
 
         if (function_exists("system")) {
             ob_start();
-            system($cmd, $code);
-            $text = ob_get_contents();
-            ob_end_clean();
+            system($cmd, $result["code"]);
+            $output = ob_get_clean();
         } elseif (function_exists("exec")) {
-            exec($cmd, $text, $code);
-            $text = implode("\n", $text);
+            $output = [];
+            exec($cmd, $output, $result["code"]);
         }
 
-        // if ($code === 0 && $text === "") return "Executed successfully";
-
-        return array(
-            "code" => $code,
-            "text" => $text
-        );
+        $result["output"] = is_array($output) ? $output : explode("\n", $output);
+        return $result;
     }
 }
 
@@ -236,7 +250,5 @@ function POST($key, $val = null) {
     }
     return $val;
 }
-
-
 
 ?>
