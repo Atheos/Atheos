@@ -337,9 +337,9 @@
 						self.list();
 						self.dock.load();
 
-						for (var path in atheos.sessionmanager.sessions) {
+						for (var path in atheos.editor.sessions) {
 							if (path.indexOf(projectPath) === 0) {
-								atheos.sessionmanager.remove(path);
+								atheos.editor.remove(path);
 							}
 						}
 

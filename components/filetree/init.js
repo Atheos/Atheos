@@ -141,7 +141,7 @@
 					if (anchor.attr('data-type') === 'folder' || anchor.attr('data-type') === 'root') {
 						self.openFolder(anchor.attr('data-path'));
 					} else if (anchor.attr('data-type') === 'file') {
-						atheos.sessionmanager.openFile(anchor.attr('data-path'));
+						atheos.editor.openFile(anchor.attr('data-path'));
 					}
 				}
 			});
@@ -305,7 +305,7 @@
 								toast('error', reply);
 							} else {
 								//node.attr('data-path', newPath);
-								atheos.sessionmanager.rename(oldPath, newPath);
+								atheos.editor.rename(oldPath, newPath);
 							}
 							node.remove();
 							self.rescan();
@@ -868,7 +868,7 @@
 						self.repathChildren(path, newPath);
 					}
 					// Change any active files
-					atheos.sessionmanager.rename(path, newPath);
+					atheos.editor.rename(path, newPath);
 				}
 			});
 			atheos.modal.unload();
@@ -909,7 +909,7 @@
 								var node = oX('#FILETREE a[data-path="' + path + '"]');
 								node.parent('li').remove();
 								// Close any active files
-								atheos.sessionmanager.remove(path);
+								atheos.editor.remove(path);
 							}
 						});
 					},

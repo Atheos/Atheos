@@ -105,7 +105,7 @@
 
 					
 					atheos.filetree.setRoot();
-					atheos.sessionmanager.openFiles(reply.openFiles);
+					atheos.editor.openFiles(reply.openFiles);
 
 				}
 			});

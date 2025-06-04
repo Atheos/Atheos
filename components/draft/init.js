@@ -51,11 +51,11 @@
 		autosave: function() {
 			if (!self.enabled || self.saving.length > 0) return;
 
-			var changedTabs = atheos.sessionmanager.getUnsavedChanges();
+			var changedTabs = atheos.editor.getUnsavedChanges();
 			if (!changedTabs) return;
 
 			changedTabs.forEach(function(path) {
-				let session = atheos.sessionmanager.sessions[path];
+				let session = atheos.editor.sessions[path];
 				if (session.autosaved) return;
 				self.save(session);
 			});
@@ -101,7 +101,7 @@
 		},
 
 		open: function(path) {
-			let session = atheos.sessionmanager.sessions[path];
+			let session = atheos.editor.sessions[path];
 			
 			if(!session) return;
 

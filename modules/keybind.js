@@ -65,14 +65,14 @@
 			vimEx: []
 		},
 		saveFile: {
-			fn: () => atheos.sessionmanager.save(),
+			fn: () => atheos.editor.save(),
 			default: 'Ctrl-S', // Ctrl+S
 			emacs: [],
 			sublime: [],
 			vimEx: ['write', 'w']
 		},
 		saveAllFiles: {
-			fn: () => atheos.sessionmanager.saveAll(),
+			fn: () => atheos.editor.saveAll(),
 			default: 'Ctrl-Shift-S', // Ctrl+Shift+S
 			emacs: [],
 			sublime: [],
@@ -80,8 +80,8 @@
 		},
 		saveCloseFile: {
 			fn: () => {
-				atheos.sessionmanager.save();
-				atheos.sessionmanager.close();
+				atheos.editor.save();
+				atheos.editor.close();
 			},
 			// default: [83, 'ctrl'],			// Ctrl+S
 			emacs: [],
@@ -89,7 +89,7 @@
 			vimEx: ['wq']
 		},
 		closeFile: {
-			fn: () => atheos.sessionmanager.close(),
+			fn: () => atheos.editor.close(),
 			default: 'Ctrl-Q', // Ctrl+Q
 			emacs: [],
 			sublime: [],

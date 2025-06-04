@@ -106,7 +106,7 @@
 						file.forEach(function(result) {
 							// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 							// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
-							content += `<a class="result" onclick="atheos.sessionmanager.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
+							content += `<a class="result" onclick="atheos.editor.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
 						});
 
 						node.html(content);
@@ -261,13 +261,13 @@
 			parentNode.addClass('open');
 			parentNode.find('.expand').replaceClass('none', 'fa fa-minus');
 
-			var nodeHTML = atheos.fileTree.createDirectoryItem(path, type, size, isRepo, isLink);
+			var nodeHTML = atheos.filetree.createDirectoryItem(path, type, size, isRepo, isLink);
 			if (nodeHTML == '') return false; // Return false for hidden files / parent folders
 			var list = parentNode.siblings('ul')[0];
 			if (list) {
 				// UL exists, other children to play with
 				list.append(nodeHTML);
-				atheos.fileTree.sortNodes(list.element);
+				atheos.filetree.sortNodes(list.element);
 			} else {
 				list = oX('<ul>');
 				list.append(nodeHTML);

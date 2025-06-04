@@ -156,9 +156,11 @@
 	window.isUndefined = (value) => typeof value === 'undefined';
 	window.isFunction = (value) => typeof value === 'function';
 	window.isBoolean = (value) => typeof value === 'boolean';
+	window.isElement = (value) => value instanceof Element;
 	window.isSymbol = (value) => typeof value === 'symbol';
 	window.isDate = (value) => value instanceof Date;
 	window.isNull = (value) => value === null;
+
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Shorthand for sending to console
