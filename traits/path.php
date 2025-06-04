@@ -53,7 +53,7 @@ trait Path {
     //////////////////////////////////////////////////////////////////////////80
     // Return full workspace path
     //////////////////////////////////////////////////////////////////////////80
-    public static function getWorkspacePath($path) {
+    public static function getWorkspacePath($path, $skipAccessCheck=false) {
         $path = Common::cleanPath($path);
 
         if (!$path) {
@@ -62,8 +62,8 @@ trait Path {
 
         // $path = str_replace(WORKSPACE . "/", "", $path);
 
-        //Security check
-        if (!Common::checkPath($path)) {
+        //Security check; $skipAccessCheck used during project creation
+        if (!$skipAccessCheck && !Common::checkPath($path)) {
             Common::send(403, "Client does not have access.");
         }
 
