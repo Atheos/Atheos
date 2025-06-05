@@ -16,7 +16,6 @@ function getConfig() {
 
 include_once "traits/branches.php";
 include_once "traits/commit.php";
-include_once "traits/execute.php";
 include_once "traits/history.php";
 include_once "traits/initialize.php";
 include_once "traits/remotes.php";
@@ -28,7 +27,6 @@ class CodeGit {
 
 	use Commit; // commit, add, showCommit, amend
 	use Branches; // getBranches, getCurrentBranch
-	use Execute; // execute, parseCommandCodes
 	use History; // loadLog, diff, blame
 	use Initialize; // initRepo, initSubMod
 	use Remotes; // getRemotes
