@@ -58,6 +58,13 @@ server {
 		fastcgi_index index.php;
 		include fastcgi_params;
 	}
+
+	#lets secure some files that should not be shared.
+	location ~ \.(ht|git|txt|yml|xml|md|json)$ {
+		deny all;
+		return 404;
+	}
+
 }
 ```
 ## Troubleshooting
