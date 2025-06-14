@@ -1083,9 +1083,9 @@
 			if (override) {
 				self.saveModifications(path, 'override', file.newContent);
 			} else if (file.originalContent.length === 0) {
-				self.saveModifications(path, 'full', file.newContent);
+				self.saveModifications(file, 'full', file.newContent);
 			} else if (file.newContent.length === 0) {
-				self.saveModifications(path, 'clear', 'clearContent');
+				self.saveModifications(file, 'clear', 'clearContent');
 			} else {
 				atheos.workerManager.addTask({
 					taskType: 'diff',
@@ -1123,7 +1123,7 @@
 			if (newContent.length < 1) {
 				return handleSuccess(file.serverMTime);
 			}
-
+			
 			echo({
 				data: {
 					target: 'editor',
