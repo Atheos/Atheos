@@ -28,7 +28,7 @@
 
 		var xhr = new XMLHttpRequest(),
 			data = opt.data ? [] : null;
-			
+
 		if (opt.data && typeof opt.data === 'object') {
 			for (var name in opt.data) {
 				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opt.data[name]));
@@ -68,10 +68,8 @@
 			}
 
 			// Call the relevant callback function
-			if (xhr.status >= 200 && xhr.status < 300) {
-				if (opt.success) {
-					opt.success(data, status);
-				}
+			if (opt.success && xhr.status >= 200 && xhr.status < 300) {
+				opt.success(data, status);
 			} else if (opt.failure) {
 				opt.failure(data, status);
 			}
