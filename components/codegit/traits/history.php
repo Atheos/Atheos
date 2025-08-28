@@ -40,7 +40,7 @@ trait History {
 			$result = $this->untrackedDiff($path);
 
 		} else if (in_array($path, $status["modified"])) {
-			$result = Common::safe_execute("git diff -- ?", $path);
+			$result = Common::safe_execute("git diff -w -- ?", $path);
 
 		} else if (in_array($path, $status["added"])) {
 			$result = Common::safe_execute("git diff --cached -- ?", $path);
