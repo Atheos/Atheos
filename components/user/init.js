@@ -354,7 +354,7 @@
 				});
 			};
 
-			let changedTabs = atheos.editor.unsavedChanges();
+			let changedTabs = atheos.editor.getUnsavedChanges();
 			if (changedTabs) {
 				atheos.editor.focus(changedTabs[0]);
 				let changes = '';
@@ -446,5 +446,6 @@
 
 	carbon.subscribe('system.loadMinor', () => self.init());
 	atheos.user = self;
+
 
 })();
