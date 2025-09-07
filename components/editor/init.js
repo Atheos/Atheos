@@ -391,8 +391,17 @@
 			xEditorWindow.remove();
 			xEditorPane.css('flex', null);
 			aceEditor.focus();
+
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Merge all Editor instances
+		//////////////////////////////////////////////////////////////////////80
+		mergeAllEditorWindows: function() {
+			while (self.editorPanes.length > 1) {
+				self.mergeEditorWindow();
+			}
+		},
 		//////////////////////////////////////////////////////////////////////80
 		//
 		// Remove all Editor instances and clean up the DOM
@@ -1123,7 +1132,7 @@
 			if (newContent.length < 1) {
 				return handleSuccess(file.serverMTime);
 			}
-			
+
 			echo({
 				data: {
 					target: 'editor',
