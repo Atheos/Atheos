@@ -20,7 +20,7 @@
 //	- reset: resets carbon, deleting all subscriptions
 //  - sub: subscribes to an event, or multiple comma-delimited events
 //  - pub: publishes an event with arguements
-//  - del: deletes a subscribtion
+//  - del: deletes a subscription
 //
 // 	carbon.subscribe('system.loadExtra', () => atheos.plugin.init());
 //
@@ -41,13 +41,16 @@
 		pub: function(topic) {
 			if (!subs[topic]) return;
 
-			topic = subs[topic];
-
-			var args = Array.prototype.slice.call(arguments, 1),
-				i = topic.length;
+			let callbacks = subs[topic],
+				args = Array.prototype.slice.call(arguments, 1),
+				i = callbacks.length;
 
 			while (--i >= 0) {
-				topic[i].apply(null, args);
+				try {
+					callbacks[i].apply(null, args);
+				} catch (err) {
+					console.error(`Subscription error: "${topic}"`, err);
+				}
 			}
 		},
 
