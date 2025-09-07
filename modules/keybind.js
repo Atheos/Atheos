@@ -170,11 +170,7 @@
 		},
 
 		mergeAllEditorWindows: {
-			fn: () => {
-				let activeFile = atheos.inFocusFile;
-				atheos.editor.exterminate();
-				atheos.editor.addEditorPane(activeFile);
-			},
+			fn: () => atheos.editor.mergeAllEditorWindows(),
 			default: 'Ctrl-Shift-M', // Ctrl+M
 			emacs: [],
 			sublime: [],

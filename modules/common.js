@@ -27,6 +27,7 @@
 			self.initDropdown();
 			self.initTogglePassword();
 			self.initPasswordMonitor();
+			self.initSplitMenu();
 			self.initCheckMonitors();
 			self.initOverlay();
 		},
@@ -131,6 +132,25 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Show/Hide Split Menus
+		//////////////////////////////////////////////////////////////////////80		
+		initSplitMenu: function() {
+			self.initMenuHandler('#split', '#split_menu');
+
+			fX('#split-vertically').on('click', function(e) {
+				atheos.editor.addEditorPane(atheos.inFocusFile, 'bottom');
+			});
+
+			fX('#split-horizontally').on('click', function(e) {
+				atheos.editor.addEditorPane(atheos.inFocusFile, 'right');
+			});
+
+			fX('#merge-all').on('click', function(e) {
+				atheos.editor.mergeAllEditorWindows();
+			});
+		},
+
 		initPasswordMonitor: function() {
 			let reqs = {
 				lowercase: /[a-z]/,
@@ -223,7 +243,7 @@
 		//////////////////////////////////////////////////////////////////////
 		scriptCache: {},
 		loadScript: function(url, callback) {
-		    // If script is already loaded, callback instantly
+			// If script is already loaded, callback instantly
 			if (self.scriptCache[url] === 'loaded') {
 				if (isFunction(callback)) callback.call(this);
 				return;
