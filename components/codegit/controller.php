@@ -40,7 +40,7 @@ switch ($action) {
         $message = POST("message");
         $files = POST("files");
         if ($repo && $files && $message) {
-            $CodeGit->commit($message, $files);
+            $CodeGit->commit($repo, $message, $files);
         } else {
             Common::send(417, i18n("git_error_noRepoFileMsg"));
         }
