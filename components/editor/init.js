@@ -987,6 +987,7 @@
 			aceSession.setMode(aceModePath);
 
 			aceSession.setMode('ace/mode/' + mode);
+			aceSession.setNewLineMode('unix');
 			aceSession.setUndoManager(aceUndoManager);
 
 			let file = {
