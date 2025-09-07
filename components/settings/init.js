@@ -99,7 +99,7 @@
 			if (setting == 'editor.ligatures') {
 				atheos.editor.setCodeLigatures(value);
 			} else if (setting == 'editor.keyboardHandler') {
-				atheos.editor.setKeyboard(value);
+				atheos.keybind.setGlobalKeyboard(value);
 
 			} else if (setting.startsWith('editor.')) {
 				let option = setting.replace('editor.', '');

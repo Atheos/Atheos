@@ -115,7 +115,6 @@
 					let temp = eStorage(key);
 					if (temp !== null) self.settings[key] = temp;
 				}
-				atheos.keybind.setKeyboard(self.settings.keyboardHandler);
 
 				self.loopBehavior = storage('editor.loopBehavior') || self.loopBehavior;
 
@@ -294,7 +293,7 @@
 				self.updateEditorFocus(aceEditor, true);
 			});
 
-			atheos.keybind.addCustomCommands(aceEditor);
+			atheos.keybind.activateCustomCommands(aceEditor);
 
 			self.editorPanes.push(aceEditor);
 			return aceEditor;
@@ -499,16 +498,6 @@
 			val = val ? 'Ubuntu-Fira' : 'Ubuntu-Mono';
 			self.setOption('fontFamily', val, aceEditor);
 		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// set keyboard handler
-		//////////////////////////////////////////////////////////////////////80
-		setKeyboard: function(val, aceEditor) {
-			val = val === 'default' ? null : "ace/keyboard/" + val;
-			self.setOption('keyboardHandler', val, aceEditor);
-			atheos.keybind.setKeyboard(val);
-		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		//

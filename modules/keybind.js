@@ -59,7 +59,7 @@
 	const keymaps = {
 		closeModal: {
 			fn: () => atheos.modal.unload(),
-			default: 'Esc', // Esc
+			default: 'Escape', // Esc
 			emacs: [],
 			sublime: [],
 			vimEx: []
@@ -155,7 +155,7 @@
 		},
 		splitEditorVertically: {
 			fn: () => atheos.editor.addEditorPane(atheos.inFocusFile, 'bottom'),
-			default: 'Alt+;', // Alt+;
+			default: 'Alt-;', // Alt+;
 			emacs: [],
 			sublime: [],
 			vimEx: ['vs']
@@ -188,48 +188,99 @@
 		}
 	};
 
+	let activeMode = 'default';
 	let activeBindings = {};
 
-	let activeMode = 'default';
 
 	const self = {
 
-		setKeyboard: function(mode) {
-			mode = mode == null ? 'default' : mode;
-			atheos.editor.forEachAceEditor(function(aceEditor) {
-				aceEditor.commands.commands = {};
-				if (mode == 'default') {
-					self.setDefaultKeybindings(aceEditor);
-				}
+		activeMode: 'default',
+
+		//////////////////////////////////////////////////////////////////////80
+		// Init
+		//////////////////////////////////////////////////////////////////////80
+		init: function() {
+			document.addEventListener('keydown', self.defaultHandler);
+			carbon.subscribe('settings.loaded', function() {
+				activeMode = storage('editor.keyboardHandler') || activeMode;
+				self.setGlobalKeyboard(activeMode);
 			});
-
-			if (mode == "vim") {
-				self.activateVimKeybindings();
-			}
-		},
-
-		addCustomCommands: function(aceEditor) {
-			if (activeMode === 'default') {
-				self.addDefaultKeybindings(aceEditor);
-			}
-
-
-		},
-
-		add: function(name, binding) {
-			keymaps[name] = binding;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Key Rebind
 		//////////////////////////////////////////////////////////////////////80
-		rebind: function(oldKey, newKey) {
-			if (oldKey in bindings) delete bindings[oldKey];
-			bindings[newKey] = bindings[oldKey];
+		setGlobalKeyboard: function(mode) {
+			activeMode = mode == null ? 'default' : mode;
+
+			atheos.editor.forEachAceEditor(function(aceEditor) {
+				self.activateCustomCommands(aceEditor);
+
+			});
+
+			if (activeMode == "default") {
+				activeBindings = {};
+				for (let [name, binding] of Object.entries(keymaps)) {
+					if (!binding.default) continue;
+
+					// break the binding into tokens
+					const tokens = binding.default.toLowerCase().split("-");
+					const mainKey = tokens[tokens.length - 1]; // last part is the actual key
+
+					let data = {
+						name: name,
+						args: binding.args || [],
+						cmd: tokens,
+						callback: binding.fn
+					};
+
+					(activeBindings[mainKey] = activeBindings[mainKey] || []).push(data);
+
+				}
+				log(activeBindings);
+
+			} else if (activeMode == "vim") {
+				self.activateVimKeybindings();
+			}
 		},
 
-		addDefaultKeybindings: function(aceEditor) {
+		//////////////////////////////////////////////////////////////////////80
+		// Activate custom keybindings for current ace editor
+		//////////////////////////////////////////////////////////////////////80
+		activateCustomCommands: function(aceEditor) {
+			log(aceEditor);
+			// 			aceEditor.commands.commands = {};
+			let aceMode = activeMode === 'default' ? null : "ace/keyboard/" + activeMode;
+			aceEditor.setOption('keyboardHandler', aceMode);
+			if (activeMode == 'default') {
+				self.activateDefaultKeybindings(aceEditor);
+			}
 
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Default Event Handler when not focused within Ace Editor
+		//////////////////////////////////////////////////////////////////////80
+		defaultHandler: function(e) {
+			if (activeMode !== 'default') return;
+
+			const pressed = e.key.toLowerCase();
+			if (!activeBindings[pressed]) return;
+
+			activeBindings[pressed].forEach(function(bind) {
+				if (bind.cmd.includes('alt') !== e.altKey) return;
+				if (bind.cmd.includes('ctrl') !== (e.ctrlKey || e.metaKey)) return;
+				if (bind.cmd.includes('shift') !== e.shiftKey) return;
+				e.preventDefault();
+				e.stopPropagation();
+				bind.callback.apply(this, bind.args);
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Activate Default Keybindings
+		//////////////////////////////////////////////////////////////////////80
+		activateDefaultKeybindings: function(aceEditor) {
 			Object.entries(keymaps).forEach(([name, binding]) => {
 				if (!binding.default) return;
 				const winKey = binding.default; // e.g., 'Ctrl-S'
@@ -250,6 +301,9 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Activate Vim Keybindings
+		//////////////////////////////////////////////////////////////////////80
 		activateVimKeybindings: function() {
 			ace.config.setModuleUrl("ace/keyboard/vim", "/components/editor/ace-editor/keybinding-vim.js");
 
@@ -264,17 +318,31 @@
 					} else if ('vimNorm' in binding && binding.vimNorm > 0) {
 						let key = binding.vimEx[0],
 							alias = binding.vimEx.length > 1 ? binding.vimEx[1] : binding.vimEx[0];
-						// Vim.mapCommand(",r", "normal", "run-current", {}, {
-						// 	exec: () => runCurrentFile()
-						// });
 					}
 				});
 
 			});
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
+		// Add new keybinding
+		//////////////////////////////////////////////////////////////////////80
+		add: function(name, binding) {
+			keymaps[name] = binding;
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Update keybinding
+		//////////////////////////////////////////////////////////////////////80
+		rebind: function(oldKey, newKey) {
+			if (oldKey in bindings) delete bindings[oldKey];
+			bindings[newKey] = bindings[oldKey];
 		}
+
 	};
 
-	// carbon.subscribe('system.loadMinor', () => self.init());
+	carbon.subscribe('system.loadMinor', () => self.init());
 	atheos.keybind = self;
 
 })();
