@@ -123,8 +123,8 @@ $SourceManager = new SourceManager;
         // If constant DATA defined in config.php, use it. Otherwise fall back to default folder location
         $path = defined("DATA") ? DATA . "/" : __DIR__ . "/data/";
 
-        $users = file_exists($path . "users.json");
-        $projects = file_exists($path . "projects.json");
+        $users = file_exists($path . "users.json.php");
+        $projects = file_exists($path . "projects.json.php");
 
         if (!$users && !$projects) {
             // Installer
