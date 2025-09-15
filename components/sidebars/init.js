@@ -96,7 +96,7 @@
 
 				setTimeout(() => {
 					this.isOpen = true;
-					atheos.editor.updateTabDropdownVisibility();
+					atheos.tabmanager.updateTabDropdownVisibility();
 					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 
@@ -113,7 +113,7 @@
 
 				setTimeout(() => {
 					this.isOpen = false;
-					atheos.editor.updateTabDropdownVisibility();
+					atheos.tabmanager.updateTabDropdownVisibility();
 					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 			}, hoverDuration);
@@ -194,7 +194,7 @@
 
 				setTimeout(() => {
 					this.isOpen = true;
-					atheos.editor.updateTabDropdownVisibility();
+					atheos.tabmanager.updateTabDropdownVisibility();
 					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 
@@ -210,7 +210,7 @@
 
 				setTimeout(() => {
 					this.isOpen = false;
-					atheos.editor.updateTabDropdownVisibility();
+					atheos.tabmanager.updateTabDropdownVisibility();
 					fX('#EDITOR').trigger('h-resize-root');
 				}, 300);
 			}, hoverDuration);
