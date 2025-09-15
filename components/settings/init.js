@@ -234,7 +234,7 @@
 			});
 		}
 	};
-
+	carbon.subscribe('system.loadMajor', () => self.init());
 	atheos.settings = self;
 
 })();
