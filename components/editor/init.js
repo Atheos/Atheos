@@ -193,11 +193,8 @@
 			// If the aceEditor is already attached to a file session
 			//   Save the session cursor location
 			if (aceEditor.path) {
-				log(aceEditor);
-				log(aceEditor.path);
 				const oldProxySession = aceEditor.getSession();
 				let oldFile = self.getFile(aceEditor.path);
-				log(oldFile);
 				if (oldFile) {
 					let state = {
 						element: aceEditor.element,
@@ -783,7 +780,6 @@
 		// Remove an active file session
 		//////////////////////////////////////////////////////////////////////80
 		remove: function(path) {
-			log(path);
 			if (!(path in self.activeFiles)) {
 				return;
 			}
@@ -799,7 +795,6 @@
 			file.fileTab.remove();
 			atheos.tabmanager.updateTabDropdownVisibility();
 			delete self.activeFiles[path];
-			log(tabs.length);
 
 			if (tabs.length === 1) {
 				// If only one tab is open, close all editor panes
@@ -849,35 +844,41 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Reload file content
+		//////////////////////////////////////////////////////////////////////80
 		reload: function(path) {
 			if (!path && atheos.contextmenu.active) {
 				path = atheos.contextmenu.active.path;
 			}
 
-			let session = self.getAceSession(path);
-			if (isString(session)) return toast('error', session);
-			path = session.path;
+			let file = self.getFile(path);
+			if (isString(file)) return toast('error', file);
 
 			echo({
 				data: {
-					target: 'filetree',
-					action: 'open',
+					target: 'editor',
+					action: 'openFile',
 					path: path
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return toast('error', 'Unable to reload file.');
-					session.serverMTime = reply.modifyTime;
-					session.originalContent = reply.content;
-					session.setValue(reply.content);
-					session.status = 'current';
-					if (session.fileTab) {
-						session.fileTab.removeClass('changed');
+					file.serverMTime = reply.modifyTime;
+					file.originalContent = reply.content;
+					file.aceSession.setValue(reply.content);
+
+					file.status = 'current';
+					if (file.fileTab) {
+						file.fileTab.removeClass('changed');
 					}
 					toast('success', 'File reloaded from server.');
 				}
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Reset file content
+		//////////////////////////////////////////////////////////////////////80
 		reset: function(path) {
 			if (!path && atheos.contextmenu.active) {
 				path = atheos.contextmenu.active.path;
@@ -886,8 +887,8 @@
 			let file = self.getFile(path);
 			if (isString(file)) return toast('error', file);
 
-			let session = self.getAceSession(file.path);
-			session.setValue(session.originalContent);
+			file.aceSession.setValue(file.originalContent);
+
 			file.status = 'current';
 			if (file.fileTab) {
 				file.fileTab.removeClass('changed');
