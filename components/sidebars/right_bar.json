@@ -92,7 +92,7 @@
 		"title": "save_all",
 		"admin": false,
 		"icon": "fa fa-save",
-		"onclick": "atheos.active.saveAll();"
+		"onclick": "atheos.editor.saveAll();"
 	},
 	{
 		"title": "help",

@@ -13,6 +13,7 @@ class SourceManager {
 	private $modules = array(
 		"modules/system.js",
 		"modules/alert.js",
+		"modules/filetab.js",
 		"modules/flow.js",
 		"modules/chrono.js",
 		"modules/common.js",
@@ -20,6 +21,7 @@ class SourceManager {
 		"modules/keybind.js",
 		"modules/modal.js",
 		"modules/output.js",
+		"modules/splitter.js",
 		"modules/toast.js"
 	);
 

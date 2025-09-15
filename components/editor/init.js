@@ -10,6 +10,11 @@
 
 (function() {
 
+
+	// File → owns AceSession
+	// EditorPane → owns AceEditor → shows a proxy session of File
+	// EditorWindow → contains multiple Panes
+
 	// Currently in focused 
 	const inFocus = {
 		file: null,
@@ -32,8 +37,6 @@
 		}
 	});
 
-	let eStorage = (k, v) => storage('editor.' + k, v);
-
 	// Classes from Ace
 	var AceEditorInstance = ace.require('ace/editor').Editor;
 	var AceVirtualRenderer = ace.require('ace/virtual_renderer').VirtualRenderer;
@@ -41,11 +44,6 @@
 	var AceUndoManager = ace.require('ace/undomanager').UndoManager;
 
 	const self = {
-
-		tabList: oX('#active_file_tabs'),
-		dropDownMenu: oX('#active_file_dropdown'),
-		loopBehavior: 'loopActive',
-		dropDownOpen: false,
 
 		// An array of Ace Editor Instances as panes on UI.
 		editorPanes: [],
@@ -72,8 +70,6 @@
 			keyboardHandler: null
 		},
 
-		fileExtensionTextMode: {},
-
 		init: function() {
 			fX('#auxSaveFile').on('click', () => self.save());
 			fX('#auxReloadFile').on('click', () => self.reload());
@@ -97,119 +93,16 @@
 				}
 			};
 
-
-			self.updateTabDropdownVisibility();
-			self.initTabListeners();
-			self.initSplitterListener();
-
-			atheos.common.initMenuHandler('#tab_dropdown', '#active_file_dropdown', ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
-
-			fX('#tab_close').on('click', function(e) {
-				e.stopPropagation();
-				self.closeAll();
-			});
-
 			carbon.subscribe('settings.loaded', function() {
-				// Retrieve editor settings from localeStorage
+				// Retrieve editor settings from localStorage
 				for (let key in self.settings) {
-					let temp = eStorage(key);
+					let temp = storage('editor.' + key);
 					if (temp !== null) self.settings[key] = temp;
 				}
-
-				self.loopBehavior = storage('editor.loopBehavior') || self.loopBehavior;
-
-				// This timeout is an effort to double check the tab visibility
-				// after everything has been loaded. The default route has some 
-				// minor issues on loading such that it doesn't quite meet spec
-				setTimeout(self.updateTabDropdownVisibility, 500);
-
 			});
 
 			carbon.sub('chrono.kilo', self.trackCursor);
-
-			var editor = oX('#EDITOR');
-
-			//////////////////////////////////////////////////////////////////80
-			// h-resize & v-resize events are custom events triggered solely for
-			// use in allowing you to resize split containers. The -root events
-			// are triggered throughout Atheos as needed, and cascade down into 
-			// any split containers. - Liam Siira
-			//////////////////////////////////////////////////////////////////80
-			fX('#EDITOR').on('h-resize-root, v-resize-root', function(e) {
-				var wrapper = oX('#EDITOR .editor-wrapper');
-				if (wrapper) {
-					if (e.type === 'h-resize-root') {
-						wrapper.css('width', editor.width());
-						fX('#EDITOR .editor-wrapper').trigger('h-resize');
-					} else {
-						wrapper.css('height', editor.height());
-						fX('#EDITOR .editor-wrapper').trigger('v-resize');
-					}
-				}
-
-				self.forEachAceEditor(function(int) {
-					int.resize();
-				});
-
-			});
-
-			window.addEventListener('resize', function() {
-				fX('#EDITOR').trigger('h-resize-root, v-resize-root');
-			});
-			window.onresize = self.updateTabDropdownVisibility;
 		},
-
-
-		initSplitterListener: function() {
-			fX('#EDITOR .splitter').on('mousedown', function(e) {
-				let splitter = e.target;
-				e.stopPropagation();
-
-				const prev = splitter.previousElementSibling;
-				const next = splitter.nextElementSibling;
-
-				let isHorizontal = oX(splitter).hasClass('horizontal');
-
-				const start = isHorizontal ? e.clientX : e.clientY;
-				const prevRect = prev.getBoundingClientRect();
-				const nextRect = next.getBoundingClientRect();
-
-				const total = (isHorizontal ? prevRect.width + nextRect.width : prevRect.height + nextRect.height);
-
-				// function updateSiblings(e) {
-				function onMouseMove(e) {
-					const current = isHorizontal ? e.clientX : e.clientY;
-					const delta = current - start;
-					const newPrev = Math.max(50, (isHorizontal ? prevRect.width : prevRect.height) + delta);
-					const container = splitter.parentElement.getBoundingClientRect();
-					const percent = (newPrev / (isHorizontal ? container.width : container.height)) * 100;
-					prev.style.flex = `0 0 ${percent}%`;
-					// 	next.style.flex = `1 1 0%`; // Let it fill the rest					
-					// 	const newNext = total - newPrev;
-
-					// 	prev.style.flex = `0 0 ${newPrev}px`;
-					// 	next.style.flex = `0 0 ${newNext}px`;
-				}
-
-				// let timeout = false;
-				// function onMouseMove(e) {
-				// 	if (timeout === false) {
-				// 		// In an attempt at optimization, I am setting a timeout on
-				// 		// the moveTarget such that it runs only once every 50ms
-				// 		timeout = setTimeout(() => updateSiblings(e), 50);
-				// 	}
-				// }
-
-				function onMouseUp() {
-					document.removeEventListener('mousemove', onMouseMove);
-					document.removeEventListener('mouseup', onMouseUp);
-				}
-
-				document.addEventListener('mousemove', onMouseMove);
-				document.addEventListener('mouseup', onMouseUp);
-			});
-		},
-
 
 
 		//////////////////////////////////////////////////////////////////////80
@@ -262,25 +155,6 @@
 
 			var resizeEditor = () => aceEditor.resize();
 
-			// 			if (splitContainer) {
-			// 				editorPane.splitContainer = splitContainer;
-			// 				editorPane.splitID = childID;
-
-			// 				atheos.inFocusEditor.splitContainer = splitContainer;
-			// 				atheos.inFocusEditor.splitID = 1 - childID;
-
-			// 				oX(splitContainer.parent).on('h-resize', resizeEditor);
-			// 				oX(splitContainer.parent).on('v-resize', resizeEditor);
-
-			// 				if (self.editorPanes.length === 1) {
-			// 					var re = function() {
-			// 						self.editorPanes[0].aceEditor.resize();
-			// 					};
-			// 					oX(splitContainer.parent).on('h-resize', re);
-			// 					oX(splitContainer.parent).on('v-resize', re);
-			// 				}
-			// 			}
-
 			aceEditor.xElement = xElement;
 			aceEditor.element = xElement.element;
 			// self.changeListener(instance);
@@ -316,16 +190,21 @@
 				aceEditor = self.createEditorPane();
 			}
 
+			// If the aceEditor is already attached to a file session
+			//   Save the session cursor location
 			if (aceEditor.path) {
-				const oldSession = aceEditor.getSession();
+				log(aceEditor);
+				log(aceEditor.path);
+				const oldProxySession = aceEditor.getSession();
 				let oldFile = self.getFile(aceEditor.path);
+				log(oldFile);
 				if (oldFile) {
 					let state = {
 						element: aceEditor.element,
 						time: Date.now(),
-						cursor: oldSession.getSelection().getCursor(),
-						scrollTop: oldSession.getScrollTop(),
-						scrollLeft: oldSession.getScrollLeft()
+						cursor: oldProxySession.getSelection().getCursor(),
+						scrollTop: oldProxySession.getScrollTop(),
+						scrollLeft: oldProxySession.getScrollLeft()
 					};
 					oldFile.states.push(state);
 				}
@@ -401,35 +280,24 @@
 				self.mergeEditorWindow();
 			}
 		},
+
 		//////////////////////////////////////////////////////////////////////80
 		//
 		// Remove all Editor instances and clean up the DOM
 		//
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
-			var editors = oX('#EDITOR').findAll('.editor, .editor-wrapper');
-			editors.forEach((editor) => {
-				editor.remove();
+			self.forEachAceEditor(function(aceEditor, index) {
+				aceEditor.destroy();
+				aceEditor.xElement.remove();
+				self.editorPanes.splice(index, 1);
 			});
+
+			inFocus.file = null;
+			inFocus.editorPane = null;
+			inFocus.aceEditor = null;
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
-			self.editorPanes = [];
-			atheos.inFocusEditor = null;
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		//
-		// Detach EditSession session from all Editor instances replacing
-		// them with replacementSession
-		//
-		//////////////////////////////////////////////////////////////////////80
-		removeSession: function(path, newPath) {
-
-			// 			if (oX('#current_file').text() === session.path) {
-			// 				oX('#current_file').text(replacementSession.path);
-			// 			}
-
-			// 			atheos.textmode.setModeDisplay(replacementSession);
 		},
 
 		isAttached: function(file) {
@@ -469,7 +337,7 @@
 
 			var path = aceEditor.path;
 			let file = self.getFile(path);
-			self.highlightEntry(path);
+			atheos.tabmanager.highlightEntry(path);
 
 			inFocus.file = file;
 			inFocus.aceEditor = aceEditor;
@@ -481,14 +349,13 @@
 		},
 
 
-
 		setOption: function(opt, val, aceEditor) {
 			if (aceEditor) return aceEditor.setOption(opt, val);
 			self.forEachAceEditor(function(aceEditor) {
 				aceEditor.setOption(opt, val);
 			});
 			self.settings[opt] = val;
-			eStorage(opt, val);
+			storage('editor.' + opt, val);
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -549,340 +416,18 @@
 			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 		},
 
-		initTabListeners: function() {
-			var activeListener = function(e) {
-				e.stopPropagation();
-
-				var tagName = e.target.tagName;
-				var node = oX(e.target);
-
-				if (tagName === 'UL') return;
-
-				var path = node.attr('data-path');
-				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
-					path = node.parent('LI').attr('data-path');
-				}
-
-				if (e.which === 2) {
-					// Middle click anywhere closes file
-					self.close(path);
-
-				} else if (e.which === 1) {
-
-					// Left click not on an icon: Switch focus to file
-					if (tagName !== 'I') {
-						self.focusOnFile(path);
-
-						// Left click on an icon: Save or close file
-					} else if (tagName === 'I') {
-						// Save file
-						if (node.hasClass('save')) {
-							self.save(path);
-
-							// Close file
-						} else if (node.hasClass('close')) {
-							self.close(path);
-							// 		self.updateTabDropdownVisibility();
-						}
-					}
-				}
-			};
-
-			fX('#active_file_tabs').on('click, auxclick', function(e) {
-				activeListener(e);
-			});
-
-			fX('#active_file_dropdown').on('click, auxclick', function(e) {
-				activeListener(e);
-			});
-
-			fX('#active_file_tabs').on('mousedown', self.handleDrag);
-
-			fX('#active_file_tabs').on('dragstart', blackhole);
-
-		},
-
-		handleDrag: function(e) {
-			// Inspired By: https://codepen.io/fitri/pen/VbrZQm
-			// Made with love by @fitri
-			// & https://github.com/io-developer/js-dragndrop
-			e.stopPropagation();
-
-			var target = e.target;
-			var origin, sibling;
-
-			var dragZone = self.tabList.element;
-			var clone, startEX, startEY, startMX, startMY, timeout;
-
-			var xMax, yMax;
-
-			function moveTarget(e) {
-				timeout = false;
-
-				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
-
-				swap = swap.filter((item) => {
-					var rect = item.getBoundingClientRect();
-					if (e.clientX < rect.left || e.clientX >= rect.right) return false;
-					return (item !== clone);
-				});
-
-				if (swap.length === 0) return;
-
-				swap = swap[swap.length - 1];
-				if (dragZone.contains(swap)) {
-					swap = swap !== target.nextSibling ? swap : swap.nextSibling;
-					if (swap) {
-						swap.parentNode.insertBefore(target, swap);
-					}
-				}
-			}
-
-			function dragMove(e) {
-				var x = startEX + e.screenX - startMX;
-				x = (x > xMax) ? xMax : ((x < 0) ? 0 : x);
-				clone.style.left = (x - dragZone.scrollLeft) + 'px';
-				if (timeout === false) {
-					// In an attempt at optimization, I am setting a timeout on
-					// the moveTarget such that it runs only once every 50ms
-					timeout = setTimeout(() => moveTarget(e), 50);
-				}
-			}
-
-			function dragStart() {
-				timeout = false;
-
-				startEX = target.offsetLeft;
-				startEY = target.offsetTop;
-
-				startMX = e.screenX;
-				startMY = e.screenY;
-
-				clone = target.cloneNode(true);
-				clone.style.left = (startEX - dragZone.scrollLeft) + 'px';
-				clone.style.top = (startEY - dragZone.scrollTop) + 'px';
-				clone.style.position = 'absolute';
-				clone.style.cursor = 'grabbing';
-
-				dragZone.append(clone);
-				target.style.opacity = 0;
-
-				xMax = dragZone.offsetWidth - clone.offsetWidth;
-				yMax = dragZone.offsetHeight - clone.offsetHeight;
-
-				document.addEventListener('mousemove', dragMove);
-			}
-
-			function dragEnd() {
-				clearTimeout(timeout);
-				target.style.opacity = '';
-				if (clone) clone.remove();
-				if (target.parentNode !== origin) {
-					if (sibling) {
-						sibling.after(target);
-					} else {
-						origin.append(target);
-					}
-				}
-				document.removeEventListener('mousemove', dragMove);
-				document.removeEventListener('mouseup', dragEnd);
-			}
-
-			target = target.closest('.draggable');
-			if (!target || !dragZone) return;
-
-			origin = target.parentNode;
-			sibling = target.previousSibling;
-
-			timeout = setTimeout(dragStart, 200);
-			document.addEventListener('mouseup', dragEnd);
-		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Move Up or down (Key Combo)
 		//////////////////////////////////////////////////////////////////////80
 		cycleFocus: function(direction) {
-			var nextPath = self.getNextFileTab(direction);
+			var nextPath = atheos.tabmanager.getNextFileTab(direction);
 			if (nextPath) {
 				self.attachFileToEditor(self.activeFiles[nextPath]);
-				if (self.loopBehavior === 'loopBoth') {
-					self.highlightEntry(nextPath, direction);
-				} else {
-					self.highlightEntry(nextPath);
-				}
+				atheos.tabmanager.highlightEntry(nextPath, direction);
 			}
 		},
 
-		//////////////////////////////////////////////////////////////////////80
-		// Find next file tab
-		//////////////////////////////////////////////////////////////////////80
-		getNextFileTab: function(direction) {
-
-			var activeTabs = self.tabList.findAll('li');
-			if (self.loopBehavior === 'loopBoth') {
-				var dropDownChildren = self.dropDownMenu.findAll('li');
-				activeTabs = activeTabs.concat(dropDownChildren);
-			}
-
-			var currentTab = false;
-
-			activeTabs.forEach(function(tab, i) {
-				currentTab = tab.hasClass('active') ? i : currentTab;
-			});
-
-			if (currentTab === false || activeTabs.length === 0) {
-				return;
-			}
-
-			var newTabElement = null;
-
-			if (direction === 'up') {
-				currentTab = (currentTab === 0) ? (activeTabs.length - 1) : (currentTab - 1);
-				newTabElement = activeTabs[currentTab];
-			} else {
-				currentTab = (currentTab + 1) % activeTabs.length;
-				newTabElement = activeTabs[currentTab];
-			}
-			return newTabElement.attr('data-path')
-		},
-
-		highlightEntry: function(path, direction) {
-			direction = direction || false;
-			var active = self.tabList.findAll('.active');
-			active.forEach(function(item) {
-				item.removeClass('active');
-			});
-
-			var file = self.activeFiles[path];
-			var dropDown = self.dropDownMenu.find('[data-path="' + path + '"]');
-
-			if (dropDown.exists()) {
-				var fileTab = file.fileTab;
-				self.moveTab(self.tabList, fileTab, direction);
-
-				var tab;
-				if (direction === 'up') {
-					tab = self.tabList.find('li:last-child');
-				} else {
-					tab = self.tabList.find('li:first-child');
-				}
-				self.moveTab(self.dropDownMenu, tab, direction);
-			}
-			file.fileTab.addClass('active');
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Move tab between Active & Dropdown
-		//////////////////////////////////////////////////////////////////////80
-		moveTab: function(destination, fileTab, direction) {
-			direction = direction || false;
-
-			if (direction === 'up') {
-				destination.prepend(fileTab);
-			} else {
-				destination.append(fileTab);
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Add newly opened file to list
-		//////////////////////////////////////////////////////////////////////80
-		createFileTab: function(path) {
-			/* If the tab list would overflow with the new tab. Move the
-				* first tab to dropdown, then add a new tab. */
-			if (self.isTabListOverflowed(true)) {
-				var tab = self.tabList.find('li:first-child');
-				self.moveTab(self.dropDownMenu, tab);
-			}
-
-			var fileTab = self.createListItem(path);
-			self.tabList.append(fileTab);
-			atheos.editor.updateTabDropdownVisibility();
-
-			return fileTab;
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Is the activeTabs overflowed
-		//////////////////////////////////////////////////////////////////////80
-		isTabListOverflowed: function(includeFictiveTab) {
-			includeFictiveTab = includeFictiveTab || false;
-
-			var tabs = self.tabList.findAll('li');
-			var count = includeFictiveTab ? tabs.length + 1 : tabs.length;
-
-			if (count <= 1) {
-				return false;
-			}
-
-			var tabWidth = count * tabs[0].width(true);
-
-			//	If we subtract the width of the left side bar, of the right side
-			//	bar handle and of the tab dropdown handle to the window width,
-			//	do we have enough room for the tab list? Its kind of complicated
-			//	to handle all the offsets, so afterwards we add a fixed offset
-			//	just to be sure. 
-
-			var availableWidth = oX('#ACTIVE').width();
-
-			var iconWidths = oX('#tab_dropdown').width() * 2;
-
-			var room = availableWidth - (iconWidths + tabWidth + 50);
-
-			return (room < 0);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Update tab visibility
-		//////////////////////////////////////////////////////////////////////80
-		updateTabDropdownVisibility: function() {
-			var fileTab;
-
-			while (self.isTabListOverflowed()) {
-				fileTab = self.tabList.find('li:last-child');
-				if (fileTab.exists()) {
-					self.moveTab(self.dropDownMenu, fileTab);
-				} else {
-					break;
-				}
-			}
-
-			while (!self.isTabListOverflowed(true)) {
-				fileTab = self.dropDownMenu.find('li:last-child');
-				if (fileTab.exists()) {
-					self.moveTab(self.tabList, fileTab);
-				} else {
-					break;
-				}
-			}
-
-			if (self.dropDownMenu.findAll('li').length > 0) {
-				oX('#tab_dropdown').show();
-			} else {
-				oX('#tab_dropdown').hide();
-			}
-
-			if (self.tabList.findAll('li').length > 1) {
-				oX('#tab_close').show();
-			} else {
-				oX('#tab_close').hide();
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Factory
-		//////////////////////////////////////////////////////////////////////80
-		createListItem: function(path) {
-			var info = pathinfo(path);
-
-			var item = `<li class="draggable" data-path="${path}">
-			<a title="${path}"><span class="subtle">${info.directory}/</span>${info.basename}</a>
-			<i class="save fas fa-save"></i><i class="close fas fa-times-circle"></i>
-			</li>`;
-
-			item = oX(item);
-			return item;
-		},
 
 		// Path to EditSession instance mapping
 		activeFiles: {},
@@ -965,6 +510,9 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Create Edit Session
+		//////////////////////////////////////////////////////////////////////80
 		createEditSession: function(path, content, modifyTime, mode) {
 			let aceSession = new AceEditSession(content),
 				aceUndoManager = new AceUndoManager();
@@ -984,7 +532,7 @@
 				path: path,
 				serverMTime: modifyTime,
 				originalContent: content.slice(0),
-				fileTab: atheos.editor.createFileTab(path),
+				fileTab: atheos.tabmanager.createFileTab(path),
 				aceSession: aceSession,
 				aceUndo: aceUndoManager,
 				states: []
@@ -1231,32 +779,43 @@
 			}
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Remove an active file session
+		//////////////////////////////////////////////////////////////////////80
 		remove: function(path) {
 			log(path);
 			if (!(path in self.activeFiles)) {
 				return;
 			}
+
+			// Grab reference to file being closed
 			var file = self.activeFiles[path];
 
-
-			/* Select all the tab tumbs except the one which is to be removed. */
-			var tabs = atheos.editor.tabList.findAll('li');
-
-			if (tabs.length === 0) {
-				atheos.editor.exterminate();
-			}
-			var nextFilePath = self.getNextFileTab('up');
-			atheos.editor.removeSession(path, nextFilePath);
-
-			self.forEachAceEditor(function(aceEditor) {
-				if (aceEditor.path === path) {
-					self.attachFileToEditor(self.activeFiles[nextFilePath], aceEditor);
-				}
-			});
+			// Grab reference to all currently open tab elements.
+			var tabs = atheos.tabmanager.tabList.findAll('li');
+			// Select the next filepath to be in focus from the tab list.
+			var nextFilePath = atheos.tabmanager.getNextFileTab('up');
 
 			file.fileTab.remove();
-			atheos.editor.updateTabDropdownVisibility();
+			atheos.tabmanager.updateTabDropdownVisibility();
 			delete self.activeFiles[path];
+			log(tabs.length);
+
+			if (tabs.length === 1) {
+				// If only one tab is open, close all editor panes
+				atheos.editor.exterminate();
+			} else {
+				// If more than one tab is open, swap to next file
+
+
+				// Loop thru editor panes and swap each to next file path
+				self.forEachAceEditor(function(aceEditor) {
+					if (aceEditor.path === path) {
+						aceEditor.path = null;
+						self.attachFileToEditor(self.activeFiles[nextFilePath], aceEditor);
+					}
+				});
+			}
 
 			echo({
 				url: atheos.controller,
@@ -1268,15 +827,18 @@
 			});
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Remove all active file sessions
+		//////////////////////////////////////////////////////////////////////80
 		removeAll: function() {
 			for (var path in self.activeFiles) {
-				var session = self.activeFiles[path];
-				session.fileTab.remove();
+				var file = self.activeFiles[path];
+				file.fileTab.remove();
 
 				delete self.activeFiles[path];
 			}
 
-			atheos.editor.updateTabDropdownVisibility();
+			atheos.tabmanager.updateTabDropdownVisibility();
 			atheos.editor.exterminate();
 			echo({
 				url: atheos.controller,
