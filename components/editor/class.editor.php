@@ -99,7 +99,7 @@ class Editor {
         }
 
         $modifyTime = filemtime($path);
-        $status = $inFocus ? "inFocus" : "active";
+        $status = $inFocus === "true" ? "inFocus" : "active";
         $this->setStatus($path, $status);
         Common::send(200, array("content" => $output, "modifyTime" => $modifyTime));
     }
