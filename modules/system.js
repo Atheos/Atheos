@@ -22,7 +22,7 @@
 		baseUrl: window.location.href,
 		controller: 'controller.php',
 		dialog: 'dialog.php',
-		
+
 		current: {
 			projectName: '',
 			projectPath: '',
@@ -77,10 +77,10 @@
 		// Loads users last state in a single request
 		//////////////////////////////////////////////////////////////////////80
 		restoreState: function() {
-					carbon.publish('system.loadMajor');
-					carbon.publish('system.loadMinor');
-					carbon.publish('system.loadExtra');		    
-		    
+			carbon.publish('system.loadMajor');
+			carbon.publish('system.loadMinor');
+			carbon.publish('system.loadExtra');
+
 			echo({
 				data: {
 					target: 'core',
@@ -100,10 +100,10 @@
 					atheos.current.projectPath = reply.projectPath;
 					atheos.current.projectName = reply.projectName;
 					atheos.current.projectIsRepo = reply.projectIsRepo;
-					
+
 					atheos.settings.processSettings(reply.settings);
 
-					
+
 					atheos.filetree.setRoot();
 					atheos.editor.openFiles(reply.openFiles);
 
