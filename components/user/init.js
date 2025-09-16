@@ -354,11 +354,11 @@
 				});
 			};
 
-			let changedTabs = atheos.editor.getUnsavedChanges();
-			if (changedTabs) {
-				atheos.editor.focus(changedTabs[0]);
+			let changedPaths = atheos.editor.getChangedPaths();
+			if (changedPaths.length) {
+				atheos.editor.focus(changedPaths[0]);
 				let changes = '';
-				changedTabs.forEach(function(path, i) {
+				changedPaths.forEach(function(path, i) {
 					changes += pathinfo(path).basename + '\n';
 				});
 

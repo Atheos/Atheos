@@ -11,9 +11,9 @@
 (function() {
 
 
-	// File → owns AceSession
-	// EditorPane → owns AceEditor → shows a proxy session of File
-	// EditorWindow → contains multiple Panes
+	// File -> wns AceSession
+	// EditorPane ->owns AceEditor -> shows a proxy session of File
+	// EditorWindow -> contains multiple Panes
 
 	// Currently in focused 
 	const inFocus = {
@@ -47,7 +47,10 @@
 
 		// An array of Ace Editor Instances as panes on UI.
 		editorPanes: [],
+		// Path to EditSession instance mapping
+		activeFiles: {},
 
+		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
 		// Settings applied to each editor pane/instance
 		settings: {
 			theme: 'ace/theme/atheos',
@@ -77,7 +80,7 @@
 
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
-				let changedPaths = self.getUnsavedChanges();
+				let changedPaths = self.getChangedPaths();
 				if (changedPaths) {
 					self.focusOnFile(changedPaths[0]);
 					e = e || window.event;
@@ -112,10 +115,6 @@
 			// This can be a little confusing to follow, took me a while. First,
 			// keep in mind that Ace objects has their own .el property, which
 			// holds an onyx object, that holds it's own raw element.
-
-			// SplitContainer takes raw html elements and has it's own mini-dom
-			// helper that has zero error checking in order to be as fast as
-			// possible.
 
 			var xElement = oX('<div class="editorPane"></div>');
 
@@ -157,14 +156,11 @@
 
 			aceEditor.xElement = xElement;
 			aceEditor.element = xElement.element;
-			// self.changeListener(instance);
 			aceEditor.on('change', () => self.markChanged(aceEditor.path));
-			// 			self.bindKeys(editorPane);
-
 
 			aceEditor.on('focus', function() {
 				self.trackCursor();
-				self.updateEditorFocus(aceEditor, true);
+				self.updateEditorFocus(aceEditor);
 			});
 
 			atheos.keybind.activateCustomCommands(aceEditor);
@@ -297,29 +293,6 @@
 			oX('#current_mode>span').html('');
 		},
 
-		isAttached: function(file) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				if (self.editorPanes[k].getSession().path === file.path) {
-					return true;
-				}
-			}
-			return false;
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// Convenience function to iterate over Editor instances
-		//
-		// Parameters:
-		//   fn - {Function} callback called with each member as an argument
-		//
-		/////////////////////////////////////////////////////////////////
-		forEachAceEditor: function(fn) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				fn.call(self, self.editorPanes[k]);
-			}
-		},
-
 		/////////////////////////////////////////////////////////////////
 		//
 		// Set an editor instance as active
@@ -346,6 +319,9 @@
 		},
 
 
+		/////////////////////////////////////////////////////////////////
+		// Set option on AceEditor instance
+		/////////////////////////////////////////////////////////////////
 		setOption: function(opt, val, aceEditor) {
 			if (aceEditor) return aceEditor.setOption(opt, val);
 			self.forEachAceEditor(function(aceEditor) {
@@ -353,14 +329,6 @@
 			});
 			self.settings[opt] = val;
 			storage('editor.' + opt, val);
-		},
-
-		/////////////////////////////////////////////////////////////////
-		// Set Font Size
-		/////////////////////////////////////////////////////////////////
-		setCodeLigatures: function(val, aceEditor) {
-			val = val ? 'Ubuntu-Fira' : 'Ubuntu-Mono';
-			self.setOption('fontFamily', val, aceEditor);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -398,12 +366,7 @@
 
 
 		//////////////////////////////////////////////////////////////////////80
-		//
 		// Setup Cursor Tracking
-		//
-		// Parameters:
-		//   i - {Editor} (Defaults to active editor)
-		//
 		//////////////////////////////////////////////////////////////////////80
 		trackCursor: function() {
 			var col = i18n('Col');
@@ -425,13 +388,10 @@
 			}
 		},
 
-
-		// Path to EditSession instance mapping
-		activeFiles: {},
-
-		noOpen: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'exe', 'zip', 'tar', 'tar.gz'],
-
-		getUnsavedChanges() {
+		//////////////////////////////////////////////////////////////////////80
+		// Move Up or down (Key Combo)
+		//////////////////////////////////////////////////////////////////////80
+		getChangedPaths: function() {
 			var changedPaths = [];
 
 			for (let path in self.activeFiles) {
@@ -440,7 +400,7 @@
 				}
 			}
 
-			return (changedPaths.length > 0) ? changedPaths : false;
+			return changedPaths;
 		},
 
 
@@ -574,6 +534,9 @@
 			carbon.publish('active.focus', path);
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Send focus status to server
+		//////////////////////////////////////////////////////////////////////80
 		sendFocusToServer: function(path) {
 			echo({
 				url: atheos.controller,
@@ -859,7 +822,8 @@
 				data: {
 					target: 'editor',
 					action: 'openFile',
-					path: path
+					path: path,
+					inFocus: atheos.inFocusPath === path
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return toast('error', 'Unable to reload file.');
@@ -993,7 +957,21 @@
 			}
 
 			return index >= 0 ? self.editorPanes[index] : null;
-		}
+		},
+
+		/////////////////////////////////////////////////////////////////
+		//
+		// Convenience function to iterate over Editor instances
+		//
+		// Parameters:
+		//   fn - {Function} callback called with each member as an argument
+		//
+		/////////////////////////////////////////////////////////////////
+		forEachAceEditor: function(fn) {
+			for (var k = 0; k < self.editorPanes.length; k++) {
+				fn.call(self, self.editorPanes[k]);
+			}
+		},
 
 	};
 

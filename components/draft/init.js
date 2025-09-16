@@ -51,10 +51,10 @@
 		autosave: function() {
 			if (!self.enabled || self.saving.length > 0) return;
 
-			var changedTabs = atheos.editor.getUnsavedChanges();
-			if (!changedTabs) return;
+			var changedPaths = atheos.editor.getChangedPaths();
+			if (!changedPaths.length) return;
 
-			changedTabs.forEach(function(path) {
+			changedPaths.forEach(function(path) {
 				let session = atheos.editor.sessions[path];
 				if (session.autosaved) return;
 				self.save(session);

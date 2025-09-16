@@ -97,7 +97,8 @@
 		publish: function(setting, value, hidden) {
 
 			if (setting == 'editor.ligatures') {
-				atheos.editor.setCodeLigatures(value);
+				val = val ? 'Ubuntu-Fira' : 'Ubuntu-Mono';
+				atheos.editor.setOption('fontFamily', val);
 			} else if (setting == 'editor.keyboardHandler') {
 				atheos.keybind.setGlobalKeyboard(value);
 
