@@ -73,6 +73,7 @@
 					// Left click not on an icon: Switch focus to file
 					if (tagName !== 'I') {
 						atheos.editor.focusOnFile(path);
+						atheos.editor.sendFocusToServer(path);
 
 						// Left click on an icon: Save or close file
 					} else if (tagName === 'I') {
