@@ -237,7 +237,6 @@
 					(activeBindings[mainKey] = activeBindings[mainKey] || []).push(data);
 
 				}
-				log(activeBindings);
 
 			} else if (activeMode == "vim") {
 				self.activateVimKeybindings();
@@ -248,7 +247,6 @@
 		// Activate custom keybindings for current ace editor
 		//////////////////////////////////////////////////////////////////////80
 		activateCustomCommands: function(aceEditor) {
-			log(aceEditor);
 			// 			aceEditor.commands.commands = {};
 			let aceMode = activeMode === 'default' ? null : "ace/keyboard/" + activeMode;
 			aceEditor.setOption('keyboardHandler', aceMode);
