@@ -51,27 +51,27 @@
 			if (xhr.readyState !== 4) return; // not complete
 
 			// Try to parse JSON data
-			var data = xhr.responseText;
+			var reply = xhr.responseText;
 			try {
-				data = JSON.parse(data);
+				reply = JSON.parse(reply);
 
-				if ('debug' in data) {
-					console.log(data.debug);
-					delete data.debug;
+				if ('debug' in reply) {
+					console.log(reply.debug);
+					delete reply.debug;
 				}
 			} catch (e) {}
 
 			let status = xhr.status;
-			if (isObject(data)) {
-				status = data.status;
-				delete data.status;
+			if (isObject(reply)) {
+				status = reply.status;
+				delete reply.status;
 			}
 
 			// Call the relevant callback function
 			if (opt.success && xhr.status >= 200 && xhr.status < 300) {
-				opt.success(data, status);
+				opt.success(reply, status);
 			} else if (opt.failure) {
-				opt.failure(data, status);
+				opt.failure(reply, status);
 			}
 		};
 
