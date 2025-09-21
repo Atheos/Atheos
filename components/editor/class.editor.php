@@ -100,10 +100,12 @@ class Editor {
 
         $modifyTime = filemtime($path);
         $status = $inFocus === "true" ? "inFocus" : "active";
-        $this->setStatus($path, $status);
+        if ($inFocus === "true") {
+            $this->setStatus($path, "inFocus");
+        }
         Common::send(200, array("content" => $output, "modifyTime" => $modifyTime));
     }
-    
+
     //////////////////////////////////////////////////////////////////////////80
     // Mark File As Focused
     //  All other files will be marked as non-focused.
@@ -111,8 +113,8 @@ class Editor {
     public function setFocus($path) {
         $this->setStatus($path, "inFocus");
         Common::send(200);
-    }    
-    
+    }
+
     //////////////////////////////////////////////////////////////////////////80
     // Mark File As Focused
     //  All other files will be marked as non-focused.
@@ -127,10 +129,10 @@ class Editor {
         $where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
         $value = array("user" => $this->activeUser, "path" => $path, "status" => $status);
         $this->db->update($where, $value, true);
-        
+
         return true;
-    }    
-    
+    }
+
     //////////////////////////////////////////////////////////////////////////80
     // Save (Modifies a file name/contents or directory name)
     //////////////////////////////////////////////////////////////////////////80
@@ -152,7 +154,7 @@ class Editor {
             // Do nothing if there is no content
             Common::send(200, array("modifyTime" => $serverModifyTime));
         }
-        
+
         // Common::send(202, array("modifyTime" => filemtime($path)));
         try {
             $oldContent = file_get_contents($path);
