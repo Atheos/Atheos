@@ -459,7 +459,7 @@
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return;
-					self.createEditSession(path, reply.content, reply.modifyTime, mode);
+					self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
 					if (inFocus) {
 						self.focusOnFile(path, line);
 					}
@@ -470,7 +470,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Create Edit Session
 		//////////////////////////////////////////////////////////////////////80
-		createEditSession: function(path, content, modifyTime, mode) {
+		createEditSession: function(path, content, modifyTime, loadHash, mode) {
 			let aceSession = new AceEditSession(content),
 				aceUndoManager = new AceUndoManager();
 
@@ -488,6 +488,7 @@
 				status: 'current',
 				path: path,
 				serverMTime: modifyTime,
+				serverHash: loadHash,
 				originalContent: content.slice(0),
 				fileTab: atheos.tabmanager.createFileTab(path),
 				aceSession: aceSession,
@@ -638,7 +639,8 @@
 					path: file.path,
 					saveType,
 					newContent,
-					modifyTime: file.serverMTime
+					modifyTime: file.serverMTime,
+					loadHash: file.serverHash
 				},
 				settled: function(reply, status) {
 					if (status === 200) {

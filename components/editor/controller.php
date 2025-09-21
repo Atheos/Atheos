@@ -82,8 +82,9 @@ switch ($action) {
         $saveType = POST("saveType");
         $newContent = POST("newContent");
         $modifyTime = POST("modifyTime");
+        $loadHash = POST("loadHash");
 
-        $Editor->saveFile($path, $saveType, $newContent, $modifyTime);
+        $Editor->saveFile($path, $saveType, $newContent, $modifyTime, $loadHash);
         break;
 
     //////////////////////////////////////////////////////////////////////////80

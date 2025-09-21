@@ -86,24 +86,24 @@ class Editor {
             Common::send(418, "Invalid path.");
         }
 
-        $output = file_get_contents($path);
+        $content = file_get_contents($path);
 
         if (extension_loaded("mbstring")) {
-            if (!mb_check_encoding($output, "UTF-8")) {
-                if (mb_check_encoding($output, "ISO-8859-1")) {
-                    $output = utf8_encode($output);
+            if (!mb_check_encoding($content, "UTF-8")) {
+                if (mb_check_encoding($content, "ISO-8859-1")) {
+                    $content = utf8_encode($content);
                 } else {
-                    $output = mb_convert_encoding($output, "UTF-8");
+                    $content = mb_convert_encoding($content, "UTF-8");
                 }
             }
         }
 
         $modifyTime = filemtime($path);
-        $status = $inFocus === "true" ? "inFocus" : "active";
+        $loadHash = hash("sha256", $content);
         if ($inFocus === "true") {
             $this->setStatus($path, "inFocus");
         }
-        Common::send(200, array("content" => $output, "modifyTime" => $modifyTime));
+        Common::send(200, array("content" => $content, "modifyTime" => $modifyTime, "loadHash" => $loadHash));
     }
 
     //////////////////////////////////////////////////////////////////////////80
@@ -136,28 +136,33 @@ class Editor {
     //////////////////////////////////////////////////////////////////////////80
     // Save (Modifies a file name/contents or directory name)
     //////////////////////////////////////////////////////////////////////////80
-    public function saveFile($path, $saveType, $newContent, $clientModifyTime) {
+    public function saveFile($path, $saveType, $newContent, $clientModifyTime, $loadHash) {
         if (!is_file($path)) {
             Common::send(418, "Invalid path.");
         }
 
-        if ($saveType === "patch") {
-            $serverModifyTime = filemtime($path);
-            if (!$clientModifyTime) {
-                Common::send(419, "Missing modification time.");
-            } elseif ($serverModifyTime !== (int)$clientModifyTime) {
-                Common::send(159, "out of sync");
-            }
-        }
-
-        if (strlen(trim($newContent)) === 0) {
-            // Do nothing if there is no content
-            Common::send(200, array("modifyTime" => $serverModifyTime));
-        }
-
-        // Common::send(202, array("modifyTime" => filemtime($path)));
         try {
             $oldContent = file_get_contents($path);
+            $serverModifyTime = filemtime($path);
+
+            if ($saveType === "patch") {
+                if (!$clientModifyTime) {
+                    Common::send(419, "Missing modification time.");
+                } elseif ($serverModifyTime !== (int)$clientModifyTime) {
+                    if ($loadHash and $loadHash !== hash("sha256", $oldContent)) {
+                        // Hash matches, safe to continue to save
+                    } else {
+                        Common::send(159, "out of sync");
+                    }
+                }
+            }
+
+            if (strlen(trim($newContent)) === 0) {
+                // Do nothing if there is no content
+                Common::send(200, array("modifyTime" => $serverModifyTime));
+            }
+
+            // Common::send(202, array("modifyTime" => filemtime($path)));
             $fileWriter = fopen($path, "w");
             if (!$fileWriter) {
                 Common::send(506, "Client does not have access.");
@@ -178,7 +183,7 @@ class Editor {
                 // returned instead of new modification time after editing
                 // the file.
                 clearstatcache();
-                Common::send(200, array("modifyTime" => filemtime($path)));
+                Common::send(200, array("modifyTime" => filemtime($path), "loadHash" => hash("sha256", $newContent)));
             } else {
                 Common::send(506, "Server encountered an error during write.");
             }
@@ -188,7 +193,6 @@ class Editor {
         }catch(Exception $e) {
             Common::send(506, "Server encountered an unknown error.");
         }
-
     }
 
 
