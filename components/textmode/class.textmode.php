@@ -38,6 +38,7 @@ class TextMode {
 		'json' => 'json',
 		'java' => 'java',
 		'sty' => 'latex',
+		'tex' => 'latex',
 		'xml' => 'xml',
 		'sql' => 'sql',
 		'md' => 'markdown',
