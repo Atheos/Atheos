@@ -63,6 +63,6 @@ switch ($action) {
 		break;
 
 	default:
-		Common::send(416, "Invalid action.");
+		Common::send(416, "invalid_action");
 		break;
 }

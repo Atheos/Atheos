@@ -40,7 +40,7 @@ class Settings {
 		if (!empty($settings)) {
 			Common::send(200, $settings);
 		} else {
-			Common::send(404, "Settings for user not found.");
+			Common::send(404, "settings_missing");
 		}
 	}
 
@@ -49,6 +49,6 @@ class Settings {
 	//////////////////////////////////////////////////////////////////////////80
 	public function save($key, $value) {
 		$this->db->update($key, $value, true);
-		Common::send(200, "Setting $key saved.");
+		Common::send(200, "setting_saved");
 	}
 }

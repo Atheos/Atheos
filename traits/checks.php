@@ -79,7 +79,7 @@ trait Check {
 			if ($destroy) {
 				session_unset();
 				session_destroy();
-				Common::send("error", "Security violation.");
+				Common::send(451, "Security violation.");
 			}
 
 			SESSION("LAST_ACTIVE", time()); // Reset user activity timer
@@ -93,7 +93,7 @@ trait Check {
 		}
 
 		if (!SESSION("user")) {
-			Common::send("error", "Authentication error");
+			Common::send(401, "Authentication error");
 		}
 	}
 }

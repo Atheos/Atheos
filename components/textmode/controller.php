@@ -39,6 +39,6 @@ switch ($action) {
 		$TextMode->loadExtensionMap();
 		break;
 	default:
-		Common::send(416, "Invalid action.");
+		Common::send(416, "invalid_action");
 		break;
 }
