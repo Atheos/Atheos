@@ -53,7 +53,7 @@ function maxUpload() {
     $max_upload = bytes(ini_get("upload_max_filesize"));
     $max_post = bytes(ini_get("post_max_size"));
     $memory_limit = bytes(ini_get("memory_limit"));
-    
+
     $max = min($max_upload, $max_post, $memory_limit);
 
     return [
@@ -95,6 +95,6 @@ case "upload":
     // Default: Invalid Action
     //////////////////////////////////////////////////////////////////////////80
 default:
-    Common::send(416, "Invalid action.");
+    Common::send(416, "invalid_action");
     break;
 }

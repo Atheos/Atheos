@@ -60,6 +60,6 @@ class Update {
 	public function saveCache($cache) {
 		$cache = json_decode($cache);
 		Common::saveJSON("update", $cache, "cache");
-		Common::send(200);
+		Common::send(200, "Market cache updated.");
 	}
 }
