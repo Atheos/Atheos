@@ -11,9 +11,9 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 set_error_handler(function($severity, $message, $file, $line) {
-	if (error_reporting() & $severity) {
-		throw new ErrorException($message, 0, $severity, $file, $line);
-	}
+    if (error_reporting() & $severity) {
+        throw new ErrorException($message, 0, $severity, $file, $line);
+    }
 });
 
 require_once("common.php");
@@ -26,30 +26,29 @@ $target = Common::cleanPath($target);
 // Verify Session or Key
 //////////////////////////////////////////////////////////////////////////////80
 if ($action !== "authenticate") {
-	Common::checkSession();
+    Common::checkSession();
 }
 
-if (!$action || !$target) {
-	Common::send(415, "Missing target or action.");
-}
+if (!$action) Common::send(415, "missing_action");
+if (!$target) Common::send(415, "missing_target");
 
 if ($target === "i18n" && $action === "init") {
-	$cache = array("cache" => $i18n->getCache());
-	Common::send(200, $cache);
+    $cache = array("cache" => $i18n->getCache());
+    Common::send(200, $cache);
 }
 
 if ($target === "core" && $action === "loadState") {
     $state = Common::loadState();
-	Common::send(200, $state);
+    Common::send(200, $state);
 }
 
 
 $componentPath = Common::cleanPath("components/$target/controller.php");
 
 if (file_exists("components/$target/controller.php")) {
-	require("components/$target/controller.php");
+    require("components/$target/controller.php");
 } elseif (file_exists("plugins/$target/controller.php")) {
-	require("plugins/$target/controller.php");
+    require("plugins/$target/controller.php");
 } else {
-	Common::send(404, "Bad target destination");
+    Common::send(416, "invalid_target");
 }
