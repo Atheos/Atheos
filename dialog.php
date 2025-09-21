@@ -21,14 +21,14 @@ $action = POST("action");
 $target = POST("target");
 $target = Common::cleanPath($target);
 
-if (!$action || !$target) {
-    Common::send("error", "Missing target or action.");
-}
+if (!$action) Common::send(415, "missing_action");
+if (!$target) Common::send(415, "missing_target");
+
 
 if (file_exists("components/$target/dialog.php")) {
     require("components/$target/dialog.php");
 } elseif (file_exists("plugins/$target/dialog.php")) {
     require("plugins/$target/dialog.php");
 } else {
-    Common::send("error", "Bad target destination");
+    Common::send(416, "invalid_target");
 }

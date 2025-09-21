@@ -3,6 +3,15 @@
 	"deny": "No",
 	"affirm": "Yes",
 
+	"invalid": {
+		"action": "Invalid action.",
+		"target": "Invalid target."
+	},
+	"missing": {
+		"action": "Missing action.",
+		"target": "Missing target."
+	},
+
 	"enabled": "Enabled",
 	"disabled": "Disabled",
 
@@ -216,7 +225,10 @@
 		"feedback": "Notification Settings",
 		"draft": "Draft Settings",
 		"system": "System Settings",
-		"codegit": "CodeGit Settings"
+		"codegit": "CodeGit Settings",
+		"saved": "User settings updated.",
+		"missing": "User settings not found.",
+		"loaded": "User settings loaded."
 	},
 
 	"feedback": "Notifications",
@@ -571,8 +583,7 @@
 			"noPathUrl": "Missing path or URL.",
 			"invalidTransferType": "Invalid git transfer type.",
 			"noTypeRepoRemoteBranch": "Missing type, repo, remote or branch.",
-			"noRepoType": "Missing repo or type.",
-			"invalidAction": "Invalid action."
+			"noRepoType": "Missing repo or type."
 		},
 		"init": {
 			"": "Git Init",
@@ -678,7 +689,4 @@
 	"log": "Log",
 	"transfer": "Transfer",
 	"configure": "Configure"
-
-
-
 }
