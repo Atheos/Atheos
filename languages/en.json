@@ -47,7 +47,7 @@
 	},
 
 	"key": {
-		"alt": "Atl",
+		"alt": "Alt",
 		"esc": "Esc",
 		"ctrl": "Ctrl",
 		"shift": "Shift"
@@ -148,7 +148,7 @@
 		"query": "Query:",
 		"searching": "Searching...",
 		"searchFiles": "Search Files:",
-		"fileTypes": "space seperated file types",
+		"fileTypes": "space separated file types",
 		"withinWorkSpace": "Within Workspace"
 	},
 
@@ -678,6 +678,7 @@
 	"log": "Log",
 	"transfer": "Transfer",
 	"configure": "Configure"
+
 
 
 }
