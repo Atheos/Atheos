@@ -171,7 +171,7 @@ class Common {
         $settings = $settings_db->select("*");
 
         return array(
-            "userLastLogin" => $userData["lastLogin"],
+            "lastLogin" => SESSION("lastLogin"), //$userData["lastLogin"],
             "projectName" => $projectName,
             "projectPath" => $projectPath,
             "projectIsRepo" => is_dir($projectPath . "/.git"),

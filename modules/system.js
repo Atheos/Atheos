@@ -103,7 +103,6 @@
 
 					atheos.settings.processSettings(reply.settings);
 
-
 					atheos.filetree.setRoot();
 					atheos.editor.openFiles(reply.openFiles);
 
