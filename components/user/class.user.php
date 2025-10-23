@@ -75,6 +75,7 @@ class User {
 		if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
 			SESSION("projectPath", $user["activePath"]);
 			SESSION("projectName", $user["activeName"]);
+			SESSION("lastLogin", $user["lastLogin"]);
 		}
 
 		$reply = array(
