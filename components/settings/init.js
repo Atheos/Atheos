@@ -72,7 +72,6 @@
 
 			value = value === 'true' ? true : value === 'false' ? false : value;
 
-
 			echo({
 				url: atheos.controller,
 				data: {
@@ -86,9 +85,6 @@
 					if (status !== 200) return;
 					storage(key, value);
 					self.publish(key, value, hidden);
-					// 	toast(status, 'Setting "' + key + '" saved.');
-					// 	reply.text = 'Setting "' + key + '" saved.';
-					// 	self.displayStatus(reply);
 				}
 			});
 
