@@ -88,8 +88,8 @@
  "Installed" : "Yüklenenler",
  "Last update was done by " : "Son güncellemeyi yapan ",
  "Latest Version" : "Son Versiyon",
- "Login" : "Giriş",
- "Logout" : "Çıkış",
+ "Login" : "Oturum Aç",
+ "Logout" : "Oturumu Kapat",
  "Marketplace" : "Market",
  "Merge All" : "Hepsini Birleştir",
  "Mode" : "Mod",
@@ -195,3 +195,4 @@
  "Your Version" : "Kullandığınız Versiyon"
 
 }
+
