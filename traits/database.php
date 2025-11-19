@@ -157,6 +157,11 @@ class ObjStore extends Store {
         if (!$where) return "missing_parameter";
         if ($where === "*") return $this->data;
 
+        // Fix: ensure $this->data is iterable
+        if (!is_array($this->data)) {
+            return [];
+        }
+
         $positive = array();
         $negative = array();
 
