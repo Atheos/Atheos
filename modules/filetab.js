@@ -204,7 +204,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Find next file tab
 		//////////////////////////////////////////////////////////////////////80
-		getNextFileTab: function(direction) {
+		getNextFile: function(direction) {
 
 			var activeTabs = self.tabList.findAll('li');
 			if (self.loopBehavior === 'loopBoth') {
@@ -231,9 +231,24 @@
 				nextTabIndex = (currentTabIndex + 1) % activeTabs.length;
 				nextTabElement = activeTabs[nextTabIndex];
 			}
-			return nextTabElement.attr('data-path');
+			let path = nextTabElement.attr('data-path');
+			return path in atheos.editor.activeFiles ? atheos.editor.activeFiles[path] : null;
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Move Up or down (Key Combo)
+		//////////////////////////////////////////////////////////////////////80
+		cycleFocus: function(direction) {
+			var nextFile = self.getNextFile(direction);
+			if (nextFile) {
+				atheos.editor.attachFileToEditor(nextFile);
+				self.highlightEntry(nextFile.path, direction);
+			}
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// 
+		//////////////////////////////////////////////////////////////////////80
 		highlightEntry: function(path, direction) {
 			direction = direction || false;
 			var active = self.tabList.findAll('.active');
