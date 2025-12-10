@@ -133,14 +133,14 @@
 			vimEx: []
 		},
 		cycleFocusUp: {
-			fn: () => atheos.editor.cycleFocus('up'),
+			fn: () => atheos.tabmanager.cycleFocus('up'),
 			default: 'Ctrl-Up', // Ctrl+UP
 			emacs: [],
 			sublime: [],
 			vimEx: []
 		},
 		cycleFocusDown: {
-			fn: () => atheos.editor.cycleFocus('down'),
+			fn: () => atheos.tabmanager.cycleFocus('down'),
 			default: 'Ctrl-Down', // Ctrl+DOWN
 			emacs: [],
 			sublime: [],
@@ -213,10 +213,9 @@
 		setGlobalKeyboard: function(mode) {
 			activeMode = mode === null ? 'default' : mode;
 
-			atheos.editor.forEachAceEditor(function(aceEditor) {
-				self.activateCustomCommands(aceEditor);
-
-			});
+			for (var i = 0; i < atheos.editor.editorPanes.length; i++) {
+				self.activateCustomCommands(atheos.editor.editorPanes[i]);
+			}
 
 			if (activeMode === 'default') {
 				activeBindings = {};
