@@ -17,7 +17,7 @@
 //  -  alt: Alt key is also pressed
 //
 //	atheos.keybind.add(87, 'ctrl', function(text) {
-//		console.log("This will log when Ctrl + W is pressed:" + text);
+//		console.log('This will log when Ctrl + W is pressed:' + text);
 //	}, ['Custom Message']);
 //////////////////////////////////////////////////////////////////////////////80
 // Default Bindings
@@ -211,20 +211,20 @@
 		// Key Rebind
 		//////////////////////////////////////////////////////////////////////80
 		setGlobalKeyboard: function(mode) {
-			activeMode = mode == null ? 'default' : mode;
+			activeMode = mode === null ? 'default' : mode;
 
 			atheos.editor.forEachAceEditor(function(aceEditor) {
 				self.activateCustomCommands(aceEditor);
 
 			});
 
-			if (activeMode == "default") {
+			if (activeMode === 'default') {
 				activeBindings = {};
 				for (let [name, binding] of Object.entries(keymaps)) {
 					if (!binding.default) continue;
 
 					// break the binding into tokens
-					const tokens = binding.default.toLowerCase().split("-");
+					const tokens = binding.default.toLowerCase().split('-');
 					const mainKey = tokens[tokens.length - 1]; // last part is the actual key
 
 					let data = {
@@ -238,7 +238,7 @@
 
 				}
 
-			} else if (activeMode == "vim") {
+			} else if (activeMode === 'vim') {
 				self.activateVimKeybindings();
 			}
 		},
@@ -248,9 +248,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		activateCustomCommands: function(aceEditor) {
 			// 			aceEditor.commands.commands = {};
-			let aceMode = activeMode === 'default' ? null : "ace/keyboard/" + activeMode;
+			let aceMode = activeMode === 'default' ? null : 'ace/keyboard/' + activeMode;
 			aceEditor.setOption('keyboardHandler', aceMode);
-			if (activeMode == 'default') {
+			if (activeMode === 'default') {
 				self.activateDefaultKeybindings(aceEditor);
 			}
 
@@ -303,9 +303,9 @@
 		// Activate Vim Keybindings
 		//////////////////////////////////////////////////////////////////////80
 		activateVimKeybindings: function() {
-			ace.config.setModuleUrl("ace/keyboard/vim", "/components/editor/ace-editor/keybinding-vim.js");
+			ace.config.setModuleUrl('ace/keyboard/vim', '/components/editor/ace-editor/keybinding-vim.js');
 
-			ace.config.loadModule("ace/keyboard/vim", function(module) {
+			ace.config.loadModule('ace/keyboard/vim', function(module) {
 				const Vim = module.Vim;
 
 				Object.values(keymaps).forEach((binding) => {
