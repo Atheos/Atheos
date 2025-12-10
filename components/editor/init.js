@@ -9,11 +9,12 @@
 //////////////////////////////////////////////////////////////////////////////80
 
 (function() {
+	'use strict';
 
-
-	// File -> wns AceSession
-	// EditorPane ->owns AceEditor -> shows a proxy session of File
-	// EditorWindow -> contains multiple Panes
+	// File -> Represents the file on the server
+	// AceSession -> Owns the editing session, such as history.
+	// EditorPane -> Owns AceEditor Text Editor -> shows a proxy session of File
+	// EditorWindow -> Can contain multiple Panes
 
 	// Currently in focused 
 	const inFocus = {
@@ -275,16 +276,14 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		//
 		// Remove all Editor instances and clean up the DOM
-		//
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
-			self.forEachAceEditor(function(aceEditor, index) {
-				aceEditor.destroy();
-				aceEditor.xElement.remove();
-				self.editorPanes.splice(index, 1);
-			});
+			for (var i = 0; i < self.editorPanes.length; i++) {
+				self.editorPanes[i].destroy();
+				self.editorPanes[i].xElement.remove();
+				self.editorPanes.splice(i, 1);
+			}
 
 			inFocus.file = null;
 			inFocus.editorPane = null;
@@ -294,12 +293,7 @@
 		},
 
 		/////////////////////////////////////////////////////////////////
-		//
 		// Set an editor instance as active
-		//
-		// Parameters:
-		//   i - {Editor}
-		//
 		/////////////////////////////////////////////////////////////////
 		updateEditorFocus: function(aceEditor) {
 			aceEditor = aceEditor || self.inFocusEditor;
@@ -324,21 +318,15 @@
 		/////////////////////////////////////////////////////////////////
 		setOption: function(opt, val, aceEditor) {
 			if (aceEditor) return aceEditor.setOption(opt, val);
-			self.forEachAceEditor(function(aceEditor) {
-				aceEditor.setOption(opt, val);
-			});
+			for (var i = 0; i < self.editorPanes.length; i++) {
+				self.editorPanes[i].setOption(opt, val);
+			}
 			self.settings[opt] = val;
 			storage('editor.' + opt, val);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		//
 		// Insert text
-		//
-		// Parameters:
-		//   val - {String} Text to be inserted
-		//   i - {Editor} (Defaults to active editor)
-		//
 		//////////////////////////////////////////////////////////////////////80
 		insertText: function(val, aceEditor) {
 			aceEditor = aceEditor || atheos.inFocusEditor;
@@ -347,15 +335,8 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		//
 		// Move the cursor to a particular line
-		//
-		// Parameters:
-		//   line - {Number} Line number
-		//   i - {Editor} Editor instance
-		//
 		//////////////////////////////////////////////////////////////////////80
-
 		gotoLine: function(line, aceEditor) {
 			aceEditor = aceEditor || atheos.inFocusEditor;
 			if (!aceEditor) return;
@@ -363,7 +344,6 @@
 			aceEditor.gotoLine(line, 0, true);
 			aceEditor.focus();
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Setup Cursor Tracking
@@ -376,33 +356,18 @@
 			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 		},
 
-
 		//////////////////////////////////////////////////////////////////////80
-		// Move Up or down (Key Combo)
-		//////////////////////////////////////////////////////////////////////80
-		cycleFocus: function(direction) {
-			var nextPath = atheos.tabmanager.getNextFileTab(direction);
-			if (nextPath) {
-				self.attachFileToEditor(self.activeFiles[nextPath]);
-				atheos.tabmanager.highlightEntry(nextPath, direction);
-			}
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Move Up or down (Key Combo)
+		// Return list of all modified files
 		//////////////////////////////////////////////////////////////////////80
 		getChangedPaths: function() {
 			var changedPaths = [];
-
 			for (let path in self.activeFiles) {
 				if (self.activeFiles[path].status === 'changed') {
 					changedPaths.push(path);
 				}
 			}
-
 			return changedPaths;
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Open multiple files; mostly used to restore last user state.
@@ -419,7 +384,6 @@
 				}
 			}
 		},
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Open File
@@ -442,28 +406,21 @@
 			// file content to ensure that the highlighter is ready when 
 			// content is being loaded into the editor pane.
 			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', function() {
-				self.loadFile(path, mode, inFocus, line);
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Load File
-		//////////////////////////////////////////////////////////////////////80
-		loadFile: function(path, mode, inFocus, line) {
-			echo({
-				data: {
-					target: 'editor',
-					action: 'openFile',
-					path: path,
-					inFocus: inFocus
-				},
-				settled: function(reply, status) {
-					if (status !== 200) return;
-					self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
-					if (inFocus) {
-						self.focusOnFile(path, line);
+				echo({
+					data: {
+						target: 'editor',
+						action: 'openFile',
+						path: path,
+						inFocus: inFocus
+					},
+					settled: function(reply, status) {
+						if (status !== 200) return;
+						self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
+						if (inFocus) {
+							self.focusOnFile(path, line);
+						}
 					}
-				}
+				});
 			});
 		},
 
@@ -613,8 +570,6 @@
 
 		//////////////////////////////////////////////////////////////////////80
 		// Save file
-		// I'm pretty sure the save methods on this are magic and should
-		// be worshipped.
 		//////////////////////////////////////////////////////////////////////80
 		saveModifications: function(file, saveType, newContent) {
 			let handleSuccess = function(modifyTime) {
@@ -755,8 +710,8 @@
 			// Grab reference to all currently open tab elements.
 			var tabs = atheos.tabmanager.tabList.findAll('li');
 			// Select the next filepath to be in focus from the tab list.
-			var nextFilePath = atheos.tabmanager.getNextFileTab('up');
 
+			var nextFile = atheos.tabmanager.getNextFile('up');
 			file.fileTab.remove();
 			atheos.tabmanager.updateTabDropdownVisibility();
 			delete self.activeFiles[path];
@@ -766,15 +721,13 @@
 				atheos.editor.exterminate();
 			} else {
 				// If more than one tab is open, swap to next file
-
-
 				// Loop thru editor panes and swap each to next file path
-				self.forEachAceEditor(function(aceEditor) {
-					if (aceEditor.path === path) {
-						aceEditor.path = null;
-						self.attachFileToEditor(self.activeFiles[nextFilePath], aceEditor);
+				for (var i = 0; i < self.editorPanes.length; i++) {
+					if (self.editorPanes[i].path === path) {
+						self.editorPanes[i].path = null;
+						self.attachFileToEditor(nextFile.path, self.editorPanes[i]);
 					}
-				});
+				}
 			}
 
 			echo({
@@ -866,55 +819,44 @@
 		// Rename tab to new name
 		//////////////////////////////////////////////////////////////////////80
 		rename: function(oldPath, newPath) {
-			var switchSessions = function(oldPath, newPath) {
+			var makeRename = function(oldPath, newPath) {
+
+				// Update fileTab
 				var fileTab = self.activeFiles[oldPath].fileTab;
 				fileTab.attr('data-path', newPath);
-				var title = newPath;
-				if (atheos.common.isAbsPath(newPath)) {
-					title = newPath.substring(1);
-				}
 
 				let info = pathinfo(newPath);
 				fileTab.find('a').html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
 
+				// Switch activeFiles path key; remove old key
 				self.activeFiles[newPath] = self.activeFiles[oldPath];
 				self.activeFiles[newPath].path = newPath;
-
 				delete self.activeFiles[oldPath];
-			};
 
-			if (self.activeFiles[oldPath]) {
-				// A file was renamed
-				switchSessions.apply(self, [oldPath, newPath]);
+				// Update editor panes to use new path where open
+				for (var i = 0; i < self.editorPanes.length; i++) {
+					if (self.editorPanes[i].path === oldPath) {
+						self.editorPanes[i].path = newPath;
 
-				// pass new sessions instance to setactive
-				for (var k = 0; k < atheos.editor.instances.length; k++) {
-					if (atheos.editor.instances[k].getSession().path === newPath) {
-						atheos.editor.setFocusOn(atheos.editor.instances[k]);
+						// Update text mode, in case of extension change
+						var ext = pathinfo(newPath).extension;
+						var mode = atheos.textmode.selectMode(ext);
+						atheos.textmode.setModeDisplay(self.editorPanes[i].getSession());
 					}
 				}
+			};
 
-				var newSession = self.activeFiles[newPath];
+			if (self.activeFiles[oldPath]) { // A currently active file was renamed
+				// Switch the activeFiles to use the new path
+				makeRename.apply(self, [oldPath, newPath]);
+			} else { // A folder was renamed
 
-				// Change Editor Mode
-				var ext = pathinfo(newPath).extension;
-				var mode = atheos.textmode.selectMode(ext);
-
-				// handle async mode change
-				var fn = function() {
-					atheos.textmode.setModeDisplay(newSession);
-					newSession.removeListener('changeMode', fn);
-				};
-
-				newSession.on('changeMode', fn);
-				newSession.setMode('ace/mode/' + mode);
-			} else {
-				// A folder was renamed
-				var newKey;
-				for (var key in self.activeFiles) {
-					newKey = key.replace(oldPath, newPath);
-					if (newKey !== key) {
-						switchSessions.apply(self, [key, newKey]);
+				oldPath = oldPath.endsWith('/') ? oldPath : oldPath + '/';
+				newPath = newPath.endsWith('/') ? newPath : newPath + '/';
+				for (var actvePath in self.activeFiles) {
+					if (actvePath.startsWith(oldPath)) {
+						let newActivePath = actvePath.replace(oldPath, newPath);
+						makeRename.apply(self, [actvePath, newActivePath]);
 					}
 				}
 			}
@@ -959,21 +901,7 @@
 			}
 
 			return index >= 0 ? self.editorPanes[index] : null;
-		},
-
-		/////////////////////////////////////////////////////////////////
-		//
-		// Convenience function to iterate over Editor instances
-		//
-		// Parameters:
-		//   fn - {Function} callback called with each member as an argument
-		//
-		/////////////////////////////////////////////////////////////////
-		forEachAceEditor: function(fn) {
-			for (var k = 0; k < self.editorPanes.length; k++) {
-				fn.call(self, self.editorPanes[k]);
-			}
-		},
+		}
 
 	};
 
