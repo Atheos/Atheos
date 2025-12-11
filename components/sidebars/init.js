@@ -244,7 +244,7 @@
 		//////////////////////////////////////////////////////////////////////	
 		init: function() {
 			editor = oX('#EDITOR');
-			workspace = oX('#workspace');
+			workspace = oX('#WORKSPACE');
 
 			left.init();
 			right.init();

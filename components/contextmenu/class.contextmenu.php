@@ -15,30 +15,34 @@ class ContextMenu {
     //////////////////////////////////////////////////////////////////////////80
     // Default File Manager Menu Map
     //////////////////////////////////////////////////////////////////////////80
-    private $fileMenu = array(
+    private $menuItems = array(
         //////////////////////////////////////////////////////////////////////80
         // Folder Actions
         //////////////////////////////////////////////////////////////////////80
         [
             "title" => "fileNew",
+            "location" => "fileTree",
             "icon" => "fas fa-plus-circle",
             "type" => "folder",
             "action" => "atheos.filetree.createFile"
         ],
         [
             "title" => "folderNew",
+            "location" => "fileTree",
             "icon" => "fas fa-folder",
             "type" => "folder",
             "action" => "atheos.filetree.createFolder"
         ],
         [
             "title" => "filesUpload",
+            "location" => "fileTree",
             "icon" => "fas fa-upload",
             "type" => "folder",
             "action" => "atheos.transfer.openUpload"
         ],
         [
             "title" => "hr_directory",
+            "location" => "fileTree",
             "type" => "folder",
         ],
         //////////////////////////////////////////////////////////////////////80
@@ -51,27 +55,32 @@ class ContextMenu {
         // ],
         [
             "title" => "copy",
+            "location" => "fileTree",
             "icon" => "fas fa-copy",
             "action" => "atheos.filetree.copy"
         ],
         [
             "title" => "paste",
+            "location" => "fileTree",
             "icon" => "fas fa-paste",
             "type" => "folder",
             "action" => "atheos.filetree.paste"
         ],
         [
             "title" => "duplicate",
+            "location" => "fileTree",
             "icon" => "fas fa-clone",
             "action" => "atheos.filetree.openDuplicate"
         ],
         [
             "title" => "download",
+            "location" => "fileTree",
             "icon" => "fas fa-download",
             "action" => "atheos.transfer.download"
         ],
         [
             "title" => "extract",
+            "location" => "fileTree",
             "icon" => "fas fa-file-export",
             "type" => "file",
             "fTypes" => ["zip", "tar", "tar.gz"],
@@ -79,6 +88,7 @@ class ContextMenu {
         ],
         [
             "title" => "preview",
+            "location" => "fileTree",
             "icon" => "fas fa-eye",
             "type" => "file",
             "fTypes" => ["php", "html"],
@@ -96,16 +106,19 @@ class ContextMenu {
         //////////////////////////////////////////////////////////////////////80
         [
             "title" => "hr_noRoot",
+            "location" => "fileTree",
             "noRoot" => true,
         ],
         [
             "title" => "rename",
+            "location" => "fileTree",
             "icon" => "fas fa-pencil-alt",
             "noRoot" => true,
             "action" => "atheos.filetree.openRename"
         ],
         [
             "title" => "delete",
+            "location" => "fileTree",
             "icon" => "fas fa-trash-alt",
             "noRoot" => true,
             "action" => "atheos.filetree.delete"
@@ -115,10 +128,12 @@ class ContextMenu {
         //////////////////////////////////////////////////////////////////////80
         [
             "title" => "hr_folder",
+            "location" => "fileTree",
             "type" => "folder",
         ],
         [
             "title" => "rescan",
+            "location" => "fileTree",
             "icon" => "fas fa-sync-alt",
             "type" => "folder",
             "action" => "atheos.filetree.rescan"
@@ -128,10 +143,12 @@ class ContextMenu {
         //////////////////////////////////////////////////////////////////////80
         [
             "title" => "hr_git_folder",
+            "location" => "fileTree",
             "type" => "folder",
         ],
         [
             "title" => "codegit_open",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "folder",
             "isRepo" => true,
@@ -139,6 +156,7 @@ class ContextMenu {
         ],
         [
             "title" => "git_init",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "folder",
             "isRepo" => false,
@@ -146,6 +164,7 @@ class ContextMenu {
         ],
         [
             "title" => "git_clone",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "folder",
             "action" => "atheos.codegit.gitClone"
@@ -155,11 +174,13 @@ class ContextMenu {
         //////////////////////////////////////////////////////////////////////80
         [
             "title" => "hr_git_file",
+            "location" => "fileTree",
             "type" => "file",
             "inRepo" => true
         ],
         [
             "title" => "git_diff",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "file",
             "inRepo" => true,
@@ -167,6 +188,7 @@ class ContextMenu {
         ],
         [
             "title" => "git_blame",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "file",
             "inRepo" => true,
@@ -174,33 +196,117 @@ class ContextMenu {
         ],
         [
             "title" => "git_log",
+            "location" => "fileTree",
             "icon" => "fas fa-code-branch",
             "type" => "file",
             "inRepo" => true,
             "action" => "atheos.codegit.log"
-        ]
+        ],
+
+
+        //////////////////////////////////////////////////////////////////////80
+        // FileTab Items:
+        //////////////////////////////////////////////////////////////////////80
+        [
+            "title" => "save",
+            "location" => "fileTab",
+            "icon" => "fas fa-save",
+            "action" => "atheos.editor.save"
+        ],
+        [
+            "title" => "reload",
+            "location" => "fileTab",
+            "icon" => "fas fa-sync-alt",
+            "action" => "atheos.editor.reset"
+        ],
+        [
+            "title" => "reset",
+            "location" => "fileTab",
+            "icon" => "fas fa-sync-alt",
+            "action" => "atheos.editor.reload"
+        ],
+
+        //////////////////////////////////////////////////////////////////////80
+        // Editor Items:
+        //////////////////////////////////////////////////////////////////////80
+        [
+            "title" => "selectAll",
+            "location" => "editor",
+            "icon" => "fas fa-object-group",
+            "action" => "atheos.editor.selectAllText"
+        ],
+        [
+            "title" => "cut",
+            "location" => "editor",
+            "icon" => "fas fa-scissors",
+            "action" => "atheos.editor.cutToClipboard"
+        ],
+        [
+            "title" => "copy",
+            "location" => "editor",
+            "icon" => "fas fa-copy",
+            "action" => "atheos.editor.copyToClipboard"
+        ],
+        [
+            "title" => "paste",
+            "location" => "editor",
+            "icon" => "fas fa-paste",
+            "action" => "atheos.editor.pasteFromClipboard"
+        ],
+        [
+            "title" => "hr_search",
+            "location" => "editor"
+        ],
+        [
+            "title" => "find",
+            "location" => "editor",
+            "icon" => "fas fa-search",
+            "action" => "atheos.editor.openFind"
+        ],
+        [
+            "title" => "replace",
+            "location" => "editor",
+            "icon" => "fas fa-wand-magic-sparkles",
+            "action" => "atheos.editor.openReplace"
+        ],
+        [
+            "title" => "gotoLine",
+            "location" => "editor",
+            "icon" => "fas fa-scroll",
+            "action" => "atheos.editor.openGotoLine"
+        ],
     );
-
-
-    private $tabMenu = array();
 
     //////////////////////////////////////////////////////////////////////////80
     // Load Context loadMenus
     //////////////////////////////////////////////////////////////////////////80
     public function loadMenus() {
-        $temp = array();
-        foreach ($this->fileMenu as $item) {
+        $tempFileTree = array();
+        $tempFileTab = array();
+        $tempEditor = array();
+
+        foreach ($this->menuItems as $item) {
             if (isset($item["title"])) {
                 $item["title"] = strpos($item["title"], "hr_") ? $item["title"] : i18n($item["title"]);
             }
             if (isset($item["admin"]) && $item["admin"] && !Common::checkAccess("configure")) continue;
 
-            $temp[] = $item;
+            if ($item["location"] === "fileTree") {
+                $tempFileTree[] = $item;
+
+            } else if ($item["location"] === "fileTab") {
+                $tempFileTab[] = $item;
+
+            } else if ($item["location"] === "editor") {
+                $tempEditor[] = $item;
+
+            }
         }
 
         Common::send(200, array(
-            "fileMenu" => $temp,
-            "tabMenu" => $this->tabMenu
+            "fileTreeItems" => $tempFileTree,
+            "fileTabItems" => $tempFileTab,
+            "editorItems" => $tempEditor,
         ));
     }
 }

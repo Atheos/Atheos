@@ -69,12 +69,12 @@ $SourceManager = new SourceManager;
     if (SESSION("user")) {
         ?>
 
-        <div id="workspace">
+        <div id="WORKSPACE">
             <div id="contextmenu"></div>
 
             <?php require_once("components/sidebars/sb-left.php"); ?>
 
-            <div id="ACTIVE">
+            <div id="FILETABS">
                 <ul id="active_file_tabs" class="tabList"></ul>
                 <a id="tab_dropdown" class="fas fa-chevron-circle-down"></a>
                 <a id="tab_close" class="fas fa-times-circle"></a>

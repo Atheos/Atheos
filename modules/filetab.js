@@ -27,7 +27,7 @@
 			// Resolve DOM nodes fresh at init time
 			self.tabList = oX('#active_file_tabs');
 			self.dropDownMenu = oX('#active_file_dropdown');
-			
+
 			self.initFileTabListener();
 
 			atheos.common.initMenuHandler('#tab_dropdown', '#active_file_dropdown', ['fa-chevron-circle-down', 'fa-chevron-circle-up']);
@@ -55,14 +55,22 @@
 				e.stopPropagation();
 
 				var tagName = e.target.tagName;
-				var node = oX(e.target);
+				var anchor = oX(e.target);
 
 				if (tagName === 'UL') return;
 
-				var path = node.attr('data-path');
-				if (['I', 'A', 'SPAN'].indexOf(tagName) > -1) {
-					path = node.parent('LI').attr('data-path');
+
+				if (tagName !== 'A') {
+					if (tagName === 'LI') {
+						anchor = anchor.find('a');
+					} else if (tagName === 'SPAN') {
+						anchor = anchor.parent('a');
+					} else {
+						anchor = anchor.sibling('a');
+					}
 				}
+
+				var path = anchor.attr('data-path');
 
 				if (e.which === 2) {
 					// Middle click anywhere closes file
@@ -78,11 +86,11 @@
 						// Left click on an icon: Save or close file
 					} else if (tagName === 'I') {
 						// Save file
-						if (node.hasClass('save')) {
+						if (anchor.hasClass('save')) {
 							atheos.editor.save(path);
 
 							// Close file
-						} else if (node.hasClass('close')) {
+						} else if (anchor.hasClass('close')) {
 							atheos.editor.close(path);
 							// 		self.updateTabDropdownVisibility();
 						}
@@ -328,7 +336,7 @@
 			//	to handle all the offsets, so afterwards we add a fixed offset
 			//	just to be sure. 
 
-			var availableWidth = oX('#ACTIVE').width();
+			var availableWidth = oX('#FILETABS').width();
 
 			var iconWidths = oX('#tab_dropdown').width() * 2;
 
@@ -380,8 +388,8 @@
 		createListItem: function(path) {
 			var info = pathinfo(path);
 
-			var item = `<li class="draggable" data-path="${path}">
-			<a title="${path}"><span class="subtle">${info.directory}/</span>${info.basename}</a>
+			var item = `<li class="draggable">
+			<a title="${path}" data-path="${path}"><span class="subtle">${info.directory}/</span>${info.basename}</a>
 			<i class="save fas fa-save"></i><i class="close fas fa-times-circle"></i>
 			</li>`;
 
