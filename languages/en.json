@@ -33,6 +33,8 @@
 	},
 	"logout": "Logout",
 	"rememberMe": "Remember Me",
+	
+	"selectAll": "Select All",
 
 	"find": "Find",
 	"find:": "Find:",
@@ -114,6 +116,7 @@
 	"rescan": "Rescan",
 
 	"download": "Download",
+	
 
 	"save": {
 		"": "Save",
@@ -126,6 +129,9 @@
 		"all": "Close All",
 		"active": "Close Active File"
 	},
+	
+	"reload": "Reload",
+	"reset": "Reset",
 
 	"closeUnsavedFile": "Close Unsaved File?",
 

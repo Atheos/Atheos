@@ -17,17 +17,18 @@
 (function() {
 	'use strict';
 
-	let menu = null;
+	let xContextMenu = null,
+		lastActive = null;
 
 	const self = {
 
-		fileMenu: {},
-		tabMenu: {},
-		projectMenu: {},
-		active: {},
+		fileTreeItems: [],
+		fileTabItems: [],
+		editorItems: [],
+		activeItem: {},
 
 		init: function() {
-			menu = oX('#contextmenu');
+			xContextMenu = oX('#contextmenu');
 
 			echo({
 				data: {
@@ -36,42 +37,68 @@
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return;
-					// self.createFileMenu(reply.fileMenu);
-					self.fileMenu = (typeof reply.fileMenu !== 'undefined') ? reply.fileMenu : {};
-					self.tabMenu = (typeof reply.tabMenu !== 'undefined') ? reply.fileMenu : {};
+					log(reply);
+
+					self.fileTreeItems = (typeof reply.fileTreeItems !== 'undefined') ? reply.fileTreeItems : [];
+					self.fileTabItems = (typeof reply.fileTabItems !== 'undefined') ? reply.fileTabItems : [];
+					self.editorItems = (typeof reply.editorItems !== 'undefined') ? reply.editorItems : [];
 
 					carbon.publish('contextmenu.requestItems');
 				}
 			});
 
-			// Initialize self listener
-			fX('#FILETREE').on('contextmenu', function(e) { // Context Menu
+			// Initialize filetree event listener
+			fX('#WORKSPACE').on('contextmenu', function(e) { // Context Menu
+				if (lastActive) lastActive.removeClass('context-menu-active');
+
+				let xTarget = oX(e.target),
+					menuType = false;
+
+				if (xTarget.parent('#FILETREE').exists()) { // Right click on FileTree
+					menuType = 'FileTreeMenu';
+
+				} else if (xTarget.parent('#FILETABS').exists()) {
+					menuType = 'FileTabMenu';
+
+				} else if (xTarget.parent('#EDITOR').exists()) {
+					menuType = 'Editor';
+
+				} else {
+					return;
+				}
+
 				e.preventDefault();
+				let html = '';
+				if (menuType === 'FileTreeMenu' || menuType === 'FileTabMenu') {
+					var anchor = atheos.filetree.checkAnchor(e.target);
+					if (!anchor) return;
+					anchor.addClass('context-menu-active');
+					log(anchor.element);
 
-				var active = oX('#FILETREE a.context-menu-active');
-				if (active) active.removeClass('context-menu-active');
+					let path = anchor.attr('data-path');
 
-				var anchor = atheos.filetree.checkAnchor(e.target);
-				self.showFileMenu(anchor);
+					if (menuType === 'FileTreeMenu') {
+						html = self.buildFileTreeMenu(anchor, path);
+					} else if (menuType === 'FileTabMenu') {
+						html = self.buildFileTabMenu(anchor, path);
+					}
 
-				self.show(e);
-				menu.addClass('fm');
+					lastActive = anchor;
+				} else if (menuType === 'Editor') {
+					html = self.buildEditorMenu();
+				}
+
+				xContextMenu.html(html);
+				self.activeItem.menuType = menuType;
+				carbon.publish('contextmenu.show' + menuType, self.activeItem);
+				log(menuType);
+				self.showMenu(e);
 			});
 
 			self.initTouchEvents();
 
-			fX('#ACTIVE').on('contextmenu', function(e) { // Context Menu
-				e.preventDefault();
-
-				var anchor = atheos.filetree.checkAnchor(e.target);
-				self.showTabMenu(anchor);
-
-				self.show(e);
-				menu.addClass('at');
-			});
-
-			// Hide on click for filetree
-			fX('#contextmenu.fm').on('click', function(e) {
+			// Click events for context menu
+			fX('#contextmenu').on('click', function(e) {
 				e.preventDefault();
 				let target = oX(e.target),
 					tagName = e.target.tagName;
@@ -86,15 +113,15 @@
 				}
 
 				if (typeof action === 'function') {
-					action(self.active, target);
+					if (self.activeItem.menuType === 'FileTreeMenu') {
+						action(self.activeItem, target);
+					} else if (self.activeItem.menuType === 'FileTabMenu') {
+						action(self.activeItem.path);
+					} else if (self.activeItem.menuType === 'Editor') {
+						action(self.activeItem.path);
+					}
 					self.hide();
 				}
-			});
-
-			// Hide on click for active tabs
-			fX('#contextmenu.at').on('click', function(e) {
-				e.preventDefault();
-				self.hide();
 			});
 
 			// Keep the contextmenu open if the mouse only leaves for a second
@@ -108,48 +135,19 @@
 			});
 		},
 
-		createFileMenu: function(items) {
-			let html = '';
-			for (let item of items) {
-				html += self.createMenuItem(item);
-			}
-			self.fileMenu = `<div id="fileMenu">${html}</div>`;
-		},
-
 		//////////////////////////////////////////////////////////////////////80
-		// Create Menu Item
+		// Build File Tree Context Menu
 		//////////////////////////////////////////////////////////////////////80
-		createMenuItem: function(item) {
-			let html = '';
+		buildFileTreeMenu: function(anchor, path) {
 
-			if (item.icon && item.action) {
-				let icon = `<i class="${item.icon}"></i>`;
-
-				html = `<a action="${item.action}">${icon + item.title}</a>\n`;
-			} else {
-				html = `<hr id="${item.title}">\n`;
-			}
-			return html;
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Show Context Menu
-		//////////////////////////////////////////////////////////////////////80
-		showFileMenu: function(anchor) {
-			if (!anchor) return;
-
-
-			let path = anchor.attr('data-path'),
-				type = anchor.attr('data-type'),
+			let type = anchor.attr('data-type'),
 				name = anchor.find('span').html(),
 				isRepo = !isUndefined(anchor.find('i.repo-icon')),
 				inRepo = atheos.codegit.findParentRepo(path),
 				extension = type === 'folder' ? 'folder' : pathinfo(path).extension;
 
-			anchor.addClass('context-menu-active');
-
 			let html = '';
-			for (let item of self.fileMenu) {
+			for (let item of self.fileTreeItems) {
 				if ('noRoot' in item && type === 'root') continue;
 
 				if ('type' in item && item.type !== type) {
@@ -160,18 +158,13 @@
 				if ('inRepo' in item && item.inRepo !== (inRepo !== false)) continue;
 				if ('fTypes' in item && !item.fTypes.includes(extension)) continue;
 
+				if (item.title === 'paste' && atheos.filetree.clipboard === '') continue;
+
 				html += self.createMenuItem(item);
 			}
 
-			menu.html(html);
-
-			// Show faded 'paste' if nothing in clipboard
-			if (type !== 'file' && atheos.filetree.clipboard === '') {
-				oX('#contextmenu i.fa-paste').parent().hide();
-			}
-
 			/* Notify listeners. */
-			self.active = {
+			self.activeItem = {
 				path,
 				type,
 				name,
@@ -179,54 +172,51 @@
 				inRepo,
 				extension
 			};
-
-			carbon.publish('contextmenu.showFileMenu', self.active);
+			return html;
 		},
 
-		showTabMenu: function(anchor) {
-			if (!anchor) return;
-			anchor = anchor.parent('li');
-
-			var path = anchor.attr('data-path'),
-				type = anchor.attr('data-type'),
-				name = anchor.find('span').html();
-
-			var html = '<a id="auxSaveFile"><i class="fas fa-save"></i>Save</a><a id="auxReloadFile"><i class="fas fa-sync-alt"></i>Reload</a><a id="auxResetFile"><i class="fas fa-sync-alt"></i>Reset</a>';
-
-			self.active = {
-				path,
-				type,
-				name
+		//////////////////////////////////////////////////////////////////////80
+		// Build File Tab Menu
+		//////////////////////////////////////////////////////////////////////80		
+		buildFileTabMenu: function(anchor, path) {
+			let html = '';
+			for (let item of self.fileTabItems) {
+				html += self.createMenuItem(item);
+			}
+			self.activeItem = {
+				path
 			};
-
-			menu.attr({
-				'data-path': path,
-				'data-type': type,
-				'data-name': name
-			});
-
-			menu.html(html);
-
-			carbon.publish('contextmenu.showTabMenu');
-
+			return html;
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Build Editor Menu
+		//////////////////////////////////////////////////////////////////////80		
+		buildEditorMenu: function(anchor, path) {
+			let html = '';
+			for (let item of self.editorItems) {
+				html += self.createMenuItem(item);
+			}
+			self.activeItem = {
+				path
+			};
+			return html;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Show Context Menu
 		//////////////////////////////////////////////////////////////////////80
-		show: function(e) {
-			menu.removeClass('fm at');
+		showMenu: function(e) {
 			var top = e.pageY;
 			var windowHeight = window.innerHeight || document.documentElement.clientHeight || document.body.clientHeight;
-			if (top > windowHeight - menu.height()) {
-				top -= menu.height();
+			if (top > windowHeight - xContextMenu.height()) {
+				top -= xContextMenu.height();
 			}
 
 			top = top < 10 ? 10 : top;
 
 			var max = windowHeight - top - 10;
 
-			menu.css({
+			xContextMenu.css({
 				'top': top + 'px',
 				'left': e.pageX + 'px',
 				'max-height': max + 'px',
@@ -238,7 +228,9 @@
 		// Hide Context Menu
 		//////////////////////////////////////////////////////////////////////80
 		hide: function() {
-			menu.hide();
+			if (lastActive) lastActive.removeClass('context-menu-active');
+
+			xContextMenu.hide();
 			self.active = false;
 			carbon.publish('contextmenu.hide');
 		},
@@ -273,7 +265,26 @@
 			document.addEventListener('touchend', (e) => {
 				clearTimeout(touchTimer);
 			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Create Menu Item
+		//////////////////////////////////////////////////////////////////////80
+		createMenuItem: function(item) {
+			let html = '';
+
+			if (item.icon && item.action) {
+				let icon = `<i class="${item.icon}"></i>`;
+
+				html = `<a action="${item.action}">${icon + item.title}</a>\n`;
+			} else {
+				html = `<hr id="${item.title}">\n`;
+			}
+			return html;
 		}
+
+
+
 	};
 
 	carbon.subscribe('system.loadMinor', self.init);

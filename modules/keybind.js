@@ -103,31 +103,22 @@
 			vimEx: []
 		},
 		findText: {
-			fn: () => {
-				let editor = atheos.inFocusEditor;
-				editor.execCommand('find');
-			},
+			fn: () => atheos.editor.openFind(),
 			default: 'Ctrl-F', // Ctrl+F
 			emacs: [],
 			sublime: [],
 			vimEx: []
 		},
-		gotoLine: {
-			fn: () => {
-				let editor = atheos.inFocusEditor;
-				editor.execCommand('gotoline');
-			},
-			default: 'Ctrl-G', // Ctrl+G
+		replaceText: {
+			fn: () => atheos.editor.openReplace(),
+			default: 'Ctrl-R', // Ctrl+R
 			emacs: [],
 			sublime: [],
 			vimEx: []
 		},
-		replaceText: {
-			fn: () => {
-				let editor = atheos.inFocusEditor;
-				editor.execCommand('replace');
-			},
-			default: 'Ctrl-R', // Ctrl+R
+		gotoLine: {
+			fn: () => atheos.editor.openGotoLine(),
+			default: 'Ctrl-G', // Ctrl+G
 			emacs: [],
 			sublime: [],
 			vimEx: []

@@ -75,10 +75,6 @@
 		},
 
 		init: function() {
-			fX('#auxSaveFile').on('click', () => self.save());
-			fX('#auxReloadFile').on('click', () => self.reload());
-			fX('#auxResetFile').on('click', () => self.reset());
-
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
 				let changedPaths = self.getChangedPaths();
@@ -306,10 +302,11 @@
 			inFocus.file = file;
 			inFocus.aceEditor = aceEditor;
 
-			path = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
+			let display = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
-			oX('#current_file').text(path);
+			oX('#current_file').text(display);
 			atheos.textmode.setModeDisplay(aceEditor.getSession());
+			self.focusOnFile(path);
 		},
 
 
@@ -326,12 +323,83 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Insert text
+		// Insert text into aceEditor
 		//////////////////////////////////////////////////////////////////////80
 		insertText: function(val, aceEditor) {
 			aceEditor = aceEditor || atheos.inFocusEditor;
 			if (!aceEditor) return;
 			aceEditor.insert(val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Select all text in file
+		//////////////////////////////////////////////////////////////////////80
+		selectAllText: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			aceEditor.execCommand("selectall");
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Cut selected text to client clipboard
+		//////////////////////////////////////////////////////////////////////80
+		cutToClipboard: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			const selection = aceEditor.getSelection();
+			const range = selection.getRange();
+
+			if (range.isEmpty()) return;
+
+			navigator.clipboard.writeText(aceEditor.getCopyText())
+				.then(() => {
+					aceEditor.session.remove(range);
+					selection.clearSelection();
+				});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Copy selected text to client clipboard
+		//////////////////////////////////////////////////////////////////////80
+		copyToClipboard: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			navigator.clipboard.writeText(aceEditor.getCopyText());
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Paste text from client clipboard to location
+		//////////////////////////////////////////////////////////////////////80
+		pasteFromClipboard: function(val, aceEditor) {
+			navigator.clipboard.readText()
+				.then(text => {
+					self.insertText(text);
+				});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Find Window
+		//////////////////////////////////////////////////////////////////////80
+		openFind: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('find');
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Replace Window
+		//////////////////////////////////////////////////////////////////////80
+		openReplace: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('replace');
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Goto Line Window
+		//////////////////////////////////////////////////////////////////////80
+		openGotoLine: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('gotoline');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -481,6 +549,7 @@
 		// Focus on opened file
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
+			//  trace(path);
 			if (path !== atheos.inFocusPath) {
 				atheos.editor.attachFileToEditor(self.activeFiles[path]);
 				if (line) setTimeout(atheos.editor.gotoLine(line), 500);
