@@ -9,18 +9,13 @@
 (function() {
 	'use strict';
 
-	var self = false;
-
-	atheos.install = {
+	const self = {
 
 		//////////////////////////////////////////////////////////////////////80
 		// Initilization
 		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			fX('#retest').on('click', () => window.location.reload());
-
-			if (self) return;
-			self = this;
 
 			let form = oX('#install');
 			if (!form) return;
@@ -89,5 +84,7 @@
 			});
 		},
 	};
+
+	atheos.install = self;
 
 })();
