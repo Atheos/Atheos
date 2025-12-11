@@ -55,19 +55,21 @@
 				e.stopPropagation();
 
 				var tagName = e.target.tagName;
-				var anchor = oX(e.target);
+				var xTarget = oX(e.target),
+					anchor;
 
 				if (tagName === 'UL') return;
 
-
 				if (tagName !== 'A') {
 					if (tagName === 'LI') {
-						anchor = anchor.find('a');
+						anchor = xTarget.find('a');
 					} else if (tagName === 'SPAN') {
-						anchor = anchor.parent('a');
+						anchor = xTarget.parent('a');
 					} else {
-						anchor = anchor.sibling('a');
+						anchor = xTarget.sibling('a');
 					}
+				} else {
+					anchor = xTarget;
 				}
 
 				var path = anchor.attr('data-path');
@@ -77,23 +79,21 @@
 					self.close(path);
 
 				} else if (e.which === 1) {
-
-					// Left click not on an icon: Switch focus to file
-					if (tagName !== 'I') {
-						atheos.editor.focusOnFile(path);
-						atheos.editor.sendFocusToServer(path);
-
-						// Left click on an icon: Save or close file
-					} else if (tagName === 'I') {
+					// Left click on an icon: Save or close file
+					if (tagName === 'I') {
 						// Save file
-						if (anchor.hasClass('save')) {
+						if (xTarget.hasClass('save')) {
 							atheos.editor.save(path);
 
 							// Close file
-						} else if (anchor.hasClass('close')) {
+						} else if (xTarget.hasClass('close')) {
 							atheos.editor.close(path);
 							// 		self.updateTabDropdownVisibility();
 						}
+					} else {
+						// Left click not on an icon: Switch focus to file
+						atheos.editor.focusOnFile(path);
+						atheos.editor.sendFocusToServer(path);
 					}
 				}
 			};
