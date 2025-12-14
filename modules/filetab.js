@@ -239,7 +239,7 @@
 				nextTabIndex = (currentTabIndex + 1) % activeTabs.length;
 				nextTabElement = activeTabs[nextTabIndex];
 			}
-			let path = nextTabElement.attr('data-path');
+			let path = nextTabElement.find('a').attr('data-path');
 			return path in atheos.editor.activeFiles ? atheos.editor.activeFiles[path] : null;
 		},
 

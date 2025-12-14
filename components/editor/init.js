@@ -781,6 +781,7 @@
 			// Select the next filepath to be in focus from the tab list.
 
 			var nextFile = atheos.tabmanager.getNextFile('up');
+
 			file.fileTab.remove();
 			atheos.tabmanager.updateTabDropdownVisibility();
 			delete self.activeFiles[path];
@@ -794,7 +795,7 @@
 				for (var i = 0; i < self.editorPanes.length; i++) {
 					if (self.editorPanes[i].path === path) {
 						self.editorPanes[i].path = null;
-						self.attachFileToEditor(nextFile.path, self.editorPanes[i]);
+						self.attachFileToEditor(nextFile, self.editorPanes[i]);
 					}
 				}
 			}
