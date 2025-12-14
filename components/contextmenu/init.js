@@ -37,8 +37,6 @@
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return;
-					log(reply);
-
 					self.fileTreeItems = (typeof reply.fileTreeItems !== 'undefined') ? reply.fileTreeItems : [];
 					self.fileTabItems = (typeof reply.fileTabItems !== 'undefined') ? reply.fileTabItems : [];
 					self.editorItems = (typeof reply.editorItems !== 'undefined') ? reply.editorItems : [];
