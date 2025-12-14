@@ -30,35 +30,16 @@ class Editor {
     // Construct
     //////////////////////////////////////////////////////////////////////////80
     public function __construct() {
-        $this->activeUser = SESSION("user");
-        $this->db = Common::getObjStore("activeFiles");
-    }
-
-
-    //////////////////////////////////////////////////////////////////////////80
-    // Check File
-    //////////////////////////////////////////////////////////////////////////80
-    public function check($path) {
-        $where = array(["user", "!=", $this->activeUser], ["path", "==", $path]);
-        $result = $this->db->select($where);
-
-        if (count($result) > 0) {
-            $activeUsers = array();
-            foreach ($result as $item) {
-                if ($item["user"] !== $this->activeUser) $activeUsers[] = $item["user"];
-            }
-            Common::send(151, i18n("warning_fileOpen", implode(", ", $activeUsers)));
-        } else {
-            Common::send(200);
-        }
+        $activeUser = SESSION("user");
+        $this->activeUser = $activeUser;
+        $this->db = Common::getObjStore("activeFiles", "users/" . $activeUser);
     }
 
     //////////////////////////////////////////////////////////////////////////80
     // List User's Active Files
     //////////////////////////////////////////////////////////////////////////80
     public function listActiveFiles() {
-        $where = array(["user", "==", $this->activeUser]);
-        $result = $this->db->select($where);
+        $result = $this->db->select("*");
 
         $temp = array();
         foreach ($result as $file) {
@@ -70,7 +51,7 @@ class Editor {
             } else {
 
                 // Invalid file path
-                $where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+                $where = array(["path", "==", $path]);
                 $this->db->delete($where);
             }
         }
@@ -121,13 +102,17 @@ class Editor {
     //////////////////////////////////////////////////////////////////////////80
     public function setStatus($path, $status) {
         // Set all files open by user as "active"
-        $where = array(["user", "==", $this->activeUser], ["path", "==", "*"]);
+        $where = array(["path", "==", "*"]);
         $value = array("status" => "active");
         $this->db->update($where, $value);
 
         // Insert/update the passed path as either active or inFocus
-        $where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
-        $value = array("user" => $this->activeUser, "path" => $path, "status" => $status);
+        $where = array(["path", "==", $path]);
+        $value = array(
+            "path" => $path, 
+            "updated" => time(), 
+            "status" => $status
+            );
         $this->db->update($where, $value, true);
 
         return true;
@@ -200,7 +185,7 @@ class Editor {
     // Rename File
     //////////////////////////////////////////////////////////////////////////80
     public function rename($oldPath, $newPath) {
-        $where = array(["user", "==", $this->activeUser], ["path", "==", $oldPath]);
+        $where = array(["path", "==", $oldPath]);
         $value = array("path" => $newPath);
         $this->db->update($where, $value);
         Common::send(200);
@@ -210,7 +195,7 @@ class Editor {
     // Remove File
     //////////////////////////////////////////////////////////////////////////80
     public function remove($path) {
-        $where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
+        $where = array(["path", "==", $path]);
         $this->db->delete($where);
         Common::send(200);
     }
@@ -219,8 +204,7 @@ class Editor {
     // Remove All Files
     //////////////////////////////////////////////////////////////////////////80
     public function removeAll() {
-        $where = array(["user", "==", $this->activeUser]);
-        $this->db->delete($where);
+        $this->db->delete("*");
         Common::send(200);
     }
 }
