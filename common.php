@@ -149,8 +149,8 @@ class Common {
         }
 
 
-        $openFiles_db = Common::getObjStore("activeFiles");
-        $result = $openFiles_db->select(array(["user", "==", $activeUser]));
+        $openFiles_db = Common::getObjStore("activeFiles", "users/" . $activeUser);
+        $result = $openFiles_db->select("*");
 
         $openFiles = array();
         foreach ($result as $file) {

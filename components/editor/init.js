@@ -527,38 +527,15 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Check if opened by another user
-		//////////////////////////////////////////////////////////////////////80
-		check: function(path) {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'editor',
-					action: 'check',
-					path: path
-				},
-				settled: function(reply, status) {
-					if (status === 151) {
-						toast(status, reply);
-					}
-				}
-			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
 		// Focus on opened file
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
-			//  trace(path);
-			if (path !== atheos.inFocusPath) {
-				atheos.editor.attachFileToEditor(self.activeFiles[path]);
-				if (line) setTimeout(atheos.editor.gotoLine(line), 500);
-			}
-			/* Check for users registered on the file. */
-			self.check(path);
+			if (path === atheos.inFocusPath) return;
+			atheos.editor.attachFileToEditor(self.activeFiles[path]);
+			if (line) setTimeout(atheos.editor.gotoLine(line), 500);
 
 			/* Notify listeners. */
-			carbon.publish('active.focus', path);
+			carbon.pub('active.focus', path);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
