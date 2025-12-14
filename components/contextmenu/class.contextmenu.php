@@ -217,13 +217,13 @@ class ContextMenu {
             "title" => "reload",
             "location" => "fileTab",
             "icon" => "fas fa-sync-alt",
-            "action" => "atheos.editor.reset"
+            "action" => "atheos.editor.reload"
         ],
         [
             "title" => "reset",
             "location" => "fileTab",
             "icon" => "fas fa-sync-alt",
-            "action" => "atheos.editor.reload"
+            "action" => "atheos.editor.reset"
         ],
 
         //////////////////////////////////////////////////////////////////////80
