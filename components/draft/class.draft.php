@@ -39,7 +39,7 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send(104, "No drafts.");
+			Common::send(104, "draft_none");
 		} else {
 			Common::send(200, $results[0]);
 		}
@@ -52,7 +52,7 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send(104, "No drafts.");
+			Common::send(104, "draft_none");
 		}
 
 		$name = $results[0]["name"];
@@ -68,7 +68,7 @@ class Draft {
 		$where = array(["user", "==", $this->activeUser], ["path", "==", $path]);
 		$results = $this->db->select($where);
 		if (empty($results)) {
-			Common::send(104, "No drafts.");
+			Common::send(104, "draft_none");
 		}
 
 		$name = $results[0]["name"];

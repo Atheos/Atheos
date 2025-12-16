@@ -274,7 +274,8 @@
 		"": "Draft",
 		"enable": "Enable autosaving files in draft",
 		"interval": "Draft saving interval",
-		"verbose": "Verbose autosaving"
+		"verbose": "Verbose autosaving",
+		"none": "No drafts."
 	},
 
 	"account": {
@@ -494,7 +495,8 @@
 		"unableDownload": "Unable to download Archive.",
 		"noZip": "Zip Extension not found.",
 		"missingDesc": "Missing Description.",
-		"missingAuth": "Unknown"
+		"missingAuth": "Unknown",
+		"saved": "Market Saved"
 	},
 	"complete": "Complete!",
 	"installed": "Installed",
