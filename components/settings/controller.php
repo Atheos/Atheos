@@ -10,10 +10,9 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-require_once('class.settings.php');
+require_once("class.settings.php");
 
 $activeUser = SESSION("user");
-
 $Settings = new Settings($activeUser);
 
 switch ($action) {
