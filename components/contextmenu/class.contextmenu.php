@@ -286,8 +286,8 @@ class ContextMenu {
         $tempEditor = array();
 
         foreach ($this->menuItems as $item) {
-            if (isset($item["title"])) {
-                $item["title"] = strpos($item["title"], "hr_") ? $item["title"] : i18n($item["title"]);
+            if (isset($item["title"]) && strpos($item["title"], "hr_") !== false) {
+                $item["title"] = i18n($item["title"]);
             }
             if (isset($item["admin"]) && $item["admin"] && !Common::checkAccess("configure")) continue;
 
