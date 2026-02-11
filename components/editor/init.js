@@ -78,7 +78,7 @@
 			// Prompt if a user tries to close window without saving all files
 			window.onbeforeunload = function(e) {
 				let changedPaths = self.getChangedPaths();
-				if (changedPaths) {
+				if (changedPaths.length) {
 					self.focusOnFile(changedPaths[0]);
 					e = e || window.event;
 					var errMsg = 'You have unsaved files.';
