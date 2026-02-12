@@ -706,7 +706,7 @@
 					// Add new element to file tree
 					self.addToFileTree(path, type, self.activeAnchor.path, 0);
 					if (type === 'file') {
-						self.openFile(path, true);
+						atheos.editor.openFile(path, true);
 					}
 					/* Notify listeners. */
 					carbon.publish('filetree.create', {
