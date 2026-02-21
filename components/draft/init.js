@@ -51,13 +51,13 @@
 		autosave: function() {
 			if (!self.enabled || self.saving.length > 0) return;
 
-			var changedPaths = atheos.editor.getChangedPaths();
+			let changedPaths = atheos.editor.getChangedPaths();
 			if (!changedPaths.length) return;
 
 			changedPaths.forEach(function(path) {
-				let session = atheos.editor.sessions[path];
-				if (session.autosaved) return;
-				self.save(session);
+				let file = atheos.editor.getFile(path);
+				if (file.autosaved) return;
+				self.save(file);
 			});
 		},
 
@@ -101,9 +101,9 @@
 		},
 
 		open: function(path) {
-			let session = atheos.editor.sessions[path];
+			let file = atheos.editor.getFile(path);
 			
-			if(!session) return;
+			if(!file) return;
 
 			echo({
 				data: {
@@ -113,30 +113,32 @@
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return;
-					session.setValue(reply.content, 1);
+					file.aceSession.setValue(reply.content, 1);
+					atheos.editor.markChanged(path);
+					atheos.editor.focusOnFile(path);
 				}
 			});
 		},
 
-		save: function(session) {
-			self.saving.push[session.path];
+		save: function(file) {
+			self.saving.push[file.path];
 
-			let content = session.getValue();
+			let content = file.aceSession.getValue();
 
 			echo({
 				data: {
 					target: 'draft',
 					action: 'save',
-					path: session.path,
+					path: file.path,
 					content
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return;
 
 
-					let index = self.saving.indexOf(session.path);
+					let index = self.saving.indexOf(file.path);
 					self.saving = self.saving.splice(index, 1);
-					session.autosaved = true;
+					file.autosaved = true;
 
 					if (self.verbose && self.saving.length === 0) {
 						atheos.toast.show('success', 'Autosave to draft complete.');
