@@ -99,17 +99,25 @@ trait File {
     }
 
     //////////////////////////////////////////////////////////////////////////80
-    // Delete file within data
+    // Delete file within DATA
     //////////////////////////////////////////////////////////////////////////80
     public static function delete($name, $namespace) {
         $path = DATA . "/" . $namespace . "/" . $name;
         $path = preg_replace("#\/+#", "/", $path);
+
         if (is_file($path)) {
             unlink($path);
             return true;
-        } else {
-            return false;
         }
+
+        // Next try the new PHP-wrapped format.
+        $wrapped = $path . ".php";
+        if (is_file($wrapped)) {
+            unlink($wrapped);
+            return true;
+        }
+
+        return false;
     }
 
     //////////////////////////////////////////////////////////////////////////80
