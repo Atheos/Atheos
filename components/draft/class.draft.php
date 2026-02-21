@@ -55,8 +55,7 @@ class Draft {
 			Common::send(104, "draft_none");
 		}
 
-		$name = $results[0]["name"];
-		Common::deleteCache($name, "drafts");
+		Common::deleteCache($path . $this->activeUser, "drafts");
 		$this->db->delete($where);
 		Common::send(200);
 	}
@@ -71,15 +70,14 @@ class Draft {
 			Common::send(104, "draft_none");
 		}
 
-		$name = $results[0]["name"];
-		$content = Common::loadCache($name, "drafts");
+		$content = Common::loadCache($path . $this->activeUser, "drafts");
 
 		if (!$content) {
-			$this->db->delete($where);
 			Common::send(404, "Draft file missing.");
 		}
 
-		Common::deleteCache($name, "drafts");
+		Common::deleteCache($path . $this->activeUser, "drafts");
+		$this->db->delete($where);
 		Common::send(200, array("content" => $content));
 	}
 
