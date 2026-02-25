@@ -74,7 +74,6 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 }
 
 .ace-atheos .ace_keyword,
-.ace-atheos .ace_meta,
 .ace-atheos .ace_support.ace_constant.ace_property-value {
 	color: var(--orange);
 }
@@ -87,6 +86,9 @@ ace.define("ace/theme/atheos", ["require", "exports", "module", "ace/lib/dom"], 
 	color: var(--green);
 }
 
+.ace-atheos .ace_constant.ace_meta {
+	color: var(--lime);
+}
 .ace-atheos .ace_constant.ace_language {
 	color: var(--jade);
 }

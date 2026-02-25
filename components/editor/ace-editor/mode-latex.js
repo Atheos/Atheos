@@ -15,6 +15,9 @@ ace.define("ace/mode/latex_highlight_rules", ["require", "exports", "module", "a
 				token: "constant.numeric",
 				regex: "(\\\\subsection)({)([^}]*)(})",
 			}, {
+				token: "constant.meta",
+				regex: "(\\\\subsubsection)({)([^}]*)(})",
+			}, {
 				token: ["keyword", "lparen", "variable.parameter", "rparen", "lparen", "storage.type", "rparen"],
 				regex: "(\\\\(?:documentclass|usepackage|input))(?:(\\[)([^\\]]*)(\\]))?({)([^}]*)(})"
 			}, {
