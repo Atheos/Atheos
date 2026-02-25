@@ -32,7 +32,7 @@ trait Commit {
         $result = Common::safe_execute("git commit --author=\"? <?>\" -m ?", $name, $email, $message);
 
         if ($result["code"] === 0) {
-            Common::send(200, i18n("git_commit_success"));
+            Common::send(200, "git_commit_success");
         } else {
             Common::send(500, i18n("git_commit_failed") . "\n\n" . implode("\n", $result["output"] ?? []));
         }
@@ -59,7 +59,7 @@ trait Commit {
         }
 
         if ($result["code"] === 0) {
-            Common::send(200, i18n("git_amend_success"));
+            Common::send(200, "git_amend_success");
         } else {
             Common::send(500, i18n("git_amend_failed") . "\n\n" . implode("\n", $result["output"] ?? []));
         }
