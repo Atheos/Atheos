@@ -71,7 +71,6 @@
 					var anchor = atheos.filetree.checkAnchor(e.target);
 					if (!anchor) return;
 					anchor.addClass('context-menu-active');
-					log(anchor.element);
 
 					let path = anchor.attr('data-path');
 
@@ -89,7 +88,6 @@
 				xContextMenu.html(html);
 				self.activeItem.menuType = menuType;
 				carbon.publish('contextmenu.show' + menuType, self.activeItem);
-				log(menuType);
 				self.showMenu(e);
 			});
 
