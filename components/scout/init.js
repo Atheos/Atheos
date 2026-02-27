@@ -62,13 +62,14 @@
 
 			oX('#probe_processing').show();
 
+			var path = oX('#dialog input[name="probe_path"]').value();
 			var query = oX('#dialog input[name="probe_query"]').value();
 			var extensions = oX('#dialog input[name="probe_filter"]').value();
-			var filter = extensions.trim();
+			var fileTypes = extensions.trim();
 			// var type = oX('#dialog select[name="probe_type"]').prop('checked');
-			if (filter !== '') {
+			if (fileTypes !== '') {
 				//season the string to use in find command
-				filter = '\\(' + filter.replace(/\s+/g, '\\|') + '\\)';
+				fileTypes = '\\(' + fileTypes.replace(/\s+/g, '\\|') + '\\)';
 			}
 
 			echo({
@@ -77,9 +78,9 @@
 					target: 'scout',
 					action: 'probe',
 					// type,
-					path: atheos.current.projectPath,
+					path: path || atheos.current.projectPath,
 					query,
-					filter
+					fileTypes
 				},
 				settled: function(reply, status) {
 					table.empty();
@@ -104,8 +105,6 @@
 						node.addClass('file');
 
 						file.forEach(function(result) {
-							// result.string = String(result.string).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
-							// result.line = result.line.length >= file.length ? result.line : new Array(file.length - result.length + 1).join(' ') + result.line;
 							content += `<a class="result" onclick="atheos.editor.openFile('${result.path}',true,${result.line});atheos.modal.unload();"><span>Line ${result.line}: </span>${result.string}</a>`;
 						});
 
@@ -125,10 +124,11 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Probe file contents
 		//////////////////////////////////////////////////////////////////////80
-		openSearch: function() {
+		openSearch: function(anchor) {
 			atheos.modal.load(500, {
 				target: 'scout',
 				action: 'probe',
+				path: anchor ? anchor.path : atheos.current.projectPath,
 				callback: function() {
 					var table = oX('#probe_results');
 

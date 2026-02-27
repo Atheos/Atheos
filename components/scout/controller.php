@@ -39,7 +39,11 @@ switch ($action) {
 	// Probe File Contents
 	//////////////////////////////////////////////////////////////////////////80
 	case "probe":
-		$Scout->probe();
+        $path = Common::cleanPath($path);
+        $query = POST("query");
+        $fileTypes = POST("fileTypes");
+
+		$Scout->probe($path, $query, $fileTypes);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80

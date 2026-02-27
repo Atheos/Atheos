@@ -28,6 +28,11 @@ switch ($action) {
 		<form class="searchText">
 			<table id="probe_table">
 				<tr>
+					<td colspan="3">
+						<input type="text" name="probe_path" placeholder="<?php echo i18n("scout_folder"); ?>" value="<?php echo $path; ?>"
+					</td>
+				</tr>
+				<tr>
 					<td width="65%">
 						<input type="text" name="probe_query" placeholder="<?php echo i18n("scout_query"); ?>" autofocus="autofocus">
 					</td>

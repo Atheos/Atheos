@@ -145,8 +145,6 @@
 	"help": "Help",
 	"mode": "Mode",
 
-
-
 	"more": "More",
 	"less": "Less",
 	"users": "Users",
@@ -160,6 +158,7 @@
 
 	"scout": {
 		"open": "Open Scout",
+		"folder": "Search Directory",
 		"query": "Query:",
 		"searching": "Searching...",
 		"searchFiles": "Search Files:",
@@ -407,8 +406,9 @@
 
 	"fileUpload": "Upload File",
 	"filesUpload": "Upload Files",
-
+	
 	"folderNew": "New Folder",
+	"folderProbe": "Search Folder",
 
 	"path": {
 		"": "Path",

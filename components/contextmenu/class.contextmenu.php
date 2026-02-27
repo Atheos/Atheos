@@ -41,6 +41,13 @@ class ContextMenu {
             "action" => "atheos.transfer.openUpload"
         ],
         [
+            "title" => "folderProbe",
+            "location" => "fileTree",
+            "icon" => "fas fa-magnifying-glass",
+            "type" => "folder",
+            "action" => "atheos.scout.openSearch"
+        ],
+        [
             "title" => "hr_directory",
             "location" => "fileTree",
             "type" => "folder",

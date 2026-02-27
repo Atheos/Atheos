@@ -91,14 +91,8 @@ class Scout {
     //////////////////////////////////////////////////////////////////////////80
     // Probe: Deep file content search
     //////////////////////////////////////////////////////////////////////////80
-    public function probe() {
-        $type = POST("type");
-        $path = POST("path");
-        $path = Common::cleanPath($path);
-        $query = POST("query");
-        $filter = POST("filter");
-
-        $path = $type ? WORKSPACE : Common::getWorkspacePath($path);
+    public function probe($path, $query, $fileTypes) {
+        // $path = $type ? WORKSPACE : Common::getWorkspacePath($path);
         $root = WORKSPACE;
         $root = $this::normalizePath($root, "/");
 
@@ -108,14 +102,14 @@ class Scout {
 
         if (substr(php_uname(), 0, 7) == "Windows") {
             $query = escapeshellarg($query);
-            $filter = str_replace(["\\(", "\\)"], "", $filter);
-            if ($filter === "") {
+            $fileTypes = str_replace(["\\(", "\\)"], "", $fileTypes);
+            if ($fileTypes === "") {
                 $filters = ["*.*"];
             } else {
-                $filters = explode("\\|", $filter);
+                $filters = explode("\\|", $fileTypes);
             }
-            foreach ($filters as $filter) {
-                $searchPath = escapeshellarg($path . "/*." . $filter);
+            foreach ($filters as $fileTypes) {
+                $searchPath = escapeshellarg($path . "/*." . $fileTypes);
                 $cmd = "findstr /s /n /i ? ?";
 
                 $result = Common::safe_execute($cmd, $query, $searchPath);
@@ -140,10 +134,10 @@ class Scout {
                 }
             }
         } else {
-            $filter = ".*$filter";
+            $fileTypes = ".*$fileTypes";
             $cmd = "find -L ? -iregex ? -type f | xargs grep -i -I -n -R -H ?";
 
-            $result = Common::safe_execute($cmd, $path, $filter, $query);
+            $result = Common::safe_execute($cmd, $path, $fileTypes, $query);
             $output = $result["output"];
 
             foreach ($output as $line) {
