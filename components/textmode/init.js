@@ -8,23 +8,15 @@
 // Authors: Codiad Team, @ccvca, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
 	'use strict';
 
-	var atheos = global.atheos;
-
-	var self = null;
-
-	carbon.subscribe('system.loadMinor', () => atheos.textmode.init());
-
-	atheos.textmode = {
+	const self = {
 
 		extensionMap: {},
 		availableModes: [],
 
 		init: function() {
-			self = this;
-
 			echo({
 				url: atheos.controller,
 				data: {
@@ -196,4 +188,7 @@
 			extensions.append(html);
 		}
 	};
-})(this);
+
+	carbon.subscribe('system.loadMinor', () => self.init());
+	atheos.textmode = self;
+})();
