@@ -356,7 +356,7 @@
 
 			let changedPaths = atheos.editor.getChangedPaths();
 			if (changedPaths.length) {
-				atheos.editor.focus(changedPaths[0]);
+				atheos.editor.focusOnFile(changedPaths[0]);
 				let changes = '';
 				changedPaths.forEach(function(path, i) {
 					changes += pathinfo(path).basename + '\n';
@@ -371,9 +371,9 @@
 							postLogout();
 						},
 						'Discard Changes': function() {
-							for (let path in atheos.editor.sessions) {
-								atheos.editor.sessions[path].status = 'current';
-							}
+							changedPaths.forEach(function(path) {
+								atheos.editor.activeFiles[path].status = 'current';
+							});
 							postLogout();
 						},
 						'Cancel': function() {
