@@ -109,14 +109,49 @@ class Editor {
         // Insert/update the passed path as either active or inFocus
         $where = array(["path", "==", $path]);
         $value = array(
-            "path" => $path, 
-            "updated" => time(), 
+            "path" => $path,
+            "updated" => time(),
             "status" => $status
-            );
+        );
         $this->db->update($where, $value, true);
 
         return true;
     }
+
+    //////////////////////////////////////////////////////////////////////////80
+    // Encode high unicode characters
+    //////////////////////////////////////////////////////////////////////////80
+    public function encodeHighUnicode($str) {
+        $pattern = '/[\x{10000}-\x{10FFFF}]/u';
+        $callback = function($match) {
+            $codepoint = mb_ord($match[0]);
+            $hex = dechex($codepoint);
+            $paddedHex = str_pad(strtolower($hex), 6, '0', STR_PAD_LEFT);
+
+            $prefix = "\xee\x80\x80";
+            $suffix = "\xee\x80\x81";
+
+            return $prefix . $paddedHex . $suffix;
+        };
+
+        return preg_replace_callback($pattern, $callback, $str);
+    }
+
+
+
+    //////////////////////////////////////////////////////////////////////////80
+    // Decode high unicode characters
+    //////////////////////////////////////////////////////////////////////////80
+    public function decodeHighUnicode($str) {
+        $pattern = '/\xee\x80\x80([0-9a-f]{6})\xee\x80\x81/';
+        $callback = function($match) {
+            $codepoint = hexdec($match[1]);
+            return mb_chr($codepoint);
+        };
+
+        return preg_replace_callback($pattern, $callback, $str);
+    }
+
 
     //////////////////////////////////////////////////////////////////////////80
     // Save (Modifies a file name/contents or directory name)
@@ -159,8 +194,12 @@ class Editor {
 
             if ($saveType === "patch") {
                 $dmp = new diff_match_patch();
-                $patch = $dmp->patch_apply($dmp->patch_fromText($newContent), $oldContent);
-                $newContent = $patch[0];
+
+                // Encode/decode high unicode chars to fix PHP/JS encoding differences.
+                $oldEncodedContent = $this->encodeHighUnicode($oldContent);
+                $patches = $dmp->patch_fromText($newContent);
+                $encodedPatch = $dmp->patch_apply($patches, $oldEncodedContent);
+                $newContent = $this->decodeHighUnicode($encodedPatch[0]);
             }
 
             if (fwrite($fileWriter, $newContent)) {
