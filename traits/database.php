@@ -31,7 +31,7 @@ class Store {
     protected $data = array();
 
     function __construct($table, $path) {
-        if (!is_dir($path)) mkdir($path);
+        if (!is_dir($path)) mkdir($path, 0755, true);
 
         $this->path = $path . $table . ".db.php";
         if (is_readable($this->path)) {
