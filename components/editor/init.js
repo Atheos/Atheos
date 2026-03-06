@@ -494,23 +494,23 @@
 			file.newContent = content.slice(0);
 
 			if (override) {
-				self.saveModifications(file, 'override', file.newContent);
+				self.saveContentToServer(file, 'override', file.newContent);
 			} else if (file.originalContent.length === 0) {
-				self.saveModifications(file, 'full', file.newContent);
+				self.saveContentToServer(file, 'full', file.newContent);
 			} else if (file.newContent.length === 0) {
-				self.saveModifications(file, 'clear', 'clearContent');
+				self.saveContentToServer(file, 'clear', 'clearContent');
 			} else {
 				atheos.workerManager.addTask({
 					taskType: 'diff',
 					id: path,
 					original: file.originalContent,
 					changed: file.newContent
-				}, function(success, patch) {
+				}, function(success, patchTxt) {
 					let saveType = success ? 'patch' : 'full';
 					if (success) {
-						self.saveModifications(file, 'patch', patch);
+						self.saveContentToServer(file, 'patch', patchTxt);
 					} else {
-						self.saveModifications(file, 'full', file.newContent);
+						self.saveContentToServer(file, 'full', file.newContent);
 					}
 				}, self);
 			}
@@ -519,7 +519,7 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save file
 		//////////////////////////////////////////////////////////////////////80
-		saveModifications: function(file, saveType, newContent) {
+		saveContentToServer: function(file, saveType, newContent) {
 			let handleSuccess = function(modifyTime) {
 				file.originalContent = file.newContent;
 				file.newContent = '';
@@ -530,7 +530,8 @@
 				}
 				carbon.publish('session.saved', file.path);
 			};
-
+			
+			// HLSiira: I'm uncertain why this If statement is here.
 			if (newContent.length < 1) {
 				return handleSuccess(file.serverMTime);
 			}
@@ -771,11 +772,13 @@
 			var makeRename = function(oldPath, newPath) {
 
 				// Update fileTab
-				var fileTab = self.activeFiles[oldPath].fileTab;
-				fileTab.attr('data-path', newPath);
+				var fileTab = self.activeFiles[oldPath].fileTab,
+				anchor = fileTab.find('a');
 
 				let info = pathinfo(newPath);
-				fileTab.find('a').html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
+				anchor.html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
+				anchor.attr('data-path', newPath);
+				anchor.attr('title', newPath);
 
 				// Switch activeFiles path key; remove old key
 				self.activeFiles[newPath] = self.activeFiles[oldPath];
