@@ -93,7 +93,6 @@
 					} else {
 						// Left click not on an icon: Switch focus to file
 						atheos.editor.focusOnFile(path);
-						atheos.editor.sendFocusToServer(path);
 					}
 				}
 			};

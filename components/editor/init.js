@@ -156,8 +156,8 @@
 			aceEditor.on('change', () => self.markChanged(aceEditor.path));
 
 			aceEditor.on('focus', function() {
+				self.syncSystemFocus(aceEditor);
 				self.trackCursor();
-				self.updateEditorFocus(aceEditor);
 			});
 
 			atheos.keybind.activateCustomCommands(aceEditor);
@@ -222,6 +222,10 @@
 				}
 			}
 
+			// Fixes firefox not focusing on pane during load.
+			// Ensure editor is rendered
+			aceEditor.resize(true);
+			self.syncSystemFocus(aceEditor);
 			aceEditor.focus();
 		},
 
@@ -275,7 +279,7 @@
 		// Remove all Editor instances and clean up the DOM
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
-			for (var i = 0; i < self.editorPanes.length; i++) {
+			for (var i = self.editorPanes.length - 1; i >= 0; i--) {
 				self.editorPanes[i].destroy();
 				self.editorPanes[i].xElement.remove();
 				self.editorPanes.splice(i, 1);
@@ -289,13 +293,14 @@
 		},
 
 		/////////////////////////////////////////////////////////////////
-		// Set an editor instance as active
+		// Syncs the focused editor to the rest of Atheos
 		/////////////////////////////////////////////////////////////////
-		updateEditorFocus: function(aceEditor) {
+		syncSystemFocus: function(aceEditor) {
 			aceEditor = aceEditor || self.inFocusEditor;
 			if (!aceEditor) return;
 
 			var path = aceEditor.path;
+			if (path === atheos.inFocusPath) return;
 			let file = self.getFile(path);
 			atheos.tabmanager.highlightEntry(path);
 
@@ -306,136 +311,20 @@
 
 			oX('#current_file').text(display);
 			atheos.textmode.setModeDisplay(aceEditor.getSession());
-			self.focusOnFile(path);
-		},
 
 
-		/////////////////////////////////////////////////////////////////
-		// Set option on AceEditor instance
-		/////////////////////////////////////////////////////////////////
-		setOption: function(opt, val, aceEditor) {
-			if (aceEditor) return aceEditor.setOption(opt, val);
-			for (var i = 0; i < self.editorPanes.length; i++) {
-				self.editorPanes[i].setOption(opt, val);
-			}
-			self.settings[opt] = val;
-			storage('editor.' + opt, val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Insert text into aceEditor
-		//////////////////////////////////////////////////////////////////////80
-		insertText: function(val, aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			aceEditor.insert(val);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Select all text in file
-		//////////////////////////////////////////////////////////////////////80
-		selectAllText: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			aceEditor.execCommand("selectall");
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Cut selected text to client clipboard
-		//////////////////////////////////////////////////////////////////////80
-		cutToClipboard: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			const selection = aceEditor.getSelection();
-			const range = selection.getRange();
-
-			if (range.isEmpty()) return;
-
-			navigator.clipboard.writeText(aceEditor.getCopyText())
-				.then(() => {
-					aceEditor.session.remove(range);
-					selection.clearSelection();
-				});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Copy selected text to client clipboard
-		//////////////////////////////////////////////////////////////////////80
-		copyToClipboard: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			navigator.clipboard.writeText(aceEditor.getCopyText());
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Paste text from client clipboard to location
-		//////////////////////////////////////////////////////////////////////80
-		pasteFromClipboard: function(val, aceEditor) {
-			navigator.clipboard.readText()
-				.then(text => {
-					self.insertText(text);
-				});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Open AceEditor's Find Window
-		//////////////////////////////////////////////////////////////////////80
-		openFind: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('find');
-		},
-		//////////////////////////////////////////////////////////////////////80
-		// Open AceEditor's Replace Window
-		//////////////////////////////////////////////////////////////////////80
-		openReplace: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('replace');
-		},
-		//////////////////////////////////////////////////////////////////////80
-		// Open AceEditor's Goto Line Window
-		//////////////////////////////////////////////////////////////////////80
-		openGotoLine: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('gotoline');
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Move the cursor to a particular line
-		//////////////////////////////////////////////////////////////////////80
-		gotoLine: function(line, aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
-			if (!aceEditor) return;
-			aceEditor.scrollToLine(line, true, true);
-			aceEditor.gotoLine(line, 0, true);
-			aceEditor.focus();
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Setup Cursor Tracking
-		//////////////////////////////////////////////////////////////////////80
-		trackCursor: function() {
-			var col = i18n('Col');
-			let i = atheos.inFocusEditor;
-			if (!i) return;
-			let pos = i.getCursorPosition();
-			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Return list of all modified files
-		//////////////////////////////////////////////////////////////////////80
-		getChangedPaths: function() {
-			var changedPaths = [];
-			for (let path in self.activeFiles) {
-				if (self.activeFiles[path].status === 'changed') {
-					changedPaths.push(path);
+			echo({
+				url: atheos.controller,
+				data: {
+					target: 'editor',
+					action: 'setFocus',
+					path: path
 				}
-			}
-			return changedPaths;
+			});
 		},
+
+
+
 
 		//////////////////////////////////////////////////////////////////////80
 		// Open multiple files; mostly used to restore last user state.
@@ -463,9 +352,7 @@
 			if (self.noOpen.indexOf(ext) > -1) return;
 
 			if (inFocus && self.activeFiles[path]) {
-				self.focusOnFile(path, line);
-				self.sendFocusToServer(path);
-				return;
+				return self.focusOnFile(path, line);
 			}
 
 			let mode = atheos.textmode.selectMode(ext);
@@ -473,7 +360,30 @@
 			// Load the textmode for syntax highlighting prior to loading
 			// file content to ensure that the highlighter is ready when 
 			// content is being loaded into the editor pane.
-			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', function() {
+			// atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', function() {
+			// 	echo({
+			// 		data: {
+			// 			target: 'editor',
+			// 			action: 'openFile',
+			// 			path: path,
+			// 			inFocus: inFocus
+			// 		},
+			// 		settled: function(reply, status) {
+			// 			if (status !== 200) return;
+			// 			self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
+			// 			if (inFocus) {
+			// 				self.focusOnFile(path, line);
+			// 			}
+			// 		}
+			// 	});
+			// });
+
+
+			let modePromise = new Promise(resolve =>
+				atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', resolve)
+			);
+
+			let filePromise = new Promise((resolve, reject) =>
 				echo({
 					data: {
 						target: 'editor',
@@ -482,14 +392,32 @@
 						inFocus: inFocus
 					},
 					settled: function(reply, status) {
-						if (status !== 200) return;
-						self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
-						if (inFocus) {
-							self.focusOnFile(path, line);
-						}
+						status === 200 ? resolve(reply) : reject(status);
 					}
-				});
+				})
+			);
+
+			Promise.all([modePromise, filePromise]).then(([_, reply]) => {
+				self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
+				if (inFocus) self.focusOnFile(path, line);
 			});
+
+
+
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Focus on opened file
+		//////////////////////////////////////////////////////////////////////80
+		focusOnFile: function(path, line) {
+			if (path === atheos.inFocusPath) return;
+			atheos.editor.attachFileToEditor(self.activeFiles[path]);
+			if (line) setTimeout(() => {
+				atheos.editor.gotoLine(line);
+			}, 500);
+
+			/* Notify listeners. */
+			carbon.pub('active.focus', path);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -524,32 +452,6 @@
 			self.activeFiles[path] = file;
 			carbon.publish('active.open', path);
 			return file;
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Focus on opened file
-		//////////////////////////////////////////////////////////////////////80
-		focusOnFile: function(path, line) {
-			if (path === atheos.inFocusPath) return;
-			atheos.editor.attachFileToEditor(self.activeFiles[path]);
-			if (line) setTimeout(atheos.editor.gotoLine(line), 500);
-
-			/* Notify listeners. */
-			carbon.pub('active.focus', path);
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Send focus status to server
-		//////////////////////////////////////////////////////////////////////80
-		sendFocusToServer: function(path) {
-			echo({
-				url: atheos.controller,
-				data: {
-					target: 'editor',
-					action: 'setFocus',
-					path: path
-				}
-			});
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -592,7 +494,7 @@
 			file.newContent = content.slice(0);
 
 			if (override) {
-				self.saveModifications(path, 'override', file.newContent);
+				self.saveModifications(file, 'override', file.newContent);
 			} else if (file.originalContent.length === 0) {
 				self.saveModifications(file, 'full', file.newContent);
 			} else if (file.newContent.length === 0) {
@@ -655,8 +557,8 @@
 								'the server\'s copy.',
 							actions: {
 								'Reload File': function() {
-									self.remove(path);
-									self.openFile(path);
+									self.remove(file.path);
+									self.openFile(file.path);
 								},
 								'Save Anyway': function() {
 									self.save(file.path, true);
@@ -926,9 +828,141 @@
 			});
 		},
 
+
+
+
+
 		/////////////////////////////////////////////////////////////////
+		// Set option on AceEditor instance
+		/////////////////////////////////////////////////////////////////
+		setOption: function(opt, val, aceEditor) {
+			if (aceEditor) return aceEditor.setOption(opt, val);
+			for (var i = 0; i < self.editorPanes.length; i++) {
+				self.editorPanes[i].setOption(opt, val);
+			}
+			self.settings[opt] = val;
+			storage('editor.' + opt, val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Insert text into aceEditor
+		//////////////////////////////////////////////////////////////////////80
+		insertText: function(val, aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			aceEditor.insert(val);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Select all text in file
+		//////////////////////////////////////////////////////////////////////80
+		selectAllText: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			aceEditor.execCommand("selectall");
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Cut selected text to client clipboard
+		//////////////////////////////////////////////////////////////////////80
+		cutToClipboard: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			const selection = aceEditor.getSelection();
+			const range = selection.getRange();
+
+			if (range.isEmpty()) return;
+
+			navigator.clipboard.writeText(aceEditor.getCopyText())
+				.then(() => {
+					aceEditor.session.remove(range);
+					selection.clearSelection();
+				});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Copy selected text to client clipboard
+		//////////////////////////////////////////////////////////////////////80
+		copyToClipboard: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			navigator.clipboard.writeText(aceEditor.getCopyText());
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Paste text from client clipboard to location
+		//////////////////////////////////////////////////////////////////////80
+		pasteFromClipboard: function(val, aceEditor) {
+			navigator.clipboard.readText()
+				.then(text => {
+					self.insertText(text);
+				});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Find Window
+		//////////////////////////////////////////////////////////////////////80
+		openFind: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('find');
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Replace Window
+		//////////////////////////////////////////////////////////////////////80
+		openReplace: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('replace');
+		},
+		//////////////////////////////////////////////////////////////////////80
+		// Open AceEditor's Goto Line Window
+		//////////////////////////////////////////////////////////////////////80
+		openGotoLine: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			atheos.inFocusEditor.execCommand('gotoline');
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Move the cursor to a particular line
+		//////////////////////////////////////////////////////////////////////80
+		gotoLine: function(line, aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+			if (!aceEditor) return;
+			aceEditor.scrollToLine(line, true, true);
+			aceEditor.gotoLine(line, 0, true);
+			aceEditor.focus();
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Setup Cursor Tracking
+		//////////////////////////////////////////////////////////////////////80
+		trackCursor: function() {
+			var col = i18n('Col');
+			let i = atheos.inFocusEditor;
+			if (!i) return;
+			let pos = i.getCursorPosition();
+			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Return list of all modified files
+		//////////////////////////////////////////////////////////////////////80
+		getChangedPaths: function() {
+			var changedPaths = [];
+			for (let path in self.activeFiles) {
+				if (self.activeFiles[path].status === 'changed') {
+					changedPaths.push(path);
+				}
+			}
+			return changedPaths;
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
 		// Tiny helper functions
-		/////////////////////////////////////////////////////////////////
+		//////////////////////////////////////////////////////////////////////80
 		getFile: function(path) {
 			return (path && !self.activeFiles[path]) ? 'File path not open.' : self.activeFiles[path];
 		},
