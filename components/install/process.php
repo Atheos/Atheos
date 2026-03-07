@@ -21,7 +21,7 @@ $config = BASE_PATH . "/config.php";
 //////////////////////////////////////////////////////////////////////////////80
 // Verify no overwrites
 //////////////////////////////////////////////////////////////////////////////80
-if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH . "/data/projects.json.php")) {
+if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH . "/data/projects.db.php")) {
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Get POST responses
@@ -37,7 +37,7 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
 	$authorized = POST("analytics") ?: "UNKNOWN";
 
 	//////////////////////////////////////////////////////////////////////////80
-	// Create Projects filesue
+	// Create Projects file
 	//////////////////////////////////////////////////////////////////////////80
 
 	$password = password_hash($password, PASSWORD_DEFAULT);
@@ -62,9 +62,7 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
 		if (!file_exists(WORKSPACE . "/" . $projectPath)) mkdir(WORKSPACE . "/" . $projectPath);
 	}
 
-	$projectData = array($projectName => $projectPath);
-
-	Common::saveJSON("projects.db", $projectData);
+	Common::getKeyStore("projects")->insert($projectName, $projectPath);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Users file
