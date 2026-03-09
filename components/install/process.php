@@ -85,25 +85,7 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
 	//////////////////////////////////////////////////////////////////////////80
 	// Create analytics cache
 	//////////////////////////////////////////////////////////////////////////80
-	$version = Common::version();
-	$analyticsData = array(
-		"enabled" => $authorized,
-		"uuid" => uniqid(),
-		"iVersion" => $version,
-		"rVersion" => $version,
-		"first_heard" => date("Y/m/d"),
-		"last_heard" => date("Y/m/d"),
-		"php_version" => phpversion(),
-		"server_os" => $_SERVER["SERVER_SOFTWARE"],
-		"client_os" => [Common::getBrowser()],
-		"timezone" => $timezone,
-		"language" => $language,
-    	"sessions"=> 0,
-    	"totalUsage"=> "PT0S",
-		"plugins" => array()
-	);
-
-	Common::saveJSON("analytics.db", $analyticsData);
+	Common::getKeyStore("analytics")->insert("enabled", $authorized);
 
 	//////////////////////////////////////////////////////////////////////////80
 	// Create Config
