@@ -35,6 +35,12 @@ $SourceManager = new SourceManager;
     <!-- PreConnects -->
     <link rel="preconnect" href="https://www.atheos.io">
 
+
+    <!-- Preload Fonts -->
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Fira.woff2" as="font" type="font/woff2" crossorigin>
+
     <!-- FAVICONS -->
     <?php
     require_once("templates/favicons.php");
