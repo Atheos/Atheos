@@ -41,11 +41,11 @@ class Common {
 
     public static $configDefaults = array(
         "BASE_PATH" => [
-            "description" => "PATH TO ATHEOS",
+            "description" => "Full path to Atheos installation",
             "default" => __DIR__
         ],
         "BASE_URL" => [
-            "description" => "BASE URL TO ATHEOS (without trailing slash)",
+            "description" => "The base URL to Atheos (without trailing slash)",
             "default" => ""
         ],
         "WEBROOT" => [
@@ -53,11 +53,11 @@ class Common {
             "default" => "/var/www/html/"
         ],
         "TITLE" => [
-            "description" => "Add an install domain to the page title",
+            "description" => "Custom title added to the browser page title/tab",
             "default" => ""
         ],
         "THEME" => [
-            "description" => "",
+            "description" => "Base theme for all users; options are dark/light red/green/blue.",
             "default" => "dark blue",
         ],
 
@@ -82,7 +82,7 @@ class Common {
             "default" => "en",
         ],
         "DEVELOPMENT" => [
-            "description" => "TIMEZONE",
+            "description" => "Development mode disables asset minification and enables verbose messages.",
             "default" => false,
         ],
         // "AUTH_PATH" => [
