@@ -105,7 +105,7 @@
 		// Open a preview in another window
 		//////////////////////////////////////////////////////////////////////80
 		openInBrowser: function(anchor) {
-			let path = anchor ? anchor.path : atheos.inFocusPath;
+			let path = anchor ? anchor.path : inFocus.filePath;
 
 			echo({
 				data: {

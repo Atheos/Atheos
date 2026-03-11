@@ -16,6 +16,9 @@
 		extensionMap: {},
 		availableModes: [],
 
+		//////////////////////////////////////////////////////////////////////80
+		// Component initialization
+		//////////////////////////////////////////////////////////////////////80
 		init: function() {
 			echo({
 				url: atheos.controller,
@@ -33,9 +36,37 @@
 			});
 
 			atheos.common.initMenuHandler('#current_mode', '#changemode_menu');
-
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		// Load textmodes and apply them to editor sessions.
+		//////////////////////////////////////////////////////////////////////80
+		setMode: function(path, aceSession) {
+			let ext = pathinfo(path).extension.toLowerCase();
+			let mode = atheos.textmode.selectMode(ext);
+
+			atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', function() {
+				let aceModePath = 'ace/mode/' + mode;
+				if (!ace.require(aceModePath)) {
+					console.warn('Missing ACE mode:', mode);
+				}
+				if (aceSession) {
+					aceSession.setMode(aceModePath);
+				} else {
+					let file = atheos.editor.activeFiles[path];
+					if (file) file.aceSession.setMode('ace/mode/' + mode);
+
+					for (let paneID in atheos.editor.editorPanes) {
+						let editorPane = atheos.editor.editorPanes[paneID];
+						if (editorPane.path === path) editorPane.getSession().setMode('ace/mode/' + mode);
+					}
+				}
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Create textmode menu on page load
+		//////////////////////////////////////////////////////////////////////80
 		createModeMenu: function() {
 			var menu = oX('#changemode_menu');
 
@@ -82,16 +113,16 @@
 				}
 
 				var newMode = 'ace/mode/' + node.text();
-				var inFocusSession = atheos.inFocusSession;
+				var editSession = inFocus.editSession;
 
 				// handle async mode change
 				var fn = function() {
-					self.setModeDisplay(inFocusSession);
-					inFocusSession.removeListener('changeMode', fn);
+					self.setModeDisplay(editSession);
+					editSession.removeListener('changeMode', fn);
 				};
-				inFocusSession.on('changeMode', fn);
+				editSession.on('changeMode', fn);
 
-				inFocusSession.setMode(newMode);
+				editSession.setMode(newMode);
 			});
 		},
 

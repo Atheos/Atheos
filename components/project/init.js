@@ -34,6 +34,9 @@
 			fX('#project-atheos').on('click', function() {
 				self.open('Atheos IDE', '@TH305');
 			});
+			fX('#project-userWorkspace').on('click', function() {
+				self.open('User Workspace', 'PR1V@T3');
+			});
 			fX('#project-webRoot').on('click', function() {
 				self.open('Web Root', 'W3BR00T');
 			});

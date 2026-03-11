@@ -137,7 +137,6 @@
 					if (lastSearched) {
 						oX('#dialog input[name="probe_query"]').value(lastSearched.query);
 						oX('#dialog input[name="probe_filter"]').value(lastSearched.extensions);
-						// oX('#dialog input[name="probe_type"]').checked(lastSearched.type);
 						if (lastSearched.results !== '') {
 							table.html(lastSearched.results);
 							atheos.flow.slide('open', table.element);
