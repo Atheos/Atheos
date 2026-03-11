@@ -26,7 +26,7 @@ $SourceManager = new SourceManager;
 <html lang="en" class="<?php if (defined("THEME") && THEME) echo(THEME) ?>">
 <head>
     <meta charset="utf-8">
-    <title><?php if (defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
+    <title><?php if (defined("TITLE") && TITLE) echo(TITLE . " | ") ?>Atheos IDE</title>
     <meta name="author" content="Liam Siira">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
