@@ -10,6 +10,11 @@ use MatthiasMullie\Minify;
 
 class SourceManager {
 
+	private $classes = array(
+		"classes/filepath.js",
+		"classes/filehandle.js"
+	);
+
 	private $modules = array(
 		"modules/system.js",
 		"modules/alert.js",
@@ -55,6 +60,9 @@ class SourceManager {
 		}
 
 		foreach ($plugins as $plugin) {
+			if (file_exists(COMPONENTS . "/" . $component . "/class.js")) {
+				$this->components[] = "components/$component/class.js";
+			}			
 			if (file_exists(PLUGINS . "/" . $plugin . "/init.js")) {
 				$this->pluginsJS[] = "plugins/$plugin/init.js";
 			}
@@ -69,6 +77,9 @@ class SourceManager {
 		$files = array();
 
 		switch ($dataset) {
+			case "classes":
+				$files = $this->classes;
+				break;
 			case "modules":
 				$files = $this->modules;
 				break;
