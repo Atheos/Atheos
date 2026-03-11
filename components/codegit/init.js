@@ -8,12 +8,9 @@
 // Authors: Codiad Team, @Fluidbyte, Atheos Team, @hlsiira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function(global) {
+(function() {
+	'use strict';
 
-
-	var self = null;
-
-	var atheos = global.atheos;
 
 	//////////////////////////////////////////////////////////////////////
 	// Codegit
@@ -39,9 +36,8 @@
 	//////////////////////////////////////////////////////////////////////
 
 
-	carbon.subscribe('system.loadExtra', () => atheos.codegit.init());
 
-	atheos.codegit = {
+	const self = {
 
 		location: '',
 		activeRepo: '',
@@ -54,7 +50,6 @@
 		icon: '<i class="fas fa-code-branch"></i>',
 
 		init: function() {
-			self = this;
 
 			fX('#codegit menu').on('click', function(e) {
 				var target = oX(e.target);
@@ -286,7 +281,7 @@
 
 
 		checkFileStatus: function(path) {
-			path = path || atheos.inFocusPath;
+			path = path || inFocus.filePath;
 
 			echo({
 				url: atheos.controller,
@@ -474,4 +469,8 @@
 			return setting;
 		}
 	};
-})(this);
+
+	carbon.subscribe('system.loadExtra', () => self.init());
+	atheos.codegit = self;
+
+})();
