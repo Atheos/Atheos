@@ -98,7 +98,7 @@
 		}
 	};
 
-	window.alert = atheos.alert.show;
 	atheos.alert = self;
+	window.alert = atheos.alert.show;
 
 })();
