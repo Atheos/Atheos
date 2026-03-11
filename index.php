@@ -18,8 +18,7 @@ if (defined("HEADERS") && HEADERS) {
     }
 }
 
-require_once("traits/cls.source.php");
-
+require_once("classes/sourcemanager.php");
 $SourceManager = new SourceManager;
 
 ?>
@@ -54,6 +53,9 @@ $SourceManager = new SourceManager;
 
     // LOAD LIBRARIES
     $SourceManager->linkResource("js", "libraries", DEVELOPMENT);
+
+    // LOAD CLASSES
+    $SourceManager->linkResource("js", "classes", DEVELOPMENT);
 
     // LOAD MODULES
     $SourceManager->linkResource("js", "modules", DEVELOPMENT);
