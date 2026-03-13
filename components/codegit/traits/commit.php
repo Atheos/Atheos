@@ -1,6 +1,6 @@
 <?php
 
-trait Commit {
+trait GitCommit {
 
     public function add($file) {
         return Common::safe_execute("git add --all -- ?", $file);
@@ -19,7 +19,7 @@ trait Commit {
             return;
         }
 
-        $files = explode(",", $files);
+        // $files = explode(",", $files);
 
 
         foreach ($files as $file) {
