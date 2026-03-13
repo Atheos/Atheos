@@ -1,7 +1,7 @@
 <?php
 
 
-trait Initialize {
+trait GitInitialize {
 
 	public function init($path, $type) {
 		if (!is_dir($path)) return false;

@@ -1,7 +1,7 @@
 <?php
 
 
-trait History {
+trait GitHistory {
 
 	public function loadLog($path) {
 		$cmd = "git log --relative-date --pretty=format:\"%%H|%%an|%%ae|%%ar|%%s\" -500";
