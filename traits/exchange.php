@@ -53,7 +53,11 @@ trait Exchange {
         $data["status"] = $status;
 
         // Return
-        exit(json_encode($data));
+		if (Common::$responseType === "batch") {
+        	Common::$responseStack[Common::$responseIndex] = ["status" => $status, "data" => $data];
+	    } else {
+        	exit(json_encode($data));
+	    }
     }
 
     //////////////////////////////////////////////////////////////////////////80

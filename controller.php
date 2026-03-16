@@ -18,37 +18,75 @@ set_error_handler(function($severity, $message, $file, $line) {
 
 require_once("common.php");
 
-$action = POST("action");
-$target = POST("target");
-$target = Common::cleanPath($target);
+//////////////////////////////////////////////////////////////////////////////80
+// Process Individual Requests
+//////////////////////////////////////////////////////////////////////////////80
+function processRequest() {
+    global $i18n;
+
+
+    $action = POST("action");
+    $target = POST("target");
+    $target = Common::cleanPath($target);
+
+    try {
+
+        //////////////////////////////////////////////////////////////////////////////80
+        // Verify Session or Key
+        //////////////////////////////////////////////////////////////////////////////80
+        if ($action !== "authenticate") {
+            Common::checkSession();
+        }
+
+        if (!$action) return Common::send(415, "missing_action");
+        if (!$target) return Common::send(415, "missing_target");
+
+        if ($target === "i18n" && $action === "init") {
+            $cache = array("cache" => $i18n->getCache());
+            Common::send(200, $cache);
+
+        } elseif ($target === "core" && $action === "loadState") {
+            $state = Common::loadState();
+            Common::send(200, $state);
+
+        } else {
+
+            if (file_exists("components/$target/controller.php")) {
+                require("components/$target/controller.php");
+            } elseif (file_exists("plugins/$target/controller.php")) {
+                require("plugins/$target/controller.php");
+            } else {
+                Common::send(416, "invalid_target");
+            }
+        }
+
+    } catch (Exception $e) {
+        Common::send(501, array(
+            "target" => $target,
+            "action" => $action,
+            "error" => $e->getMessage()
+        ));
+    }
+}
 
 //////////////////////////////////////////////////////////////////////////////80
-// Verify Session or Key
+// Check for single vs batch request
 //////////////////////////////////////////////////////////////////////////////80
-if ($action !== "authenticate") {
-    Common::checkSession();
-}
+if (POST("multiRequest")) {
+    Common::$responseType = "batch";
+    $requests = POST('requests') ?? [];
 
-if (!$action) Common::send(415, "missing_action");
-if (!$target) Common::send(415, "missing_target");
+    foreach ($requests as $i => $req) {
+        Common::$responseIndex = $i;
+        Common::$debugStack = [];
 
-if ($target === "i18n" && $action === "init") {
-    $cache = array("cache" => $i18n->getCache());
-    Common::send(200, $cache);
-}
+        $_POST = $req;
+        processRequest();
+    }
+    Common::$debugStack = [];
+    Common::$responseType = "single";
+    Common::send(200, Common::$responseStack);
 
-if ($target === "core" && $action === "loadState") {
-    $state = Common::loadState();
-    Common::send(200, $state);
-}
-
-
-$componentPath = Common::cleanPath("components/$target/controller.php");
-
-if (file_exists("components/$target/controller.php")) {
-    require("components/$target/controller.php");
-} elseif (file_exists("plugins/$target/controller.php")) {
-    require("plugins/$target/controller.php");
 } else {
-    Common::send(416, "invalid_target");
+    processRequest();
 }
