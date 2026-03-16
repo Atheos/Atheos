@@ -18,29 +18,67 @@
 	'use strict';
 
 	let headers = {},
-		globalDest = false;
+		globalDest = false,
+		batchDest = 'batch.php',
+		batchQueue = [],
+		batchTimer = null,
+		batchDelay = 50;
 
-	function echo(opt) {
-		if (!opt || !globalDest) return;
-		if (!opt.url) opt.url = globalDest;
+	let destinations = {};
+	// destinations['ajax.php'] = { batch: 'batch.php', queue: [], timer: null }
 
-		opt.type = opt.type || ((opt.data) ? 'POST' : 'GET');
+	//////////////////////////////////////////////////////////////////////////80
+	// Process Replies
+	//////////////////////////////////////////////////////////////////////////80
+	function processReply(opt, reply, status) {
+		try {
+			reply = JSON.parse(reply);
 
-		var xhr = new XMLHttpRequest(),
-			data = opt.data ? [] : null;
-
-		if (opt.data && typeof opt.data === 'object') {
-			for (var name in opt.data) {
-				data.push(encodeURIComponent(name) + '=' + encodeURIComponent(opt.data[name]));
+			if ('debug' in reply) {
+				console.log(reply.debug);
+				delete reply.debug;
 			}
-			if (opt.rnd) data.push(('v=' + Math.random()).replace('.', ''));
-			data = data.join('&');
+		} catch (e) {}
+
+		if (isObject(reply) && 'status' in reply) {
+			status = reply.status;
+			delete reply.status;
 		}
 
-		if (opt.settled && typeof opt.settled === 'function') {
-			opt.success = opt.settled;
-			opt.failure = opt.settled;
+		// Call the relevant callback function
+		if (opt.settled) {
+			opt.settled(reply, status);
+		} else if (opt.success && status >= 200 && status < 300) {
+			opt.success(reply, status);
+		} else if (opt.failure) {
+			opt.failure(reply, status);
 		}
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Encode data for xhr requests
+	//////////////////////////////////////////////////////////////////////////80
+	function encodeData(data) {
+		let payload = [];
+
+		if (data && typeof data === 'object') {
+			for (var key in data) {
+				payload.push(encodeURIComponent(key) + '=' + encodeURIComponent(data[key]));
+			}
+			if (data.rnd) payload.push(('v=' + Math.random()).replace('.', ''));
+			payload = payload.join('&');
+		}
+
+		return payload;
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Send Request
+	//////////////////////////////////////////////////////////////////////////80
+	function sendRequest(opt) {
+		var xhr = new XMLHttpRequest(),
+			payload = opt.data ? [] : null;
+
 
 		if (opt.timeout) {
 			xhr.timeout = opt.timeout;
@@ -51,48 +89,84 @@
 			if (xhr.readyState !== 4) return; // not complete
 
 			// Try to parse JSON data
-			var reply = xhr.responseText;
-			try {
-				reply = JSON.parse(reply);
-
-				if ('debug' in reply) {
-					console.log(reply.debug);
-					delete reply.debug;
-				}
-			} catch (e) {}
-
-			let status = xhr.status;
-			if (isObject(reply)) {
-				status = reply.status;
-				delete reply.status;
-			}
-
-			// Call the relevant callback function
-			if (opt.success && xhr.status >= 200 && xhr.status < 300) {
-				opt.success(reply, status);
-			} else if (opt.failure) {
-				opt.failure(reply, status);
-			}
+			let reply = processReply(opt, xhr.responseText, xhr.status);
 		};
 
 		if (opt.type === 'GET') {
-			data = data ? '?' + data : '';
-			xhr.open('GET', opt.url + data, true);
-		} else if (opt.type === 'POST') {
+			opt.url = opt.data ? opt.url + encodeData(opt.data) : opt.url;
+			xhr.open('GET', opt.url, true);
+
+		} else {
+
+			let contentType = (opt.type === 'POST') ? 'application/JSON' : 'application/x-www-form-urlencoded';
+			payload = (opt.type === 'POST') ? JSON.stringify(opt.data) : encodeData(opt.data);
+
 			xhr.open('POST', opt.url, true);
-			xhr.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
+			xhr.setRequestHeader('Content-Type', contentType);
 		}
 
-		for (const s in headers) {
-			xhr.setRequestHeader(s, headers[s]);
-		}
+		for (const s in headers) xhr.setRequestHeader(s, headers[s]);
+		xhr.send(payload);
 
-		xhr.send(data);
 		return xhr;
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Send Request Queue
+	//////////////////////////////////////////////////////////////////////////80
+	function sendQueue() {
+		if (!batchQueue.length) return;
+
+		const pending = batchQueue.splice(0);
+
+		sendRequest({
+			url: globalDest,
+			data: {
+				multiRequest: true,
+				requests: pending.map(opt => opt.data)
+			},
+			type: 'POST',
+			settled: function(reply, batStatus) {
+				const responses = reply || {};
+				pending.forEach((opt, i) => {
+					const res = responses[i];
+					if (!res) return;
+					let resStatus = res.status || batStatus;
+					const data = res.data || res;
+					processReply(opt, data, resStatus);
+				});
+			}
+		});
+	}
+
+	//////////////////////////////////////////////////////////////////////////80
+	// Echo function
+	//////////////////////////////////////////////////////////////////////////80
+	function echo(opt) {
+		if (!opt || !globalDest) return;
+		if (!opt.url) opt.url = globalDest;
+
+		opt.type = opt.type || ((opt.data) ? 'POST' : 'GET');
+
+		// Queue non-urgent POST requests if batchDest is set
+		if (opt.type === 'POST' && opt.url === globalDest) {
+			batchQueue.push(opt);
+			if (opt.sendNow) {
+				sendQueue();
+			} else {
+				clearTimeout(batchTimer);
+				batchTimer = setTimeout(sendQueue, batchDelay);
+			}
+		} else {
+			sendRequest(opt);
+		}
 	}
 
 	echo.setHeaders = (opt) => headers = opt;
 	echo.setGlobalDest = (url) => globalDest = url;
+	echo.setBatchDelay = (ms) => batchDelay = ms;
+	echo.sendQueue = sendQueue;
 
 	window.echo = echo;
 })();

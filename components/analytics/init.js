@@ -287,6 +287,7 @@
 		send(data) {
 			echo({
 				url: self.home,
+				type: 'FORM',
 				data,
 				settled: function(reply, status) {
 					if (status === 418) {

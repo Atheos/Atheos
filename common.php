@@ -38,6 +38,11 @@ class Common {
     // PROPERTIES
     //////////////////////////////////////////////////////////////////////////80
     public static $debugStack = array();
+    
+    public static $responseType = "single";
+    public static $responseIndex = 0;
+    public static $responseStack = array();
+    
 
     public static $configDefaults = array(
         "BASE_PATH" => [
