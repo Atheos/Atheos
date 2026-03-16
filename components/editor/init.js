@@ -24,18 +24,18 @@
 	};
 
 	Object.defineProperties(atheos, {
-		inFocusFile: {
-			get: () => inFocus.file
+		inFocusEditor: {
+			get: () => inFocus.aceEditor
 		},
 		inFocusPath: {
-			get: () => inFocus.file ? inFocus.file.path : null
+			get: () => inFocus.path
+		},
+		inFocusFile: {
+			get: () => inFocus.file
 		},
 		inFocusSession: {
 			get: () => inFocus.file ? inFocus.file.aceSession : null
 		},
-		inFocusEditor: {
-			get: () => inFocus.aceEditor
-		}
 	});
 
 	// Classes from Ace
@@ -108,7 +108,8 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Creates a new edit pane
 		//////////////////////////////////////////////////////////////////////80
-		createEditorPane: function(where) {
+		createEditorPane: function(where, splitTarget) {
+			log('Create pane:', where);
 			// This can be a little confusing to follow, took me a while. First,
 			// keep in mind that Ace objects has their own .el property, which
 			// holds an onyx object, that holds it's own raw element.
@@ -125,7 +126,12 @@
 			} else {
 				// Otherwise, we try to split the view into two editorPanes
 
-				var xFirstChild = atheos.inFocusEditor.xElement;
+				// var xFirstChild = atheos.inFocusEditor.xElement;
+				let firstPane = atheos.inFocusEditor ? atheos.inFocusEditor : self.editorPanes[0];
+				var xFirstChild = firstPane.xElement;
+				xFirstChild = splitTarget ? splitTarget.xElement : xFirstChild;
+
+
 
 				childID = (where === 'top' || where === 'left') ? 0 : 1;
 				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
@@ -148,6 +154,7 @@
 			}
 
 			let aceEditor = new AceEditorInstance(new AceVirtualRenderer(xElement.element));
+			aceEditor.paneId = 'pane_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
 
 			var resizeEditor = () => aceEditor.resize();
 
@@ -166,6 +173,75 @@
 			return aceEditor;
 		},
 
+		//////////////////////////////////////////////////////////////////////80
+		//
+		//////////////////////////////////////////////////////////////////////80
+		serializePaneTree: function(xElement) {
+			xElement = xElement || oX('#EDITOR').element.firstElementChild;
+			if (!xElement) return null;
+
+			if (xElement.classList.contains('editorPane')) {
+				let aceEditor = self.editorPanes.find(p => p.element === xElement);
+				let proxySession = aceEditor.getSession();
+				return {
+					type: 'pane',
+					paneId: aceEditor.paneId,
+					path: aceEditor ? aceEditor.path : null,
+					inFocus: atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId,
+					cursor: proxySession.getSelection().getCursor(),
+					scrollTop: proxySession.getScrollTop(),
+					scrollLeft: proxySession.getScrollLeft()
+				};
+			}
+
+			if (xElement.classList.contains('editorWindow')) {
+				let direction = xElement.classList.contains('vertical') ? 'vertical' : 'horizontal';
+				let childPanes = Array.from(xElement.children).filter(c => !c.classList.contains('splitter'));
+				return {
+					type: 'split',
+					direction,
+					children: childPanes.map(c => self.serializePaneTree(c))
+				};
+			}
+
+			return null;
+		},
+
+
+		//////////////////////////////////////////////////////////////////////80
+		//
+		//////////////////////////////////////////////////////////////////////80
+		restorePaneTree: function(node, targetPane) {
+			if (!node) return;
+
+			if (node.type === 'pane') {
+				if (!node.path) return;
+				log('Restore node: ', node.path);
+
+				let pane = targetPane || self.createEditorPane();
+				let file = self.activeFiles[node.path];
+				if (file) {
+					self.attachFileToEditor(file, pane);
+				}
+				if (node.inFocus) {
+					inFocus.aceEditor = pane;
+					inFocus.file = file;
+					inFocus.path = node.path;
+				}
+
+				return pane;
+			}
+
+			if (node.type === 'split') {
+				log('Restore split.');
+				let [first, second] = node.children;
+				let firstPane = self.restorePaneTree(first, targetPane);
+
+				let where = node.direction === 'vertical' ? 'bottom' : 'right';
+				let secondPane = self.createEditorPane(where, firstPane);
+				self.restorePaneTree(second, secondPane);
+			}
+		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Attachs a file editing session to an editing pane instance. 
@@ -202,6 +278,8 @@
 			var proxySession = new AceEditSession(file.aceSession.getDocument(),
 				file.aceSession.getMode());
 
+			atheos.textmode.setMode(file.path, proxySession);
+
 			proxySession.setUndoManager(file.aceSession.getUndoManager());
 			proxySession.path = file.path;
 			aceEditor.setSession(proxySession);
@@ -226,7 +304,7 @@
 			// Ensure editor is rendered
 			aceEditor.resize(true);
 			self.syncSystemFocus(aceEditor);
-			aceEditor.focus();
+			// aceEditor.focus();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -300,52 +378,120 @@
 			if (!aceEditor) return;
 
 			var path = aceEditor.path;
-			if (path === atheos.inFocusPath) return;
+			if (atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId && path === atheos.inFocusPath) return;
 			let file = self.getFile(path);
 			atheos.tabmanager.highlightEntry(path);
 
 			inFocus.file = file;
 			inFocus.aceEditor = aceEditor;
+			inFocus.path = path;
 
 			let display = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
 
 			oX('#current_file').text(display);
 			atheos.textmode.setModeDisplay(aceEditor.getSession());
 
+			let paneTree = self.serializePaneTree();
+			storage('editor.paneTree', paneTree);
+			log(paneTree);
+
+			let fileStates = {};
+			for (let path in self.activeFiles) {
+				fileStates[path] = self.activeFiles[path].states;
+			}
+			log(fileStates);
 
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'editor',
 					action: 'setFocus',
-					path: path
+					path: path,
+					paneTree,
+					fileStates
 				}
 			});
 		},
-
-
-
 
 		//////////////////////////////////////////////////////////////////////80
 		// Open multiple files; mostly used to restore last user state.
 		//////////////////////////////////////////////////////////////////////80
 		openFiles: function(files) {
-			var key, item, focusFound;
-			for (key in files) {
-				item = files[key];
-				if (item.status === 'inFocus' && !focusFound) {
-					self.openFile(item.path, true);
-					focusFound = true;
-				} else {
-					self.openFile(item.path, false);
+
+			let savedTree = storage('editor.paneTree');
+			log(savedTree);
+			if (savedTree) {
+				let filePromises = files.map((file) => {
+					let ext = pathinfo(file.path).extension.toLowerCase();
+					if (self.noOpen.indexOf(ext) > -1) return;
+
+					// atheos.textmode.setMode(file.path);
+					let sessionPromise = ('content' in file) ? Promise.resolve(file) : self.fetchFile(file.path);
+
+					return sessionPromise.then((reply) => {
+						self.createEditSession(file.path, reply.content, reply.modifyTime, reply.loadHash, reply.mode);
+					});
+				});
+				Promise.all(filePromises).then(function() {
+					self.restorePaneTree(savedTree);
+				});
+			} else {
+				var key, item, focusFound;
+				for (key in files) {
+					item = files[key];
+					if (item.status === 'inFocus' && !focusFound) {
+						self.openFile(item.path, true);
+						focusFound = true;
+					} else {
+						self.openFile(item.path, false);
+					}
 				}
 			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
+		// Fetch file content and metadata
+		//////////////////////////////////////////////////////////////////////80
+		fetchFile: function(path) {
+			let filePromise = new Promise((resolve, reject) =>
+				echo({
+					data: {
+						target: 'editor',
+						action: 'openFile',
+						path,
+						inFocus: false
+					},
+					settled: function(reply, status) {
+						return status === 200 ? resolve(reply) : reject(status);
+					}
+				})
+			);
+			return filePromise;
+		},
+
+		//////////////////////////////////////////////////////////////////////80
 		// Open File
 		//////////////////////////////////////////////////////////////////////80
-		openFile: function(path, inFocus, line) {
+		openFile: function(path, focus, line) {
+			log(path);
+			focus = typeof focus !== 'undefined' ? focus : true;
+
+			let ext = pathinfo(path).extension.toLowerCase();
+			if (self.noOpen.indexOf(ext) > -1) return;
+
+			if (focus && self.activeFiles[path]) return self.focusOnFile(path, line);
+			atheos.textmode.setMode(path);
+			return self.fetchFile(path).then((reply) => {
+				self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, reply.mode);
+
+				if (focus) self.focusOnFile(path, line);
+			});
+		},
+
+		//////////////////////////////////////////////////////////////////////80
+		// Open File
+		//////////////////////////////////////////////////////////////////////80
+		openFileOld: function(path, inFocus, line) {
 			inFocus = typeof(inFocus) !== 'undefined' ? inFocus : true;
 
 			let ext = pathinfo(path).extension.toLowerCase();
@@ -356,28 +502,6 @@
 			}
 
 			let mode = atheos.textmode.selectMode(ext);
-
-			// Load the textmode for syntax highlighting prior to loading
-			// file content to ensure that the highlighter is ready when 
-			// content is being loaded into the editor pane.
-			// atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', function() {
-			// 	echo({
-			// 		data: {
-			// 			target: 'editor',
-			// 			action: 'openFile',
-			// 			path: path,
-			// 			inFocus: inFocus
-			// 		},
-			// 		settled: function(reply, status) {
-			// 			if (status !== 200) return;
-			// 			self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
-			// 			if (inFocus) {
-			// 				self.focusOnFile(path, line);
-			// 			}
-			// 		}
-			// 	});
-			// });
-
 
 			let modePromise = new Promise(resolve =>
 				atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', resolve)
@@ -410,7 +534,9 @@
 		// Focus on opened file
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
+			log('focusOn', path);
 			if (path === atheos.inFocusPath) return;
+			log('new focus');
 			atheos.editor.attachFileToEditor(self.activeFiles[path]);
 			if (line) setTimeout(() => {
 				atheos.editor.gotoLine(line);
@@ -423,17 +549,12 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Create Edit Session
 		//////////////////////////////////////////////////////////////////////80
-		createEditSession: function(path, content, modifyTime, loadHash, mode) {
+		createEditSession: function(path, content, modifyTime, loadHash) {
 			let aceSession = new AceEditSession(content),
 				aceUndoManager = new AceUndoManager();
 
-			let aceModePath = 'ace/mode/' + mode;
-			if (!ace.require(aceModePath)) {
-				console.warn('Missing ACE mode:', mode);
-			}
-			aceSession.setMode(aceModePath);
 
-			aceSession.setMode('ace/mode/' + mode);
+			atheos.textmode.setMode(path, aceSession);
 			aceSession.setNewLineMode('unix');
 			aceSession.setUndoManager(aceUndoManager);
 
@@ -530,7 +651,7 @@
 				}
 				carbon.publish('session.saved', file.path);
 			};
-			
+
 			// HLSiira: I'm uncertain why this If statement is here.
 			if (newContent.length < 1) {
 				return handleSuccess(file.serverMTime);
@@ -773,7 +894,7 @@
 
 				// Update fileTab
 				var fileTab = self.activeFiles[oldPath].fileTab,
-				anchor = fileTab.find('a');
+					anchor = fileTab.find('a');
 
 				let info = pathinfo(newPath);
 				anchor.html(`<span class="subtle">${info.directory.replace(/^\/+/g, '')}/</span>${info.basename}`);
@@ -941,11 +1062,24 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Setup Cursor Tracking
 		//////////////////////////////////////////////////////////////////////80
-		trackCursor: function() {
-			var col = i18n('Col');
-			let i = atheos.inFocusEditor;
-			if (!i) return;
-			let pos = i.getCursorPosition();
+		trackCursor: function(aceEditor) {
+			aceEditor = aceEditor || atheos.inFocusEditor;
+
+			if (!aceEditor) return;
+			let pos = aceEditor.getCursorPosition();
+
+
+			let aceSession = aceEditor.getSession();
+
+			let state = {
+				time: Date.now(),
+				cursor: aceSession.getSelection().getCursor(),
+				scrollTop: aceSession.getScrollTop(),
+				scrollLeft: aceSession.getScrollLeft()
+			};
+			// self.activeFiles[aceEditor.path].states.push(state);
+
+
 			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
 		},
 
