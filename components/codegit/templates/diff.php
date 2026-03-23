@@ -1,11 +1,8 @@
 <?php
 $files = POST("files");
 
-if ($files) {
-	$files = explode(",", $files);
-} else {
+if (empty($files)) {
 	$files = array($path);
-	echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("codegit_diff") . "</label>";
 }
 
 $diffs = array();
@@ -13,6 +10,7 @@ foreach ($files as $i => $file) {
 	$diffs[] = $CodeGit->loadDiff($file);
 }
 
+echo "<label class=\"title\"><i class=\"fas fa-code-branch\"></i>" . i18n("codegit_diff") . "</label>";
 echo "<div id=\"codegit_diff\" class=\"content\">";
 
 foreach ($diffs as $i => $diff) {
