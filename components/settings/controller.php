@@ -30,7 +30,7 @@ switch ($action) {
 	case "save":
 		$key = POST("key");
 		$value = POST("value");
-		if ($key && $value) {
+		if ($key && isset($value)) {
 			$Settings->save($key, $value);
 		} else {
 			Common::send(417, "Missing key or value.");
