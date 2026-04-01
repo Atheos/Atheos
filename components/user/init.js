@@ -368,7 +368,9 @@
 					actions: {
 						'Save All & Close': function() {
 							atheos.editor.saveAll();
-							postLogout();
+							carbon.subscribe('editor.allSaved', function() {
+								postLogout();
+							});
 						},
 						'Discard Changes': function() {
 							changedPaths.forEach(function(path) {
