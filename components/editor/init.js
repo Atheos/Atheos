@@ -649,7 +649,11 @@
 				if (file.fileTab) {
 					file.fileTab.removeClass('changed');
 				}
-				carbon.publish('session.saved', file.path);
+				carbon.publish('editor.saved', file.path);
+
+				if (self.getChangedPaths().length === 0) {
+					carbon.publish('editor.allSaved');
+				}
 			};
 
 			// HLSiira: I'm uncertain why this If statement is here.
