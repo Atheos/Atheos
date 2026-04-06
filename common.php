@@ -38,6 +38,64 @@ class Common {
     // PROPERTIES
     //////////////////////////////////////////////////////////////////////////80
     public static $debugStack = array();
+    
+    public static $responseType = "single";
+    public static $responseIndex = 0;
+    public static $responseStack = array();
+    
+
+    public static $configDefaults = array(
+        "BASE_PATH" => [
+            "description" => "Full path to Atheos installation",
+            "default" => __DIR__
+        ],
+        "BASE_URL" => [
+            "description" => "The base URL to Atheos (without trailing slash)",
+            "default" => ""
+        ],
+        "WEBROOT" => [
+            "description" => "WEBROOT",
+            "default" => "/var/www/html/"
+        ],
+        "TITLE" => [
+            "description" => "Custom title added to the browser page title/tab",
+            "default" => ""
+        ],
+        "THEME" => [
+            "description" => "Base theme for all users; options are dark/light red/green/blue.",
+            "default" => "dark blue",
+        ],
+
+        "LIFETIME" => [
+            "description" => "SESSION LIFETIME IN SECONDS (e.g. 7200 = 2 hours)",
+            "default" => false,
+        ],
+        "MAXRESTORESIZE" => [
+            "description" => "Max file size when restoring user session.",
+            "default" => 1048576
+        ],
+        "MAXRESTORECOUNT" => [
+            "description" => "Max file size count when restoring user session.",
+            "default" => 20
+        ],
+        "TIMEZONE" => [
+            "description" => "TIMEZONE",
+            "default" => false,
+        ],
+        "LANGUAGE" => [
+            "description" => "TIMEZONE",
+            "default" => "en",
+        ],
+        "DEVELOPMENT" => [
+            "description" => "Development mode disables asset minification and enables verbose messages.",
+            "default" => false,
+        ],
+        // "AUTH_PATH" => [
+        //     "description" => "EXTERNAL AUTHENTICATION",
+        //     "default" => "/path/to/customauth.php",
+        // ],
+    );
+
 
     //////////////////////////////////////////////////////////////////////////80
     // METHODS
@@ -53,34 +111,35 @@ class Common {
 
         if (file_exists($path."/config.php")) require_once($path."/config.php");
 
-        if (defined("LIFETIME") && LIFETIME !== false) {
-            ini_set("session.cookie_lifetime", LIFETIME);
+        // Set global config constants from config defaults
+        foreach (self::$configDefaults as $key => $entry) {
+            if (!defined($key)) {
+                $val = is_array($entry["default"]) ? serialize($entry["default"]) : $entry["default"];
+                define($key, $val);
+            }
         }
 
-        define("WEBROOT", "/var/www/html/");
-
-        if (!defined("BASE_PATH")) define("BASE_PATH", $path);
-        if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
-        if (!defined("LIBRARIES")) define("LIBRARIES", BASE_PATH . "/libraries");
-        if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
-        if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
-        if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
-        if (!defined("TIMEZONE")) {
+        // TIMEZONE
+        if (!defined("TIMEZONE") && TIMEZONE !== false) {
             $date = new DateTime();
             $timeZone = $date->getTimezone();
             define("TIMEZONE", $timeZone->getName());
         }
-        if (!defined("LANGUAGE")) define("LANGUAGE", "en");
-        if (!defined("THEME")) define("THEME", "dark blue");
-        if (!defined("DEVELOPMENT")) define("DEVELOPMENT", false);
-
-        // TIMEZONE
         try {
             date_default_timezone_set(TIMEZONE);
         } catch (Exception $e) {
             date_default_timezone_set("UTC");
         }
 
+        // Set session lifetime
+        if (defined("LIFETIME") && LIFETIME !== false) {
+            ini_set("session.cookie_lifetime", LIFETIME);
+        }
+
+        //Check for external authentification
+        if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
+
+        // Set security headers, if not already set.
         if (!defined("HEADERS")) define ("HEADERS", serialize(array(
             "Strict-Transport-Security: max-age=31536000; includeSubDomains; preload",
             "X-Frame-Options: SAMEORIGIN",
@@ -91,8 +150,11 @@ class Common {
             "Access-Control-Allow-Origin: *"
         )));
 
-        //Check for external authentification
-        if (defined("AUTH_PATH") && file_exists(AUTH_PATH)) require_once(AUTH_PATH);
+        if (!defined("COMPONENTS")) define("COMPONENTS", BASE_PATH . "/components");
+        if (!defined("LIBRARIES")) define("LIBRARIES", BASE_PATH . "/libraries");
+        if (!defined("PLUGINS")) define("PLUGINS", BASE_PATH . "/plugins");
+        if (!defined("DATA")) define("DATA", BASE_PATH . "/data");
+        if (!defined("WORKSPACE")) define("WORKSPACE", BASE_PATH . "/workspace");
 
         global $components; global $libraries; global $plugins;
         // Read Components & Plugins
@@ -120,9 +182,7 @@ class Common {
     public static function loadState() {
         $activeUser = SESSION("user");
 
-
         $userData = Common::loadJSON("users")[$activeUser];
-
 
         $activeProjectName = SESSION("projectName");
         $activeProjectPath = SESSION("projectPath");
@@ -154,14 +214,20 @@ class Common {
 
         $openFiles = array();
         foreach ($result as $file) {
-            $path = $file["path"];
 
-            // Ensure path is correct when in workspace
+            $path = $file["path"];
             if (file_exists(Common::getWorkspacePath($path))) {
+                if (count($openFiles) < MAXRESTORECOUNT) {
+                    if (filesize($path) < MAXRESTORESIZE) {
+                        $content = file_get_contents($path);
+                        $file["content"] = $content;
+                        $file["modifyTime"] = filemtime($path);
+                        $file["loadHash"] = hash("sha256", $content);
+                    }
+                }
+
                 $openFiles[] = $file;
             } else {
-
-                // Invalid file path
                 $where = array(["user", "==", $activeUser], ["path", "==", $path]);
                 $openFiles_db->delete($where);
             }

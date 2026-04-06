@@ -139,11 +139,11 @@
 			self.initMenuHandler('#split', '#split_menu');
 
 			fX('#split-vertically').on('click', function(e) {
-				atheos.editor.addEditorPane(atheos.inFocusFile, 'bottom');
+				atheos.editor.addEditorPane(inFocus.fileHandle, 'bottom');
 			});
 
 			fX('#split-horizontally').on('click', function(e) {
-				atheos.editor.addEditorPane(atheos.inFocusFile, 'right');
+				atheos.editor.addEditorPane(inFocus.fileHandle, 'right');
 			});
 
 			fX('#merge-all').on('click', function(e) {

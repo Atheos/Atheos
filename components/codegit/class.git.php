@@ -14,25 +14,25 @@ function getConfig() {
 	return array();
 }
 
-include_once "traits/branches.php";
-include_once "traits/commit.php";
-include_once "traits/history.php";
-include_once "traits/initialize.php";
-include_once "traits/remotes.php";
-include_once "traits/settings.php";
-include_once "traits/status.php";
-include_once "traits/transfer.php";
+require_once("traits/branches.php");
+require_once("traits/commit.php");
+require_once("traits/history.php");
+require_once("traits/initialize.php");
+require_once("traits/remotes.php");
+require_once("traits/settings.php");
+require_once("traits/status.php");
+require_once("traits/transfer.php");
 
 class CodeGit {
 
-	use Commit; // commit, add, showCommit, amend
-	use Branches; // getBranches, getCurrentBranch
-	use History; // loadLog, diff, blame
-	use Initialize; // initRepo, initSubMod
-	use Remotes; // getRemotes
-	use Settings; // getSettings
-	use Status; // status, loadChanges, parseChanges, fileStatus
-	use Transfer; // push, pull, fetch
+	use GitCommit; // commit, add, showCommit, amend
+	use GitBranches; // getBranches, getCurrentBranch
+	use GitHistory; // loadLog, diff, blame
+	use GitInitialize; // initRepo, initSubMod
+	use GitRemotes; // getRemotes
+	use GitSettings; // getSettings
+	use GitStatus; // status, loadChanges, parseChanges, fileStatus
+	use GitTransfer; // push, pull, fetch
 
 	private $activeUser;
 	private $path;

@@ -105,7 +105,7 @@
 		// Open a preview in another window
 		//////////////////////////////////////////////////////////////////////80
 		openInBrowser: function(anchor) {
-			let path = anchor ? anchor.path : atheos.inFocusPath;
+			let path = anchor ? anchor.path : inFocus.filePath;
 
 			echo({
 				data: {
@@ -156,13 +156,15 @@
 			// & https://github.com/io-developer/js-dragndrop
 			e.stopPropagation();
 
-			var target = e.target;
-			var origin, sibling;
+			let target = e.target;
+			let origin, sibling;
 
-			var dragZone = oX('#FILETREE').element;
-			var clone, startEX, startEY, startMX, startMY, timeout;
+			let dragZone = oX('#FILETREE').element;
+			let clone, startEX, startEY, startMX, startMY, timeout;
 
-			var xMax, yMax;
+			let xMax, yMax;
+
+			let swapCount = 0;
 
 			// Move actual/invisible node around / ID target
 
@@ -171,10 +173,10 @@
 			function moveTarget(e) {
 				timeout = false;
 
-				var swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
+				let swap = [].slice.call(dragZone.querySelectorAll('.draggable'));
 
 				swap = swap.filter((item) => {
-					var rect = item.getBoundingClientRect();
+					let rect = item.getBoundingClientRect();
 					if (e.clientX < rect.left || e.clientX >= rect.right) return false;
 					if (e.clientY < rect.top || e.clientY >= rect.bottom) return false;
 					return (item !== clone);
@@ -190,7 +192,8 @@
 							iNode.classList.replace('fa-download', 'fa-folder');
 						});
 						swap.parentNode.insertBefore(target, swap.nextSibling);
-						if (swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length > 0) {
+						swapCount = swap.querySelectorAll('a[data-type="folder"],a[data-type="root"]').length;
+						if (swapCount) {
 							swap.querySelector('i[data-type="folder"],i[data-type="root"]').classList.replace('fa-folder', 'fa-download');
 						}
 					}
@@ -199,7 +202,7 @@
 
 			// Move clone/ghost element node
 			function dragMove(e) {
-				var x = startEX + e.screenX - startMX,
+				let x = startEX + e.screenX - startMX,
 					y = startEY + e.screenY - startMY;
 
 				// Clamp / wrap coordinates
@@ -253,14 +256,15 @@
 				target.style.opacity = '';
 				if (clone) clone.remove();
 
-				var parentUl = target.closest('ul');
-				var parentFolder = target.previousSibling.querySelector('a[data-type="folder"],a[data-type="root"]');
-				var folder;
+				let parentFolder = target.previousSibling?.querySelector('a[data-type="folder"],a[data-type="root"]'),
+					parentUl = target.closest('ul'),
+					folder;
 				if (!parentFolder) {
 					if (!parentUl) return;
 					folder = parentUl.previousElementSibling;
 					if (parentUl === origin || !folder) return origin.append(target);
 				} else {
+					if (!swapCount) return origin.append(target); // Prevents unintended move of draggable
 					dragZone.querySelectorAll('i[data-type="folder"],i[data-type="root"]').forEach(function(iNode) {
 						iNode.classList.replace('fa-download', 'fa-folder');
 					});

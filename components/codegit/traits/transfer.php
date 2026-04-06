@@ -1,6 +1,6 @@
 <?php
 
-trait Transfer {
+trait GitTransfer {
     public function transfer($type, $remote, $branch) {
         if (!in_array($type, ["push", "pull", "fetch"], true)) {
             Common::send(418, i18n("git_error_invalidTransferType"));

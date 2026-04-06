@@ -1,7 +1,7 @@
 <?php
 
 
-trait Settings {
+trait GitSettings {
 
 	public function settings($repo, $data = false) {
 		$db = Common::getObjStore("codegit", "users/" . $this->activeUser);
