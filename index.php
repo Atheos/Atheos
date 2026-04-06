@@ -132,7 +132,7 @@ $SourceManager = new SourceManager;
         $path = defined("DATA") ? DATA . "/" : __DIR__ . "/data/";
 
         $users = file_exists($path . "users.json.php");
-        $projects = file_exists($path . "projects.json.php");
+        $projects = file_exists($path . "projects.db.php");
 
         if (!$users && !$projects) {
             // Installer
