@@ -21,11 +21,18 @@
 		var oldVal = localStorage.getItem('atheos.' + key);
 
 		if (typeof newVal !== 'undefined') {
+			newVal = (typeof newVal === 'object') ? JSON.stringify(newVal) : newVal;
 			localStorage.setItem('atheos.' + key, newVal);
 		}
 
 		if (!oldVal) {
 			return oldVal;
+		} else if (oldVal[0] === '{' || oldVal[0] === '[') {
+			try {
+				return JSON.parse(oldVal);
+			} catch (e) {
+				return oldVal;
+			}
 		} else if (oldVal === 'true' || oldVal === 'false') {
 			return (oldVal === 'true');
 		} else if (isNaN(oldVal) === false) {

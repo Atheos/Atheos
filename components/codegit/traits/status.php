@@ -1,7 +1,7 @@
 <?php
 
 
-trait Status {
+trait GitStatus {
 
     public function repoStatus() {
         $result = Common::safe_execute("git status --branch --porcelain");

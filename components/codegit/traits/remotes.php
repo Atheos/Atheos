@@ -1,7 +1,7 @@
 <?php
 
 
-trait Remotes {
+trait GitRemotes {
 
 	public function getRemotes() {
 		$result = Common::safe_execute("git remote -v");

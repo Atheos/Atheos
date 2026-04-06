@@ -1,7 +1,7 @@
 <?php
 
 
-trait Branches {
+trait GitBranches {
 
 	public function getBranches($path) {
 		if (!is_dir($path)) return false;

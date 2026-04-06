@@ -18,8 +18,7 @@ if (defined("HEADERS") && HEADERS) {
     }
 }
 
-require_once("traits/cls.source.php");
-
+require_once("classes/sourcemanager.php");
 $SourceManager = new SourceManager;
 
 ?>
@@ -27,13 +26,19 @@ $SourceManager = new SourceManager;
 <html lang="en" class="<?php if (defined("THEME") && THEME) echo(THEME) ?>">
 <head>
     <meta charset="utf-8">
-    <title><?php if (defined("DOMAIN") && DOMAIN) echo(DOMAIN . " | ") ?>Atheos IDE</title>
+    <title><?php if (defined("TITLE") && TITLE) echo(TITLE . " | ") ?>Atheos IDE</title>
     <meta name="author" content="Liam Siira">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="A Web-Based IDE with a small footprint and minimal requirements">
 
     <!-- PreConnects -->
     <link rel="preconnect" href="https://www.atheos.io">
+
+
+    <!-- Preload Fonts -->
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Regular.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Bold.woff2" as="font" type="font/woff2" crossorigin>
+    <link rel="preload" href="fonts/ubuntu/Ubuntu-Fira.woff2" as="font" type="font/woff2" crossorigin>
 
     <!-- FAVICONS -->
     <?php
@@ -48,6 +53,9 @@ $SourceManager = new SourceManager;
 
     // LOAD LIBRARIES
     $SourceManager->linkResource("js", "libraries", DEVELOPMENT);
+
+    // LOAD CLASSES
+    $SourceManager->linkResource("js", "classes", DEVELOPMENT);
 
     // LOAD MODULES
     $SourceManager->linkResource("js", "modules", DEVELOPMENT);
