@@ -23,7 +23,8 @@ require_once("common.php");
 //////////////////////////////////////////////////////////////////////////////80
 function processRequest() {
     global $i18n;
-
+    
+    chdir(BASE_PATH);
 
     $action = POST("action");
     $target = POST("target");
