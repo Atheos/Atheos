@@ -98,6 +98,7 @@ switch ($action) {
 		session_unset();
 		session_destroy();
 		session_start();
+		Common::send(204);
 		break;
 
 	//////////////////////////////////////////////////////////////////////////80

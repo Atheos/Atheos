@@ -1,8 +1,8 @@
 <?php
 
 $data = Common::getKeyStore("analytics")->select("*");
-$enabled = $data["enabled"] === true ? " checked" : "";
-$disabled = $data["enabled"] ? "" : " checked";
+$enabled = $data["enabled"] === "true" ? " checked" : "";
+$disabled = $data["enabled"] === "false" ? " checked" : "";
 
 
 ?>

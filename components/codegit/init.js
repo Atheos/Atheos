@@ -63,9 +63,11 @@
 				var target = oX(e.target);
 				if (target.tagName === 'BUTTON') {
 					if (target.attr('data-button') === 'diff') {
-						self.showPanel('diff', self.activeRepo, {
-							files: [target.parent('tr').attr('data-file')]
-						});
+						let data = {
+							files: self.getSelectedFiles(),
+							path: target.parent('tr').attr('data-file')
+						};
+						self.showPanel('diff', self.activeRepo, data);
 					} else if (target.attr('data-button') === 'undo') {
 						self.undo(self.activeRepo, target.parent('tr').attr('data-file'));
 					}
@@ -119,6 +121,18 @@
 				counter++;
 			}
 			return false;
+		},
+
+		getSelectedFiles: function() {
+			let selectedFiles = [],
+				checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
+
+			checkboxes.forEach((checkbox) => {
+				if (checkbox.prop('checked')) {
+					selectedFiles.push(checkbox.parent('tr').attr('data-file'));
+				}
+			});
+			return selectedFiles;
 		},
 
 		//Check if directories has git repo
@@ -243,23 +257,16 @@
 		},
 
 		commit: function(amend) {
-			var message = oX('#commit_message');
-			var repo = self.activeRepo;
+			let message = oX('#commit_message');
+			let repo = self.activeRepo;
 
-			var data = {
+			let data = {
 				action: amend ? 'amend' : 'commit',
 				target: 'codegit',
-				files: [],
+				files: self.getSelectedFiles(),
 				message: message.value(),
 				repo
 			};
-
-			var checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
-			checkboxes.forEach((checkbox) => {
-				if (checkbox.prop('checked')) {
-					data.files.push(checkbox.parent('tr').attr('data-file'));
-				}
-			});
 
 			echo({
 				url: atheos.controller,
@@ -269,6 +276,7 @@
 					if (status === 200) {
 						message.empty();
 						oX('input[type="checkbox"][group="cg_overview"][parent="true"').prop('checked', false);
+						let checkboxes = oX('#codegit_overview tbody').findAll('input[type="checkbox"]');
 						checkboxes.forEach((checkbox) => {
 							if (checkbox.prop('checked')) {
 								checkbox.parent('tr').remove();
