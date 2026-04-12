@@ -101,6 +101,25 @@
 			} else if (setting.startsWith('editor.')) {
 				let option = setting.replace('editor.', '');
 				atheos.editor.setOption(option, value);
+
+				if (option == 'theme') {
+					let themeName = value.split('/').pop();
+					let themePromise = new Promise(resolve =>
+						atheos.common.loadScript(
+							'components/editor/ace-editor/theme-' + themeName + '.js',
+							resolve
+						)
+					);
+
+					// Set system theme based on isDark value of ace-editor theme
+					themePromise.then(function() {
+						let themeModule = ace.require(value),
+							mode = themeModule.isDark ? "dark " : "light ",
+							color = document.documentElement.classList[1];
+						self.save("system.theme", mode + color, true);
+					});
+				}
+
 			} else {
 				switch (setting) {
 					case 'editor.loopBehavior':
@@ -129,6 +148,9 @@
 						break;
 					case 'output.location':
 						atheos.output.setLocation(value);
+						break;
+					case 'system.theme':
+						document.documentElement.className = value;
 						break;
 				}
 			}
