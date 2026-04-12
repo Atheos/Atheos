@@ -1,6 +1,19 @@
 <label><i class="fas fa-sliders-h"></i><?php echo i18n("settings_system"); ?></label>
 <table>
 	<tr>
+		<td><?php echo i18n("theme"); ?></td>
+		<td>
+			<select class="setting" data-setting="system.theme">
+				<option value="dark blue" default selected><?php echo i18n("theme_dark_blue"); ?></option>
+				<option value="dark red"><?php echo i18n("theme_dark_red"); ?></option>
+				<option value="dark green"><?php echo i18n("theme_dark_green"); ?></option>
+				<option value="light blue"><?php echo i18n("theme_light_blue"); ?></option>
+				<option value="light red"><?php echo i18n("theme_light_red"); ?></option>
+				<option value="light green"><?php echo i18n("theme_light_green"); ?></option>
+			</select>
+		</td>
+	</tr>
+	<tr>
 		<td><?php echo i18n("loop_behavior"); ?></td>
 		<td>
 			<toggle>

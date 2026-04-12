@@ -21,9 +21,18 @@ if (defined("HEADERS") && HEADERS) {
 require_once("classes/sourcemanager.php");
 $SourceManager = new SourceManager;
 
+if (defined("THEME") && THEME) $theme = THEME;
+
+// Try to get the system theme from the user settings
+$activeUser = SESSION("user");
+if ($activeUser) {
+	$userTheme = Common::getKeyStore("settings", "users/" . $activeUser)->select("system.theme");
+	if ($userTheme) $theme = $userTheme;
+}
+
 ?>
 <!doctype html>
-<html lang="en" class="<?php if (defined("THEME") && THEME) echo(THEME) ?>">
+<html lang="en" class="<?php if (isset($theme) && $theme) echo($theme) ?>">
 <head>
     <meta charset="utf-8">
     <title><?php if (defined("TITLE") && TITLE) echo(TITLE . " | ") ?>Atheos IDE</title>
