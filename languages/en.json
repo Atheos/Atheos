@@ -434,7 +434,20 @@
 	"printMarginShow": "Print Margin",
 	"printMarginColumn": "Print Margin Column",
 
-	"theme": "Theme",
+	"theme": {
+		"": "Theme",
+		"dark": {
+			"blue": "Dark blue",
+			"red": "Dark red",
+			"green": "Dark green"
+		},
+		"light": {
+			"blue": "Light blue",
+			"red": "Light red",
+			"green": "Light green"
+		}
+	},
+
 	"hover": {
 		"": "Hover",
 		"duration": "Sidebar Hover Duration"
