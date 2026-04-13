@@ -354,7 +354,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Remove all Editor instances and clean up the DOM
+		// Remove all Editor instances, clean up the DOM and the storage
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
 			for (var i = self.editorPanes.length - 1; i >= 0; i--) {
@@ -368,6 +368,7 @@
 			inFocus.aceEditor = null;
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
+			storage('editor.paneTree', '');
 		},
 
 		/////////////////////////////////////////////////////////////////
