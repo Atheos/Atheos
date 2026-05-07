@@ -273,13 +273,13 @@ class TextMode {
 	//////////////////////////////////////////////////////////////////
 	// Create a select field with options for all availble textmodes, current one selected.
 	//////////////////////////////////////////////////////////////////
-	public function createTextModeSelect($extension) {
+	public function createTextModeSelect($extension, $currentMode) {
 		$extension = trim(strtolower($extension));
 		$find = false;
 		$html = '<select name="textmode">'."\n";
 		foreach ($this->availableModes as $mode) {
 			$html .= '	<option';
-			if ($mode == $extension) {
+			if ($mode == $currentMode) {
 				$html .= ' selected="selected"';
 				$find = true;
 			}

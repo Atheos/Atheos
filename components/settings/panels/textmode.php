@@ -42,7 +42,7 @@ if (!$map || !is_array($map)) {
 			} ?>
 			<tr>
 				<td><input type="text" name="extension" value="<?php echo $extension ?>" /></td>
-				<td><?php echo $TextMode->createTextModeSelect($extension) ?></td>
+				<td><?php echo $TextMode->createTextModeSelect($extension, $mode) ?></td>
 			</tr>
 			<?php
 		}
