@@ -192,7 +192,7 @@
 				url: atheos.controller,
 				data: data,
 				settled: function(reply, status) {
-					toast(status, reply.message);
+					toast(status, reply.text);
 
 					if (status === 200 && reply.extensions) {
 						self.setEditorTextModes(reply);
