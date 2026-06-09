@@ -11,8 +11,7 @@ use MatthiasMullie\Minify;
 class SourceManager {
 
     private $classes = array(
-        "classes/filepath.js",
-        "classes/filehandle.js"
+        "classes/filepath.js"
     );
 
     private $modules = array(
@@ -119,7 +118,7 @@ class SourceManager {
         } elseif (is_readable($minifiedFileName)) {
             $mostRecent = filemtime($minifiedFileName);
             foreach ($files as $file) {
-                if (filemtime($file) > $mostRecent) {
+                if (file_exists($file) && filemtime($file) > $mostRecent) {
                     $mostRecent = filemtime($file);
                     break;
                 }
