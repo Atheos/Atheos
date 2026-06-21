@@ -17,7 +17,6 @@ $User = new User($activeUser);
 
 $username = POST("username");
 $password = POST("password");
-$language = POST("language");
 
 switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
@@ -25,6 +24,7 @@ switch ($action) {
 	//////////////////////////////////////////////////////////////////////////80
 	case "authenticate":
 		if ($username && $password) {
+			$language = POST("language");
 			$languages = $i18n->codes();
 			if (!$language || !isset($languages[$language])) $language = "en";
 
