@@ -22,6 +22,7 @@ require_once("traits/helpers.php");
 require_once("traits/file.php");
 require_once("traits/path.php");
 require_once("traits/exchange.php");
+require_once("traits/notify.php");
 
 require_once("traits/i18n.php");
 
@@ -33,16 +34,17 @@ class Common {
     use File;
     use Path;
     use Exchange;
+    use Notify;
 
     //////////////////////////////////////////////////////////////////////////80
     // PROPERTIES
     //////////////////////////////////////////////////////////////////////////80
     public static $debugStack = array();
-    
+
     public static $responseType = "single";
     public static $responseIndex = 0;
     public static $responseStack = array();
-    
+
 
     public static $configDefaults = array(
         "BASE_PATH" => [
@@ -94,6 +96,18 @@ class Common {
         //     "description" => "EXTERNAL AUTHENTICATION",
         //     "default" => "/path/to/customauth.php",
         // ],
+        "NOTIFY_URL" => [
+            "description" => "User configured notifcation endpoint URL, such as Pushover's API for login notifcations.",
+            "default" => false,
+        ],
+        "NOTIFY_FORM" => [
+            "description" => "Send notification payload as form-encoded (true) or JSON (false), depending on what the endpoint expects.",
+            "default" => false,
+        ],
+        "NOTIFY_PAYLOAD" => [
+            "description" => "Notification payload template sent to the endpoint. Use {subject} and {body} as placeholders for the message subject and body.",
+            "default" => false,
+        ],
     );
 
 

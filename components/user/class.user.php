@@ -12,198 +12,199 @@
 
 class User {
 
-	//////////////////////////////////////////////////////////////////////////80
-	// PROPERTIES
-	//////////////////////////////////////////////////////////////////////////80
-	private $activeUser = "";
-	private $users = "";
+    //////////////////////////////////////////////////////////////////////////80
+    // PROPERTIES
+    //////////////////////////////////////////////////////////////////////////80
+    private $activeUser = "";
+    private $users = "";
 
-	//////////////////////////////////////////////////////////////////////////80
-	// METHODS
-	//////////////////////////////////////////////////////////////////////////80
+    //////////////////////////////////////////////////////////////////////////80
+    // METHODS
+    //////////////////////////////////////////////////////////////////////////80
 
-	// ----------------------------------||---------------------------------- //
+    // ----------------------------------||---------------------------------- //
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Construct
-	//////////////////////////////////////////////////////////////////////////80
-	public function __construct($activeUser) {
-		$this->users = Common::loadJSON("users");
-		$this->activeUser = $activeUser;
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Construct
+    //////////////////////////////////////////////////////////////////////////80
+    public function __construct($activeUser) {
+        $this->users = Common::loadJSON("users");
+        $this->activeUser = $activeUser;
+    }
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Authenticate
-	//////////////////////////////////////////////////////////////////////////80
-	public function authenticate($username, $password, $language) {
+    //////////////////////////////////////////////////////////////////////////80
+    // Authenticate
+    //////////////////////////////////////////////////////////////////////////80
+    public function authenticate($username, $password, $language) {
 
-		if (array_key_exists($username, $this->users) === false) {
-			Common::send(404, "Username not found.");
-		}
+        if (array_key_exists($username, $this->users) === false) {
+            Common::send(404, "Username not found.");
+        }
 
-		$user = $this->users[$username];
+        $user = $this->users[$username];
 
-		if (password_verify($password, $user["password"])) {
-			$this->buildSession($user, $username, $language);
+        if (password_verify($password, $user["password"])) {
+            $this->buildSession($user, $username, $language);
+            Common::sendNotification("{" . $username . "} logged in.", "Authentication");
 
+        } elseif ($user["resetPassword"]) {
+            $password = password_hash($password, PASSWORD_DEFAULT);
+            $this->users[$username]["password"] = $password;
 
-		} elseif ($user["resetPassword"]) {
-			$password = password_hash($password, PASSWORD_DEFAULT);
-			$this->users[$username]["password"] = $password;
+            // Save array back to JSON
+            Common::saveJSON("users", $this->users);
+            Common::log("{" . $username . "} changed password", "access");
 
-			// Save array back to JSON
-			Common::saveJSON("users", $this->users);
-			Common::log("{" . $username . "} changed password", "access");
+            $this->buildSession($user, $username, $language);
+        } else {
+            // Log Action
+			Common::sendNotification("{" . $username . "} attempted login.", "Authentication");            
+            Common::log("{" . $username . "} attempted log in", "access");
+            Common::send(451, "Invalid password.");
+        }
+    }
 
-			$this->buildSession($user, $username, $language);
-		} else {
-			// Log Action
-			Common::log("{" . $username . "} attempted log in", "access");
-			Common::send(451, "Invalid password.");
-		}
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Build session post authentication
+    //////////////////////////////////////////////////////////////////////////80
+    public function buildSession($user, $username, $language) {
+        SESSION("user", $username);
+        SESSION("lang", $language);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Build session post authentication
-	//////////////////////////////////////////////////////////////////////////80
-	public function buildSession($user, $username, $language) {
-		SESSION("user", $username);
-		SESSION("lang", $language);
+        if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
+            SESSION("projectPath", $user["activePath"]);
+            SESSION("projectName", $user["activeName"]);
+            SESSION("lastLogin", $user["lastLogin"]);
+        }
 
-		if (isset($user["activePath"]) && $user["activePath"] !== "" && isset($user["activeName"]) && $user["activeName"] !== "") {
-			SESSION("projectPath", $user["activePath"]);
-			SESSION("projectName", $user["activeName"]);
-			SESSION("lastLogin", $user["lastLogin"]);
-		}
+        $reply = array(
+            "username" => $username,
+            "lastLogin" => $user["lastLogin"],
+            "text" => "Successfully authenticated."
+        );
 
-		$reply = array(
-			"username" => $username,
-			"lastLogin" => $user["lastLogin"],
-			"text" => "Successfully authenticated."
-		);
+        $this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
+        Common::saveJSON("users", $this->users);
 
-		$this->users[$username]["lastLogin"] = date("Y-m-d H:i:s");
-		Common::saveJSON("users", $this->users);
+        // Log Action
+        Common::log("{" . $username . "} logged in", "access");
+        Common::send(200, $reply);
+    }
 
-		// Log Action
-		Common::log("{" . $username . "} logged in", "access");
-		Common::send(200, $reply);
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Change Password
+    //////////////////////////////////////////////////////////////////////////80
+    public function changePassword($username, $password) {
+        $password = password_hash($password, PASSWORD_DEFAULT);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Change Password
-	//////////////////////////////////////////////////////////////////////////80
-	public function changePassword($username, $password) {
-		$password = password_hash($password, PASSWORD_DEFAULT);
+        if (array_key_exists($username, $this->users) === false) {
+            Common::send(404, "Username not found.");
+        }
 
-		if (array_key_exists($username, $this->users) === false) {
-			Common::send(404, "Username not found.");
-		}
+        $this->users[$username]["password"] = $password;
 
-		$this->users[$username]["password"] = $password;
+        // Save array back to JSON
+        Common::saveJSON("users", $this->users);
+        // Log
+        Common::log("{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
+        Common::send(200, "Password changed");
+    }
 
-		// Save array back to JSON
-		Common::saveJSON("users", $this->users);
-		// Log
-		Common::log("{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
-		Common::send(200, "Password changed");
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Change Permissions
+    //////////////////////////////////////////////////////////////////////////80
+    public function changePermissions($username, $permissions) {
+        $this->users[$username]["permissions"] = $permissions;
+        // Save array back to JSON
+        Common::saveJSON("users", $this->users);
+        // Log
+        Common::log("{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
+        Common::send(200, "User permissions updated");
+    }
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Change Permissions
-	//////////////////////////////////////////////////////////////////////////80
-	public function changePermissions($username, $permissions) {
-		$this->users[$username]["permissions"] = $permissions;
-		// Save array back to JSON
-		Common::saveJSON("users", $this->users);
-		// Log
-		Common::log("{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
-		Common::send(200, "User permissions updated");
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Create Account
+    //////////////////////////////////////////////////////////////////////////80
+    public function create($username, $password) {
+        $password = password_hash($password, PASSWORD_DEFAULT);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Create Account
-	//////////////////////////////////////////////////////////////////////////80
-	public function create($username, $password) {
-		$password = password_hash($password, PASSWORD_DEFAULT);
+        if (!array_key_exists($username, $this->users)) {
+            $this->users[$username] = array(
+                "password" => $password,
+                "resetPassword" => false,
+                "creationDate" => date("Y-m-d H:i:s"),
+                "activeProject" => "",
+                "lastLogin" => false,
+                "permissions" => ["read", "write"],
+                "userACL" => "full"
+            );
 
-		if (!array_key_exists($username, $this->users)) {
-			$this->users[$username] = array(
-				"password" => $password,
-				"resetPassword" => false,
-				"creationDate" => date("Y-m-d H:i:s"),
-				"activeProject" => "",
-				"lastLogin" => false,
-				"permissions" => ["read", "write"],
-				"userACL" => "full"
-			);
+            Common::saveJSON("users", $this->users);
+            // Log
+            Common::log("{" . $this->activeUser . "} created account {" . $username . "}", "access");
+            Common::send(200, array("username" => $username));
 
-			Common::saveJSON("users", $this->users);
-			// Log
-			Common::log("{" . $this->activeUser . "} created account {" . $username . "}", "access");
-			Common::send(200, array("username" => $username));
+        } else {
+            Common::send(409, "That username is already taken.");
+        }
+    }
 
-		} else {
-			Common::send(409, "That username is already taken.");
-		}
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Delete Account
+    //////////////////////////////////////////////////////////////////////////80
+    public function delete($username) {
+        // Remove User
+        unset($this->users[$username]);
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Delete Account
-	//////////////////////////////////////////////////////////////////////////80
-	public function delete($username) {
-		// Remove User
-		unset($this->users[$username]);
+        // Save array back to JSON
+        Common::saveJSON("users", $this->users);
 
-		// Save array back to JSON
-		Common::saveJSON("users", $this->users);
+        $db = Common::getObjStore("active");
+        $where = array("user" => $username);
+        $db->delete($where);
 
-		$db = Common::getObjStore("active");
-		$where = array("user" => $username);
-		$db->delete($where);
+        // Log
+        Common::log("{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
+        Common::send(200, "Account Deleted.");
+    }
 
-		// Log
-		Common::log("{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
-		Common::send(200, "Account Deleted.");
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Set Current Project
+    //////////////////////////////////////////////////////////////////////////80
+    public function saveActiveProject($activeName, $activePath) {
+        $this->users[$this->activeUser]["activeName"] = $activeName;
+        $this->users[$this->activeUser]["activePath"] = $activePath;
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Set Current Project
-	//////////////////////////////////////////////////////////////////////////80
-	public function saveActiveProject($activeName, $activePath) {
-		$this->users[$this->activeUser]["activeName"] = $activeName;
-		$this->users[$this->activeUser]["activePath"] = $activePath;
+        // Save array back to JSON
+        Common::saveJSON("users", $this->users);
+        // Response
+        Common::send(200);
+    }
 
-		// Save array back to JSON
-		Common::saveJSON("users", $this->users);
-		// Response
-		Common::send(200);
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Update Project ACL
+    //////////////////////////////////////////////////////////////////////////80
+    public function updateACL($username, $userACL) {
+        // Access set to all projects
+        if ($userACL !== "full") {
+            $userACL = explode(",", $userACL);
+        }
+        $this->users[$username]["userACL"] = $userACL;
+        // Save array back to JSON
+        Common::saveJSON("users", $this->users);
+        // Log
+        Common::log("{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
+        Common::send(200, "User ACL updated");
+    }
 
-	//////////////////////////////////////////////////////////////////////////80
-	// Update Project ACL
-	//////////////////////////////////////////////////////////////////////////80
-	public function updateACL($username, $userACL) {
-		// Access set to all projects
-		if ($userACL !== "full") {
-			$userACL = explode(",", $userACL);
-		}
-		$this->users[$username]["userACL"] = $userACL;
-		// Save array back to JSON
-		Common::saveJSON("users", $this->users);
-		// Log
-		Common::log("{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
-		Common::send(200, "User ACL updated");
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Verify Account Exists
-	//////////////////////////////////////////////////////////////////////////80
-	public function verify($username) {
-		if (array_key_exists($username, $this->users)) {
-			Common::send(204);
-		} else {
-			Common::send(404, "Invalid account.");
-		}
-	}
+    //////////////////////////////////////////////////////////////////////////80
+    // Verify Account Exists
+    //////////////////////////////////////////////////////////////////////////80
+    public function verify($username) {
+        if (array_key_exists($username, $this->users)) {
+            Common::send(204);
+        } else {
+            Common::send(404, "Invalid account.");
+        }
+    }
 }
