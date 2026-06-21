@@ -125,10 +125,12 @@
 		// Probe file contents
 		//////////////////////////////////////////////////////////////////////80
 		openSearch: function(anchor) {
+			let probePath = (anchor && 'path' in anchor) ? anchor.path : atheos.current.projectPath;
+			
 			atheos.modal.load(500, {
 				target: 'scout',
 				action: 'probe',
-				path: anchor ? anchor.path : atheos.current.projectPath,
+				path: probePath,
 				callback: function() {
 					var table = oX('#probe_results');
 
