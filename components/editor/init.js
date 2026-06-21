@@ -11,30 +11,34 @@
 (function() {
 	'use strict';
 
-	// File -> Represents the file on the server
+	// FileHandle -> Represents the file on the server
 	// AceSession -> Owns the editing session, such as history.
 	// EditorPane -> Owns AceEditor Text Editor -> shows a proxy session of File
 	// EditorWindow -> Can contain multiple Panes
 
 	// Currently in focused 
-	const inFocus = {
-		file: null,
-		editorPane: null,
-		aceEditor: null
+	// TODO: Eventually reduce to only a path
+	const inFocusState = {
+		fileHandle: null,
+		editorPane: null
 	};
 
-	Object.defineProperties(atheos, {
-		inFocusEditor: {
-			get: () => inFocus.aceEditor
+	window.inFocus = {};
+	Object.defineProperties(inFocus, {
+		fileHandle: {
+			get: () => inFocusState.fileHandle
 		},
-		inFocusPath: {
-			get: () => inFocus.path
+		filePath: {
+			get: () => inFocusState.fileHandle ? inFocusState.fileHandle.path : null
 		},
-		inFocusFile: {
-			get: () => inFocus.file
+		editorPane: {
+			get: () => inFocusState.editorPane
 		},
-		inFocusSession: {
-			get: () => inFocus.file ? inFocus.file.aceSession : null
+		paneID: {
+			get: () => inFocusState.editorPane ? inFocusState.editorPane.paneID : null
+		},
+		editSession: {
+			get: () => inFocusState.fileHandle ? inFocusState.fileHandle.aceSession : null
 		},
 	});
 
@@ -47,7 +51,8 @@
 	const self = {
 
 		// An array of Ace Editor Instances as panes on UI.
-		editorPanes: [],
+		editorPanes: {},
+
 		// Path to EditSession instance mapping
 		activeFiles: {},
 
@@ -114,93 +119,89 @@
 			// keep in mind that Ace objects has their own .el property, which
 			// holds an onyx object, that holds it's own raw element.
 
-			var xElement = oX('<div class="editorPane"></div>');
+			var xEditorPane = oX('<div class="editorPane"></div>');
 
-			var childID = null,
-				splitContainer = null;
-
-			if (self.editorPanes.length === 0) {
+			if (self.paneIDs.length === 0) {
 				// If no editor panes exist, we append directly to the root wrapper.
-				oX('#EDITOR').append(xElement);
+				oX('#EDITOR').append(xEditorPane);
 
 			} else {
 				// Otherwise, we try to split the view into two editorPanes
 
-				// var xFirstChild = atheos.inFocusEditor.xElement;
-				let firstPane = atheos.inFocusEditor ? atheos.inFocusEditor : self.editorPanes[0];
-				var xFirstChild = firstPane.xElement;
-				xFirstChild = splitTarget ? splitTarget.xElement : xFirstChild;
+				// let firstEditorPane = inFocus.editorPane ? inFocus.editorPane : self.editorPanes[0];
+				let firstEditorPane = inFocus.editorPane || Object.values(self.editorPanes)[0];
+				var xFirstPane = firstEditorPane.xEditorPane;
+				xFirstPane = splitTarget ? splitTarget.xEditorPane : xFirstPane;
 
-
-
-				childID = (where === 'top' || where === 'left') ? 0 : 1;
-				var type = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
+				let childIndex = (where === 'top' || where === 'left') ? 0 : 1,
+					splitType = (where === 'top' || where === 'bottom') ? 'vertical' : 'horizontal';
 				var children = [];
 
-				children[childID] = xElement.element;
-				children[1 - childID] = xFirstChild.element;
+				children[childIndex] = xEditorPane.element;
+				children[1 - childIndex] = xFirstPane.element;
 
-				var parent = oX('<div class="editorWindow">');
+				var editorWindow = oX('<div class="editorWindow">');
 				var splitter = oX('<div class="splitter">');
 
-				parent.addClass(type);
-				splitter.addClass(type);
+				editorWindow.addClass(splitType);
+				splitter.addClass(splitType);
 
-				xFirstChild.replaceWith(parent);
+				xFirstPane.replaceWith(editorWindow);
 
-				parent.append(children[0]);
-				parent.append(splitter);
-				parent.append(children[1]);
+				editorWindow.append(children[0]);
+				editorWindow.append(splitter);
+				editorWindow.append(children[1]);
 			}
 
-			let aceEditor = new AceEditorInstance(new AceVirtualRenderer(xElement.element));
-			aceEditor.paneId = 'pane_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+			let editorPane = new AceEditorInstance(new AceVirtualRenderer(xEditorPane.element));
+			editorPane.paneID = 'pane_' + Date.now() + '_' + Math.random().toString(36).slice(2, 6);
+			xEditorPane.attr('data-paneID', editorPane.paneID);
 
-			var resizeEditor = () => aceEditor.resize();
+			var resizeEditor = () => editorPane.resize();
 
-			aceEditor.xElement = xElement;
-			aceEditor.element = xElement.element;
-			aceEditor.on('change', () => self.markChanged(aceEditor.path));
+			editorPane.xEditorPane = xEditorPane;
+			editorPane.element = xEditorPane.element;
+			editorPane.on('change', () => self.markChanged(editorPane.path));
 
-			aceEditor.on('focus', function() {
-				self.syncSystemFocus(aceEditor);
+			editorPane.on('focus', function() {
+				self.syncSystemFocus(editorPane);
 				self.trackCursor();
 			});
 
-			atheos.keybind.activateCustomCommands(aceEditor);
+			atheos.keybind.activateCustomCommands(editorPane);
 
-			self.editorPanes.push(aceEditor);
-			return aceEditor;
+			self.editorPanes[editorPane.paneID] = editorPane;
+			return editorPane;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		//
 		//////////////////////////////////////////////////////////////////////80
-		serializePaneTree: function(xElement) {
-			xElement = xElement || oX('#EDITOR').element.firstElementChild;
-			if (!xElement) return null;
+		serializeEditorPanes: function(xEditorNode) {
+			xEditorNode = xEditorNode || oX('#EDITOR').children()[0];
+			if (!xEditorNode.exists()) return null;
 
-			if (xElement.classList.contains('editorPane')) {
-				let aceEditor = self.editorPanes.find(p => p.element === xElement);
-				let proxySession = aceEditor.getSession();
+			if (xEditorNode.hasClass('editorPane')) {
+				let aceEditor = self.editorPanes[xEditorNode.attr('data-paneID')];
+				let paneSession = aceEditor.getSession();
 				return {
 					type: 'pane',
-					paneId: aceEditor.paneId,
+					paneID: aceEditor.paneID,
 					path: aceEditor ? aceEditor.path : null,
-					inFocus: atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId,
-					cursor: proxySession.getSelection().getCursor(),
-					scrollTop: proxySession.getScrollTop(),
-					scrollLeft: proxySession.getScrollLeft()
+					inFocus: inFocus.editorPane && aceEditor.paneID === inFocus.editorPane.paneID,
+					cursor: paneSession.getSelection().getCursor(),
+					scrollTop: paneSession.getScrollTop(),
+					scrollLeft: paneSession.getScrollLeft()
 				};
 			}
 
-			if (xElement.classList.contains('editorWindow')) {
-				let direction = xElement.classList.contains('vertical') ? 'vertical' : 'horizontal';
-				let childPanes = Array.from(xElement.children).filter(c => !c.classList.contains('splitter'));
+			if (xEditorNode.hasClass('editorWindow')) {
+				let direction = xEditorNode.hasClass('vertical') ? 'vertical' : 'horizontal';
+				let childPanes = xEditorNode.children().filter(c => !c.hasClass('splitter'));
 				return {
 					type: 'split',
 					direction,
-					children: childPanes.map(c => self.serializePaneTree(c))
+					children: childPanes.map(c => self.serializeEditorPanes(c))
 				};
 			}
 
@@ -211,33 +212,33 @@
 		//////////////////////////////////////////////////////////////////////80
 		//
 		//////////////////////////////////////////////////////////////////////80
-		restorePaneTree: function(node, targetPane) {
-			if (!node) return;
+		restorePaneTree: function(editorNode, targetPane) {
+			if (!editorNode) return;
 
-			if (node.type === 'pane') {
-				if (!node.path) return;
-				log('Restore node: ', node.path);
+			if (editorNode.type === 'pane') {
+				if (!editorNode.path) return;
+				log('Restore node: ', editorNode.path);
 
 				let pane = targetPane || self.createEditorPane();
-				let file = self.activeFiles[node.path];
-				if (file) {
-					self.attachFileToEditor(file, pane);
+				let fileHandle = self.activeFiles[editorNode.path];
+				if (fileHandle) {
+					self.attachFileToEditor(fileHandle, pane);
 				}
-				if (node.inFocus) {
-					inFocus.aceEditor = pane;
-					inFocus.file = file;
-					inFocus.path = node.path;
+				if (editorNode.inFocus) {
+					inFocusState.aceEditor = pane;
+					inFocusState.fileHandle = fileHandle;
+					inFocusState.path = editorNode.path;
 				}
 
 				return pane;
 			}
 
-			if (node.type === 'split') {
+			if (editorNode.type === 'split') {
 				log('Restore split.');
-				let [first, second] = node.children;
+				let [first, second] = editorNode.children;
 				let firstPane = self.restorePaneTree(first, targetPane);
 
-				let where = node.direction === 'vertical' ? 'bottom' : 'right';
+				let where = editorNode.direction === 'vertical' ? 'bottom' : 'right';
 				let secondPane = self.createEditorPane(where, firstPane);
 				self.restorePaneTree(second, secondPane);
 			}
@@ -246,9 +247,9 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Attachs a file editing session to an editing pane instance. 
 		//////////////////////////////////////////////////////////////////////80
-		attachFileToEditor: function(file, aceEditor) {
+		attachFileToEditor: function(fileHandle, aceEditor) {
 			// If no pane is provided, use the one currently in focus,
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 
 			// First check if the file session is already attached to an editing pane
 			// If it's not, then simply attach the session directly.
@@ -262,41 +263,44 @@
 			// If the aceEditor is already attached to a file session
 			//   Save the session cursor location
 			if (aceEditor.path) {
-				const oldProxySession = aceEditor.getSession();
+				const oldPaneSession = aceEditor.getSession();
 				let oldFile = self.getFile(aceEditor.path);
 				if (oldFile) {
 					let state = {
 						element: aceEditor.element,
 						time: Date.now(),
-						cursor: oldProxySession.getSelection().getCursor(),
-						scrollTop: oldProxySession.getScrollTop(),
-						scrollLeft: oldProxySession.getScrollLeft()
+						cursor: oldPaneSession.getSelection().getCursor(),
+						scrollTop: oldPaneSession.getScrollTop(),
+						scrollLeft: oldPaneSession.getScrollLeft()
 					};
-					oldFile.states.push(state);
+					oldFile.states[aceEditor.paneID] = state;
 				}
 			}
-			var proxySession = new AceEditSession(file.aceSession.getDocument(),
-				file.aceSession.getMode());
+			var paneSession = new AceEditSession(fileHandle.aceSession.getDocument(),
+				fileHandle.aceSession.getMode());
 
-			atheos.textmode.setMode(file.path, proxySession);
+			log(fileHandle);
+			log(fileHandle.path);
 
-			proxySession.setUndoManager(file.aceSession.getUndoManager());
-			proxySession.path = file.path;
-			aceEditor.setSession(proxySession);
+			atheos.textmode.setMode(fileHandle.path, paneSession);
+
+			paneSession.setUndoManager(fileHandle.aceSession.getUndoManager());
+			paneSession.path = fileHandle.path;
+			aceEditor.setSession(paneSession);
 
 			// Apply the user preferred settings
 			aceEditor.setOptions(self.settings);
 			aceEditor.setAnimatedScroll(true);
 
-			aceEditor.path = file.path;
+			aceEditor.path = fileHandle.path;
 
-			if (file.states.length) {
-				let lastState = file.states.find(state => state.element === aceEditor.element);
+			if (fileHandle.states.length) {
+				let lastState = fileHandle.states.find(state => state.element === aceEditor.element);
 				if (lastState) {
-					proxySession.getSelection().moveCursorToPosition(lastState.cursor);
-					proxySession.getSelection().clearSelection();
-					proxySession.setScrollTop(lastState.scrollTop);
-					proxySession.setScrollLeft(lastState.scrollLeft);
+					paneSession.getSelection().moveCursorToPosition(lastState.cursor);
+					paneSession.getSelection().clearSelection();
+					paneSession.setScrollTop(lastState.scrollTop);
+					paneSession.setScrollLeft(lastState.scrollLeft);
 				}
 			}
 
@@ -310,19 +314,19 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Creates a new edit pane
 		//////////////////////////////////////////////////////////////////////80
-		addEditorPane: function(file, where) {
+		addEditorPane: function(fileHandle, where) {
 			let aceEditor = self.createEditorPane(where);
-			self.attachFileToEditor(file, aceEditor);
+			self.attachFileToEditor(fileHandle, aceEditor);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Merge the current editorPanes by moving the inFocusEditor
 		//////////////////////////////////////////////////////////////////////80
 		mergeEditorWindow: function() {
-			const aceEditor = atheos.inFocusEditor;
+			const aceEditor = inFocus.editorPane;
 			if (!aceEditor) return;
 
-			let xEditorPane = aceEditor.xElement;
+			let xEditorPane = aceEditor.xEditorPane;
 
 			const xEditorWindow = xEditorPane.parent(),
 				xSibling = xEditorPane.sibling('.editorPane');
@@ -354,64 +358,64 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Remove all Editor instances, clean up the DOM and the storage
+		// Remove all Editor instances and clean up the DOM
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
 			for (var i = self.editorPanes.length - 1; i >= 0; i--) {
 				self.editorPanes[i].destroy();
-				self.editorPanes[i].xElement.remove();
+				self.editorPanes[i].xEditorPane.remove();
 				self.editorPanes.splice(i, 1);
 			}
 
-			inFocus.file = null;
-			inFocus.editorPane = null;
-			inFocus.aceEditor = null;
+			inFocusState.fileHandle = null;
+			inFocusState.editorPane = null;
+
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
-			storage('editor.paneTree', '');
 		},
 
 		/////////////////////////////////////////////////////////////////
 		// Syncs the focused editor to the rest of Atheos
 		/////////////////////////////////////////////////////////////////
-		syncSystemFocus: function(aceEditor) {
-			aceEditor = aceEditor || self.inFocusEditor;
-			if (!aceEditor) return;
+		syncSystemFocus: function(editorPane) {
+			editorPane = editorPane || inFocus.editorPane;
+			if (!editorPane) return;
 
-			var path = aceEditor.path;
-			if (atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId && path === atheos.inFocusPath) return;
-			let file = self.getFile(path);
-			atheos.tabmanager.highlightEntry(path);
+			var filePath = editorPane.path;
+			if (inFocus.editorPane && editorPane.paneID === inFocus.editorPane.paneID && filePath === inFocus.path) return;
+			let fileHandle = self.getFile(filePath);
+			atheos.tabmanager.highlightEntry(filePath);
 
-			inFocus.file = file;
-			inFocus.aceEditor = aceEditor;
-			inFocus.path = path;
+			inFocusState.fileHandle = fileHandle;
+			inFocusState.editorPane = editorPane;
 
-			let display = (path.length < 30) ? path : '...' + path.substr(path.length - 30);
+			let display = (filePath.length < 30) ? filePath : '...' + filePath.substr(filePath.length - 30);
 
 			oX('#current_file').text(display);
-			atheos.textmode.setModeDisplay(aceEditor.getSession());
+			atheos.textmode.setModeDisplay(editorPane.getSession());
 
-			let paneTree = self.serializePaneTree();
+			let paneTree = self.serializeEditorPanes();
 			storage('editor.paneTree', paneTree);
 			log(paneTree);
 
 			let fileStates = {};
 			for (let path in self.activeFiles) {
-				fileStates[path] = self.activeFiles[path].states;
+				fileStates[filePath] = self.activeFiles[filePath].states;
 			}
-			log(fileStates);
+			// log(fileStates);
 
 			echo({
 				url: atheos.controller,
 				data: {
 					target: 'editor',
 					action: 'setFocus',
-					path: path,
+					path: filePath,
 					paneTree,
 					fileStates
 				}
 			});
+			/* Notify listeners. */
+			carbon.pub('active.focus', filePath);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -422,15 +426,15 @@
 			let savedTree = storage('editor.paneTree');
 			log(savedTree);
 			if (savedTree) {
-				let filePromises = files.map((file) => {
-					let ext = pathinfo(file.path).extension.toLowerCase();
+				log(files);
+				let filePromises = files.map((fileHandle) => {
+					let ext = pathinfo(fileHandle.path).extension.toLowerCase();
 					if (self.noOpen.indexOf(ext) > -1) return;
 
-					// atheos.textmode.setMode(file.path);
-					let sessionPromise = ('content' in file) ? Promise.resolve(file) : self.fetchFile(file.path);
+					let sessionPromise = ('content' in fileHandle) ? Promise.resolve(fileHandle) : self.fetchFile(fileHandle.path);
 
 					return sessionPromise.then((reply) => {
-						self.createEditSession(file.path, reply.content, reply.modifyTime, reply.loadHash, reply.mode);
+						self.createEditSession(fileHandle.path, reply.content, reply.modifyTime, reply.loadHash, reply.mode);
 					});
 				});
 				Promise.all(filePromises).then(function() {
@@ -483,52 +487,10 @@
 			if (focus && self.activeFiles[path]) return self.focusOnFile(path, line);
 			atheos.textmode.setMode(path);
 			return self.fetchFile(path).then((reply) => {
-				self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, reply.mode);
+				self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash);
 
 				if (focus) self.focusOnFile(path, line);
 			});
-		},
-
-		//////////////////////////////////////////////////////////////////////80
-		// Open File
-		//////////////////////////////////////////////////////////////////////80
-		openFileOld: function(path, inFocus, line) {
-			inFocus = typeof(inFocus) !== 'undefined' ? inFocus : true;
-
-			let ext = pathinfo(path).extension.toLowerCase();
-			if (self.noOpen.indexOf(ext) > -1) return;
-
-			if (inFocus && self.activeFiles[path]) {
-				return self.focusOnFile(path, line);
-			}
-
-			let mode = atheos.textmode.selectMode(ext);
-
-			let modePromise = new Promise(resolve =>
-				atheos.common.loadScript('components/editor/ace-editor/mode-' + mode + '.js', resolve)
-			);
-
-			let filePromise = new Promise((resolve, reject) =>
-				echo({
-					data: {
-						target: 'editor',
-						action: 'openFile',
-						path: path,
-						inFocus: inFocus
-					},
-					settled: function(reply, status) {
-						status === 200 ? resolve(reply) : reject(status);
-					}
-				})
-			);
-
-			Promise.all([modePromise, filePromise]).then(([_, reply]) => {
-				self.createEditSession(path, reply.content, reply.modifyTime, reply.loadHash, mode);
-				if (inFocus) self.focusOnFile(path, line);
-			});
-
-
-
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -536,53 +498,50 @@
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
 			log('focusOn', path);
-			if (path === atheos.inFocusPath) return;
+			if (path === inFocus.path) return;
 			log('new focus');
 			atheos.editor.attachFileToEditor(self.activeFiles[path]);
 			if (line) setTimeout(() => {
 				atheos.editor.gotoLine(line);
 			}, 500);
-
-			/* Notify listeners. */
-			carbon.pub('active.focus', path);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Create Edit Session
 		//////////////////////////////////////////////////////////////////////80
-		createEditSession: function(path, content, modifyTime, loadHash) {
+		createEditSession: function(filePath, content, modifyTime, loadHash) {
 			let aceSession = new AceEditSession(content),
 				aceUndoManager = new AceUndoManager();
 
 
-			atheos.textmode.setMode(path, aceSession);
+			atheos.textmode.setMode(filePath, aceSession);
 			aceSession.setNewLineMode('unix');
 			aceSession.setUndoManager(aceUndoManager);
 
-			let file = {
+			let fileHandle = {
 				status: 'current',
-				path: path,
+				path: filePath,
 				serverMTime: modifyTime,
 				serverHash: loadHash,
 				originalContent: content.slice(0),
-				fileTab: atheos.tabmanager.createFileTab(path),
+				fileTab: atheos.tabmanager.createFileTab(filePath),
 				aceSession: aceSession,
 				aceUndo: aceUndoManager,
-				states: []
+				states: {}
 			};
 
-			self.activeFiles[path] = file;
-			carbon.publish('active.open', path);
-			return file;
+			self.activeFiles[filePath] = fileHandle;
+			carbon.publish('active.open', filePath);
+			return fileHandle;
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Mark changed
 		//////////////////////////////////////////////////////////////////////80
-		markChanged: function(path) {
-			self.activeFiles[path].status = 'changed';
-			self.activeFiles[path].autosaved = false;
-			self.activeFiles[path].fileTab.addClass('changed');
+		markChanged: function(filePath) {
+			self.activeFiles[filePath].status = 'changed';
+			self.activeFiles[filePath].autosaved = false;
+			self.activeFiles[filePath].fileTab.addClass('changed');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -606,33 +565,36 @@
 				path = atheos.contextmenu.active.path;
 			}
 			if (!path) {
-				path = atheos.inFocusPath;
+				path = inFocus.filePath;
 			}
 
-			let file = self.getFile(path);
-			if (isString(file)) return toast('error', file);
+			let fileHandle = self.getFile(path);
+			log(path);
+			if (isString(fileHandle)) return toast('error', fileHandle);
+			log(fileHandle);
 
-			var content = file.aceSession.getValue();
-			file.newContent = content.slice(0);
+
+			var content = fileHandle.aceSession.getValue();
+			fileHandle.newContent = content.slice(0);
 
 			if (override) {
-				self.saveContentToServer(file, 'override', file.newContent);
-			} else if (file.originalContent.length === 0) {
-				self.saveContentToServer(file, 'full', file.newContent);
-			} else if (file.newContent.length === 0) {
-				self.saveContentToServer(file, 'clear', 'clearContent');
+				self.saveContentToServer(fileHandle, 'override', fileHandle.newContent);
+			} else if (fileHandle.originalContent.length === 0) {
+				self.saveContentToServer(fileHandle, 'full', fileHandle.newContent);
+			} else if (fileHandle.newContent.length === 0) {
+				self.saveContentToServer(fileHandle, 'clear', 'clearContent');
 			} else {
 				atheos.workerManager.addTask({
 					taskType: 'diff',
 					id: path,
-					original: file.originalContent,
-					changed: file.newContent
+					original: fileHandle.originalContent,
+					changed: fileHandle.newContent
 				}, function(success, patchTxt) {
 					let saveType = success ? 'patch' : 'full';
 					if (success) {
-						self.saveContentToServer(file, 'patch', patchTxt);
+						self.saveContentToServer(fileHandle, 'patch', patchTxt);
 					} else {
-						self.saveContentToServer(file, 'full', file.newContent);
+						self.saveContentToServer(fileHandle, 'full', fileHandle.newContent);
 					}
 				}, self);
 			}
@@ -641,36 +603,32 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Save file
 		//////////////////////////////////////////////////////////////////////80
-		saveContentToServer: function(file, saveType, newContent) {
+		saveContentToServer: function(fileHandle, saveType, newContent) {
 			let handleSuccess = function(modifyTime) {
-				file.originalContent = file.newContent;
-				file.newContent = '';
-				file.serverMTime = modifyTime;
-				file.status = 'unchanged';
-				if (file.fileTab) {
-					file.fileTab.removeClass('changed');
+				fileHandle.originalContent = fileHandle.newContent;
+				fileHandle.newContent = '';
+				fileHandle.serverMTime = modifyTime;
+				fileHandle.status = 'unchanged';
+				if (fileHandle.fileTab) {
+					fileHandle.fileTab.removeClass('changed');
 				}
-				carbon.publish('editor.saved', file.path);
-
-				if (self.getChangedPaths().length === 0) {
-					carbon.publish('editor.allSaved');
-				}
+				carbon.publish('session.saved', fileHandle.path);
 			};
 
 			// HLSiira: I'm uncertain why this If statement is here.
 			if (newContent.length < 1) {
-				return handleSuccess(file.serverMTime);
+				return handleSuccess(fileHandle.serverMTime);
 			}
 
 			echo({
 				data: {
 					target: 'editor',
 					action: 'saveFile',
-					path: file.path,
+					path: fileHandle.path,
 					saveType,
 					newContent,
-					modifyTime: file.serverMTime,
-					loadHash: file.serverHash
+					modifyTime: fileHandle.serverMTime,
+					loadHash: fileHandle.serverHash
 				},
 				settled: function(reply, status) {
 					if (status === 200) {
@@ -684,11 +642,11 @@
 								'the server\'s copy.',
 							actions: {
 								'Reload File': function() {
-									self.remove(file.path);
-									self.openFile(file.path);
+									self.remove(fileHandle.path);
+									self.openFile(fileHandle.path);
 								},
 								'Save Anyway': function() {
-									self.save(file.path, true);
+									self.save(fileHandle.path, true);
 								}
 							}
 						});
@@ -798,10 +756,11 @@
 			} else {
 				// If more than one tab is open, swap to next file
 				// Loop thru editor panes and swap each to next file path
-				for (var i = 0; i < self.editorPanes.length; i++) {
-					if (self.editorPanes[i].path === path) {
-						self.editorPanes[i].path = null;
-						self.attachFileToEditor(nextFile, self.editorPanes[i]);
+				for (let paneID in self.editorPanes) {
+					let editorPane = self.editorPanes[paneID];
+					if (editorPane.path == path) {
+						editorPane.path = null;
+						self.attachFileToEditor(nextFile, editorPane);
 					}
 				}
 			}
@@ -854,7 +813,7 @@
 					target: 'editor',
 					action: 'openFile',
 					path: path,
-					inFocus: atheos.inFocusPath === path
+					inFocus: inFocus.path === path
 				},
 				settled: function(reply, status) {
 					if (status !== 200) return toast('error', 'Unable to reload file.');
@@ -977,7 +936,7 @@
 		// Insert text into aceEditor
 		//////////////////////////////////////////////////////////////////////80
 		insertText: function(val, aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
 			aceEditor.insert(val);
 		},
@@ -986,7 +945,7 @@
 		// Select all text in file
 		//////////////////////////////////////////////////////////////////////80
 		selectAllText: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
 			aceEditor.execCommand("selectall");
 		},
@@ -995,7 +954,7 @@
 		// Cut selected text to client clipboard
 		//////////////////////////////////////////////////////////////////////80
 		cutToClipboard: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
 			const selection = aceEditor.getSelection();
 			const range = selection.getRange();
@@ -1013,7 +972,7 @@
 		// Copy selected text to client clipboard
 		//////////////////////////////////////////////////////////////////////80
 		copyToClipboard: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
 			navigator.clipboard.writeText(aceEditor.getCopyText());
 		},
@@ -1032,32 +991,32 @@
 		// Open AceEditor's Find Window
 		//////////////////////////////////////////////////////////////////////80
 		openFind: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('find');
+			inFocus.editorPane.execCommand('find');
 		},
 		//////////////////////////////////////////////////////////////////////80
 		// Open AceEditor's Replace Window
 		//////////////////////////////////////////////////////////////////////80
 		openReplace: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('replace');
+			inFocus.editorPane.execCommand('replace');
 		},
 		//////////////////////////////////////////////////////////////////////80
 		// Open AceEditor's Goto Line Window
 		//////////////////////////////////////////////////////////////////////80
 		openGotoLine: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
-			atheos.inFocusEditor.execCommand('gotoline');
+			inFocus.editorPane.execCommand('gotoline');
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Move the cursor to a particular line
 		//////////////////////////////////////////////////////////////////////80
 		gotoLine: function(line, aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+			aceEditor = aceEditor || inFocus.editorPane;
 			if (!aceEditor) return;
 			aceEditor.scrollToLine(line, true, true);
 			aceEditor.gotoLine(line, 0, true);
@@ -1067,14 +1026,14 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Setup Cursor Tracking
 		//////////////////////////////////////////////////////////////////////80
-		trackCursor: function(aceEditor) {
-			aceEditor = aceEditor || atheos.inFocusEditor;
+		trackCursor: function(editorPane) {
+			editorPane = editorPane || inFocus.editorPane;
 
-			if (!aceEditor) return;
-			let pos = aceEditor.getCursorPosition();
+			if (!editorPane) return;
+			let pos = editorPane.getCursorPosition();
 
 
-			let aceSession = aceEditor.getSession();
+			let aceSession = editorPane.getSession();
 
 			let state = {
 				time: Date.now(),
@@ -1082,7 +1041,7 @@
 				scrollTop: aceSession.getScrollTop(),
 				scrollLeft: aceSession.getScrollLeft()
 			};
-			// self.activeFiles[aceEditor.path].states.push(state);
+			self.activeFiles[editorPane.path].states[editorPane.paneID] = state;
 
 
 			oX('#cursor-position').html(`${i18n('Ln')}: ${pos.row + 1}&middot;${i18n('Col')}: ${pos.column}`);
@@ -1114,7 +1073,14 @@
 			return isString(file) ? false : file.aceSession;
 		},
 		getAceEditor: function(key) {
+			log(key);
 			let index;
+
+			const panes = Object.values(self.editorPanes);
+			if (isString(key)) return panes.find(p => p.path === key) || null;
+			if (isElement(key)) return panes.find(p => p.element === key) || null;
+			return null;
+
 
 			if (isString(key)) {
 				// If search key is a string, assume its a path
@@ -1125,8 +1091,17 @@
 
 			return index >= 0 ? self.editorPanes[index] : null;
 		}
-
 	};
+
+
+	Object.defineProperties(self, {
+		paneIDs: {
+			get: () => Object.keys(self.editorPanes)
+		},
+		activePaths: {
+			get: () => Object.keys(self.activeFiles)
+		}
+	});
 
 	carbon.subscribe('system.loadMajor', () => self.init());
 	atheos.editor = self;
