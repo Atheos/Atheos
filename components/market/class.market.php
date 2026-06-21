@@ -159,7 +159,7 @@ class Market {
 
 
 			// Log Action
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} installed plugin {$name}", "market");
+			Common::log("{" . $this->activeUser . "} installed plugin {$name}", "market");
 			$this->buildCache(true);
 			Common::send(200, i18n("market_install_success", $name));
 		} else {
@@ -177,7 +177,7 @@ class Market {
 		}
 		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} removed plugin {$name}", "market");
+		Common::log("{" . $this->activeUser . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
 		Common::send(200, "Plugin successfully removed.");

@@ -86,7 +86,7 @@ class Project {
         }
 
         // Log Action
-        Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created project {$projectName}", "projects");
+        Common::log("{" . $this->activeUser . "} created project {$projectName}", "projects");
         Common::send(200, array("name" => $projectName, "path" => $projectPath));
 
     }
@@ -105,7 +105,7 @@ class Project {
         $this->db->delete($projectName);
 
         // Log Action
-        Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted project {$projectName}", "projects");
+        Common::log("{" . $this->activeUser . "} deleted project {$projectName}", "projects");
         Common::send(200, "Project deleted.");
     }
 
@@ -166,7 +166,7 @@ class Project {
         $this->db->delete($oldName);
 
         // Log Action
-        Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} renamed project {$oldName} to {$newName}", "projects");
+        Common::log("{" . $this->activeUser . "} renamed project {$oldName} to {$newName}", "projects");
         Common::send(200);
     }
 

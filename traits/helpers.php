@@ -99,7 +99,11 @@ trait Helpers {
         if (count($lines) >= 100) {
             array_shift($lines);
         }
-
+        
+        // Add the date/time if not provided
+        if ($text[0] !== "@") {
+            $text = "@" . date("Y-m-d H:i:s") . ":\t$text";
+        }
         $lines[] = $text;
 
         // Save raw log
