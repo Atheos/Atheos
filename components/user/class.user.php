@@ -36,8 +36,6 @@ class User {
 	// Authenticate
 	//////////////////////////////////////////////////////////////////////////80
 	public function authenticate($username, $password, $language) {
-		// Check for old folder storage location
-		$this->pivotFolder();
 
 		if (array_key_exists($username, $this->users) === false) {
 			Common::send(404, "Username not found.");
@@ -55,12 +53,12 @@ class User {
 
 			// Save array back to JSON
 			Common::saveJSON("users", $this->users);
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} changed password", "access");
+			Common::log("{" . $username . "} changed password", "access");
 
 			$this->buildSession($user, $username, $language);
 		} else {
 			// Log Action
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} attempted log in", "access");
+			Common::log("{" . $username . "} attempted log in", "access");
 			Common::send(451, "Invalid password.");
 		}
 	}
@@ -88,7 +86,7 @@ class User {
 		Common::saveJSON("users", $this->users);
 
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $username . "} logged in", "access");
+		Common::log("{" . $username . "} logged in", "access");
 		Common::send(200, $reply);
 	}
 
@@ -107,7 +105,7 @@ class User {
 		// Save array back to JSON
 		Common::saveJSON("users", $this->users);
 		// Log
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
+		Common::log("{" . $this->activeUser . "} changed password of {" . $username . "}", "access");
 		Common::send(200, "Password changed");
 	}
 
@@ -119,7 +117,7 @@ class User {
 		// Save array back to JSON
 		Common::saveJSON("users", $this->users);
 		// Log
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
+		Common::log("{" . $this->activeUser . "} changed permissions of {" . $username . "}", "access");
 		Common::send(200, "User permissions updated");
 	}
 
@@ -142,7 +140,7 @@ class User {
 
 			Common::saveJSON("users", $this->users);
 			// Log
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} created account {" . $username . "}", "access");
+			Common::log("{" . $this->activeUser . "} created account {" . $username . "}", "access");
 			Common::send(200, array("username" => $username));
 
 		} else {
@@ -165,7 +163,7 @@ class User {
 		$db->delete($where);
 
 		// Log
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
+		Common::log("{" . $this->activeUser . "} deleted account {" . $username . "}", "access");
 		Common::send(200, "Account Deleted.");
 	}
 
@@ -194,7 +192,7 @@ class User {
 		// Save array back to JSON
 		Common::saveJSON("users", $this->users);
 		// Log
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
+		Common::log("{" . $this->activeUser . "} changed ACL of {" . $username . "}", "access");
 		Common::send(200, "User ACL updated");
 	}
 
@@ -206,21 +204,6 @@ class User {
 			Common::send(204);
 		} else {
 			Common::send(404, "Invalid account.");
-		}
-	}
-
-	//////////////////////////////////////////////////////////////////////////80
-	// Pivot user settings to subdirectory
-	// REMOVE ON MARCH 2025
-	//////////////////////////////////////////////////////////////////////////80
-	public function pivotFolder() {
-		if (!is_dir(DATA . "/users")) mkdir(DATA . "/users");
-
-		foreach ($this->users as $username => $data) {
-			if (is_dir(DATA . "/" . $username)) {
-				rename(DATA . "/$username", DATA . "/users/" . $username);
-			}
-
 		}
 	}
 }
