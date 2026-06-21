@@ -215,7 +215,7 @@ class Market {
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
 					$status = isset($data["status"]) ? $data["status"] : "unavailable";
 					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
-					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
+					$author = isset($data["author"]) ? (is_array($data["author"]) ? implode(", ", $data["author"]) : $data["author"]) : i18n("market_missingAuth");
 
 					if ($status === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
