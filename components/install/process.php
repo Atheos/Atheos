@@ -108,6 +108,7 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
     $overrides = [
         "TIMEZONE" => $timezone,
         "DEVELOPMENT" => $development === "true",
+        "TITLE" => $domain,
     ];
 
     $configLines = "";
