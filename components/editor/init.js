@@ -358,7 +358,7 @@
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Remove all Editor instances and clean up the DOM
+		// Remove all Editor instances, clean up the DOM and the storage
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
 			for (var i = self.editorPanes.length - 1; i >= 0; i--) {
@@ -372,6 +372,7 @@
 
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
+			storage('editor.paneTree', '');
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -612,7 +613,11 @@
 				if (fileHandle.fileTab) {
 					fileHandle.fileTab.removeClass('changed');
 				}
-				carbon.publish('session.saved', fileHandle.path);
+				carbon.publish('editor.saved', fileHandle.path);
+
+				if (self.getChangedPaths().length === 0) {
+					carbon.publish('editor.allSaved');
+				}
 			};
 
 			// HLSiira: I'm uncertain why this If statement is here.
