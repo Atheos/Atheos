@@ -44,7 +44,7 @@
 				carbon.subscribe('chrono.kilo', self.throttle);
 			});
 
-			carbon.subscribe('active.save', self.delete);
+			carbon.subscribe('editor.saved', self.delete);
 			carbon.subscribe('active.open', self.check);
 		},
 

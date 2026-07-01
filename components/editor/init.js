@@ -50,7 +50,7 @@
 
 	const self = {
 
-		// An array of Ace Editor Instances as panes on UI.
+		// An object of Ace Editor Instances as panes on UI.
 		editorPanes: {},
 
 		// Path to EditSession instance mapping
@@ -333,11 +333,12 @@
 
 			if (!xEditorWindow.exists() || !xEditorWindow.hasClass('editorWindow')) return;
 
-			const index = self.editorPanes.findIndex(p => p.element === xSibling.element);
+			const panes = Object.values(self.editorPanes);
+			const targetPane = panes.find(p => p.element === xSibling.element);
 
-			if (index !== -1) {
-				self.editorPanes[index].destroy();
-				self.editorPanes.splice(index, 1);
+			if (targetPane) {
+				self.editorPanes[targetPane.paneID].destroy();
+				delete self.editorPanes[targetPane.paneID];
 			}
 
 			// Replace the .editorWindow with the current pane
@@ -352,19 +353,19 @@
 		// Merge all Editor instances
 		//////////////////////////////////////////////////////////////////////80
 		mergeAllEditorWindows: function() {
-			while (self.editorPanes.length > 1) {
+			while (Object.values(self.editorPanes).length > 1) {
 				self.mergeEditorWindow();
 			}
 		},
 
 		//////////////////////////////////////////////////////////////////////80
-		// Remove all Editor instances and clean up the DOM
+		// Remove all Editor instances, clean up the DOM and the storage
 		//////////////////////////////////////////////////////////////////////80
 		exterminate: function() {
-			for (var i = self.editorPanes.length - 1; i >= 0; i--) {
-				self.editorPanes[i].destroy();
-				self.editorPanes[i].xEditorPane.remove();
-				self.editorPanes.splice(i, 1);
+			for (let paneID in self.editorPanes) {
+				self.editorPanes[paneID].destroy();
+				self.editorPanes[paneID].xEditorPane.remove();
+				delete self.editorPanes[paneID];
 			}
 
 			inFocusState.fileHandle = null;
@@ -372,6 +373,7 @@
 
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
+			storage('editor.paneTree', '');
 		},
 
 		/////////////////////////////////////////////////////////////////
@@ -612,7 +614,11 @@
 				if (fileHandle.fileTab) {
 					fileHandle.fileTab.removeClass('changed');
 				}
-				carbon.publish('session.saved', fileHandle.path);
+				carbon.publish('editor.saved', fileHandle.path);
+
+				if (self.getChangedPaths().length === 0) {
+					carbon.publish('editor.allSaved');
+				}
 			};
 
 			// HLSiira: I'm uncertain why this If statement is here.
@@ -871,14 +877,14 @@
 				delete self.activeFiles[oldPath];
 
 				// Update editor panes to use new path where open
-				for (var i = 0; i < self.editorPanes.length; i++) {
-					if (self.editorPanes[i].path === oldPath) {
-						self.editorPanes[i].path = newPath;
+				for (let paneID in self.editorPanes) {
+					if (self.editorPanes[paneID].path === oldPath) {
+						self.editorPanes[paneID].path = newPath;
 
 						// Update text mode, in case of extension change
 						var ext = pathinfo(newPath).extension;
 						var mode = atheos.textmode.selectMode(ext);
-						atheos.textmode.setModeDisplay(self.editorPanes[i].getSession());
+						atheos.textmode.setMode(newPath, self.editorPanes[paneID].getSession());
 					}
 				}
 			};
@@ -925,8 +931,8 @@
 		/////////////////////////////////////////////////////////////////
 		setOption: function(opt, val, aceEditor) {
 			if (aceEditor) return aceEditor.setOption(opt, val);
-			for (var i = 0; i < self.editorPanes.length; i++) {
-				self.editorPanes[i].setOption(opt, val);
+			for (let paneID in self.editorPanes) {
+				self.editorPanes[paneID].setOption(opt, val);
 			}
 			self.settings[opt] = val;
 			storage('editor.' + opt, val);
@@ -1080,16 +1086,6 @@
 			if (isString(key)) return panes.find(p => p.path === key) || null;
 			if (isElement(key)) return panes.find(p => p.element === key) || null;
 			return null;
-
-
-			if (isString(key)) {
-				// If search key is a string, assume its a path
-				index = self.editorPanes.findIndex(p => p.path === key);
-			} else if (isElement(key)) {
-				index = self.editorPanes.findIndex(p => p.element === key);
-			}
-
-			return index >= 0 ? self.editorPanes[index] : null;
 		}
 	};
 
