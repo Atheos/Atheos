@@ -18,12 +18,12 @@
 //												- Liam Siira
 //////////////////////////////////////////////////////////////////////////////80
 
-(function() {
+(function () {
 	'use strict';
 
 	const self = {
 
-		init: function() {
+		init: function () {
 			self.initDropdown();
 			self.initTogglePassword();
 			self.initPasswordMonitor();
@@ -38,12 +38,12 @@
 		//////////////////////////////////////////////////////////////////////80
 		optionMenus: [],
 
-		initMenuHandler: function(buttonID, menuID, switchClasses) {
+		initMenuHandler: function (buttonID, menuID, switchClasses) {
 			var menuOpen = false;
 
 			let menu = oX(menuID);
 
-			menu.close = function() {
+			menu.close = function () {
 				if (menuOpen) {
 					if (isArray(switchClasses)) {
 						// I could have made a nice If statement to switch the appropriate classes
@@ -81,7 +81,7 @@
 			});
 		},
 
-		closeMenus: function(exclude) {
+		closeMenus: function (exclude) {
 			this.optionMenus.forEach((menu) => {
 				if (menu !== exclude) {
 					menu.close();
@@ -92,13 +92,13 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Dropdown Menu Handler (WIP for custom drop downs)
 		//////////////////////////////////////////////////////////////////////80
-		initDropdown: function() {
-			var close = function() {
+		initDropdown: function () {
+			var close = function () {
 				oX('dropdown.expanded').removeClass('expanded');
 				fX('dropdown').off('click');
 			};
 
-			fX('dropdown').on('click', function(e) {
+			fX('dropdown').on('click', function (e) {
 				e.preventDefault();
 				e.stopPropagation();
 
@@ -117,8 +117,8 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Show/Hide Password Handler
 		//////////////////////////////////////////////////////////////////////80		
-		initTogglePassword: function() {
-			fX('i.togglePassword').on('click', function(e) {
+		initTogglePassword: function () {
+			fX('i.togglePassword').on('click', function (e) {
 				var icon = $(e.target);
 				var field = icon.sibling('input[name="' + icon.attr('for') + '"]');
 				if (!field) return;
@@ -135,23 +135,23 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Show/Hide Split Menus
 		//////////////////////////////////////////////////////////////////////80		
-		initSplitMenu: function() {
+		initSplitMenu: function () {
 			self.initMenuHandler('#split', '#split_menu');
 
-			fX('#split-vertically').on('click', function(e) {
+			fX('#split-vertically').on('click', function (e) {
 				atheos.editor.addEditorPane(null, 'bottom');
 			});
 
-			fX('#split-horizontally').on('click', function(e) {
+			fX('#split-horizontally').on('click', function (e) {
 				atheos.editor.addEditorPane(null, 'right');
 			});
 
-			fX('#merge-all').on('click', function(e) {
+			fX('#merge-all').on('click', function (e) {
 				atheos.editor.mergeAllEditorWindows();
 			});
 		},
 
-		initPasswordMonitor: function() {
+		initPasswordMonitor: function () {
 			let reqs = {
 				lowercase: /[a-z]/,
 				uppercase: /[A-Z]/,
@@ -159,7 +159,7 @@
 				symbols: /[^\w\s|_]/
 			};
 
-			let testStrength = throttle(function(e) {
+			let testStrength = throttle(function (e) {
 				if (oX('#login')) return;
 
 				let input = oX(e.target),
@@ -182,8 +182,8 @@
 		//////////////////////////////////////////////////////////////////////80
 		// Checkbox Group Handler
 		//////////////////////////////////////////////////////////////////////80		
-		initCheckMonitors: function() {
-			fX('input[type="checkbox"][group]').on('click', function(e) {
+		initCheckMonitors: function () {
+			fX('input[type="checkbox"][group]').on('click', function (e) {
 				var input = oX(e.target);
 				var members = oX(document).findAll('input[type="checkbox"][group="' + input.attr('group') + '"]');
 				var checked = input.prop('checked');
@@ -208,13 +208,13 @@
 		},
 
 		overlay: null,
-		initOverlay: function() {
+		initOverlay: function () {
 			self.overlay = oX('overlay');
 			// overlay.on('click', atheos.alert.unload);
 			// overlay.on('click', atheos.modal.unload);
 		},
 
-		showOverlay: function(type, hidden) {
+		showOverlay: function (type, hidden) {
 			if (!hidden) self.overlay.addClass('active');
 			if (type === 'alert') {
 				self.overlay.on('click', atheos.alert.unloadAll);
@@ -224,7 +224,7 @@
 			return self.overlay;
 		},
 
-		hideOverlay: function() {
+		hideOverlay: function () {
 			self.overlay.removeClass('active');
 			self.overlay.hide();
 		},
@@ -232,7 +232,7 @@
 		//////////////////////////////////////////////////////////////////////
 		// Check Absolute Path
 		//////////////////////////////////////////////////////////////////////
-		isAbsPath: function(path) {
+		isAbsPath: function (path) {
 			// const isRelative = path => !/^([a-z]+:)?[\\/]/i.test(path);
 			// log(isRelative(path));
 			return path.indexOf('/') === 0;
@@ -242,7 +242,7 @@
 		// Load Script: Used to add new JS to the page.
 		//////////////////////////////////////////////////////////////////////
 		scriptCache: {},
-		loadScript: function(url, callback) {
+		loadScript: function (url, callback) {
 			// If script is already loaded, callback instantly
 			if (self.scriptCache[url] === 'loaded') {
 				if (isFunction(callback)) callback.call(this);

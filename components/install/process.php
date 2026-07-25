@@ -64,7 +64,11 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
 
     $projectData = array($projectName => $projectPath);
 
-    Common::saveJSON("projects.db", $projectData);
+    // Save projects database in KeyStore format
+    $projectDB = Common::getKeyStore("projects");
+    if ($projectDB->insert($projectName, $projectPath) !== true) {
+        Common::send(500, "Failed to create project database");
+    }
 
     //////////////////////////////////////////////////////////////////////////80
     // Create Users file
@@ -105,7 +109,13 @@ if (!file_exists(BASE_PATH . "/data/users.json.php") && !file_exists(BASE_PATH .
 
     Common::saveJSON("analytics.db", $analyticsData);
 
+    // Auto-detect BASE_URL from the request URI
+    $scriptName = $_SERVER['SCRIPT_NAME'];
+    $baseUrl = preg_replace('#/index\.php$#', '', $scriptName);
+    $baseUrl = preg_replace('#/components/install/process\.php$#', '', $baseUrl);
+
     $overrides = [
+        "BASE_URL" => $baseUrl,
         "TIMEZONE" => $timezone,
         "DEVELOPMENT" => $development === "true",
         "TITLE" => $domain,
