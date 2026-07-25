@@ -410,8 +410,10 @@
 			if (!aceEditor) return;
 
 			var path = aceEditor.path;
+			if (!path) return;
 			if (atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId && path === atheos.inFocusPath) return;
 			let file = self.getFile(path);
+			if (!file || isString(file)) return;
 			atheos.tabmanager.highlightEntry(path);
 
 			inFocus.file = file;
