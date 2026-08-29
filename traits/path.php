@@ -37,15 +37,11 @@ trait Path {
             $path = str_replace("../", "", $path);
         }
 
-        // allow only valid chars in paths$
+        // allow only valid chars in paths
         // $path = preg_replace("/[^A-Za-z0-9 :\-\._\+\/]/", "", $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:]/u', '', $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)]/u', '', $path);
         $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)\[\]\{\}~!@#$%&\'\+=]/u', '', $path);
-
-        // Normalize the path using realpath to resolve ".." and extra slashes
-        $normalizedPath = realpath($path);
-        // if (!$normalizedPath) return "";
 
         return $path;
     }
