@@ -17,9 +17,7 @@ trait Path {
     //////////////////////////////////////////////////////////////////////////80
     public static function isAbsPath($path) {
         if (!$path) return false;
-        if (strlen($path) > 0 && $path[0] === "/") return true;
-        if (strlen($path) > 1 && $path[1] === ":") return true;
-        return false;
+        return ($path[0] === "/" || (strlen($path) > 1 && $path[1] === ":"));
     }
 
     //////////////////////////////////////////////////////////////////////////80
@@ -39,11 +37,15 @@ trait Path {
             $path = str_replace("../", "", $path);
         }
 
-        // allow only valid chars in paths
+        // allow only valid chars in paths$
         // $path = preg_replace("/[^A-Za-z0-9 :\-\._\+\/]/", "", $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:]/u', '', $path);
         // $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)]/u', '', $path);
         $path = preg_replace('/[^\p{L}\p{N} _\.\-\/:\(\)\[\]\{\}~!@#$%&\'\+=]/u', '', $path);
+
+        // Normalize the path using realpath to resolve ".." and extra slashes
+        $normalizedPath = realpath($path);
+        // if (!$normalizedPath) return "";
 
         return $path;
     }
