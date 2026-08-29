@@ -187,10 +187,23 @@ class User {
 	//////////////////////////////////////////////////////////////////////////80
 	public function updateACL($username, $userACL) {
 		// Access set to all projects
-		if ($userACL !== "full") {
-			$userACL = explode(",", $userACL);
+		if ($userACL === "full") {
+			$normalizedACL = "full";
+		} else {
+			if (is_string($userACL)) {
+				$normalizedACL = array_values(array_filter(array_map('trim', explode(",", $userACL)), function($value) {
+					return $value !== "";
+				}));
+			} elseif (is_array($userACL)) {
+				$normalizedACL = array_values(array_filter(array_map('trim', $userACL), function($value) {
+					return $value !== "";
+				}));
+			} else {
+				$normalizedACL = [];
+			}
 		}
-		$this->users[$username]["userACL"] = $userACL;
+
+		$this->users[$username]["userACL"] = $normalizedACL;
 		// Save array back to JSON
 		Common::saveJSON("users", $this->users);
 		// Log

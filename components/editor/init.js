@@ -177,7 +177,12 @@
 		//
 		//////////////////////////////////////////////////////////////////////80
 		serializePaneTree: function(xElement) {
-			xElement = xElement || oX('#EDITOR').element.firstElementChild;
+			if (!xElement) {
+				let root = oX('#EDITOR').element;
+				xElement = Array.from(root.children).find(c =>
+					c.classList.contains('editorPane') || c.classList.contains('editorWindow')
+				);
+			}
 			if (!xElement) return null;
 
 			if (xElement.classList.contains('editorPane')) {
@@ -227,6 +232,7 @@
 					inFocus.aceEditor = pane;
 					inFocus.file = file;
 					inFocus.path = node.path;
+					carbon.pub('active.focus', node.path);
 				}
 
 				return pane;
@@ -311,8 +317,11 @@
 		// Creates a new edit pane
 		//////////////////////////////////////////////////////////////////////80
 		addEditorPane: function(file, where) {
+			file = file || (atheos.inFocusPath ? self.getFile(atheos.inFocusPath) : null);
+			if (!file || isString(file)) return;
 			let aceEditor = self.createEditorPane(where);
 			self.attachFileToEditor(file, aceEditor);
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -341,16 +350,38 @@
 			xEditorWindow.remove();
 			xEditorPane.css('flex', null);
 			aceEditor.focus();
-
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Merge all Editor instances
 		//////////////////////////////////////////////////////////////////////80
 		mergeAllEditorWindows: function() {
-			while (self.editorPanes.length > 1) {
-				self.mergeEditorWindow();
+			if (self.editorPanes.length <= 1) return;
+
+			let survivor = atheos.inFocusEditor || self.editorPanes[0];
+
+			for (let i = self.editorPanes.length - 1; i >= 0; i--) {
+				if (self.editorPanes[i] === survivor) continue;
+				self.editorPanes[i].destroy();
+				self.editorPanes[i].xElement.remove();
+				self.editorPanes.splice(i, 1);
 			}
+
+			survivor.xElement.remove();
+			let editorRoot = oX('#EDITOR').element;
+			Array.from(editorRoot.children).forEach(c => {
+				if (c.classList.contains('editorPane') ||
+					c.classList.contains('editorWindow') ||
+					c.classList.contains('splitter')) {
+					c.remove();
+				}
+			});
+			oX('#EDITOR').append(survivor.xElement);
+			survivor.xElement.css('flex', null);
+			survivor.resize(true);
+			survivor.focus();
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -379,8 +410,10 @@
 			if (!aceEditor) return;
 
 			var path = aceEditor.path;
+			if (!path) return;
 			if (atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId && path === atheos.inFocusPath) return;
 			let file = self.getFile(path);
+			if (!file || isString(file)) return;
 			atheos.tabmanager.highlightEntry(path);
 
 			inFocus.file = file;
@@ -392,13 +425,25 @@
 			oX('#current_file').text(display);
 			atheos.textmode.setModeDisplay(aceEditor.getSession());
 
+			carbon.pub('active.focus', path);
+			self.persistLayout(path);
+		},
+
+		/////////////////////////////////////////////////////////////////
+		// Persist the current pane tree and file states to localStorage
+		// and the server. Called after layout mutations (split / merge)
+		// and after focus changes.
+		/////////////////////////////////////////////////////////////////
+		persistLayout: function(path) {
+			path = path || atheos.inFocusPath;
+
 			let paneTree = self.serializePaneTree();
 			storage('editor.paneTree', paneTree);
 			log(paneTree);
 
 			let fileStates = {};
-			for (let path in self.activeFiles) {
-				fileStates[path] = self.activeFiles[path].states;
+			for (let p in self.activeFiles) {
+				fileStates[p] = self.activeFiles[p].states;
 			}
 			log(fileStates);
 
@@ -421,7 +466,7 @@
 
 			let savedTree = storage('editor.paneTree');
 			log(savedTree);
-			if (savedTree) {
+			if (savedTree && typeof savedTree === 'object' && savedTree.type) {
 				let filePromises = files.map((file) => {
 					let ext = pathinfo(file.path).extension.toLowerCase();
 					if (self.noOpen.indexOf(ext) > -1) return;
@@ -542,9 +587,6 @@
 			if (line) setTimeout(() => {
 				atheos.editor.gotoLine(line);
 			}, 500);
-
-			/* Notify listeners. */
-			carbon.pub('active.focus', path);
 		},
 
 		//////////////////////////////////////////////////////////////////////80
