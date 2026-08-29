@@ -181,7 +181,6 @@
 					},
 					success: function(reply) {
 						oX('#project_list .content').html(reply);
-						let projects = oX('#project_list .content').findAll('LI');
 					}
 				});
 			},

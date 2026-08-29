@@ -138,15 +138,15 @@
 		initSplitMenu: function () {
 			self.initMenuHandler('#split', '#split_menu');
 
-			fX('#split-vertically').on('click', function (e) {
+			fX('#split-vertically').on('click', function () {
 				atheos.editor.addEditorPane(null, 'bottom');
 			});
 
-			fX('#split-horizontally').on('click', function (e) {
+			fX('#split-horizontally').on('click', function () {
 				atheos.editor.addEditorPane(null, 'right');
 			});
 
-			fX('#merge-all').on('click', function (e) {
+			fX('#merge-all').on('click', function () {
 				atheos.editor.mergeAllEditorWindows();
 			});
 		},
