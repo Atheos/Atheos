@@ -16,7 +16,7 @@
 	// EditorPane -> Owns AceEditor Text Editor -> shows a proxy session of File
 	// EditorWindow -> Can contain multiple Panes
 
-	// Currently in focused 
+	// Currently in focus 
 	const inFocus = {
 		file: null,
 		editorPane: null,
@@ -76,7 +76,7 @@
 
 		init: function() {
 			// Prompt if a user tries to close window without saving all files
-			window.onbeforeunload = function(e) {
+				window.onbeforeunload = function(e) {
 				let changedPaths = self.getChangedPaths();
 				if (changedPaths.length) {
 					self.focusOnFile(changedPaths[0]);
@@ -177,7 +177,12 @@
 		//
 		//////////////////////////////////////////////////////////////////////80
 		serializePaneTree: function(xElement) {
-			xElement = xElement || oX('#EDITOR').element.firstElementChild;
+			if (!xElement) {
+				let root = oX('#EDITOR').element;
+				xElement = Array.from(root.children).find(c =>
+					c.classList.contains('editorPane') || c.classList.contains('editorWindow')
+				);
+			}
 			if (!xElement) return null;
 
 			if (xElement.classList.contains('editorPane')) {
@@ -223,10 +228,11 @@
 				if (file) {
 					self.attachFileToEditor(file, pane);
 				}
-				if (node.inFocus) {
+				if (node.inFocus && file) {
 					inFocus.aceEditor = pane;
 					inFocus.file = file;
 					inFocus.path = node.path;
+					carbon.pub('active.focus', node.path);
 				}
 
 				return pane;
@@ -291,7 +297,13 @@
 			aceEditor.path = file.path;
 
 			if (file.states.length) {
-				let lastState = file.states.find(state => state.element === aceEditor.element);
+				let lastState = null;
+				for (let i = file.states.length - 1; i >= 0; i--) {
+					if (file.states[i].element === aceEditor.element) {
+						lastState = file.states[i];
+						break;
+					}
+				}
 				if (lastState) {
 					proxySession.getSelection().moveCursorToPosition(lastState.cursor);
 					proxySession.getSelection().clearSelection();
@@ -311,8 +323,11 @@
 		// Creates a new edit pane
 		//////////////////////////////////////////////////////////////////////80
 		addEditorPane: function(file, where) {
+			file = file || (atheos.inFocusPath ? self.getFile(atheos.inFocusPath) : null);
+			if (!file || isString(file)) return;
 			let aceEditor = self.createEditorPane(where);
 			self.attachFileToEditor(file, aceEditor);
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -341,16 +356,38 @@
 			xEditorWindow.remove();
 			xEditorPane.css('flex', null);
 			aceEditor.focus();
-
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
 		// Merge all Editor instances
 		//////////////////////////////////////////////////////////////////////80
 		mergeAllEditorWindows: function() {
-			while (self.editorPanes.length > 1) {
-				self.mergeEditorWindow();
+			if (self.editorPanes.length <= 1) return;
+
+			let survivor = atheos.inFocusEditor || self.editorPanes[0];
+
+			for (let i = self.editorPanes.length - 1; i >= 0; i--) {
+				if (self.editorPanes[i] === survivor) continue;
+				self.editorPanes[i].destroy();
+				self.editorPanes[i].xElement.remove();
+				self.editorPanes.splice(i, 1);
 			}
+
+			survivor.xElement.remove();
+			let editorRoot = oX('#EDITOR').element;
+			Array.from(editorRoot.children).forEach(c => {
+				if (c.classList.contains('editorPane') ||
+					c.classList.contains('editorWindow') ||
+					c.classList.contains('splitter')) {
+					c.remove();
+				}
+			});
+			oX('#EDITOR').append(survivor.xElement);
+			survivor.xElement.css('flex', null);
+			survivor.resize(true);
+			survivor.focus();
+			self.persistLayout();
 		},
 
 		//////////////////////////////////////////////////////////////////////80
@@ -366,6 +403,7 @@
 			inFocus.file = null;
 			inFocus.editorPane = null;
 			inFocus.aceEditor = null;
+			inFocus.path = null;
 			oX('#current_file').html('');
 			oX('#current_mode>span').html('');
 			storage('editor.paneTree', '');
@@ -379,8 +417,10 @@
 			if (!aceEditor) return;
 
 			var path = aceEditor.path;
+			if (!path) return;
 			if (atheos.inFocusEditor && aceEditor.paneId === atheos.inFocusEditor.paneId && path === atheos.inFocusPath) return;
 			let file = self.getFile(path);
+			if (!file || isString(file)) return;
 			atheos.tabmanager.highlightEntry(path);
 
 			inFocus.file = file;
@@ -392,13 +432,25 @@
 			oX('#current_file').text(display);
 			atheos.textmode.setModeDisplay(aceEditor.getSession());
 
+			carbon.pub('active.focus', path);
+			self.persistLayout(path);
+		},
+
+		/////////////////////////////////////////////////////////////////
+		// Persist the current pane tree and file states to localStorage
+		// and the server. Called after layout mutations (split / merge)
+		// and after focus changes.
+		/////////////////////////////////////////////////////////////////
+		persistLayout: function(path) {
+			path = path || atheos.inFocusPath;
+
 			let paneTree = self.serializePaneTree();
 			storage('editor.paneTree', paneTree);
 			log(paneTree);
 
 			let fileStates = {};
-			for (let path in self.activeFiles) {
-				fileStates[path] = self.activeFiles[path].states;
+			for (let p in self.activeFiles) {
+				fileStates[p] = self.activeFiles[p].states;
 			}
 			log(fileStates);
 
@@ -419,9 +471,18 @@
 		//////////////////////////////////////////////////////////////////////80
 		openFiles: function(files) {
 
+			// If there's nothing open on the server, any saved pane tree in
+			// localStorage is stale (e.g. after reinstalling / clearing the
+			// workspace). Restoring it would spawn phantom editor panes and
+			// claim focus for a path that isn't actually open.
+			if (!files || files.length === 0) {
+				storage('editor.paneTree', '');
+				return;
+			}
+
 			let savedTree = storage('editor.paneTree');
 			log(savedTree);
-			if (savedTree) {
+			if (savedTree && typeof savedTree === 'object' && savedTree.type) {
 				let filePromises = files.map((file) => {
 					let ext = pathinfo(file.path).extension.toLowerCase();
 					if (self.noOpen.indexOf(ext) > -1) return;
@@ -536,15 +597,16 @@
 		//////////////////////////////////////////////////////////////////////80
 		focusOnFile: function(path, line) {
 			log('focusOn', path);
-			if (path === atheos.inFocusPath) return;
+			// Only skip if the in-focus editor is already displaying this file.
+			// inFocus.path alone can be stale (e.g. restored from a pane tree
+			// whose file is no longer open), which would otherwise swallow the
+			// first file opened after a fresh launch.
+			if (atheos.inFocusEditor && atheos.inFocusEditor.path === path) return;
 			log('new focus');
 			atheos.editor.attachFileToEditor(self.activeFiles[path]);
 			if (line) setTimeout(() => {
 				atheos.editor.gotoLine(line);
 			}, 500);
-
-			/* Notify listeners. */
-			carbon.pub('active.focus', path);
 		},
 
 		//////////////////////////////////////////////////////////////////////80

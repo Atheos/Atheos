@@ -78,10 +78,7 @@ class Common {
             "description" => "Max file size count when restoring user session.",
             "default" => 20
         ],
-        "TIMEZONE" => [
-            "description" => "TIMEZONE",
-            "default" => false,
-        ],
+
         "LANGUAGE" => [
             "description" => "TIMEZONE",
             "default" => "en",
@@ -120,14 +117,12 @@ class Common {
         }
 
         // TIMEZONE
-        if (!defined("TIMEZONE") && TIMEZONE !== false) {
+        if (!defined("TIMEZONE") || !TIMEZONE) {
             $date = new DateTime();
             $timeZone = $date->getTimezone();
             define("TIMEZONE", $timeZone->getName());
         }
-        try {
-            date_default_timezone_set(TIMEZONE);
-        } catch (Exception $e) {
+        if (!date_default_timezone_set(TIMEZONE)) {
             date_default_timezone_set("UTC");
         }
 
