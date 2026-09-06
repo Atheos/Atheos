@@ -102,7 +102,7 @@ switch ($action) {
 			<label><?php echo i18n("project_name"); ?></label>
 			<input name="projectName" autofocus="autofocus" autocomplete="off">
 			<label><?php echo i18n("folderNameOrAbsolutePath"); ?></label>
-			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/]+" autocomplete="off" title="Please input a valid file path.">
+			<input name="projectPath" autofocus="off" pattern="[A-Za-z0-9 \-\._\/:\\]+" autocomplete="off" title="Please input a valid file path.">
 
 			<!-- Clone From GitHub -->
 			<table style="display: none;" id="git_options">

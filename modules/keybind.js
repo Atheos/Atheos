@@ -138,14 +138,14 @@
 			vimEx: []
 		},
 		splitEditorHorizontally: {
-			fn: () => atheos.editor.addEditorPane(inFocus.fileHandle, 'right'),
+			fn: () => atheos.editor.addEditorPane(null, 'right'),
 			default: 'Ctrl-;', // Ctrl+;
 			emacs: [],
 			sublime: [],
 			vimEx: ['sp']
 		},
 		splitEditorVertically: {
-			fn: () => atheos.editor.addEditorPane(inFocus.fileHandle, 'bottom'),
+			fn: () => atheos.editor.addEditorPane(null, 'bottom'),
 			default: 'Alt-;', // Alt+;
 			emacs: [],
 			sublime: [],
@@ -153,7 +153,7 @@
 		},
 
 		mergeEditorWindow: {
-			fn: () => atheos.editor.mergeEditorWindow(inFocus.editorPane),
+			fn: () => atheos.editor.mergeEditorWindow(),
 			default: 'Ctrl-M', // Ctrl+M
 			emacs: [],
 			sublime: [],
