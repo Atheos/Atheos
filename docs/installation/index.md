@@ -11,6 +11,7 @@ Cache: true
 		<li><a href="/docs/installation/nginx.md">Configuration example on Nginx</a></li>
 		<li><a href="/docs/installation/centos.md">Quick Installation on CentOS</a></li>
 		<li><a href="/docs/installation/ubuntu.md">Quick Installation on Ubuntu</a></li>
+		<li><a href="/docs/installation/easypanel.md">One-Click Installation on Easypanel</a></li>
 	</ul>
 </section>
 <section>
