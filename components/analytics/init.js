@@ -306,7 +306,7 @@
 				action: 'saveDuration',
 				duration: TimeMe.getTimeOnPage()
 			};
-			navigator.sendBeacon('/controller.php', JSON.stringify(data));
+			navigator.sendBeacon('controller.php', JSON.stringify(data));
 		},
 
 		//////////////////////////////////////////////////////////////////////80

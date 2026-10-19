@@ -113,7 +113,11 @@
 				}
 
 				var newMode = 'ace/mode/' + node.text();
-				var editSession = inFocus.editSession;
+
+				// If no editor is in focus, there's nothing to change
+				var aceEditor = atheos.inFocusEditor;
+				var editSession = aceEditor ? aceEditor.getSession() : null;
+				if (!editSession) return false;
 
 				// handle async mode change
 				var fn = function() {
@@ -123,6 +127,12 @@
 				editSession.on('changeMode', fn);
 
 				editSession.setMode(newMode);
+
+				// Keep the backing file session in sync so the mode persists
+				// across tab switches and pane restores.
+				if (atheos.inFocusFile) {
+					atheos.inFocusFile.aceSession.setMode(newMode);
+				}
 			});
 		},
 

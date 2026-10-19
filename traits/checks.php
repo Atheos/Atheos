@@ -37,6 +37,9 @@ trait Check {
 
 		if (!array_key_exists($activeUser, $users)) return false;
 
+		// Normalize path separators for consistent comparison
+		$path = str_replace("\\", "/", $path);
+
 		// Allow configuration and web root access if user has configure privileges
 		if (Common::checkAccess("configure")) {
 			if (strpos($path, BASE_PATH) === 0 || strpos($path, WEBROOT) === 0) {
@@ -50,7 +53,10 @@ trait Check {
 				continue;
 			}
 
-			if (strpos($path, $projectPath) === 0 || strpos($path, WORKSPACE . "/$projectPath") === 0) {
+			// Normalize project path separators too
+			$normalPath = str_replace("\\", "/", $projectPath);
+
+			if (strpos($path, $normalPath) === 0) {
 				return true;
 			}
 		}

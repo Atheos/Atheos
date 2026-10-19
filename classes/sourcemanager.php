@@ -11,8 +11,7 @@ use MatthiasMullie\Minify;
 class SourceManager {
 
     private $classes = array(
-        "classes/filepath.js",
-        "classes/filehandle.js"
+        // "classes/filepath.js"
     );
 
     private $modules = array(

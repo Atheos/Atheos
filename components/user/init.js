@@ -188,14 +188,17 @@
 				e.preventDefault();
 
 				let data = serialize(e.target);
+				let username = data.username || '';
+				let password = data.password || '';
+				let validate = data.validate || '';
 
-				let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(data.username)) && data.username.length !== 0,
-					vPass = data.password === data.validate;
+				let vUser = !(/^[^A-Za-z0-9\-\_\@\.]+$/i.test(username)) && username.length !== 0,
+					vPass = password === validate;
 
 				if (!vUser) return toast('error', 'Username must be an alphanumeric string');
 				if (!vPass) return toast('error', 'Passwords do not match.');
 
-				self.createUser(data.username, data.password);
+				self.createUser(username, password);
 			};
 
 			atheos.modal.load(400, {
@@ -416,13 +419,15 @@
 				data.username = username;
 
 				if (data.userACL !== 'full') {
-					data.userACL = data.project;
+					data.userACL = Array.isArray(data.project)
+						? data.project
+						: (data.project ? [data.project] : []);
 				}
 
 				delete data.project;
 
-				// Check and make sure if access level not full that at least on project is selected
-				if (data.userACL !== 'full' && data.userACL.length < 0) {
+				// Check and make sure if access level not full that at least one project is selected
+				if (data.userACL !== 'full' && data.userACL.length <= 0) {
 					toast('error', 'At least one project must be selected');
 				} else {
 					echo({
