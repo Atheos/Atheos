@@ -96,13 +96,13 @@
 }
 
 .ace-atheos .ace_invalid {
-	color: var(--fontColorMajor;
+	color: var(--fontColorMajor);
 	background-color: var(--red);
 }
 
 .ace-atheos .ace_fold {
 	background-color: var(--orange);
-	border-color: var(--fontColorSmall;
+	border-color: var(--fontColorSmall);
 }
 
 .ace-atheos .ace_storage,
@@ -121,7 +121,7 @@
 }
 
 .ace-atheos .ace_comment {
-	color: var(--fontColorMinor;
+	color: var(--fontColorMinor);
 }
 
 .ace-atheos .ace_fold-widget.ace_start:after {
@@ -145,4 +145,14 @@
 	border-right:
 		1px dotted var(--foreground);
 	margin-right: -1px;
+}
+
+
+.ace-atheos {
+  .ace-markup.heading { color: #ffcc00; font-weight: bold; }
+  .ace-markup.bold { color: #ff9900; font-weight: bold; }
+  .ace-markup.italic { color: #ff66cc; font-style: italic; }
+  .ace-support.function { color: #66ccff; }
+  .ace-support.function.cite { color: #00cccc; }
+  .ace-entity.name.reference { color: #00cc66; }
 }

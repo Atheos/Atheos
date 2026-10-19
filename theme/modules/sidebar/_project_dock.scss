@@ -33,7 +33,7 @@
 			cursor: pointer;
 
 			&:hover {
-				background-color: $hoverMinor;
+				background-color: var(--hoverMinor);
 			}
 		}
 	}

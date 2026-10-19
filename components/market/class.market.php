@@ -159,7 +159,7 @@ class Market {
 
 
 			// Log Action
-			Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} installed plugin {$name}", "market");
+			Common::log("{" . $this->activeUser . "} installed plugin {$name}", "market");
 			$this->buildCache(true);
 			Common::send(200, i18n("market_install_success", $name));
 		} else {
@@ -177,7 +177,7 @@ class Market {
 		}
 		Common::rDelete(BASE_PATH.'/'.$type.'/'.$name);
 		// Log Action
-		Common::log("@" . date("Y-m-d H:i:s") . ":\t{" . $this->activeUser . "} removed plugin {$name}", "market");
+		Common::log("{" . $this->activeUser . "} removed plugin {$name}", "market");
 
 		$this->buildCache(true);
 		Common::send(200, "Plugin successfully removed.");
@@ -215,7 +215,7 @@ class Market {
 					$keywords = isset($data["keywords"])  ? implode(", ", $data["keywords"]) : "none";
 					$status = isset($data["status"]) ? $data["status"] : "unavailable";
 					$description = isset($data["description"]) ? $data["description"] : i18n("market_missingDesc");
-					$author = isset($data["author"]) ? implode(", ", $data["author"]) : i18n("market_missingAuth");
+					$author = isset($data["author"]) ? (is_array($data["author"]) ? implode(", ", $data["author"]) : $data["author"]) : i18n("market_missingAuth");
 
 					if ($status === "updatable") {
 						$action = "<a class=\"fas fa-sync-alt\" onclick = \"atheos.market.update('$name', '$type', '$category');return false;\"></a>";
